@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMLExtension", "SAMLExtension\SAMLExtension.csproj", "{A83C845E-F62A-4FE6-8C11-6BB5FAD00DE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAMLUtils", "..\SAMLUtils\SAMLUtils\SAMLUtils.csproj", "{7161B747-5ADA-4FE0-9559-DC039ABE0551}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A83C845E-F62A-4FE6-8C11-6BB5FAD00DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A83C845E-F62A-4FE6-8C11-6BB5FAD00DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A83C845E-F62A-4FE6-8C11-6BB5FAD00DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A83C845E-F62A-4FE6-8C11-6BB5FAD00DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7161B747-5ADA-4FE0-9559-DC039ABE0551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7161B747-5ADA-4FE0-9559-DC039ABE0551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7161B747-5ADA-4FE0-9559-DC039ABE0551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7161B747-5ADA-4FE0-9559-DC039ABE0551}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -31,12 +31,23 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
             if (context.Request.ContentLength < 65536)
             {
-                byte[] buffer = new byte[context.Request.ContentLength];
-                context.Request.InputStream.Read(buffer, 0, context.Request.ContentLength);
-                string SAMLResponse = Encoding.UTF8.GetString(buffer);
+                string rawSamlData = context.Request["SAMLResponse"];
+                // TODO:  This should have been encrypted!  So we needed to decrypt it.
+                // It is critical that we do so because we use the Url to determine the authority.
+                string redirectUrl = context.Request["RelayState"];
+                // TODO:  Need to extract the Authority from the Url.
+                // TODO:  Need to incorporate the authority into the userName.
+
+                // read the base64 encoded bytes
+                byte[] samlData = Convert.FromBase64String(rawSamlData);
+                // We need to decide if this is a compressed stream that needs to be inflated.
+                // read back into a UTF string
+                string SAMLResponse = Encoding.UTF8.GetString(samlData);
                 string userName;
                 string authority;
-                SAMLHelperBase.GetUserNameAndAuthorityFromResponse(SAMLResponse, out userName, out authority);
+
+                SAMLResponseHelper helper = new SAMLResponseHelper(null, SAMLResponse, null, null);
+                helper.GetUserNameAndAuthorityFromResponse(out userName, out authority);
                 if (userName == null || authority == null)
                 {
                     throw new ArgumentException("The subject name identifier or the issuer cannot be null.");
@@ -50,13 +61,20 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 server.Url = GetReportServerUrl(reportServer, instanceName);
 
                 server.LogonUser(userName, SAMLResponse, authority);
-                // TODO:  Need to get the relayState and redirect to the orignal resource.
+                if (redirectUrl != null)
+                {
+                    HttpContext.Current.Response.Redirect(redirectUrl, false);
+                }
+                else
+                {
+                    // TODO:
+                    // Where should this go to?
+                }
             }
             else
             {
                 throw new ArgumentException("Invalid SAML Response");
             }
-            //write your handler implementation here.
         }
 
         //Method to get the report server url using WMI

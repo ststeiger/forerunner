@@ -86,7 +86,14 @@ namespace TestSAMLUtils
             using (StreamReader streamReader = new StreamReader("SignedSAMLResponse.xml"))
             {
                 String text = streamReader.ReadToEnd();
-                Assert.IsTrue(SAMLHelperBase.VerifyXml(text, null));
+                // Simulate the ACS
+                SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
+                string userName;
+                string authority;
+                // Simulate the extension
+                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(null, null));
+                Assert.IsTrue(responseHelper2.IsValid());
             }
         }
 
@@ -110,7 +117,18 @@ namespace TestSAMLUtils
             using (StreamReader streamReader = new StreamReader("SignedSAMLResponse.xml"))
             {
                 String text = streamReader.ReadToEnd();
-                Assert.IsTrue(SAMLHelperBase.VerifyXml(text, key));
+                // Simulate the ACS
+                SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
+                string userName;
+                string authority;
+                // Simulate the extension
+                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+
+                Assert.IsTrue(userName.Equals(@"_242f88493449e639aab95dd9b92b1d04234ab84fd8"));
+                Assert.IsTrue(authority.Equals(@"https://openidp.feide.no"));
+
+                SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(key, null));
+                Assert.IsTrue(responseHelper2.IsValid());
             }
         }
 
@@ -154,7 +172,15 @@ namespace TestSAMLUtils
             using (StreamReader streamReader = new StreamReader("SignedSAMLResponse.xml"))
             {
                 String text = streamReader.ReadToEnd();
-                Assert.IsFalse(SAMLHelperBase.VerifyXml(text, null));
+
+                // Simulate the ACS
+                SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
+                string userName;
+                string authority;
+                // Simulate the extension
+                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(key, null));
+                Assert.IsFalse(responseHelper2.IsValid());
             }
         }
 
@@ -178,18 +204,14 @@ namespace TestSAMLUtils
             using (StreamReader streamReader = new StreamReader("SignedSAMLResponse.xml"))
             {
                 String text = streamReader.ReadToEnd();
-                Assert.IsFalse(SAMLHelperBase.VerifyXml(text, new RSACryptoServiceProvider()));
-            }
-        }
-
-        [TestMethod]
-        [DeploymentItem("SampleSAMLResponse.xml")]
-        public void TestValidateUsernameAndAuthority()
-        {
-            using (StreamReader streamReader = new StreamReader("SampleSAMLResponse.xml"))
-            {
-                String samlResponse = streamReader.ReadToEnd();
-                Assert.IsTrue(TestSAMLHelper.TestValidateUsernameAndAuthority( @"_242f88493449e639aab95dd9b92b1d04234ab84fd8" , samlResponse, @"https://openidp.feide.no" ));
+                // Simulate the ACS
+                SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
+                string userName;
+                string authority;
+                // Simulate the extension
+                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(new RSACryptoServiceProvider(), null));
+                Assert.IsFalse(responseHelper2.IsValid());
             }
         }
     }

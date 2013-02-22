@@ -50,13 +50,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportingService2010.cs" />
     <Compile Include="ReportServerProxy.cs" />
-    <Compile Include="SAMLExtension.cs" />
+    <Compile Include="SAMLAuthenticationExtension.cs" />
+    <Compile Include="SAMLAuthorizationExtension.cs" />
+    <Compile Include="SSO.aspx.cs">
+      <DependentUpon>SSO.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SSO.aspx.designer.cs">
+      <DependentUpon>SSO.aspx.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\SAMLUtils\SAMLUtils\SAMLUtils.csproj">
       <Project>{7161B747-5ADA-4FE0-9559-DC039ABE0551}</Project>
       <Name>SAMLUtils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SSO.aspx">
+      <SubType>ASPXCodeBehind</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

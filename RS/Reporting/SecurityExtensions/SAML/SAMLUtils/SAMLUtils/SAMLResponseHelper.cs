@@ -34,14 +34,14 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             return false;
         }
 
-        public void GetUserNameAndAuthorityFromResponse(out string userNameExtracted, out string authorityExtracted)
+        public void GetNameIDAndIssuerFromResponse(out string nameIdExtracted, out string issuerNameExtracted)
         {
             XmlNode nameIDNode = doc.SelectSingleNode(
                 "/samlp:Response/saml:Assertion/saml:Subject/saml:NameID", ns);
             XmlNode issuerNode = doc.SelectSingleNode(
                 "/samlp:Response/saml:Issuer", ns);
-            userNameExtracted = nameIDNode.InnerText;
-            authorityExtracted = issuerNode.InnerText;
+            nameIdExtracted = nameIDNode.InnerText;
+            issuerNameExtracted = issuerNode.InnerText;
         }
 
         private bool VerifyXml()
@@ -75,10 +75,10 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
 
         private bool ValidateUserNameAndAuthority()
         {
-            string userNameExtracted;
-            string authorityExtracted;
-            GetUserNameAndAuthorityFromResponse(out userNameExtracted, out authorityExtracted);
-            return userName.Equals(userNameExtracted) && authority.Equals(authorityExtracted);
+            string nameIdExtracted;
+            string issuerExtracted;
+            GetNameIDAndIssuerFromResponse(out nameIdExtracted, out issuerExtracted);
+            return userName.StartsWith(authority + ".") && userName.Equals(SAMLHelperBase.GetUserName(authority, nameIdExtracted), StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

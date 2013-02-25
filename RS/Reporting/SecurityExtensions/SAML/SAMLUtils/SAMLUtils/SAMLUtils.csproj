@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ForeRunner.Reporting.Extensions.SAMLUtils</RootNamespace>
     <AssemblyName>ForeRunner.Reporting.Extensions.SAMLUtils</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Security" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -44,6 +44,9 @@
     <Compile Include="SAMLRequestHelper.cs" />
     <Compile Include="SAMLResponseHelper.cs" />
     <Compile Include="TenantInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Sql\DatabaseSetup.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -88,10 +88,12 @@ namespace TestSAMLUtils
                 String text = streamReader.ReadToEnd();
                 // Simulate the ACS
                 SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
-                string userName;
-                string authority;
+                string nameID;
+                string issuer;
                 // Simulate the extension
-                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                responseHelper1.GetNameIDAndIssuerFromResponse(out nameID, out issuer);
+                string authority = "TestAuthority";
+                string userName = SAMLHelperBase.GetUserName(authority, nameID);
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(null, null));
                 Assert.IsTrue(responseHelper2.IsValid());
             }
@@ -119,13 +121,15 @@ namespace TestSAMLUtils
                 String text = streamReader.ReadToEnd();
                 // Simulate the ACS
                 SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
-                string userName;
-                string authority;
+                string nameID;
+                string issuer;
                 // Simulate the extension
-                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                responseHelper1.GetNameIDAndIssuerFromResponse(out nameID, out issuer);
+                string authority = "TestAuthority";
+                string userName = SAMLHelperBase.GetUserName(authority, nameID);
 
-                Assert.IsTrue(userName.Equals(@"_242f88493449e639aab95dd9b92b1d04234ab84fd8"));
-                Assert.IsTrue(authority.Equals(@"https://openidp.feide.no"));
+                Assert.IsTrue(userName.Equals(authority + @"._242f88493449e639aab95dd9b92b1d04234ab84fd8"));
+                Assert.IsTrue(issuer.Equals(@"https://openidp.feide.no"));
 
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(key, null));
                 Assert.IsTrue(responseHelper2.IsValid());
@@ -175,10 +179,12 @@ namespace TestSAMLUtils
 
                 // Simulate the ACS
                 SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
-                string userName;
-                string authority;
+                string nameID;
+                string issuer;
                 // Simulate the extension
-                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                responseHelper1.GetNameIDAndIssuerFromResponse(out nameID, out issuer);
+                string authority = "TestAuthority";
+                string userName = SAMLHelperBase.GetUserName(authority, nameID);
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(key, null));
                 Assert.IsFalse(responseHelper2.IsValid());
             }
@@ -206,10 +212,12 @@ namespace TestSAMLUtils
                 String text = streamReader.ReadToEnd();
                 // Simulate the ACS
                 SAMLResponseHelper responseHelper1 = new SAMLResponseHelper(null, text, null, null);
-                string userName;
-                string authority;
+                string nameID;
+                string issuer;
                 // Simulate the extension
-                responseHelper1.GetUserNameAndAuthorityFromResponse(out userName, out authority);
+                responseHelper1.GetNameIDAndIssuerFromResponse(out nameID, out issuer);
+                string authority = "TestAuthority";
+                string userName = SAMLHelperBase.GetUserName(authority, nameID);
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(new RSACryptoServiceProvider(), null));
                 Assert.IsFalse(responseHelper2.IsValid());
             }

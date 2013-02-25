@@ -11,14 +11,35 @@ namespace ForeRunner.Reporting.Extensions.SAML
     public class AssertionConsumerService : IHttpHandler
     {
         private const int MaxItemPathLength = 260;
-        private const string wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\v10";
-        private const string rsAsmx = @"/ReportService2010.asmx";
+        private string wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\v10";
+        private string rsAsmx = @"/ReportService2010.asmx";
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
         /// web and register it with IIS before being able to use it. For more information
         /// see the following link: http://go.microsoft.com/?linkid=8101007
         /// </summary>
         #region IHttpHandler Members
+
+        public AssertionConsumerService()
+        {
+            string RSServerVersion = ConfigurationManager.AppSettings["ForeRunnerRSServerVersion"];
+            // 2005 and 2008 both uses the 2005.asmx.
+            // TODO:  Need to check the WMI Namespace for 2008R2 and 2012.
+            if (RSServerVersion.Equals("v9"))
+            {
+                wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\v9";
+                rsAsmx = @"/ReportService2005.asmx";
+            }
+            else if (RSServerVersion.Equals("v10"))
+            {
+                wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\v10";
+                rsAsmx = @"/ReportService2005.asmx";
+            }
+            else if (!RSServerVersion.Equals("v10.5") && !RSServerVersion.Equals("v11"))
+            {
+                throw new Exception("Unsupported RS Version");
+            }
+        }
 
         public bool IsReusable
         {
@@ -35,23 +56,29 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 // TODO:  This should have been encrypted!  So we needed to decrypt it.
                 // It is critical that we do so because we use the Url to determine the authority.
                 string redirectUrl = context.Request["RelayState"];
-                // TODO:  Need to extract the Authority from the Url.
-                // TODO:  Need to incorporate the authority into the userName.
+                string authority = SAMLHelperBase.GetAuthorityFromUrl(redirectUrl);
+                if (authority == null)
+                {
+                    throw new ArgumentException("The authority cannot be null.");
+                }
 
                 // read the base64 encoded bytes
                 byte[] samlData = Convert.FromBase64String(rawSamlData);
                 // We need to decide if this is a compressed stream that needs to be inflated.
                 // read back into a UTF string
                 string SAMLResponse = Encoding.UTF8.GetString(samlData);
-                string userName;
-                string authority;
+                string nameID;
+                string issuer;
 
                 SAMLResponseHelper helper = new SAMLResponseHelper(null, SAMLResponse, null, null);
-                helper.GetUserNameAndAuthorityFromResponse(out userName, out authority);
-                if (userName == null || authority == null)
+                helper.GetNameIDAndIssuerFromResponse(out nameID, out issuer);
+                if (nameID == null || issuer == null)
                 {
                     throw new ArgumentException("The subject name identifier or the issuer cannot be null.");
                 }
+
+                string userName = SAMLHelperBase.GetUserName(authority, nameID);
+                
                 ReportServerProxy server = new ReportServerProxy();
 
                 string reportServer = ConfigurationManager.AppSettings["ReportServer"];

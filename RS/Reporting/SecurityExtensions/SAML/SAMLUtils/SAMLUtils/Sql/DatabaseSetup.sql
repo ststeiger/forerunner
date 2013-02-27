@@ -22,14 +22,14 @@ IF EXISTS(SELECT * FROM sys.objects
 GO
 
 /*2083 is the current IE Url limit*/
-CREATE TABLE AuthorityCollection(ID int identity(1,1), Authority nvarchar(256), CertificateBlob nvarchar(1024), IDPUrl nvarchar(2083), Constraint UC_Authority Unique (Authority))
+CREATE TABLE AuthorityCollection(ID int identity(1,1), Authority nvarchar(256), CertificateBlob nvarchar(2048), IDPUrl nvarchar(2083), Constraint UC_Authority Unique (Authority))
 GO
 CREATE TABLE  UserCollection(ID int identity(1,1), Authority nvarchar(256), UserName nvarchar(512))
 GO
 
 CREATE PROCEDURE sp_LoadCertificate
 @Authority nvarchar(256),
-@CertificateBlob nvarchar(1024)
+@CertificateBlob nvarchar(2048)
 AS
 IF NOT EXISTS(SELECT * FROM AuthorityCollection Where Authority = @Authority) INSERT AuthorityCollection (Authority) VALUES (@Authority) 
 UPDATE AuthorityCollection

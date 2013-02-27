@@ -29,7 +29,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
             // TODO:  Need to encrypt this thing before sending this off.
             // Obviously, all these stuff need to be read from the config too.
             // Need to get the tenant information based on the UrlReferrer.
-            RelayState.Value = targetUrl;
+            RelayState.Value = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(targetUrl));
             SAMLRequestHelper helper = new SAMLRequestHelper(new TenantInfo(null, new Uri(idpUrl)), new Uri(GetACSUrl()), GetIssuer());
             // Set SAML Response
             SAMLResponse.Value =

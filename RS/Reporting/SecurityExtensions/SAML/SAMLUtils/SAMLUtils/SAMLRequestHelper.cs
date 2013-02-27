@@ -13,7 +13,7 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
         private Uri assertionConsumerServiceUri;
         private string issuer;
 
-        private bool isZip = false;
+        private bool isGZip = false;
 
         public SAMLRequestHelper(TenantInfo tenantInfo, Uri assertionConsumerServiceUri, String issuer)
         {
@@ -24,15 +24,15 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             this.issuer = issuer;
         }
 
-        public bool IsZip
+        public bool IsGZip
         {
             set
             {
-                isZip = value;
+                isGZip = value;
             }
             get
             {
-                return isZip;
+                return isGZip;
             }
         }
 
@@ -71,9 +71,9 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
 
                     xmlWriter.WriteEndElement();
                 }
-                byte[] toEncodeAsBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(stringWriter.ToString());
+                byte[] toEncodeAsBytes = System.Text.Encoding.UTF8.GetBytes(stringWriter.ToString());
                    
-                if (isZip)
+                if (isGZip)
                 {
                     return zipAndEncode(toEncodeAsBytes);
                 }
@@ -84,11 +84,11 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             }
         }
 
-        private string zipAndEncode(byte[] toEncodeAsBytes) 
+        public static string zipAndEncode(byte[] toEncodeAsBytes) 
         {
             using (MemoryStream output = new MemoryStream())
             {
-                using (var zip = new DeflateStream(output, CompressionMode.Compress))
+                using (var zip = new GZipStream(output, CompressionMode.Compress))
                 {
                     zip.Write(toEncodeAsBytes, 0, toEncodeAsBytes.Length);
                 }

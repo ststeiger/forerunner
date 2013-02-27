@@ -5,6 +5,8 @@
     using System.Data;
     using System.Data.SqlClient;
     using System.Globalization;
+    using System.IO;
+    using System.IO.Compression;
     using System.Security.Cryptography;
     using System.Security.Cryptography.Pkcs;
     using System.Security.Cryptography.X509Certificates;
@@ -21,11 +23,6 @@
     /// </summary>
     public class SAMLHelperBase
     {
-        private static String GetConnectionString()
-        {
-            return ConfigurationManager.ConnectionStrings["ForeRunnerSAMLExtension.ConnectionString"].ConnectionString;
-        }
-
         private static String GetRegExString()
         {
             return ConfigurationManager.AppSettings["ForeRunnerSAMLExtension.TenantAuthorityRegEx"];
@@ -74,36 +71,7 @@
         /// </summary>
         public static bool VerifyUserAndAuthority(string userName, string authority)
         {
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
-            {
-                SqlCommand cmd = new SqlCommand("sp_CheckUserExists", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter sqlParam = cmd.Parameters.Add("@UserName",
-                                                    SqlDbType.VarChar,
-                                                    256);
-                sqlParam.Value = userName;
-                try
-                {
-                    connection.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        reader.Read(); // Advance to the one and only row
-                        // Return output parameters from returned data stream
-                        string userNameInDB = reader.GetString(0);
-                        if (userNameInDB == null || !userNameInDB.StartsWith(authority))
-                        {
-                            return false;
-                        }
-                        return String.Compare(userName, userNameInDB, true) == 0;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                        "Failed to verify user" + ex.Message));
-                }
-            }
+            return DatabaseHelper.CheckUserExists(userName, authority);
         }
 
         /// <summary>
@@ -111,34 +79,10 @@
         /// </summary>
         /// <param name="authority"></param>
         /// <returns></returns>
-        private static X509Certificate2 GetCertificateFromDB(string authority)
+        public static X509Certificate2 GetCertificateFromDB(string authority)
         {
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
-            {
-                SqlCommand cmd = new SqlCommand("sp_GetCertificate", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlParameter sqlParam = cmd.Parameters.Add("@Authority",
-                                                    SqlDbType.VarChar,
-                                                    256);
-                sqlParam.Value = authority;
-                try
-                {
-                    connection.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        reader.Read(); // Advance to the one and only row
-                        // Return output parameters from returned data stream
-                        string certString = reader.GetString(0);
-                        return new X509Certificate2(Encoding.UTF8.GetBytes(certString));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                        "Failed to load certificate for authority" + ex.Message));
-                }
-            }
+            string certString = DatabaseHelper.getPropertyByAuthority(authority, "sp_GetCertificate", "Failed to load certificate for authority");
+            return new X509Certificate2(Encoding.UTF8.GetBytes(certString));
         }
 
         /// <summary>
@@ -166,31 +110,35 @@
 
         public static string GetIDPUrl(string authority)
         {
-            using (SqlConnection connection = new SqlConnection(GetConnectionString()))
-            {
-                SqlCommand cmd = new SqlCommand("sp_GetIDPUrl", connection);
-                cmd.CommandType = CommandType.StoredProcedure;
+            return DatabaseHelper.getPropertyByAuthority(authority, "sp_GetIDPUrl", "Failed to load IDP Url for authority");
+        }
 
-                SqlParameter sqlParam = cmd.Parameters.Add("@Authority",
-                                                    SqlDbType.VarChar,
-                                                    256);
-                sqlParam.Value = authority;
-                try
+        public static byte[] inflateIfNeeded(byte[] inputStream)
+        {
+            if (CheckIsCompressed.IsGZip(inputStream)) 
+            {
+                using (GZipStream stream = new GZipStream(new MemoryStream(inputStream), CompressionMode.Decompress))
                 {
-                    connection.Open();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    const int size = 4096;
+                    byte[] buffer = new byte[size];
+                    using (MemoryStream memory = new MemoryStream())
                     {
-                        reader.Read(); // Advance to the one and only row
-                        // Return output parameters from returned data stream
-                        return reader.GetString(0);
+                        int count = 0;
+                        do
+                        {
+                            count = stream.Read(buffer, 0, size);
+                            if (count > 0)
+                            {
+                                memory.Write(buffer, 0, count);
+                            }
+                        }
+                        while (count > 0);
+                        return memory.ToArray();
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                        "Failed to load IDP Url for authority" + ex.Message));
-                }
             }
+
+            return inputStream;
         }
     }
 }

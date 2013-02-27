@@ -52,19 +52,20 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
             if (context.Request.ContentLength < 65536)
             {
-                string rawSamlData = context.Request["SAMLResponse"];
+                string rawSamlData = HttpUtility.UrlDecode(context.Request["SAMLResponse"]);
                 // TODO:  This should have been encrypted!  So we needed to decrypt it.
                 // It is critical that we do so because we use the Url to determine the authority.
-                string redirectUrl = context.Request["RelayState"];
+                string redirectUrl = Encoding.UTF8.GetString(Convert.FromBase64String(HttpUtility.UrlDecode(context.Request["RelayState"])));
                 string authority = SAMLHelperBase.GetAuthorityFromUrl(redirectUrl);
                 if (authority == null)
                 {
-                    throw new ArgumentException("The authority cannot be null.");
+                    authority = "";
                 }
 
                 // read the base64 encoded bytes
                 byte[] samlData = Convert.FromBase64String(rawSamlData);
                 // We need to decide if this is a compressed stream that needs to be inflated.
+                samlData = SAMLHelperBase.inflateIfNeeded(samlData);
                 // read back into a UTF string
                 string SAMLResponse = Encoding.UTF8.GetString(samlData);
                 string nameID;

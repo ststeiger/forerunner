@@ -14,58 +14,6 @@ namespace TestSAMLUtils
     [TestClass]
     public class SAMLResponseTest
     {
-        // Sign an XML file and save the signature in a new file. 
-        private void SignXmlFile(string fileName, string signedFileName, RSA Key)
-        {
-            // Create a new XML document.
-            XmlDocument doc = new XmlDocument();
-
-            // Format the document to ignore white spaces.
-            doc.PreserveWhitespace = false;
-
-            // Load the passed XML file using its name.
-            doc.Load(new XmlTextReader(fileName));
-
-            // Create a SignedXml object.
-            SignedXml signedXml = new SignedXml(doc);
-
-            // Add the key to the SignedXml document. 
-            signedXml.SigningKey = Key;
-
-            // Create a reference to be signed.
-            Reference reference = new Reference();
-            reference.Uri = "";
-
-            // Add an enveloped transformation to the reference.
-            XmlDsigEnvelopedSignatureTransform env = new XmlDsigEnvelopedSignatureTransform();
-            reference.AddTransform(env);
-
-            // Add the reference to the SignedXml object.
-            signedXml.AddReference(reference);
-
-
-            // Add an RSAKeyValue KeyInfo (optional; helps recipient find key to validate).
-            KeyInfo keyInfo = new KeyInfo();
-            keyInfo.AddClause(new RSAKeyValue((RSA)Key));
-            signedXml.KeyInfo = keyInfo;
-
-            // Compute the signature.
-            signedXml.ComputeSignature();
-
-            // Get the XML representation of the signature and save 
-            // it to an XmlElement object.
-            XmlElement xmlDigitalSignature = signedXml.GetXml();
-
-            // Append the element to the XML document.
-            doc.DocumentElement.AppendChild(doc.ImportNode(xmlDigitalSignature, true));
-
-            // Save the signed XML document to a file specified 
-            // using the passed string.
-            XmlTextWriter xmltw = new XmlTextWriter(signedFileName, new UTF8Encoding(false));
-            doc.WriteTo(xmltw);
-            xmltw.Close();
-        }
-
         /// <summary>
         /// Call verifyXml and verify that the signature of the xml matched the xml.
         /// </summary>
@@ -78,7 +26,7 @@ namespace TestSAMLUtils
 
             // Sign the XML that was just created and save it in a  
             // new file.
-            SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
+            SAMLResponseHelper.SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
             Trace.TraceInformation("XML file signed.");
 
             // Verify the signature of the signed XML.
@@ -111,7 +59,7 @@ namespace TestSAMLUtils
 
             // Sign the XML that was just created and save it in a  
             // new file.
-            SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
+            SAMLResponseHelper.SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
             Trace.TraceInformation("XML file signed.");
 
             // Verify the signature of the signed XML.
@@ -167,7 +115,7 @@ namespace TestSAMLUtils
 
             // Sign the XML that was just created and save it in a  
             // new file.
-            SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
+            SAMLResponseHelper.SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
             Trace.TraceInformation("XML file signed.");
 
             TamperSignedFile("SignedSAMLResponse.xml");
@@ -202,7 +150,7 @@ namespace TestSAMLUtils
 
             // Sign the XML that was just created and save it in a  
             // new file.
-            SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
+            SAMLResponseHelper.SignXmlFile("SampleSAMLResponse.xml", "SignedSAMLResponse.xml", key);
             Trace.TraceInformation("XML file signed.");
 
             // Verify the signature of the signed XML.

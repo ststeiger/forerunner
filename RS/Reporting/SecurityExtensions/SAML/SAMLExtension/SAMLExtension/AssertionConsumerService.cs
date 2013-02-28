@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Management;
 using System.Text;
 using System.Web;
+using Common.Web;
 using ForeRunner.Reporting.Extensions.SAMLUtils;
 
 namespace ForeRunner.Reporting.Extensions.SAML
@@ -13,6 +14,8 @@ namespace ForeRunner.Reporting.Extensions.SAML
         private const int MaxItemPathLength = 260;
         private string wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\v10";
         private string rsAsmx = @"/ReportService2010.asmx";
+        // Make this protected to allow for unit testing
+        protected IReportServerFactory reportServerFactory = new ReportServerProxyFactory();
         /// <summary>
         /// You will need to configure this handler in the web.config file of your 
         /// web and register it with IIS before being able to use it. For more information
@@ -52,10 +55,11 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
             if (context.Request.ContentLength < 65536)
             {
-                string rawSamlData = HttpUtility.UrlDecode(context.Request["SAMLResponse"]);
+                // Use a home brew version of the HtmlUtility according to the spec.  HttpUtility.UrlEncode and UrlDecode has a bug with '+' characters.
+                string rawSamlData = HtmlUtility.UrlDecode(context.Request["SAMLResponse"]);
                 // TODO:  This should have been encrypted!  So we needed to decrypt it.
                 // It is critical that we do so because we use the Url to determine the authority.
-                string redirectUrl = Encoding.UTF8.GetString(Convert.FromBase64String(HttpUtility.UrlDecode(context.Request["RelayState"])));
+                string redirectUrl = Encoding.UTF8.GetString(Convert.FromBase64String(HtmlUtility.UrlDecode(context.Request["RelayState"])));
                 string authority = SAMLHelperBase.GetAuthorityFromUrl(redirectUrl);
                 if (authority == null)
                 {
@@ -79,8 +83,8 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 }
 
                 string userName = SAMLHelperBase.GetUserName(authority, nameID);
-                
-                ReportServerProxy server = new ReportServerProxy();
+
+                IReportServer server = reportServerFactory.getInstance();
 
                 string reportServer = ConfigurationManager.AppSettings["ReportServer"];
                 string instanceName = ConfigurationManager.AppSettings["ReportServerInstance"];
@@ -132,7 +136,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
 
                 if (serverClass == null)
                     throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                      CustomSecurity.WMIClassError));
+                      SAMLExtension.WMIClassError));
 
                 //Get instances
                 ManagementObjectCollection instances = serverClass.GetInstances();
@@ -155,16 +159,21 @@ namespace ForeRunner.Reporting.Extensions.SAML
 
                     if (reportServerVirtualDirectory == string.Empty)
                         throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                           CustomSecurity.MissingUrlReservation));
+                           SAMLExtension.MissingUrlReservation));
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                    CustomSecurity.RSUrlError + ex.Message), ex);
+                    SAMLExtension.RSUrlError + ex.Message), ex);
             }
 
             return reportServerVirtualDirectory + rsAsmx;
+        }
+
+        private IReportServer createReportServerInstance()
+        {
+            return reportServerFactory.getInstance();
         }
         #endregion
     }

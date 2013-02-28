@@ -47,6 +47,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ACSTestSubClass.cs" />
+    <Compile Include="MockReportServerProxy.cs" />
+    <Compile Include="MockReportServerProxyFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ACSTest.cs" />
   </ItemGroup>

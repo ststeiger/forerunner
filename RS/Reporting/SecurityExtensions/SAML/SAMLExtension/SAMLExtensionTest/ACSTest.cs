@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
+using Common.Web;
 using ForeRunner.Reporting.Extensions.SAML;
 using ForeRunner.Reporting.Extensions.SAMLUtils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -23,7 +24,7 @@ namespace SAMLExtensionTest
                 HttpResponse response = new HttpResponse(sw);
                 HttpRequest request = new HttpRequest(fileName, "http://whatever.com/" + fileName, queryString);
                 HttpContext context = new HttpContext(request, response);
-                new AssertionConsumerService().ProcessRequest(context);
+                new ACSTestSubClass().ProcessRequest(context);
             }
             return output.ToString();
         }
@@ -48,7 +49,7 @@ namespace SAMLExtensionTest
             DatabaseHelper.loadCertificate("Tenant1", certString);
             string samlResponse = GetSAMLReponse();
             byte[] samlData = Convert.FromBase64String(samlResponse);
-            string queryString = "RelayState=" + HttpUtility.UrlEncode(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("http://whatever.com/Tenant1/"))) + "&SAMLResponse=" + HttpUtility.UrlEncode(samlResponse);
+            string queryString = "RelayState=" + HtmlUtility.UrlEncode(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("http://whatever.com/Tenant1/"))) + "&SAMLResponse=" + HtmlUtility.UrlEncode(samlResponse);
             string result = RawRequest("ACS.ashx", queryString);
         }
     }

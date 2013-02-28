@@ -46,12 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssertionConsumerService.cs" />
-    <Compile Include="CustomSecurity.cs" />
+    <Compile Include="IReportServer.cs" />
+    <Compile Include="IReportServerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportingService2010.cs" />
     <Compile Include="ReportServerProxy.cs" />
+    <Compile Include="ReportServerProxyFactory.cs" />
     <Compile Include="SAMLAuthenticationExtension.cs" />
     <Compile Include="SAMLAuthorizationExtension.cs" />
+    <Compile Include="SAMLExtension.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SAMLExtension.resx</DependentUpon>
+    </Compile>
     <Compile Include="SSO.aspx.cs">
       <DependentUpon>SSO.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -70,6 +77,12 @@
     <Content Include="SSO.aspx">
       <SubType>ASPXCodeBehind</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SAMLExtension.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SAMLExtension.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

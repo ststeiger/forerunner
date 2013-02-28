@@ -29,7 +29,8 @@ namespace Microsoft.SqlServer.ReportingServices2010 {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(RecurrencePattern))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ScheduleDefinitionOrReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DataSourceDefinitionOrReference))]
-    public partial class ReportingService2010 : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    public partial class ReportingService2010 : System.Web.Services.Protocols.SoapHttpClientProtocol, ForeRunner.Reporting.Extensions.SAML.IReportServer
+    {
         
         private TrustedUserHeader trustedUserHeaderValueField;
         

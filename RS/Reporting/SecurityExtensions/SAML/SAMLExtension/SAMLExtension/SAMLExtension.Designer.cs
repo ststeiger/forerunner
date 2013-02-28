@@ -17,7 +17,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class CustomSecurity
+    internal class SAMLExtension
     {
 
         private static global::System.Resources.ResourceManager resourceMan;
@@ -25,7 +25,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
         private static global::System.Globalization.CultureInfo resourceCulture;
 
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal CustomSecurity()
+        internal SAMLExtension()
         {
         }
 
@@ -39,7 +39,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.Samples.ReportingServices.CustomSecurity.CustomSecurity", typeof(CustomSecurity).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ForeRunner.Reporting.Extensions.SAML", typeof(SAMLExtension).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

@@ -502,7 +502,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
           //Model item name mismatch
           throw new Exception(string.Format(CultureInfo.InvariantCulture,
-              CustomSecurity.OperationNameError));
+              SAMLExtension.OperationNameError));
         }
 
         // create model operation names data
@@ -534,7 +534,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
           //Model name mismatch
           throw new Exception(string.Format(CultureInfo.InvariantCulture,
-             CustomSecurity.OperationNameError));
+             SAMLExtension.OperationNameError));
         }
 
          // create operation names data
@@ -575,7 +575,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
          {
            //Catalog name mismatch
            throw new Exception(string.Format(CultureInfo.InvariantCulture,
-            CustomSecurity.OperationNameError));
+            SAMLExtension.OperationNameError));
          }
          
          m_FldOperNames = new Hashtable();
@@ -603,7 +603,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
          {
            //Folder name mismatch
            throw new Exception(string.Format(CultureInfo.InvariantCulture,
-            CustomSecurity.OperationNameError));
+            SAMLExtension.OperationNameError));
          }
 
          m_RptOperNames = new Hashtable();
@@ -666,7 +666,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
          {
            //Report name mismatch
            throw new Exception(string.Format(CultureInfo.InvariantCulture,
-            CustomSecurity.OperationNameError));
+            SAMLExtension.OperationNameError));
          }
 
          m_ResOperNames = new Hashtable();
@@ -689,7 +689,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
          {
            //Resource name mismatch
            throw new Exception(string.Format(CultureInfo.InvariantCulture,
-            CustomSecurity.OperationNameError));
+            SAMLExtension.OperationNameError));
          }
 
          m_DSOperNames = new Hashtable();
@@ -712,7 +712,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
          {
            //Datasource name mismatch
            throw new Exception(string.Format(CultureInfo.InvariantCulture,
-            CustomSecurity.OperationNameError));
+            SAMLExtension.OperationNameError));
          }
       }
 
@@ -740,13 +740,13 @@ namespace ForeRunner.Reporting.Extensions.SAML
                else
                {
                   throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                    CustomSecurity.UnrecognizedElement));
+                    SAMLExtension.UnrecognizedElement));
                }
             }
          }
          else
              throw new Exception(string.Format(CultureInfo.InvariantCulture,
-                CustomSecurity.AdminConfiguration));
+                SAMLExtension.AdminConfiguration));
       }
 
        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]

@@ -42,6 +42,10 @@ namespace ForeRunner.Reporting.Extensions.SAML
             {
                 throw new Exception("Unsupported RS Version");
             }
+            else
+            {
+                wmiNamespace = @"\root\Microsoft\SqlServer\ReportServer\{0}\" + RSServerVersion;
+            }
         }
 
         public bool IsReusable
@@ -95,7 +99,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 server.LogonUser(userName, SAMLResponse, authority);
                 if (redirectUrl != null)
                 {
-                    HttpContext.Current.Response.Redirect(redirectUrl, false);
+                    redirect(redirectUrl);
                 }
                 else
                 {
@@ -107,6 +111,11 @@ namespace ForeRunner.Reporting.Extensions.SAML
             {
                 throw new ArgumentException("Invalid SAML Response");
             }
+        }
+
+        protected virtual void redirect(string redirectUrl)
+        {
+            HttpContext.Current.Response.Redirect(redirectUrl, false);
         }
 
         //Method to get the report server url using WMI

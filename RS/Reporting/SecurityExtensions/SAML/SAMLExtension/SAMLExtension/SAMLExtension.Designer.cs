@@ -39,7 +39,7 @@ namespace ForeRunner.Reporting.Extensions.SAML
             {
                 if (object.ReferenceEquals(resourceMan, null))
                 {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ForeRunner.Reporting.Extensions.SAML", typeof(SAMLExtension).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ForeRunner.Reporting.Extensions.SAML.SAMLExtension", typeof(SAMLExtension).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

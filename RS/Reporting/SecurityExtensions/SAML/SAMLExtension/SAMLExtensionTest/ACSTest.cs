@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Hosting;
 using Common.Web;
 using ForeRunner.Reporting.Extensions.SAML;
@@ -15,15 +16,15 @@ namespace SAMLExtensionTest
     [TestClass]
     public class ACSTest
     {
-
         protected string RawRequest(string fileName, string queryString)
         {
             StringBuilder output = new StringBuilder();
             using (StringWriter sw = new StringWriter(output))
             {
                 HttpResponse response = new HttpResponse(sw);
-                HttpRequest request = new HttpRequest(fileName, "http://whatever.com/" + fileName, queryString);
+                HttpRequest request = new HttpRequest(fileName, "http://whatever.com/" + fileName, queryString);                
                 HttpContext context = new HttpContext(request, response);
+                HttpContext.Current = context;
                 new ACSTestSubClass().ProcessRequest(context);
             }
             return output.ToString();

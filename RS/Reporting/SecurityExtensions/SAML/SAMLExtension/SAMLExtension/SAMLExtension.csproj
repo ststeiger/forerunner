@@ -82,6 +82,7 @@
     <EmbeddedResource Include="SAMLExtension.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SAMLExtension.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

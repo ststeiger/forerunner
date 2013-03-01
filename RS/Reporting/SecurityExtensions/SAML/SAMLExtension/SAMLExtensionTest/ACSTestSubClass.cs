@@ -11,5 +11,9 @@ namespace SAMLExtensionTest
         {
             this.reportServerFactory = new MockReportServerProxyFactory();
         }
+
+        protected override void redirect(string redirectUrl)
+        {
+        }
     }
 }

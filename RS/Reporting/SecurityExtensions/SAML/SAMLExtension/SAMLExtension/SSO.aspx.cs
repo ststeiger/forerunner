@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.UI.HtmlControls;
+using Common.Web;
 using ForeRunner.Reporting.Extensions.SAMLUtils;
 
 namespace ForeRunner.Reporting.Extensions.SAML
@@ -29,12 +30,10 @@ namespace ForeRunner.Reporting.Extensions.SAML
             // TODO:  Need to encrypt this thing before sending this off.
             // Obviously, all these stuff need to be read from the config too.
             // Need to get the tenant information based on the UrlReferrer.
-            RelayState.Value = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(targetUrl));
+            RelayState.Value = HtmlUtility.UrlEncode(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(targetUrl)));
             SAMLRequestHelper helper = new SAMLRequestHelper(new TenantInfo(null, new Uri(idpUrl)), new Uri(GetACSUrl()), GetIssuer());
             // Set SAML Response
-            SAMLResponse.Value =
-            helper.generateSAMLRequest();
-
+            SAMLResponse.Value = HtmlUtility.UrlEncode(helper.generateSAMLRequest());
             //Set Form Action
             this.frmSSO.Action = idpUrl;
             

@@ -49,7 +49,7 @@ function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
         $Row.append($Cell);
         $Container.append($Row);
     }
-
+    AddLoadingIndicator($Container, UID);
   
     //Log in screen if needed
 
@@ -69,8 +69,16 @@ function ShowLoadingImage() {
 
 
 }
+function AddLoadingIndicator($Container, UID) {
+    var loadIndicator = "loadIndicator_" + UID;
+    var loadingDiv = new $("<div id=\"" + loadIndicator + "\" class=\"loading-indicator\"></div>").text("Report loading...");
+    $Container.append(loadingDiv);
 
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
+function RemoveLoadingIndicator(UID) {
+    var loadIndicatorID = "loadIndicator_" + UID;
+    var className = $("#" + loadIndicatorID).remove();
+}
 
     if (OldPage != null)
         if (OldPage.$Container != null)
@@ -90,7 +98,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         PageNumber: NewPageNum
     })
     .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); })
-    .fail(function () { console.log("error"); })
+    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS.UID); })
 
 }
 function SetPage(RS,NewPageNum,OldPage) {    

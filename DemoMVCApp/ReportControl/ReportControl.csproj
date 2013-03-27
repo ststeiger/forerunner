@@ -232,7 +232,7 @@
     </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
+    <ProjectReference Include="..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
       <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
       <Name>Jayrock.Json</Name>
     </ProjectReference>

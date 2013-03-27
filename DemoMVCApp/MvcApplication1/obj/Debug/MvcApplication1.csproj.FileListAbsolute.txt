@@ -34,3 +34,39 @@ C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\MvcApplicat
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\MvcApplication1\bin\ReportControl.pdb
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\MvcApplication1\bin\Jayrock.Json.dll
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\MvcApplication1\bin\Jayrock.Json.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\MvcApplication1.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\MvcApplication1.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Antlr3.Runtime.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\EntityFramework.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Newtonsoft.Json.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\ReportControl.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Net.Http.Formatting.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Helpers.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Http.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Http.WebHost.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Mvc.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Optimization.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Providers.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Razor.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.Razor.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\WebGrease.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Jayrock.Json.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\ReportControl.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\EntityFramework.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Newtonsoft.Json.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Net.Http.Formatting.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Helpers.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Http.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Http.WebHost.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Mvc.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.Razor.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\System.Web.WebPages.Razor.xml
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\bin\Jayrock.Json.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\obj\Debug\MvcApplication1.csprojResolveAssemblyReference.cache
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\obj\Debug\MvcApplication1.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\MvcApplication1\obj\Debug\MvcApplication1.pdb

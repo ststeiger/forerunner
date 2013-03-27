@@ -620,10 +620,14 @@ namespace ReportControl
             //BodyArea
             w.WriteMember("BodyElements");
             w.WriteStartArray();
-            while (ReadByte() == 0x14)
+            while (InspectByte() == 0x14)
             {
-                if (ReadByte() == 0x06)
+                //Advance over the the 0x14
+                Seek(1);
+                if (InspectByte() == 0x06)
                 {
+                    //Advance over the the 0x06
+                    Seek(1);
                     //w.WriteStartObject();
                     WriteJSONElements();
                     //w.WriteEndObject();
@@ -631,18 +635,21 @@ namespace ReportControl
                     WriteJSONReportItems();
 
                     //Measurments
+                    w.WriteStartObject();
+                    w.WriteMember("Type");
+                    w.WriteString("Measurments");
                     WriteJSONMeasurments();
+                    w.WriteEndObject();
                 }
                 else
                     ThrowParseError();
             }
-           
 
+            w.WriteEndArray();
             //Report ElementEnd
             WriteJSONReportElementEnd();
             w.WriteEndObject();
-            w.WriteEndArray();
-            Seek(-1);
+                     
             return true;
 
          }
@@ -908,11 +915,6 @@ namespace ReportControl
                  ThrowParseError();
          }
 
-         public void WriteJSONActionImageMap()
-         {
-
-         }
-
          public void WriteJSONActionInfoContent()
          {
              if (ReadByte() == 0x02)
@@ -958,9 +960,8 @@ namespace ReportControl
 
          public void WriteJSONMeasurments()
          {
-             if (ReadByte() != 0x10)
-                 // THis must be a Measurment Property
-                 ThrowParseError();
+             if (ReadByte() != 0x10)                 
+                 ThrowParseError();  //This should never happen
 
              w.WriteMember("Measurments");
              w.WriteStartObject();
@@ -1051,9 +1052,6 @@ namespace ReportControl
              while (WriteJSONReportItem());             
              
              w.WriteEndArray();
-
-             //Reset Object since this is the end of the array
-             Seek(-1);
              return true;             
              
          }
@@ -1061,7 +1059,7 @@ namespace ReportControl
          public Boolean WriteJSONReportItem(Boolean CheckOnly = false)
          {
 
-             switch (ReadByte())
+             switch (InspectByte())
              {
                  case 0x08:
                      //Line
@@ -1083,17 +1081,19 @@ namespace ReportControl
                      //Rectangle
                      if (!CheckOnly) WriteJSONRectangle();
                      break;
-                 default:
-                     if (CheckOnly) Seek(-1);
+                 default:                     
                      return false;
-             }
-             if (CheckOnly) Seek(-1);
+             }             
              return true;
          }
 
 
          public void WriteJSONRectangle()
          {
+             if (ReadByte() != 0x0A)
+                 // THis must be a Measurment Property
+                 ThrowParseError();
+
              w.WriteStartObject();
              w.WriteMember("Type");
              w.WriteString("Rectangle");
@@ -1105,6 +1105,7 @@ namespace ReportControl
              w.WriteMember("Content");
              w.WriteStartArray();
              while (WriteJSONReportItem());
+             w.WriteEndArray();
 
              WriteJSONMeasurments();
 
@@ -1114,6 +1115,9 @@ namespace ReportControl
          }
          public void WriteJSONTablix()
          {
+             if (ReadByte() != 0x0D)
+                 // THis must be a Measurment Property
+                 ThrowParseError();     
              
              w.WriteStartObject();
              w.WriteMember("Type");
@@ -1170,8 +1174,13 @@ namespace ReportControl
                  prop.Add("TablixRowMembersDef", "Object", 0x0E, this.WriteJSONTablixRowMemeber);
                  prop.Add("TablixColMembersDef", "Object", 0x0F, this.WriteJSONTablixColMemeber);
                  prop.Write(this,0x08);
-
-
+                 
+                 //We are now Tablix Rows 
+                 Seek(-1);
+                 LoopObjectArray("TablixRows", 0x08, this.WriteJSONTablixRow);                 
+                 if (ReadByte() != 0xFF)
+                     //THis should never happen
+                     ThrowParseError();            
              }
              else
                  //This should never happen
@@ -1182,51 +1191,164 @@ namespace ReportControl
 
          }
 
+         public Boolean WriteJSONTablixRow()
+         {
+             RPLProperties prop;
+             while (InspectByte() == 0x0A || InspectByte() == 0x0B || InspectByte() == 0x0C || InspectByte() == 0x09)
+             {
+                 switch (InspectByte())
+                 {
+                     case 0x0A:
+                         //Corner     
+                         w.WriteStartObject();
+                         w.WriteMember("Type");
+                         w.WriteString("Corner");
+                         prop = new RPLProperties(0x0A);
+                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("ColSpan", "Int32", 0x05);
+                         prop.Add("RowSpan", "Int32", 0x06);
+                         prop.Add("ColumnIndex", "Int32", 0x08);
+                         prop.Add("RowIndex", "Int32", 0x09);
+                         prop.Add("CellItemState", "Byte", 0x0D);
+                         prop.Add("ContentTop", "Single", 0x00);
+                         prop.Add("ContentLeft", "Single", 0x01);
+                         prop.Add("ContentWidth", "Single", 0x02);
+                         prop.Add("ContentHeight", "Single", 0x03);
+                         prop.Write(this);
+                         w.WriteEndObject();
+                         break;
+                     case 0x0B:
+                         //TablixColumnHeader   
+                         w.WriteStartObject();
+                         w.WriteMember("Type");
+                         w.WriteString("ColumnHeader");
+                         prop = new RPLProperties(0x0B);
+                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("ColSpan", "Int32", 0x05);
+                         prop.Add("RowSpan", "Int32", 0x06);
+                         prop.Add("ColumnIndex", "Int32", 0x08);
+                         prop.Add("RowIndex", "Int32", 0x09);
+                         prop.Add("CellItemState", "Byte", 0x0D);
+                         prop.Add("ContentTop", "Single", 0x00);
+                         prop.Add("ContentLeft", "Single", 0x01);
+                         prop.Add("ContentWidth", "Single", 0x02);
+                         prop.Add("ContentHeight", "Single", 0x03);
+
+                         prop.Add("DefIndex", "Int32", 0x07);
+                         prop.Add("GroupLabel", "String", 0x0A);
+                         prop.Add("UniqueName", "String", 0x0B);
+                         prop.Add("State", "Byte", 0x0C);
+                         prop.Add("RecursiveToggleLevel", "Int32", 0x0E);
+
+                         prop.Write(this);
+                         w.WriteEndObject();
+
+                         break;
+                     case 0x0C:
+                         //TablixRowHeader         
+                         w.WriteStartObject();
+                         w.WriteMember("Type");
+                         w.WriteString("RowHeader");
+                         prop = new RPLProperties(0x0C);
+                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("ColSpan", "Int32", 0x05);
+                         prop.Add("RowSpan", "Int32", 0x06);
+                         prop.Add("ColumnIndex", "Int32", 0x08);
+                         prop.Add("RowIndex", "Int32", 0x09);
+                         prop.Add("CellItemState", "Byte", 0x0D);
+                         prop.Add("ContentTop", "Single", 0x00);
+                         prop.Add("ContentLeft", "Single", 0x01);
+                         prop.Add("ContentWidth", "Single", 0x02);
+                         prop.Add("ContentHeight", "Single", 0x03);
+
+                         prop.Add("DefIndex", "Int32", 0x07);
+                         prop.Add("GroupLabel", "String", 0x0A);
+                         prop.Add("UniqueName", "String", 0x0B);
+                         prop.Add("State", "Byte", 0x0C);
+                         prop.Add("RecursiveToggleLevel", "Int32", 0x0E);
+
+                         prop.Write(this);
+                         w.WriteEndObject();
+
+                         break;
+                     case 0x09:
+                         //Tablix Body Cell      
+                         Seek(1);
+                         w.WriteStartObject();
+                         w.WriteMember("Type");
+                         w.WriteString("BodyRowCells");
+                         w.WriteMember("OffSet");
+                         w.WriteNumber(ReadInt64());
+                         w.WriteEndObject();
+                         break;
+                     default:
+                         ThrowParseError();
+                         break;
+                 }
+
+             }
+             if (ReadByte() != 0xFF)
+                 //THis should never happen
+                 ThrowParseError();
+             return true;
+         }
+
          public Boolean WriteJSONTablixColMemeber()
          {
-             int Count;
-             RPLProperties prop;
+             int Count;             
+             if (ReadByte() != 0x0F)
+                 //THis should never happen
+                 ThrowParseError();
 
              w.WriteMember("ColMemberDefCount");
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("ColMemberDefs");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
-             {
-                 w.WriteStartObject();
-                 prop = new RPLProperties(0x10);
-                 prop.Add("DefinitionPath", "String", 0x00);
-                 prop.Add("Level", "Int32", 0x01);
-                 prop.Add("MemberCellIndex", "Int32", 0x02);
-                 prop.Add("MemberDefState", "Byte", 0x03);
-                 w.WriteEndObject();
-             }
+                 WriteJSONMemberDefs();
              w.WriteEndArray();
 
              return true;
          }
 
+         public void WriteJSONMemberDefs()
+         {
+             RPLProperties prop;
+
+             if (ReadByte() != 0x10)
+                 //This should never happen
+                 ThrowParseError();
+
+             w.WriteStartObject();
+            
+            prop = new RPLProperties(0xFF);
+            prop.Add("DefinitionPath", "String", 0x00);
+            prop.Add("Level", "Int32", 0x01);
+            prop.Add("MemberCellIndex", "Int32", 0x02);
+            prop.Add("MemberDefState", "Byte", 0x03);
+            prop.Write(this);            
+            w.WriteEndObject();
+
+         }
          public Boolean WriteJSONTablixRowMemeber()
          {
              int Count;
              RPLProperties prop;
 
+             if (ReadByte() != 0x0E)
+                 //THis should never happen
+                 ThrowParseError();
+
              w.WriteMember("RowMemberDefCount");
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("RowMemeberDefs");
              w.WriteStartArray();
-             for (int i = 0; i < Count; i++)
-             {
-                 w.WriteStartObject();
-                 prop = new RPLProperties(0x10);
-                 prop.Add("DefinitionPath", "String", 0x00);
-                 prop.Add("Level", "Int32", 0x01);
-                 prop.Add("MemberCellIndex", "Int32", 0x02);
-                 prop.Add("MemberDefState", "Byte", 0x03);
-                 w.WriteEndObject();
-             }
+             for (int i = 0; i < Count; i++)                        
+                 WriteJSONMemberDefs();             
              w.WriteEndArray();
 
              return true;
@@ -1234,10 +1356,16 @@ namespace ReportControl
          public Boolean WriteJSONColumnWidths()
          {
              int Count;
+
+             if (ReadByte() != 0x04)
+                 //THis should never happen
+                 ThrowParseError();
+
              w.WriteMember("ColumnCount");
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("ColumnWidths");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -1255,19 +1383,23 @@ namespace ReportControl
          public Boolean WriteJSONRowHeights()
          {
              int Count;
+
+             if (ReadByte() != 0x05)
+                 //THis should never happen
+                 ThrowParseError();
+
              w.WriteMember("RowCount");
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("RowHeights");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
                  w.WriteStartObject();
                  w.WriteMember("Height");
                  w.WriteNumber(ReadSingle());
-                 w.WriteMember("FixRows1");
-                 w.WriteNumber(ReadByte());
-                 w.WriteMember("FixRows2");
+                 w.WriteMember("FixRows");
                  w.WriteNumber(ReadByte());
                  w.WriteEndObject();
              }
@@ -1299,6 +1431,8 @@ namespace ReportControl
          }
          public void WriteJSONRichText()
          {
+             if (ReadByte() != 0x07)              
+                 ThrowParseError();  //This should never happen
 
              w.WriteStartObject();
              w.WriteMember("Type");
@@ -1379,6 +1513,10 @@ namespace ReportControl
 
          public void WriteJSONImage()
          {
+             if (ReadByte() != 0x09)
+                 ThrowParseError();  //This should never happen
+
+
              w.WriteStartObject();
              w.WriteMember("Elements");
              WriteJSONElements();
@@ -1390,6 +1528,10 @@ namespace ReportControl
 
          public void WriteJSONLine()
          {
+             if (ReadByte() != 0x08)
+                 ThrowParseError();  //This should never happen
+
+
              RPLProperties prop = new RPLProperties(0x08);
 
              prop.Add("UniqueName", "String", 0x00);

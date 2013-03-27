@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "About";
+}
+
+<h2>About</h2>
+
+<table>
+    <tr>
+        <td>Report Name</td>
+        <td>Report</td>
+    </tr>
+    <tr>
+        <td>Sales By Sales Person</td>
+        <td>@Html.Partial("PartialReport")</td>
+    </tr>
+</table>
+
+
+<ul data-role="listview" data-inset="true">
+    <li data-role="list-divider">Navigation</li>
+    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+</ul>

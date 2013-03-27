@@ -1,0 +1,1631 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.IO;
+using System.Web.Services;
+using ReportControl.RSExec;
+using System.Diagnostics;
+using System.Net;
+using Jayrock.Json;
+
+namespace ReportControl
+{
+    public class Report
+    {
+        public String ReportServerURL;
+
+        public Report(String RepURL)
+        {
+            ReportServerURL = RepURL;
+        }
+
+        public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
+        {
+            ReportExecutionService rs = new ReportExecutionService();
+            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+            NetworkCredential myCred = new NetworkCredential("jason", "Shadow33", "ForerunnerWin7");
+            rs.Credentials = myCred;
+
+            //rs.Url = "http://192.168.1.27/reportserver/ReportExecution2005.asmx";
+
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+            // Render arguments
+            byte[] result = null;
+            //string reportPath = "AdventureWorks 2008R2/Sales By Sales Person";
+            string format = "HTML4.0"; //"HTML4.0"
+            string historyID = null;
+
+            //Device Info
+            string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar><HTMLFragment>True</HTMLFragment>";
+            //Page number   
+            devInfo += @"<Section>1</Section>";
+            //Imgage root                
+            devInfo += @"<StreamRoot>../api/Report/GetImage/</StreamRoot>";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
+
+            devInfo = "";
+
+
+            DataSourceCredentials[] credentials = null;
+            string showHideToggle = null;
+            string encoding;
+
+            string extension;
+            Warning[] warnings = null;
+            ParameterValue[] reportHistoryParameters = null;
+            string[] streamIDs = null;
+
+            ExecutionInfo execInfo = new ExecutionInfo();
+            ExecutionHeader execHeader = new ExecutionHeader();
+
+            rs.ExecutionHeaderValue = execHeader;
+
+            //execInfo = rs.LoadReport(reportPath, historyID);
+
+            //rs.SetExecutionParameters(parameters, "en-us");
+            rs.ExecutionHeaderValue.ExecutionID = SessionID;
+
+            Console.WriteLine("SessionID: {0}", rs.ExecutionHeaderValue.ExecutionID);
+
+
+            try
+            {
+                result = rs.RenderStream(format, ImageID, devInfo, out encoding, out mimeType);
+                return result;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                mimeType = "";
+                return null;
+            }
+
+        }
+
+        public string GetReport(string reportPath)
+        {
+            ReportExecutionService rs = new ReportExecutionService();
+            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+            NetworkCredential myCred = new NetworkCredential("jason", "Shadow33", "ForerunnerWin7");
+            rs.Credentials = myCred;
+
+            //rs.Url = "http://192.168.1.27/reportserver/ReportExecution2005.asmx";
+
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+            // Render arguments
+            byte[] result = null;
+            //string reportPath = "AdventureWorks 2008R2/Sales By Sales Person";
+            string format = "HTML4.0"; //"HTML4.0"
+            string historyID = null;
+
+
+
+            // Prepare report parameter.
+            //ParameterValue[] parameters = new ParameterValue[3];
+            //parameters[0] = new ParameterValue();
+            //parameters[0].Name = "EmpID";
+            //parameters[0].Value = "288";
+            //parameters[1] = new ParameterValue();
+            //parameters[1].Name = "ReportMonth";
+            //parameters[1].Value = "6"; // June
+            //parameters[2] = new ParameterValue();
+            //parameters[2].Name = "ReportYear";
+            //parameters[2].Value = "2004";
+
+            DataSourceCredentials[] credentials = null;
+            string showHideToggle = null;
+            string encoding;
+            string mimeType;
+            string extension;
+            Warning[] warnings = null;
+            ParameterValue[] reportHistoryParameters = null;
+            string[] streamIDs = null;
+
+            ExecutionInfo execInfo = new ExecutionInfo();
+            ExecutionHeader execHeader = new ExecutionHeader();
+
+            rs.ExecutionHeaderValue = execHeader;
+
+            execInfo = rs.LoadReport(reportPath, historyID);
+
+            //rs.SetExecutionParameters(parameters, "en-us");
+            String SessionId = rs.ExecutionHeaderValue.ExecutionID;
+
+            //Device Info
+            string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar><HTMLFragment>true</HTMLFragment><StyleStream>false</StyleStream>";
+            //Page number   
+            devInfo += @"<Section>1</Section>";
+
+            //ReplacementRoot
+            devInfo += @"<ReplacementRoot>/api/Report/Action/?RepServer=" + ReportServerURL + "&amp;SessionID=" + SessionId + "&amp;ActionID=</ReplacementRoot>";
+
+            //Imgage root 
+            devInfo += @"<StreamRoot>/api/Report/GetImage/?RepServer=" + ReportServerURL + "&amp;SessionID=" + SessionId + "&amp;ImageID=</StreamRoot>";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
+
+            Console.WriteLine("SessionID: {0}", rs.ExecutionHeaderValue.ExecutionID);
+
+
+            try
+            {
+                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                execInfo = rs.GetExecutionInfo();
+                Console.WriteLine("Execution date and time: {0}", execInfo.ExecutionDateTime);
+
+                UTF8Encoding enc = new UTF8Encoding();
+                string str = enc.GetString(result);
+                return str;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+
+
+
+
+        }
+
+        public string GetReportJson(string reportPath)
+        {
+            ReportExecutionService rs = new ReportExecutionService();
+            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+            NetworkCredential myCred = new NetworkCredential("jason", "Shadow33", "ForerunnerWin7");
+            rs.Credentials = myCred;
+
+            //rs.Url = "http://192.168.1.27/reportserver/ReportExecution2005.asmx";
+
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+            // Render arguments
+            byte[] result = null;
+            //string reportPath = "AdventureWorks 2008R2/Sales By Sales Person";
+            string format = "RPL"; //"HTML4.0"
+            string historyID = null;
+
+            // Prepare report parameter.
+            //ParameterValue[] parameters = new ParameterValue[3];
+            //parameters[0] = new ParameterValue();
+            //parameters[0].Name = "EmpID";
+            //parameters[0].Value = "288";
+            //parameters[1] = new ParameterValue();
+            //parameters[1].Name = "ReportMonth";
+            //parameters[1].Value = "6"; // June
+            //parameters[2] = new ParameterValue();
+            //parameters[2].Name = "ReportYear";
+            //parameters[2].Value = "2004";
+
+            DataSourceCredentials[] credentials = null;
+            string showHideToggle = null;
+            string encoding;
+            string mimeType;
+            string extension;
+            Warning[] warnings = null;
+            ParameterValue[] reportHistoryParameters = null;
+            string[] streamIDs = null;
+
+            ExecutionInfo execInfo = new ExecutionInfo();
+            ExecutionHeader execHeader = new ExecutionHeader();
+
+            rs.ExecutionHeaderValue = execHeader;
+
+            execInfo = rs.LoadReport(reportPath, historyID);
+
+            //rs.SetExecutionParameters(parameters, "en-us");
+            String SessionId = rs.ExecutionHeaderValue.ExecutionID;
+
+            
+
+            //Device Info
+            string devInfo = @"<DeviceInfo><ToggleItems>False</ToggleItems><MeasureItems>False</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><Toolbar>False</Toolbar>";
+            //Page number   
+            devInfo += @"<StartPage>1</StartPage><EndPage>1</EndPage><ImageConsolidation>False</ImageConsolidation>";
+
+            //ReplacementRoot
+            devInfo += @"<ReplacementRoot>/api/Report/Action/?RepServer=" + ReportServerURL + "&amp;SessionID=" + SessionId + "&amp;ActionID=</ReplacementRoot>";
+
+            //Imgage root 
+            devInfo += @"<StreamRoot>/api/Report/GetImage/?ImageID=</StreamRoot>";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
+
+            Console.WriteLine("SessionID: {0}", rs.ExecutionHeaderValue.ExecutionID);
+
+
+            try
+            {
+                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                execInfo = rs.GetExecutionInfo();
+                Console.WriteLine("Execution date and time: {0}", execInfo.ExecutionDateTime);
+
+                return ConvertRPLToJSON(result);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+
+
+
+
+        }
+
+        private string ConvertRPLToJSON(byte[] RPL)
+        {
+                
+            JsonWriter w = new JsonTextWriter();
+            RPLReader r = new RPLReader(RPL,w);
+           
+            //Read Report Object
+            //Report = RPLStamp Version reportStart ReportProperties *PageContent OffsetsArrayElement ReportElementEnd Version
+            w.WriteStartObject();
+            w.WriteMember("RPLStamp");
+            w.WriteString(r.ReadString());
+            
+            //Version
+            r.WriteJSONVersion();
+
+            //Report Start
+            if (r.ReadByte() == 0x00)
+            {
+                w.WriteMember("Report");
+                w.WriteStartObject();
+
+                //Report Porperties            
+                r.WriteJSONRepProp();
+
+                //Report Content
+                r.WriteReportContent();
+
+                //End Report
+                w.WriteEndObject();
+            }
+
+            //End RPL
+            w.WriteEndObject();
+            return w.ToString();
+
+        }
+
+    }
+
+    public class RPLDateTime
+    {
+        public int Type;
+        public Int64 MiliSec;
+
+    }
+
+    public class RPLProperties
+    {
+        public RPLProperty[] PropArray;
+        public byte RPLPropBagCode;
+        public int NumProp;
+        byte TypeCode = 0x00;
+
+        public class RPLProperty
+        {
+            public string Name;
+            public string DataType;
+            public byte RPLCode;
+            public Func<Boolean> ObjFunction;
+            public Func<Byte,Boolean> ObjFunction2;
+            
+        }
+
+        public RPLProperties(byte RPLCode)
+        {
+            RPLPropBagCode = RPLCode;
+            PropArray = new RPLProperty[50];
+            NumProp = 0;
+        }
+
+
+        public void Add(string pName, string pType, byte pCode, Func<Byte,Boolean> f)
+        {
+
+            //This is a Total Hack for OrigionalValue
+
+            if (NumProp == PropArray.GetUpperBound(0))
+                //Need to Grow, throuw for now
+                ThrowParseError();
+
+            PropArray[NumProp] = new RPLProperty();
+            PropArray[NumProp].Name = pName;
+            PropArray[NumProp].DataType = pType;
+            PropArray[NumProp].RPLCode = pCode;
+            PropArray[NumProp].ObjFunction2 = f;
+            NumProp++;
+        }
+
+        public void Add(string pName, string pType, byte pCode, Func<Boolean> f = null)
+        {
+            if (NumProp == PropArray.GetUpperBound(0))
+                //Need to Grow, throuw for now
+                ThrowParseError();
+
+            PropArray[NumProp] = new RPLProperty();
+            PropArray[NumProp].Name = pName;
+            PropArray[NumProp].DataType = pType;
+            PropArray[NumProp].RPLCode = pCode;
+            PropArray[NumProp].ObjFunction = f;
+            NumProp++;
+        } 
+        public void WriteMemeber(byte Code, RPLReader r)
+        {
+            int i;
+            JsonWriter w = r.w;
+            
+
+            for (i = 0; i < NumProp; i++)
+            {
+                if (PropArray[i].RPLCode == Code)
+                    break;
+            }
+
+            if (i < NumProp)
+            {
+                w.WriteMember(PropArray[i].Name);
+                switch (PropArray[i].DataType)
+                {
+                    case "Int32":
+                        w.WriteNumber(r.ReadInt32());
+                        break;
+                    case "Int64":
+                        w.WriteNumber(r.ReadInt64());
+                        break;
+                    case "Int16":
+                        w.WriteNumber(r.ReadInt16());
+                        break;
+                    case "String":
+                        w.WriteString(r.ReadString());
+                        break;                    
+                    case "Float":
+                        w.WriteNumber(r.ReadFloat());
+                        break;
+                    case "Single":
+                        w.WriteNumber(r.ReadSingle());
+                        break;
+                    case "Char":
+                        w.WriteString(r.ReadChar().ToString());
+                        break;
+                    case "DateTime":
+                        w.WriteNumber(r.ReadDateTime().MiliSec);
+                        //TODO Need to write datetime type
+                        break;
+                    case "Decimal":
+                        w.WriteNumber(r.ReadDecimal());
+                        break;
+                    case "Boolean":
+                        w.WriteBoolean(r.ReadBoolean());
+                        break;
+                    case "Byte":
+                        //This is a Total Hack for OrigionalValue
+                        //TypeCode is guarenteed to come  before OrigionalValue
+                        if (PropArray[i].Name == "TypeCode")
+                        {
+                            TypeCode = r.ReadByte();
+                            w.WriteNumber(TypeCode);
+                        }
+                        else
+                            w.WriteNumber(r.ReadByte());
+                        break;
+                    case "Object":
+                        //This is a Total Hack for OrigionalValue
+                        if (PropArray[i].Name == "OriginalValue")
+                            PropArray[i].ObjFunction2(TypeCode);                        
+                        else
+                        {
+                            w.WriteStartObject();
+                            //Step back a byte to re-read object type
+                            r.Seek(-1);
+                            PropArray[i].ObjFunction();
+                            w.WriteEndObject();
+                        }
+                        break;
+                    default:
+                        ThrowParseError();
+                        break;
+                }
+            }
+            else
+                ThrowParseError();
+
+        }
+
+        public void ThrowParseError()
+        {
+            //TODO Throw correct, this should not happen
+            throw new IndexOutOfRangeException();
+        }
+
+        public void Write(RPLReader r, Byte EndCode = 0xFF)
+        {
+            //If RPLPRopertyBagCode is 0xFF then there is no Object code just arbitrary properties
+            if (RPLPropBagCode == 0xFF)
+            {
+                byte isEnd = r.ReadByte();
+                while (isEnd != EndCode)
+                {
+                    WriteMemeber(isEnd, r);
+                    isEnd = r.ReadByte();
+                }
+            }
+            else if (r.ReadByte() == RPLPropBagCode)
+            {
+                byte isEnd = r.ReadByte();
+                while (isEnd != EndCode)
+                {
+                    WriteMemeber(isEnd, r);
+                    isEnd = r.ReadByte();
+                }
+            }
+            else
+                ThrowParseError();
+        }
+
+    }
+     public class RPLReader
+     {
+         private byte[] RPL;
+         private int Index;
+         public JsonWriter w;
+
+         public RPLReader(byte[] inArray,JsonWriter InWritter)
+         {
+             RPL = inArray;
+             Index = 0;
+             w = InWritter;
+         }
+
+         public void WriteReportContent()
+         {
+
+             Boolean ret;
+
+              if (ReadByte() == 0x13)
+              {
+
+                  w.WriteMember("PageContent");
+                  w.WriteStartObject();
+
+                  //PageLayout
+                  WriteJSONPageProp();
+     
+                  //Sections
+                  LoopObjectArray("Sections",0x15, this.WriteJSONSections);
+                  
+
+              }
+         }
+         public void WriteJSONVersion()
+         {
+             //Version
+             w.WriteMember("Version");
+             w.WriteStartObject();
+             w.WriteMember("Major");
+             w.WriteNumber(ReadByte());
+             w.WriteMember("Minor");
+             w.WriteNumber(ReadByte());
+             w.WriteMember("Build");
+             w.WriteNumber(ReadInt32());
+             w.WriteEndObject();
+             
+         }
+
+         public void WriteJSONArrayOffset()
+         {
+             int PageCount;
+             
+             if (ReadByte() == 0x12)
+             {
+
+                 w.WriteMember("ArrayOffset");
+                 w.WriteStartObject();
+
+                 w.WriteMember("Offset");
+                 w.WriteNumber(ReadInt64());
+                 w.WriteMember("Count");
+                 PageCount = ReadInt32();
+                 w.WriteNumber(PageCount);
+                 w.WriteMember("PageContent");
+                 w.WriteStartArray();
+                 for (int i = 1; i < PageCount; i++)
+                 {
+                     w.WriteNumber(ReadInt64());
+                 }
+                 w.WriteEndArray();
+                 w.WriteStartObject();
+             }
+         }
+
+         public void WriteJSONPageProp()
+         {
+             RPLProperties prop = new RPLProperties(0x03);
+
+             prop.Add("PageHeight", "Single", 0x10);
+             prop.Add("PageWidth", "Single", 0x11);
+             prop.Add("MarginTop", "Single", 0x12);
+             prop.Add("MarginLeft", "Single", 0x13);
+             prop.Add("MarginBottom", "Single", 0x14);
+             prop.Add("MarginRight", "Single", 0x15);
+             prop.Add("PageName", "String", 0x30);
+             prop.Add("PageStyle", "Object", 0x06, this.WriteJSONStyle);
+
+             prop.Write(this);
+
+             if (ReadByte() != 0xFF)
+                 ThrowParseError();
+
+
+         }
+
+         public void ThrowParseError()
+         {
+             //TODO Throw correct, this should not happen
+             throw new IndexOutOfRangeException();
+         }
+         public Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)
+         {
+             w.WriteMember(ArrayName);
+             w.WriteStartArray();
+              while (ReadByte() == Code)
+                 f();
+              w.WriteEndArray();
+
+             //Reset Object since this is the end of the array
+             Seek(-1);
+             return true;
+         }
+         public Boolean WriteJSONSections()
+         {
+            RPLProperties prop;
+             
+            w.WriteStartObject();
+                 
+            //Section Properties
+            if (InspectByte() == 0x16)
+            {
+                //Mixed Section
+                prop = new RPLProperties(0x16);
+                prop.Add("ID", "String", 0x00);
+                prop.Add("ColumnCount", "Int32", 0x01);
+                prop.Add("ColumnSpacing", "Single", 0x02);
+                prop.Write(this);
+            }
+            else if (InspectByte() == 0x15)
+            {
+                //SimpleSection Section
+                prop = new RPLProperties(0x16);
+                prop.Add("ID", "String", 0x00);
+                prop.Add("ColumnCount", "Int32", 0x01);
+                prop.Add("ColumnSpacing", "Single", 0x02);
+                prop.Write(this);
+            }
+            else
+                ThrowParseError();
+
+            //BodyArea
+            w.WriteMember("BodyElements");
+            w.WriteStartArray();
+            while (ReadByte() == 0x14)
+            {
+                if (ReadByte() == 0x06)
+                {
+                    //w.WriteStartObject();
+                    WriteJSONElements();
+                    //w.WriteEndObject();
+                    //Report Items
+                    WriteJSONReportItems();
+
+                    //Measurments
+                    WriteJSONMeasurments();
+                }
+                else
+                    ThrowParseError();
+            }
+           
+
+            //Report ElementEnd
+            WriteJSONReportElementEnd();
+            w.WriteEndObject();
+            w.WriteEndArray();
+            Seek(-1);
+            return true;
+
+         }
+
+         public Boolean WriteJSONElements(byte ObjectType = 0x00)
+         {
+             // ObjectType is used to handle dublicate values
+             // 0x13 is Paragraph
+             //0x14 TextRun
+             
+
+             RPLProperties prop;
+            
+            if (ReadByte() != 0x0F)
+                // THis must be a Element Property
+                ThrowParseError();
+            if (InspectByte() == 0x00)
+            {
+                //w.WriteMember("Elements");
+                w.WriteStartObject();   
+                //Shared Properties
+                w.WriteMember("SharedElements");
+                w.WriteStartObject();         
+                prop = new RPLProperties(0x00);
+                prop.Add("ID", "String", 0x01);                   
+                if (ObjectType != 0x14) prop.Add("Lable", "String", 0x03);               
+                else prop.Add("Lable", "String", 0x08);
+                prop.Add("Name", "String", 0x02);
+                prop.Add("Bookmark", "String", 0x04);
+                if (ObjectType != 0x14) prop.Add("Tooltip", "String", 0x05);
+                else prop.Add("Tooltip", "String", 0x09);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                if (ObjectType != 0x13) prop.Add("ToggleItem", "String", 0x08);                     
+                prop.Add("Slant", "Byte", 0x18);
+                prop.Add("CanGrow", "Boolean", 0x19);
+                prop.Add("CanShrink", "Boolean", 0x1A);
+                prop.Add( "CanSort", "Boolean", 0x1D);
+                prop.Add( "Value", "String", 0x1B);
+                if (ObjectType != 0x13) prop.Add("Value", "String", 0x0A);
+                prop.Add( "Formula", "String", 0x1F);
+                if (ObjectType != 0x13) prop.Add("Formula", "String", 0x0C);
+                prop.Add( "IsToggleParent", "Boolean", 0x20);
+                prop.Add( "TypeCode", "Byte", 0x21);
+                prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
+                prop.Add( "IsSimple", "Boolean", 0x23);
+                prop.Add( "Sizing", "Byte", 0x29);
+                prop.Add( "LinkToChild", "String", 0x2B);
+                prop.Add( "PrintOnFirstPage", "Boolean", 0x2C);
+                prop.Add( "PrintBetweenSections", "Boolean", 0x2F);
+                prop.Add("FormattedValueExpressionBased", "Boolean", 0x2D);
+                prop.Add("ReportName", "String", 0x0F);
+                prop.Add("Markup/ListStyle", "Byte", 0x07);                     
+                prop.Add("ListLevel", "Int32", 0x08); 
+                prop.Add("LeftIndent", "String", 0x09);
+                prop.Add("RightIndent", "String", 0x0A);
+                prop.Add("HangingIndent", "String", 0x0B);
+                prop.Add("SpaceBefore", "String", 0x0C); 
+                prop.Add("SpaceAfter", "String", 0x0D);                   
+                prop.Write(this);
+                w.WriteEndObject();
+
+                //NonShared Properties
+                w.WriteMember("NonSharedElements");
+                w.WriteStartObject();         
+                prop = new RPLProperties(0x01);
+                prop.Add("Lable", "String", 0x03);
+                if (ObjectType == 0x13 || ObjectType == 0x14) prop.Add("UniqueName", "String", 0x04);
+                else prop.Add("UniqueName", "String", 0x00);                
+                prop.Add("Bookmark", "String", 0x04);
+                prop.Add("Tooltip", "String", 0x05);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                if (ObjectType != 0x14) prop.Add("ActionInfo", "Object", 0x07, this.WriteJSONActionInfo); 
+                else prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
+                if (ObjectType != 0x14 ) prop.Add("Value", "String", 0x1B);
+                else prop.Add( "Value", "String", 0x0A);
+                prop.Add("ToggleState", "Boolean", 0x1C);
+                prop.Add("SortState", "Byte", 0x1E);
+                prop.Add( "IsToggleParent", "Boolean", 0x20);
+                prop.Add( "TypeCode", "Byte", 0x21);
+                prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
+                if (ObjectType != 0x14 ) prop.Add("ProcessedWithError", "Boolean", 0x2E);
+                else prop.Add( "ProcessedWithError", "Boolean", 0x0D);
+                prop.Add( "ContentOffset", "Single", 0x25);
+                prop.Add( "ContentHeight", "Single", 0x03);
+                prop.Add( "ContentHeight", "Single", 0x24);
+                prop.Add("ActionImageMapAreas", "Object", 0x26, this.WriteJSONActionImageMapAreas); 
+                prop.Add("DynamicImageData", "Object", 0x27, this.WriteJSONImageData);
+                prop.Add( "StreamName", "String", 0x28);
+                prop.Add("ImageDataProperties", "Object", 0x2A, this.WriteJSONImageDataProperties); 
+                prop.Add( "Language", "String", 0x0B); 
+                prop.Add( "Markup/ListStyle", "Boolean", 0x2C);
+                prop.Add( "ListLevel", "Int32", 0x08);
+                prop.Add( "LeftIndent", "String", 0x09);
+                prop.Add( "RightIndent", "String", 0x0A); 
+                prop.Add( "HangingIndent", "String", 0x0B);
+                prop.Add( "SpaceBefore", "String", 0x0C);
+                prop.Add( "SpaceAfter", "String", 0x0D);  
+                prop.Add( "ParagraphNumber", "Int32", 0x0E);
+                prop.Add( "FirstLine", "Boolean", 0x0F);
+                prop.Add( "ContentTop", "Single", 0x00); 
+                prop.Add( "ContentLeft", "Single", 0x01);
+                prop.Add( "ContentWidth", "Single", 0x02);
+                prop.Write(this);
+                w.WriteEndObject();
+                w.WriteEndObject();
+
+                if (ReadByte() != 0xFF)
+                //This should never happen
+                ThrowParseError();
+
+               
+            }
+            else if (InspectByte() == 0x02)
+            {
+                w.WriteMember("Offset");
+                w.WriteNumber(ReadInt64());
+            }
+             
+             return true;
+         
+         }
+
+         public Boolean WriteJSONImageDataProperties()
+         {
+             RPLProperties prop;
+
+             if (ReadByte() != 0x2A)
+                 //This should never happen
+                 ThrowParseError();
+
+             switch (ReadByte())
+             {
+                 case 0x02:
+                     //UseShared
+                     w.WriteMember("SharedOffset");
+                     w.WriteNumber(ReadInt64());
+                     break;
+                 case 0x00:
+                     //Inline
+                     Seek(-1);
+                     prop = new RPLProperties(0x00);
+                     prop.Add("ImageMimeType", "String", 0x00);
+                     prop.Add("ImageName", "String", 0x01);
+                     prop.Add("Width", "Int32", 0x03);
+                     prop.Add("Height", "Int32", 0x04);
+                     prop.Add("HorizontalResolution", "Single", 0x05);
+                     prop.Add("VerticalResolution", "Single", 0x06);
+                     prop.Add("RawFormat", "Byte", 0x07);
+                     prop.Add("ImageData", "Object", 0x02,this.WriteJSONImageData);
+                     prop.Write(this);
+                     break;
+                 case 0x01:
+                     //NonShared
+                     Seek(-1);
+                     prop = new RPLProperties(0x01);
+                     prop.Add("ImageMimeType", "String", 0x00);
+                     prop.Add("ImageName", "String", 0x01);
+                     prop.Add("Width", "Int32", 0x03);
+                     prop.Add("Height", "Int32", 0x04);
+                     prop.Add("HorizontalResolution", "Single", 0x05);
+                     prop.Add("VerticalResolution", "Single", 0x06);
+                     prop.Add("RawFormat", "Byte", 0x07);
+                     prop.Add("ImageData", "Object", 0x02,this.WriteJSONImageData);
+                     prop.Add("ImageConsolidationOffsets", "Object", 0x31,this.WriteJSONImageConsolidationOffsets);  //TODO:  This is a property that changes per version
+                     prop.Write(this);
+                     break;
+
+
+             }
+
+             return true;
+         }
+
+         public Boolean WriteJSONImageConsolidationOffsets()
+         {
+             w.WriteMember("Left");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Top");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Width");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Height");
+             w.WriteNumber(ReadInt32());
+
+             return true;
+         }
+         public Boolean WriteJSONImageData()
+         {
+             int Count;
+             w.WriteMember("Count");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteMember("ImageContent");
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+                 w.WriteNumber(ReadByte());
+             w.WriteEndArray();
+             return true;
+         }
+
+         public Boolean WriteJSONActionImageMapAreas()
+         {
+             int Count;           
+             w.WriteMember("Count");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteMember("ActionImageMap");
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 WriteJSONActionInfoContent();
+                 WriteJSONImageMapAreas();
+                 w.WriteEndObject();
+             }
+
+             w.WriteEndArray();
+
+             return true;
+         }
+
+         public void WriteJSONImageMapAreas()
+         {
+             int Count;
+             int CorCount;
+             RPLProperties prop;
+
+             if (ReadByte() == 0x0A)
+             {
+                 w.WriteMember("MapAreaCount");
+                 Count = ReadInt32();
+                 w.WriteNumber(Count);
+
+                 w.WriteMember("ImageMapArea");
+                 w.WriteStartArray();
+                 for (int i = 0; i < Count; i++)
+                 {
+                     w.WriteStartObject();
+                     w.WriteMember("ShapeType");
+                     w.WriteNumber(ReadByte());
+                     w.WriteMember("CoorCount");
+                     CorCount = ReadInt32();
+                     w.WriteNumber(CorCount);
+                     w.WriteMember("Coordinates");
+                     w.WriteStartArray();
+                     for (int j = 0; j < CorCount; CorCount++)                     
+                         w.WriteNumber(ReadFloat());
+                     w.WriteEndArray();
+                     if (ReadByte() != 0xFF)
+                     {
+                         //This must be a tooltip
+                         w.WriteMember("Tooltip");
+                         w.WriteString(ReadString());
+                     }
+                     w.WriteEndObject();
+                 }
+                 w.WriteEndArray();
+             }
+             else
+                 //This cannot happen
+                 ThrowParseError();
+         }
+
+         public void WriteJSONActionImageMap()
+         {
+
+         }
+
+         public void WriteJSONActionInfoContent()
+         {
+             if (ReadByte() == 0x02)
+                 WriteJSONActions();
+             else
+                   //This cannot happen
+                 ThrowParseError();
+
+         }
+
+         public Boolean WriteJSONActionInfo()
+         {
+             LoopObjectArray("Actions", 0x02, this.WriteJSONActions);
+             return true;
+         }
+
+         public Boolean WriteJSONActions()
+         {
+             int Count;
+             RPLProperties prop;
+             w.WriteMember("Count");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 prop = new RPLProperties(0x03);
+                 prop.Add("Label", "String", 0x04);
+                 prop.Add("HyperLink", "String", 0x06);
+                 prop.Add("BookmarkLink", "String", 0x07);
+                 prop.Add("DrillthroughId", "String", 0x08);
+                 prop.Add("DrillthroughUrl", "String", 0x09);
+                 prop.Write(this);
+                 w.WriteEndObject();
+             }
+             
+             w.WriteEndArray();
+
+             return true;
+         }
+
+         public void WriteJSONMeasurments()
+         {
+             if (ReadByte() != 0x10)
+                 // THis must be a Measurment Property
+                 ThrowParseError();
+
+             w.WriteMember("Measurments");
+             w.WriteStartObject();
+             w.WriteMember("Offset");
+             w.WriteNumber(ReadInt64());
+             w.WriteMember("Count");
+             int Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             for (int i = 0; i < Count; i++)
+                 WriteJSONMeasurment();
+
+             w.WriteEndObject();
+         }
+
+         public void WriteJSONMeasurment()
+         {
+
+             w.WriteMember("Left");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Top");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Width");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("Height");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("zIndex");
+             w.WriteNumber(ReadInt32());
+             w.WriteMember("State");
+             w.WriteNumber(ReadByte());
+             w.WriteMember("EndOffset");
+             w.WriteNumber(ReadInt64());
+           
+         }
+
+
+         public Boolean WriteJSONOrigionalValue(byte TypeCode)
+         {
+
+             switch (TypeCode)
+             {
+                 case 0x03:
+                     w.WriteBoolean(ReadBoolean());
+                     break;
+                 case 0x04:
+                     w.WriteString(ReadChar().ToString());
+                     break;
+                 case 0x06:
+                     w.WriteNumber(ReadByte());
+                     break;
+                 case 0x07:
+                     w.WriteNumber(ReadInt16());
+                     break;
+                 case 0x09:
+                     w.WriteNumber(ReadInt32());
+                     break;
+                 case 0x0B:
+                     w.WriteNumber(ReadInt64());
+                     break;
+                 case 0x0C:
+                     w.WriteNumber(ReadSingle());
+                     break;
+                 case 0x0D:
+                     w.WriteNumber(ReadFloat());
+                     break;
+                 case 0x0E:
+                     w.WriteNumber(ReadDecimal());
+                     break;
+                 case 0x0F:
+                      w.WriteNumber(ReadDateTime().MiliSec);
+                      //TODO Need to write datetime type                        
+                     break;
+                 case 0x11:
+                 default:
+                     w.WriteString(ReadString());
+                     break;
+             }
+
+             return true;
+         }
+
+         public Boolean WriteJSONReportItems()
+         {
+             
+             //w.WriteMember("ReportItems");
+             w.WriteStartArray();
+
+             while (WriteJSONReportItem());             
+             
+             w.WriteEndArray();
+
+             //Reset Object since this is the end of the array
+             Seek(-1);
+             return true;             
+             
+         }
+
+         public Boolean WriteJSONReportItem(Boolean CheckOnly = false)
+         {
+
+             switch (ReadByte())
+             {
+                 case 0x08:
+                     //Line
+                     if (!CheckOnly) WriteJSONLine();
+                     break;
+                 case 0x07:
+                     //RichText
+                     if (!CheckOnly) WriteJSONRichText();
+                     break;
+                 case 0x09:
+                     //Image
+                     if (!CheckOnly) WriteJSONImage();
+                     break;
+                 case 0x0D:
+                     //Tablix
+                     if (!CheckOnly) WriteJSONTablix();
+                     break;
+                 case 0x0A:
+                     //Rectangle
+                     if (!CheckOnly) WriteJSONRectangle();
+                     break;
+                 default:
+                     if (CheckOnly) Seek(-1);
+                     return false;
+             }
+             if (CheckOnly) Seek(-1);
+             return true;
+         }
+
+
+         public void WriteJSONRectangle()
+         {
+             w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("Rectangle");
+
+             //Properties
+             w.WriteMember("Elements");
+             WriteJSONElements();
+
+             w.WriteMember("Content");
+             w.WriteStartArray();
+             while (WriteJSONReportItem());
+
+             WriteJSONMeasurments();
+
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
+             
+         }
+         public void WriteJSONTablix()
+         {
+             
+             w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("Tablix");
+
+             //Properties
+             w.WriteMember("Elements");
+             WriteJSONElements();
+            
+             //Tablix Content
+             //Either Row or ReportItem
+             w.WriteMember("Content");
+             w.WriteStartArray();
+             while (InspectByte() == 0x12 || WriteJSONReportItem(true))
+             {                
+                 if (InspectByte() == 0x12)
+                 {
+                     //Tablix Row
+                     ReadByte();  //Read the Token
+                     w.WriteStartObject();
+                     w.WriteMember("Type");
+                     w.WriteString("BodyRow");
+                     w.WriteMember("RowIndex");
+                     w.WriteNumber(ReadInt32());
+                     //WriteCells
+                     LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
+                     w.WriteEndObject();
+                     if (ReadByte() != 0xFF)
+                         //This should never happen
+                         ThrowParseError();
+                 }
+                 else
+                      WriteJSONReportItem();
+                     
+             }
+          
+             w.WriteEndArray();
+             
+             //Tablix Structure
+             if (ReadByte() == 0x11)
+             {
+                 w.WriteMember("TablixOffset");
+                 w.WriteNumber(ReadInt64());
+
+                 RPLProperties prop = new RPLProperties(0xFF);  //No Object Code, use special 0xFF                 
+                 prop.Add("ColumnHeaderRows", "Int32", 0x00);
+                 prop.Add("RowHeaderColumns", "Int32", 0x01);
+                 prop.Add("ColsBeforeRowHeader", "Int32", 0x02);
+                 prop.Add("LayoutDirection", "Byte", 0x03);
+                 prop.Add("ColumnsWidths", "Object", 0x04,this.WriteJSONColumnWidths);
+                 prop.Add("RowHeights", "Object", 0x05,this.WriteJSONRowHeights);
+                 prop.Add("ContentTop", "Singe", 0x06);
+                 prop.Add("ContentLeft", "Singe", 0x07);
+                 prop.Add("TablixRowMembersDef", "Object", 0x0E, this.WriteJSONTablixRowMemeber);
+                 prop.Add("TablixColMembersDef", "Object", 0x0F, this.WriteJSONTablixColMemeber);
+                 prop.Write(this,0x08);
+
+
+             }
+             else
+                 //This should never happen
+                 ThrowParseError();
+            
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
+
+         }
+
+         public Boolean WriteJSONTablixColMemeber()
+         {
+             int Count;
+             RPLProperties prop;
+
+             w.WriteMember("ColMemberDefCount");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 prop = new RPLProperties(0x10);
+                 prop.Add("DefinitionPath", "String", 0x00);
+                 prop.Add("Level", "Int32", 0x01);
+                 prop.Add("MemberCellIndex", "Int32", 0x02);
+                 prop.Add("MemberDefState", "Byte", 0x03);
+                 w.WriteEndObject();
+             }
+             w.WriteEndArray();
+
+             return true;
+         }
+
+         public Boolean WriteJSONTablixRowMemeber()
+         {
+             int Count;
+             RPLProperties prop;
+
+             w.WriteMember("RowMemberDefCount");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 prop = new RPLProperties(0x10);
+                 prop.Add("DefinitionPath", "String", 0x00);
+                 prop.Add("Level", "Int32", 0x01);
+                 prop.Add("MemberCellIndex", "Int32", 0x02);
+                 prop.Add("MemberDefState", "Byte", 0x03);
+                 w.WriteEndObject();
+             }
+             w.WriteEndArray();
+
+             return true;
+         }
+         public Boolean WriteJSONColumnWidths()
+         {
+             int Count;
+             w.WriteMember("ColumnCount");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 w.WriteMember("Width");
+                 w.WriteNumber(ReadSingle());
+                 w.WriteMember("FixColumn");
+                 w.WriteNumber(ReadByte());                 
+                 w.WriteEndObject();
+             }
+             w.WriteEndArray();
+
+             return true;
+         }
+         public Boolean WriteJSONRowHeights()
+         {
+             int Count;
+             w.WriteMember("RowCount");
+             Count = ReadInt32();
+             w.WriteNumber(Count);
+
+             w.WriteStartArray();
+             for (int i = 0; i < Count; i++)
+             {
+                 w.WriteStartObject();
+                 w.WriteMember("Height");
+                 w.WriteNumber(ReadSingle());
+                 w.WriteMember("FixRows1");
+                 w.WriteNumber(ReadByte());
+                 w.WriteMember("FixRows2");
+                 w.WriteNumber(ReadByte());
+                 w.WriteEndObject();
+             }
+             w.WriteEndArray();
+
+             return true;
+         }
+
+         public Boolean WriteJSONCells()
+         {
+             RPLProperties prop = new RPLProperties(0xFF);
+
+
+             w.WriteStartObject();
+             prop.Add("CellItemOffset", "Int64", 0x04);
+             prop.Add("ColSpan", "Int32", 0x05);
+             prop.Add("RowSpan", "Int32", 0x06);
+             prop.Add("ColumnIndex", "Int32", 0x08);
+             prop.Add("CellItemState", "Byte", 0x0D);
+             prop.Add("ContentTop", "Singe", 0x00);
+             prop.Add("ContentLeft", "Singe", 0x01);
+             prop.Add("ContentWidth", "String", 0x02);
+             prop.Add("ContentHeight", "Singe", 0x03);
+             prop.Write(this);
+
+             w.WriteEndObject();
+
+             return true;
+         }
+         public void WriteJSONRichText()
+         {
+
+             w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("RichTextBox");
+             
+             //Properties
+             w.WriteMember("Elements");
+             WriteJSONElements();
+             
+             //Paragraphs
+             while (InspectByte() == 0x14)
+             {
+                 w.WriteMember("Paragraphs");
+                 LoopObjectArray("TextRuns", 0x14, this.WriteJSONTextRun);
+                 WriteParagraph();
+             }
+             
+             //Paragraph Structure
+             if (ReadByte() == 0x12)
+             {
+                 
+                 w.WriteMember("TokenOffset");
+                 w.WriteNumber(ReadInt64());
+                 w.WriteMember("ParagraphCount");
+                 int ParCount = ReadInt32();
+                 w.WriteNumber(ParCount);
+                 w.WriteMember("ParagraphOffsets");
+                 w.WriteStartArray();
+                 for (int i = 0; i < ParCount; i++)
+                     w.WriteNumber(ReadInt64());
+                 w.WriteEndArray();
+                 if (ReadByte() != 0xFF)
+                     //THis should never happen
+                     ThrowParseError();
+             }
+             else
+                 //THis should never happen
+                 ThrowParseError();
+
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
+
+         }
+
+         public void WriteParagraph()
+         {
+             if (ReadByte() == 0x13)
+             {
+                 w.WriteMember("Elements");
+                 WriteJSONElements();
+
+                 //TextRuns
+                 w.WriteMember("TextRunCount");
+                 int Count = ReadInt32();
+                 w.WriteNumber(Count);
+                 w.WriteMember("TextRunOffsets");
+                 w.WriteStartArray();
+                 for (int i = 0; i < Count; i++)
+                     w.WriteNumber(ReadInt64());
+                 w.WriteEndArray();
+                 if (ReadByte() == 0xFF)
+                     //THis should never happen
+                     ThrowParseError();
+             }
+             else
+                 //THis should never happen
+                 ThrowParseError();
+         }
+
+         public Boolean WriteJSONTextRun()
+         {
+             //Properties
+             w.WriteMember("Elements");
+             WriteJSONElements();
+             return true;
+         }
+
+
+         public void WriteJSONImage()
+         {
+             w.WriteStartObject();
+             w.WriteMember("Elements");
+             WriteJSONElements();
+
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
+
+         }
+
+         public void WriteJSONLine()
+         {
+             RPLProperties prop = new RPLProperties(0x08);
+
+             prop.Add("UniqueName", "String", 0x00);
+             prop.Add("Slant", "Byte", 0x18);
+             prop.Add("ID", "String", 0x01);
+             prop.Add("Name", "String", 0x02);
+             prop.Add("Tooltip", "String", 0x05);
+             prop.Add("ToogleItem", "String", 0x08);
+             prop.Add("Lable", "String", 0x03);
+             prop.Add("Bookmark", "String", 0x04);
+             prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+             prop.Write(this);
+
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
+
+         }
+
+         public void WriteJSONReportElementEnd()
+         {
+             if (ReadByte() == 0xFE)
+             {
+                 w.WriteMember("OffsetRef");
+                 w.WriteNumber(ReadInt64());
+             }
+             else
+              //TODO Throw correct, this should not happen
+                throw new IndexOutOfRangeException();
+
+             //Must be the end
+             if (ReadByte() != 0xFF)
+                 //TODO Throw correct, this should not happen
+                 throw new IndexOutOfRangeException();
+
+         }
+
+         public Boolean WriteJSONStyle()
+         {
+             if (ReadByte() != 0x06)
+                 //TODO Throw correct, this should not happen
+                 throw new IndexOutOfRangeException();
+             RPLProperties prop;
+
+             if (InspectByte() == 0x00)
+                prop = new RPLProperties(0x00);
+             else
+                prop = new RPLProperties(0x01);
+
+
+             prop.Add("BorderColor", "String", 0x00);
+             prop.Add("BorderColorLeft", "String", 0x01);
+             prop.Add("BorderColorRight", "String", 0x02);
+             prop.Add("BorderColorTop", "String", 0x03);
+             prop.Add("BorderColorBottom", "String", 0x04);
+             prop.Add("BorderStyle", "Byte", 0x05);
+             prop.Add("BorderStyleLeft", "Byte", 0x06);
+             prop.Add("BorderStyleRight", "Byte", 0x07);
+             prop.Add("BorderStyleTop", "Byte", 0x08);
+             prop.Add("BorderStyleBottom", "Byte", 0x09);
+             prop.Add( "BorderWidth", "String", 0x0A);
+             prop.Add( "BorderWidthLeft", "String", 0x0B);
+             prop.Add( "BorderWidthRight", "String", 0x0C);
+             prop.Add( "BorderWidthTop", "String", 0x0D);
+             prop.Add( "BorderWidthBottom", "String", 0x0E);
+             prop.Add( "PaddingLeft", "String", 0x0F);
+             prop.Add( "PaddingRight", "String", 0x10);
+             prop.Add( "PaddingTop", "String", 0x11);
+             prop.Add( "PaddingBottom", "String", 0x12);
+             prop.Add( "FontStyle", "Byte", 0x13);
+             prop.Add( "FontFamily", "String", 0x14);
+             prop.Add( "FontSize", "String", 0x15);
+             prop.Add( "FontWeight", "Byte", 0x16);
+             prop.Add( "Format", "String", 0x17);
+             prop.Add( "TextDecoration", "Byte", 0x18);
+             prop.Add("TextAlign", "Byte", 0x19);
+             prop.Add( "VerticalAlign", "Byte", 0x1A);
+             prop.Add( "Color", "String", 0x1B);
+             prop.Add( "LineHeight", "String", 0x1C);
+             prop.Add( "Direction", "Byte", 0x1D);
+             prop.Add( "WritingMode", "Byte", 0x1E);
+             prop.Add( "UnicodeBiDi", "Byte", 0x1F);
+             prop.Add("Language", "String", 0x20);
+             prop.Add( "BackgroundImage", "TempObject", 0x21);
+             prop.Add( "BackgroundColor", "String", 0x22);
+             prop.Add("BackgroundRepeat", "Byte", 0x23);
+             prop.Add("NumeralLanguage", "String", 0x24);
+             prop.Add("NumeralVariant", "Int32", 0x25);
+             prop.Add("Calendar", "Byte", 0x26);
+             
+             prop.Write(this);
+             return true;
+         }
+
+         public void WriteJSONRepProp()
+         {
+             
+             RPLProperties prop = new RPLProperties(0x02);
+
+             prop.Add("Description", "String", 0x09);
+             prop.Add("Location", "String", 0x0A);
+             prop.Add("Language", "String", 0x0B);
+             prop.Add("ExecTime", "Int64", 0x0C);
+             prop.Add("Author", "String", 0x0D);
+             prop.Add("AutoRefresh", "Int32", 0x0E);
+             prop.Add("ReportName", "String", 0x0F);
+             prop.Add("ConsumeContainerWhiteSpace", "Boolean", 0x32);
+
+             prop.Write(this);
+             
+         }
+         public int ReadInt32()
+         {
+             int retval = BitConverter.ToInt32(RPL, Index); 
+             Seek(4);
+             return retval;
+         }
+
+         public Int64 ReadInt64()
+         {
+             Int64 retval = BitConverter.ToInt64(RPL, Index);             
+             Seek(8);
+             return retval;
+         }
+
+
+         public RPLDateTime ReadDateTime()
+         {
+             RPLDateTime retval = new RPLDateTime();
+             Int64 dt = RPL[Index];;
+             byte b = RPL[Index];
+                         
+             retval.Type = b >> 2;
+             retval.MiliSec = dt << 2;
+             Seek(8);
+             return retval;
+         }
+        public short ReadInt16()
+        {
+            short retval = BitConverter.ToInt16(RPL, Index); 
+            Seek(2);
+            return retval;
+        }
+
+        public float ReadSingle()
+        {
+            float retval = BitConverter.ToSingle(RPL, Index); 
+            Seek(4);
+            return retval;
+        }
+
+        public double ReadFloat()
+        {
+            double retval = BitConverter.ToDouble(RPL, Index); 
+            Seek(8);
+            return retval;
+        }
+        
+         public char ReadChar()
+        {
+            char retval = Encoding.Unicode.GetChars(RPL, Index, 2)[1];
+            Seek(2);
+            return retval;
+        }
+         public byte ReadByte()
+         {
+             byte retval = RPL[Index];
+             Seek(1);
+             return retval;
+         }
+
+         public byte InspectByte()
+         {
+             byte retval = RPL[Index];             
+             return retval;
+         }
+
+         public decimal ReadDecimal()
+         {
+             int[] bits = new int[4];
+             bits[0] = ReadInt32();
+             bits[2] = ReadInt32();
+             bits[3] = ReadInt32();
+             bits[4] = ReadInt32();
+
+             decimal retval = new decimal(bits);
+             return retval;
+         }
+         
+         public Boolean ReadBoolean()
+         {
+             Boolean retval;
+
+             if (RPL[Index] == 1)
+                 retval = true;
+             else
+                 retval = false;
+             Seek(1);
+             return retval;
+         }
+
+         public string ReadString()
+         {
+             int length;
+             string retval;
+
+             length = GetLength(0);
+             retval = Encoding.Unicode.GetString(RPL,Index,length);
+             Seek(length);
+             return retval;
+
+         }
+
+        
+         public int GetLength(int Depth)
+         {
+             int Len;
+             int retval;
+
+             Len = ReadByte();
+             if (Len > 128)
+             {
+                 retval = Len - 128;
+                 retval += GetLength(Depth+1)*Depth+1 * 128;
+             }
+             else
+                 retval = Len;
+
+             return retval;
+         
+         }
+
+         public void Seek(int Advance)
+         {
+             Index+=Advance;
+         }
+
+
+    }
+}

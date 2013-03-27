@@ -1,0 +1,5 @@
+C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\WebApplication2\bin\WebApplication2.dll
+C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\WebApplication2\bin\WebApplication2.pdb
+C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\WebApplication2\obj\Debug\WebApplication2.dll
+C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\WebApplication2\obj\Debug\WebApplication2.pdb
+C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\WebApplication2\obj\Debug\WebApplication2.csprojResolveAssemblyReference.cache

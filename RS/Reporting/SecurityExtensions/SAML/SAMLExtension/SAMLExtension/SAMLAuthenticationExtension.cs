@@ -33,6 +33,8 @@ namespace ForeRunner.Reporting.Extensions.SAML
 
         public void GetUserInfo(out IIdentity userIdentity, out IntPtr userId)
         {
+            // initialize a pointer to the current user id to zero
+            userId = IntPtr.Zero;
             // If the current user identity is not null,
             // set the userIdentity parameter to that of the current user 
             if (HttpContext.Current != null
@@ -47,11 +49,9 @@ namespace ForeRunner.Reporting.Extensions.SAML
             // To configure for anonymous logon, return a Gener
             {
                 System.Diagnostics.Debug.Assert(false, "Warning: userIdentity is null! Modify your code if you wish to support anonymous logon.");
-                throw new NullReferenceException("Anonymous logon is not configured. userIdentity should not be null!");
+                userIdentity = null;
+                //throw new NullReferenceException("Anonymous logon is not configured. userIdentity should not be null!");
             }
-
-            // initialize a pointer to the current user id to zero
-            userId = IntPtr.Zero;
         }
 
         public bool IsValidPrincipalName(string principalName)

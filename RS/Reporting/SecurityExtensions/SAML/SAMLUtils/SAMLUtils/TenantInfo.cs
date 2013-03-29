@@ -10,12 +10,18 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
     {
         private AsymmetricAlgorithm key;
         private Uri iDP;
+        private bool isPost;
         public TenantInfo(AsymmetricAlgorithm key, Uri iDP)
         {
             this.key = key;
             this.iDP = iDP;
         }
 
+        public bool IsPostBinding
+        {
+            get { return isPost;  }
+            set { isPost = value; }
+        }
         public AsymmetricAlgorithm Key
         {
             get

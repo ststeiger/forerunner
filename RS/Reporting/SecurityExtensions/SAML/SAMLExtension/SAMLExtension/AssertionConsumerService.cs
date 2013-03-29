@@ -60,11 +60,18 @@ namespace ForeRunner.Reporting.Extensions.SAML
             if (context.Request.ContentLength < 65536)
             {
                 // Use a home brew version of the HtmlUtility according to the spec.  HttpUtility.UrlEncode and UrlDecode has a bug with '+' characters.
-                string rawSamlData = HtmlUtility.UrlDecode(context.Request["SAMLResponse"]);
+                string rawSamlData = HtmlUtility.UrlDecode(getSAMLResponseFromRequest(context));
                 // TODO:  This should have been encrypted!  So we needed to decrypt it.
                 // It is critical that we do so because we use the Url to determine the authority.
-                string redirectUrl = Encoding.UTF8.GetString(Convert.FromBase64String(HtmlUtility.UrlDecode(context.Request["RelayState"])));
-                string authority = SAMLHelperBase.GetAuthorityFromUrl(redirectUrl);
+                string relayStateString = Encoding.UTF8.GetString(Convert.FromBase64String(HtmlUtility.UrlDecode(getRelayStateFromRequest(context))));
+                System.Collections.Specialized.NameValueCollection nv = HttpUtility.ParseQueryString(relayStateString);
+                string reportServer = ConfigurationManager.AppSettings["ReportServer"];
+                string instanceName = ConfigurationManager.AppSettings["ReportServerInstance"];
+                string serverUrl = GetServerVirtualDirectory(reportServer, instanceName);
+                string redirectUrl = nv.Get("targetUrl");
+                bool isReportManager = nv.Get("isReportManager").Equals("true");
+                string authority = nv.Get("authority");
+                
                 if (authority == null)
                 {
                     authority = "";
@@ -90,11 +97,8 @@ namespace ForeRunner.Reporting.Extensions.SAML
 
                 IReportServer server = reportServerFactory.getInstance();
 
-                string reportServer = ConfigurationManager.AppSettings["ReportServer"];
-                string instanceName = ConfigurationManager.AppSettings["ReportServerInstance"];
-
                 // Get the server URL from the report server using WMI
-                server.Url = GetReportServerUrl(reportServer, instanceName);
+                server.Url = GetReportServerUrl(reportServer, instanceName); ;
 
                 server.LogonUser(userName, SAMLResponse, authority);
                 if (redirectUrl != null)
@@ -115,12 +119,17 @@ namespace ForeRunner.Reporting.Extensions.SAML
 
         protected virtual void redirect(string redirectUrl)
         {
-            HttpContext.Current.Response.Redirect(redirectUrl, false);
+            HttpContext.Current.Response.Redirect(redirectUrl, true);
         }
 
         //Method to get the report server url using WMI
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2201:DoNotRaiseReservedExceptionTypes")]
         private string GetReportServerUrl(string machineName, string instanceName)
+        {
+            return GetServerVirtualDirectory(machineName, instanceName) + rsAsmx;
+        }
+
+        private string GetServerVirtualDirectory(string machineName, string instanceName)
         {
             string reportServerVirtualDirectory = String.Empty;
             string fullWmiNamespace = @"\\" + machineName + string.Format(wmiNamespace, instanceName);
@@ -176,13 +185,32 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 throw new Exception(string.Format(CultureInfo.InvariantCulture,
                     SAMLExtension.RSUrlError + ex.Message), ex);
             }
-
-            return reportServerVirtualDirectory + rsAsmx;
+            return reportServerVirtualDirectory;
         }
 
         private IReportServer createReportServerInstance()
         {
             return reportServerFactory.getInstance();
+        }
+
+        private string getSAMLResponseFromRequest(HttpContext context)
+        {
+            return getValueFromRequest(context, "SAMLResponse");
+        }
+
+        private string getRelayStateFromRequest(HttpContext context)
+        {
+            return getValueFromRequest(context, "RelayState");
+        }
+
+        private string getValueFromRequest(HttpContext context, String fieldName)
+        {
+            string returnValue = context.Request[fieldName];
+            if (returnValue == null)
+            {
+                returnValue = context.Request.Form[fieldName];
+            }
+            return returnValue;
         }
         #endregion
     }

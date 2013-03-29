@@ -14,6 +14,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using System.Web;
 
     /// <summary>
     /// This class provides the basic helper functions that would
@@ -23,19 +24,37 @@
     /// </summary>
     public class SAMLHelperBase
     {
-        private static String GetRegExString()
+        private static String GetRegExString(bool isReportManager)
         {
-            return ConfigurationManager.AppSettings["ForeRunnerSAMLExtension.TenantAuthorityRegEx"];
+            //string keyName = isReportManager ? "ForeRunnerSAMLExtension.RMTenantAuthorityRegEx" : "ForeRunnerSAMLExtension.TenantAuthorityRegEx";
+            string keyName = "ForeRunnerSAMLExtension.TenantAuthorityRegEx";
+            return ConfigurationManager.AppSettings[keyName];
         }
 
+        private static String GetItemPath(string url)
+        {
+            string[] parts = url.Split('?');
+            string query = parts[parts.Length - 1];
+            return HttpUtility.ParseQueryString(query).Get("ItemPath");
+        }
         /// <summary>
         /// This method extracts the authority from the Url
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="isReportManager"></param>
         /// <returns></returns>
-        public static string GetAuthorityFromUrl(string url)
+        public static string GetAuthorityFromUrl(string url, bool isReportManager = false)
         {
-            Match match = Regex.Match(url, GetRegExString(),
+            if (isReportManager)
+            {
+                url = GetItemPath(url);
+            }
+            if (url == null || url.Length == 0)
+            {
+                return null;
+            }
+            string regExString = GetRegExString(isReportManager);
+            Match match = Regex.Match(url, regExString,
                 RegexOptions.IgnoreCase);
 
             // Here we check the Match instance.

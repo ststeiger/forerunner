@@ -144,6 +144,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\HtmlPage1.html" />
     <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\icons-18-black.png" />
@@ -214,6 +215,7 @@
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="reports\WebForm1.aspx" />
+    <Content Include="Scripts\FRReport.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />

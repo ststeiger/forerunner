@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using Jayrock.Json;
 
+
 namespace ReportControl
 {
     public class Report
@@ -88,7 +89,7 @@ namespace ReportControl
 
         }
 
-        public string GetReport(string reportPath)
+        public string GetReportHTML(string reportPath)
         {
             ReportExecutionService rs = new ReportExecutionService();
             //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
@@ -176,6 +177,18 @@ namespace ReportControl
 
         }
 
+        public string GetReportScript(string reportPath)
+        {
+            StringBuilder sb = new StringBuilder(1024); 
+            
+            //sb.Append("<div id=\"Report\">");
+            sb.Append("<div id=\"ReportDiv\"></div>");
+            sb.Append("<script src=\"/Scripts/jquery-1.7.1.min.js\"></script>");
+            sb.Append("<script src=\"/Scripts/FRReport.js\"></script>");
+            sb.Append("<script>GetReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",\"abcd\", 1,\"ReportDiv\")</script>");
+            return sb.ToString();
+        }
+
         public string GetReportJson(string reportPath)
         {
             ReportExecutionService rs = new ReportExecutionService();
@@ -248,7 +261,7 @@ namespace ReportControl
                 execInfo = rs.GetExecutionInfo();
                 Console.WriteLine("Execution date and time: {0}", execInfo.ExecutionDateTime);
 
-                return ConvertRPLToJSON(result);
+                return ConvertRPLToJSON(result, SessionId);
 
             }
             catch (Exception e)
@@ -262,7 +275,7 @@ namespace ReportControl
 
         }
 
-        private string ConvertRPLToJSON(byte[] RPL)
+        private string ConvertRPLToJSON(byte[] RPL,string SessionID)
         {
                 
             JsonWriter w = new JsonTextWriter();
@@ -271,6 +284,8 @@ namespace ReportControl
             //Read Report Object
             //Report = RPLStamp Version reportStart ReportProperties *PageContent OffsetsArrayElement ReportElementEnd Version
             w.WriteStartObject();
+            w.WriteMember("SessionID");
+            w.WriteString(SessionID);
             w.WriteMember("RPLStamp");
             w.WriteString(r.ReadString());
             
@@ -295,6 +310,7 @@ namespace ReportControl
 
             //End RPL
             w.WriteEndObject();
+
             return w.ToString();
 
         }
@@ -506,7 +522,7 @@ namespace ReportControl
      
                   //Sections
                   LoopObjectArray("Sections",0x15, this.WriteJSONSections);
-                  
+                  w.WriteEndObject();
 
               }
          }
@@ -618,7 +634,7 @@ namespace ReportControl
                 ThrowParseError();
 
             //BodyArea
-            w.WriteMember("BodyElements");
+            w.WriteMember("Columns");
             w.WriteStartArray();
             while (InspectByte() == 0x14)
             {
@@ -628,17 +644,23 @@ namespace ReportControl
                 {
                     //Advance over the the 0x06
                     Seek(1);
-                    //w.WriteStartObject();
+                    
+                    w.WriteStartObject();
+                    w.WriteMember("Elements");
                     WriteJSONElements();
                     //w.WriteEndObject();
                     //Report Items
+
+                    w.WriteMember("ReportItems");
                     WriteJSONReportItems();
 
                     //Measurments
-                    w.WriteStartObject();
-                    w.WriteMember("Type");
-                    w.WriteString("Measurments");
+                    //w.WriteMember("Measurments");                    
+                    //w.WriteStartObject();                                        
                     WriteJSONMeasurments();
+                    //w.WriteEndObject();
+
+
                     w.WriteEndObject();
                 }
                 else
@@ -963,7 +985,7 @@ namespace ReportControl
              if (ReadByte() != 0x10)                 
                  ThrowParseError();  //This should never happen
 
-             w.WriteMember("Measurments");
+             w.WriteMember("Measurment");
              w.WriteStartObject();
              w.WriteMember("Offset");
              w.WriteNumber(ReadInt64());
@@ -971,8 +993,11 @@ namespace ReportControl
              int Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("Measurments");
+             w.WriteStartArray();
              for (int i = 0; i < Count; i++)
                  WriteJSONMeasurment();
+             w.WriteEndArray();
 
              w.WriteEndObject();
          }
@@ -980,20 +1005,22 @@ namespace ReportControl
          public void WriteJSONMeasurment()
          {
 
+             w.WriteStartObject();
              w.WriteMember("Left");
-             w.WriteNumber(ReadInt32());
+             w.WriteNumber(ReadSingle());
              w.WriteMember("Top");
-             w.WriteNumber(ReadInt32());
+             w.WriteNumber(ReadSingle());
              w.WriteMember("Width");
-             w.WriteNumber(ReadInt32());
+             w.WriteNumber(ReadSingle());
              w.WriteMember("Height");
-             w.WriteNumber(ReadInt32());
+             w.WriteNumber(ReadSingle());
              w.WriteMember("zIndex");
-             w.WriteNumber(ReadInt32());
+             w.WriteNumber(ReadSingle());
              w.WriteMember("State");
              w.WriteNumber(ReadByte());
              w.WriteMember("EndOffset");
              w.WriteNumber(ReadInt64());
+             w.WriteEndObject();
            
          }
 

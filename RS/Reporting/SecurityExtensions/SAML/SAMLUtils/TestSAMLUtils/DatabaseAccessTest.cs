@@ -48,5 +48,14 @@ namespace TestSAMLUtils
 
             Assert.IsTrue(SAMLHelperBase.VerifyUserAndAuthority("Tenant1.blah@gmail.com", testAuthority));
         }
+
+        [TestMethod]
+        [DeploymentItem("app.config")]
+        public void TestAddReportingUser2()
+        {
+            DatabaseHelper.addReportingUser("", "employee@gmail.com");
+
+            Assert.IsTrue(SAMLHelperBase.VerifyUserAndAuthority(".employee@gmail.com", ""));
+        }
     }
 }

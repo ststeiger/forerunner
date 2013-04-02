@@ -77,7 +77,7 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
                         reader.Read(); // Advance to the one and only row
                         // Return output parameters from returned data stream
                         string userNameInDB = reader.GetString(0);
-                        if (userNameInDB == null || !userNameInDB.StartsWith(authority))
+                        if (userNameInDB == null || !userNameInDB.StartsWith(authority == null ? "" : authority))
                         {
                             return false;
                         }

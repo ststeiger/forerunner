@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SSO.aspx.cs" Inherits="ForeRunner.Reporting.Extensions.SAML.SSO" EnableSessionState="True" EnableViewStateMac="false"%>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="SSO.aspx.cs" Inherits="ForeRunner.Reporting.Extensions.SAML.SSO, ForeRunner.Reporting.Extensions.SAML" EnableSessionState="True" EnableViewStateMac="false"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -13,7 +13,7 @@
         <br />
     </center>
     <div style="display:none" >
-        <input id="SAMLResponse" type="text" runat="server" enableviewstate="False"/>
+        <input id="SAMLRequest" type="text" runat="server" enableviewstate="False"/>
         <input id="RelayState" type="text" runat="server" enableviewstate="False"/>
     </div>
     </form>

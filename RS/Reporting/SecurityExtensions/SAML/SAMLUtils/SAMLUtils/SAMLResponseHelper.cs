@@ -16,9 +16,11 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
 
         public SAMLResponseHelper(string userName, string samlResponse, string authority, TenantInfo tenantInfo)
         {
+            doc.PreserveWhitespace = true;
+            doc.XmlResolver = null;
+
             this.userName = userName;
             doc.LoadXml(samlResponse);
-            doc.PreserveWhitespace = true; ;
             ns = new XmlNamespaceManager(doc.NameTable);
             ns.AddNamespace("samlp", @"urn:oasis:names:tc:SAML:2.0:protocol");
             ns.AddNamespace("saml", @"urn:oasis:names:tc:SAML:2.0:assertion");
@@ -53,7 +55,7 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             XmlDocument doc = new XmlDocument();
 
             // Format the document to ignore white spaces.
-            doc.PreserveWhitespace = false;
+            doc.PreserveWhitespace = true;
 
             // Load the passed XML file using its name.
             doc.Load(new XmlTextReader(fileName));
@@ -106,13 +108,43 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
 
             // Find the "Signature" node and create a new 
             // XmlNodeList object.
-            XmlNodeList nodeList = doc.GetElementsByTagName("Signature");
+            //XmlElement node = (XmlElement)doc.SelectSingleNode(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
 
+            //XmlNodeList nodeList = doc.GetElementsByTagName("Signature");
+            XmlNodeList nodeList = doc.SelectNodes(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
+            //if (node != null)
             if (nodeList != null && nodeList.Count > 0)
             {
-                // Load the signature node.
-                signedXml.LoadXml((XmlElement)nodeList[0]);
+                foreach (XmlNode xmlNode in nodeList)
+                {
+                    if (xmlNode.ParentNode.Equals(doc.DocumentElement))
+                    {
+                        // Load the signature node.
+                        signedXml.LoadXml((XmlElement)xmlNode);
+                        //signedXml.LoadXml(node);
 
+                        // Check the signature and return the result. 
+                        return (tenantInfo.Key != null) ? signedXml.CheckSignature(tenantInfo.Key) : signedXml.CheckSignature();
+                    }
+                }
+            }
+
+            return false;
+            /*
+            // Create a new SignedXml object and pass it 
+            // the XML document class.
+            SignedXml signedXml = new SignedXml(doc);
+
+            // Find the "Signature" node and create a new 
+            // XmlNodeList object.
+            XmlElement node = (XmlElement) doc.SelectSingleNode(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
+
+            if (node != null)
+            {
+                // Load the signature node.
+                signedXml.LoadXml(node);
+
+                bool result = signedXml.CheckSignature();
                 // Check the signature and return the result. 
                 if (tenantInfo.Key != null)
                 {
@@ -123,8 +155,7 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
                     return signedXml.CheckSignature();
                 }
             }
-
-            return false;
+            return false;*/
         }
 
         private bool ValidateUserNameAndAuthority()

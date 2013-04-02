@@ -62,9 +62,11 @@
     <Compile Include="SSO.aspx.cs">
       <DependentUpon>SSO.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="SSO.aspx.designer.cs">
       <DependentUpon>SSO.aspx.cs</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +78,7 @@
   <ItemGroup>
     <Content Include="SSO.aspx">
       <SubType>ASPXCodeBehind</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -50,10 +50,46 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdentityModelClasses\AuthenticationRequest.cs" />
+    <Compile Include="IdentityModelClasses\BinaryKeyIdentifierClause.cs" />
+    <Compile Include="IdentityModelClasses\ConsentIdentifier.cs" />
     <Compile Include="DatabaseAccessTest.cs" />
+    <Compile Include="IdentityModelClasses\DateTimeFormats.cs" />
+    <Compile Include="IdentityModelClasses\DateTimeUtil.cs" />
+    <Compile Include="IdentityModelClasses\DiagnosticUtility.cs" />
+    <Compile Include="IdentityModelClasses\EncryptedKeyIdentifierClause.cs" />
+    <Compile Include="IdentityModelClasses\EncryptionCredentials.cs" />
+    <Compile Include="IdentityModelClasses\LocalIdKeyIdentifierClause.cs" />
+    <Compile Include="IdentityModelClasses\NameIdentifierFormats.cs" />
+    <Compile Include="IdentityModelClasses\NameIdentifierPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IdentityModelClasses\RequestedAuthenticationContext.cs" />
+    <Compile Include="IdentityModelClasses\Saml2AudienceRestriction.cs" />
+    <Compile Include="IdentityModelClasses\Saml2Conditions.cs" />
+    <Compile Include="IdentityModelClasses\Saml2Constants.cs" />
+    <Compile Include="IdentityModelClasses\Saml2Id.cs" />
+    <Compile Include="IdentityModelClasses\Saml2NamedIdentifier.cs" />
+    <Compile Include="IdentityModelClasses\Saml2ProxyRestriction.cs" />
+    <Compile Include="IdentityModelClasses\Saml2Subject.cs" />
+    <Compile Include="IdentityModelClasses\Saml2SubjectConfirmation.cs" />
+    <Compile Include="IdentityModelClasses\Saml2SubjectConfirmationData.cs" />
+    <Compile Include="IdentityModelClasses\SamlMessage.cs" />
+    <Compile Include="IdentityModelClasses\SamlpUtil.cs" />
+    <Compile Include="IdentityModelClasses\SamlRequest.cs" />
     <Compile Include="SAMLRequestTest.cs" />
     <Compile Include="SAMLResponseTest.cs" />
+    <Compile Include="IdentityModelClasses\Scoping.cs" />
+    <Compile Include="IdentityModelClasses\SecurityKey.cs" />
+    <Compile Include="IdentityModelClasses\SecurityKeyIdentifier.cs" />
+    <Compile Include="IdentityModelClasses\SecurityKeyIdentifierClause.cs" />
+    <Compile Include="IdentityModelClasses\SecurityToken.cs" />
+    <Compile Include="IdentityModelClasses\SecurityUtility.cs" />
+    <Compile Include="IdentityModelClasses\SigningCredentials.cs" />
+    <Compile Include="IdentityModelClasses\SR.cs" />
+    <Compile Include="IdentityModelClasses\UniqueId.cs" />
+    <Compile Include="IdentityModelClasses\UriUtil.cs" />
+    <Compile Include="IdentityModelClasses\XmlNamespaceReader.cs" />
+    <Compile Include="IdentityModelClasses\XmlUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -36,6 +36,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Security" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>

@@ -14,12 +14,14 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
         private string issuer;
 
         private bool isGZip = false;
+        private bool isPost = false;
 
         public SAMLRequestHelper(TenantInfo tenantInfo, Uri assertionConsumerServiceUri, String issuer)
         {
             this.tenantInfo = tenantInfo;
-            id = "_" + System.Guid.NewGuid().ToString();
-            issueInstant = DateTime.Now.ToUniversalTime().ToString("yyyy-mm-ddTH:mm:ssZ");
+            id = "_" + System.Guid.NewGuid().ToString().Replace("-", "");
+            issueInstant = DateTime.Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
+            DateTime time = DateTime.Parse(issueInstant);
             this.assertionConsumerServiceUri = assertionConsumerServiceUri;
             this.issuer = issuer;
         }
@@ -36,6 +38,18 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             }
         }
 
+        public bool IsPostBinding
+        {
+            set
+            {
+                isPost = value;
+            }
+            get
+            {
+                return isPost;
+            }
+        }
+
         public string generateSAMLRequest()
         {
             using (StringWriter stringWriter = new StringWriter())
@@ -49,7 +63,9 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
                     xmlWriter.WriteAttributeString("ID", id);
                     xmlWriter.WriteAttributeString("Version", "2.0");
                     xmlWriter.WriteAttributeString("IssueInstant", issueInstant);
-                    xmlWriter.WriteAttributeString("ProtocolBinding", "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST");
+                    xmlWriter.WriteAttributeString("ProtocolBinding", isPost ? "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" : "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect");
+                    xmlWriter.WriteAttributeString("Destination", tenantInfo.IDP.OriginalString);
+                    xmlWriter.WriteAttributeString("ProviderName", "ForeRunner");
                     xmlWriter.WriteAttributeString("AssertionConsumerServiceURL", assertionConsumerServiceUri.ToString());
 
                     xmlWriter.WriteStartElement("saml", "Issuer", "urn:oasis:names:tc:SAML:2.0:assertion");
@@ -57,17 +73,17 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
                     xmlWriter.WriteEndElement();
 
                     xmlWriter.WriteStartElement("samlp", "NameIDPolicy", "urn:oasis:names:tc:SAML:2.0:protocol");
-                    xmlWriter.WriteAttributeString("Format", "urn:oasis:names:tc:SAML:2.0:nameid-format:unspecified");
+                    xmlWriter.WriteAttributeString("Format", "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent");
                     xmlWriter.WriteAttributeString("AllowCreate", "true");
                     xmlWriter.WriteEndElement();
 
-                    xmlWriter.WriteStartElement("samlp", "RequestedAuthnContext", "urn:oasis:names:tc:SAML:2.0:protocol");
-                    xmlWriter.WriteAttributeString("Comparison", "exact");
-                    xmlWriter.WriteEndElement();
+                    //xmlWriter.WriteStartElement("samlp", "RequestedAuthnContext", "urn:oasis:names:tc:SAML:2.0:protocol");
+                    //xmlWriter.WriteAttributeString("Comparison", "exact");
+                    //xmlWriter.WriteEndElement();
 
-                    xmlWriter.WriteStartElement("saml", "AuthnContextClassRef", "urn:oasis:names:tc:SAML:2.0:assertion");
-                    xmlWriter.WriteString("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-                    xmlWriter.WriteEndElement();
+                    //xmlWriter.WriteStartElement("saml", "AuthnContextClassRef", "urn:oasis:names:tc:SAML:2.0:assertion");
+                    //xmlWriter.WriteString("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
+                    //xmlWriter.WriteEndElement();
 
                     xmlWriter.WriteEndElement();
                 }

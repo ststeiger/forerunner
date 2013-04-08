@@ -261,7 +261,7 @@ namespace ReportControl
                 execInfo = rs.GetExecutionInfo();
                 Console.WriteLine("Execution date and time: {0}", execInfo.ExecutionDateTime);
 
-                return ConvertRPLToJSON(result, SessionId);
+                return ConvertRPLToJSON(result, SessionId, ReportServerURL);
 
             }
             catch (Exception e)
@@ -275,7 +275,7 @@ namespace ReportControl
 
         }
 
-        private string ConvertRPLToJSON(byte[] RPL,string SessionID)
+        private string ConvertRPLToJSON(byte[] RPL,string SessionID, string ReportServerURL)
         {
                 
             JsonWriter w = new JsonTextWriter();
@@ -286,6 +286,8 @@ namespace ReportControl
             w.WriteStartObject();
             w.WriteMember("SessionID");
             w.WriteString(SessionID);
+            w.WriteMember("ReportServerURL");
+            w.WriteString(ReportServerURL);
             w.WriteMember("RPLStamp");
             w.WriteString(r.ReadString());
             
@@ -509,19 +511,34 @@ namespace ReportControl
          public void WriteReportContent()
          {
 
-             Boolean ret;
-
               if (ReadByte() == 0x13)
               {
 
                   w.WriteMember("PageContent");
                   w.WriteStartObject();
 
-                  //PageLayout
+                  //PageLayout Start
+                  w.WriteMember("PageLayoutStart");
+                  w.WriteStartObject();
                   WriteJSONPageProp();
-     
+                  w.WriteEndObject();
+
                   //Sections
                   LoopObjectArray("Sections",0x15, this.WriteJSONSections);
+                  
+
+                  //Measurments
+                  WriteJSONMeasurements();
+
+                  //PageLayout End
+                  if (InspectByte() == 0x03)
+                  {
+                      w.WriteMember("PageLayoutEnd");
+                      w.WriteStartObject();
+                      WriteJSONPageProp();
+                      w.WriteEndObject();
+                  }
+
                   w.WriteEndObject();
 
               }
@@ -624,7 +641,7 @@ namespace ReportControl
             else if (InspectByte() == 0x15)
             {
                 //SimpleSection Section
-                prop = new RPLProperties(0x16);
+                prop = new RPLProperties(0x15);
                 prop.Add("ID", "String", 0x00);
                 prop.Add("ColumnCount", "Int32", 0x01);
                 prop.Add("ColumnSpacing", "Single", 0x02);
@@ -657,7 +674,7 @@ namespace ReportControl
                     //Measurments
                     //w.WriteMember("Measurments");                    
                     //w.WriteStartObject();                                        
-                    WriteJSONMeasurments();
+                    WriteJSONMeasurements();
                     //w.WriteEndObject();
 
 
@@ -980,12 +997,12 @@ namespace ReportControl
              return true;
          }
 
-         public void WriteJSONMeasurments()
+         public void WriteJSONMeasurements()
          {
              if (ReadByte() != 0x10)                 
                  ThrowParseError();  //This should never happen
 
-             w.WriteMember("Measurment");
+             w.WriteMember("Measurement");
              w.WriteStartObject();
              w.WriteMember("Offset");
              w.WriteNumber(ReadInt64());
@@ -993,16 +1010,16 @@ namespace ReportControl
              int Count = ReadInt32();
              w.WriteNumber(Count);
 
-             w.WriteMember("Measurments");
+             w.WriteMember("Measurements");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
-                 WriteJSONMeasurment();
+                 WriteJSONMeasurement();
              w.WriteEndArray();
 
              w.WriteEndObject();
          }
 
-         public void WriteJSONMeasurment()
+         public void WriteJSONMeasurement()
          {
 
              w.WriteStartObject();
@@ -1015,7 +1032,7 @@ namespace ReportControl
              w.WriteMember("Height");
              w.WriteNumber(ReadSingle());
              w.WriteMember("zIndex");
-             w.WriteNumber(ReadSingle());
+             w.WriteNumber(ReadInt32());
              w.WriteMember("State");
              w.WriteNumber(ReadByte());
              w.WriteMember("EndOffset");
@@ -1134,7 +1151,7 @@ namespace ReportControl
              while (WriteJSONReportItem());
              w.WriteEndArray();
 
-             WriteJSONMeasurments();
+             WriteJSONMeasurements();
 
              WriteJSONReportElementEnd();
              w.WriteEndObject();
@@ -1362,8 +1379,7 @@ namespace ReportControl
          public Boolean WriteJSONTablixRowMemeber()
          {
              int Count;
-             RPLProperties prop;
-
+ 
              if (ReadByte() != 0x0E)
                  //THis should never happen
                  ThrowParseError();
@@ -1392,7 +1408,7 @@ namespace ReportControl
              Count = ReadInt32();
              w.WriteNumber(Count);
 
-             w.WriteMember("ColumnWidths");
+             w.WriteMember("Columns");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -1419,7 +1435,7 @@ namespace ReportControl
              Count = ReadInt32();
              w.WriteNumber(Count);
 
-             w.WriteMember("RowHeights");
+             w.WriteMember("Rows");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -1545,6 +1561,8 @@ namespace ReportControl
 
 
              w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("Image");
              w.WriteMember("Elements");
              WriteJSONElements();
 

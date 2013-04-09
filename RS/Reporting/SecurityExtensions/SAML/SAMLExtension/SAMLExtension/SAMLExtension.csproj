@@ -77,7 +77,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SSO.aspx">
-      <SubType>ASPXCodeBehind</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

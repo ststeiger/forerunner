@@ -46,7 +46,7 @@
                 />
       </saml:SubjectConfirmation>
     </saml:Subject>
-    <saml:Conditions NotBefore="2008-05-27T07:48:53Z" NotOnOrAfter="2008-05-27T07:54:23Z">
+    <saml:Conditions NotBefore="2008-05-27T07:48:53Z" NotOnOrAfter="2099-05-27T07:54:23Z">
       <saml:AudienceRestriction>
         <saml:Audience>urn:mace:feide.no:services:no.feide.foodle</saml:Audience>
       </saml:AudienceRestriction>

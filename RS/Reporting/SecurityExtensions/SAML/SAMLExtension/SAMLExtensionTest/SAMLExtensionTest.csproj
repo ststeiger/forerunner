@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ComponentSpace.SAML2">
-      <HintPath>..\..\..\..\..\Externals\ComponentSpace\bin\ComponentSpace.SAML2.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ReportingServices.Interfaces">
       <HintPath>..\..\..\..\..\Externals\ReportingServices\110\bin\Microsoft.ReportingServices.Interfaces.dll</HintPath>
     </Reference>

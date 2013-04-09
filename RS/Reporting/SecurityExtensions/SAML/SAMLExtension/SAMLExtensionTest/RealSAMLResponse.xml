@@ -1,25 +1,5 @@
 ﻿<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="_29c74388c2d7675b2489449fbe8ae8c4a2937a03be" Version="2.0" IssueInstant="2013-03-15T05:47:27Z" Destination="http://dragonbeard.contrivance.org/ReportServer/Pages/SSO.aspx" InResponseTo="_413c232fbf2d42deafb2f6f49ce30744">
   <saml:Issuer>http://dragonbeard.contrivance.org/simplesaml/saml2/idp/metadata.php</saml:Issuer>
-  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-    <ds:SignedInfo>
-      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-      <ds:Reference URI="#_29c74388c2d7675b2489449fbe8ae8c4a2937a03be">
-        <ds:Transforms>
-          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
-          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
-        </ds:Transforms>
-        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
-        <ds:DigestValue>3Cr1+Tou9XEjYrpMyPk+gZS36eY=</ds:DigestValue>
-      </ds:Reference>
-    </ds:SignedInfo>
-    <ds:SignatureValue>xryBObascTC4ZUL4L7W0DdhhXolvfaMzVtkDhqfIl2AY6txm3ZufY9gpnQ2IOHCz6EpLv2wq8C30UfY85JTXl+SJTrcgO6EhDKbFeeM9e1kGJET1g7EG+CoMOaxRwYXyXQMNZvNQEm2r8HTSJJ0+49hEpgnQ8a9ljFt4gcpv6jM=</ds:SignatureValue>
-    <ds:KeyInfo>
-      <ds:X509Data>
-        <ds:X509Certificate>MIICbjCCAdegAwIBAgIJAMf2Xs3h7lepMA0GCSqGSIb3DQEBBQUAME8xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJXQTEQMA4GA1UEBwwHUmVkbW9uZDEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMCAXDTEzMDMxNTA1MjYwMVoYDzIxMTMwMjE5MDUyNjAxWjBPMQswCQYDVQQGEwJVUzELMAkGA1UECAwCV0ExEDAOBgNVBAcMB1JlZG1vbmQxITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA4F3CiF8BvVt4IJ+vT1/U92GZllqTmlzgnJ2Pps8fDo0uo1/1AWx7QVgeShUdlPFaLM6xr6sXy5hVhIx7Xj05vuPkAQ53cNy093kq3rOEZN5dDxFgYdy5QMazLqLUlbkAmfvfXt8NBDeiyGjs986J90PMTr/AxcinvgVSvODd9kUCAwEAAaNQME4wHQYDVR0OBBYEFMDJZK5Oix+vCmbPFucT70qEtY8TMB8GA1UdIwQYMBaAFMDJZK5Oix+vCmbPFucT70qEtY8TMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQEFBQADgYEAsuc6OuQf8wz3kOrvQTeRD4c6sUFX1YlLRSiZV/TB7JHhY7hTst2z+ydgc+5ZSZmIKivpLAwk01+xry9stHQKCNat81madaOrJ+zvDe1nMAsept5hB0Oxomc33srgS0Qy82KuMPv5Gc/LS98yRt/n6OgRD8qw+LIQUx5pzLRPjKg=</ds:X509Certificate>
-      </ds:X509Data>
-    </ds:KeyInfo>
-  </ds:Signature>
   <samlp:Status>
     <samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
   </samlp:Status>
@@ -31,7 +11,7 @@
         <saml:SubjectConfirmationData NotOnOrAfter="2013-03-15T05:52:27Z" Recipient="http://dragonbeard.contrivance.org/ReportServer/Pages/SSO.aspx" InResponseTo="_413c232fbf2d42deafb2f6f49ce30744"/>
       </saml:SubjectConfirmation>
     </saml:Subject>
-    <saml:Conditions NotBefore="2013-03-15T05:46:57Z" NotOnOrAfter="2013-03-15T05:52:27Z">
+    <saml:Conditions NotBefore="2013-03-15T05:46:57Z" NotOnOrAfter="2099-03-15T05:52:27Z">
       <saml:AudienceRestriction>
         <saml:Audience>https://dragonbeard.contrivance.org/ReportServer/</saml:Audience>
       </saml:AudienceRestriction>

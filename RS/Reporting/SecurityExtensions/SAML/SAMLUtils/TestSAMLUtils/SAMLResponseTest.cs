@@ -43,7 +43,7 @@ namespace TestSAMLUtils
                 string authority = "TestAuthority";
                 string userName = SAMLHelperBase.GetUserName(authority, nameID);
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(null, null));
-                Assert.IsTrue(responseHelper2.IsValid());
+                Assert.IsTrue(responseHelper2.IsValid(true));
             }
         }
 
@@ -80,7 +80,7 @@ namespace TestSAMLUtils
                 Assert.IsTrue(issuer.Equals(@"https://openidp.feide.no"));
 
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(key, null));
-                Assert.IsTrue(responseHelper2.IsValid());
+                Assert.IsTrue(responseHelper2.IsValid(true));
             }
         }
 
@@ -167,7 +167,7 @@ namespace TestSAMLUtils
                 string authority = "TestAuthority";
                 string userName = SAMLHelperBase.GetUserName(authority, nameID);
                 SAMLResponseHelper responseHelper2 = new SAMLResponseHelper(userName, text, authority, new TenantInfo(new RSACryptoServiceProvider(), null));
-                Assert.IsFalse(responseHelper2.IsValid());
+                Assert.IsFalse(responseHelper2.IsValid(true));
             }
         }
     }

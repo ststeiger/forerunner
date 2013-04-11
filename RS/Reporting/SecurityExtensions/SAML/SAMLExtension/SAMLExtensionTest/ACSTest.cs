@@ -12,7 +12,6 @@ using Common.Web;
 using ForeRunner.Reporting.Extensions.SAML;
 using ForeRunner.Reporting.Extensions.SAMLUtils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ComponentSpace.SAML2.Protocols;
 
 namespace SAMLExtensionTest
 {
@@ -60,7 +59,9 @@ namespace SAMLExtensionTest
             DatabaseHelper.loadCertificate("Tenant1", certString);
             string samlResponse = GetSAMLReponse(".\\SAMLResponse.xml");
             byte[] samlData = Convert.FromBase64String(samlResponse);
-            string queryString = "RelayState=" + HtmlUtility.UrlEncode(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("http://whatever.com/Tenant1/"))) + "&SAMLResponse=" + HtmlUtility.UrlEncode(samlResponse);
+            string relayStateString = "authority=" + "myAuthority" + "&targetUrl=" + "http://whatever.com/Tenant1/" + "&isReportManager=" + "true" ;
+
+            string queryString = "RelayState=" + HtmlUtility.UrlEncode(Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(relayStateString))) + "&SAMLResponse=" + HtmlUtility.UrlEncode(samlResponse);
             string result = RawRequest("ACS.ashx", queryString);
         }
 
@@ -68,10 +69,11 @@ namespace SAMLExtensionTest
         [DeploymentItem("RealSAMLResponse.xml")]
         [DeploymentItem("app.config")]
         [DeploymentItem("server.pem")]
+        [DeploymentItem("server.p12")]
         public void TestExtension()
         {
             X509Certificate2 cert = SAMLHelperBase.GetCertificateFromDB("");
-            string samlResponse = File.ReadAllText(".\\RealSAMLResponse.xml");
+            string samlResponse = GetSAMLReponse(".\\RealSAMLResponse.xml", false, ".\\server.p12");
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(samlResponse);
             //Assert.IsTrue(SAMLMessageSignature.IsSigned(doc.DocumentElement));
@@ -84,17 +86,16 @@ namespace SAMLExtensionTest
         [DeploymentItem("RealSAMLResponse.xml")]
         [DeploymentItem("app.config")]
         [DeploymentItem("server.crt")]
-        public void TestSignature()
+        [DeploymentItem("server.p12")]
+        public void TestSignature1()
         {
-            X509Certificate2 cert = SAMLHelperBase.GetCertificateFromDB("");
-            //string certString = File.ReadAllText(".\\server.crt");
-            cert = new X509Certificate2(".\\server.crt");
-            string samlResponse = File.ReadAllText(".\\RealSAMLResponse.xml");
+            string samlResponse = GetSAMLReponse(".\\RealSAMLResponse.xml", false, ".\\server.p12");
+            X509Certificate2 cert = new X509Certificate2(".\\server.crt");
             XmlDocument doc = new XmlDocument();
-            doc.PreserveWhitespace = false;
+            doc.PreserveWhitespace = true;
             doc.LoadXml(samlResponse);
 
-            MySignedXml signedXml = new MySignedXml(doc.DocumentElement);
+            SignedXml signedXml = new SignedXml(doc.DocumentElement);
 
             XmlElement node = (XmlElement)doc.SelectSingleNode(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
 
@@ -104,11 +105,9 @@ namespace SAMLExtensionTest
                 signedXml.LoadXml(node);
                 Assert.IsTrue(signedXml.CheckSignature(cert.PublicKey.Key));
             }
-            //CheckSignedInfo(cert.PublicKey.Key);
-            //Assert.IsTrue(SAMLMessageSignature.IsSigned(doc.DocumentElement));
-            //Assert.IsTrue(SAMLMessageSignature.Verify(doc.DocumentElement));
-            //SAMLAuthenticationExtension ext = new SAMLAuthenticationExtension();
-            //Assert.IsTrue(ext.LogonUser(".employee@gmail.com", samlResponse, ""));
+
+            SAMLResponseHelper helper = new SAMLResponseHelper(".employee@gmail.com", samlResponse, "", new TenantInfo(cert.PublicKey.Key, null));
+            Assert.IsTrue(helper.IsValid());
         }
 
         [TestMethod]

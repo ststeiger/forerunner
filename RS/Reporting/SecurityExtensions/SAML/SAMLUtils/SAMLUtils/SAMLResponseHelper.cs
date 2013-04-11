@@ -29,13 +29,26 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             this.tenantInfo = tenantInfo;
         }
 
-        public bool IsValid()
+        public bool IsValid(bool skipTimeRangeCheck = false)
         {
             if (ValidateUserNameAndAuthority())
             {
-                return VerifyXml();
+                if (IsValidTimeRange() || skipTimeRangeCheck)
+                {
+                    return VerifyXml();
+                }
             }
             return false;
+        }
+
+        public bool IsValidTimeRange()
+        {
+            DateTime notBefore;
+            DateTime notOnOrAfter;
+            GetNotBeforeAndNotOnOrAfter(out notBefore, out notOnOrAfter);
+            DateTime now = DateTime.Now;
+
+            return now.CompareTo(notBefore) >= 0 && now.CompareTo(notOnOrAfter) < 0;
         }
 
         public void GetNameIDAndIssuerFromResponse(out string nameIdExtracted, out string issuerNameExtracted)
@@ -46,6 +59,16 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
                 "/samlp:Response/saml:Issuer", ns);
             nameIdExtracted = nameIDNode.InnerText;
             issuerNameExtracted = issuerNode.InnerText;
+        }
+
+        public void GetNotBeforeAndNotOnOrAfter(out DateTime notBefore, out DateTime notOnOrAfter)
+        {
+            XmlNode conditionsNode = doc.SelectSingleNode(
+                "/samlp:Response/saml:Assertion/saml:Conditions", ns);
+            String notBeforeString = conditionsNode.Attributes["NotBefore"].Value.ToString();
+            String notOnOrAfterString = conditionsNode.Attributes["NotOnOrAfter"].Value.ToString();
+            notBefore = (notBeforeString != null) ? DateTime.Parse(notBeforeString) : DateTime.MinValue;
+            notOnOrAfter = (notOnOrAfterString != null) ? DateTime.Parse(notOnOrAfterString) : DateTime.MaxValue;   
         }
 
         // Sign an XML file and save the signature in a new file. 
@@ -107,10 +130,6 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             SignedXml signedXml = new SignedXml(doc);
 
             // Find the "Signature" node and create a new 
-            // XmlNodeList object.
-            //XmlElement node = (XmlElement)doc.SelectSingleNode(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
-
-            //XmlNodeList nodeList = doc.GetElementsByTagName("Signature");
             XmlNodeList nodeList = doc.SelectNodes(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
             //if (node != null)
             if (nodeList != null && nodeList.Count > 0)
@@ -130,32 +149,6 @@ namespace ForeRunner.Reporting.Extensions.SAMLUtils
             }
 
             return false;
-            /*
-            // Create a new SignedXml object and pass it 
-            // the XML document class.
-            SignedXml signedXml = new SignedXml(doc);
-
-            // Find the "Signature" node and create a new 
-            // XmlNodeList object.
-            XmlElement node = (XmlElement) doc.SelectSingleNode(@"//*[local-name(.) = 'Signature' and namespace-uri(.) = 'http://www.w3.org/2000/09/xmldsig#']");
-
-            if (node != null)
-            {
-                // Load the signature node.
-                signedXml.LoadXml(node);
-
-                bool result = signedXml.CheckSignature();
-                // Check the signature and return the result. 
-                if (tenantInfo.Key != null)
-                {
-                    return signedXml.CheckSignature(tenantInfo.Key);
-                }
-                else
-                {
-                    return signedXml.CheckSignature();
-                }
-            }
-            return false;*/
         }
 
         private bool ValidateUserNameAndAuthority()

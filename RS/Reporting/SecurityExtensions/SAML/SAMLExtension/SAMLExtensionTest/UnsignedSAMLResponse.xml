@@ -11,7 +11,7 @@
         <saml:SubjectConfirmationData NotOnOrAfter="2013-03-15T05:52:27Z" Recipient="http://dragonbeard.contrivance.org/ReportServer/Pages/SSO.aspx" InResponseTo="_413c232fbf2d42deafb2f6f49ce30744"/>
       </saml:SubjectConfirmation>
     </saml:Subject>
-    <saml:Conditions NotBefore="2013-03-15T05:46:57Z" NotOnOrAfter="2013-03-15T05:52:27Z">
+    <saml:Conditions NotBefore="2012-03-15T05:46:57Z" NotOnOrAfter="2099-03-15T05:52:27Z">
       <saml:AudienceRestriction>
         <saml:Audience>https://dragonbeard.contrivance.org/ReportServer/</saml:Audience>
       </saml:AudienceRestriction>

@@ -22,11 +22,6 @@ namespace ForeRunner.Reporting.Extensions.SAML
         {
             return ConfigurationManager.AppSettings["ForeRunnerSAMLExtension.ACSUrl"];
         }
-        
-        private bool IsReportManager()
-        {
-            return ConfigurationManager.AppSettings["ForeRunnerSAMLExtension.IsReportManager"] == "true";
-        }
 
         private bool GetAuthorityFromForm()
         {
@@ -52,6 +47,11 @@ namespace ForeRunner.Reporting.Extensions.SAML
                 AssertionConsumerService acs = new AssertionConsumerService();
                 acs.ProcessRequest(HttpContext.Current);
             }
+        }
+
+        private bool IsReportManager()
+        {
+            return Request.QueryString["ReturnUrl"].StartsWith("http");
         }
 
         private void CreateSAMLRequestAndCallIDP()

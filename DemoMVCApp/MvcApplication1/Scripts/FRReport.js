@@ -46,6 +46,7 @@ function SetActionCursor(Ob) {
 function LoadSection(ReportServer, ReportPath, SessionID, PageNum){
     
     $("#ReportDiv12").fadeOut("fast");
+    $("#PageInput").val(PageNum);
 
     var ReportAPI = "/api/Report/GetJSON/";
     $.getJSON(ReportAPI, {
@@ -92,6 +93,13 @@ function GetToolbar() {
     $Cell.html("Prev");
     $Row.append($Cell);
 
+    $Cell = new $("<INPUT/>");
+    $Cell.attr("style", "min-width:10mm;max-width:15mm;text-align:right;");
+    $Cell.attr("id", "PageInput"); 
+    $Cell.attr("type", "number")
+    $Cell.bind('keypress', function (e) { if (e.keyCode == 13) NavToPage($("#PageInput").val()); });  
+    $Row.append($Cell);
+
     $Cell = new $("<TD/>");
     $Cell.attr("style", "min-width:10mm;");
     $Cell.attr("onclick", "NavToPage(++Page)");
@@ -108,7 +116,9 @@ function GetToolbar() {
 }
 
 function NavToPage(PageNum) {
+    Page = PageNum;
     LoadSection(ReportObj.ReportServerURL, ReportObj.ReportPath, ReportObj.SessionID, PageNum)
+
 }
 
 function ShowParms() {

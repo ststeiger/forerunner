@@ -26,59 +26,25 @@ namespace ReportControl
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
             ReportExecutionService rs = new ReportExecutionService();
-            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            ExecutionInfo execInfo = new ExecutionInfo();
+            ExecutionHeader execHeader = new ExecutionHeader();
+            byte[] result = null;
+            string encoding;
 
+            //TODO: Security 
+            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
             NetworkCredential myCred = new NetworkCredential("jason", "Shadow33", "ForerunnerWin7");
             rs.Credentials = myCred;
 
-            //rs.Url = "http://192.168.1.27/reportserver/ReportExecution2005.asmx";
-
+            // Setup Request
             rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-            // Render arguments
-            byte[] result = null;
-            //string reportPath = "AdventureWorks 2008R2/Sales By Sales Person";
-            string format = "HTML4.0"; //"HTML4.0"
-            string historyID = null;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><Toolbar>False</Toolbar><HTMLFragment>True</HTMLFragment>";
-            //Page number   
-            devInfo += @"<Section>1</Section>";
-            //Imgage root                
-            devInfo += @"<StreamRoot>../api/Report/GetImage/</StreamRoot>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
-            devInfo = "";
-
-
-            DataSourceCredentials[] credentials = null;
-            string showHideToggle = null;
-            string encoding;
-
-            string extension;
-            Warning[] warnings = null;
-            ParameterValue[] reportHistoryParameters = null;
-            string[] streamIDs = null;
-
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-
             rs.ExecutionHeaderValue = execHeader;
-
-            //execInfo = rs.LoadReport(reportPath, historyID);
-
-            //rs.SetExecutionParameters(parameters, "en-us");
             rs.ExecutionHeaderValue.ExecutionID = SessionID;
-
-            Console.WriteLine("SessionID: {0}", rs.ExecutionHeaderValue.ExecutionID);
-
-
+            
             try
             {
-                result = rs.RenderStream(format, ImageID, devInfo, out encoding, out mimeType);
+                result = rs.RenderStream("RPL", ImageID, "", out encoding, out mimeType);
                 return result;
-
             }
             catch (Exception e)
             {
@@ -185,27 +151,39 @@ namespace ReportControl
             sb.Append("<div id=\"ReportDiv\"></div>");
             sb.Append("<script src=\"/Scripts/jquery-1.7.1.min.js\"></script>");
             sb.Append("<script src=\"/Scripts/FRReport.js\"></script>");
-            sb.Append("<script>GetReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",\"abcd\", 1,\"ReportDiv\")</script>");
+            sb.Append("<script>InitReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",true, 1,\"ReportDiv\")</script>");
             return sb.ToString();
         }
 
-        public string GetReportJson(string reportPath)
+        public string GetReportJson(string reportPath,string SessionID,string PageNum)
         {
+            byte[] result = null;
+            string format = "RPL";
+            string historyID = null;
+            string showHideToggle = null;
+            string encoding;
+            string mimeType;
+            string extension;
+            Warning[] warnings = null;
+            ParameterValue[] reportHistoryParameters = null;
+            string[] streamIDs = null;
+            string NewSession;
+
+
+            if (SessionID == null)
+                NewSession = "";
+            else
+                NewSession = SessionID;
+
+
             ReportExecutionService rs = new ReportExecutionService();
             //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
             NetworkCredential myCred = new NetworkCredential("jason", "Shadow33", "ForerunnerWin7");
             rs.Credentials = myCred;
-
-            //rs.Url = "http://192.168.1.27/reportserver/ReportExecution2005.asmx";
-
             rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-            // Render arguments
-            byte[] result = null;
-            //string reportPath = "AdventureWorks 2008R2/Sales By Sales Person";
-            string format = "RPL"; //"HTML4.0"
-            string historyID = null;
-
+            
+            
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];
             //parameters[0] = new ParameterValue();
@@ -219,63 +197,41 @@ namespace ReportControl
             //parameters[2].Value = "2004";
 
             DataSourceCredentials[] credentials = null;
-            string showHideToggle = null;
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings = null;
-            ParameterValue[] reportHistoryParameters = null;
-            string[] streamIDs = null;
-
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
 
-            execInfo = rs.LoadReport(reportPath, historyID);
-
-            //rs.SetExecutionParameters(parameters, "en-us");
-            String SessionId = rs.ExecutionHeaderValue.ExecutionID;
-
+            if (NewSession != "")           
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+            else
+                execInfo = rs.LoadReport(reportPath, historyID);
             
 
+            //rs.SetExecutionParameters(parameters, "en-us");
+            NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
             //Device Info
-            string devInfo = @"<DeviceInfo><ToggleItems>False</ToggleItems><MeasureItems>False</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><Toolbar>False</Toolbar>";
+            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
             //Page number   
-            devInfo += @"<StartPage>1</StartPage><EndPage>1</EndPage><ImageConsolidation>False</ImageConsolidation>";
-
-            //ReplacementRoot
-            devInfo += @"<ReplacementRoot>/api/Report/Action/?RepServer=" + ReportServerURL + "&amp;SessionID=" + SessionId + "&amp;ActionID=</ReplacementRoot>";
-
-            //Imgage root 
-            devInfo += @"<StreamRoot>/api/Report/GetImage/?ImageID=</StreamRoot>";
+            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info
             devInfo += @"</DeviceInfo>";
-
-            Console.WriteLine("SessionID: {0}", rs.ExecutionHeaderValue.ExecutionID);
-
 
             try
             {
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
-                Console.WriteLine("Execution date and time: {0}", execInfo.ExecutionDateTime);
-
-                return ConvertRPLToJSON(result, SessionId, ReportServerURL);
-
+                return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return e.Message;
             }
-
-
-
-
         }
 
-        private string ConvertRPLToJSON(byte[] RPL,string SessionID, string ReportServerURL)
+        private string ConvertRPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath)
         {
                 
             JsonWriter w = new JsonTextWriter();
@@ -288,6 +244,8 @@ namespace ReportControl
             w.WriteString(SessionID);
             w.WriteMember("ReportServerURL");
             w.WriteString(ReportServerURL);
+            w.WriteMember("ReportPath");
+            w.WriteString(reportPath);
             w.WriteMember("RPLStamp");
             w.WriteString(r.ReadString());
             
@@ -811,6 +769,17 @@ namespace ReportControl
          
          }
 
+
+         public Boolean DeReference(int StartIndex, Func<Boolean> DeFunction) 
+         {
+            
+             int CurrIndex = this.Index;
+             this.Index = StartIndex;
+             DeFunction();
+             this.Index = CurrIndex;
+             return true;
+         }
+
          public Boolean WriteJSONImageDataProperties()
          {
              RPLProperties prop;
@@ -822,9 +791,9 @@ namespace ReportControl
              switch (ReadByte())
              {
                  case 0x02:
-                     //UseShared
-                     w.WriteMember("SharedOffset");
-                     w.WriteNumber(ReadInt64());
+                     //Shared Image so unshare
+                     int NewIndex = (int)ReadInt64();
+                     DeReference(NewIndex, WriteJSONImageDataProperties);
                      break;
                  case 0x00:
                      //Inline
@@ -1211,7 +1180,7 @@ namespace ReportControl
                  prop.Add("RowHeaderColumns", "Int32", 0x01);
                  prop.Add("ColsBeforeRowHeader", "Int32", 0x02);
                  prop.Add("LayoutDirection", "Byte", 0x03);
-                 prop.Add("ColumnsWidths", "Object", 0x04,this.WriteJSONColumnWidths);
+                 prop.Add("ColumnWidths", "Object", 0x04,this.WriteJSONColumnWidths);
                  prop.Add("RowHeights", "Object", 0x05,this.WriteJSONRowHeights);
                  prop.Add("ContentTop", "Singe", 0x06);
                  prop.Add("ContentLeft", "Singe", 0x07);

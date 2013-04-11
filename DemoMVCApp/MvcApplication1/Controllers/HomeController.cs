@@ -28,8 +28,8 @@ namespace MvcApplication1.Controllers
             ViewBag.Message = "Your app description page.";
 
 
-            ViewBag.Report = Rep.GetReportHTML("/AdventureWorks 2008R2/Sales By Sales Person");
-            //ViewBag.Report = Rep.GetReportJson("/AdventureWorks 2008R2/Sales By Sales Person");
+            //ViewBag.Report = Rep.GetReportHTML("/AdventureWorks 2008R2/Sales By Sales Person");
+            ViewBag.Report = Rep.GetReportJson("/AdventureWorks 2008R2/Sales By Sales Person","","0");
             ViewBag.Report = Rep.GetReportScript("/AdventureWorks 2008R2/Sales By Sales Person");
 
             return View();

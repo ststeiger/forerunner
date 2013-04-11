@@ -16,10 +16,7 @@ namespace MvcApplication1.Controllers
 {   
     public class ReportController : ApiController
     {
-         //
-        // GET: /Report/GetImage
-
-        //[Authorize]
+         
         [HttpGet]
         public HttpResponseMessage GetImage(string RepServer,string SessionID, string ImageID)
         {
@@ -29,9 +26,7 @@ namespace MvcApplication1.Controllers
             HttpResponseMessage Resp;
 
             result = Rep.GetImage(SessionID,ImageID,out mimeType);
-
-            ByteArrayContent content = new ByteArrayContent(result);
-           
+            ByteArrayContent content = new ByteArrayContent(result);           
             Resp = this.Request.CreateResponse();
             Resp.Content = content;
             Resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
@@ -42,23 +37,17 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public HttpResponseMessage GetJSON(string RepServer, string ReportPath, string SessionID, int PageID)
         {
-            //http://localhost:54173/api/Report/GetJSON/?RepServer=192.168.1.27/reportserver&ReportPath=/AdventureWorks 2008R2/Sales By Sales Person&SessionID=abcd&PageID=1
-
             Report Rep = new Report(RepServer);
-            //string mimeType;
             byte[] result;
             HttpResponseMessage Resp;
 
-            result = Encoding.UTF8.GetBytes(Rep.GetReportJson(ReportPath));
-
+            result = Encoding.UTF8.GetBytes(Rep.GetReportJson(ReportPath,SessionID,PageID.ToString()));
             ByteArrayContent content = new ByteArrayContent(result);
-
             Resp = this.Request.CreateResponse();
             Resp.Content = content;
             Resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
 
-            return Resp;
-            
+            return Resp;            
         }
     }
 }

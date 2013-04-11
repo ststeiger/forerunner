@@ -1,5 +1,52 @@
 ﻿
-function GetReport(ReportServer, ReportPath, SessionID, PageNum,ReportDiv) {
+//Global reference to head of Report JSON Object
+var ReportObj;
+var ReportDiv;
+var $RepContainer;
+//Hack
+var Page;
+
+function InitReport(ReportServer, ReportPath, Toolbar, PageNum, RepDivName) {
+    var $Container = $("<Table/>");    
+    var $Row;
+    var $Cell;
+       
+    ReportDiv = RepDivName;
+    Page = PageNum;
+    if (Toolbar) {
+        $Row = new $("<TR/>");
+        $Cell = new $("<TD/>");
+        $Cell.append(GetToolbar());
+        $Row.append($Cell);
+        $Container.append($Row);
+    }
+
+    ;
+
+    //Log in screen if needed
+
+    //If Parameters needed show Parameters
+
+
+    //Else load the reprot Page requested
+    $Row = new $("<TR/>");
+    $RepContainer = $Row;
+    $Container.append($Row);
+    $("#" + ReportDiv).append($Container);
+    LoadSection(ReportServer, ReportPath, "", PageNum);
+
+    //$("#" + ReportDiv).append($Container);
+}
+
+function SetActionCursor(Ob) {
+    Ob.style.cursor = "pointer";   
+}
+
+
+function LoadSection(ReportServer, ReportPath, SessionID, PageNum){
+    
+    $("#ReportDiv12").fadeOut("fast");
+
     var ReportAPI = "/api/Report/GetJSON/";
     $.getJSON(ReportAPI, {
         RepServer: ReportServer,
@@ -7,66 +54,129 @@ function GetReport(ReportServer, ReportPath, SessionID, PageNum,ReportDiv) {
         SessionID: SessionID,
         PageID: PageNum
     })
-    .done(function (Data) { WriteReport(Data, ReportDiv); })
+    .done(function (Data) { WriteReport(Data); })
+    .fail(function () { console.log("error"); })
+
+   
 }
 
-function WriteReport(ReportObj, ReportDiv) {
+function GetToolbar() {
+    var $Toolbar = $("<Table/>");
+    var $Row = $("<TR/>");
+    var $Cell;
 
+    $Toolbar.attr("style", "width:100%;background-color:lightsteelblue;");
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "width:10mm;");
+    $Cell.attr("onclick", "ShowParms()");
+    $Cell.attr("onmouseover", "SetActionCursor(this)");
+    $Cell.html("Par");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("onclick", "NavHome()");
+    $Cell.attr("onmouseover", "SetActionCursor(this)");
+    $Cell.html("Home");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "min-width:30mm;");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("onclick", "NavToPage(--Page)");
+    $Cell.attr("onmouseover", "SetActionCursor(this)");
+    $Cell.html("Prev");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("onclick", "NavToPage(++Page)");
+    $Cell.attr("onmouseover", "SetActionCursor(this)");
+    $Cell.html("Next");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "width:100%;");       
+    $Row.append($Cell);
+
+    $Toolbar.append($Row);
+    return $Toolbar;
+}
+
+function NavToPage(PageNum) {
+    LoadSection(ReportObj.ReportServerURL, ReportObj.ReportPath, ReportObj.SessionID, PageNum)
+}
+
+function ShowParms() {
+    alert("Show");
+}
+
+function WriteReport(Report) {
     var $Report = GetDefaultHTMLDiv();
+    ReportObj = Report;
 
     //Write Style   
-    $Report.attr("Style", "position:relative;" + GetStyle(ReportObj.Report.PageContent.PageStyle));
+   
+
+    //Write Style   
+    $Report.attr("Style", "overflow:hidden;position:relative;" + GetStyle(ReportObj.Report.PageContent.PageStyle));
 
     //Sections
-    $.each(ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(ReportObj, Obj, Index, ReportObj.Report.PageContent, $Report); });
-    $("#"+ReportDiv).append($Report);        
-    //Div = document.getElementById(ReportDiv);
+    $.each(ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(Obj, Index, ReportObj.Report.PageContent, $Report); });
+
+    
+    $("#ReportDiv12").remove();
+    $Report.attr("id", "ReportDiv12");
+    $RepContainer.append($Report);
+    //$("ReportDiv12").fadeIn("normal");
 
 }
 
-function WriteSection(ReportObj,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {    
+function WriteSection(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {    
     var $NewObj = GetDefaultHTMLTable();
     var $Sec = $("<TR/>");
 
-    $Sec.attr("Style",  GetMeasurements(GetMeasurmentsObj(CurrObjParent, CurrObjIndex)));
+    //TODO: losing a little space somewhere need to find and fix, probably padding or boarder that is not visible/needed
+    $Sec.attr("Style", "float:left;"+ GetMeasurements(GetMeasurmentsObj(CurrObjParent, CurrObjIndex)));
     
     //Columns
     $NewObj.append($Sec);
-    $.each(CurrObj.Columns, function (Index, Obj) { WriteColumn(ReportObj, Obj, Index, CurrObj, $Sec); });
+    $.each(CurrObj.Columns, function (Index, Obj) { WriteColumn(Obj, Index, CurrObj, $Sec); });
     $HTMLParent.append($NewObj);
 
 }
-function WriteColumn(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
+function WriteColumn(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
     var $NewObj = $("<TD/>");
     var $RIDiv;
     
     $NewObj.attr("Style", GetElementsStyle(CurrObj.Elements, null));
-    $.each(CurrObj.ReportItems, function (Index, Obj) { $RIDiv = new $("<Div/>"); $NewObj.append(WriteReportItems(ReportObj, Obj, Index, CurrObj, $RIDiv)); });
+    $.each(CurrObj.ReportItems, function (Index, Obj) { $RIDiv = new $("<Div/>"); $NewObj.append(WriteReportItems(Obj, Index, CurrObj, $RIDiv)); });
     $HTMLParent.append($NewObj);
 }
 
-function WriteReportItems(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
+function WriteReportItems(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
     
     switch (CurrObj.Type)
     {
         case "RichTextBox":
-            return WriteRichText(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
+            return WriteRichText(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
             break;
         case "Image":
-            return WriteImage(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
-            break;
-        case "RichTextBox":
-            return WriteRichText(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
+            return WriteImage(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
             break;
         case "Tablix":
-            return WriteTablix(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
+            return WriteTablix(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
             break;
         case "Rectangle":
-            return WriteRectangle(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
+            return WriteRectangle(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent);
             break;
     }
 }
-function WriteRichText(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {   
+function WriteRichText(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {   
     var Style = "";
 
     if (CurrObj.Elements.SharedElements.Value != null)
@@ -85,6 +195,73 @@ function WriteRichText(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLPar
     //$HTMLParent.append($NewObj);
     return $HTMLParent;
 }
+function WriteImage(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
+    var $NewObj = $("<IMG/>");
+    var Src = "/api/Report/GetImage/?";
+    var Style = GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex));
+
+    //Hack for Image size, need to handle clip, fit , fit proportional
+    if ($HTMLParent.width() != 0)
+        Style += "width:" + $HTMLParent.width() + "px;" + "height:" + $HTMLParent.height() + "px;"
+    $NewObj.attr("Style", Style);
+
+    //src parameters
+    Src += "RepServer=" + ReportObj.ReportServerURL;
+    Src += "&SessionID=" + ReportObj.SessionID;
+    Src += "&ImageID=" + CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
+    $NewObj.attr("src", Src);
+    $NewObj.attr("alt", "Cannot display image");
+
+
+    $HTMLParent.append($NewObj);
+    return $HTMLParent;
+}
+function WriteTablix(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
+    var $Tablix = GetDefaultHTMLTable();
+    var Style = "border-collapse:collapse;";
+    var $Row;
+    var $Cell;
+    var $Col;
+    var $ColGroup = $("<ColGroup/>");
+    var ColIndex = 0;
+    var RowIndex = 0;
+
+    Style += GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex));
+    $Tablix.attr("Style", Style);
+
+    $.each(CurrObj.ColumnWidths.Columns, function (Index, Obj) {
+        $Col = new $("<Col/>");
+        $Col.attr("Style", "Width:" + Obj.Width + "mm;");
+        $ColGroup.append($Col);
+    })
+    $Tablix.append($ColGroup);
+
+    $Row = GetTableRow();
+    $.each(CurrObj.Content, function (Index, Obj) {
+        if (Obj.Type != "BodyRow") {
+            $Cell = new $("<TD/>");
+            $Cell.attr("Style", "Width:" + CurrObj.ColumnWidths.Columns[ColIndex].Width + "mm;" + "height:" + CurrObj.RowHeights.Rows[RowIndex].Height + "mm;");
+            $Row.append(WriteReportItems(Obj, Index, CurrObj, $Cell));
+            ColIndex++;
+        }
+        else {
+            $Tablix.append($Row);
+            $Row = GetTableRow();
+            ColIndex = 0;
+            RowIndex++;
+        }
+    })
+
+    return $Tablix;
+}
+function WriteRectangle(CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
+    var $RIDiv;
+
+    $HTMLParent.attr("Style", GetElementsStyle(CurrObj.Elements, null));
+    $.each(CurrObj.Content, function (Index, Obj) { $RIDiv = new $("<Div/>"); $HTMLParent.append(WriteReportItems(Obj, Index, CurrObj, $RIDiv)); });
+
+    return $HTMLParent;
+}
 
 function GetElementsStyle(CurrObj, Measurements,position) {
     var Style = "";
@@ -100,7 +277,6 @@ function GetElementsStyle(CurrObj, Measurements,position) {
      
     return Style;
 }
-
 function GetMeasurements(CurrObj) {
     var Style = "";
 
@@ -398,57 +574,3 @@ function GetTableRow() {
     return retval;
 }
 
-function WriteImage(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
-    var $NewObj = $("<IMG/>");
-    var Src = "/api/Report/GetImage/?";
-
-    $NewObj.attr("Style",  GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex)));
-    Src += "RepServer=" + ReportObj.ReportServerURL;
-    Src += "&SessionID=" + ReportObj.SessionID;
-    Src += "&ImageID=" + CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-    $NewObj.attr("src", Src);
-    $NewObj.attr("alt", "Cannot find image");
-
-    return $NewObj;
-}
-function WriteTablix(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
-    var $Tablix = GetDefaultHTMLTable();
-    var Style = "border-collapse:collapse;";
-    var $Row;
-    var $Cell ;
-    var $Col;
-    var $ColGroup = $("<ColGroup/>");
-    
-    
-    Style +=  GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex));
-    $Tablix.attr("Style", Style);
-
-    $.each(CurrObj.ColumnsWidths.Columns, function (Index, Obj) {
-        $Col = new $("<Col/>");
-        $Col.attr("Style", "Width:"+ Obj.Width +"mm;");
-        $ColGroup.append($Col);
-    })
-    $Tablix.append($ColGroup);
-
-    $Row = GetTableRow();
-    $.each(CurrObj.Content, function (Index, Obj) {
-        if (Obj.Type != "BodyRow"){
-            $Cell = new $("<TD/>");
-            $Row.append(WriteReportItems(ReportObj, Obj, Index, CurrObj, $Cell));            
-        }
-        else {
-            $Tablix.append($Row);
-            $Row = GetTableRow();
-        }
-    })
-
-    return $Tablix;
-}
-function WriteRectangle(ReportObj, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent) {
-    var $RIDiv;
-
-    $HTMLParent.attr("Style", GetElementsStyle(CurrObj.Elements, null));
-    $.each(CurrObj.Content, function (Index, Obj) { $RIDiv = new $("<Div/>"); $HTMLParent.append(WriteReportItems(ReportObj, Obj, Index, CurrObj, $RIDiv)); });
-
-    return $HTMLParent;
-}

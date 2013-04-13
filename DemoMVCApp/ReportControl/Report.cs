@@ -10,6 +10,7 @@ using ReportControl.RSExec;
 using System.Diagnostics;
 using System.Net;
 using Jayrock.Json;
+using System.Threading;
 
 
 namespace ReportControl
@@ -168,13 +169,16 @@ namespace ReportControl
             ParameterValue[] reportHistoryParameters = null;
             string[] streamIDs = null;
             string NewSession;
-
+            
 
             if (SessionID == null)
                 NewSession = "";
             else
                 NewSession = SessionID;
 
+
+            //Delay just for testing
+            //Thread.Sleep(1000);
 
             ReportExecutionService rs = new ReportExecutionService();
             //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
@@ -651,118 +655,138 @@ namespace ReportControl
 
          }
 
-         public Boolean WriteJSONElements(byte ObjectType = 0x00)
+         public Boolean WriteJSONElements(byte ObjectType = 0x00, int DeRef = 0)
          {
              // ObjectType is used to handle dublicate values
              // 0x13 is Paragraph
              //0x14 TextRun
              
+             //Def ref is used for share propoerties that need to be deferenced
+             // 0 means normal
+             // 1 mean Shared property only
+             // 2 means non sharred only
+
 
              RPLProperties prop;
             
-            if (ReadByte() != 0x0F)
-                // THis must be a Element Property
-                ThrowParseError();
-            if (InspectByte() == 0x00)
+             if (DeRef != 2)
+                if (ReadByte() != 0x0F)
+                    // THis must be a Element Property
+                    ThrowParseError();
+
+
+            if (InspectByte() == 0x00 || (InspectByte() == 0x01 && DeRef == 2))
             {
-                //w.WriteMember("Elements");
-                w.WriteStartObject();   
-                //Shared Properties
-                w.WriteMember("SharedElements");
-                w.WriteStartObject();         
-                prop = new RPLProperties(0x00);
-                prop.Add("ID", "String", 0x01);                   
-                if (ObjectType != 0x14) prop.Add("Lable", "String", 0x03);               
-                else prop.Add("Lable", "String", 0x08);
-                prop.Add("Name", "String", 0x02);
-                prop.Add("Bookmark", "String", 0x04);
-                if (ObjectType != 0x14) prop.Add("Tooltip", "String", 0x05);
-                else prop.Add("Tooltip", "String", 0x09);
-                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-                if (ObjectType != 0x13) prop.Add("ToggleItem", "String", 0x08);                     
-                prop.Add("Slant", "Byte", 0x18);
-                prop.Add("CanGrow", "Boolean", 0x19);
-                prop.Add("CanShrink", "Boolean", 0x1A);
-                prop.Add( "CanSort", "Boolean", 0x1D);
-                prop.Add( "Value", "String", 0x1B);
-                if (ObjectType != 0x13) prop.Add("Value", "String", 0x0A);
-                prop.Add( "Formula", "String", 0x1F);
-                if (ObjectType != 0x13) prop.Add("Formula", "String", 0x0C);
-                prop.Add( "IsToggleParent", "Boolean", 0x20);
-                prop.Add( "TypeCode", "Byte", 0x21);
-                prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
-                prop.Add( "IsSimple", "Boolean", 0x23);
-                prop.Add( "Sizing", "Byte", 0x29);
-                prop.Add( "LinkToChild", "String", 0x2B);
-                prop.Add( "PrintOnFirstPage", "Boolean", 0x2C);
-                prop.Add( "PrintBetweenSections", "Boolean", 0x2F);
-                prop.Add("FormattedValueExpressionBased", "Boolean", 0x2D);
-                prop.Add("ReportName", "String", 0x0F);
-                prop.Add("Markup/ListStyle", "Byte", 0x07);                     
-                prop.Add("ListLevel", "Int32", 0x08); 
-                prop.Add("LeftIndent", "String", 0x09);
-                prop.Add("RightIndent", "String", 0x0A);
-                prop.Add("HangingIndent", "String", 0x0B);
-                prop.Add("SpaceBefore", "String", 0x0C); 
-                prop.Add("SpaceAfter", "String", 0x0D);                   
-                prop.Write(this);
-                w.WriteEndObject();
+                if (DeRef == 1 || DeRef == 0)
+                {
+                    //w.WriteMember("Elements");
+                    w.WriteStartObject();
+                    //Shared Properties
+                    w.WriteMember("SharedElements");
+                    w.WriteStartObject();
+                    prop = new RPLProperties(0x00);
+                    prop.Add("ID", "String", 0x01);
+                    if (ObjectType != 0x14) prop.Add("Lable", "String", 0x03);
+                    else prop.Add("Lable", "String", 0x08);
+                    prop.Add("Name", "String", 0x02);
+                    prop.Add("Bookmark", "String", 0x04);
+                    if (ObjectType != 0x14) prop.Add("Tooltip", "String", 0x05);
+                    else prop.Add("Tooltip", "String", 0x09);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    if (ObjectType != 0x13) prop.Add("ToggleItem", "String", 0x08);
+                    prop.Add("Slant", "Byte", 0x18);
+                    prop.Add("CanGrow", "Boolean", 0x19);
+                    prop.Add("CanShrink", "Boolean", 0x1A);
+                    prop.Add("CanSort", "Boolean", 0x1D);
+                    prop.Add("Value", "String", 0x1B);
+                    if (ObjectType != 0x13) prop.Add("Value", "String", 0x0A);
+                    prop.Add("Formula", "String", 0x1F);
+                    if (ObjectType != 0x13) prop.Add("Formula", "String", 0x0C);
+                    prop.Add("IsToggleParent", "Boolean", 0x20);
+                    prop.Add("TypeCode", "Byte", 0x21);
+                    prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
+                    prop.Add("IsSimple", "Boolean", 0x23);
+                    prop.Add("Sizing", "Byte", 0x29);
+                    prop.Add("LinkToChild", "String", 0x2B);
+                    prop.Add("PrintOnFirstPage", "Boolean", 0x2C);
+                    prop.Add("PrintBetweenSections", "Boolean", 0x2F);
+                    prop.Add("FormattedValueExpressionBased", "Boolean", 0x2D);
+                    prop.Add("ReportName", "String", 0x0F);
+                    prop.Add("Markup/ListStyle", "Byte", 0x07);
+                    prop.Add("ListLevel", "Int32", 0x08);
+                    prop.Add("LeftIndent", "String", 0x09);
+                    prop.Add("RightIndent", "String", 0x0A);
+                    prop.Add("HangingIndent", "String", 0x0B);
+                    prop.Add("SpaceBefore", "String", 0x0C);
+                    prop.Add("SpaceAfter", "String", 0x0D);
+                    prop.Write(this);
+                    w.WriteEndObject();
+                }
 
-                //NonShared Properties
-                w.WriteMember("NonSharedElements");
-                w.WriteStartObject();         
-                prop = new RPLProperties(0x01);
-                prop.Add("Lable", "String", 0x03);
-                if (ObjectType == 0x13 || ObjectType == 0x14) prop.Add("UniqueName", "String", 0x04);
-                else prop.Add("UniqueName", "String", 0x00);                
-                prop.Add("Bookmark", "String", 0x04);
-                prop.Add("Tooltip", "String", 0x05);
-                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-                if (ObjectType != 0x14) prop.Add("ActionInfo", "Object", 0x07, this.WriteJSONActionInfo); 
-                else prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
-                if (ObjectType != 0x14 ) prop.Add("Value", "String", 0x1B);
-                else prop.Add( "Value", "String", 0x0A);
-                prop.Add("ToggleState", "Boolean", 0x1C);
-                prop.Add("SortState", "Byte", 0x1E);
-                prop.Add( "IsToggleParent", "Boolean", 0x20);
-                prop.Add( "TypeCode", "Byte", 0x21);
-                prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
-                if (ObjectType != 0x14 ) prop.Add("ProcessedWithError", "Boolean", 0x2E);
-                else prop.Add( "ProcessedWithError", "Boolean", 0x0D);
-                prop.Add( "ContentOffset", "Single", 0x25);
-                prop.Add( "ContentHeight", "Single", 0x03);
-                prop.Add( "ContentHeight", "Single", 0x24);
-                prop.Add("ActionImageMapAreas", "Object", 0x26, this.WriteJSONActionImageMapAreas); 
-                prop.Add("DynamicImageData", "Object", 0x27, this.WriteJSONImageData);
-                prop.Add( "StreamName", "String", 0x28);
-                prop.Add("ImageDataProperties", "Object", 0x2A, this.WriteJSONImageDataProperties); 
-                prop.Add( "Language", "String", 0x0B); 
-                prop.Add( "Markup/ListStyle", "Boolean", 0x2C);
-                prop.Add( "ListLevel", "Int32", 0x08);
-                prop.Add( "LeftIndent", "String", 0x09);
-                prop.Add( "RightIndent", "String", 0x0A); 
-                prop.Add( "HangingIndent", "String", 0x0B);
-                prop.Add( "SpaceBefore", "String", 0x0C);
-                prop.Add( "SpaceAfter", "String", 0x0D);  
-                prop.Add( "ParagraphNumber", "Int32", 0x0E);
-                prop.Add( "FirstLine", "Boolean", 0x0F);
-                prop.Add( "ContentTop", "Single", 0x00); 
-                prop.Add( "ContentLeft", "Single", 0x01);
-                prop.Add( "ContentWidth", "Single", 0x02);
-                prop.Write(this);
-                w.WriteEndObject();
-                w.WriteEndObject();
+                if (DeRef == 2 || DeRef==0)
+                {
+                    //NonShared Properties
+                    w.WriteMember("NonSharedElements");
+                    w.WriteStartObject();
+                    prop = new RPLProperties(0x01);
+                    prop.Add("Lable", "String", 0x03);
+                    if (ObjectType == 0x13 || ObjectType == 0x14) prop.Add("UniqueName", "String", 0x04);
+                    else prop.Add("UniqueName", "String", 0x00);
+                    prop.Add("Bookmark", "String", 0x04);
+                    prop.Add("Tooltip", "String", 0x05);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    if (ObjectType != 0x14) prop.Add("ActionInfo", "Object", 0x07, this.WriteJSONActionInfo);
+                    else prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
+                    if (ObjectType != 0x14) prop.Add("Value", "String", 0x1B);
+                    else prop.Add("Value", "String", 0x0A);
+                    prop.Add("ToggleState", "Boolean", 0x1C);
+                    prop.Add("SortState", "Byte", 0x1E);
+                    prop.Add("IsToggleParent", "Boolean", 0x20);
+                    prop.Add("TypeCode", "Byte", 0x21);
+                    prop.Add("OriginalValue", "String", 0x22, this.WriteJSONOrigionalValue);
+                    if (ObjectType != 0x14) prop.Add("ProcessedWithError", "Boolean", 0x2E);
+                    else prop.Add("ProcessedWithError", "Boolean", 0x0D);
+                    prop.Add("ContentOffset", "Single", 0x25);
+                    prop.Add("ContentHeight", "Single", 0x03);
+                    prop.Add("ContentHeight", "Single", 0x24);
+                    prop.Add("ActionImageMapAreas", "Object", 0x26, this.WriteJSONActionImageMapAreas);
+                    prop.Add("DynamicImageData", "Object", 0x27, this.WriteJSONImageData);
+                    prop.Add("StreamName", "String", 0x28);
+                    prop.Add("ImageDataProperties", "Object", 0x2A, this.WriteJSONImageDataProperties);
+                    prop.Add("Language", "String", 0x0B);
+                    prop.Add("Markup/ListStyle", "Boolean", 0x2C);
+                    prop.Add("ListLevel", "Int32", 0x08);
+                    prop.Add("LeftIndent", "String", 0x09);
+                    prop.Add("RightIndent", "String", 0x0A);
+                    prop.Add("HangingIndent", "String", 0x0B);
+                    prop.Add("SpaceBefore", "String", 0x0C);
+                    prop.Add("SpaceAfter", "String", 0x0D);
+                    prop.Add("ParagraphNumber", "Int32", 0x0E);
+                    prop.Add("FirstLine", "Boolean", 0x0F);
+                    prop.Add("ContentTop", "Single", 0x00);
+                    prop.Add("ContentLeft", "Single", 0x01);
+                    prop.Add("ContentWidth", "Single", 0x02);
+                    prop.Write(this);
+                    w.WriteEndObject();
+                    w.WriteEndObject();
+                
 
-                if (ReadByte() != 0xFF)
-                //This should never happen
-                ThrowParseError();
+                    if (ReadByte() != 0xFF)
+                        //This should never happen
+                        ThrowParseError();
+                }
 
                
             }
             else if (InspectByte() == 0x02)
             {
-                w.WriteMember("Offset");
-                w.WriteNumber(ReadInt64());
+                ReadByte();
+                int NewIndex = (int)ReadInt64();
+                int CurrIndex = this.Index;
+                this.Index = NewIndex;
+                WriteJSONElements(ObjectType,1);
+                this.Index = CurrIndex;
+                WriteJSONElements(ObjectType, 2);
             }
              
              return true;
@@ -770,6 +794,15 @@ namespace ReportControl
          }
 
 
+         public Boolean DeReference(int StartIndex,byte ObjectType, Func<byte, Boolean> DeFunction)
+         {
+
+             int CurrIndex = this.Index;
+             this.Index = StartIndex;
+             DeFunction(ObjectType);
+             this.Index = CurrIndex;
+             return true;
+         }
          public Boolean DeReference(int StartIndex, Func<Boolean> DeFunction) 
          {
             

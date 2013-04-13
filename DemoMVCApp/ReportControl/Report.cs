@@ -144,17 +144,22 @@ namespace ReportControl
 
         }
 
-        public string GetReportScript(string reportPath)
+        public string GetReportScript()
         {
-            StringBuilder sb = new StringBuilder(1024);
+            string script ="";
+
+            script += "<script src='/Scripts/jquery-1.7.1.min.js'></script>";
+            script += "<script src='/Scripts/FRReport.js'></script>";
+            return script;
+        }
+        public string GetReportInitScript(string reportPath)
+        {            
+            string script = "";
             string UID = Guid.NewGuid().ToString("N");
 
-            //sb.Append("<div id=\"Report\">");
-            sb.Append("<div id=\"ReportDiv\"></div>");
-            sb.Append("<script src=\"/Scripts/jquery-1.7.1.min.js\"></script>");
-            sb.Append("<script src=\"/Scripts/FRReport.js\"></script>");
-            sb.Append("<script>InitReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",true, 1,\"ReportDiv\"," + UID + ")</script>");
-            return sb.ToString();
+            script += "<div id='" + UID + "'></div>";
+            script += "<script>InitReport('" + ReportServerURL + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
+            return script;
         }
 
         public string GetReportJson(string reportPath,string SessionID,string PageNum)
@@ -227,7 +232,10 @@ namespace ReportControl
             {
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
-                return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath);
+                if (result != null)
+                    return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath);
+                else
+                    return "";
             }
             catch (Exception e)
             {

@@ -30,7 +30,9 @@ namespace MvcApplication1.Controllers
 
             //ViewBag.Report = Rep.GetReportHTML("/AdventureWorks 2008R2/Sales By Sales Person");
             //ViewBag.Report = Rep.GetReportJson("/AdventureWorks 2008R2/Sales By Sales Person","","0");
-            ViewBag.Report = Rep.GetReportScript("/AdventureWorks 2008R2/Sales By Sales Person");
+            ViewBag.ReportScript = Rep.GetReportScript();
+            ViewBag.Report1 = Rep.GetReportInitScript("/AdventureWorks 2008R2/Sales By Sales Person");
+            ViewBag.Report2 = Rep.GetReportInitScript("/AdventureWorks 2008R2/Sales By Sales Person");
 
             return View();
         }

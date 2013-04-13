@@ -5,6 +5,7 @@
 
 <h2>About</h2>
 
+@Html.Raw(@ViewBag.ReportScript)
 <table>
     <tr>
         <td>Report Name</td>
@@ -12,7 +13,11 @@
     </tr>
     <tr>
         <td>Sales By Sales Person</td>
-        <td>@Html.Raw(@ViewBag.Report)</td>
+        <td>@Html.Raw(@ViewBag.Report1)</td>
+    </tr>
+    <tr>
+        <td>Sales By Sales Person2</td>
+        <td>@Html.Raw(@ViewBag.Report2)</td>
     </tr>
 </table>
 

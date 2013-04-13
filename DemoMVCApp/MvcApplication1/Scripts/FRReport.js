@@ -31,12 +31,12 @@ function ReportPage($pContainer, pReportObj) {
 }
 
 
-function InitReport(ReportServer, ReportPath, Toolbar, PageNum, RepDivName,UID) {
+function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
     var $Container = $("<Table/>");    
     var $Row =  new $("<TR/>");
     var $Cell;
     
-    var RS = new ReportState(UID, $("#" + RepDivName),  ReportServer, ReportPath, Toolbar, $Row);
+    var RS = new ReportState(UID, $("#" + UID), ReportServer, ReportPath, Toolbar, $Row);
     
     Reports[UID] = RS;
     

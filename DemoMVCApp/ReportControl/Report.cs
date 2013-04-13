@@ -146,13 +146,14 @@ namespace ReportControl
 
         public string GetReportScript(string reportPath)
         {
-            StringBuilder sb = new StringBuilder(1024); 
-            
+            StringBuilder sb = new StringBuilder(1024);
+            string UID = Guid.NewGuid().ToString("N");
+
             //sb.Append("<div id=\"Report\">");
             sb.Append("<div id=\"ReportDiv\"></div>");
             sb.Append("<script src=\"/Scripts/jquery-1.7.1.min.js\"></script>");
             sb.Append("<script src=\"/Scripts/FRReport.js\"></script>");
-            sb.Append("<script>InitReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",true, 1,\"ReportDiv\")</script>");
+            sb.Append("<script>InitReport(\"" + ReportServerURL + "\",\"" + reportPath + "\",true, 1,\"ReportDiv\"," + UID + ")</script>");
             return sb.ToString();
         }
 

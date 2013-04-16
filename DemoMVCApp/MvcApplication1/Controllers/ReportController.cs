@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Routing;
 using System.Web.Security;
-using ReportControl;
+using Forerunner.ReportControl;
 using System.Net.Http.Headers;
 using System.Drawing;
 using System.IO;
@@ -16,38 +16,63 @@ namespace MvcApplication1.Controllers
 {   
     public class ReportController : ApiController
     {
-         
+                 
         [HttpGet]
-        public HttpResponseMessage GetImage(string RepServer,string SessionID, string ImageID)
+        public HttpResponseMessage GetImage(string ReportServerURL,string SessionID, string ImageID)
         {
-            Report Rep = new Report(RepServer);
+            Report rep = new Report(ReportServerURL);
             string mimeType;
             byte[] result;
-            HttpResponseMessage Resp;
+            HttpResponseMessage resp;
 
-            result = Rep.GetImage(SessionID,ImageID,out mimeType);
+            //Application will need to handel security
+            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+
+            result = rep.GetImage(SessionID,ImageID,out mimeType);
             ByteArrayContent content = new ByteArrayContent(result);           
-            Resp = this.Request.CreateResponse();
-            Resp.Content = content;
-            Resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            resp = this.Request.CreateResponse();
+            resp.Content = content;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
 
-            return Resp;
+            return resp;
         }
 
         [HttpGet]
-        public HttpResponseMessage GetJSON(string RepServer, string ReportPath, string SessionID, int PageID)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
         {
-            Report Rep = new Report(RepServer);
+            Report rep = new Report(ReportServerURL);
             byte[] result;
-            HttpResponseMessage Resp;
+            HttpResponseMessage resp;
 
-            result = Encoding.UTF8.GetBytes(Rep.GetReportJson(ReportPath,SessionID,PageID.ToString()));
+            //Application will need to handel security
+            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+
+            result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString());
             ByteArrayContent content = new ByteArrayContent(result);
-            Resp = this.Request.CreateResponse();
-            Resp.Content = content;
-            Resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+            resp = this.Request.CreateResponse();
+            resp.Content = content;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
 
-            return Resp;            
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        {
+            Report rep = new Report(ReportServerURL);
+            byte[] result;
+            HttpResponseMessage resp;
+
+            //Application will need to handel security
+            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+
+            result = Encoding.UTF8.GetBytes(rep.GetReportJson(ReportPath, SessionID, PageNumber.ToString()));
+            ByteArrayContent content = new ByteArrayContent(result);
+            resp = this.Request.CreateResponse();
+            resp.Content = content;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;            
         }
     }
 }

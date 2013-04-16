@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ReportControl;
+using Forerunner.ReportControl;
 
 
 namespace MvcApplication1.Controllers

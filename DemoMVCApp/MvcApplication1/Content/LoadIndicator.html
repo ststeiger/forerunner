@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Progress Load Indicator</title>
+    <script language="javascript" type="text/javascript" src="../Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" language="javascript">
+        function Reload() {
+            window.location.reload(true);
+        }
+        function ShowLoader() {
+            var className = $("#progressBar").attr("class").toString();
+            if (className.indexOf("hidden") != -1) {
+                $("#progressBar").removeClass("hidden").addClass("display");
+            }
+        }
+        function CloseLoader() {
+            var className = $("#progressBar").attr("class").toString();
+            if (className.indexOf("display") != -1) {
+                $("#progressBar").removeClass("display").addClass("hidden");
+            }
+        }
+        $(document).ready(function () {
+            $("#showloading").click(ShowLoader);
+            $("#closeloading").click(CloseLoader);
+        });
+    </script>
+    <style type="text/css">
+        body{ 
+            margin: 0; 
+            font-size: 12px; 
+            line-height: 100%; 
+            font-family: Arial, sans-serif; 
+        } 
+
+        .background { 
+            width: 100%; 
+            height: 100%; 
+            background-color: white;
+            position:relative; 
+            top: 0; 
+            left: 0; 
+            z-index: 2000; 
+        } 
+
+        .progressBar 
+        {
+            border: solid 2px #86A5AD;
+            background: white url(/Content/images/ajax-loader1.gif) no-repeat 10px 10px;
+            width: 148px; 
+            height: 28px; 
+            position:relative; 
+            margin:10px auto; 
+            padding: 10px 10px 10px 50px; 
+            text-align: left; 
+            line-height: 27px; 
+            font-weight: bold; 
+            z-index: 2001; 
+        } 
+
+        .hidden
+        {
+            display:none;
+        }
+
+        .display
+        {
+            display:block;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin:50px auto; height:400px; width:600px; border:1px solid red">
+        <input type="button" id="showloading" value="show" />
+        <input type="button" id="closeloading" value="close" />
+        <input type="button" id="reload" value="reload" onclick="Reload()" />
+        <div id="background" class="background hidden" ></div> 
+        <div id="progressBar" class="progressBar hidden">Report loading...</div>
+    </div>
+</body>
+</html>

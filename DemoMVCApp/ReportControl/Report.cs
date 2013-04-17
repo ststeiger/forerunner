@@ -1123,6 +1123,12 @@ namespace Forerunner.ReportControl
                      //Rectangle
                      if (!CheckOnly) WriteJSONRectangle();
                      break;
+                 case 0x0B:
+                     if (!CheckOnly) WriteJSONChart();
+                     break;
+                 case 0x15:
+                     if (!CheckOnly) WriteJSONMap();
+                     break;
                  default:                     
                      return false;
              }             
@@ -1544,16 +1550,42 @@ namespace Forerunner.ReportControl
          }
          public void WriteJSONImage()
          {
-             if (ReadByte() != 0x09)
-                 ThrowParseError();  //This should never happen
+             //if (ReadByte() != 0x09)
+             //    ThrowParseError();  //This should never happen
 
+
+             //w.WriteStartObject();
+             //w.WriteMember("Type");
+             //w.WriteString("Image");
+             //w.WriteMember("Elements");
+             //WriteJSONElements();
+
+             //WriteJSONReportElementEnd();
+             //w.WriteEndObject();
+             WriteJSONImageTypeElement(0x09, "Image");
+
+         }
+         public void WriteJSONChart()
+         {
+             WriteJSONImageTypeElement(0x0B, "Chart");
+         }
+
+         public void WriteJSONMap()
+         {
+             WriteJSONImageTypeElement(0x15, "Map");
+         }
+
+
+         public void WriteJSONImageTypeElement(byte type, string typeName)
+         {
+             if (ReadByte() != type)
+                 ThrowParseError();
 
              w.WriteStartObject();
              w.WriteMember("Type");
-             w.WriteString("Image");
+             w.WriteString(typeName);
              w.WriteMember("Elements");
              WriteJSONElements();
-
              WriteJSONReportElementEnd();
              w.WriteEndObject();
 

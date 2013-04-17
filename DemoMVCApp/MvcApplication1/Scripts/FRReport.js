@@ -235,6 +235,10 @@ function WriteReportItems(RIContext) {
         case "Rectangle":
             return WriteRectangle(RIContext);
             break;
+        case "Chart":
+        case "Map":
+            return WriteChartImage(RIContext);
+            break;
     }
 }
 function WriteRichText(RIContext) {
@@ -270,12 +274,31 @@ function WriteImage(RIContext) {
     $NewObj.attr("Style", Style);
 
     //src parameters
-    Src += "RepServer=" + RIContext.RS.ReportServerURL;
+    Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
     $NewObj.attr("src", Src);
     $NewObj.attr("alt", "Cannot display image");
     return $NewObj;
+}
+function WriteChartImage(RIContext) {
+    var $NewObj = $("<IMG/>");
+    var Src = "/api/Report/GetImage/?";
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    //var Style = GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex));
+    //Measurements go on Parent
+    if (GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex) != null)
+        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+    //Hack for Image size, need to handle clip, fit , fit proportional    
+    $NewObj.attr("Style", Style);
+    //src parameters
+    Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
+    Src += "&SessionID=" + RIContext.RS.SessionID;
+    Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
+    $NewObj.attr("src", Src);
+    $NewObj.attr("alt", "Cannot display chart image");
+    RIContext.$HTMLParent.append($NewObj);
+    return RIContext.$HTMLParent;
 }
 function ResizeImage(img) {
     //TODO: this does not work

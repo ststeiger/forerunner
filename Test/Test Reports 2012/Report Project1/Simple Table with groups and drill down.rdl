@@ -6,12 +6,12 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>3.63542in</Width>
+              <Width>4.60417in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>1.14in</Height>
+              <Height>1.96167in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -213,8 +213,19 @@
                                           <Border>
                                             <Color>LightGrey</Color>
                                             <Style>Solid</Style>
-                                            <Width>5pt</Width>
                                           </Border>
+                                          <TopBorder>
+                                            <Width>5pt</Width>
+                                          </TopBorder>
+                                          <BottomBorder>
+                                            <Width>5pt</Width>
+                                          </BottomBorder>
+                                          <LeftBorder>
+                                            <Width>2pt</Width>
+                                          </LeftBorder>
+                                          <RightBorder>
+                                            <Width>5pt</Width>
+                                          </RightBorder>
                                           <BackgroundColor>#6e9eca</BackgroundColor>
                                           <PaddingLeft>2pt</PaddingLeft>
                                           <PaddingRight>2pt</PaddingRight>
@@ -323,8 +334,19 @@
                                           <Border>
                                             <Color>LightGrey</Color>
                                             <Style>Solid</Style>
-                                            <Width>5pt</Width>
                                           </Border>
+                                          <TopBorder>
+                                            <Width>5pt</Width>
+                                          </TopBorder>
+                                          <BottomBorder>
+                                            <Width>5pt</Width>
+                                          </BottomBorder>
+                                          <LeftBorder>
+                                            <Width>2pt</Width>
+                                          </LeftBorder>
+                                          <RightBorder>
+                                            <Width>5pt</Width>
+                                          </RightBorder>
                                           <PaddingLeft>2pt</PaddingLeft>
                                           <PaddingRight>2pt</PaddingRight>
                                           <PaddingTop>2pt</PaddingTop>
@@ -422,9 +444,10 @@
                             </TablixMembers>
                           </TablixRowHierarchy>
                           <DataSetName>DataSet1</DataSetName>
-                          <Top>0.5in</Top>
+                          <Top>0.875in</Top>
+                          <Left>0.22917in</Left>
                           <Height>0.64in</Height>
-                          <Width>3.63542in</Width>
+                          <Width>3.63541in</Width>
                           <Style />
                         </Tablix>
                         <Textbox Name="Country">
@@ -446,10 +469,42 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Country</rd:DefaultName>
+                          <Top>0.16056in</Top>
+                          <Left>1.625in</Left>
                           <Height>0.27in</Height>
-                          <Width>3.63542in</Width>
+                          <Width>2.125in</Width>
                           <ZIndex>1</ZIndex>
                           <Style>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <Textbox Name="Textbox24">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Test the bottom</Value>
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox24</rd:DefaultName>
+                          <Top>1.57056in</Top>
+                          <Left>1.625in</Left>
+                          <Height>0.25in</Height>
+                          <Width>1in</Width>
+                          <ZIndex>2</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -496,9 +551,10 @@
         <PageBreak>
           <BreakLocation>End</BreakLocation>
         </PageBreak>
-        <Top>0.36in</Top>
-        <Height>1.14in</Height>
-        <Width>3.63542in</Width>
+        <Top>0.64125in</Top>
+        <Left>0.00001in</Left>
+        <Height>1.96167in</Height>
+        <Width>4.60417in</Width>
         <Style>
           <FontFamily>Tahoma</FontFamily>
           <FontSize>14pt</FontSize>
@@ -536,10 +592,10 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>1.5in</Height>
+    <Height>4.0925in</Height>
     <Style />
   </Body>
-  <Width>3.63542in</Width>
+  <Width>5.23833in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

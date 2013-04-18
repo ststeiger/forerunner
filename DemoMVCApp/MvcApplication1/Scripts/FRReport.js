@@ -71,19 +71,23 @@ function ShowLoadingImage() {
 function LoadPage(RS, NewPageNum,Page) {
 
     if (Page != null)
-        Page.$Container.fadeOut(500);
-    
-    if (RS.Pages[NewPageNum] != null)
-        SetPage(RS, NewPageNum);
-    else 
-        $.getJSON("/api/Report/GetJSON/", {
-            ReportServerURL: RS.ReportServerURL,
-            ReportPath: RS.ReportPath,
-            SessionID: RS.SessionID,
-            PageNumber: NewPageNum
-        })
-        .done(function (Data) { WritePage(Data, RS, NewPageNum,Page); })
-        .fail(function () { console.log("error"); })
+        if (Page.$Container != null)
+            Page.$Container.fadeOut("fast");
+
+    if (RS.Pages[NewPageNum] !=null)
+        if (RS.Pages[NewPageNum].$Container != null) {
+            SetPage(RS, NewPageNum);
+            return;
+        }
+        
+    $.getJSON("/api/Report/GetJSON/", {
+        ReportServerURL: RS.ReportServerURL,
+        ReportPath: RS.ReportPath,
+        SessionID: RS.SessionID,
+        PageNumber: NewPageNum
+    })
+    .done(function (Data) { WritePage(Data, RS, NewPageNum, Page); })
+    .fail(function () { console.log("error"); })
 
 }
 function SetPage(RS,NewPageNum,OldPage) {    
@@ -106,7 +110,7 @@ function GetToolbar(UID) {
     var $Row = $("<TR/>");
     var $Cell;
 
-    $Toolbar.attr("style", "width:100%;background-color:lightsteelblue;");
+    $Toolbar.attr("style", "width:100%;background-color:lightsteelblue;background:linear-gradient(steelblue lightsteelblue);");
 
     $Cell = new $("<TD/>");
     $Cell.attr("style", "width:10mm;");
@@ -117,9 +121,9 @@ function GetToolbar(UID) {
 
     $Cell = new $("<TD/>");
     $Cell.attr("style", "min-width:10mm;");
-    $Cell.attr("onclick", "NavHome('" + UID + "')");
+    $Cell.attr("onclick", "ShowNav('" + UID + "')");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Home");
+    $Cell.html("Nav");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
@@ -183,6 +187,11 @@ function ShowParms() {
     alert("Show");
 }
 
+function ShowNav(UID) {
+
+
+
+}
 
 
 function WritePage(Data, RS, NewPageNum,Page) {
@@ -192,7 +201,7 @@ function WritePage(Data, RS, NewPageNum,Page) {
     RS.SessionID =Data.SessionID;
 
     //Write Style   
-    $Report.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;overflow:hidden;position:relative;" + GetStyle(Data.Report.PageContent.PageStyle));
+    $Report.attr("Style", "" + GetStyle(Data.Report.PageContent.PageStyle));
 
     //Sections
     $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
@@ -204,21 +213,42 @@ function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
     var $Sec = $("<TR/>");
 
-    $Sec.attr("Style", "float:left;" + GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), false));
-    
+    $Sec.attr("Style", "" + GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex)));
+
     //Columns
     $NewObj.append($Sec);
     $.each(RIContext.CurrObj.Columns, function (Index, Obj) { WriteColumn(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $Sec, null)); });
     RIContext.$HTMLParent.append($NewObj);   
 }
 function WriteColumn(RIContext) {
-    var $NewObj = $("<TD/>");
-    var $RIDiv;
-    
-    $NewObj.attr("Style", GetElementsStyle(RIContext.CurrObj.Elements));
-    $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) { $RIDiv = new $("<Div/>"); $NewObj.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $RIDiv, ""))); });
-    RIContext.$HTMLParent.append($NewObj);
+    var $Column = $("<TD/>");  //HTML Object for the report column
+    var $RI;        //This is the ReportItem Object
+    var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
+    var Layout = new Object();  //This array holds the object that are before to determin location
+
+    $Column.attr("Style", "" + GetElementsStyle(RIContext.CurrObj.Elements));
+    $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {        
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
+        Layout[Index] = $RI;
+        $LocDiv = SetLocation(new $("<Div/>"), RIContext.CurrObj.Measurement.Measurements,Layout, Index);
+        $LocDiv.append($RI);
+        $Column.append($LocDiv);
+    });
+    RIContext.$HTMLParent.append($Column);
 }
+
+function SetLocation($LocObj, Measurements,Layout, CurrObjIndex) {
+    var NewTop = Measurements[CurrObjIndex].Top;
+
+    //Need to use Layout to get real height and convert from px to mm
+    for (var i = 0 ; i < CurrObjIndex; i++) {        
+        //NewTop -= Layout[i].height();        
+        NewTop -= Measurements[i].Height;
+    }
+    $LocObj.attr("Style", "position:relative;top:" + NewTop + "mm;left:" + Measurements[CurrObjIndex].Left + "mm;");
+    return $LocObj;
+}
+
 function WriteReportItems(RIContext) {
     
     switch (RIContext.CurrObj.Type)
@@ -245,10 +275,12 @@ function WriteRichText(RIContext) {
         $NewObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
     else
         $NewObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-   
-    if (GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex) != null)
-        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
+    //If no value put in HTML empty
+    if (RIContext.CurrObj.Elements.SharedElements.Value == "" || RIContext.CurrObj.Elements.NonSharedElements.Value == "")
+        $NewObj.html("&nbsp");
+
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
     $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
 
@@ -263,8 +295,7 @@ function WriteImage(RIContext) {
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
 
     //Measurements go on Parent
-    if (GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex) != null)
-        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
 
     //Hack for Image size, need to handle clip, fit , fit proportional
     $NewObj.attr("Style", Style);
@@ -290,7 +321,7 @@ function ResizeImage(img) {
 }
 function WriteTablix(RIContext) {
     var $Tablix = GetDefaultHTMLTable();
-    var Style = "border-collapse:collapse;padding: 0;";
+    var Style = "border-collapse:collapse;padding:0;";
     var $Row;
     var $Cell;
     var $Col;
@@ -298,9 +329,10 @@ function WriteTablix(RIContext) {
     var ColIndex = 0;
     var RowIndex = 0;
     var $RIDiv;
+    var width;
+    var bordersize = 0;
 
-    if (GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex) != null)
-        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
 
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
     $Tablix.attr("Style", Style);
@@ -316,23 +348,35 @@ function WriteTablix(RIContext) {
     $.each(RIContext.CurrObj.Content, function (Index, Obj) {
         if (Obj.Type != "BodyRow") {
             $Cell = new $("<TD/>");
+         
+            // Width and Border go on the Cell so we need to subtract out border width from content width, allign the TD to the Top in case another column grows
+            Style = "vertical-align:top;";
+            Style += GetFullBorderStyle(Obj);
+            if (RIContext.CurrObj.ColumnWidths.Columns[ColIndex] != null) {
+                // need to handle different left and right size borders
+                if ((ColIndex == 0) && (ColIndex == (RIContext.CurrObj.ColumnWidths.ColumnCount - 1)))
+                    bordersize = GetBorderSize(Obj, "Left") + GetBorderSize(Obj, "Right")
+                else if (ColIndex == 0)
+                    bordersize = GetBorderSize(Obj, "Left") + GetBorderSize(Obj, "Right")*.5
+                else if (ColIndex == (RIContext.CurrObj.ColumnWidths.ColumnCount - 1))
+                    bordersize = GetBorderSize(Obj, "Right") + GetBorderSize(Obj, "Left") * .5
+                else
+                    bordersize = GetBorderSize(Obj, "Right")*.5 + GetBorderSize(Obj, "Left") * .5
 
-            //TODO:Total hack on width to get address txt overlap issue, probabgly needs to be done a differnt way.
-            if (RIContext.CurrObj.ColumnWidths.Columns[ColIndex] != null)
-                Style = "width:" + (RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width + .5) + "mm;" + "height:" + RIContext.CurrObj.RowHeights.Rows[RowIndex].Height + "mm;" + "max-width:" + (RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width + .5) + "mm;" + "max-height:" + RIContext.CurrObj.RowHeights.Rows[RowIndex].Height + "mm;" + "min-width:" + RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width + "mm;" + "min-height:" + RIContext.CurrObj.RowHeights.Rows[RowIndex].Height + "mm;";
-            else
-                Style = Style;
-            $RIDiv = new $("<Div/>");
+                width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width - bordersize;
+                Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;";
+            }
             $Cell.attr("Style", Style);
-            $Cell.append($RIDiv);
 
+            // Not sure why IE and Firefox do not work with box sizing, but block size works.
             if ($.browser.mozilla || $.browser.msie) 
-                $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $RIDiv, "dispay:block;height:100%;")));
+                $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "dispay:block;height:100%;width:100%;margin:0 0 0;")));
             else
-                $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $RIDiv, "-moz-box-sizing:border-box;box-sizing:border-box;" + Style)));
+                $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "box-sizing:border-box;margin:0 0 0;")));
             $Row.append($Cell);
             ColIndex++;
         }
+        //BodyRow in a table means new row
         else {
             ColIndex = 0;
             RowIndex++;
@@ -344,10 +388,19 @@ function WriteTablix(RIContext) {
     return $Tablix;
 }
 function WriteRectangle(RIContext) {
-    var $RIDiv;
-    
+    var $RI;        //This is the ReportItem Object
+    var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
+    var Layout = new Object();  //This array holds the object that are before to determin location
+
     RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.Elements));
-    $.each(RIContext.CurrObj.Content, function (Index, Obj) { $RIDiv = new $("<Div/>"); RIContext.$HTMLParent.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $RIDiv, ""))); });
+
+    $.each(RIContext.CurrObj.Content, function (Index, Obj) {             
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
+        Layout[Index] = $RI;
+        $LocDiv = SetLocation(new $("<Div/>"), RIContext.CurrObj.Measurement.Measurements, Layout, Index);        
+        $LocDiv.append($RI);
+        RIContext.$HTMLParent.append($LocDiv);
+    });
 
     return RIContext.$HTMLParent;
 }
@@ -358,46 +411,98 @@ function GetElementsStyle(CurrObj) {
 
     Style += GetStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
     Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
-    Style += "word-wrap:break-all;word-wrap:break-word;white-space:pre-wrap;";
-     
+    Style += "white-space:pre-wrap;";     
     return Style;
 }
-function GetMeasurements(CurrObj, Absolute) {
-    var Style = "";
+function GetBorderSize(CurrObj,Side) {
+    var Obj;
 
-    if (Absolute)
-        Style += "position: absolute;";
-    
+    //Need left, top, right bottom border
+    Obj = CurrObj.Elements.SharedElements.Style;
+    if (Obj != null) {
+        if (Side == "Left")
+            if (Obj.BorderWidthLeft != null)
+                return ConvertToMM(Obj.BorderWidthLeft);
+            else
+                return ConvertToMM(Obj.BorderWidth);
+        else if (Side == "Right")
+            if (Obj.BorderWidthRight != null)
+                return ConvertToMM(Obj.BorderWidthRight);
+            else
+                return ConvertToMM(Obj.BorderWidth);
+    }
+    Obj = CurrObj.Elements.NonSharedElements.Style;
+    if (Obj != null)
+        if (Side == "Left")
+            if (Obj.BorderWidthLeft != null)
+                return ConvertToMM(Obj.BorderWidthLeft);
+            else
+                return ConvertToMM(Obj.BorderWidth);
+        else if (Side == "Right")
+            if (Obj.BorderWidthRight != null)
+                return ConvertToMM(Obj.BorderWidthRight);
+            else
+                return ConvertToMM(Obj.BorderWidth);
+
+    return 0;
+}
+function GetFullBorderStyle(CurrObj) {
+    var Style = "";
+    var Obj;
+
+    //Need left, top, right bottom border
+    Obj = CurrObj.Elements.SharedElements.Style;
+    if (Obj != null) {
+        if (Obj.BorderStyle != null)
+            Style += "border:" + Obj.BorderWidth + " " + GetBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+        if (Obj.BorderStyleLeft != null || Obj.BorderWidthLeft != null || Obj.BorderColorLeft != null)
+            Style += "border-left:" + ((Obj.BorderWidthLeft == null) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft == null) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+        if (Obj.BorderStyleRight != null || Obj.BorderWidthRight != null || Obj.BorderColorRight != null)
+            Style += "border-right:" + ((Obj.BorderWidthRight == null) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight == null) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+        if (Obj.BorderStyleTop != null || Obj.BorderWidthTop != null || Obj.BorderColorTop != null)
+            Style += "border-top:" + ((Obj.BorderWidthTop == null) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop == null) ? GetBorderStyle(Obj.BorderStyle) :GetBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop == null) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+        if (Obj.BorderStyleBottom != null || Obj.BorderWidthBottom != null || Obj.BorderColorBottom != null)
+            Style += "border-bottom:" + ((Obj.BorderWidthBottom == null) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom == null) ? Obj.BorderColor : Obj.BorderColorBottom )+ ";";
+    }
+    Obj = CurrObj.Elements.NonSharedElements.Style;
+    if (Obj != null){
+        if (Obj.BorderStyle != null)
+            Style += "border:" + Obj.BorderWidth + " " + GetBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+        if (Obj.BorderStyleLeft != null || Obj.BorderWidthLeft != null || Obj.BorderColorLeft != null)
+            Style += "border-left:" + ((Obj.BorderWidthLeft == null) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft == null) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+        if (Obj.BorderStyleRight != null || Obj.BorderWidthRight != null || Obj.BorderColorRight != null)
+            Style += "border-right:" + ((Obj.BorderWidthRight == null) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight == null) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+        if (Obj.BorderStyleTop != null || Obj.BorderWidthTop != null || Obj.BorderColorTop != null)
+            Style += "border-top:" + ((Obj.BorderWidthTop == null) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop == null) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+        if (Obj.BorderStyleBottom != null || Obj.BorderWidthBottom != null || Obj.BorderColorBottom != null)
+            Style += "border-bottom:" + ((Obj.BorderWidthBottom == null) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom == null) ? GetBorderStyle(Obj.BorderStyle) : GetBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom == null) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+    }
+    return Style;
+}
+function GetMeasurements(CurrObj) {
+    var Style = "";
+    //TODO:  zIndex
+
+    if (CurrObj == null)
+        return "";
+
+    //Top and left are set in set location, height is not set becasue differnt browsers measure and break words differently
     if (CurrObj.Width != null) {
         Style += "width:" + CurrObj.Width  + "mm;";
         Style += "min-width:" + CurrObj.Width + "mm;";
         Style += "max-width:" + (CurrObj.Width) + "mm;";
     }
-    if (CurrObj.Height != null) {
-        Style += "height:" + CurrObj.Height + "mm;";
-        Style += "min-height:" + CurrObj.Height + "mm;";
-        Style += "max-height:" + CurrObj.Height + "mm;";
-    }
-
-    if (CurrObj.Left != null)
-        Style += "left:" + CurrObj.Left + "mm;";
-    if (CurrObj.Height != null)
-        Style += "top:" + CurrObj.Top + "mm;";
 
     return Style;
-    //TODO:  zIndex?
 }
 function GetStyle(CurrObj, TypeCodeObj) {
     var Style = "";
 
     if (CurrObj == null)
         return Style;
-
-    //Need left, top, right bottom border
+   
     if (CurrObj.BackgroundColor != null)
-        Style += "background-color:" + CurrObj.BackgroundColor + ";";
-    if (CurrObj.BorderWidth != null)
-        Style += "border:" + CurrObj.BorderWidth + " " + GetBorderStyle(CurrObj.BorderStyle) + " " + CurrObj.BorderColor + ";";
+        Style += "background-color:" + CurrObj.BackgroundColor + ";";   
     if (CurrObj.UnicodeBiDi != null)
         Style += "unicode-bidi:" + GetBiDi(CurrObj.UnicodeBiDi) + ";";
     if (CurrObj.VerticalAlign != null)
@@ -665,4 +770,31 @@ function GetTableRow() {
     retval.attr("Height", 0);
     return retval;
 }
+function ConvertToMM(ConvertFrom) {
+    var unit = ConvertFrom.match(/\D+$/)[0];  // get the existing unit
+    var value = ConvertFrom.match(/\d+/)[0];  // get the numeric component
 
+    switch (unit) {
+        case "px":
+            return value / 3.78;
+            break;
+        case "pt":
+            return value * 0.352777777778;
+            break;
+        case "in":
+            return value * 25.4;
+            break;
+        case "mm":
+            return value;
+            break;
+        case "cm":
+            return value * 10;
+            break;
+        case "em":
+            return value * 4.2175176;
+            break;
+    }
+
+    //This is an error
+    return value;
+}

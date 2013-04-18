@@ -26,7 +26,7 @@ namespace MvcApplication1.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+            rep.SetCustomSecurity("TestAccount", "Forerunner", "TestPWD");
 
             result = rep.GetImage(SessionID,ImageID,out mimeType);
             ByteArrayContent content = new ByteArrayContent(result);           
@@ -45,7 +45,7 @@ namespace MvcApplication1.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+            rep.SetCustomSecurity("TestAccount", "Forerunner", "TestPWD");
 
             result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString());
             ByteArrayContent content = new ByteArrayContent(result);
@@ -64,7 +64,7 @@ namespace MvcApplication1.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            //rep.SetCustomSecurity("User", "Domain", "Pwd");
+            rep.SetCustomSecurity("TestAccount", "Forerunner", "TestPWD");
 
             result = Encoding.UTF8.GetBytes(rep.GetReportJson(ReportPath, SessionID, PageNumber.ToString()));
             ByteArrayContent content = new ByteArrayContent(result);

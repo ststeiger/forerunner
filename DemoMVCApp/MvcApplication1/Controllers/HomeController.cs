@@ -22,7 +22,7 @@ namespace MvcApplication1.Controllers
             string RepURL;
 
             //RepURL = "192.168.1.105/reportserver/";
-            RepURL = "192.168.1.27/reportserver/";
+            RepURL = "localhost:8080/reportserver/";
 
             Report Rep = new Report(RepURL);
             ViewBag.Message = "Your app description page.";
@@ -31,8 +31,8 @@ namespace MvcApplication1.Controllers
             //ViewBag.Report = Rep.GetReportHTML("/AdventureWorks 2008R2/Sales By Sales Person");
             //ViewBag.Report = Rep.GetReportJson("/AdventureWorks 2008R2/Sales By Sales Person","","0");
             ViewBag.ReportScript = Rep.GetReportScript();
-            ViewBag.Report1 = Rep.GetReportInitScript("/AdventureWorks 2008R2/Sales By Sales Person");
-            ViewBag.Report2 = Rep.GetReportInitScript("/AdventureWorks 2008R2/Sales By Sales Person");
+            ViewBag.Report1 = Rep.GetReportInitScript("/Northwind Test Reports/Simple Table with groups and drill down");
+            ViewBag.Report2 = Rep.GetReportInitScript("/Northwind Test Reports/Simple Table with groups and drill down");
 
             return View();
         }

@@ -4,14 +4,15 @@
     <title></title>    
 </head>
 <body>
-    <table><tr><td><div id="Div1" style="top:0;vertical-align:top;"></div></td><td><div id="Div2" style="top:0;vertical-align:top;"></div></td></tr></table>
+    
+    <table><tr><td style="vertical-align: top;"><div id="Div1" ></div></td><td style="vertical-align: top;"><div id="Div2" style="top:0;vertical-align:top;"></div></td></tr></table>
     
     <script src="/Scripts/jquery-1.7.1.js"></script>
     <script src="/scripts/FRReport.js"></script>
     <script>
         //InitReport("192.168.1.27/reportserver", "/AdventureWorks 2008R2/Sales By Sales Person", true, 1, "Div1");
         //InitReport("192.168.1.27/reportserver", "/NW Test/Territory Sales Martix", true, 1, "Div2")
-        InitReport("192.168.1.27/reportserver", "/NW Test/Teritory Sales - Large", true, 1, "Div2")
+       InitReport("localhost:8080/reportserver", "/Northwind Test Reports/Simple Table with groups and drill down", true, 1, "Div2")
     </script>
 </body>
 </html>

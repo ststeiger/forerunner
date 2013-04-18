@@ -1,0 +1,3 @@
+# Files in these folders are generated as part of the build and not maintained in Git
+bin/
+obj/

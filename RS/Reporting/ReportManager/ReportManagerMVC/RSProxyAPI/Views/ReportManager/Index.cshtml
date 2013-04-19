@@ -1,12 +1,9 @@
-﻿<html>
-<head>
-  <meta name="viewport" content="width=device-width; initial-scale=1.0;"/>
-  <link rel='stylesheet' type='text/css' href="Content/reportmanager.css"> 
-  <title>Report Manager</title>
-</head>
-<body class="body1 holder" id="pageSection">
-  <div id="modalViewContainer">Test</div>
+﻿@{
+    ViewBag.Title = "Report Manager";
+    Layout = "../Shared/_RMLayout.cshtml";    
+}
 
+@section scripts{
   <script type="text/javascript" src="../Scripts/jquery-1.7.2.js"></script>
   <script type="text/javascript" src="../Scripts/underscore.js"></script>
   <script type="text/javascript" src="../Scripts/json2.js"></script>
@@ -18,6 +15,10 @@
   <script type="text/javascript" src="../Scripts/App/utils.js"></script>
   <script type="text/javascript" src="../Scripts/Models/reportmanagermodels.js"></script>
   <script type="text/javascript" src="../Scripts/Views/appPageView.js"></script>
+  <script type="text/javascript" src="../Scripts/Views/reportmanagermainview.js"></script>
   <script type="text/javascript" src="../Scripts/App/router.js"></script>
-</body>
-</html>
+}
+
+<div class="body1 holder" id="pageSection">
+  <div id="modalViewContainer"></div>
+</div>

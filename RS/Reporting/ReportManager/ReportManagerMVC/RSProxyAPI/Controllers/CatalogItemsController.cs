@@ -11,8 +11,8 @@ namespace RSProxyAPI.Controllers
     public class CatalogItemsController : ApiController
     {
         // TODO:  Replace these with config settings
-        private string url = "http://meowlett/ReportServer/ReportService2005.asmx";
-        private bool useStub = true;
+        private string url = "http://meowlett/ReportServer_WinAuth/ReportService2005.asmx";
+        private bool useStub = false;
         // GET api/catalogitem
         public IEnumerable<CatalogItem> Get()
         {

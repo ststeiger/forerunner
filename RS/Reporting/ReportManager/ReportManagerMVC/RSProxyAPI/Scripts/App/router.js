@@ -3,7 +3,7 @@ var g_App = g_App || {};
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate([ 'AppPageView' ], '', function() {  
+g_App.utils.loadTemplate(['AppPageView','ReportManagerMainView'], '', function() {  
   // Create the application Router 
   g_App.router = new ApplicationRouter();
   Backbone.history.start();
@@ -14,31 +14,35 @@ g_App.utils.loadTemplate([ 'AppPageView' ], '', function() {
 (function() {
   ApplicationRouter = Backbone.Router.extend({
     routes : {
-      ""                  : "transitionToReportManager",
-      "ReportViewer"      : "transitionToReportViewer",
+      "" : "transitionToReportManager",
+      "ReportManager/:path" : "transitionToReportManager",      
+      "ReportViewer/:path" : "transitionToReportViewer",
     },
 
     // Application page view
     appPageView : null,
 
-    transitionToReportManager: function () {
+    transitionToReportManager: function (path) {
       var appPageModel = new g_App.AppPageModel({
         showBackButton: false,
         pageTitle : 'ReportManager',
       });
+      var catalogItemsModel = new g_App.CatalogItemCollection({
+        path: path
+      });
       this.appPageView.transitionMainSection(appPageModel, [
-          "ReportManagerMainView"], "reportmanager",
-          g_App.ReportManagerMainView, {});
+          'ReportManagerMainView'], '',
+          g_App.ReportManagerMainView, { model: catalogItemsModel });
     },
 
-    transitionToReportViewer: function (date) {
+    transitionToReportViewer: function (path) {
       var appPageModel = new g_App.AppPageModel({
         showBackButton : true,
         pageTitle : 'ReportViewer',
       });
       this.appPageView.transitionMainSection(appPageModel, [
-          "ReportViewerMainView"], "reportviewer",
-          g_App.ReportViewerMainView, {});
+          'ReportViewerMainView'], '',
+          g_App.ReportViewerMainView, {reportPath : path});
     },
     
     showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

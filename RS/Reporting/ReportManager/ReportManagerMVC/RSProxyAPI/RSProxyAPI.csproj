@@ -192,13 +192,13 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\backbone_ui.js" />
     <Content Include="Scripts\collection_view.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.2.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
@@ -216,11 +216,13 @@
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\tpl\ReportManagerMainView.html" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\tpl\AppPageView.html" />
+    <Content Include="Scripts\Views\reportmanagermainview.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -248,7 +250,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\ReportManager\Index.cshtml" />
+    <None Include="Views\ReportManager\Index.cshtml" />
+    <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

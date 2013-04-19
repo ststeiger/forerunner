@@ -38,7 +38,7 @@ namespace MvcApplication1.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string PageHeight, string PageWidth)
         {
             Report rep = new Report(ReportServerURL);
             byte[] result;
@@ -47,7 +47,7 @@ namespace MvcApplication1.Controllers
             //Application will need to handel security
             rep.SetCustomSecurity("TestAccount", "Forerunner", "TestPWD");
 
-            result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString());
+            result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString(),PageHeight,PageWidth);
             ByteArrayContent content = new ByteArrayContent(result);
             resp = this.Request.CreateResponse();
             resp.Content = content;

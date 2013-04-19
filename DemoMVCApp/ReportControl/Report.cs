@@ -176,7 +176,7 @@ namespace Forerunner.ReportControl
                 return e.Message;
             }
         }
-        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum)
+        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum,string PageHeight, string PageWidth)
         {
             byte[] result = null;
             string format = "Image";
@@ -242,6 +242,7 @@ namespace Forerunner.ReportControl
             string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
             //End Device Info
             devInfo += @"</DeviceInfo>";
 
@@ -1148,7 +1149,7 @@ namespace Forerunner.ReportControl
              w.WriteMember("Elements");
              WriteJSONElements();
 
-             w.WriteMember("Content");
+             w.WriteMember("ReportItems");
              w.WriteStartArray();
              while (WriteJSONReportItem());
              w.WriteEndArray();
@@ -1550,20 +1551,7 @@ namespace Forerunner.ReportControl
          }
          public void WriteJSONImage()
          {
-             //if (ReadByte() != 0x09)
-             //    ThrowParseError();  //This should never happen
-
-
-             //w.WriteStartObject();
-             //w.WriteMember("Type");
-             //w.WriteString("Image");
-             //w.WriteMember("Elements");
-             //WriteJSONElements();
-
-             //WriteJSONReportElementEnd();
-             //w.WriteEndObject();
              WriteJSONImageTypeElement(0x09, "Image");
-
          }
          public void WriteJSONChart()
          {

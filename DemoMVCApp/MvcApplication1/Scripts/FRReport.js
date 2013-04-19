@@ -217,36 +217,70 @@ function WriteSection(RIContext) {
 
     //Columns
     $NewObj.append($Sec);
-    $.each(RIContext.CurrObj.Columns, function (Index, Obj) { WriteColumn(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, $Sec, null)); });
+    $.each(RIContext.CurrObj.Columns, function (Index, Obj) { $Sec.append(WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<TD/>"), null))); });
     RIContext.$HTMLParent.append($NewObj);   
 }
-function WriteColumn(RIContext) {
-    var $Column = $("<TD/>");  //HTML Object for the report column
+
+function WriteRectangle(RIContext) {
     var $RI;        //This is the ReportItem Object
     var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
-    var Layout = new Object();  //This array holds the object that are before to determin location
+    var EmptyDivHeight = 0;
+    var $EmptyDiv = $("<Div/>");
+    var Measurements;
+    var NewTop =0;
 
-    $Column.attr("Style", "" + GetElementsStyle(RIContext.CurrObj.Elements));
-    $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {        
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        Layout[Index] = $RI;
-        $LocDiv = SetLocation(new $("<Div/>"), RIContext.CurrObj.Measurement.Measurements,Layout, Index);
+    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.Elements));
+
+    $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));               
+        Measurements = RIContext.CurrObj.Measurement.Measurements;
+
+        // Keep track of how much space we are using for top position offset       
+        $LocDiv = new $("<Div/>");
         $LocDiv.append($RI);
-        $Column.append($LocDiv);
+        $LocDiv.attr("Style", "position:relative;top:" + (Measurements[Index].Top - NewTop) + "mm;left:" + Measurements[Index].Left + "mm;");
+        NewTop += Measurements[Index].Height;
+
+        //Collect empty space, this needs to handle more complex layout       
+        if (Index > 0) {
+            if (Measurements[Index].Top > (Measurements[Index - 1].Top + Measurements[Index - 1].Height))
+                EmptyDivHeight += Measurements[Index].Top - (Measurements[Index - 1].Top + Measurements[Index - 1].Height);
+        }
+        else
+            EmptyDivHeight += Measurements[Index].Top;
+
+        RIContext.$HTMLParent.append($LocDiv);
     });
-    RIContext.$HTMLParent.append($Column);
+
+
+    // Take up the empty space
+    $EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
+    RIContext.$HTMLParent.append($EmptyDiv);
+
+    return RIContext.$HTMLParent;
 }
 
-function SetLocation($LocObj, Measurements,Layout, CurrObjIndex) {
-    var NewTop = Measurements[CurrObjIndex].Top;
+function GetHeight($Obj) {
+    var height;
 
-    //Need to use Layout to get real height and convert from px to mm
-    for (var i = 0 ; i < CurrObjIndex; i++) {        
-        //NewTop -= Layout[i].height();        
-        NewTop -= Measurements[i].Height;
+    if ($Obj.height() > 0) {
+        height =  $Obj.height();        
+        // if height is zero, then we're dealing with a hidden element
     }
-    $LocObj.attr("Style", "position:relative;top:" + NewTop + "mm;left:" + Measurements[CurrObjIndex].Left + "mm;");
-    return $LocObj;
+    else {
+        var copied_elem = $Obj.clone()
+                          .attr("id", false)
+                          .css({
+                              visibility: "hidden", display: "block",
+                              position: "absolute"
+                          });
+        $("body").append(copied_elem);
+        height = copied_elem.height();
+        
+        copied_elem.remove();
+    }
+    return height;
+
 }
 
 function WriteReportItems(RIContext) {
@@ -316,16 +350,16 @@ function WriteChartImage(RIContext) {
     var $NewObj = $("<IMG/>");
     var Src = "/api/Report/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-    //var Style = GetElementsStyle(CurrObj.Elements, GetMeasurmentsObj(CurrObjParent, CurrObjIndex));
+
     //Measurements go on Parent
-    if (GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex) != null)
-        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
-    //Hack for Image size, need to handle clip, fit , fit proportional    
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     $NewObj.attr("Style", Style);
+
     //src parameters
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
+
     $NewObj.attr("src", Src);
     $NewObj.attr("alt", "Cannot display chart image");
     RIContext.$HTMLParent.append($NewObj);
@@ -409,23 +443,6 @@ function WriteTablix(RIContext) {
     })
 
     return $Tablix;
-}
-function WriteRectangle(RIContext) {
-    var $RI;        //This is the ReportItem Object
-    var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
-    var Layout = new Object();  //This array holds the object that are before to determin location
-
-    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.Elements));
-
-    $.each(RIContext.CurrObj.Content, function (Index, Obj) {             
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        Layout[Index] = $RI;
-        $LocDiv = SetLocation(new $("<Div/>"), RIContext.CurrObj.Measurement.Measurements, Layout, Index);        
-        $LocDiv.append($RI);
-        RIContext.$HTMLParent.append($LocDiv);
-    });
-
-    return RIContext.$HTMLParent;
 }
 
 
@@ -794,8 +811,11 @@ function GetTableRow() {
     return retval;
 }
 function ConvertToMM(ConvertFrom) {
-    var unit = ConvertFrom.match(/\D+$/)[0];  // get the existing unit
-    var value = ConvertFrom.match(/\d+/)[0];  // get the numeric component
+    var unit = ConvertFrom.match(/\D+$/);  // get the existing unit
+    var value = ConvertFrom.match(/\d+/);  // get the numeric component
+
+    if (unit.length == 1) unit = unit[0];
+    if (value.length == 1) value = value[0];
 
     switch (unit) {
         case "px":

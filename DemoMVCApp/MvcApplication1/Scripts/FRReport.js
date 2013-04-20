@@ -47,7 +47,7 @@ function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
         $Row.append($Cell);
         $Container.append($Row);
     }
-
+    AddLoadingIndicator($Container, UID);
   
     //Log in screen if needed
 
@@ -67,7 +67,16 @@ function ShowLoadingImage() {
 
 
 }
+function AddLoadingIndicator($Container, UID) {
+    var loadIndicator = "loadIndicator_" + UID;
+    var loadingDiv = new $("<div id=\"" + loadIndicator + "\" class=\"loading-indicator\"></div>").text("Report loading...");
+    $Container.append(loadingDiv);
 
+}
+function RemoveLoadingIndicator(UID) {
+    var loadIndicatorID = "loadIndicator_" + UID;
+    var className = $("#" + loadIndicatorID).remove();
+}
 function LoadPage(RS, NewPageNum,Page) {
 
     if (Page != null)
@@ -87,7 +96,7 @@ function LoadPage(RS, NewPageNum,Page) {
         PageNumber: NewPageNum
     })
     .done(function (Data) { WritePage(Data, RS, NewPageNum, Page); })
-    .fail(function () { console.log("error"); })
+    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS.UID); })
 
 }
 function SetPage(RS,NewPageNum,OldPage) {    
@@ -207,7 +216,7 @@ function WritePage(Data, RS, NewPageNum,Page) {
     $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
 
     SetPage(RS,NewPageNum,Page);
-    
+    RemoveLoadingIndicator(RS.UID);
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();

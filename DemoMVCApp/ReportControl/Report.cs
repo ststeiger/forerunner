@@ -166,7 +166,7 @@ namespace Forerunner.ReportControl
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
-                    return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath);
+                    return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
                 else
                     return "";
             }
@@ -259,7 +259,7 @@ namespace Forerunner.ReportControl
                 return null;
             }
         }
-        private string ConvertRPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath)
+        private string ConvertRPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath, int NumPages)
         {
                 
             JsonWriter w = new JsonTextWriter();
@@ -274,6 +274,8 @@ namespace Forerunner.ReportControl
             w.WriteString(ReportServerURL);
             w.WriteMember("ReportPath");
             w.WriteString(reportPath);
+            w.WriteMember("NumPages");
+            w.WriteNumber(NumPages);
             w.WriteMember("RPLStamp");
             w.WriteString(r.ReadString());
             
@@ -1176,6 +1178,7 @@ namespace Forerunner.ReportControl
             
              //Tablix Content
              //Either Row or ReportItem
+             w.SetShouldWrite(false);
              w.WriteMember("Content");
              w.WriteStartArray();
              while (InspectByte() == 0x12 || WriteJSONReportItem(true))
@@ -1188,10 +1191,10 @@ namespace Forerunner.ReportControl
                      w.WriteMember("Type");
                      w.WriteString("BodyRow");
                      w.WriteMember("RowIndex");
-                     w.WriteNumber(ReadInt32());
+                     w.WriteNumber(ReadInt32());                     
                      //WriteCells
                      LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
-                     w.WriteEndObject();
+                     //w.WriteEndObject();
                      if (ReadByte() != 0xFF)
                          //This should never happen
                          ThrowParseError();
@@ -1202,7 +1205,8 @@ namespace Forerunner.ReportControl
              }
           
              w.WriteEndArray();
-             
+             w.SetShouldWrite(true);
+
              //Tablix Structure
              if (ReadByte() == 0x11)
              {
@@ -1237,6 +1241,80 @@ namespace Forerunner.ReportControl
              w.WriteEndObject();
 
          }
+
+
+         public Boolean WriteJSONDeRefCellReportItem()
+         {
+             if (ReadByte() != 0x04)
+                 // THis must be a Cell reference Property
+                 ThrowParseError();             
+             int StartIndex = (int)ReadInt64();
+             int CurrIndex = this.Index;             
+             this.Index = StartIndex;
+
+
+             if (ReadByte() != 0xFE)
+                 // THis must be a ReportElementEnd record
+                 ThrowParseError();
+            //Jump to start of ReportItemEnd  This is differnt for each report item             
+             this.Index = (int)ReadInt64();
+             switch (InspectByte())
+             {
+                 case 0x12:
+                     //Rich textbox structure
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 case 0x11:
+                     //Tablix Structure
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 case 0x10:
+                     //Rectangle measurements
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 default:
+                     break;
+             }
+             w.WriteMember("ReportItem");
+             WriteJSONReportItem();
+
+
+             //Set back
+             this.Index = CurrIndex;
+             return true;
+
+         }
+         
+         public void WriteJSONDeRefTablixBodyCells()
+         {
+             int StartIndex = (int)ReadInt64();
+             int CurrIndex = this.Index;
+             this.Index = StartIndex;
+
+             
+             if (ReadByte() != 0x12)
+                 // THis must be a Cell reference Property
+                 ThrowParseError();
+             
+             //Tablix Row
+                w.WriteStartObject();
+                w.WriteMember("Type");
+                w.WriteString("BodyRow");
+                w.WriteMember("RowIndex");
+                w.WriteNumber(ReadInt32());
+                //WriteCells
+                LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
+                w.WriteEndObject();
+                if (ReadByte() != 0xFF)
+                    //This should never happen
+                    ThrowParseError();             
+             //Set back
+             this.Index = CurrIndex;             
+         }
+
          public Boolean WriteJSONTablixRow()
          {
              RPLProperties prop;
@@ -1250,7 +1328,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("Corner");
                          prop = new RPLProperties(0x0A);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1269,7 +1347,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("ColumnHeader");
                          prop = new RPLProperties(0x0B);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1296,7 +1374,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("RowHeader");
                          prop = new RPLProperties(0x0C);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1320,12 +1398,7 @@ namespace Forerunner.ReportControl
                      case 0x09:
                          //Tablix Body Cell      
                          Seek(1);
-                         w.WriteStartObject();
-                         w.WriteMember("Type");
-                         w.WriteString("BodyRowCells");
-                         w.WriteMember("OffSet");
-                         w.WriteNumber(ReadInt64());
-                         w.WriteEndObject();
+                         WriteJSONDeRefTablixBodyCells();
                          break;
                      default:
                          ThrowParseError();
@@ -1338,6 +1411,8 @@ namespace Forerunner.ReportControl
                  ThrowParseError();
              return true;
          }
+
+        
          public Boolean WriteJSONTablixColMemeber()
          {
              int Count;             
@@ -1450,13 +1525,16 @@ namespace Forerunner.ReportControl
 
              return true;
          }
+
+        
+
          public Boolean WriteJSONCells()
          {
              RPLProperties prop = new RPLProperties(0xFF);
 
 
              w.WriteStartObject();
-             prop.Add("CellItemOffset", "Int64", 0x04);
+             prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
              prop.Add("ColSpan", "Int32", 0x05);
              prop.Add("RowSpan", "Int32", 0x06);
              prop.Add("ColumnIndex", "Int32", 0x08);

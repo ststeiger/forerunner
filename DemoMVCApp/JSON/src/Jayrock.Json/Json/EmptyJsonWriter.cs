@@ -23,7 +23,7 @@
 namespace Jayrock.Json
 {
     public sealed class EmptyJsonWriter : JsonWriterBase
-    {
+    {       
         protected override void WriteStartObjectImpl() {}
         protected override void WriteEndObjectImpl() {}
         protected override void WriteMemberImpl(string name) {}

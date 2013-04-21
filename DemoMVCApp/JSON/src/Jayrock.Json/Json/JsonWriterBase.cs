@@ -40,6 +40,17 @@ namespace Jayrock.Json
         private WriterStateStack _stateStack;
         private WriterState _state;
         private int _maxDepth = 30;
+        private int ShouldWrite = 0;
+
+
+         public sealed override void SetShouldWrite(bool ShouldWrite)
+        {
+            if (ShouldWrite)
+                this.ShouldWrite--;
+            else
+                this.ShouldWrite++;
+            
+        }
 
         protected JsonWriterBase()
         {
@@ -69,6 +80,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteStartObject()
         {
+            if (this.ShouldWrite != 0) return;
+
             EnteringBracket();
             WriteStartObjectImpl();
             EnterBracket(JsonWriterBracket.Object);
@@ -76,6 +89,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteEndObject()
         {
+            if (this.ShouldWrite != 0) return;
+
             if (_state.Bracket != JsonWriterBracket.Object)
                 throw new JsonException("JSON Object tail not expected at this time.");
             
@@ -85,6 +100,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteMember(string name)
         {
+            if (this.ShouldWrite != 0) return;
+
             if (_state.Bracket != JsonWriterBracket.Object)
                 throw new JsonException("A JSON Object member is not valid inside a JSON Array.");
 
@@ -94,6 +111,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteStartArray()
         {
+            if (this.ShouldWrite != 0) return;
+
             EnteringBracket();
             WriteStartArrayImpl();
             EnterBracket(JsonWriterBracket.Array);
@@ -101,6 +120,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteEndArray()
         {
+            if (this.ShouldWrite != 0) return;
+
             if (_state.Bracket != JsonWriterBracket.Array)
                 throw new JsonException("JSON Array tail not expected at this time.");
             
@@ -110,17 +131,23 @@ namespace Jayrock.Json
 
         public sealed override void WriteString(char[] chars, int offset, int length)
         {
+            if (this.ShouldWrite != 0) return;
+
             if (chars == null) throw new ArgumentNullException("chars");
             WriteStringOrChars(null, chars, offset, length);
         }
 
         public sealed override void WriteString(string value)
         {
+            if (this.ShouldWrite != 0) return;
+
             WriteStringOrChars(value, null, 0, 0);
         }
 
         private void WriteStringOrChars(string value, char[] chars, int offset, int length)
         {
+            if (this.ShouldWrite != 0) return;
+
             if (Depth == 0)
             {
                 WriteStartArray();
@@ -143,6 +170,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteNumber(string value)
         {
+            if (this.ShouldWrite != 0) return;
+
             if (Depth == 0)
             {
                 WriteStartArray(); WriteNumber(value); WriteEndArray();
@@ -157,6 +186,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteBoolean(bool value)
         {
+            if (this.ShouldWrite != 0) return;
+
             if (Depth == 0)
             {
                 WriteStartArray(); WriteBoolean(value); WriteEndArray();
@@ -171,6 +202,8 @@ namespace Jayrock.Json
 
         public sealed override void WriteNull()
         {
+            if (this.ShouldWrite != 0) return;
+
             if (Depth == 0)
             {
                 WriteStartArray(); WriteNull(); WriteEndArray();

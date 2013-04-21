@@ -38,6 +38,12 @@ namespace Jayrock.Json
     public abstract class JsonWriter : IDisposable
     {
         /// <summary>
+        /// Determin if the mentods should write or do nothing
+        /// </summary>
+        /// 
+        public abstract void SetShouldWrite(bool ShouldWrite);
+
+        /// <summary>
         /// Return the current level of nesting as the writer encounters
         /// nested objects and arrays.
         /// </summary>

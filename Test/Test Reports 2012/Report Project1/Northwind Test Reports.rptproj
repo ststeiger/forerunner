@@ -13,6 +13,10 @@
       <Name>Simple Table with groups and drill down.rdl</Name>
       <FullPath>Simple Table with groups and drill down.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Matrix.rdl</Name>
+      <FullPath>Simple Matrix.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

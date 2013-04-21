@@ -21,6 +21,9 @@ function ReportState(UID, $ReportOuterDiv,  ReportServer, ReportPath, Toolbar, $
     this.SessionID = "";
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
+    this.Lock = false;
+    this.$ReportContainer = $("<Table/>");
+    this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
 
 }
 function ReportPage($Container, ReportObj) {
@@ -31,8 +34,7 @@ function ReportPage($Container, ReportObj) {
 }
 
 
-function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
-    var $Container = $("<Table/>");    
+function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {      
     var $Row =  new $("<TR/>");
     var $Cell;
     
@@ -45,9 +47,9 @@ function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
         $Cell = new $("<TD/>");
         $Cell.append(GetToolbar(UID));
         $Row.append($Cell);
-        $Container.append($Row);
+        RS.$ReportContainer.append($Row);
     }
-    AddLoadingIndicator($Container, UID);
+    AddLoadingIndicator(RS);
   
     //Log in screen if needed
 
@@ -55,22 +57,16 @@ function InitReport(ReportServer, ReportPath, Toolbar, PageNum, UID) {
 
 
     //load the report Page requested        
-    $Container.append(RS.$PageContainer);
-    RS.$ReportOuterDiv.append($Container);
-    LoadPage(RS, PageNum,null);    
+    RS.$ReportContainer.append(RS.$PageContainer);
+    RS.$ReportOuterDiv.append(RS.$ReportContainer);
+    LoadPage(RS, PageNum, null);    
 }
 
 function SetActionCursor(Ob) {
     Ob.style.cursor = "pointer";   
 }
-function ShowLoadingImage() {
-
-
-}
-function AddLoadingIndicator($Container, UID) {
-    var loadIndicator = "loadIndicator_" + UID;
-    var loadingDiv = new $("<div id=\"" + loadIndicator + "\" class=\"loading-indicator\"></div>").text("Report loading...");
-    $Container.append(loadingDiv);
+function AddLoadingIndicator(RS) {    
+    RS.$ReportContainer.append(RS.$LoadingIndicator);
 }
 
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {  
@@ -92,8 +88,12 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         PageNumber: NewPageNum
     })
     .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); })
-    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS.UID); })
+    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 
+}
+
+function RemoveLoadingIndicator(RS) {
+    RS.$LoadingIndicator.detach();
 }
 function SetPage(RS, NewPageNum, OldPage) {
     RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
@@ -102,13 +102,14 @@ function SetPage(RS, NewPageNum, OldPage) {
         OldPage.$Container.detach();
     RS.CurPage = NewPageNum;
     RS.$PageInput.val(NewPageNum);
+    RS.Lock = 0;
 }
 function RefreshReport(RS) {
     Page = RS.Pages[RS.CurPage];
 
     RS.SessionID = "";
     RS.Pages = new Object();
-    LoadPage(RS, 1, Page, false);
+    LoadPage(RS, 1, Page, false); 
 }
 function GetToolbar(UID) {
     var $Toolbar = $("<Table/>");
@@ -184,26 +185,28 @@ function GetToolbar(UID) {
 }
 function NavToPage(RS, NewPageNum) {
 
-    //TODO:  Need to handle calling this before the last call finishes
-    LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+    if (RS.Lock == 0) {
+        RS.Lock = 1;
+        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+    }
 
 }
 function ShowParms() {
     alert("Show");
 }
 
-function ShowNav(UID) {
+function LoadAllPages(RS) {
 
-    for (var i = 1; i <= Reports[UID].NumPages; i++)
-        if (Reports[UID].Pages[i] == null)
-            LoadPage(Reports[UID], i, null, true);
+    for (var i = 1; i <= RS.NumPages; i++)
+        if (RS.Pages[i] == null)
+            LoadPage(RS, i, null, true);
 
 }
-
-
-
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     var $Report = GetDefaultHTMLDiv();
+
+    //Error, need to handle this better
+    if (Data == null) return;
 
     if (RS.Pages[NewPageNum] == null)
         RS.Pages[NewPageNum] = new ReportPage($Report, Data);
@@ -221,6 +224,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     //Sections
     $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
 
+    RemoveLoadingIndicator(RS);
     if (!LoadOnly)
         SetPage(RS, NewPageNum, OldPage);
 
@@ -238,9 +242,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     })
     .fail(function () { console.log("error"); })
 
-
 }
-
 function SetImage(Data, RS) {
     if (RS.Pages[PageNum] == null)
         RS.Pages[PageNum] = new ReportPage(null, null);
@@ -259,7 +261,6 @@ function WriteSection(RIContext) {
     $.each(RIContext.CurrObj.Columns, function (Index, Obj) { $Sec.append(WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<TD/>"), null))); });
     RIContext.$HTMLParent.append($NewObj);
 }
-
 function WriteRectangle(RIContext) {
     var $RI;        //This is the ReportItem Object
     var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
@@ -298,7 +299,6 @@ function WriteRectangle(RIContext) {
 
     return RIContext.$HTMLParent;
 }
-
 function GetHeight($Obj) {
     var height;
 
@@ -321,7 +321,6 @@ function GetHeight($Obj) {
     return height;
 
 }
-
 function WriteReportItems(RIContext) {
 
     switch (RIContext.CurrObj.Type) {
@@ -415,7 +414,6 @@ function ResizeImage(img) {
         img.height = "auto";
     }
 }
-
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");
     var Style = "";

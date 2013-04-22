@@ -458,6 +458,12 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width - wbordersize;
         height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height - hbordersize;
         Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;";
+
+        //Row and column span
+        if (Obj.RowSpan != null)
+            $Cell.attr("rowspan", Obj.RowSpan);
+        if (Obj.ColumnSpan != null)
+            $Cell.attr("columnspan", Obj.ColumnSpan);
     }
     //Background color goes on the cell
     if (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null)
@@ -508,8 +514,10 @@ function WriteTablix(RIContext) {
                 $Row.append(WriteTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
             })
         }
-        else
+        else {
+            
             if (Obj.Cell != null) $Row.append(WriteTablixCell(RIContext, Obj, Index));
+        }
     })
     $Tablix.append($Row);
     return $Tablix;

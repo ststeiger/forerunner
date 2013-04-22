@@ -15,49 +15,64 @@ using System.Threading;
 
 namespace Forerunner.ReportControl
 {
-    public class Report
+    public class Credentials
     {
-        String ReportServerURL;
         public enum SecurityTypeEnum { Network = 0, Custom = 1 };
-        SecurityTypeEnum SecurityType;
-        string UserName;
-        string Domain;
-        string Password;
+        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
+        public string UserName;
+        public string Domain;
+        public string Password;
 
-        public Report(String ReportServerURL, SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
+        public Credentials() { }
+        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
         {
-            this.ReportServerURL = ReportServerURL;
             this.SecurityType = SecurityType;
             this.UserName = UserName;
             this.Password = Password;
             this.Domain = Domain;
         }
 
-        public void SetCustomSecurity(String UserName = "", string Domain = "", string Password = "")
-        {            
-            this.SecurityType = SecurityTypeEnum.Custom;
-            this.UserName = UserName;
-            this.Password = Password;
-            this.Domain = Domain;
+    }
 
+    
+
+    public class Report
+    {
+        String ReportServerURL;
+        Credentials Credentials = new Credentials();
+        ReportExecutionService rs = new ReportExecutionService();
+
+
+        public Report(String ReportServerURL, Credentials Credentials)
+        {
+            this.ReportServerURL = ReportServerURL;
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+            
+            SetCredentials(Credentials);
         }
+        public Report(String ReportServerURL)
+        {
+            this.ReportServerURL = ReportServerURL;
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+        }
+
+        public void SetCredentials(Credentials Credentials)
+        {
+            this.Credentials = Credentials;
+            //Security
+            if (this.Credentials.SecurityType == Credentials.SecurityTypeEnum.Network)
+                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            else
+                rs.Credentials = new NetworkCredential(this.Credentials.UserName, this.Credentials.Password, this.Credentials.Domain);
+        }
+
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
-            ReportExecutionService rs = new ReportExecutionService();
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
             byte[] result = null;
             string encoding;
             
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password,this.Domain);
-
-            // Setup Request  TODO: Need to handle HTTPS
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
             rs.ExecutionHeaderValue = execHeader;
             rs.ExecutionHeaderValue.ExecutionID = SessionID;
             
@@ -115,16 +130,6 @@ namespace Forerunner.ReportControl
             //Delay just for testing
             //Thread.Sleep(1000);
 
-            ReportExecutionService rs = new ReportExecutionService();
-            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password, this.Domain);
-
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
             
             
             // Prepare report parameter.
@@ -195,21 +200,6 @@ namespace Forerunner.ReportControl
                 NewSession = "";
             else
                 NewSession = SessionID;
-
-
-            //Delay just for testing
-            //Thread.Sleep(1000);
-
-            ReportExecutionService rs = new ReportExecutionService();
-            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password, this.Domain);
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-
 
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];

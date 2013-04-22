@@ -135,6 +135,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\Folder-icon.png" />
+    <Content Include="Images\Home-icon.png" />
+    <Content Include="Images\Report-icon.png" />
+    <Content Include="Scripts\ContentFlowAddOn.js" />
+    <Content Include="Scripts\ContentFlow\contentflow.css" />
     <Content Include="Content\ReportManager.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -192,11 +197,20 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\ContentFlow\contentflow_src.js" />
+    <Content Include="Scripts\ContentFlow\img\1x1_0.5_black.png" />
+    <Content Include="Scripts\ContentFlow\img\blank.gif" />
+    <Content Include="Scripts\ContentFlow\img\loader.gif" />
+    <Content Include="Scripts\ContentFlow\img\scrollbar_white.png" />
+    <Content Include="Scripts\ContentFlow\img\slider_white.png" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\backbone_ui.js" />
     <Content Include="Scripts\collection_view.js" />
+    <Content Include="Scripts\ContentFlow\img\.blank.gif.swp" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\ContentFlow\contentflow.js" />
+    <Content Include="Scripts\ContentFlow\mycontentflow.css" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-1.7.2.js" />
@@ -216,12 +230,15 @@
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\tpl\CatalogItemView.html" />
+    <Content Include="Scripts\tpl\ReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportManagerMainView.html" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\tpl\AppPageView.html" />
+    <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

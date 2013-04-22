@@ -14,11 +14,11 @@ namespace RSProxyAPI.Controllers
         private string url = "http://meowlett/ReportServer_WinAuth/ReportService2005.asmx";
         private bool useStub = false;
         // GET api/catalogitem
-        public IEnumerable<CatalogItem> Get()
+        public IEnumerable<CatalogItem> Get(bool isRecursive = false)
         {
             RSProxy rs = new RSProxy(url);
             rs.UseStub = useStub;
-            return rs.ListChildren("/", true); 
+            return rs.ListChildren("/", isRecursive); 
         }
 
         // GET api/catalogitem

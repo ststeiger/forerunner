@@ -8,19 +8,11 @@ var g_App = g_App || {};
   //Models
   g_App.AppPageModel = Backbone.Model.extend({
     initialize: function(attributes) {
-      // Note that the attributes will automatically be set by Backbone, so there is no need
-      // to do it here. Additionally all attributes defined in the this.defaults hash will
-      // also be defined.
-      //
-      // Attributes should always be set and get using the BB Model set and get functions.
-      // It may be not be harmful to get an attribute directly from the Model.attributes hash
-      // but you should always set attributes with the set method. If you don't, the BB Event
-      // mechanism will not work, so beware.
     },
 
     defaults: function() {
       return {
-        'footerTitle': '',
+        'pageTitle': '',
       };
     }
   });
@@ -33,13 +25,12 @@ var g_App = g_App || {};
       },
       
       events: {
-        "click #backButton" : "onClickBackButton",
+          "click #backButton": "onClickBackButton",
       },
 
       onClickBackButton: function() {
         history.back();
       },
-
 
       customEvents: function() {
         return {
@@ -58,13 +49,16 @@ var g_App = g_App || {};
         var data = this.model.toJSON();
         $(this.el).html(this.template(data));
 
+        // BUGBUG:  Need to find out why this is not showing up in the UI
+        $(this.el).find("#pageTitle").text(this.model.attributes.pageTitle);
+
         if (this.model.showBackButton) {
           $(this.el).find("#backButton").show();
         }
         else {
           $(this.el).find("#backButton").hide();
         }
-        
+
         return this;
       },
       
@@ -89,6 +83,9 @@ var g_App = g_App || {};
       onChangeMainSection: function() {
         // Append or transition the main section into the page
         var el = this.model.attributes.mainSection.el;
+        $(this.el).find("#mainSection").html(el);
+        //  BUGBUG::  This messing up the sizing
+        /*  
         if ($(this.el).find("#mainSection>div").length == 0) {
           $(this.el).find("#mainSection").append(el);
         }
@@ -99,7 +96,7 @@ var g_App = g_App || {};
             mainSection.replaceWith(el);
             $(el).fadeIn("slow");
           })
-        }
+        }*/
       },
       
       onChangeFooterTitle: function() {
@@ -110,7 +107,7 @@ var g_App = g_App || {};
       transitionMainSection: function(appPageModel, views, subfolder, mainSectionType, options) {
         // First load the subordinate view templates, everything else will happen in the callback
         var thisObj = this;
-        //g_App.utils.loadTemplate(views, subfolder, function() {
+          //g_App.utils.loadTemplate(views, subfolder, function() {
           appPageModel.attributes.mainSection = new mainSectionType(options).render();
           thisObj.model.set(appPageModel);
         //});

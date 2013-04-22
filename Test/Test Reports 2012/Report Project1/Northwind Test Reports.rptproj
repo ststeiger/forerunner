@@ -7,7 +7,12 @@
       <FullPath>Northwind.rds</FullPath>
     </ProjectItem>
   </DataSources>
-  <DataSets />
+  <DataSets>
+    <ProjectItem>
+      <Name>ProductsByLocation.rsd</Name>
+      <FullPath>ProductsByLocation.rsd</FullPath>
+    </ProjectItem>
+  </DataSets>
   <Reports>
     <ProjectItem>
       <Name>Simple Table with groups and drill down.rdl</Name>
@@ -16,6 +21,10 @@
     <ProjectItem>
       <Name>Simple Matrix.rdl</Name>
       <FullPath>Simple Matrix.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Chart.rdl</Name>
+      <FullPath>Simple Chart.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

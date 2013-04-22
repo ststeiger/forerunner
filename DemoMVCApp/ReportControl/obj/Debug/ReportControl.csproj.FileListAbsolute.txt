@@ -6,11 +6,11 @@ C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\ReportContr
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\ReportControl\bin\Debug\ReportControl.dll.config
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\ReportControl\bin\Debug\Jayrock.Json.dll
 C:\Users\Jason\Documents\Visual Studio 2012\Projects\MvcApplication1\ReportControl\bin\Debug\Jayrock.Json.pdb
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.csprojResolveAssemblyReference.cache
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.dll
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.pdb
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\bin\Debug\ReportControl.dll.config
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\bin\Debug\ReportControl.dll
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\bin\Debug\ReportControl.pdb
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\bin\Debug\Jayrock.Json.dll
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\bin\Debug\Jayrock.Json.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.csprojResolveAssemblyReference.cache
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\ReportControl\obj\Debug\ReportControl.pdb

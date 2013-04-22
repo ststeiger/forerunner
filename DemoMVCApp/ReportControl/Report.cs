@@ -893,18 +893,34 @@ namespace Forerunner.ReportControl
          }
          public Boolean WriteJSONActionImageMapAreas()
          {
-             int Count;           
+             int Count;
+
+             if (ReadByte() != 0x26)
+                 //This should never happen
+                 ThrowParseError();
+             
              w.WriteMember("Count");
              Count = ReadInt32();
              w.WriteNumber(Count);
+             
+             
 
              w.WriteMember("ActionImageMap");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
+                 if (ReadByte() != 0x07)
+                     //This should never happen
+                     ThrowParseError();
+
                  w.WriteStartObject();
-                 WriteJSONActionInfoContent();
-                 WriteJSONImageMapAreas();
+                 if (InspectByte() == 0x02)
+                    WriteJSONActionInfoContent();
+                 if (InspectByte() == 0x0A)
+                    WriteJSONImageMapAreas();
+                 if (ReadByte() != 0xFF)
+                     //This should never happen
+                     ThrowParseError();
                  w.WriteEndObject();
              }
 
@@ -936,8 +952,8 @@ namespace Forerunner.ReportControl
                      w.WriteNumber(CorCount);
                      w.WriteMember("Coordinates");
                      w.WriteStartArray();
-                     for (int j = 0; j < CorCount; CorCount++)                     
-                         w.WriteNumber(ReadFloat());
+                     for (int j = 0; j < CorCount; j++)                     
+                         w.WriteNumber(ReadSingle());
                      w.WriteEndArray();
                      if (ReadByte() != 0xFF)
                      {
@@ -975,6 +991,7 @@ namespace Forerunner.ReportControl
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("Actions");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {

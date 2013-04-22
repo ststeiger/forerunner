@@ -16,11 +16,11 @@ namespace RSProxyAPI.Controllers
         
         private bool useStub = false;
         // GET api/catalogitem
-        public IEnumerable<CatalogItem> Get()
+        public IEnumerable<CatalogItem> Get(bool isRecursive = false)
         {
             RSProxy rs = new RSProxy(url, new Credentials(Credentials.SecurityTypeEnum.Network, "TestAccount", "Forerunner", "TestPWD"));
             rs.UseStub = useStub;
-            return rs.ListChildren("/", true); 
+            return rs.ListChildren("/", isRecursive); 
         }
 
         // GET api/catalogitem

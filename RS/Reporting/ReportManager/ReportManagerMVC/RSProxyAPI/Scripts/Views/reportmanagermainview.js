@@ -13,9 +13,32 @@ var g_App = g_App || {};
     render: function () {
         var data = this.model.toJSON();
         $(this.el).html(this.template(data));
+
+        var catalogitems = this.model.models;
+        var len = catalogitems.length;
+
+        for (var i = 0; i < len; i++) {
+            $('.flow', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
+        }
+
+        var CF = new ContentFlow(this.el.children[0], {}, false);
+        CF.init();
         return this;
     },
   });
   
+  g_App.CatalogItemView = Backbone.View.extend({
+      initialize: function () {
+          this.model.bind("change", this.render, this);
+          this.model.bind("destroy", this.close, this);
+      },
+
+      render: function () {
+          var data = this.model.toJSON();
+          data.EncodedPath = String(data.Path).replace(/\//g, "%2f");;
+          $(this.el).html(this.template(data));
+          return this;
+      }
+  });
 }());
 

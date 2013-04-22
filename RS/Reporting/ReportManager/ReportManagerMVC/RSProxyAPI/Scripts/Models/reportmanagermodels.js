@@ -4,7 +4,7 @@ var g_App = g_App || {};
 // Everything inside this function is local unless assigned to a global variable such
 // as g_App
 (function() {
-
+// TODO:  These needs to be fixed up!!!
   var hostname = window.document.location.hostname;
   var urlBase = 'http://' + hostname + ':9000/api/';
 
@@ -22,9 +22,9 @@ var g_App = g_App || {};
       },
       url: function () {
           if (this.path != null && this.path != "/") {
-              return urlBase + "CatalogItems?path=" + this.path;
+              return urlBase + "CatalogItems?path=" + this.path + "&isRecursive=false";
           } else {
-              return urlBase + "CatalogItems";
+              return urlBase + "CatalogItems?isRecursive=false";
           }
       }
   });

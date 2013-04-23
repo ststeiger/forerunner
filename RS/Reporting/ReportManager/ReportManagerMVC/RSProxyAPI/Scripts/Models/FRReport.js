@@ -230,7 +230,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
         SetPage(RS, NewPageNum, OldPage);
 
     //Get Thumbnail    
-    $.get("/api/Report/GetThumbnail/", {
+    $.get(RS.ReportViewerAPI +"/GetThumbnail/", {
         ReportServerURL: RS.ReportServerURL,
         ReportPath: RS.ReportPath,
         SessionID: RS.SessionID,
@@ -369,7 +369,7 @@ function WriteRichText(RIContext) {
 }
 function WriteImage(RIContext) {
     var $NewObj = $("<IMG/>");
-    var Src = "/api/Report/GetImage/?";
+    var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
 
 
@@ -387,7 +387,7 @@ function WriteImage(RIContext) {
 }
 function WriteChartImage(RIContext) {
     var $NewObj = $("<IMG/>");
-    var Src = "/api/Report/GetImage/?";
+    var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
 
     //Measurements
@@ -467,9 +467,9 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
             $Cell.attr("columnspan", Obj.ColumnSpan);
     }
     //Background color goes on the cell
-    if (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null)
+    if ((Obj.Cell.ReportItem.Elements.SharedElements.Style !=null) && (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null))
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
-    else if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor != null)
+    else if ((Obj.Cell.ReportItem.Elements.NonSharedElements.Style != null) && (Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor != null))
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
     $Cell.attr("Style", Style);

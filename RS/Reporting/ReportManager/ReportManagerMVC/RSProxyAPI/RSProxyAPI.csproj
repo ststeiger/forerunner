@@ -237,6 +237,7 @@
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\tpl\CatalogItemView.html" />
+    <Content Include="Scripts\tpl\FRReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportManagerMainView.html" />
     <Content Include="Scripts\underscore.js" />
@@ -244,6 +245,7 @@
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\tpl\AppPageView.html" />
+    <Content Include="Scripts\Views\frreportviewermainview.js" />
     <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
     <Content Include="Web.config" />

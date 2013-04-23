@@ -7,7 +7,7 @@ var ApplicationRouter = Backbone.Router.extend({
         routes : {
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
-            "browse/:path": "transitionToReportViewer",
+            "browse/:path": "transitionToFRReportViewer",
             "test/:arg": "test",
             '*notFound': 'notFound'
         },
@@ -66,6 +66,22 @@ var ApplicationRouter = Backbone.Router.extend({
                 'ReportViewerMainView'], '',
                 g_App.ReportViewerMainView, {path: path});
         },
+
+        transitionToFRReportViewer: function (path) {
+            if (path != null) {
+                path = String(path).replace(/%2f/g, "/");
+            } else {
+                path = "/";
+            }
+            var appPageModel = new g_App.AppPageModel({
+                showBackButton: true,
+                pageTitle: 'ReportViewer',
+            });
+            this.appPageView.transitionMainSection(appPageModel, [
+                'FRReportViewerMainView'], '',
+                g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost/ReportServer_WinAuth/' });
+            InitReport('localhost/ReportServer_WinAuth/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
+        },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
             // First load the subordinate view templates, everything else will happen in the callback
@@ -95,7 +111,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
+g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView', 'FRReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.start();

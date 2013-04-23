@@ -102,7 +102,7 @@ namespace Forerunner.ReportViewer
             string script ="";
 
             script += "<script src='/Scripts/jquery-1.7.1.min.js'></script>";
-            script += "<script src='/Scripts/FRReport.js'></script>";
+            script += "<script src='/Scripts/Models/FRReport.js'></script>";
             return script;
         }
         public string GetReportInitScript(string reportPath)
@@ -111,7 +111,7 @@ namespace Forerunner.ReportViewer
             string UID = Guid.NewGuid().ToString("N");
 
             script += "<div id='" + UID + "'></div>";
-            script += "<script>InitReport('" + ReportServerURL + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
+            script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
             return script;
         }
         public string GetReportJson(string reportPath,string SessionID,string PageNum)

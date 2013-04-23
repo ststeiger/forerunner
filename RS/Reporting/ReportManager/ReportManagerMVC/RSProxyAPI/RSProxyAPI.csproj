@@ -138,6 +138,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\HtmlPage1.html" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
     <Content Include="Images\Report-icon.png" />
@@ -230,6 +231,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\laconic.js" />
+    <Content Include="Scripts\Models\FRReport.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />

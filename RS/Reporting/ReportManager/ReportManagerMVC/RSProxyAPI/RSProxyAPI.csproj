@@ -139,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\HtmlPage1.html" />
+    <Content Include="Images\ajax-loader1.gif" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
     <Content Include="Images\Report-icon.png" />

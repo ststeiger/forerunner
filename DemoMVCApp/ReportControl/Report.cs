@@ -126,12 +126,16 @@ namespace Forerunner.ReportControl
             else
                 NewSession = SessionID;
 
+            //Device Info
+            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
+            //Page number   
+            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
 
             //Delay just for testing
             //Thread.Sleep(1000);
-
-            
-            
+                        
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];
             //parameters[0] = new ParameterValue();
@@ -150,24 +154,18 @@ namespace Forerunner.ReportControl
 
             rs.ExecutionHeaderValue = execHeader;
 
-            if (NewSession != "")           
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-            else
-                execInfo = rs.LoadReport(reportPath, historyID);
-            
-
-            //rs.SetExecutionParameters(parameters, "en-us");
-            NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             try
             {
+
+                if (NewSession != "")           
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                else
+                    execInfo = rs.LoadReport(reportPath, historyID);
+            
+
+                //rs.SetExecutionParameters(parameters, "en-us");
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
@@ -201,6 +199,14 @@ namespace Forerunner.ReportControl
             else
                 NewSession = SessionID;
 
+            //Device Info
+            string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
+            //Page number   
+            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
+
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];
             //parameters[0] = new ParameterValue();
@@ -219,25 +225,17 @@ namespace Forerunner.ReportControl
 
             rs.ExecutionHeaderValue = execHeader;
 
-            if (NewSession != "")
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-            else
-                execInfo = rs.LoadReport(reportPath, historyID);
-
-
-            //rs.SetExecutionParameters(parameters, "en-us");
-            NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             try
             {
+
+                if (NewSession != "")
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                else
+                    execInfo = rs.LoadReport(reportPath, historyID);
+
+                //rs.SetExecutionParameters(parameters, "en-us");
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 return result;
@@ -256,7 +254,6 @@ namespace Forerunner.ReportControl
             RPLReader r = new RPLReader(RPL,w);
            
             //Read Report Object
-            //Report = RPLStamp Version reportStart ReportProperties *PageContent OffsetsArrayElement ReportElementEnd Version
             w.WriteStartObject();
             w.WriteMember("SessionID");
             w.WriteString(SessionID);
@@ -291,6 +288,7 @@ namespace Forerunner.ReportControl
             //End RPL
             w.WriteEndObject();
 
+            Debug.Write(w);
             return w.ToString();
 
         }

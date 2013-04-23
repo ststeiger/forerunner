@@ -1,0 +1,5 @@
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\JSON\bin\net-4.0\debug\Jayrock.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\JSON\bin\net-4.0\debug\Jayrock.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\JSON\src\Jayrock\obj\Debug\Jayrock.csprojResolveAssemblyReference.cache
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\JSON\src\Jayrock\obj\Debug\Jayrock.dll
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\DemoMVCApp\JSON\src\Jayrock\obj\Debug\Jayrock.pdb

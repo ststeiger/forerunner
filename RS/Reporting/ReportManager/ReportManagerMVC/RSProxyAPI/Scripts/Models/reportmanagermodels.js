@@ -4,28 +4,35 @@ var g_App = g_App || {};
 // Everything inside this function is local unless assigned to a global variable such
 // as g_App
 (function() {
-// TODO:  These needs to be fixed up!!!
+  // TODO:  These needs to be fixed up!!!
   var hostname = window.document.location.hostname;
   var urlBase = 'http://' + hostname + ':9000/api/';
+  var reportServerUrl = hostname + '/reportserver_winauth';
 
   // Models
   g_App.CatalogItem = Backbone.Model.extend({
     url: function() {
-      return urlBase + "CatalogItems/" + this.get("id");
+      return urlBase + 'CatalogItems/' + this.get('id');
+    },
+    viewerUrl : function() {
+      return urlBase + 'ReportViewer/';
+    },
+    reportServerUrl: function () {
+      return reportServerUrl;
     }
   });
 
   g_App.CatalogItemCollection = Backbone.Collection.extend({
-      model: g_App.CatalogItem,
-      initialize: function(options) {
-        this.path = options.path;
-      },
-      url: function () {
-          if (this.path != null && this.path != "/") {
-              return urlBase + "CatalogItems?path=" + this.path + "&isRecursive=false";
-          } else {
-              return urlBase + "CatalogItems?isRecursive=false";
-          }
+    model: g_App.CatalogItem,
+    initialize: function(options) {
+      this.path = options.path;
+    },
+    url: function () {
+      if (this.path != null && this.path != '/') {
+          return urlBase + 'CatalogItems?path=' + this.path + '&isRecursive=false';
+      } else {
+          return urlBase + 'CatalogItems?isRecursive=false';
       }
+    }
   });
 }());

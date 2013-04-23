@@ -12,7 +12,9 @@ namespace RSProxyAPI.Controllers
 {
     public class ReportViewerController : ApiController
     {
-
+        // TODO:  Make sure that this will be fixed by the security work
+        //private string domainName = "Forerunner";
+        private string domainName = "meowlett";
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
@@ -22,7 +24,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", "Forerunner", "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
 
             result = rep.GetImage(SessionID, ImageID, out mimeType);
             ByteArrayContent content = new ByteArrayContent(result);
@@ -41,7 +43,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", "Forerunner", "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
 
             result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), PageHeight, PageWidth);
             ByteArrayContent content = new ByteArrayContent(result);
@@ -60,7 +62,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", "Forerunner", "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
 
             result = Encoding.UTF8.GetBytes(rep.GetReportJson(ReportPath, SessionID, PageNumber.ToString()));
             ByteArrayContent content = new ByteArrayContent(result);

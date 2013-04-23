@@ -35,7 +35,10 @@ var g_App = g_App || {};
 
       render: function () {
           var data = this.model.toJSON();
-          data.EncodedPath = String(data.Path).replace(/\//g, "%2f");;
+          data.EncodedPath = String(data.Path).replace(/\//g, "%2f");
+          data.ReportThumbnailPath = this.model.viewerUrl()
+            + 'GetThumbnail/?ReportServerURL=' +this.model.reportServerUrl() + '&ReportPath='
+            + data.Path + '&SessionID=&PageNumber=1&PageHeight=1in&PageWidth=1in'
           $(this.el).html(this.template(data));
           return this;
       }

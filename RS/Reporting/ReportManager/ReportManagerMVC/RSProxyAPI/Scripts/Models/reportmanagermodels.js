@@ -7,7 +7,8 @@ var g_App = g_App || {};
   // TODO:  These needs to be fixed up!!!
   var hostname = window.document.location.hostname;
   var urlBase = 'http://' + hostname + ':9000/api/';
-  var reportServerUrl = hostname + '/reportserver_winauth';
+    //var reportServerUrl = hostname + '/reportserver_winauth';
+  var reportServerUrl = hostname + ':8080/reportserver';
 
   // Models
   g_App.CatalogItem = Backbone.Model.extend({

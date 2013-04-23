@@ -13,8 +13,8 @@ namespace RSProxyAPI.Controllers
     public class ReportViewerController : ApiController
     {
         // TODO:  Make sure that this will be fixed by the security work
-        //private string domainName = "Forerunner";
-        private string domainName = "meowlett";
+        private string domainName = "Forerunner";
+        //private string domainName = "meowlett";
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {

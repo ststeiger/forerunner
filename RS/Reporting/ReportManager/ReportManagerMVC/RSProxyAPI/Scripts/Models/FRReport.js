@@ -34,8 +34,11 @@ function ReportPage($Container, ReportObj) {
     this.$Img = new $("<IMG/>");
 }
 
-
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
+    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
+}
+
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID) {
     var $Row =  new $("<TR/>");
     var $Cell;
     
@@ -44,11 +47,17 @@ function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum,
     Reports[UID] = RS;
     
     if (Toolbar) {
-        $Row = new $("<TR/>");
-        $Cell = new $("<TD/>");
-        $Cell.append(GetToolbar(UID));
-        $Row.append($Cell);
-        RS.$ReportContainer.append($Row);
+        if (ToolbarUID == null) {
+            $Row = new $("<TR/>");
+            $Cell = new $("<TD/>");
+            $Cell.append(GetToolbar(UID));
+            $Row.append($Cell);
+            $Row.addClass('inlinetoolbar', 0, 0, null);
+            RS.$ReportContainer.append($Row);
+        } else {
+            $Container = $('#' + ToolbarUID);
+            $Container.append(GetToolbar(UID));
+        }
     }
     AddLoadingIndicator(RS);
   
@@ -108,7 +117,7 @@ function SetPage(RS, NewPageNum, OldPage) {
 function RefreshReport(RS) {
     Page = RS.Pages[RS.CurPage];
 
-    RS.SessionID = "";
+    RS.SessionID = "";http://localhost:9000/Images
     RS.Pages = new Object();
     LoadPage(RS, 1, Page, false); 
 }
@@ -117,64 +126,64 @@ function GetToolbar(UID) {
     var $Row = $("<TR/>");
     var $Cell;
 
-    $Toolbar.attr("style", "width:100%;background-color:lightsteelblue;background:linear-gradient(steelblue lightsteelblue);");
+    $Toolbar.attr("class", "toolbar");
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "ShowParms(Reports['" + UID + "'])");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
     $Cell.html("Par");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer20mm");
     $Cell.attr("onclick", "ShowNav('" + UID + "')");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
     $Cell.html("Nav");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:20mm;");
+    $Cell.attr("class", "spacer20mm");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "RefreshReport(Reports['" + UID + "'])");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Refresh");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:20mm;");
+    $Cell.attr("class", "spacer10mm");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Start");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer5mm");
 
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage-1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Prev");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = Reports[UID].$PageInput;
-    $Cell.attr("style", "min-width:10mm;max-width:15mm;text-align:right;");
+    $Cell.attr("class", "toolbartextbox");
     $Cell.attr("id", "PageInput");
     $Cell.attr("type", "number")
     $Cell.bind("keypress", function (e) { if (e.keyCode == 13) NavToPage(Reports[UID], Reports[UID].$PageInput.val()); });
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage+1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Next");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");

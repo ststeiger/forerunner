@@ -11,8 +11,6 @@ namespace RSProxyAPI.Controllers
 {
     public class CatalogItemsController : ApiController
     {
-        // TODO:  Replace these with config settings
-        
         private string url = ConfigurationManager.AppSettings["ForeRunner.ReportServerWSUrl"];
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];

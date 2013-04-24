@@ -31,7 +31,6 @@ namespace Forerunner.ReportControl
             this.Password = Password;
             this.Domain = Domain;
         }
-
     }
 
     
@@ -900,10 +899,8 @@ namespace Forerunner.ReportControl
              w.WriteMember("Count");
              Count = ReadInt32();
              w.WriteNumber(Count);
-             
-             
 
-             w.WriteMember("ActionImageMap");
+             w.WriteMember("ActionInfoWithMaps");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -932,9 +929,12 @@ namespace Forerunner.ReportControl
              int CorCount;
              RPLProperties prop;
 
+             
              if (ReadByte() == 0x0A)
              {
-                 w.WriteMember("MapAreaCount");
+                 w.WriteMember("ImageMapAreas");
+                 w.WriteStartObject();
+                 w.WriteMember("Count");
                  Count = ReadInt32();
                  w.WriteNumber(Count);
 
@@ -962,6 +962,7 @@ namespace Forerunner.ReportControl
                      w.WriteEndObject();
                  }
                  w.WriteEndArray();
+                 w.WriteEndObject();
              }
              else
                  //This cannot happen

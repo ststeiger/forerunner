@@ -93,7 +93,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
 }
 
 function RemoveLoadingIndicator(RS) {
-    RS.$LoadingIndicator.detach();
+    RS.$LoadingIndicator.detach();    
 }
 function SetPage(RS, NewPageNum, OldPage) {
     RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
@@ -225,6 +225,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
 
     RemoveLoadingIndicator(RS);
+
     if (!LoadOnly)
         SetPage(RS, NewPageNum, OldPage);
 
@@ -385,23 +386,117 @@ function WriteImage(RIContext) {
     return $NewObj;
 }
 function WriteChartImage(RIContext) {
-    var $NewObj = $("<IMG/>");
+    //var $NewObj = $("<IMG/>");    
+    //var Src = "/api/Report/GetImage/?";
+    //var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+
+    ////Measurements
+    //Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    //$NewObj.attr("Style", Style);
+    //$NewObj.attr("id", "img_" + RIContext.RS.SessionID);
+
+    ////src parameters
+    //Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
+    //Src += "&SessionID=" + RIContext.RS.SessionID;
+    //Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
+
+    //$NewObj.attr("src", Src);
+    //$NewObj.attr("alt", "Cannot display chart image");
+
     var Src = "/api/Report/GetImage/?";
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-    //Measurements
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    $NewObj.attr("Style", Style);
-
-    //src parameters
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
 
-    $NewObj.attr("src", Src);
-    $NewObj.attr("alt", "Cannot display chart image");
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+
+    var $NewObj = new Image();
+    $NewObj.src = Src;
+    $NewObj.style = Style;
+    $NewObj.id = "img_" + RIContext.RS.SessionID;
+    $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
+    $NewObj.onload = function () {
+        WriteActionImageMapAreas(RIContext, this.width, this.height);
+    };
+
+    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
+        var $node = $("<a/>");
+        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
+        RIContext.$HTMLParent.append($node);
+    }
+
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
+}
+function WriteAction(Action) {
+    if (Action.HyperLink != undefined) {
+        return Action.HyperLink;
+    }
+    else if (Action.BookmarkLink != undefined) {
+        return Action.BookmarkLink;
+    }
+    else {
+        return Action.DrillthroughUrl;
+    }
+}
+function WriteActionImageMapAreas(RIContext, width, height) {
+    var ActionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
+    if (ActionImageMapAreas != undefined) {
+        var $Map = $("<MAP/>");
+        $Map.attr("name", "Map_" + RIContext.RS.SessionID);
+        $Map.attr("id", "Map_" + RIContext.RS.SessionID);
+
+        for (i = 0; i < ActionImageMapAreas.Count; i++) {           
+            var element = ActionImageMapAreas.ActionInfoWithMaps[i];
+            
+            for (j = 0; j < element.ImageMapAreas.Count;j++)
+            {
+                var $Area = $("<AREA />");
+                $Area.attr("tabindex", i + 1);
+                $Area.attr("style", "text-decoration:none");
+                $Area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                $Area.attr("href", WriteAction(element.Actions[0]));
+
+                var shape;
+                var coords = "";
+                switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
+                    case 0:
+                        shape = "rect";
+                        coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100);
+                        break;
+                    case 1:
+                        shape = "poly";
+                        var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
+                        for (k = 0; k < coorCount; k++) {
+                            if (k % 2 == 0) {
+                                coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100);
+                            }
+                            else {
+                                coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100);
+                            }
+                            if (k < coorCount - 1) {
+                                coords += ",";
+                            }
+                        }
+                        break;
+                    case 2:
+                        shape = "circ";
+                        coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100) + "," +
+                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100) + "," +
+                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100);
+                        break;                
+                }
+                $Area.attr("shape", shape);
+                $Area.attr("coords", coords);           
+                $Map.append($Area);
+            }
+        }
+        RIContext.$HTMLParent.append($Map);
+    }   
 }
 function ResizeImage(img) {
     //TODO: this does not work

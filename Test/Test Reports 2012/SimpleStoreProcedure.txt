@@ -1,0 +1,21 @@
+1.
+create PROCEDURE ChartData
+AS
+BEGIN
+select top 8 ProductName,UnitPrice from Products order by UnitPrice desc
+END
+
+2.
+CREATE PROCEDURE Get_CustomerShortInfo
+AS
+BEGIN
+	SELECT CustomerID,CompanyName,[Address],Phone FROM [dbo].[Customers]
+END
+
+3.
+CREATE PROCEDURE ProductSales
+AS
+BEGIN
+select  top 10  c.ProductName, sum(b.UnitPrice*b.Quantity) as total from [dbo].[Orders] A,[dbo].[Order Details] B,[dbo].[Products] C
+where A.OrderID=B.OrderID and B.ProductID=C.ProductID group by c.ProductName order by total desc
+END

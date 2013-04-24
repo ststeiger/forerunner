@@ -107,10 +107,11 @@ var g_App = g_App || {};
       transitionMainSection: function(appPageModel, views, subfolder, mainSectionType, options) {
         // First load the subordinate view templates, everything else will happen in the callback
         var thisObj = this;
-          //g_App.utils.loadTemplate(views, subfolder, function() {
+        //g_App.utils.loadTemplate(views, subfolder, function() {
           appPageModel.attributes.mainSection = new mainSectionType(options).render();
           thisObj.model.set(appPageModel);
         //});
+          $('#HeaderArea').html(null);
       }
   });
   

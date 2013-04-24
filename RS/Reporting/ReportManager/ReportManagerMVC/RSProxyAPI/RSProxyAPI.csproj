@@ -143,6 +143,7 @@
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
     <Content Include="Images\Report-icon.png" />
+    <Content Include="Scripts\App\configs.js" />
     <Content Include="Scripts\ContentFlowAddOn.js" />
     <Content Include="Scripts\ContentFlow\contentflow.css" />
     <Content Include="Content\ReportManager.css" />

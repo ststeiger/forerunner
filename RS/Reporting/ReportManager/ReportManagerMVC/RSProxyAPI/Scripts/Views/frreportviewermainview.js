@@ -14,8 +14,6 @@ var g_App = g_App || {};
     render: function () {
         var data = {};
         $(this.el).html(this.template(data));
-        //InitReport("localhost/reportserver_winauth", "/api/ReportViewer", "/RootTest", true, 1, "FRReportViewer1");
-        //InitReport(this.reportServerUrl, '/api/ReportViewer', this.path, true, 1, 'pageSection');
         return this;
     },
   });

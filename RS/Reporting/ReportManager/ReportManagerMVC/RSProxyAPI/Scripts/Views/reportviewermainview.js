@@ -11,7 +11,7 @@ var g_App = g_App || {};
         _(this).bindAll('render');
     },
     render: function () {
-        var data = { url: 'http://localhost/ReportServer_WINAUTH/Pages/ReportViewer.aspx?' + this.path + '&rs:Command=Render' };
+        var data = { url: g_App.configs.reportServerViewer + this.path + '&rs:Command=Render' };
         $(this.el).html(this.template(data));
         return this;
     },

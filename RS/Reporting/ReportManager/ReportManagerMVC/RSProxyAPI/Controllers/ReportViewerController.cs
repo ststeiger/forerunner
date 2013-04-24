@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -12,9 +12,9 @@ namespace RSProxyAPI.Controllers
 {
     public class ReportViewerController : ApiController
     {
-        // TODO:  Make sure that this will be fixed by the security work
-        //private string domainName = "Forerunner";
-        private string domainName = "meowlett";
+        private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
+        private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
+        private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
@@ -24,7 +24,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
             result = rep.GetImage(SessionID, ImageID, out mimeType);
             ByteArrayContent content = new ByteArrayContent(result);
@@ -43,7 +43,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
             result = rep.GetThumbnail(ReportPath, SessionID, PageNumber.ToString(), PageHeight, PageWidth);
             ByteArrayContent content = new ByteArrayContent(result);
@@ -62,7 +62,7 @@ namespace RSProxyAPI.Controllers
             HttpResponseMessage resp;
 
             //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, "TestAccount", domainName, "TestPWD"));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
             result = Encoding.UTF8.GetBytes(rep.GetReportJson(ReportPath, SessionID, PageNumber.ToString()));
             ByteArrayContent content = new ByteArrayContent(result);

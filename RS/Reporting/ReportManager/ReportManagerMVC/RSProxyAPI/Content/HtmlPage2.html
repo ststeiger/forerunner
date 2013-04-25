@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="/Content/site.css" rel="stylesheet"/>
+    <link href="/Content/ReportManager.css" rel="stylesheet"/>
+    <title></title>    
+</head>
+<body>
+    
+    <table><tr><td style="vertical-align: top;"><div id="Div1" ></div></td><td style="vertical-align: top;"><div id="Div2" style="top:0;vertical-align:top;"></div></td></tr></table>
+    
+    <script src="/Scripts/jquery-1.7.1.js"></script>
+    <script src="/scripts/Models/FRReport.js"></script>
+    <script>
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/ColumnChartReport", true, 1, "Div1")
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/ImageMapTest", true, 1, "Div1")
+        InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/TwoChartReport", true, 1, "Div1")
+    </script>
+</body>
+</html>

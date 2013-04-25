@@ -908,10 +908,8 @@ namespace Forerunner.ReportViewer
              w.WriteMember("Count");
              Count = ReadInt32();
              w.WriteNumber(Count);
-             
-             
 
-             w.WriteMember("ActionImageMap");
+             w.WriteMember("ActionInfoWithMaps");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -942,7 +940,9 @@ namespace Forerunner.ReportViewer
 
              if (ReadByte() == 0x0A)
              {
-                 w.WriteMember("MapAreaCount");
+                 w.WriteMember("ImageMapAreas");
+                 w.WriteStartObject();
+                 w.WriteMember("Count");
                  Count = ReadInt32();
                  w.WriteNumber(Count);
 
@@ -970,6 +970,7 @@ namespace Forerunner.ReportViewer
                      w.WriteEndObject();
                  }
                  w.WriteEndArray();
+                 w.WriteEndObject();
              }
              else
                  //This cannot happen

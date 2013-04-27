@@ -38,7 +38,6 @@ function ReportPage($Container, ReportObj) {
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
     InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
 }
-
 function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID) {
     var $Row =  new $("<TR/>");
     var $Cell;
@@ -72,14 +71,12 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNu
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
     LoadPage(RS, PageNum, null);    
 }
-
 function SetActionCursor(Ob) {
     Ob.style.cursor = "pointer";   
 }
 function AddLoadingIndicator(RS) {    
     RS.$ReportContainer.append(RS.$LoadingIndicator);
 }
-
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {  
     if (OldPage != null)
         if (OldPage.$Container != null)
@@ -102,7 +99,6 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 
 }
-
 function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
@@ -259,8 +255,6 @@ function SetImage(Data, RS) {
         RS.Pages[PageNum] = new ReportPage(null, null);
     RS.Pages[PageNum].Image = Data;
 }
-
-
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
     var $Sec = $("<TR/>");
@@ -328,7 +322,6 @@ function WriteRectangle(RIContext) {
 
     return RIContext.$HTMLParent;
 }
-
 function Layout(){
     this.ReportItems = new Object();
     this.Height = 0;
@@ -338,14 +331,12 @@ function TempMeasurement(Height, Width) {
     this.Height = Height;
     this.Width = Width;
 }
-
 function ReportItemLocation(Index) {
     this.TopDelta = 0;    
     this.Height = 0;
     this.Index = Index;
     this.IndexAbove;  
 }
-
 function GetRectangleLayout(Measurements) {
     var l = new Layout()
    
@@ -383,7 +374,6 @@ function GetRectangleLayout(Measurements) {
     
     return l;
 }
-
 function GetHeight($Obj) {
     var height;
 
@@ -435,56 +425,66 @@ function WriteRichText(RIContext) {
     Style += "border-width:thin;border-style:solid";
     $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
 
-    //Handle each paragraphs
-    $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
-        var $Paragraph = new $("<DIV />");
-        $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
+    if (RIContext.CurrObj.Paragraphs.length == 0) {
+        if (RIContext.CurrObj.Elements.SharedElements.Value != null)
+            $NewObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+        else if (RIContext.CurrObj.Elements.NonSharedElements.Value != null)
+            $NewObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+        else
+            $NewObj.html("&nbsp");
+    }
+    else {
+        //Handle each paragraphs
+        $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
+            var $Paragraph = new $("<DIV />");
+            $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
-        var ParagraphStyle = "";
-        ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
-        ParagraphStyle += GetElementsStyle(Obj.Paragraph);
-        $Paragraph.attr("Style", ParagraphStyle);
+            var ParagraphStyle = "";
+            ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
+            ParagraphStyle += GetElementsStyle(Obj.Paragraph);
+            $Paragraph.attr("Style", ParagraphStyle);
 
-        //Handle each TextRun
-        for (i = 0; i < Obj.TextRunCount; i++) {
-            var $TextRun;         
-            var flag = true;
-            //With or without Action in TextRun
-            if (Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo == undefined) {
-                $TextRun = new $("<SPAN />");
-            }
-            else {
-                $TextRun = new $("<A />");
-                for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
-                    WriteAction(Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
+            //Handle each TextRun
+            for (i = 0; i < Obj.TextRunCount; i++) {
+                var $TextRun;
+                var flag = true;
+                //With or without Action in TextRun
+                if (Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo == undefined) {
+                    $TextRun = new $("<SPAN />");
                 }
-            }            
+                else {
+                    $TextRun = new $("<A />");
+                    for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
+                        WriteAction(Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
+                    }
+                }
 
-            if (Obj.TextRuns[i].Elements.SharedElements.Value != undefined & Obj.TextRuns[i].Elements.SharedElements.Value != "") {
-                $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                if (Obj.TextRuns[i].Elements.SharedElements.Value != undefined & Obj.TextRuns[i].Elements.SharedElements.Value != "") {
+                    $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                }
+                else if (Obj.TextRuns[i].Elements.NonSharedElements.Value != undefined & Obj.TextRuns[i].Elements.NonSharedElements.Value != "") {
+                    $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                }
+                else {
+                    $TextRun.html("&nbsp");
+                    flag = false;
+                }
+
+                $TextRun.attr("Name", Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
+
+                if (flag) {
+                    var TextRunStyle = "";
+                    TextRunStyle += GetMeasurements(GetMeasurmentsObj(Obj.TextRuns[i], i));
+                    TextRunStyle += GetElementsStyle(Obj.TextRuns[i].Elements);
+                    $TextRun.attr("Style", TextRunStyle);
+                }
+
+                $Paragraph.append($TextRun);
             }
-            else if (Obj.TextRuns[i].Elements.NonSharedElements.Value != undefined & Obj.TextRuns[i].Elements.NonSharedElements.Value != "") {
-                $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
-            }
-            else {
-                $TextRun.html("&nbsp");
-                flag = false;
-            }
 
-            $TextRun.attr("Name", Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
-
-            if (flag) {
-                var TextRunStyle = "";
-                TextRunStyle += GetMeasurements(GetMeasurmentsObj(Obj.TextRuns[i], i));
-                TextRunStyle += GetElementsStyle(Obj.TextRuns[i].Elements);
-                $TextRun.attr("Style", TextRunStyle);
-            }
-
-            $Paragraph.append($TextRun);
-        }
-
-        $NewObj.append($Paragraph);
-    });
+            $NewObj.append($Paragraph);
+        });
+    }
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {

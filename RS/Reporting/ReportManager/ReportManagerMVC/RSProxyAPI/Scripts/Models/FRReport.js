@@ -35,8 +35,11 @@ function ReportPage($Container, ReportObj) {
     this.$Img = new $("<IMG/>");
 }
 
-
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
+    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
+}
+
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID) {
     var $Row =  new $("<TR/>");
     var $Cell;
     
@@ -45,11 +48,17 @@ function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum,
     Reports[UID] = RS;
     
     if (Toolbar) {
-        $Row = new $("<TR/>");
-        $Cell = new $("<TD/>");
-        $Cell.append(GetToolbar(UID));
-        $Row.append($Cell);
-        RS.$ReportContainer.append($Row);
+        if (ToolbarUID == null) {
+            $Row = new $("<TR/>");
+            $Cell = new $("<TD/>");
+            $Cell.append(GetToolbar(UID));
+            $Row.append($Cell);
+            $Row.addClass('inlinetoolbar', 0, 0, null);
+            RS.$ReportContainer.append($Row);
+        } else {
+            $Container = $('#' + ToolbarUID);
+            $Container.append(GetToolbar(UID));
+        }
     }
     AddLoadingIndicator(RS);
   
@@ -109,7 +118,7 @@ function SetPage(RS, NewPageNum, OldPage) {
 function RefreshReport(RS) {
     Page = RS.Pages[RS.CurPage];
 
-    RS.SessionID = "";
+    RS.SessionID = "";http://localhost:9000/Images
     RS.Pages = new Object();
     LoadPage(RS, 1, Page, false); 
 }
@@ -118,64 +127,64 @@ function GetToolbar(UID) {
     var $Row = $("<TR/>");
     var $Cell;
 
-    $Toolbar.attr("style", "width:100%;background-color:lightsteelblue;background:linear-gradient(steelblue lightsteelblue);");
+    $Toolbar.attr("class", "toolbar");
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "ShowParms(Reports['" + UID + "'])");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
     $Cell.html("Par");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer20mm");
     $Cell.attr("onclick", "ShowNav('" + UID + "')");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
     $Cell.html("Nav");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:20mm;");
+    $Cell.attr("class", "spacer20mm");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "RefreshReport(Reports['" + UID + "'])");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Refresh");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:20mm;");
+    $Cell.attr("class", "spacer10mm");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Start");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer5mm");
 
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage-1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Prev");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = Reports[UID].$PageInput;
-    $Cell.attr("style", "min-width:10mm;max-width:15mm;text-align:right;");
+    $Cell.attr("class", "toolbartextbox");
     $Cell.attr("id", "PageInput");
     $Cell.attr("type", "number")
     $Cell.bind("keypress", function (e) { if (e.keyCode == 13) NavToPage(Reports[UID], Reports[UID].$PageInput.val()); });
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("style", "min-width:10mm;");
+    $Cell.attr("class", "spacer10mm");
     $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage+1)");
     $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Next");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
@@ -408,6 +417,9 @@ function WriteReportItems(RIContext) {
         case "Rectangle":
             return WriteRectangle(RIContext);
             break;
+        case "SubReport":
+            return WriteSubreport(RIContext);
+            break;
         case "Chart":
         case "Map":
             return WriteChartImage(RIContext);
@@ -418,72 +430,223 @@ function WriteRichText(RIContext) {
     var Style = "";
     var $NewObj = RIContext.$HTMLParent;
 
-    if (RIContext.CurrObj.Elements.SharedElements.Value != null)
-        $NewObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-    else if (RIContext.CurrObj.Elements.NonSharedElements.Value != null)
-        $NewObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-    else
-        $NewObj.html("&nbsp");
-
-    //If no value put in HTML empty
-    if (RIContext.CurrObj.Elements.SharedElements.Value == "" || RIContext.CurrObj.Elements.NonSharedElements.Value == "")
-        $NewObj.html("&nbsp");
-
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
+    Style += "border-width:thin;border-style:solid";
     $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
 
-    //Paragraphs
-    //$.each(CurrObj.ReportItems, function (Index, Obj) { WriteReportItems(ReportObj, Obj, Index, CurrObj, $Col); });
+    //Handle each paragraphs
+    $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
+        var $Paragraph = new $("<DIV />");
+        $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
+        var ParagraphStyle = "";
+        ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
+        ParagraphStyle += GetElementsStyle(Obj.Paragraph);
+        $Paragraph.attr("Style", ParagraphStyle);
+
+        //Handle each TextRun
+        for (i = 0; i < Obj.TextRunCount; i++) {
+            var $TextRun;         
+            var flag = true;
+            //With or without Action in TextRun
+            if (Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo == undefined) {
+                $TextRun = new $("<SPAN />");
+            }
+            else {
+                $TextRun = new $("<A />");
+                for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
+                    WriteAction(Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
+                }
+            }            
+
+            if (Obj.TextRuns[i].Elements.SharedElements.Value != undefined & Obj.TextRuns[i].Elements.SharedElements.Value != "") {
+                $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+            }
+            else if (Obj.TextRuns[i].Elements.NonSharedElements.Value != undefined & Obj.TextRuns[i].Elements.NonSharedElements.Value != "") {
+                $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+            }
+            else {
+                $TextRun.html("&nbsp");
+                flag = false;
+            }
+
+            $TextRun.attr("Name", Obj.TextRuns[i].Elements.NonSharedElements.UniqueName);
+
+            if (flag) {
+                var TextRunStyle = "";
+                TextRunStyle += GetMeasurements(GetMeasurmentsObj(Obj.TextRuns[i], i));
+                TextRunStyle += GetElementsStyle(Obj.TextRuns[i].Elements);
+                $TextRun.attr("Style", TextRunStyle);
+            }
+
+            $Paragraph.append($TextRun);
+        }
+
+        $NewObj.append($Paragraph);
+    });
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
-    var $NewObj = $("<IMG/>");
+    //var $NewObj = $("<IMG/>");
+    //var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
+    //var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+
+
+    ////Hack for Image size, need to handle clip, fit , fit proportional
+    //Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    //$NewObj.attr("Style", Style);
+
+    ////src parameters
+    //Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
+    //Src += "&SessionID=" + RIContext.RS.SessionID;
+    //Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
+    //$NewObj.attr("src", Src);
+    //$NewObj.attr("alt", "Cannot display image");    
+    //return $NewObj;
+
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-
-    //Hack for Image size, need to handle clip, fit , fit proportional
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    $NewObj.attr("Style", Style);
-
-    //src parameters
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-    $NewObj.attr("src", Src);
-    $NewObj.attr("alt", "Cannot display image");
+
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+
+    var $NewObj = new Image();
+    $NewObj.src = Src;
+    $NewObj.style = Style;    
+    $NewObj.alt = "Cannot display chart image";
+    $NewObj.onload = function () {
+        WriteActionImageMapAreas(RIContext, this.width, this.height);
+        ResizeImage(this, 36, 48);
+    };
+
+    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
+        var $node = $("<a/>");
+        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
+        RIContext.$HTMLParent.append($node);
+    }
+
     return $NewObj;
 }
 function WriteChartImage(RIContext) {
-    var $NewObj = $("<IMG/>");
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-    //Measurements
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    $NewObj.attr("Style", Style);
-
-    //src parameters
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
 
-    $NewObj.attr("src", Src);
-    $NewObj.attr("alt", "Cannot display chart image");
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+
+    var $NewObj = new Image();
+    $NewObj.src = Src;
+    $NewObj.style = Style;
+    $NewObj.id = "img_" + RIContext.RS.SessionID;
+    $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
+    $NewObj.alt = "Cannot display chart image";
+    $NewObj.onload = function () {
+        WriteActionImageMapAreas(RIContext, this.width, this.height);
+        //ResizeImage(this);
+    };
+
+    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
+        var $node = $("<a/>");
+        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
+        RIContext.$HTMLParent.append($node);
+    }
+
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
-function ResizeImage(img) {
-    //TODO: this does not work
-    if (img.height >= img.width) {
-        img.maxheight = "100%";
-        img.width = "auto";
+function WriteAction(Action, Control) {
+    if (Action.HyperLink != undefined) {
+        Control.attr("href", Action.HyperLink);
+    }
+    else if (Action.BookmarkLink != undefined) {
+        Control.attr("href", "#" + Action.BookmarkLink);
     }
     else {
-        img.maxwidth = "100%";
-        img.height = "auto";
+        Control.attr("href", Action.DrillthroughUrl);
+        //$(Control).click(function () {
+        //    //var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
+        //    //alert(reportPath);
+        //    //InitReport(RIContext.RS.ReportServerURL, RIContext.RS.ReportViewerAPI, reportPath, true, 1, RIContext.RS.UID);
+        //});
+    }
+}
+function WriteActionImageMapAreas(RIContext, width, height) {
+    var ActionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
+    if (ActionImageMapAreas != undefined) {
+        var $Map = $("<MAP/>");
+        $Map.attr("name", "Map_" + RIContext.RS.SessionID);
+        $Map.attr("id", "Map_" + RIContext.RS.SessionID);
+
+        for (i = 0; i < ActionImageMapAreas.Count; i++) {
+            var element = ActionImageMapAreas.ActionInfoWithMaps[i];
+
+            for (j = 0; j < element.ImageMapAreas.Count; j++) {
+                var $Area = $("<AREA />");
+                $Area.attr("tabindex", i + 1);
+                $Area.attr("style", "text-decoration:none");
+                $Area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);               
+                WriteAction(element.Actions[0], $Area);
+
+                var shape;
+                var coords = "";
+                switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
+                    case 0:
+                        shape = "rect";
+                        coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100) + "," +
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100);
+                        break;
+                    case 1:
+                        shape = "poly";
+                        var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
+                        for (k = 0; k < coorCount; k++) {
+                            if (k % 2 == 0) {
+                                coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100);
+                            }
+                            else {
+                                coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100);
+                            }
+                            if (k < coorCount - 1) {
+                                coords += ",";
+                            }
+                        }
+                        break;
+                    case 2:
+                        shape = "circ";
+                        coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100) + "," +
+                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100) + "," +
+                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100);
+                        break;
+                }
+                $Area.attr("shape", shape);
+                $Area.attr("coords", coords);
+                $Map.append($Area);
+            }
+        }
+        RIContext.$HTMLParent.append($Map);
+    }
+}
+function ResizeImage(img, maxHeight, maxWidth) {   
+    var ratio = 0;
+    if (img.height >= img.width) {
+        if (img.height > maxHeight) {
+            ratio = maxHeight / img.height;
+            img.css("height", maxHeight);
+            img.css("width", img.width * ratio);
+        }
+    }
+    else {
+        if (img.width > maxWidth) {
+            ratio = maxWidth / img.width;
+            $(img).css("width", maxWidth);
+            $(img).css("height", img.height * ratio);
+        }
     }
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
@@ -594,8 +757,44 @@ function WriteTablix(RIContext) {
     $Tablix.append($Row);
     return $Tablix;
 }
+function WriteSubreport(RIContext) {
+    var $RI;        //This is the ReportItem Object
+    var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
+    var EmptyDivHeight = 0;
+    var $EmptyDiv = $("<Div/>");
+    var Measurements;
+    var NewTop = 0;
 
+    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.SubReportProperties));    
+    var subReportName = $("<h2/>").css("text-align", "center").html("SubReport: "+RIContext.CurrObj.SubReportProperties.SharedElements.ReportName);
+    RIContext.$HTMLParent.append(subReportName);
 
+    $.each(RIContext.CurrObj.BodyElements.ReportItems, function (Index, Obj) {
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
+        Measurements = RIContext.CurrObj.Measurement.Measurements;
+
+        // Keep track of how much space we are using for top position offset       
+        $LocDiv = new $("<Div/>");
+        $LocDiv.append($RI);
+        //add a solid/thin border for the subreport
+        $LocDiv.attr("Style", "border-style:solid;border-width:thin;position:relative;top:" + (Measurements[Index].Top - NewTop) + "mm;left:" + Measurements[Index].Left + "mm;");
+        NewTop += Measurements[Index].Height;
+
+        //Collect empty space, this needs to handle more complex layout       
+        if (Index > 0) {
+            if (Measurements[Index].Top > (Measurements[Index - 1].Top + Measurements[Index - 1].Height))
+                EmptyDivHeight += Measurements[Index].Top - (Measurements[Index - 1].Top + Measurements[Index - 1].Height);
+        }
+        else
+            EmptyDivHeight += Measurements[Index].Top;
+
+        RIContext.$HTMLParent.append($LocDiv);
+    });
+
+    //$EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
+    RIContext.$HTMLParent.append($EmptyDiv);
+    return RIContext.$HTMLParent;
+}
 function GetElementsStyle(CurrObj) {
     var Style = "";
 

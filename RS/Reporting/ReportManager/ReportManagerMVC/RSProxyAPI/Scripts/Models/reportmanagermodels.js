@@ -4,10 +4,7 @@ var g_App = g_App || {};
 // Everything inside this function is local unless assigned to a global variable such
 // as g_App
 (function() {
-  // TODO:  These needs to be fixed up!!!
-  var hostname = window.document.location.hostname;
-  var urlBase = 'http://' + hostname + ':9000/api/';
-    //var reportServerUrl = hostname + '/reportserver_winauth';
+  var urlBase = g_App.configs.apiBase;
   var reportServerUrl = hostname + ':8080/reportserver';
 
   // Models
@@ -19,7 +16,7 @@ var g_App = g_App || {};
       return urlBase + 'ReportViewer/';
     },
     reportServerUrl: function () {
-      return reportServerUrl;
+      return g_App.configs.reportServerUrl;
     }
   });
 

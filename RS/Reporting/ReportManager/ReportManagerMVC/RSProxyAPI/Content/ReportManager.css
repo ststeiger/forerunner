@@ -8,8 +8,38 @@ html,body {
   border: 0px;
   z-index: 0;
 }
-.loading-indicator  
-{
+
+table,td,tr {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  z-index: 0;
+}
+
+header {
+  border-bottom: 1px solid gray;
+}
+
+.buttonicon {
+    height:30px;
+    background-color:transparent;
+    border-width:0px
+}
+
+.spacer20mm {
+    min-width:20mm;
+}
+
+.spacer10mm {
+    min-width:10mm;
+}
+
+.spacer5mm {
+    min-width:5mm;
+}
+
+
+.loading-indicator  {
     border: solid 2px #86A5AD;
     background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;    
     width: 148px; 
@@ -22,4 +52,19 @@ html,body {
     line-height: 27px; 
     font-weight: bold; 
     z-index: 2001
-} 
+}
+
+.toolbar {
+    width:100%;
+    background-color:transparent;
+}
+
+.toolbartextbox {
+    min-width:10mm;
+    max-width:15mm;
+    text-align:right;
+}
+
+.inlinetoolbar {
+  border-bottom: 1px solid gray;
+}

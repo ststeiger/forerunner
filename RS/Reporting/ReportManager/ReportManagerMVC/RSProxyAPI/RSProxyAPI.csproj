@@ -138,11 +138,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\HtmlPage2.html" />
+    <Content Include="Content\StellaViewerTest.html" />
     <Content Include="Content\HtmlPage1.html" />
     <Content Include="Images\ajax-loader1.gif" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
     <Content Include="Images\Report-icon.png" />
+    <Content Include="Images\ReportViewer\Backward.png" />
+    <Content Include="Images\ReportViewer\FastFoward.png" />
+    <Content Include="Images\ReportViewer\Next.png" />
+    <Content Include="Images\ReportViewer\Previous.png" />
+    <Content Include="Images\ReportViewer\Refresh.png" />
+    <Content Include="Images\ReportViewer\Save.png" />
+    <Content Include="Images\ReportViewer\Search.png" />
+    <Content Include="Scripts\App\configs.js" />
     <Content Include="Scripts\ContentFlowAddOn.js" />
     <Content Include="Scripts\ContentFlow\contentflow.css" />
     <Content Include="Content\ReportManager.css" />
@@ -202,11 +212,20 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\ContentFlow\ContentFlowAddOn_black.css" />
+    <Content Include="Scripts\ContentFlow\ContentFlowAddOn_black.js" />
+    <Content Include="Scripts\ContentFlow\ContentFlowAddOn_white.css" />
+    <Content Include="Scripts\ContentFlow\ContentFlowAddOn_white.js" />
     <Content Include="Scripts\ContentFlow\contentflow_src.js" />
     <Content Include="Scripts\ContentFlow\img\1x1_0.5_black.png" />
+    <Content Include="Scripts\ContentFlow\img\1x1_0.5_white.png" />
     <Content Include="Scripts\ContentFlow\img\blank.gif" />
     <Content Include="Scripts\ContentFlow\img\loader.gif" />
+    <Content Include="Scripts\ContentFlow\img\loader_black.gif" />
+    <Content Include="Scripts\ContentFlow\img\loader_white.gif" />
+    <Content Include="Scripts\ContentFlow\img\scrollbar_black.png" />
     <Content Include="Scripts\ContentFlow\img\scrollbar_white.png" />
+    <Content Include="Scripts\ContentFlow\img\slider_black.png" />
     <Content Include="Scripts\ContentFlow\img\slider_white.png" />
     <Content Include="Scripts\backbone.js" />
     <Content Include="Scripts\backbone_ui.js" />

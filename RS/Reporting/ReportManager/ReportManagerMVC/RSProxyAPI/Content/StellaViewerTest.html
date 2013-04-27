@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="/Content/site.css" rel="stylesheet"/>
+    <link href="/Content/ReportManager.css" rel="stylesheet"/>
+    <title></title>    
+</head>
+<body>
+    <header><table><tr><td><img src="/Images/Home-icon.png" class="buttonicon"/></td><td class="spacer10mm"></td><td><div id="MyToolbar1" /></td></tr></table></header>
+    <div id="fullwidth" style="width:100%"></div>
+    <table><tr><td style="vertical-align: top; width:100%;">
+    <div id="Div1" ></div></td><td style="vertical-align: top; width:100%;"><div id="Div2" style="top:0;vertical-align:top;"></div></td></tr></table>
+    
+    <script src="/Scripts/jquery-1.7.1.js"></script>
+    <script src="/scripts/Models/FRReport.js"></script>
+    <script>
+        InitReport("localhost/reportserver_winauth", "/api/ReportViewer", "/RootTest", true, 1, "fullwidth")
+        //InitReportEx("localhost/reportserver_winauth", "/api/ReportViewer","/RootTest", true, 1, "Div1", "MyToolbar1")
+    </script>
+</body>
+</html>

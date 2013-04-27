@@ -644,11 +644,11 @@ namespace Forerunner.ReportViewer
             //BodyArea
             w.WriteMember("Columns");
             w.WriteStartArray();
-            while (InspectByte() == 0x14)
+            if (InspectByte() == 0x14)
             {
                 //Advance over the the 0x14
                 Seek(1);
-                if (InspectByte() == 0x06)
+                while (InspectByte() == 0x06)
                 {
                     //Advance over the the 0x06
                     Seek(1);
@@ -666,13 +666,14 @@ namespace Forerunner.ReportViewer
                     //w.WriteMember("Measurments");                    
                     //w.WriteStartObject();                                        
                     WriteJSONMeasurements();
+
                     //w.WriteEndObject();
 
 
                     w.WriteEndObject();
                 }
-                else
-                    ThrowParseError();
+               // else
+                 //   ThrowParseError();
             }
 
             w.WriteEndArray();
@@ -682,6 +683,37 @@ namespace Forerunner.ReportViewer
                      
             return true;
 
+         }
+         public Boolean WriteJSONBodyElement()
+         {
+             if (InspectByte() == 0x06)
+             {
+                 //Advance over the the 0x06
+                 Seek(1);
+
+                 w.WriteStartObject();
+                 w.WriteMember("Elements");
+                 WriteJSONElements();
+                 //w.WriteEndObject();
+                 //Report Items
+
+                 w.WriteMember("ReportItems");
+                 WriteJSONReportItems();
+
+                 //Measurments
+                 //w.WriteMember("Measurments");                    
+                 //w.WriteStartObject();                                        
+                 WriteJSONMeasurements();
+                 WriteJSONReportElementEnd();
+                 //w.WriteEndObject();
+
+
+                 w.WriteEndObject();
+             }
+             else
+                 ThrowParseError();
+
+             return true;
          }
          public Boolean WriteJSONElements(byte ObjectType = 0x00, int DeRef = 0)
          {
@@ -713,21 +745,21 @@ namespace Forerunner.ReportViewer
                     w.WriteMember("SharedElements");
                     w.WriteStartObject();
                     prop = new RPLProperties(0x00);
-                    prop.Add("ID", "String", 0x01);
-                    if (ObjectType != 0x14) prop.Add("Lable", "String", 0x03);
-                    else prop.Add("Lable", "String", 0x08);
+                    prop.Add("ID", "String", 0x01);                    
+                    if (ObjectType != 0x14) prop.Add("Label", "String", 0x03);
+                    else prop.Add("Label", "String", 0x08);
                     prop.Add("Name", "String", 0x02);
                     prop.Add("Bookmark", "String", 0x04);
-                    if (ObjectType != 0x14) prop.Add("Tooltip", "String", 0x05);
-                    else prop.Add("Tooltip", "String", 0x09);
+                    prop.Add("Tooltip", "String", 0x05);                    
                     prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
                     if (ObjectType != 0x13) prop.Add("ToggleItem", "String", 0x08);
                     prop.Add("Slant", "Byte", 0x18);
                     prop.Add("CanGrow", "Boolean", 0x19);
                     prop.Add("CanShrink", "Boolean", 0x1A);
                     prop.Add("CanSort", "Boolean", 0x1D);
-                    prop.Add("Value", "String", 0x1B);
-                    if (ObjectType != 0x13) prop.Add("Value", "String", 0x0A);
+                    if (ObjectType != 0x14) prop.Add("Value", "String", 0x1B);
+                    else if (ObjectType != 0x13) prop.Add("Value", "String", 0x0A);
+                    else prop.Add("Value", "String", 0x0A);                    
                     prop.Add("Formula", "String", 0x1F);
                     if (ObjectType != 0x13) prop.Add("Formula", "String", 0x0C);
                     prop.Add("IsToggleParent", "Boolean", 0x20);
@@ -746,7 +778,7 @@ namespace Forerunner.ReportViewer
                     prop.Add("RightIndent", "String", 0x0A);
                     prop.Add("HangingIndent", "String", 0x0B);
                     prop.Add("SpaceBefore", "String", 0x0C);
-                    prop.Add("SpaceAfter", "String", 0x0D);
+                    prop.Add("SpaceAfter", "String", 0x0D);                  
                     prop.Write(this);
                     w.WriteEndObject();
                 }
@@ -757,11 +789,11 @@ namespace Forerunner.ReportViewer
                     w.WriteMember("NonSharedElements");
                     w.WriteStartObject();
                     prop = new RPLProperties(0x01);
-                    prop.Add("Lable", "String", 0x03);
-                    if (ObjectType == 0x13 || ObjectType == 0x14) prop.Add("UniqueName", "String", 0x04);
+                    prop.Add("Label", "String", 0x03);                    
+                    if (ObjectType == 0x13) prop.Add("UniqueName", "String", 0x04);
                     else prop.Add("UniqueName", "String", 0x00);
                     prop.Add("Bookmark", "String", 0x04);
-                    prop.Add("Tooltip", "String", 0x05);
+                    prop.Add("Tooltip", "String", 0x05);                    
                     prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
                     if (ObjectType != 0x14) prop.Add("ActionInfo", "Object", 0x07, this.WriteJSONActionInfo);
                     else prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
@@ -782,7 +814,8 @@ namespace Forerunner.ReportViewer
                     prop.Add("StreamName", "String", 0x28);
                     prop.Add("ImageDataProperties", "Object", 0x2A, this.WriteJSONImageDataProperties);
                     prop.Add("Language", "String", 0x0B);
-                    prop.Add("Markup/ListStyle", "Boolean", 0x2C);
+                    //prop.Add("Markup/ListStyle", "Boolean", 0x2C);
+                    prop.Add("Markup/ListStyle", "Boolean", 0x07);
                     prop.Add("ListLevel", "Int32", 0x08);
                     prop.Add("LeftIndent", "String", 0x09);
                     prop.Add("RightIndent", "String", 0x0A);
@@ -908,10 +941,8 @@ namespace Forerunner.ReportViewer
              w.WriteMember("Count");
              Count = ReadInt32();
              w.WriteNumber(Count);
-             
-             
 
-             w.WriteMember("ActionImageMap");
+             w.WriteMember("ActionInfoWithMaps");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -942,7 +973,9 @@ namespace Forerunner.ReportViewer
 
              if (ReadByte() == 0x0A)
              {
-                 w.WriteMember("MapAreaCount");
+                 w.WriteMember("ImageMapAreas");
+                 w.WriteStartObject();
+                 w.WriteMember("Count");
                  Count = ReadInt32();
                  w.WriteNumber(Count);
 
@@ -970,6 +1003,7 @@ namespace Forerunner.ReportViewer
                      w.WriteEndObject();
                  }
                  w.WriteEndArray();
+                 w.WriteEndObject();
              }
              else
                  //This cannot happen
@@ -986,7 +1020,15 @@ namespace Forerunner.ReportViewer
          }
          public Boolean WriteJSONActionInfo()
          {
-             LoopObjectArray("Actions", 0x02, this.WriteJSONActions);
+             if (ReadByte() == 0x0B || ReadByte() == 0x07)
+             {
+                 WriteJSONActionInfoContent();
+
+                 if (ReadByte() != 0xFF)
+                     ThrowParseError();
+             }
+             else
+                 ThrowParseError();
              return true;
          }
          public Boolean WriteJSONActions()
@@ -1141,6 +1183,9 @@ namespace Forerunner.ReportViewer
                      break;
                  case 0x0B:
                      if (!CheckOnly) WriteJSONChart();
+                     break;
+                 case 0x0C:
+                     if (!CheckOnly) WriteJSONSubreport();
                      break;
                  case 0x15:
                      if (!CheckOnly) WriteJSONMap();
@@ -1576,14 +1621,20 @@ namespace Forerunner.ReportViewer
              WriteJSONElements();
              
              //Paragraphs
+             w.WriteMember("Paragraphs");
+             w.WriteStartArray();
              while (InspectByte() == 0x14)
              {
-                 w.WriteMember("Paragraphs");
+                 w.WriteStartObject();
                  LoopObjectArray("TextRuns", 0x14, this.WriteJSONTextRun);
                  WriteJSONParagraph();
+                 w.WriteEndObject();
              }
+             w.WriteEndArray();
              
              //Paragraph Structure
+             w.WriteMember("RichTextBoxStructure");
+             w.WriteStartObject();
              if (ReadByte() == 0x12)
              {
                  
@@ -1604,17 +1655,80 @@ namespace Forerunner.ReportViewer
              else
                  //THis should never happen
                  ThrowParseError();
+             w.WriteEndObject();
 
              WriteJSONReportElementEnd();
              w.WriteEndObject();
 
          }
-         public void WriteJSONParagraph()
+         public Boolean WriteJSONParagraph()
          {
              if (ReadByte() == 0x13)
              {
-                 w.WriteMember("Elements");
-                 WriteJSONElements();
+                 w.WriteMember("Paragraph");
+                 //WriteJSONElements();
+                 RPLProperties prop;
+
+                 if (ReadByte() != 0x0F)
+                     ThrowParseError();
+
+                 switch (InspectByte())
+                 {
+                     case 0x02:
+                         //Shared Image so unshare
+                         int NewIndex = (int)ReadInt64();
+                         DeReference(NewIndex, this.WriteJSONParagraph);
+                         break;
+                     case 0x00:                                                       
+                         //Shared Properties
+                         w.WriteStartObject();
+                         w.WriteMember("SharedElements");
+                         w.WriteStartObject();
+                         prop = new RPLProperties(0x00);
+                         prop.Add("ID", "String", 0x05);
+                         prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                         prop.Add("ListStyle", "Byte", 0x07);
+                         prop.Add("ListLevel", "Int32", 0x08);
+                         prop.Add("LeftIndent", "String", 0x09);
+                         prop.Add("RightIndent", "String", 0x0A);
+                         prop.Add("HangingIndent", "String", 0x0B);
+                         prop.Add("SpaceBefore", "String", 0x0C);
+                         prop.Add("SpaceAfter", "String", 0x0D);
+                         prop.Add("ContentHeight", "Single", 0x03);
+                         prop.Write(this);
+                         w.WriteEndObject();
+
+                         //NonShared                     
+                         if (InspectByte() == 0x01)
+                         {
+                             prop = new RPLProperties(0x01);
+                             w.WriteMember("NonSharedElements");
+                             w.WriteStartObject();
+                             prop.Add("UniqueName", "String", 0x04);
+                             prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                             prop.Add("ListStyle", "Byte", 0x07);
+                             prop.Add("ListLevel", "Int32", 0x08);
+                             prop.Add("LeftIndent", "String", 0x09);
+                             prop.Add("RightIndent", "String", 0x0A);
+                             prop.Add("HangingIndent", "String", 0x0B);
+                             prop.Add("SpaceBefore", "String", 0x0C);
+                             prop.Add("SpaceAfter", "String", 0x0D);
+                             prop.Add("ParagraphNumber", "Int32", 0x0E);
+                             prop.Add("FirstLine", "Byte", 0x0F);
+                             prop.Add("ContentTop", "Single", 0x00);
+                             prop.Add("ContentLeft", "Single", 0x01);
+                             prop.Add("ContentWidth", "Single", 0x02);
+                             prop.Add("ContentHeight", "Single", 0x03);
+                             prop.Write(this);
+                             w.WriteEndObject();
+                         }
+                         w.WriteEndObject();
+
+                         if (ReadByte() != 0xFF)
+                             //The end of ElementProperties
+                             ThrowParseError();
+                         break;
+                 }
 
                  //TextRuns
                  w.WriteMember("TextRunCount");
@@ -1625,19 +1739,83 @@ namespace Forerunner.ReportViewer
                  for (int i = 0; i < Count; i++)
                      w.WriteNumber(ReadInt64());
                  w.WriteEndArray();
-                 if (ReadByte() == 0xFF)
+                 if (ReadByte() != 0xFF)
                      //THis should never happen
                      ThrowParseError();
              }
              else
                  //THis should never happen
                  ThrowParseError();
+
+             return true;
          }
          public Boolean WriteJSONTextRun()
          {
              //Properties
+             w.WriteStartObject();
              w.WriteMember("Elements");
-             WriteJSONElements();
+             RPLProperties prop;
+
+             if (ReadByte() != 0x0F)
+                 ThrowParseError();
+
+             switch (InspectByte())
+             {
+                 case 0x02:
+                     //Shared Image so unshare
+                     int NewIndex = (int)ReadInt64();
+                     DeReference(NewIndex, WriteJSONTextRun);
+                     break;
+                 case 0x00:                               
+                     //Shared Properties
+                     w.WriteStartObject();
+                     w.WriteMember("SharedElements");
+                     w.WriteStartObject();
+                     prop = new RPLProperties(0x00);
+                     prop.Add("ID", "String", 0x05);
+                     prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                     prop.Add("Markup", "Byte", 0x07);
+                     prop.Add("Label", "String", 0x08);
+                     prop.Add("Tooltip", "String", 0x09);
+                     prop.Add("Value", "String", 0x0A);
+                     prop.Add("Formula", "String", 0x0C);
+                     prop.Add("ContentHeight", "Single", 0x03);
+                     prop.Write(this);
+                     w.WriteEndObject();                    
+
+                     //NonShared                     
+                     if (InspectByte() == 0x01)
+                     {
+                         prop = new RPLProperties(0x01);
+                         w.WriteMember("NonSharedElements");
+                         w.WriteStartObject();
+                         prop.Add("UniqueName", "String", 0x04);
+                         prop.Add("Markup", "Byte", 0x07);
+                         prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                         prop.Add("Label", "String", 0x08);
+                         prop.Add("Tooltip", "String", 0x09);
+                         prop.Add("Value", "String", 0x0A);
+                         prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
+                         prop.Add("ProcessedWithError", "Byte", 0x0D);
+                         prop.Add("ContentTop", "Single", 0x00);
+                         prop.Add("ContentLeft", "Single", 0x01);
+                         prop.Add("ContentWidth", "Single", 0x02);
+                         prop.Add("ContentHeight", "Single", 0x03);
+                         prop.Write(this);
+                         w.WriteEndObject();
+                     }
+                     w.WriteEndObject();
+
+                     if (ReadByte() != 0xFF)
+                         //The end of ElementProperties
+                         ThrowParseError();
+                     break;
+             }
+
+             if (ReadByte() != 0xFF)
+                 ThrowParseError();
+
+             w.WriteEndObject();
              return true;
          }
          public void WriteJSONImage()
@@ -1668,6 +1846,24 @@ namespace Forerunner.ReportViewer
              WriteJSONReportElementEnd();
              w.WriteEndObject();
 
+         }
+         public void WriteJSONSubreport()
+         {
+             if (ReadByte() != 0x0C)
+                 ThrowParseError();
+
+             w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("SubReport");
+             w.WriteMember("SubReportProperties");
+             WriteJSONElements();
+             w.WriteMember("BodyElements");
+             WriteJSONBodyElement();
+
+             WriteJSONMeasurements();
+
+             WriteJSONReportElementEnd();
+             w.WriteEndObject();
          }
          public void WriteJSONLine()
          {

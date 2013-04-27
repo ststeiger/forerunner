@@ -21,8 +21,8 @@ var g_App = g_App || {};
             $('.flow', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
         }
 
-        var CF = new ContentFlow(this.el.children[0], {}, false);
-        CF.init();
+        var CF = new ContentFlow(this.el.children[0], {startItem: 0}, false);
+        CF._init();
         return this;
     },
   });

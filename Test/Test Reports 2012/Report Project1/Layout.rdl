@@ -1,597 +1,111 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Tablix Name="List1">
-        <TablixBody>
-          <TablixColumns>
-            <TablixColumn>
-              <Width>4.60417in</Width>
-            </TablixColumn>
-          </TablixColumns>
-          <TablixRows>
-            <TablixRow>
-              <Height>1.96167in</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Rectangle Name="List1_Contents">
-                      <ReportItems>
-                        <Tablix Name="table1">
-                          <TablixBody>
-                            <TablixColumns>
-                              <TablixColumn>
-                                <Width>1.39583in</Width>
-                              </TablixColumn>
-                              <TablixColumn>
-                                <Width>1.23958in</Width>
-                              </TablixColumn>
-                              <TablixColumn>
-                                <Width>1in</Width>
-                              </TablixColumn>
-                            </TablixColumns>
-                            <TablixRows>
-                              <TablixRow>
-                                <Height>0.22in</Height>
-                                <TablixCells>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="textbox2">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>Category Name</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>11pt</FontSize>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>textbox2</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <BackgroundColor>SteelBlue</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="textbox4">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>Product Name</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>11pt</FontSize>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>textbox4</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <BackgroundColor>SteelBlue</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="textbox5">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>Price</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontSize>11pt</FontSize>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style>
-                                              <TextAlign>Right</TextAlign>
-                                            </Style>
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>textbox5</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <BackgroundColor>SteelBlue</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                </TablixCells>
-                              </TablixRow>
-                              <TablixRow>
-                                <Height>0.21in</Height>
-                                <TablixCells>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="CategoryName">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>=Fields!CategoryName.Value</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>CategoryName</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <BackgroundColor>#6e9eca</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="textbox6">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value />
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>textbox6</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                          </Border>
-                                          <TopBorder>
-                                            <Width>5pt</Width>
-                                          </TopBorder>
-                                          <BottomBorder>
-                                            <Width>5pt</Width>
-                                          </BottomBorder>
-                                          <LeftBorder>
-                                            <Width>2pt</Width>
-                                          </LeftBorder>
-                                          <RightBorder>
-                                            <Width>5pt</Width>
-                                          </RightBorder>
-                                          <BackgroundColor>#6e9eca</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="textbox7">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>=Sum(Fields!price.Value)</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Format>'$'#,0.00;('$'#,0.00)</Format>
-                                                  <Color>White</Color>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>textbox7</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <BackgroundColor>#6e9eca</BackgroundColor>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                          <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                </TablixCells>
-                              </TablixRow>
-                              <TablixRow>
-                                <Height>0.21in</Height>
-                                <TablixCells>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Image Name="Image2">
-                                        <Source>Embedded</Source>
-                                        <Value>DSC00058</Value>
-                                        <Sizing>FitProportional</Sizing>
-                                        <Style>
-                                          <Border>
-                                            <Style>None</Style>
-                                          </Border>
-                                        </Style>
-                                      </Image>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="ProductName">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>=Fields!ProductName.Value</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>ProductName</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                          </Border>
-                                          <TopBorder>
-                                            <Width>5pt</Width>
-                                          </TopBorder>
-                                          <BottomBorder>
-                                            <Width>5pt</Width>
-                                          </BottomBorder>
-                                          <LeftBorder>
-                                            <Width>2pt</Width>
-                                          </LeftBorder>
-                                          <RightBorder>
-                                            <Width>5pt</Width>
-                                          </RightBorder>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                  <TablixCell>
-                                    <CellContents>
-                                      <Textbox Name="price">
-                                        <CanGrow>true</CanGrow>
-                                        <KeepTogether>true</KeepTogether>
-                                        <Paragraphs>
-                                          <Paragraph>
-                                            <TextRuns>
-                                              <TextRun>
-                                                <Value>=Fields!price.Value</Value>
-                                                <Style>
-                                                  <FontFamily>Tahoma</FontFamily>
-                                                  <FontWeight>Bold</FontWeight>
-                                                  <Format>'$'#,0.00;('$'#,0.00)</Format>
-                                                </Style>
-                                              </TextRun>
-                                            </TextRuns>
-                                            <Style />
-                                          </Paragraph>
-                                        </Paragraphs>
-                                        <rd:DefaultName>price</rd:DefaultName>
-                                        <Style>
-                                          <Border>
-                                            <Color>LightGrey</Color>
-                                            <Style>Solid</Style>
-                                            <Width>5pt</Width>
-                                          </Border>
-                                          <PaddingLeft>2pt</PaddingLeft>
-                                          <PaddingRight>2pt</PaddingRight>
-                                          <PaddingTop>2pt</PaddingTop>
-                                          <PaddingBottom>2pt</PaddingBottom>
-                                          <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
-                                        </Style>
-                                      </Textbox>
-                                    </CellContents>
-                                  </TablixCell>
-                                </TablixCells>
-                              </TablixRow>
-                            </TablixRows>
-                          </TablixBody>
-                          <TablixColumnHierarchy>
-                            <TablixMembers>
-                              <TablixMember />
-                              <TablixMember />
-                              <TablixMember />
-                            </TablixMembers>
-                          </TablixColumnHierarchy>
-                          <TablixRowHierarchy>
-                            <TablixMembers>
-                              <TablixMember>
-                                <KeepWithGroup>After</KeepWithGroup>
-                                <RepeatOnNewPage>true</RepeatOnNewPage>
-                                <KeepTogether>true</KeepTogether>
-                              </TablixMember>
-                              <TablixMember>
-                                <Group Name="table1_CategoryName">
-                                  <GroupExpressions>
-                                    <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
-                                  </GroupExpressions>
-                                </Group>
-                                <SortExpressions>
-                                  <SortExpression>
-                                    <Value>=Fields!CategoryName.Value</Value>
-                                  </SortExpression>
-                                </SortExpressions>
-                                <TablixMembers>
-                                  <TablixMember>
-                                    <KeepWithGroup>After</KeepWithGroup>
-                                    <KeepTogether>true</KeepTogether>
-                                  </TablixMember>
-                                  <TablixMember>
-                                    <Group Name="table1_Details_Group">
-                                      <DataElementName>Detail</DataElementName>
-                                    </Group>
-                                    <TablixMembers>
-                                      <TablixMember />
-                                    </TablixMembers>
-                                    <Visibility>
-                                      <ToggleItem>CategoryName</ToggleItem>
-                                    </Visibility>
-                                    <DataElementName>Detail_Collection</DataElementName>
-                                    <DataElementOutput>Output</DataElementOutput>
-                                    <KeepTogether>true</KeepTogether>
-                                  </TablixMember>
-                                </TablixMembers>
-                              </TablixMember>
-                            </TablixMembers>
-                          </TablixRowHierarchy>
-                          <DataSetName>DataSet1</DataSetName>
-                          <Top>0.875in</Top>
-                          <Left>0.22917in</Left>
-                          <Height>0.64in</Height>
-                          <Width>3.63541in</Width>
-                          <Style />
-                        </Tablix>
-                        <Textbox Name="Country">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!Country.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>14pt</FontSize>
-                                    <Color>SlateGray</Color>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Country</rd:DefaultName>
-                          <Top>0.16056in</Top>
-                          <Left>1.625in</Left>
-                          <Height>0.27in</Height>
-                          <Width>2.125in</Width>
-                          <ZIndex>1</ZIndex>
-                          <Style>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                        <Textbox Name="Textbox24">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Test the bottom</Value>
-                                  <Style />
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox24</rd:DefaultName>
-                          <Top>1.57056in</Top>
-                          <Left>1.625in</Left>
-                          <Height>0.25in</Height>
-                          <Width>1.23958in</Width>
-                          <ZIndex>2</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                            </Border>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </ReportItems>
-                      <KeepTogether>true</KeepTogether>
-                      <Style />
-                    </Rectangle>
-                  </CellContents>
-                </TablixCell>
-              </TablixCells>
-            </TablixRow>
-          </TablixRows>
-        </TablixBody>
-        <TablixColumnHierarchy>
-          <TablixMembers>
-            <TablixMember />
-          </TablixMembers>
-        </TablixColumnHierarchy>
-        <TablixRowHierarchy>
-          <TablixMembers>
-            <TablixMember>
-              <Group Name="list1_Country">
-                <GroupExpressions>
-                  <GroupExpression>=Fields!Country.Value</GroupExpression>
-                </GroupExpressions>
-                <PageBreak>
-                  <BreakLocation>Between</BreakLocation>
-                </PageBreak>
-              </Group>
-              <SortExpressions>
-                <SortExpression>
-                  <Value>=Fields!Country.Value</Value>
-                </SortExpression>
-              </SortExpressions>
-              <DataElementOutput>Output</DataElementOutput>
-              <KeepTogether>true</KeepTogether>
-            </TablixMember>
-          </TablixMembers>
-        </TablixRowHierarchy>
-        <DataSetName>DataSet1</DataSetName>
-        <PageBreak>
-          <BreakLocation>End</BreakLocation>
-        </PageBreak>
-        <Top>0.64125in</Top>
-        <Left>0.00001in</Left>
-        <Height>1.96167in</Height>
-        <Width>4.60417in</Width>
+      <Rectangle Name="Rectangle1">
+        <KeepTogether>true</KeepTogether>
+        <Top>0.48833in</Top>
+        <Left>0.37375in</Left>
+        <Height>3.70833in</Height>
+        <Width>2.60417in</Width>
         <Style>
-          <FontFamily>Tahoma</FontFamily>
-          <FontSize>14pt</FontSize>
-          <Color>SlateGray</Color>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
         </Style>
-      </Tablix>
-      <Textbox Name="textbox1">
+      </Rectangle>
+      <Rectangle Name="Rectangle3">
+        <KeepTogether>true</KeepTogether>
+        <Top>0.19667in</Top>
+        <Left>3.48833in</Left>
+        <Height>1.52083in</Height>
+        <Width>2.60417in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle2">
+        <KeepTogether>true</KeepTogether>
+        <Top>4.45188in</Top>
+        <Left>1.88417in</Left>
+        <Height>1.64583in</Height>
+        <Width>4.40625in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle4">
+        <KeepTogether>true</KeepTogether>
+        <Top>2.55084in</Top>
+        <Left>3.14458in</Left>
+        <Height>1in</Height>
+        <Width>3.14584in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
+        </Style>
+      </Rectangle>
+      <Rectangle Name="Rectangle5">
+        <KeepTogether>true</KeepTogether>
+        <Top>1.1374in</Top>
+        <Left>6.58792in</Left>
+        <Height>5.26041in</Height>
+        <Width>2.60417in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BackgroundColor>Blue</BackgroundColor>
+        </Style>
+      </Rectangle>
+      <Textbox Name="Textbox1">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Simple Table with groups and drill down</Value>
-                <Style>
-                  <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>SteelBlue</Color>
-                </Style>
+                <Value>Bottom</Value>
+                <Style />
               </TextRun>
             </TextRuns>
             <Style />
           </Paragraph>
         </Paragraphs>
-        <rd:DefaultName>textbox1</rd:DefaultName>
-        <Height>0.36in</Height>
-        <Width>8in</Width>
-        <ZIndex>1</ZIndex>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>7.62375in</Top>
+        <Left>0.50917in</Left>
+        <Height>0.25in</Height>
+        <Width>1.67708in</Width>
+        <ZIndex>5</ZIndex>
         <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Image Name="Image1">
-        <Source>Embedded</Source>
-        <Value>DSC00058</Value>
-        <Sizing>FitProportional</Sizing>
-        <Top>1.13417in</Top>
-        <Left>4.94667in</Left>
-        <Height>3.64583in</Height>
-        <Width>4.75in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Image>
     </ReportItems>
-    <Height>6.5925in</Height>
+    <Height>7.98312in</Height>
     <Style />
   </Body>
-  <Width>14.51958in</Width>
+  <Width>9.405in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -600,53 +114,6 @@
     <Style />
   </Page>
   <AutoRefresh>0</AutoRefresh>
-  <DataSources>
-    <DataSource Name="Northwind">
-      <DataSourceReference>Northwind</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>9ebbf244-5aa9-42f2-81e6-8eacdfb20296</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="DataSet1">
-      <Query>
-        <DataSourceName>Northwind</DataSourceName>
-        <CommandText>SELECT        Products.ProductName, Categories.CategoryName, [Order Details].UnitPrice * [Order Details].Quantity AS price, Customers.Region, Customers.City, 
-                         Customers.Country
-FROM            Orders INNER JOIN
-                         Customers ON Orders.CustomerID = Customers.CustomerID INNER JOIN
-                         [Order Details] ON Orders.OrderID = [Order Details].OrderID INNER JOIN
-                         Products ON [Order Details].ProductID = Products.ProductID INNER JOIN
-                         Categories ON Products.CategoryID = Categories.CategoryID</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="ProductName">
-          <DataField>ProductName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="CategoryName">
-          <DataField>CategoryName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="price">
-          <DataField>price</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Region">
-          <DataField>Region</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="City">
-          <DataField>City</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Country">
-          <DataField>Country</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-  </DataSets>
   <EmbeddedImages>
     <EmbeddedImage Name="DSC00058">
       <MIMEType>image/jpeg</MIMEType>
@@ -769,8 +236,6 @@ TWLjbQUW27rYpzeTbuzO3C8Y9+ueKoSySTuF34C4Krn1ropwvqbN6amHq87WqlAwByBnOc9qxdRl8i3F
 UWJz5NkU27trMVAHqBUWgRm91C4RI9q2sKzuSD3YqAPxq4NOLbOaext3yAxqg3K20EE9jWXfSiNoy+Cq/wAI5/Suamve1HBXMGbIcsVGCTjP6VraD4Z1vX2WOzs5DAPme4HCqM4r3spyyrmdeNGkr3OXMcdDLqEqtR2seo6F4K0zS44rq7s1uJoxgs4+UdO3fp3rqrONreZlhjhCooZUVQOK/o7h3hvD5NQSirye7Pw3Oc4q5nVc5P3ehYjlmtlS7+yIrO24SKM47jNVUmintIhPcJ5yuzSSIfvE9segr6pRS2PFSuNujMT5jP5RVAQFOMjt+lV4ZZhCY03eZN91weTScUNO25Zu1uBpzwvKv7xSnmSAkqfaqsckMyG0ZgqY+Ylev0rKdNPcqLbV0EWmWwk2wMoRV3E45zVm80+1nUfITxjPT2rH2ZpF31KT6dcvEkMNuRGg2jtgdK5fVPCFhd3BW+0yExu2/hOhH8q5MTlmGxcXGrBM6qGOrYaSdOTVjn734VaRqrPLZ3Elu5ySCM81wus/DLxFpnmOluZoYxnzFGM4r8v4h4MlQbrYVadj9ByTir2lqOJP/9k=</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
-  <Language>en-US</Language>
-  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>b9e04be5-206a-4845-bdd3-b4a812f0db61</rd:ReportID>
+  <rd:ReportID>13c9c335-60e2-464b-9ac6-ee98e7645b29</rd:ReportID>
 </Report>

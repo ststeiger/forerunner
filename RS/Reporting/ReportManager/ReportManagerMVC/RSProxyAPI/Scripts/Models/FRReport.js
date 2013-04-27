@@ -1,13 +1,14 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
 
-function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style) {
+function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style,CurrLocation) {
     this.RS = RS;
     this.CurrObj = CurrObj;
     this.CurrObjIndex = CurrObjIndex;
     this.CurrObjParent = CurrObjParent;
     this.$HTMLParent = $HTMLParent;
     this.Style = Style;
+    this.CurrLocation = CurrLocation;
 }
 function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, Toolbar, $PageContainer) {
     this.UID = UID;
@@ -254,72 +255,142 @@ function SetImage(Data, RS) {
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
     var $Sec = $("<TR/>");
+    var Location = GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
 
-    $Sec.attr("Style", "" + GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex)));
+    $Sec.attr("Style", "width:" + Location.Width + "mm;");
 
     //Columns
     $NewObj.append($Sec);
-    $.each(RIContext.CurrObj.Columns, function (Index, Obj) { $Sec.append(WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<TD/>"), null))); });
+    $.each(RIContext.CurrObj.Columns, function (Index, Obj) {
+        var $col = new $("<TD/>");
+        $col.append(WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), null, Location)));
+        $Sec.append($col)
+    });
     RIContext.$HTMLParent.append($NewObj);
 }
 function WriteRectangle(RIContext) {
     var $RI;        //This is the ReportItem Object
     var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
-    var EmptyDivHeight = 0;
-    var $EmptyDiv = $("<Div/>");
     var Measurements;
-    var NewTop = 0;
+    var RecLayout;
+    var Style;
 
-    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.Elements));
+    Measurements = RIContext.CurrObj.Measurement.Measurements;
+    RecLayout = GetRectangleLayout(Measurements);
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        Measurements = RIContext.CurrObj.Measurement.Measurements;
-
-        // Keep track of how much space we are using for top position offset       
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "", Measurements[Index]));
+                       
         $LocDiv = new $("<Div/>");
         $LocDiv.append($RI);
-        $LocDiv.attr("Style", "position:relative;top:" + (Measurements[Index].Top - NewTop) + "mm;left:" + Measurements[Index].Left + "mm;");
-        NewTop += Measurements[Index].Height;
+        Style = "";
 
-        //Collect empty space, this needs to handle more complex layout       
-        if (Index > 0) {
-            if (Measurements[Index].Top > (Measurements[Index - 1].Top + Measurements[Index - 1].Height))
-                EmptyDivHeight += Measurements[Index].Top - (Measurements[Index - 1].Top + Measurements[Index - 1].Height);
-        }
+        //Determin height and location
+        RecLayout.ReportItems[Index].NewHeight = GetHeight($RI);       
+        if (RecLayout.ReportItems[Index].IndexAbove == null)
+            RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
         else
-            EmptyDivHeight += Measurements[Index].Top;
+            RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta)
+        Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + Measurements[Index].Left + "mm;";
 
+        //Backgroundcolor goes on container        
+        if ((RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor != null))
+            Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
+        else if ((RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor != null))
+            Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
+
+        $LocDiv.attr("Style", Style);
+        $LocDiv.append($RI);
         RIContext.$HTMLParent.append($LocDiv);
     });
 
-
-    // Take up the empty space
-    $EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
-    RIContext.$HTMLParent.append($EmptyDiv);
+    Style = "position:relative;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    if (RIContext.CurrLocation != null) {
+        Style += "width:" + RIContext.CurrLocation.Width + "mm;"
+        if (RIContext.CurrObj.ReportItems.length == 0)
+            Style += "height:" + RIContext.CurrLocation.Height + "mm;";
+        else {
+            var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) + (parseFloat(RIContext.CurrLocation.Height) - (parseFloat(Measurements[RecLayout.LowestIndex].Top) + parseFloat(Measurements[RecLayout.LowestIndex].Height)))
+            Style += "height:" + parentHeight + "mm;";
+        }
+        
+    }
+    RIContext.$HTMLParent.attr("Style", Style);
 
     return RIContext.$HTMLParent;
 }
+
+function Layout(){
+    this.ReportItems = new Object();
+    this.Height = 0;
+    this.LowestIndex;
+}
+function TempMeasurement(Height, Width) {
+    this.Height = Height;
+    this.Width = Width;
+}
+
+function ReportItemLocation(Index) {
+    this.TopDelta = 0;    
+    this.Height = 0;
+    this.Index = Index;
+    this.IndexAbove;  
+}
+
+function GetRectangleLayout(Measurements) {
+    var l = new Layout()
+   
+    $.each(Measurements, function (Index, Obj) {
+        l.ReportItems[Index] = new ReportItemLocation(Index);
+        curRI = l.ReportItems[Index];
+
+        if (l.LowestIndex == null)
+            l.LowestIndex = Index;
+        else if (Obj.Top + Obj.Height > Measurements[l.LowestIndex].Top + Measurements[l.LowestIndex].Height)
+            l.LowestIndex = Index;
+
+        for (i = 0; i < Measurements.length; i++) {
+            var bottom =  Measurements[i].Top + Measurements[i].Height;
+            var right = Measurements[i].Left + Measurements[i].Width;
+            if ((Obj.Top > bottom) && (
+                    ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
+                    ((Obj.Left + Obj.Wifth > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
+                    ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))                    
+                )) 
+            
+            {
+                if (curRI.IndexAbove ==null){
+                    curRI.IndexAbove = i;
+                    curRI.TopDelta = Obj.Top - bottom;
+                }
+                else if (bottom > Measurements[curRI.IndexAbove].Top + Measurements[curRI.IndexAbove].Height){
+                    curRI.IndexAbove = i;    
+                    curRI.TopDelta = Obj.Top - bottom;
+                }
+            }
+        }
+               
+    });
+    
+    return l;
+}
+
 function GetHeight($Obj) {
     var height;
 
-    if ($Obj.height() > 0) {
-        height = $Obj.height();
-        // if height is zero, then we're dealing with a hidden element
-    }
-    else {
-        var copied_elem = $Obj.clone()
-                            .attr("id", false)
-                            .css({
-                                visibility: "hidden", display: "block",
-                                position: "absolute"
-                            });
-        $("body").append(copied_elem);
-        height = copied_elem.height();
+    var copied_elem = $Obj.clone()
+                        .attr("id", false)
+                        .css({
+                            visibility: "hidden", display: "block",
+                            position: "absolute"
+                        });
+    $("body").append(copied_elem);
+    height = copied_elem.css('height');
 
-        copied_elem.remove();
-    }
-    return height;
+    copied_elem.remove();
+
+    //Return in mm
+    return ConvertToMM(height);
 
 }
 function WriteReportItems(RIContext) {
@@ -424,7 +495,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var wbordersize = 0;
 
     // Width and Border go on the Cell so we need to subtract out border width from content width, allign the TD to the Top in case another column grows
-    Style = "vertical-align:top;";
+    Style = "vertical-align:top;padding:0;";
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;
 
@@ -455,7 +526,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
             hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Top") * .5 + GetBorderSize(Obj.Cell.ReportItem, "Bottom") * .5
 
 
-        //Specify width,but only min-height to allow brower to grow height as needed
+        //Specify width,but only min-height to allow browser to grow height as needed
         width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width - wbordersize;
         height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height - hbordersize;
         Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;";
@@ -463,8 +534,8 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         //Row and column span
         if (Obj.RowSpan != null)
             $Cell.attr("rowspan", Obj.RowSpan);
-        if (Obj.ColumnSpan != null)
-            $Cell.attr("columnspan", Obj.ColumnSpan);
+        if (Obj.ColSpan != null)
+            $Cell.attr("colspan", Obj.ColSpan);
     }
     //Background color goes on the cell
     if ((Obj.Cell.ReportItem.Elements.SharedElements.Style !=null) && (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null))
@@ -476,9 +547,9 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
 
     // Not sure why IE and Firefox do not work with box sizing, but block size works.
     if ($.browser.mozilla || $.browser.msie)
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "display:block;margin:0")));
+        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "display:block;margin:0", new TempMeasurement(height,width))));
     else
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "box-sizing:border-box;margin:0;")));
+        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "box-sizing:border-box;margin:0;", new TempMeasurement(height, width))));
 
     return $Cell;
 }

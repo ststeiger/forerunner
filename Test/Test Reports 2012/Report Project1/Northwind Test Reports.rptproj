@@ -26,6 +26,10 @@
       <Name>Simple Chart.rdl</Name>
       <FullPath>Simple Chart.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Layout.rdl</Name>
+      <FullPath>Layout.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

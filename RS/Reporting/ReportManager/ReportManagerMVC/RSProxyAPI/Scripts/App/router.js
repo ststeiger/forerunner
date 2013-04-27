@@ -79,8 +79,10 @@ var ApplicationRouter = Backbone.Router.extend({
             });
             this.appPageView.transitionMainSection(appPageModel, [
                 'FRReportViewerMainView'], '',
-                g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost/ReportServer_WinAuth/' });
-            InitReport('localhost/ReportServer_WinAuth/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
+            //    g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost/ReportServer_WinAuth/' });
+            //InitReport('localhost/ReportServer_WinAuth/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
+                g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost:8080/ReportServer/' });
+            InitReport('localhost:8080/ReportServer/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

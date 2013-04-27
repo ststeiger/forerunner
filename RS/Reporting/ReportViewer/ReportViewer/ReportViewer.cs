@@ -296,7 +296,7 @@ namespace Forerunner.ReportViewer
             //End RPL
             w.WriteEndObject();
 
-            Debug.Write(w);
+            Debug.WriteLine(w);
             return w.ToString();
 
         }

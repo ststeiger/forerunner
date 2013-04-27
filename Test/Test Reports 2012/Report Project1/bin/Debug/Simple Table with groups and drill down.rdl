@@ -563,7 +563,7 @@
         </Paragraphs>
         <rd:DefaultName>textbox1</rd:DefaultName>
         <Height>0.36in</Height>
-        <Width>3.63542in</Width>
+        <Width>8in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <PaddingLeft>2pt</PaddingLeft>

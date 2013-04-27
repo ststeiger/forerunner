@@ -46,6 +46,14 @@
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Richtextbox.rdl</Name>
+      <FullPath>Richtextbox.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Subreport.rdl</Name>
+      <FullPath>Subreport.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

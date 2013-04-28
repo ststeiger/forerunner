@@ -488,47 +488,36 @@ function WriteRichText(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
-    //var $NewObj = $("<IMG/>");
-    //var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    //var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-
-    ////Hack for Image size, need to handle clip, fit , fit proportional
-    //Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    //$NewObj.attr("Style", Style);
-
-    ////src parameters
-    //Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
-    //Src += "&SessionID=" + RIContext.RS.SessionID;
-    //Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-    //$NewObj.attr("src", Src);
-    //$NewObj.attr("alt", "Cannot display image");    
-    //return $NewObj;
-
+    var $NewObj = $("<IMG/>");
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+
+    //Hack for Image size, need to handle clip, fit , fit proportional
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
 
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    var containerHeight = RIContext.CurrLocation.Height;
+    var containerWidth = RIContext.CurrLocation.Width;
 
-    var $NewObj = new Image();
-    $NewObj.src = Src;
-    $NewObj.style = Style;    
-    $NewObj.alt = "Cannot display chart image";
-    $NewObj.onload = function () {
-        WriteActionImageMapAreas(RIContext, this.width, this.height);
-        ResizeImage(this, 36, 48);
-    };
+    var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+    if (sizingType == 3) {
+        RIContext.$HTMLParent.addClass("overflow-hidden");
+    }
+
+    $NewObj.attr("src", Src);
+    $NewObj.attr("Style", Style);
+    $NewObj.attr("alt", "Cannot display image");
+    $NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         var $node = $("<a/>");
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
         RIContext.$HTMLParent.append($node);
     }
-
-    return $NewObj;
+    RIContext.$HTMLParent.append($NewObj);
+    return RIContext.$HTMLParent;
 }
 function WriteChartImage(RIContext) {
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
@@ -632,22 +621,49 @@ function WriteActionImageMapAreas(RIContext, width, height) {
         RIContext.$HTMLParent.append($Map);
     }
 }
-function ResizeImage(img, maxHeight, maxWidth) {   
+function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     var ratio = 0;
-    if (img.height >= img.width) {
-        if (img.height > maxHeight) {
-            ratio = maxHeight / img.height;
-            img.css("height", maxHeight);
-            img.css("width", img.width * ratio);
-        }
+    var height = ConvertToMM(img.height + "px");
+    var width = ConvertToMM(img.width + "px");
+
+    switch (sizingType) {
+        case 0://AutoSize
+            $(img).css("height",height + "mm");
+            $(img).css("width", width + "mm");
+            break;
+        case 1://Fit
+            $(img).css("height", maxHeight + "mm");
+            $(img).css("width", maxWidth + "mm");
+            break;
+        case 2://Fit Proportional
+            if (height / maxHeight > 1 | width / maxWidth > 1) {
+                if ((height / maxHeight) >= (width / maxWidth)) {
+                    ratio = maxHeight / height;
+
+                    $(img).css("height", maxHeight + "mm");
+                    $(img).css("width", width * ratio + "mm");                   
+                    $(img).css("min-height", maxHeight + "mm");
+                    $(img).css("min-width", width * ratio + "mm");
+                }
+                else {
+                    ratio = maxWidth / width;
+
+                    $(img).css("width", maxWidth + "mm");
+                    $(img).css("height", height * ratio + "mm");
+                    $(img).css("min-width", maxWidth + "mm");
+                    $(img).css("min-height", height * ratio + "mm");
+                }
+            }
+            break;
+        case 3://Clip
+            $(img).css("height", ConvertToMM(img.naturalHeight + "px") + "mm");
+            $(img).css("width", ConvertToMM(img.naturalWidth + "px") + "mm");
+            $(img).css("max-height", ConvertToMM(img.naturalHeight + "px") + "mm");
+            $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
+            //Also add style overflow:hidden to it's parent container
+            break;
     }
-    else {
-        if (img.width > maxWidth) {
-            ratio = maxWidth / img.width;
-            $(img).css("width", maxWidth);
-            $(img).css("height", img.height * ratio);
-        }
-    }
+   
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");
@@ -758,11 +774,11 @@ function WriteTablix(RIContext) {
     return $Tablix;
 }
 function WriteSubreport(RIContext) {
-    var $RI;        //This is the ReportItem Object
-    var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
+    //var $RI;        //This is the ReportItem Object
+    //var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
     var EmptyDivHeight = 0;
-    var $EmptyDiv = $("<Div/>");
-    var Measurements;
+    //var $EmptyDiv = $("<Div/>");
+    //var Measurements;
     var NewTop = 0;
 
     RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.SubReportProperties));    
@@ -770,11 +786,11 @@ function WriteSubreport(RIContext) {
     RIContext.$HTMLParent.append(subReportName);
 
     $.each(RIContext.CurrObj.BodyElements.ReportItems, function (Index, Obj) {
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        Measurements = RIContext.CurrObj.Measurement.Measurements;
+        var $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
+        var Measurements = RIContext.CurrObj.Measurement.Measurements;
 
         // Keep track of how much space we are using for top position offset       
-        $LocDiv = new $("<Div/>");
+        var $LocDiv = new $("<Div/>");
         $LocDiv.append($RI);
         //add a solid/thin border for the subreport
         $LocDiv.attr("Style", "border-style:solid;border-width:thin;position:relative;top:" + (Measurements[Index].Top - NewTop) + "mm;left:" + Measurements[Index].Left + "mm;");
@@ -792,7 +808,7 @@ function WriteSubreport(RIContext) {
     });
 
     //$EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
-    RIContext.$HTMLParent.append($EmptyDiv);
+    //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
 function GetElementsStyle(CurrObj) {

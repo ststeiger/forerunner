@@ -68,3 +68,7 @@ header {
 .inlinetoolbar {
   border-bottom: 1px solid gray;
 }
+
+.overflow-hidden {
+    overflow: hidden;
+}

@@ -211,7 +211,7 @@ function LoadAllPages(RS) {
 
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
-    var $Report = $("<Div/>");
+    var $Report = GetDefaultHTMLDiv();
 
     //Error, need to handle this better
     if (Data == null) return;
@@ -498,6 +498,16 @@ function WriteImage(RIContext) {
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
 
+<<<<<<< HEAD
+    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    //Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+
+    var $NewObj = $("<IMG/>");
+    $NewObj.attr("src",Src);
+    $NewObj.attr("style",Style);    
+    $NewObj.attr("alt", "Cannot display chart image");
+    $NewObj.attr("onload","ResizeImage(this, " + RIContext.CurrLocation.Height + " ," +  RIContext.CurrLocation.Width + ");");
+=======
     var containerHeight = RIContext.CurrLocation.Height;
     var containerWidth = RIContext.CurrLocation.Width;
 
@@ -510,6 +520,7 @@ function WriteImage(RIContext) {
     $NewObj.attr("Style", Style);
     $NewObj.attr("alt", "Cannot display image");
     $NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
+>>>>>>> a61ef51905e450250d411ad9db7d5170ae760a55
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         var $node = $("<a/>");
@@ -623,6 +634,21 @@ function WriteActionImageMapAreas(RIContext, width, height) {
 }
 function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     var ratio = 0;
+<<<<<<< HEAD
+    if (img.height >= img.width) {
+        if (ConvertToMM(img.height+"px") > maxHeight) {
+            ratio = maxHeight / ConvertToMM(img.height + "px");
+            img.css("height", maxHeight + "mm");
+            img.css("width", (ConvertToMM(img.width +"px") * ratio) + "mm");
+        }
+    }
+    else {
+        if (ConvertToMM(img.width + "px") > maxWidth) {
+            ratio = maxWidth / ConvertToMM(img.width + "px");
+            $(img).css("width", maxWidth + "mm");
+            $(img).css("height", (ConvertToMM(img.height + "px") * ratio) + "mm");
+        }
+=======
     var height = ConvertToMM(img.height + "px");
     var width = ConvertToMM(img.width + "px");
 
@@ -662,6 +688,7 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
             $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
             //Also add style overflow:hidden to it's parent container
             break;
+>>>>>>> a61ef51905e450250d411ad9db7d5170ae760a55
     }
    
 }
@@ -1162,7 +1189,13 @@ function GetDefaultHTMLTable() {
     $NewObj.attr("CELLPADDING", 0);
     return $NewObj;
 }
+function GetDefaultHTMLDiv() {
+    var $NewObj = $("<Div/>");
 
+    //$NewObj.attr("height", "100%");
+    //$NewObj.attr("width", "100%");
+    return $NewObj;
+}
 function GetBorderStyle(RPLStyle) {
     switch (RPLStyle) {
         case 0:

@@ -38,7 +38,7 @@ var g_App = g_App || {};
           data.EncodedPath = String(data.Path).replace(/\//g, "%2f");
           data.ReportThumbnailPath = this.model.viewerUrl()
             + 'GetThumbnail/?ReportServerURL=' +this.model.reportServerUrl() + '&ReportPath='
-            + data.Path + '&SessionID=&PageNumber=1&PageHeight=1in&PageWidth=1in'
+            + data.Path + '&SessionID=&PageNumber=1&PageHeight=8in&PageWidth=11in'
           $(this.el).html(this.template(data));
           return this;
       }

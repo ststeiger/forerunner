@@ -54,35 +54,27 @@ namespace ForeRunner.RSProxy
 
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
         {
-            if (UseStub)
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem[] items = rs.ListChildren(path, isRecursive);            
+
+            foreach (CatalogItem ci in items)
             {
-                List<CatalogItem> list = new List<CatalogItem>();
-                if (path == "/" && isRecursive)
-                {
-                    for (int i = 1; i < 10; i++)
+                if (ci.Type == ItemTypeEnum.Report|| ci.Type == ItemTypeEnum.LinkedReport)
+                    list.Add(ci);
+                if (ci.Type == ItemTypeEnum.Folder)
+                {                    
+                    CatalogItem[] folder = rs.ListChildren(ci.Path,false);
+                    foreach (CatalogItem fci in folder)
                     {
-                        CatalogItem newItem = new CatalogItem();
-                        newItem.ID = Guid.NewGuid().ToString();
-                        newItem.Name = "Test" + i.ToString();
-                        newItem.Path = "/";
-                        list.Add(newItem);
+                        if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport)
+                        {
+                            list.Add(ci);
+                            break;
+                        }
                     }
                 }
-                else
-                {
-                    for (int i = 1; i < 5; i++)
-                    {
-                        CatalogItem newItem = new CatalogItem();
-                        newItem.ID = Guid.NewGuid().ToString();
-                        newItem.Name = "Test" + i.ToString();
-                        newItem.Path = path;
-                        list.Add(newItem);
-                    }
-                }
-                return list.ToArray();
             }
-            
-            return rs.ListChildren(path, isRecursive);
+            return list.ToArray();
         }
     }
 }

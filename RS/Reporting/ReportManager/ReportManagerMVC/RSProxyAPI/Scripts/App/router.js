@@ -81,8 +81,8 @@ var ApplicationRouter = Backbone.Router.extend({
                 'FRReportViewerMainView'], '',
                 g_App.FRReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
             InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea');
-                g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost:8080/ReportServer/' });
-            InitReport('localhost:8080/ReportServer/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
+           //     g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost:8080/ReportServer/' };
+           // InitReport('localhost:8080/ReportServer/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

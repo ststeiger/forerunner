@@ -5,7 +5,7 @@ var g_App = g_App || {};
 // as g_App
 (function() {
   var urlBase = g_App.configs.apiBase;
-  var reportServerUrl = hostname + ':8080/reportserver';
+  var reportServerUrl = 'localhost' + ':8080/reportserver';
 
   // Models
   g_App.CatalogItem = Backbone.Model.extend({

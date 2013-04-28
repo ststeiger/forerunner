@@ -549,7 +549,45 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Simple Table with groups and drill down</Value>
+                <Value>Simp</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>20pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>le </Value>
+                <Style>
+                  <FontStyle>Italic</FontStyle>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>20pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>Table with </Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>20pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>SteelBlue</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>groups</Value>
+                <Style>
+                  <FontFamily>Tahoma</FontFamily>
+                  <FontSize>20pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <TextDecoration>Underline</TextDecoration>
+                  <Color>DarkViolet</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value> and drill down</Value>
                 <Style>
                   <FontFamily>Tahoma</FontFamily>
                   <FontSize>20pt</FontSize>

@@ -48,9 +48,10 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNu
     
     if (Toolbar) {
         if (ToolbarUID == null) {
-            $Row = new $("<TR/>");
+            $Row = new $("<TR/>");            
             $Cell = new $("<TD/>");
             $Cell.append(GetToolbar(UID));
+            $Cell.attr("scroll", "this.top=");
             $Row.append($Cell);
             $Row.addClass('inlinetoolbar', 0, 0, null);
             RS.$ReportContainer.append($Row);
@@ -226,8 +227,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
 
 
     //Write Style   
-    $Report.attr("Style", "" + GetStyle(Data.Report.PageContent.PageStyle));
-
+    $Report.attr("Style", GetStyle(Data.Report.PageContent.PageStyle)); 
     //Sections
     $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
 
@@ -422,7 +422,7 @@ function WriteRichText(RIContext) {
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
-    Style += "border-width:thin;border-style:solid";
+    //Style += "border-width:thin;border-style:solid";
     $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
 
     if (RIContext.CurrObj.Paragraphs.length == 0) {
@@ -511,16 +511,13 @@ function WriteImage(RIContext) {
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
 
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    //Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
 
-    var $NewObj = new Image();
-    $NewObj.src = Src;
-    $NewObj.style = Style;    
-    $NewObj.alt = "Cannot display chart image";
-    $NewObj.onload = function () {
-        WriteActionImageMapAreas(RIContext, this.width, this.height);
-        ResizeImage(this, 36, 48);
-    };
+    var $NewObj = $("<IMG/>");
+    $NewObj.attr("src",Src);
+    $NewObj.attr("style",Style);    
+    $NewObj.attr("alt", "Cannot display chart image");
+    $NewObj.attr("onload","ResizeImage(this, " + RIContext.CurrLocation.Height + " ," +  RIContext.CurrLocation.Width + ");");
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         var $node = $("<a/>");
@@ -635,17 +632,17 @@ function WriteActionImageMapAreas(RIContext, width, height) {
 function ResizeImage(img, maxHeight, maxWidth) {   
     var ratio = 0;
     if (img.height >= img.width) {
-        if (img.height > maxHeight) {
-            ratio = maxHeight / img.height;
-            img.css("height", maxHeight);
-            img.css("width", img.width * ratio);
+        if (ConvertToMM(img.height+"px") > maxHeight) {
+            ratio = maxHeight / ConvertToMM(img.height + "px");
+            img.css("height", maxHeight + "mm");
+            img.css("width", (ConvertToMM(img.width +"px") * ratio) + "mm");
         }
     }
     else {
-        if (img.width > maxWidth) {
-            ratio = maxWidth / img.width;
-            $(img).css("width", maxWidth);
-            $(img).css("height", img.height * ratio);
+        if (ConvertToMM(img.width + "px") > maxWidth) {
+            ratio = maxWidth / ConvertToMM(img.width + "px");
+            $(img).css("width", maxWidth + "mm");
+            $(img).css("height", (ConvertToMM(img.height + "px") * ratio) + "mm");
         }
     }
 }
@@ -721,6 +718,7 @@ function WriteTablix(RIContext) {
     var Style = "border-collapse:collapse;padding:0;";
     var $Row;
     var LastRowIndex = 0;
+    var uName = RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
 
@@ -754,6 +752,12 @@ function WriteTablix(RIContext) {
             if (Obj.Cell != null) $Row.append(WriteTablixCell(RIContext, Obj, Index));
         }
     })
+    $Tablix.append($Row);
+
+    //Add Tablix bottom
+    $Row = new $("<TR/>");
+    $Row.attr("id", uName + "foot");
+    $Row.attr("Style", "height:0;padding:0;margin:0;");
     $Tablix.append($Row);
     return $Tablix;
 }
@@ -1142,8 +1146,8 @@ function GetDefaultHTMLTable() {
 function GetDefaultHTMLDiv() {
     var $NewObj = $("<Div/>");
 
-    $NewObj.attr("HEIGHT", "100%");
-    $NewObj.attr("WIDTH", "100%");
+    //$NewObj.attr("height", "100%");
+    //$NewObj.attr("width", "100%");
     return $NewObj;
 }
 function GetBorderStyle(RPLStyle) {
@@ -1208,4 +1212,38 @@ function ConvertToMM(ConvertFrom) {
 
     //This is an error
     return value;
+}
+
+function HeaderScroll($CloneObj,CloneID,$TopObj, $BottomObj) {
+    var scroll = $(window).scrollTop();
+    var anchor_top = $TopObj.offset().top;
+    var anchor_bottom = $BottomObj.offset().top;
+    if (scroll > anchor_top && scroll < anchor_bottom) {
+        clone_table = $("#" + CloneID);
+        if (clone_table.length === 0) {
+            clone_table = $CloneObj.clone();
+            clone_table.attr({ id: CloneID })
+            .css({
+                position: "fixed",
+                "pointer-events": "none",
+                top: 0
+            })
+            .width($TopObj.width());
+
+            $("#table-container").append(clone_table);
+            // dont hide the whole table or you lose border style & 
+            // actively match the inline width to the #maintable width if the 
+            // container holding the table (window, iframe, div) changes width          
+            clone_table.width($TopObj.width());
+
+            // clone tbody is hidden
+            clone_table.css({
+                visibility: "hidden"
+            });
+           
+        }
+    }
+    else {
+        $("#" + CloneID).remove();
+    }
 }

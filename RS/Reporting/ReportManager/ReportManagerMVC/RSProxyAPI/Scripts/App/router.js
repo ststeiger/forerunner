@@ -44,12 +44,33 @@ var ApplicationRouter = Backbone.Router.extend({
                         thisObj.appPageView.transitionMainSection(appPageModel, [
                         'ReportManagerMainView'], '',
                         g_App.ReportManagerMainView, { model: catalogItemsModel });
+                        // Initialize the carousel
+                        $('.sky-carousel').carousel({
+                            itemWidth: 170,
+                            itemHeight: 240,
+                            distance: 15,
+                            selectedItemDistance: 50,
+                            selectedItemZoomFactor: 1,
+                            unselectedItemZoomFactor: 0.67,
+                            unselectedItemAlpha: 0.6,
+                            motionStartDistance: 170,
+                            topMargin: 119,
+                            gradientStartPoint: 0.35,
+                            gradientOverlayColor: "#f5f5f5",
+                            gradientOverlaySize: 190,
+                            reflectionDistance: 1,
+                            reflectionAlpha: 0.35,
+                            reflectionVisible: true,
+                            reflectionSize: 70,
+                            selectByClick: true
+                        });
                     },
                     error: function (model, response) {
                         console.log(response);
                         alert('Failed to load the catalogs from the server.  Please try again.');
                     }
                 });
+
         },
 
         transitionToReportViewer: function (path) {

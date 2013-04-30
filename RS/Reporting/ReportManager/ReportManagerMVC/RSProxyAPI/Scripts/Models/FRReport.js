@@ -19,12 +19,12 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.ReportServerURL = ReportServer;
     this.ReportViewerAPI = ReportViewerAPI;
     this.ReportPath = ReportPath;
-    this.Toolbar = Toolbar;
+    this.Toolbar = Toolbar;    
     this.SessionID = "";
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = $("<Table/>");
+    this.$ReportContainer = new $("<div class='divWithFloatingRow' style='position:relative'></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
 
 }
@@ -34,14 +34,31 @@ function ReportPage($Container, ReportObj) {
     this.Image = null;
     this.$Img = new $("<IMG/>");
 }
+function UpdateTableHeaders() {
+    $("div.divWithFloatingRow").each(function () {
+        offset = $(this).offset();
+        scrollTop = $(window).scrollTop();
+        if ((scrollTop > offset.top) && (scrollTop < offset.top + $(this).height())) {
+            $(".FloatingRow", this).css("visibility", "visible");
+            $(".FloatingRow", this).css("top", Math.min(scrollTop - offset.top, $(this).height() - $(".FloatingRow", this).height()) + "px");
+        }
+        else {
+            $(".FloatingRow", this).css("visibility", "hidden");
+            $(".FloatingRow", this).css("top", "0px");
+        }
+    })
+}
+
+
 
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
     InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
 }
 function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID) {
-    var $Row =  new $("<TR/>");
+    var $Table = new $("<table/>");
+    var $Row = new $("<TR/>");
     var $Cell;
-    
+    var $FloatingToolbar;
     var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, Toolbar, $Row);
     
     Reports[UID] = RS;
@@ -50,16 +67,19 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNu
         if (ToolbarUID == null) {
             $Row = new $("<TR/>");            
             $Cell = new $("<TD/>");
-            $Cell.append(GetToolbar(UID));
-            $Cell.attr("scroll", "this.top=");
+            $Cell.append(GetToolbar(UID));            
             $Row.append($Cell);
             $Row.addClass('inlinetoolbar', 0, 0, null);
-            RS.$ReportContainer.append($Row);
+            $FloatingToolbar = $Row.clone(true, true).css({ visibility: "hidden", position: "absolute", top: "0px", left: "0px" });
+            $FloatingToolbar.addClass("FloatingRow");
+            $Table.append($Row);
+            $Table.append($FloatingToolbar);
         } else {
             $Container = $('#' + ToolbarUID);
             $Container.append(GetToolbar(UID));
         }
     }
+    $(window).scroll(UpdateTableHeaders);
     AddLoadingIndicator(RS);
   
     //Log in screen if needed
@@ -67,8 +87,9 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNu
     //If Parameters needed show Parameters
 
 
-    //load the report Page requested        
-    RS.$ReportContainer.append(RS.$PageContainer);
+    //load the report Page requested  
+    $Table.append(RS.$PageContainer);
+    RS.$ReportContainer.append($Table);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
     LoadPage(RS, PageNum, null);    
 }
@@ -172,7 +193,7 @@ function GetToolbar(UID) {
 
     $Cell = Reports[UID].$PageInput;
     $Cell.attr("class", "toolbartextbox");
-    $Cell.attr("id", "PageInput");
+    //$Cell.attr("id", "PageInput");
     $Cell.attr("type", "number")
     $Cell.bind("keypress", function (e) { if (e.keyCode == 13) NavToPage(Reports[UID], Reports[UID].$PageInput.val()); });
     $Row.append($Cell);
@@ -383,9 +404,9 @@ function GetHeight($Obj) {
                         });
 
     //Image size cannot change so do not load.
-    $copied_elem.find('img').removeAttr('src');
-    $copied_elem.find('img').removeAttr('onload');
-    $copied_elem.find('img').removeAttr('alt');
+    //$copied_elem.find('img').removeAttr('src');
+    //$copied_elem.find('img').removeAttr('onload');
+    //$copied_elem.find('img').removeAttr('alt');
     $copied_elem.find('img').remove();
 
     $("body").append($copied_elem);
@@ -819,8 +840,6 @@ function WriteSubreport(RIContext) {
     //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
-
-
 
 function GetElementsStyle(CurrObj) {
     var Style = "";

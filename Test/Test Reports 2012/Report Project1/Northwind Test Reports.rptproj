@@ -15,44 +15,16 @@
   </DataSets>
   <Reports>
     <ProjectItem>
-      <Name>ColumnChartReport.rdl</Name>
-      <FullPath>ColumnChartReport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>CustomerInfo.rdl</Name>
-      <FullPath>CustomerInfo.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ImageMapTest.rdl</Name>
-      <FullPath>ImageMapTest.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ProductSales.rdl</Name>
-      <FullPath>ProductSales.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Chart.rdl</Name>
-      <FullPath>Simple Chart.rdl</FullPath>
+      <Name>Simple Table with groups and drill down.rdl</Name>
+      <FullPath>Simple Table with groups and drill down.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Matrix.rdl</Name>
       <FullPath>Simple Matrix.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Simple Table with groups and drill down.rdl</Name>
-      <FullPath>Simple Table with groups and drill down.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>TwoChartReport.rdl</Name>
-      <FullPath>TwoChartReport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Richtextbox.rdl</Name>
-      <FullPath>Richtextbox.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Subreport.rdl</Name>
-      <FullPath>Subreport.rdl</FullPath>
+      <Name>Simple Chart.rdl</Name>
+      <FullPath>Simple Chart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Layout.rdl</Name>

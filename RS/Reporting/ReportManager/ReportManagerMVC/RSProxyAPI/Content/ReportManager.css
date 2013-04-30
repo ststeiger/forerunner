@@ -72,9 +72,10 @@ section#pageSection {
   z-index: 2001
 }
 
-.toolbar {
+.toolbar {    
+  background-color: white;
   width:100%;
-  background-color:transparent;
+  z-index:-1;
 }
 
 .toolbartextbox {
@@ -85,6 +86,7 @@ section#pageSection {
 
 .inlinetoolbar {
   border-bottom: 1px solid gray;
+
 }
 
 .overflow-hidden {

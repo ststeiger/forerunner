@@ -613,11 +613,11 @@
       <Image Name="Image1">
         <Source>Embedded</Source>
         <Value>DSC00058</Value>
-        <Sizing>FitProportional</Sizing>
+        <Sizing>Fit</Sizing>
         <Top>1.13417in</Top>
         <Left>4.94667in</Left>
-        <Height>3.64583in</Height>
-        <Width>4.75in</Width>
+        <Height>3.16667in</Height>
+        <Width>6.04167in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>

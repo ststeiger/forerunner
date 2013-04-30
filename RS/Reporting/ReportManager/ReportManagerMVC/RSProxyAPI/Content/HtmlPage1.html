@@ -5,17 +5,18 @@
     <link href="/Content/ReportManager.css" rel="stylesheet"/>
     <title></title>    
 </head>
-<body style="width:5000px;height:3000px;overflow:auto;" >
+<body  >
+    <script src="/Scripts/Carousel/js/jquery-1.9.1.min.js"></script>
+    <script src="/scripts/Models/FRReport.js"></script>
 
-    <div>this is some text</div>
+
+    <div id="t">this is some text</div>
     <table><tr><td style="vertical-align: top;"><div id="Div1" style="" ></div></td><td style="vertical-align: top;"><div id="Div2" style="vertical-align:top;"></div></td></tr>
         <tr><td style="vertical-align: top;"><div>This is some text</div></td><td style="vertical-align: top;"><div>This is some text</div></td></tr>
     </table>
-    
-    
-    <script src="/Scripts/jquery-1.7.1.js"></script>
-    <script src="/scripts/Models/FRReport.js"></script>
+
     <script>
+        //$(window).scroll("alert('hi')")
         //InitReport("192.168.1.27/reportserver", "/api/ReportViewer","/AdventureWorks 2008R2/Sales By Sales Person", true, 1, "Div1");
         //InitReport("192.168.1.27/reportserver","/api/ReportViewer", "/NW Test/Territory Sales Martix", true, 1, "Div2")
         InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Simple Table with groups and drill down", true, 1, "Div2")

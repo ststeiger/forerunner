@@ -377,16 +377,21 @@ function GetRectangleLayout(Measurements) {
 function GetHeight($Obj) {
     var height;
 
-    var copied_elem = $Obj.clone()
-                        .attr("id", false)
+    var $copied_elem = $Obj.clone()                        
                         .css({
-                            visibility: "hidden", display: "block",
-                            position: "absolute"
+                            visibility: "hidden"
                         });
-    $("body").append(copied_elem);
-    height = copied_elem.css('height');
 
-    copied_elem.remove();
+    //Image size cannot change so do not load.
+    $copied_elem.find('img').removeAttr('src');
+    $copied_elem.find('img').removeAttr('onload');
+    $copied_elem.find('img').removeAttr('alt');
+    $copied_elem.find('img').remove();
+
+    $("body").append($copied_elem);
+    height = $copied_elem.height() + "px";
+
+    $copied_elem.remove();
 
     //Return in mm
     return ConvertToMM(height);
@@ -422,8 +427,8 @@ function WriteRichText(RIContext) {
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
-    //Style += "border-width:thin;border-style:solid";
-    $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
+    Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";      
+    $NewObj.attr("Style", Style + RIContext.Style);
 
     if (RIContext.CurrObj.Paragraphs.length == 0) {
         if (RIContext.CurrObj.Elements.SharedElements.Value != null)
@@ -623,8 +628,8 @@ function WriteActionImageMapAreas(RIContext, width, height) {
 }
 function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     var ratio = 0;
-    var height = ConvertToMM(img.height + "px");
-    var width = ConvertToMM(img.width + "px");
+    var height = ConvertToMM($(img).height() + "px");
+    var width = ConvertToMM($(img).width() + "px");
 
     switch (sizingType) {
         case 0://AutoSize
@@ -642,16 +647,16 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
 
                     $(img).css("height", maxHeight + "mm");
                     $(img).css("width", width * ratio + "mm");                   
-                    $(img).css("min-height", maxHeight + "mm");
-                    $(img).css("min-width", width * ratio + "mm");
+                    $(img).css("max-height", maxHeight + "mm");
+                    $(img).css("max-width", width * ratio + "mm");
                 }
                 else {
                     ratio = maxWidth / width;
 
                     $(img).css("width", maxWidth + "mm");
                     $(img).css("height", height * ratio + "mm");
-                    $(img).css("min-width", maxWidth + "mm");
-                    $(img).css("min-height", height * ratio + "mm");
+                    $(img).css("max-width", maxWidth + "mm");
+                    $(img).css("max-height", height * ratio + "mm");
                 }
             }
             break;
@@ -704,11 +709,13 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         else
             hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Top") * .5 + GetBorderSize(Obj.Cell.ReportItem, "Bottom") * .5
 
+        wbordersize += GetPaddingSize(Obj.Cell.ReportItem, "Left") + GetPaddingSize(Obj.Cell.ReportItem, "Right");
+        hbordersize += GetPaddingSize(Obj.Cell.ReportItem, "Top") + GetPaddingSize(Obj.Cell.ReportItem, "Bottom");
 
-        //Specify width,but only min-height to allow browser to grow height as needed
+        //Specify width and height without padding and border
         width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width - wbordersize;
         height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height - hbordersize;
-        Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;";
+        Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
 
         //Row and column span
         if (Obj.RowSpan != null)
@@ -723,13 +730,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
     $Cell.attr("Style", Style);
-
-    // Not sure why IE and Firefox do not work with box sizing, but block size works.
-    if ($.browser.mozilla || $.browser.msie)
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "display:block;margin:0", new TempMeasurement(height,width))));
-    else
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "box-sizing:border-box;margin:0;", new TempMeasurement(height, width))));
-
+    $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;", new TempMeasurement(height,width))));
     return $Cell;
 }
 function WriteTablix(RIContext) {
@@ -774,10 +775,10 @@ function WriteTablix(RIContext) {
     $Tablix.append($Row);
 
     //Add Tablix bottom
-    $Row = new $("<TR/>");
-    $Row.attr("id", uName + "foot");
-    $Row.attr("Style", "height:0;padding:0;margin:0;");
-    $Tablix.append($Row);
+    //$Row = new $("<TR/>");
+    //$Row.attr("id", uName + "foot");
+    //$Row.attr("Style", "height:0;padding:0;margin:0;");
+    //$Tablix.append($Row);
     return $Tablix;
 }
 function WriteSubreport(RIContext) {
@@ -818,64 +819,66 @@ function WriteSubreport(RIContext) {
     //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
+
+
+
 function GetElementsStyle(CurrObj) {
     var Style = "";
 
     Style += GetStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
-    Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
-    Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+    Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);    
     return Style;
 }
 function GetBorderSize(CurrObj, Side) {
     var Obj;
+    var DefaultStyle;
+    var SideStyle;
+    var DefaultSize;
+    var SideSize;
 
     //Need left, top, right bottom border
     Obj = CurrObj.Elements.SharedElements.Style;
     if (Obj != null) {
-        if (Side == "Left")
-            if (Obj.BorderWidthLeft != null)
-                return ConvertToMM(Obj.BorderWidthLeft);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Right")
-            if (Obj.BorderWidthRight != null)
-                return ConvertToMM(Obj.BorderWidthRight);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Top")
-            if (Obj.BorderWidtTop != null)
-                return ConvertToMM(Obj.BorderWidthTop);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Bottom")
-            if (Obj.BorderWidthBottom != null)
-                return ConvertToMM(Obj.BorderWidthBottom);
-            else
-                return ConvertToMM(Obj.BorderWidth);
+        DefaultStyle = Obj.BorderStyle;
+        SideStyle = Obj["BorderStyle" + Side];
+        DefaultSize = Obj.BorderWidth;
+        SideSize = Obj["BorderWidth" + Side];
     }
-    Obj = CurrObj.Elements.NonSharedElements.Style;
-    if (Obj != null)
-        if (Side == "Left")
-            if (Obj.BorderWidthLeft != null)
-                return ConvertToMM(Obj.BorderWidthLeft);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Right")
-            if (Obj.BorderWidthRight != null)
-                return ConvertToMM(Obj.BorderWidthRight);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Top")
-            if (Obj.BorderWidtTop != null)
-                return ConvertToMM(Obj.BorderWidthTop);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Bottom")
-            if (Obj.BorderWidthBottom != null)
-                return ConvertToMM(Obj.BorderWidthBottom);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-    return 0;
+    else {
+        Obj = CurrObj.Elements.NonSharedElements.Style;
+        if (Obj != null) {
+            DefaultStyle = Obj.BorderStyle;
+            SideStyle = Obj["BorderStyle" + Side];
+            DefaultSize = Obj.BorderWidth;
+            SideSize = Obj["BorderWidth" + Side];
+        }
+    }
+    
+    if (SideStyle == null && DefaultStyle == 0)
+        return 0;
+    if (SideStyle == 0)
+        return 0;
+    if (SideSize == null)
+        return ConvertToMM(DefaultSize);
+    else
+        return ConvertToMM(SideSize);
+}
+function GetPaddingSize(CurrObj, Side) {
+    var Obj;
+    var SideSize;
+
+    
+    Obj = CurrObj.Elements.SharedElements.Style;
+    if (Obj != null) {
+        SideSize = Obj["Padding" + Side];
+    }
+    else {
+        Obj = CurrObj.Elements.NonSharedElements.Style;
+        if (Obj != null) {
+            SideSize = Obj["Padding" + Side];
+        }
+    }
+    return ConvertToMM(SideSize);
 }
 function GetFullBorderStyle(CurrObj) {
     var Style = "";
@@ -1162,7 +1165,6 @@ function GetDefaultHTMLTable() {
     $NewObj.attr("CELLPADDING", 0);
     return $NewObj;
 }
-
 function GetBorderStyle(RPLStyle) {
     switch (RPLStyle) {
         case 0:
@@ -1196,6 +1198,10 @@ function GetTableRow() {
     return retval;
 }
 function ConvertToMM(ConvertFrom) {
+    
+    if (ConvertFrom == null)
+        return 0;
+    
     var unit = ConvertFrom.match(/\D+$/);  // get the existing unit
     var value = ConvertFrom.match(/\d+/);  // get the numeric component
 
@@ -1227,36 +1233,7 @@ function ConvertToMM(ConvertFrom) {
     return value;
 }
 
-function HeaderScroll($CloneObj,CloneID,$TopObj, $BottomObj) {
-    var scroll = $(window).scrollTop();
-    var anchor_top = $TopObj.offset().top;
-    var anchor_bottom = $BottomObj.offset().top;
-    if (scroll > anchor_top && scroll < anchor_bottom) {
-        clone_table = $("#" + CloneID);
-        if (clone_table.length === 0) {
-            clone_table = $CloneObj.clone();
-            clone_table.attr({ id: CloneID })
-            .css({
-                position: "fixed",
-                "pointer-events": "none",
-                top: 0
-            })
-            .width($TopObj.width());
 
-            $("#table-container").append(clone_table);
-            // dont hide the whole table or you lose border style & 
-            // actively match the inline width to the #maintable width if the 
-            // container holding the table (window, iframe, div) changes width          
-            clone_table.width($TopObj.width());
 
-            // clone tbody is hidden
-            clone_table.css({
-                visibility: "hidden"
-            });
-           
-        }
-    }
-    else {
-        $("#" + CloneID).remove();
-    }
-}
+
+

@@ -19,6 +19,7 @@ var g_App = g_App || {};
 
         for (var i = 0; i < len; i++) {
             $('.sky-carousel-container', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
+            $('.rm-list-container', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
         }
 
         return this;

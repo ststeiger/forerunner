@@ -114,28 +114,6 @@ section#pageSection {
   display: inline;
 }
 
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen 
-and (min-device-width : 320px) 
-and (max-device-width : 480px) {
-/* Styles */
-.catalogitem {
-  width: 90px;
-}
-.sc-content {
-  display:inline;
-}
-}
-
-/* Smartphones (landscape) ----------- */
-@media only screen 
-and (min-width : 321px) {
-/* Styles */
-.catalogitem {
-  width: 170px;
-}
-}
-
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 
@@ -188,6 +166,22 @@ and (min-device-width : 768px)
 and (max-device-width : 1024px) 
 and (orientation : landscape) {
 /* Styles */
+.catalogitem {
+  width: 170px;
+}
+
+.sc-content {
+  display:inline;
+}
+
+.sky-carousel {
+  display: block;
+  width: device-width;
+}
+
+.rm-list {
+  display: none;
+}
 }
 
 /* iPads (portrait) ----------- */
@@ -196,6 +190,21 @@ and (min-device-width : 768px)
 and (max-device-width : 1024px) 
 and (orientation : portrait) {
 /* Styles */
+.catalogitem {
+  width: 170px;
+}
+
+.sc-content {
+  display:inline;
+}
+
+.sky-carousel {
+  display: none;
+}
+
+.rm-list {
+  display: block;
+}
 }
 
 /* Desktops and laptops ----------- */

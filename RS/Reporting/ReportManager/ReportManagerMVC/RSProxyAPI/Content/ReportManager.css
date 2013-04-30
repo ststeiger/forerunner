@@ -22,48 +22,48 @@ header {
 }
 
 .buttonicon {
-    height:30px;
-    background-color:transparent;
-    border-width:0px
+  height:30px;
+  background-color:transparent;
+  border-width:0px
 }
 
 .spacer20mm {
-    min-width:20mm;
+  min-width:20mm;
 }
 
 .spacer10mm {
-    min-width:10mm;
+  min-width:10mm;
 }
 
 .spacer5mm {
-    min-width:5mm;
+  min-width:5mm;
 }
 
 
 .loading-indicator  {
-    border: solid 2px #86A5AD;
-    background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;    
-    width: 148px; 
-    height: 28px; 
-    position: relative; 
-    margin:10px auto;
-    margin-top:50px;
-    padding: 10px 10px 10px 50px; 
-    text-align: left; 
-    line-height: 27px; 
-    font-weight: bold; 
-    z-index: 2001
+  border: solid 2px #86A5AD;
+  background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;  
+  width: 148px; 
+  height: 28px; 
+  position: relative; 
+  margin:10px auto;
+  margin-top:50px;
+  padding: 10px 10px 10px 50px; 
+  text-align: left; 
+  line-height: 27px; 
+  font-weight: bold; 
+  z-index: 2001
 }
 
 .toolbar {
-    width:100%;
-    background-color:transparent;
+  width:100%;
+  background-color:transparent;
 }
 
 .toolbartextbox {
-    min-width:10mm;
-    max-width:15mm;
-    text-align:right;
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
 }
 
 .inlinetoolbar {
@@ -71,5 +71,135 @@ header {
 }
 
 .overflow-hidden {
-    overflow: hidden;
+  overflow: hidden;
+}
+
+.sky-carousel {
+  display: block;
+}
+
+.rm-list {
+  display: none;
+  width: device-width;
+  background: -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
+}
+
+.catalogitem {
+  width: 170px;
+  display: inline;
+}
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+/* Styles */
+.catalogitem {
+  width: 90px;
+}
+.sc-content {
+  display:inline;
+}
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (min-width : 321px) {
+/* Styles */
+.catalogitem {
+  width: 170px;
+}
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) 
+and (orientation : portrait) {
+/* Styles */
+.catalogitem {
+  width: 90px;
+}
+
+.sc-content {
+  display:inline;
+}
+
+.sky-carousel {
+  display: none;
+}
+
+.rm-list {
+  display: block;
+}
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (max-height : 320px) 
+and (orientation : landscape) {
+/* Styles */
+.catalogitem {
+  width: 90px;
+}
+
+.sc-content {
+  display:inline;
+}
+
+.sky-carousel {
+  height: 250px;
+  width: device-width;
+}
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+/* Styles */
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+/* Styles */
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+/* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+/* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5)  {
+/* Styles */
+}
+
+.center { 
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+.centertext {
+  text-align:center;
+  padding-bottom: 50px;
 }

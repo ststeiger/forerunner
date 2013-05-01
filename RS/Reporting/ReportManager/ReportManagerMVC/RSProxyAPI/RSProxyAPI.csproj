@@ -152,6 +152,14 @@
     <Content Include="Images\ReportViewer\Refresh.png" />
     <Content Include="Images\ReportViewer\Save.png" />
     <Content Include="Images\ReportViewer\Search.png" />
+    <Content Include="Images\sc-graphics\closedhand.cur" />
+    <Content Include="Images\sc-graphics\closedhand.png" />
+    <Content Include="Images\sc-graphics\next_arrow.png" />
+    <Content Include="Images\sc-graphics\openhand.cur" />
+    <Content Include="Images\sc-graphics\openhand.png" />
+    <Content Include="Images\sc-graphics\preloader.gif" />
+    <Content Include="Images\sc-graphics\prev_arrow.png" />
+    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
     <Content Include="Scripts\App\configs.js" />
     <Content Include="Scripts\Carousel\css\default_skin.css" />
     <Content Include="Scripts\Carousel\css\default_skin_variation.css" />

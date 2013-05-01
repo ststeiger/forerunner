@@ -51,7 +51,14 @@ function TempMeasurement(Height, Width) {
     this.Height = Height;
     this.Width = Width;
 }
-
+function ReportItemLocation(Index) {
+    this.TopDelta = 0;
+    this.Height = 0;
+    this.Index = Index;
+    this.IndexAbove;
+    this.NewHeight;
+    this.NewTop;
+}
 
 //Page Management
 function UpdateTableHeaders() {
@@ -437,7 +444,11 @@ function WriteRectangle(RIContext) {
         Style = "";
 
         //Determin height and location
-        RecLayout.ReportItems[Index].NewHeight = GetHeight($RI);       
+        if (Obj.Type == "Image" || Obj.Type == "Chart" || Obj.Type == "Gauge" || Obj.Type == "Map" || Obj.Type == "Line")
+            RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+        else
+            RecLayout.ReportItems[Index].NewHeight = GetHeight($RI);
+
         if (RecLayout.ReportItems[Index].IndexAbove == null)
             RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
         else
@@ -445,9 +456,9 @@ function WriteRectangle(RIContext) {
         Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + Measurements[Index].Left + "mm;";
 
         //Backgroundcolor goes on container        
-        if ((RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor != null))
+        if ((RIContext.CurrObj.ReportItems[Index].Element != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor != null))
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
-        else if ((RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor != null))
+        else if ((RIContext.CurrObj.ReportItems[Index].Element != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor != null))
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
 
         $LocDiv.attr("Style", Style);
@@ -470,12 +481,7 @@ function WriteRectangle(RIContext) {
 
     return RIContext.$HTMLParent;
 }
-function ReportItemLocation(Index) {
-    this.TopDelta = 0;    
-    this.Height = 0;
-    this.Index = Index;
-    this.IndexAbove;  
-}
+
 function GetRectangleLayout(Measurements) {
     var l = new Layout()
    
@@ -534,6 +540,9 @@ function WriteReportItems(RIContext) {
         case "Chart":
         case "Map":
             return WriteChartImage(RIContext);
+            break;
+        case "Line":
+            return WriteLine(RIContext);
             break;
     }
 }
@@ -932,6 +941,22 @@ function WriteSubreport(RIContext) {
     //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
+function WriteLine(RIContext) {
+
+    var Style = GetFullBorderStyle(RIContext.CurrObj);
+    var measurement = GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+
+    Style += "width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
+
+    //TODO:Slant
+    if (RIContext.CurrObj.Elements.SharedElements.Slant == null || RIContext.CurrObj.Elements.SharedElements.Slant == 0)
+        a = 1
+
+    RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
+    return RIContext.$HTMLParent;
+
+}
+
 
 //Helper fucntions
 function GetHeight($Obj) {

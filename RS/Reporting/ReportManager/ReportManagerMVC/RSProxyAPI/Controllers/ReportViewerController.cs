@@ -28,10 +28,13 @@ namespace RSProxyAPI.Controllers
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
             result = rep.GetImage(SessionID, ImageID, out mimeType);
-            ByteArrayContent content = new ByteArrayContent(result);
             resp = this.Request.CreateResponse();
-            resp.Content = content;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            if (result != null)
+            {
+                ByteArrayContent content = new ByteArrayContent(result);                
+                resp.Content = content;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            }
 
             return resp;
         }

@@ -30,6 +30,46 @@
       <Name>Layout.rdl</Name>
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report 2.rdl</Name>
+      <FullPath>Image Report 2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustomerInfo.rdl</Name>
+      <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ImageMapTest.rdl</Name>
+      <FullPath>ImageMapTest.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ProductSales.rdl</Name>
+      <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report.rdl</Name>
+      <FullPath>Image Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Richtextbox.rdl</Name>
+      <FullPath>Richtextbox.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Subreport.rdl</Name>
+      <FullPath>Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoChartReport.rdl</Name>
+      <FullPath>TwoChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ColumnChartReport.rdl</Name>
+      <FullPath>ColumnChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Lines.rdl</Name>
+      <FullPath>Lines.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

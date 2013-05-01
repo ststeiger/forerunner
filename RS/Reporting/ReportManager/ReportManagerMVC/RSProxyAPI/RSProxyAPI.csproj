@@ -157,6 +157,14 @@
     <Content Include="Scripts\Carousel\css\default_skin_variation.css" />
     <Content Include="Scripts\Carousel\css\tooltip_skin.css" />
     <Content Include="Scripts\Carousel\css\tooltip_skin_variation.css" />
+    <Content Include="Images\sc-graphics\closedhand.cur" />
+    <Content Include="Images\sc-graphics\closedhand.png" />
+    <Content Include="Images\sc-graphics\next_arrow.png" />
+    <Content Include="Images\sc-graphics\openhand.cur" />
+    <Content Include="Images\sc-graphics\openhand.png" />
+    <Content Include="Images\sc-graphics\preloader.gif" />
+    <Content Include="Images\sc-graphics\prev_arrow.png" />
+    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
     <Content Include="Scripts\Carousel\images\sc-graphics\closedhand.cur" />
     <Content Include="Scripts\Carousel\images\sc-graphics\closedhand.png" />
     <Content Include="Scripts\Carousel\images\sc-graphics\next_arrow.png" />
@@ -330,8 +338,7 @@
           <IISUrl>http://localhost:9000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://ludwig</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

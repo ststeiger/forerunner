@@ -16,6 +16,9 @@ var g_App = g_App || {};
         $(this.el).html(this.template(data));
         return this;
     },
+    sectionHeader: function () {
+        return 'Home' + this.path;
+    }
   });
 }());
 

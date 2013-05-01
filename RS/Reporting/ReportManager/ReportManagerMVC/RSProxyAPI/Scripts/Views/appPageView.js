@@ -113,6 +113,11 @@ var g_App = g_App || {};
           thisObj.model.set(appPageModel);
         //});
           $('#HeaderArea').html(null);
+          if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.sectionHeader != null) {
+              $('#mainSectionHeader').html(appPageModel.attributes.mainSection.sectionHeader());
+          } else {
+              $('#mainSectionHeader').html(null);
+          }
       }
   });
   

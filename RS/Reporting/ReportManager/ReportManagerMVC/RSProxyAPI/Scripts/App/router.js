@@ -25,6 +25,8 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportManager: function (path) {
+            $('#footerspacer').attr('style', 'height:0');
+            $('#bottomdiv').attr('style', 'height:0');
             if (path != null) {
                 path = String(path).replace(/%2f/g,"/");
             } else {
@@ -45,7 +47,7 @@ var ApplicationRouter = Backbone.Router.extend({
                         'ReportManagerMainView'], '',
                         g_App.ReportManagerMainView, { model: catalogItemsModel });
                         // Initialize the carousel
-                        $('.sky-carousel').carousel({
+                        $('#browse-carousel').carousel({
                             itemWidth: 170,
                             itemHeight: 240,
                             distance: 15,
@@ -70,7 +72,6 @@ var ApplicationRouter = Backbone.Router.extend({
                         alert('Failed to load the catalogs from the server.  Please try again.');
                     }
                 });
-
         },
 
         transitionToReportViewer: function (path) {
@@ -89,6 +90,8 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToFRReportViewer: function (path) {
+            $('#footerspacer').attr('style', 'height: 150px');
+            $('#bottomdiv').attr('style', 'height: 150px');
             if (path != null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
@@ -101,15 +104,10 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, [
                 'FRReportViewerMainView'], '',
                 g_App.FRReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            var thisObject = this;
             var callBack = function (RS) {
-                thisObject.createPageSlider(RS);
+                CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
             };
             InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', callBack);
-        },
-
-        createPageSlider: function (RS) {
-            CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

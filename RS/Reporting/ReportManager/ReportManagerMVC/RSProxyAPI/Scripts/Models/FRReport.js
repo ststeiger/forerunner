@@ -10,6 +10,7 @@ function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent,
     this.Style = Style;
     this.CurrLocation = CurrLocation;
 }
+
 function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, Toolbar, $PageContainer) {
     this.UID = UID;
     this.$ReportOuterDiv = $ReportOuterDiv;       
@@ -26,8 +27,8 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.Lock = false;
     this.$ReportContainer = $("<Table/>");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
-
 }
+
 function ReportPage($Container, ReportObj) {
     this.ReportObj = ReportObj;    
     this.$Container = $Container;
@@ -38,7 +39,7 @@ function ReportPage($Container, ReportObj) {
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
     InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
 }
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID) {
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID, callback) {
     var $Row =  new $("<TR/>");
     var $Cell;
     
@@ -66,19 +67,68 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNu
 
     //If Parameters needed show Parameters
 
-
     //load the report Page requested        
     RS.$ReportContainer.append(RS.$PageContainer);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    LoadPage(RS, PageNum, null);    
+    LoadPage(RS, PageNum, null, false, callback);    
 }
+
+function CreateSlider(RS, ReportViewerUID, SliderUID) {
+    $Container = $('#' + SliderUID);
+    $Slider = new $('<DIV />');
+    $Slider.attr('class', 'sky-carousel');
+    $Slider.attr('style', 'height: 150px');
+    $SliderWrapper = new $('<DIV />');
+    $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+    $Slider.append($SliderWrapper);
+    $List = new $('<UL />');
+    $List.attr('class', 'sky-carousel-container');
+    for (var i = 0; i < RS.NumPages; i++) {
+        var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
+                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=8in&PageWidth=11in';
+        $ListItem = new $('<LI />');
+        $List.append($ListItem);
+        $Thumbnail = new $('<IMG />');
+        $Thumbnail.attr('class', 'pagethumb');
+        $Thumbnail.attr('src', url);
+        $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i +")");
+        $Caption = new $('<DIV />');
+        $Caption.attr('class', 'sc-content');
+        // Need to add onclick
+        $ListItem.append($Thumbnail);
+    }
+
+    $SliderWrapper.append($List);
+    $Container.append($Slider);
+
+    $Slider.carousel({
+        itemWidth: 85,
+        itemHeight: 120,
+        distance: 8,
+        selectedItemDistance: 25,
+        selectedItemZoomFactor: 1,
+        unselectedItemZoomFactor: 0.67,
+        unselectedItemAlpha: 0.6,
+        motionStartDistance: 85,
+        topMargin: 60,
+        gradientStartPoint: 0.35,
+        gradientOverlayColor: "#f5f5f5",
+        gradientOverlaySize: 95,
+        reflectionDistance: 1,
+        reflectionAlpha: 0.35,
+        reflectionVisible: true,
+        reflectionSize: 35,
+        selectByClick: true
+    });
+}
+
 function SetActionCursor(Ob) {
     Ob.style.cursor = "pointer";   
 }
 function AddLoadingIndicator(RS) {    
     RS.$ReportContainer.append(RS.$LoadingIndicator);
 }
-function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {  
+function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  
     if (OldPage != null)
         if (OldPage.$Container != null)
             OldPage.$Container.fadeOut("fast");
@@ -96,7 +146,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         SessionID: RS.SessionID,
         PageNumber: NewPageNum
     })
-    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); })
+    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (callback != null) callback(RS);})
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 
 }
@@ -115,9 +165,9 @@ function SetPage(RS, NewPageNum, OldPage) {
 function RefreshReport(RS) {
     Page = RS.Pages[RS.CurPage];
 
-    RS.SessionID = "";http://localhost:9000/Images
+    RS.SessionID = "";
     RS.Pages = new Object();
-    LoadPage(RS, 1, Page, false); 
+    LoadPage(RS, 1, Page, false, null); 
 }
 function GetToolbar(UID) {
     var $Toolbar = $("<Table/>");
@@ -195,7 +245,7 @@ function NavToPage(RS, NewPageNum) {
 
     if (RS.Lock == 0) {
         RS.Lock = 1;
-        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false, null);
     }
 
 }
@@ -207,7 +257,7 @@ function LoadAllPages(RS) {
 
     for (var i = 1; i <= RS.NumPages; i++)
         if (RS.Pages[i] == null)
-            LoadPage(RS, i, null, true);
+            LoadPage(RS, i, null, true, null);
 
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {

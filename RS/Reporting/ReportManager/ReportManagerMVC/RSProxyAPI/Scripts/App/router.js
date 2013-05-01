@@ -101,9 +101,15 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, [
                 'FRReportViewerMainView'], '',
                 g_App.FRReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea');
-           //     g_App.FRReportViewerMainView, { path: path, reportServerUrl: 'localhost:8080/ReportServer/' };
-           // InitReport('localhost:8080/ReportServer/', '/api/ReportViewer', path, true, 1, 'FRReportViewer1');
+            var thisObject = this;
+            var callBack = function (RS) {
+                thisObject.createPageSlider(RS);
+            };
+            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', callBack);
+        },
+
+        createPageSlider: function (RS) {
+            CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
@@ -134,7 +140,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView', 'FRReportViewerMainView'], '', function () {
+g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'FRReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.start();

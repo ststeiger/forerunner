@@ -1870,20 +1870,11 @@ namespace Forerunner.ReportViewer
              if (ReadByte() != 0x08)
                  ThrowParseError();  //This should never happen
 
-
-             RPLProperties prop = new RPLProperties(0x08);
-
-             prop.Add("UniqueName", "String", 0x00);
-             prop.Add("Slant", "Byte", 0x18);
-             prop.Add("ID", "String", 0x01);
-             prop.Add("Name", "String", 0x02);
-             prop.Add("Tooltip", "String", 0x05);
-             prop.Add("ToogleItem", "String", 0x08);
-             prop.Add("Lable", "String", 0x03);
-             prop.Add("Bookmark", "String", 0x04);
-             prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-             prop.Write(this);
-
+             w.WriteStartObject();
+             w.WriteMember("Type");
+             w.WriteString("Line");
+             w.WriteMember("Elements");
+             WriteJSONElements();
              WriteJSONReportElementEnd();
              w.WriteEndObject();
 

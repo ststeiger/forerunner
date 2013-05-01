@@ -66,7 +66,7 @@ namespace ForeRunner.RSProxy
                     CatalogItem[] folder = rs.ListChildren(ci.Path,false);
                     foreach (CatalogItem fci in folder)
                     {
-                        if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport)
+                        if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport || fci.Type == ItemTypeEnum.Folder)
                         {
                             list.Add(ci);
                             break;

@@ -1,6 +1,7 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
 
+// Structures
 function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style,CurrLocation) {
     this.RS = RS;
     this.CurrObj = CurrObj;
@@ -10,65 +11,283 @@ function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent,
     this.Style = Style;
     this.CurrLocation = CurrLocation;
 }
-
-function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, Toolbar, $PageContainer) {
+function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, HasToolbar, $PageContainer) {
     this.UID = UID;
     this.$ReportOuterDiv = $ReportOuterDiv;       
     this.CurPage = 0;
     this.Pages = new Object();
-    this.$PageInput = new $("<Input/>");
     this.ReportServerURL = ReportServer;
     this.ReportViewerAPI = ReportViewerAPI;
     this.ReportPath = ReportPath;
-    this.Toolbar = Toolbar;
+    this.HasToolbar = HasToolbar;
+    this.FloatingToolbarHeight;
+    this.$FloatingToolbar;
     this.SessionID = "";
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = $("<Table/>");
+    this.$ReportContainer = new $("<div class='divWithFloatingRow' style='position:relative'></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
+    this.FloatingHeaders = [];
 }
-
+function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
+    //This will be neeeded to Row/Col offsets and performance
+    this.$Tablix = $Tablix;
+    this.$RowHeader = $RowHeader;
+    this.$ColHeader = $ColHeader;
+}
 function ReportPage($Container, ReportObj) {
     this.ReportObj = ReportObj;    
     this.$Container = $Container;
     this.Image = null;
     this.$Img = new $("<IMG/>");
 }
-
-function InitReport(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID) {
-    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, null)
+function Layout() {
+    this.ReportItems = new Object();
+    this.Height = 0;
+    this.LowestIndex;
 }
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, Toolbar, PageNum, UID, ToolbarUID, callback) {
-    var $Row =  new $("<TR/>");
-    var $Cell;
+function TempMeasurement(Height, Width) {
+    this.Height = Height;
+    this.Width = Width;
+}
+
+
+//Page Management
+function UpdateTableHeaders() {
+
+    $.each(Reports, function (repIndex, RS) {
+        $.each(RS.FloatingHeaders, function (Index, Obj) {
+            SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader, RS);
+            SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader, RS);
+        });
+        if (RS.HasToolbar)
+            SetRowHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar,RS);
+    });
+
     
-    var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, Toolbar, $Row);
+
+}
+function SetColHeaderOffset($Tablix, $ColHeader,RS) {
+
+    if ($ColHeader == null)
+        return;
+
+    offset = $Tablix.offset();
+    scrollLeft = $(window).scrollLeft();
+    
+    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
+        $ColHeader.fadeIn('slow');
+        //$(".FloatingRow", this).css("display", "block");
+        $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
+    }
+    else {
+        $ColHeader.css("display", "none");
+        $ColHeader.css("left", "0px");
+    }
+}
+function SetRowHeaderOffset($Tablix,$RowHeader,RS){
+
+    if ($RowHeader == null)
+        return;
+
+    toolbarOffset = 0;
+    if (RS.HasToolbar)
+        toolbarOffset = RS.ToolbarHeight;
+    if ($RowHeader == RS.$FloatingToolbar)
+        toolbarOffset = 0;
+
+    offset = $Tablix.offset();
+    scrollTop = $(window).scrollTop();
+    //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
+    if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {
+        $RowHeader.fadeIn('slow');
+        //$(".FloatingRow", this).css("display", "block");
+        $RowHeader.css("top", Math.min(scrollTop - offset.top + toolbarOffset, $Tablix.height() - $RowHeader.height() + toolbarOffset) + "px");
+    }
+    else {
+        $RowHeader.css("display", "none");
+        $RowHeader.css("top", "0px");
+    }
+}
+function HideTableHeaders() {
+    
+    $.each(Reports, function (repIndex, RS) {
+        $.each(RS.FloatingHeaders, function (Index, Obj) {
+            if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
+            if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
+        });
+    });
+
+}
+function SetActionCursor(Ob) {
+    Ob.style.cursor = "pointer";
+}
+function AddLoadingIndicator(RS) {
+    RS.$ReportContainer.append(RS.$LoadingIndicator);
+}
+function RemoveLoadingIndicator(RS) {
+    RS.$LoadingIndicator.detach();
+}
+function SetPage(RS, NewPageNum, OldPage) {
+    RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
+    RS.Pages[NewPageNum].$Container.fadeIn("normal");
+    if (OldPage != null)
+        OldPage.$Container.detach();
+    RS.CurPage = NewPageNum;
+    $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
+    RS.Lock = 0;
+}
+function RefreshReport(RS) {
+    Page = RS.Pages[RS.CurPage];
+
+    RS.SessionID = ""; http://localhost:9000/Images
+        RS.Pages = new Object();
+    LoadPage(RS, 1, Page, false);
+}
+function GetToolbar(UID) {
+    var $Toolbar = $("<Table/>");
+    var $Row = $("<TR/>");
+    var $Cell;
+
+    $Toolbar.attr("class", "toolbar");
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer10mm");
+    $Cell.on("click", { id: UID }, function (e) { alert("ShowTHis"); ShowParms(Reports[e.data.id]); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("Par");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer20mm");
+    $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("Nav");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer20mm");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer10mm");
+    $Cell.on("click", { id: UID }, function (e) { RefreshReport(Reports[e.data.id]); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer10mm");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer10mm");
+    $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], 1); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer5mm");
+
+    $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[UID].CurPage - 1); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
+    $Row.append($Cell);
+
+    $Cell = new $("<input/>");
+    $Cell.addClass("toolbartextbox");
+    $Cell.addClass(UID);
+    $Cell.attr("type", "number")
+    $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) NavToPage(Reports[e.data.id], e.data.input.val()); });
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("class", "spacer10mm");
+    $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[e.data.id].CurPage + 1); });
+    $Cell.on("mouseover", function (event) { SetActionCursor(this); });
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
+    $Row.append($Cell);
+
+    $Cell = new $("<TD/>");
+    $Cell.attr("style", "width:100%;");
+    $Row.append($Cell);
+
+    $Toolbar.append($Row);
+    return $Toolbar;
+}
+function NavToPage(RS, NewPageNum) {
+
+    if (RS.Lock == 0) {
+        RS.Lock = 1;
+        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+    }
+
+}
+function ShowParms() {
+    alert("Show");
+}
+function LoadAllPages(RS) {
+
+    for (var i = 1; i <= RS.NumPages; i++)
+        if (RS.Pages[i] == null)
+            LoadPage(RS, i, null, true);
+
+}
+function SetImage(Data, RS) {
+    if (RS.Pages[PageNum] == null)
+        RS.Pages[PageNum] = new ReportPage(null, null);
+    RS.Pages[PageNum].Image = Data;
+}
+
+
+//Page Loading
+function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
+    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null)
+}
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, callback) {
+    var $Table = new $("<table/>");
+    var $Row = new $("<TR/>");
+    var $Cell;
+    var $FloatingToolbar;
+    var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, HasToolbar, $Row);
     
     Reports[UID] = RS;
     
-    if (Toolbar) {
+    if (HasToolbar) {
+        var $tb = GetToolbar(UID);
+        RS.ToolbarHeight = GetHeight($tb) * 3.78;
+
         if (ToolbarUID == null) {
             $Row = new $("<TR/>");            
             $Cell = new $("<TD/>");
-            $Cell.append(GetToolbar(UID));
-            $Cell.attr("scroll", "this.top=");
+            $Cell.append($tb);            
             $Row.append($Cell);
             $Row.addClass('inlinetoolbar', 0, 0, null);
-            RS.$ReportContainer.append($Row);
+            $FloatingToolbar = $Row.clone(true, true).css({ display: "none", position: "absolute", top: "0px", left: "0px" });
+            RS.$FloatingToolbar = $FloatingToolbar;
+            $Table.append($Row);
+            $Table.append($FloatingToolbar);
         } else {
             $Container = $('#' + ToolbarUID);
-            $Container.append(GetToolbar(UID));
+            $Container.append($tb);
         }
+
     }
-    AddLoadingIndicator(RS);
+    $(window).scroll(UpdateTableHeaders);
+    $(window).bind('touchmove', HideTableHeaders);
+    //window.addEventListener("gesturechange", UpdateTableHeaders, false);
   
     //Log in screen if needed
 
     //If Parameters needed show Parameters
 
-    //load the report Page requested        
-    RS.$ReportContainer.append(RS.$PageContainer);
+
+    //load the report Page requested  
+    $Table.append(RS.$PageContainer);    
+    RS.$ReportContainer.append($Table);
+    AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
     LoadPage(RS, PageNum, null, false, callback);    
 }
@@ -83,7 +302,7 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     $Slider.append($SliderWrapper);
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
-    for (var i = 0; i < RS.NumPages; i++) {
+    for (var i = 1; i <= RS.NumPages; i++) {
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
                 + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=8in&PageWidth=11in';
         $ListItem = new $('<LI />');
@@ -91,7 +310,7 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
         $Thumbnail = new $('<IMG />');
         $Thumbnail.attr('class', 'pagethumb');
         $Thumbnail.attr('src', url);
-        $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i +")");
+        $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i + ")");
         $Caption = new $('<DIV />');
         $Caption.attr('class', 'sc-content');
         // Need to add onclick
@@ -122,12 +341,6 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     });
 }
 
-function SetActionCursor(Ob) {
-    Ob.style.cursor = "pointer";   
-}
-function AddLoadingIndicator(RS) {    
-    RS.$ReportContainer.append(RS.$LoadingIndicator);
-}
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  
     if (OldPage != null)
         if (OldPage.$Container != null)
@@ -146,118 +359,8 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {
         SessionID: RS.SessionID,
         PageNumber: NewPageNum
     })
-    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (callback != null) callback(RS);})
+    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (callback != null) callback(RS); })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
-
-}
-function RemoveLoadingIndicator(RS) {
-    RS.$LoadingIndicator.detach();
-}
-function SetPage(RS, NewPageNum, OldPage) {
-    RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
-    RS.Pages[NewPageNum].$Container.fadeIn("normal");
-    if (OldPage != null)
-        OldPage.$Container.detach();
-    RS.CurPage = NewPageNum;
-    RS.$PageInput.val(NewPageNum);
-    RS.Lock = 0;
-}
-function RefreshReport(RS) {
-    Page = RS.Pages[RS.CurPage];
-
-    RS.SessionID = "";
-    RS.Pages = new Object();
-    LoadPage(RS, 1, Page, false, null); 
-}
-function GetToolbar(UID) {
-    var $Toolbar = $("<Table/>");
-    var $Row = $("<TR/>");
-    var $Cell;
-
-    $Toolbar.attr("class", "toolbar");
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Cell.attr("onclick", "ShowParms(Reports['" + UID + "'])");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Par");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer20mm");
-    $Cell.attr("onclick", "ShowNav('" + UID + "')");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("Nav");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer20mm");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Cell.attr("onclick", "RefreshReport(Reports['" + UID + "'])");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],1)");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer5mm");
-
-    $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage-1)");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
-    $Row.append($Cell);
-
-    $Cell = Reports[UID].$PageInput;
-    $Cell.attr("class", "toolbartextbox");
-    $Cell.attr("id", "PageInput");
-    $Cell.attr("type", "number")
-    $Cell.bind("keypress", function (e) { if (e.keyCode == 13) NavToPage(Reports[UID], Reports[UID].$PageInput.val()); });
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Cell.attr("onclick", "NavToPage(Reports['" + UID + "'],Reports['" + UID + "'].CurPage+1)");
-    $Cell.attr("onmouseover", "SetActionCursor(this)");
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
-    $Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("style", "width:100%;");
-    $Row.append($Cell);
-
-    $Toolbar.append($Row);
-    return $Toolbar;
-}
-function NavToPage(RS, NewPageNum) {
-
-    if (RS.Lock == 0) {
-        RS.Lock = 1;
-        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false, null);
-    }
-
-}
-function ShowParms() {
-    alert("Show");
-}
-
-function LoadAllPages(RS) {
-
-    for (var i = 1; i <= RS.NumPages; i++)
-        if (RS.Pages[i] == null)
-            LoadPage(RS, i, null, true, null);
 
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
@@ -299,11 +402,6 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     })
     .fail(function () { console.log("error"); })
 
-}
-function SetImage(Data, RS) {
-    if (RS.Pages[PageNum] == null)
-        RS.Pages[PageNum] = new ReportPage(null, null);
-    RS.Pages[PageNum].Image = Data;
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
@@ -372,15 +470,6 @@ function WriteRectangle(RIContext) {
 
     return RIContext.$HTMLParent;
 }
-function Layout(){
-    this.ReportItems = new Object();
-    this.Height = 0;
-    this.LowestIndex;
-}
-function TempMeasurement(Height, Width) {
-    this.Height = Height;
-    this.Width = Width;
-}
 function ReportItemLocation(Index) {
     this.TopDelta = 0;    
     this.Height = 0;
@@ -424,24 +513,6 @@ function GetRectangleLayout(Measurements) {
     
     return l;
 }
-function GetHeight($Obj) {
-    var height;
-
-    var copied_elem = $Obj.clone()
-                        .attr("id", false)
-                        .css({
-                            visibility: "hidden", display: "block",
-                            position: "absolute"
-                        });
-    $("body").append(copied_elem);
-    height = copied_elem.css('height');
-
-    copied_elem.remove();
-
-    //Return in mm
-    return ConvertToMM(height);
-
-}
 function WriteReportItems(RIContext) {
 
     switch (RIContext.CurrObj.Type) {
@@ -467,13 +538,13 @@ function WriteReportItems(RIContext) {
     }
 }
 function WriteRichText(RIContext) {
-    var Style = "";
+    var Style = RIContext.Style;
     var $NewObj = RIContext.$HTMLParent;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
-    //Style += "border-width:thin;border-style:solid";
-    $NewObj.attr("Style", "-moz-box-sizing:border-box;box-sizing:border-box;" + Style + RIContext.Style);
+    Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";      
+    $NewObj.attr("Style", Style);
 
     if (RIContext.CurrObj.Paragraphs.length == 0) {
         if (RIContext.CurrObj.Elements.SharedElements.Value != null)
@@ -673,8 +744,8 @@ function WriteActionImageMapAreas(RIContext, width, height) {
 }
 function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     var ratio = 0;
-    var height = ConvertToMM(img.height + "px");
-    var width = ConvertToMM(img.width + "px");
+    var height = ConvertToMM($(img).height() + "px");
+    var width = ConvertToMM($(img).width() + "px");
 
     switch (sizingType) {
         case 0://AutoSize
@@ -692,16 +763,16 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
 
                     $(img).css("height", maxHeight + "mm");
                     $(img).css("width", width * ratio + "mm");                   
-                    $(img).css("min-height", maxHeight + "mm");
-                    $(img).css("min-width", width * ratio + "mm");
+                    $(img).css("max-height", maxHeight + "mm");
+                    $(img).css("max-width", width * ratio + "mm");
                 }
                 else {
                     ratio = maxWidth / width;
 
                     $(img).css("width", maxWidth + "mm");
                     $(img).css("height", height * ratio + "mm");
-                    $(img).css("min-width", maxWidth + "mm");
-                    $(img).css("min-height", height * ratio + "mm");
+                    $(img).css("max-width", maxWidth + "mm");
+                    $(img).css("max-height", height * ratio + "mm");
                 }
             }
             break;
@@ -724,7 +795,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var wbordersize = 0;
 
     // Width and Border go on the Cell so we need to subtract out border width from content width, allign the TD to the Top in case another column grows
-    Style = "vertical-align:top;padding:0;";
+    Style = "vertical-align:top;padding:0;margin:0;";
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;
 
@@ -734,38 +805,16 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     else
         RowIndex = BodyCellRowIndex;
 
-    // need to handle different size borders
-    if (RIContext.CurrObj.ColumnWidths.Columns[ColIndex] != null) {
-        if ((ColIndex == 0) && (ColIndex == (RIContext.CurrObj.ColumnWidths.ColumnCount - 1)))
-            wbordersize = GetBorderSize(Obj.Cell.ReportItem, "Left") + GetBorderSize(Obj.Cell.ReportItem, "Right")
-        else if (ColIndex == 0)
-            wbordersize = GetBorderSize(Obj.Cell.ReportItem, "Left") + GetBorderSize(Obj.Cell.ReportItem, "Right") * .5
-        else if (ColIndex == (RIContext.CurrObj.ColumnWidths.ColumnCount - 1))
-            wbordersize = GetBorderSize(Obj.Cell.ReportItem, "Right") + GetBorderSize(Obj.Cell.ReportItem, "Left") * .5
-        else
-            wbordersize = GetBorderSize(Obj.Cell.ReportItem, "Right") * .5 + GetBorderSize(Obj.Cell.ReportItem, "Left") * .5
-
-        if ((RowIndex == 0) && (RowIndex == (RIContext.CurrObj.RowHeights.RowCount - 1)))
-            hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Top") + GetBorderSize(Obj.Cell.ReportItem, "Bottom")
-        else if (RowIndex == 0)
-            hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Top") + GetBorderSize(Obj.Cell.ReportItem, "Bottom") * .5
-        else if (RowIndex == (RIContext.CurrObj.RowHeights.RowCount - 1))
-            hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Bottom") + GetBorderSize(Obj.Cell.ReportItem, "Top") * .5
-        else
-            hbordersize = GetBorderSize(Obj.Cell.ReportItem, "Top") * .5 + GetBorderSize(Obj.Cell.ReportItem, "Bottom") * .5
-
-
-        //Specify width,but only min-height to allow browser to grow height as needed
-        width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width - wbordersize;
-        height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height - hbordersize;
-        Style += "width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;";
+        width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
+        height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
+        Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
 
         //Row and column span
         if (Obj.RowSpan != null)
             $Cell.attr("rowspan", Obj.RowSpan);
         if (Obj.ColSpan != null)
             $Cell.attr("colspan", Obj.ColSpan);
-    }
+
     //Background color goes on the cell
     if ((Obj.Cell.ReportItem.Elements.SharedElements.Style !=null) && (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null))
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
@@ -773,62 +822,77 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
     $Cell.attr("Style", Style);
-
-    // Not sure why IE and Firefox do not work with box sizing, but block size works.
-    if ($.browser.mozilla || $.browser.msie)
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "display:block;margin:0", new TempMeasurement(height,width))));
-    else
-        $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "box-sizing:border-box;margin:0;", new TempMeasurement(height, width))));
-
+    $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;", new TempMeasurement(height, width))));
     return $Cell;
 }
 function WriteTablix(RIContext) {
     var $Tablix = GetDefaultHTMLTable();
-    var Style = "border-collapse:collapse;padding:0;";
+    var Style = "border-collapse:collapse;padding:0;margin:0;";
     var $Row;
     var LastRowIndex = 0;
-    var uName = RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
+    var $FixedColHeader = new $("<DIV/>").css({ display: "none", position: "absolute", top: "0px", left: "0px" });
+    var $FixedRowHeader = new $("<DIV/>").css({ display: "none", position: "absolute", top: "0px", left: "0px" });
+    var LastObjType = "";
+    var HasFixedRows = false;
+    var HasFixedCols = false;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-
     Style += GetElementsStyle(RIContext.CurrObj.Elements);
     $Tablix.attr("Style", Style);
-
-    //var $Col;
-    //var $ColGroup = $("<ColGroup/>");
-    // $.each(Context.CurrObj.ColumnWidths.Columns, function (Index, Obj) {
-    //    $Col = new $("<Col/>");
-    //    $Col.attr("Style", "width:" + Obj.Width + "mm;" + "max-width:" + Obj.Width + "mm;");
-    //   $ColGroup.append($Col);
-    // })
-    //    $Tablix.append($ColGroup);
-
+    
     $Row = new $("<TR/>");
     $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
+        
+
         if (Obj.RowIndex != LastRowIndex) {
             $Tablix.append($Row);
+            
+            //Handle fixed col header
+            if (RIContext.CurrObj.TablixRows[Index - 1].Type == "ColumnHeader")
+                $FixedColHeader.append($Row.clone(true, true));
+
             $Row = new $("<TR/>");
             LastRowIndex = Obj.RowIndex;
         }
 
+        //Handle fixed row header
+        if (Obj.Type != "Corner" && LastObjType == "Corner") {
+            $FixedRowHeader.append($Row.clone(true, true));
+        }
+        if (Obj.Type != "RowHeader" && LastObjType == "RowHeader") {
+            $FixedRowHeader.append($Row.clone(true, true));
+        }
+        if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows == 1)
+            HasFixedRows = true;
+        if (Obj.Type != "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn == 1)
+            HasFixedCols = true;
+        
         if (Obj.Type == "BodyRow") {
             $.each(Obj.Cells, function (BRIndex, BRObj) {
                 $Row.append(WriteTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
             })
         }
         else {
-            
             if (Obj.Cell != null) $Row.append(WriteTablixCell(RIContext, Obj, Index));
         }
+        LastObjType = Obj.Type;
     })
     $Tablix.append($Row);
 
-    //Add Tablix bottom
-    $Row = new $("<TR/>");
-    $Row.attr("id", uName + "foot");
-    $Row.attr("Style", "height:0;padding:0;margin:0;");
-    $Tablix.append($Row);
-    return $Tablix;
+    if (HasFixedCols)
+        $Tablix.append($FixedColHeader);
+    else
+        $FixedColHeader = null;
+
+    if (HasFixedRows)
+        $Tablix.append($FixedRowHeader);
+    else
+        $FixedRowHeader = null;
+
+    var ret = $("<div class='divWithFloatingRow' style='position:relative'></div").append($FixedColHeader);
+    ret.append($Tablix);
+    RIContext.RS.FloatingHeaders.push(new FloatingHeader(ret, $FixedColHeader, $FixedRowHeader));
+    return ret;
 }
 function WriteSubreport(RIContext) {
     //var $RI;        //This is the ReportItem Object
@@ -868,64 +932,88 @@ function WriteSubreport(RIContext) {
     //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
+
+//Helper fucntions
+function GetHeight($Obj) {
+    var height;
+
+    var $copied_elem = $Obj.clone()
+                        .css({
+                            visibility: "hidden"
+                        });
+
+    //Image size cannot change so do not load.
+    //$copied_elem.find('img').removeAttr('src');
+    //$copied_elem.find('img').removeAttr('onload');
+    //$copied_elem.find('img').removeAttr('alt');
+    $copied_elem.find('img').remove();
+
+    $("body").append($copied_elem);
+    height = $copied_elem.outerHeight() + "px";
+
+    $copied_elem.remove();
+
+    //Return in mm
+    return ConvertToMM(height);
+
+}
 function GetElementsStyle(CurrObj) {
     var Style = "";
 
     Style += GetStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
-    Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
-    Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+    Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);    
     return Style;
 }
 function GetBorderSize(CurrObj, Side) {
     var Obj;
+    var DefaultStyle;
+    var SideStyle;
+    var DefaultSize;
+    var SideSize;
 
     //Need left, top, right bottom border
     Obj = CurrObj.Elements.SharedElements.Style;
     if (Obj != null) {
-        if (Side == "Left")
-            if (Obj.BorderWidthLeft != null)
-                return ConvertToMM(Obj.BorderWidthLeft);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Right")
-            if (Obj.BorderWidthRight != null)
-                return ConvertToMM(Obj.BorderWidthRight);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Top")
-            if (Obj.BorderWidtTop != null)
-                return ConvertToMM(Obj.BorderWidthTop);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Bottom")
-            if (Obj.BorderWidthBottom != null)
-                return ConvertToMM(Obj.BorderWidthBottom);
-            else
-                return ConvertToMM(Obj.BorderWidth);
+        DefaultStyle = Obj.BorderStyle;
+        SideStyle = Obj["BorderStyle" + Side];
+        DefaultSize = Obj.BorderWidth;
+        SideSize = Obj["BorderWidth" + Side];
     }
-    Obj = CurrObj.Elements.NonSharedElements.Style;
-    if (Obj != null)
-        if (Side == "Left")
-            if (Obj.BorderWidthLeft != null)
-                return ConvertToMM(Obj.BorderWidthLeft);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Right")
-            if (Obj.BorderWidthRight != null)
-                return ConvertToMM(Obj.BorderWidthRight);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Top")
-            if (Obj.BorderWidtTop != null)
-                return ConvertToMM(Obj.BorderWidthTop);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-        else if (Side == "Bottom")
-            if (Obj.BorderWidthBottom != null)
-                return ConvertToMM(Obj.BorderWidthBottom);
-            else
-                return ConvertToMM(Obj.BorderWidth);
-    return 0;
+    else {
+        Obj = CurrObj.Elements.NonSharedElements.Style;
+        if (Obj != null) {
+            DefaultStyle = Obj.BorderStyle;
+            SideStyle = Obj["BorderStyle" + Side];
+            DefaultSize = Obj.BorderWidth;
+            SideSize = Obj["BorderWidth" + Side];
+        }
+    }
+    
+    if (SideStyle == null && DefaultStyle == 0)
+        return 0;
+    if (SideStyle == 0)
+        return 0;
+    if (SideSize == null)
+        return ConvertToMM(DefaultSize);
+    else
+        return ConvertToMM(SideSize);
+}
+function GetPaddingSize(CurrObj, Side) {
+    var Obj;
+    var SideSize;
+
+    
+    Obj = CurrObj.Elements.SharedElements.Style;
+    if (Obj != null) {
+        SideSize = Obj["Padding" + Side];
+    }
+    else {
+        Obj = CurrObj.Elements.NonSharedElements.Style;
+        if (Obj != null) {
+            SideSize = Obj["Padding" + Side];
+        }
+    }
+    return ConvertToMM(SideSize);
 }
 function GetFullBorderStyle(CurrObj) {
     var Style = "";
@@ -1212,7 +1300,6 @@ function GetDefaultHTMLTable() {
     $NewObj.attr("CELLPADDING", 0);
     return $NewObj;
 }
-
 function GetBorderStyle(RPLStyle) {
     switch (RPLStyle) {
         case 0:
@@ -1240,12 +1327,11 @@ function GetMeasurmentsObj(CurrObj, Index) {
         retval = CurrObj.Measurement.Measurements[Index];
     return retval;
 }
-function GetTableRow() {
-    var retval = new $("<TR/>");
-    retval.attr("Height", 0);
-    return retval;
-}
 function ConvertToMM(ConvertFrom) {
+    
+    if (ConvertFrom == null)
+        return 0;
+    
     var unit = ConvertFrom.match(/\D+$/);  // get the existing unit
     var value = ConvertFrom.match(/\d+/);  // get the numeric component
 
@@ -1277,36 +1363,7 @@ function ConvertToMM(ConvertFrom) {
     return value;
 }
 
-function HeaderScroll($CloneObj,CloneID,$TopObj, $BottomObj) {
-    var scroll = $(window).scrollTop();
-    var anchor_top = $TopObj.offset().top;
-    var anchor_bottom = $BottomObj.offset().top;
-    if (scroll > anchor_top && scroll < anchor_bottom) {
-        clone_table = $("#" + CloneID);
-        if (clone_table.length === 0) {
-            clone_table = $CloneObj.clone();
-            clone_table.attr({ id: CloneID })
-            .css({
-                position: "fixed",
-                "pointer-events": "none",
-                top: 0
-            })
-            .width($TopObj.width());
 
-            $("#table-container").append(clone_table);
-            // dont hide the whole table or you lose border style & 
-            // actively match the inline width to the #maintable width if the 
-            // container holding the table (window, iframe, div) changes width          
-            clone_table.width($TopObj.width());
 
-            // clone tbody is hidden
-            clone_table.css({
-                visibility: "hidden"
-            });
-           
-        }
-    }
-    else {
-        $("#" + CloneID).remove();
-    }
-}
+
+

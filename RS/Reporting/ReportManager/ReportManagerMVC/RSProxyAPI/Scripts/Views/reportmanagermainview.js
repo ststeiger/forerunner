@@ -24,6 +24,10 @@ var g_App = g_App || {};
 
         return this;
     },
+    sectionHeader: function () {
+        if (this.model.path == '/') return 'Home';
+        return 'Home' + this.model.path;
+    }
   });
   
   g_App.CatalogItemView = Backbone.View.extend({

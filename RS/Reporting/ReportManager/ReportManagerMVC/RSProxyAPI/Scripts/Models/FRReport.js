@@ -84,10 +84,10 @@ function SetColHeaderOffset($Tablix, $ColHeader,RS) {
     offset = $Tablix.offset();
     scrollLeft = $(window).scrollLeft();
     
-    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
-        $ColHeader.fadeIn('slow');
+    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {        
         //$(".FloatingRow", this).css("display", "block");
         $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
+        $ColHeader.fadeIn('fast');
     }
     else {
         $ColHeader.css("display", "none");
@@ -108,10 +108,10 @@ function SetRowHeaderOffset($Tablix,$RowHeader,RS){
     offset = $Tablix.offset();
     scrollTop = $(window).scrollTop();
     //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
-    if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {
-        $RowHeader.fadeIn('slow');
+    if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
         //$(".FloatingRow", this).css("display", "block");
         $RowHeader.css("top", Math.min(scrollTop - offset.top + toolbarOffset, $Tablix.height() - $RowHeader.height() + toolbarOffset) + "px");
+        $RowHeader.fadeIn('fast');
     }
     else {
         $RowHeader.css("display", "none");
@@ -327,7 +327,7 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     
     if (HasToolbar) {
         var $tb = GetToolbar(UID);
-        RS.ToolbarHeight = GetHeight($tb) * 3.78;
+        RS.ToolbarHeight = GetHeight($tb) * 3.78;  //convert to px
 
         if (ToolbarUID == null) {
             $Row = new $("<TR/>");            
@@ -342,6 +342,11 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
         } else {
             $Container = $('#' + ToolbarUID);
             $Container.append($tb);
+
+            //Total hack for now
+            if ($("#mainSectionHeader") != null) {                
+                RS.ToolbarHeight += $("#mainSectionHeader").outerHeight();                
+            }
         }
 
     }

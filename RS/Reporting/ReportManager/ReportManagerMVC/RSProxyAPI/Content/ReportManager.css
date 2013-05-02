@@ -19,19 +19,13 @@ table,td,tr {
 
 header#topdiv {
   border-top: 10px solid black;
-  border-bottom: 1px solid gray;
   position: fixed;
   top:0px;
   left:0px;
   width:100%;
-  height: 35px;
+  height: 55px;
   background-color: white;
   z-index: 1;
-}
-
-.spacer {
-  height:46px;
-  display:block;
 }
 
 footer#bottomdiv {
@@ -45,8 +39,8 @@ footer#bottomdiv {
   z-index: 1;
 }
 
-.spacer {
-  height:46px;
+#headerspacer {
+  height:66px;
   display:block;
 }
 
@@ -56,7 +50,11 @@ footer#bottomdiv {
 }
 
 section#mainSectionHeader {
-  border-bottom: 1px solid gray;
+  height: 20px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  width:100%;
+  background-color: white;
 }
 
 section#pageSection {
@@ -80,7 +78,6 @@ section#pageSection {
 .spacer5mm {
   min-width:5mm;
 }
-
 
 .loading-indicator  {
   border: solid 2px #86A5AD;
@@ -141,7 +138,7 @@ section#pageSection {
 }
 
 .catalogitem {
-  width: 170px;
+  width: 250px;
   display: inline;
 }
 
@@ -152,7 +149,7 @@ and (min-width : 400px)
 and (orientation : landscape) {
 /* Styles */
 .catalogitem {
-  width: 90px;
+  width: 180px;
 }
 
 .sc-content {
@@ -195,7 +192,7 @@ and (max-width : 320px)
 and (orientation : portrait) {
 /* Styles */
 .catalogitem {
-  width: 90px;
+  width: 120px;
 }
 
 .sc-content {
@@ -238,7 +235,7 @@ and (max-device-width : 1024px)
 and (orientation : landscape) {
 /* Styles */
 .catalogitem {
-  width: 170px;
+  width: 250px;
 }
 
 .sc-content {
@@ -262,14 +259,14 @@ and (max-device-width : 1024px)
 and (orientation : portrait) {
 /* Styles */
 .catalogitem {
-  width: 170px;
+  width: 250px;
 }
 
 .sc-content {
   display:inline;
 }
 
-.sky-carousel {
+#browse-carousel {
   display: none;
 }
 
@@ -309,6 +306,6 @@ only screen and (min-device-pixel-ratio : 1.5)  {
 }
 
 .pagethumb {
-  width: 90px;
-  max-height: 120px;
+  width: 120px;
+  max-height: 160px;
 }

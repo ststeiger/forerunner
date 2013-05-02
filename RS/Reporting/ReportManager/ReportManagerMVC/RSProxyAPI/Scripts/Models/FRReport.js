@@ -328,15 +328,15 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     $Container.append($Slider);
 
     $Slider.carousel({
-        itemWidth: 85,
-        itemHeight: 120,
+        itemWidth: 120,
+        itemHeight: 160,
         distance: 8,
         selectedItemDistance: 25,
         selectedItemZoomFactor: 1,
         unselectedItemZoomFactor: 0.67,
         unselectedItemAlpha: 0.6,
         motionStartDistance: 85,
-        topMargin: 60,
+        topMargin: 30,
         gradientStartPoint: 0.35,
         gradientOverlayColor: "#f5f5f5",
         gradientOverlaySize: 95,

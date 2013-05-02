@@ -26,9 +26,10 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = new $("<div class='divWithFloatingRow' style='position:relative'></div");
+    this.$ReportContainer = new $("<div style='position:relative'></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
+    this.$PageNav;
 }
 function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
     //This will be neeeded to Row/Col offsets and performance
@@ -247,7 +248,69 @@ function SetImage(Data, RS) {
         RS.Pages[PageNum] = new ReportPage(null, null);
     RS.Pages[PageNum].Image = Data;
 }
+function CreateSlider(RS, ReportViewerUID, SliderUID) {
+    $Container = $('#' + SliderUID);
+    $Slider = new $('<DIV />');
+    $Slider.attr('class', 'sky-carousel');
+    $Slider.attr('style', 'height: 150px');
+    $SliderWrapper = new $('<DIV />');
+    $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+    $Slider.append($SliderWrapper);
+    $List = new $('<UL />');
+    $List.attr('class', 'sky-carousel-container');
+    for (var i = 1; i <= RS.NumPages; i++) {
+        
+        pHeight ="11in",
+        pWidth = "11in";
+        //pHeight = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageHeight * 0.0393700787 + "in",
+        //pWidth = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageWidth * 0.0393700787 + "in",
 
+        var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
+                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
+        $ListItem = new $('<LI />');
+        $List.append($ListItem);
+        $Thumbnail = new $('<IMG />');
+        $Thumbnail.attr('class', 'pagethumb');
+        $Thumbnail.attr('src', url);
+        $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i + ")");
+        $Caption = new $('<DIV />');
+        $Caption.attr('class', 'sc-content');
+        // Need to add onclick
+        $ListItem.append($Thumbnail);
+    }
+
+    $SliderWrapper.append($List);
+    $Container.append($Slider);
+
+    $Slider.carousel({
+        itemWidth: 85,
+        itemHeight: 120,
+        distance: 8,
+        selectedItemDistance: 25,
+        selectedItemZoomFactor: 1,
+        unselectedItemZoomFactor: 0.67,
+        unselectedItemAlpha: 0.6,
+        motionStartDistance: 85,
+        topMargin: 60,
+        gradientStartPoint: 0.35,
+        gradientOverlayColor: "#f5f5f5",
+        gradientOverlaySize: 95,
+        reflectionDistance: 1,
+        reflectionAlpha: 0.35,
+        reflectionVisible: true,
+        reflectionSize: 35,
+        selectByClick: true
+    });
+
+    RS.$PageNav = $Container;
+    RS.$PageNav.css("display","none");
+}
+function ShowNav(UID) {
+    if (Reports[UID].$PageNav.is(":visible"))
+        Reports[UID].$PageNav.fadeOut("slow")
+    else
+        Reports[UID].$PageNav.fadeIn("slow")    
+}
 
 //Page Loading
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
@@ -298,56 +361,6 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
     LoadPage(RS, PageNum, null, false, callback);    
 }
-
-function CreateSlider(RS, ReportViewerUID, SliderUID) {
-    $Container = $('#' + SliderUID);
-    $Slider = new $('<DIV />');
-    $Slider.attr('class', 'sky-carousel');
-    $Slider.attr('style', 'height: 150px');
-    $SliderWrapper = new $('<DIV />');
-    $SliderWrapper.attr('class', 'sky-carousel-wrapper');
-    $Slider.append($SliderWrapper);
-    $List = new $('<UL />');
-    $List.attr('class', 'sky-carousel-container');
-    for (var i = 1; i <= RS.NumPages; i++) {
-        var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
-                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=8in&PageWidth=11in';
-        $ListItem = new $('<LI />');
-        $List.append($ListItem);
-        $Thumbnail = new $('<IMG />');
-        $Thumbnail.attr('class', 'pagethumb');
-        $Thumbnail.attr('src', url);
-        $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i + ")");
-        $Caption = new $('<DIV />');
-        $Caption.attr('class', 'sc-content');
-        // Need to add onclick
-        $ListItem.append($Thumbnail);
-    }
-
-    $SliderWrapper.append($List);
-    $Container.append($Slider);
-
-    $Slider.carousel({
-        itemWidth: 85,
-        itemHeight: 120,
-        distance: 8,
-        selectedItemDistance: 25,
-        selectedItemZoomFactor: 1,
-        unselectedItemZoomFactor: 0.67,
-        unselectedItemAlpha: 0.6,
-        motionStartDistance: 85,
-        topMargin: 60,
-        gradientStartPoint: 0.35,
-        gradientOverlayColor: "#f5f5f5",
-        gradientOverlaySize: 95,
-        reflectionDistance: 1,
-        reflectionAlpha: 0.35,
-        reflectionVisible: true,
-        reflectionSize: 35,
-        selectByClick: true
-    });
-}
-
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  
     if (OldPage != null)
         if (OldPage.$Container != null)
@@ -394,20 +407,6 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     RemoveLoadingIndicator(RS);
     if (!LoadOnly)
         SetPage(RS, NewPageNum, OldPage);
-
-    //Get Thumbnail    
-    $.get(RS.ReportViewerAPI +"/GetThumbnail/", {
-        ReportServerURL: RS.ReportServerURL,
-        ReportPath: RS.ReportPath,
-        SessionID: RS.SessionID,
-        PageNumber: NewPageNum,
-        PageHeight: RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageHeight * 0.0393700787 + "in",
-        PageWidth: RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageWidth * 0.0393700787 + "in",
-    })
-    .done(function (Data) {
-        RS.Pages[NewPageNum].Image = Data; RS.Pages[NewPageNum].$Img.attr("src", RS.Pages[NewPageNum].Image); RS.Pages[NewPageNum].$Img.attr("alt", NewPageNum + ":");
-    })
-    .fail(function () { console.log("error"); })
 
 }
 function WriteSection(RIContext) {
@@ -481,7 +480,6 @@ function WriteRectangle(RIContext) {
 
     return RIContext.$HTMLParent;
 }
-
 function GetRectangleLayout(Measurements) {
     var l = new Layout()
    

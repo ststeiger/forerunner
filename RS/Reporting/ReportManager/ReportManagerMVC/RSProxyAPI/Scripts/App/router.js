@@ -48,18 +48,18 @@ var ApplicationRouter = Backbone.Router.extend({
                         g_App.ReportManagerMainView, { model: catalogItemsModel });
                         // Initialize the carousel
                         $('#browse-carousel').carousel({
-                            itemWidth: 170,
-                            itemHeight: 240,
+                            itemWidth: 250,
+                            itemHeight: 350,
                             distance: 15,
                             selectedItemDistance: 50,
                             selectedItemZoomFactor: 1,
                             unselectedItemZoomFactor: 0.67,
                             unselectedItemAlpha: 0.6,
-                            motionStartDistance: 170,
-                            topMargin: 119,
+                            motionStartDistance: 250,
+                            topMargin: 80,
                             gradientStartPoint: 0.35,
                             gradientOverlayColor: "#f5f5f5",
-                            gradientOverlaySize: 190,
+                            gradientOverlaySize: 200,
                             reflectionDistance: 1,
                             reflectionAlpha: 0.35,
                             reflectionVisible: true,

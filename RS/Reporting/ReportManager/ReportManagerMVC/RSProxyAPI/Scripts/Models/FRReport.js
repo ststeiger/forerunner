@@ -360,19 +360,7 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
     LoadPage(RS, PageNum, null, false, callback);    
-}
-        itemWidth: 120,
-        itemHeight: 160,
-        topMargin: 30,
-        gradientStartPoint: 0.35,
-        gradientOverlayColor: "#f5f5f5",
-        gradientOverlaySize: 95,
-        reflectionDistance: 1,
-        reflectionAlpha: 0.35,
-        reflectionVisible: true,
-        reflectionSize: 35,
-        selectByClick: true
-    });
+
 }
 
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  

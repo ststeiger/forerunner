@@ -114,6 +114,25 @@ namespace Forerunner.ReportViewer
             script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
             return script;
         }
+
+        public void pingSession(string reportPath, string SessionID)
+        {
+            byte[] result = null;
+            string format = "RPL";
+            string encoding;
+            string mimeType;
+            string extension;
+            Warning[] warnings = null;
+            string[] streamIDs = null;
+            string devInfo =  @"<DeviceInfo></DeviceInfo>";
+
+            ExecutionHeader execHeader = new ExecutionHeader();
+            rs.ExecutionHeaderValue = execHeader;
+            rs.ExecutionHeaderValue.ExecutionID = SessionID;
+
+            result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+        }
+
         public string GetReportJson(string reportPath,string SessionID,string PageNum)
         {
             byte[] result = null;

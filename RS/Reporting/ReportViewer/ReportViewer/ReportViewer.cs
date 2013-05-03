@@ -1979,7 +1979,7 @@ namespace Forerunner.ReportViewer
              prop.Add("Description", "String", 0x09);
              prop.Add("Location", "String", 0x0A);
              prop.Add("Language", "String", 0x0B);
-             prop.Add("ExecTime", "Int64", 0x0C);
+             prop.Add("ExecTime", "DateTime", 0x0C);
              prop.Add("Author", "String", 0x0D);
              prop.Add("AutoRefresh", "Int32", 0x0E);
              prop.Add("ReportName", "String", 0x0F);

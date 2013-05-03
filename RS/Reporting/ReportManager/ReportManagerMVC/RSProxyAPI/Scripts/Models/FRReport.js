@@ -666,7 +666,8 @@ function WriteRichText(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
-    var $NewObj = $("<IMG/>");
+    var $NewObj = new Image();
+
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
 
@@ -684,16 +685,21 @@ function WriteImage(RIContext) {
         RIContext.$HTMLParent.addClass("overflow-hidden");
     }
 
-    $NewObj.attr("src", Src);
-    $NewObj.attr("Style", Style);
-    $NewObj.attr("alt", "Cannot display image");
-    $NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
+    $NewObj.src = Src;
+    $NewObj.style = Style;
+    $NewObj.alt = "Cannot display image";
+
+    $NewObj.onload = function () {
+        WriteActionImageMapAreas(RIContext, this.width, this.height);
+        ResizeImage(this, sizingType, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
+    };
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         var $node = $("<a/>");
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
         RIContext.$HTMLParent.append($node);
     }
+
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
@@ -714,7 +720,7 @@ function WriteChartImage(RIContext) {
     $NewObj.alt = "Cannot display chart image";
     $NewObj.onload = function () {
         WriteActionImageMapAreas(RIContext, this.width, this.height);
-        //ResizeImage(this);
+        ResizeImage(this, 0, "", "");
     };
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
@@ -822,6 +828,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                     $(img).css("width", width * ratio + "mm");                   
                     $(img).css("max-height", maxHeight + "mm");
                     $(img).css("max-width", width * ratio + "mm");
+                    $(img).css("min-height", maxHeight + "mm");
+                    $(img).css("min-width", width * ratio + "mm");
                 }
                 else {
                     ratio = maxWidth / width;
@@ -830,6 +838,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                     $(img).css("height", height * ratio + "mm");
                     $(img).css("max-width", maxWidth + "mm");
                     $(img).css("max-height", height * ratio + "mm");
+                    $(img).css("min-width", maxWidth + "mm");
+                    $(img).css("min-height", height * ratio + "mm");
                 }
             }
             break;

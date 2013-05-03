@@ -400,16 +400,43 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     RS.SessionID = Data.SessionID;
     RS.NumPages = Data.NumPages;
 
-
-    //Write Style   
-    $Report.attr("Style", GetStyle(Data.Report.PageContent.PageStyle)); 
     //Sections
-    $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
+    if (Data.Type != undefined && Data.Type == "Parameters") {
+        WriteParameterPanel(new ReportItemContext(RS, null, null, Data, $Report, ""));
+    }
+    else {
+        //Write Style   
+        $Report.attr("Style", GetStyle(Data.Report.PageContent.PageStyle));
+        $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
+    }
 
     RemoveLoadingIndicator(RS);
     if (!LoadOnly)
         SetPage(RS, NewPageNum, OldPage);
 
+}
+function WriteParameterPanel(RIContext) {
+    $.each(RIContext.CurrObjParent.ParametersList, function (Index, Obj) {
+        var $ParameterContainer = $("<Div/>");
+        switch (Obj.Type) {
+            case "Boolean":
+                var radioValues = new Array();
+                radioValues[0] = "True";
+                radioValues[1] = "False";
+                WriteRadio(Obj.Name, radioValues, $ParameterContainer);
+                break;
+            case "DateTime":
+                break;
+            case "Integer":
+                break;
+            case "Float":
+                break;
+            case "String":
+                break;
+        }
+
+        RIContext.$HTMLParent.append($ParameterContainer);
+    });
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
@@ -618,28 +645,32 @@ function WriteRichText(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
-    var $NewObj = $("<IMG/>");
+    //var $NewObj = $("<IMG/>");   
+    //$NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");    
+
+    var $NewObj = new Image();
+
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-    //Hack for Image size, need to handle clip, fit , fit proportional
+    
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-
-    var containerHeight = RIContext.CurrLocation.Height;
-    var containerWidth = RIContext.CurrLocation.Width;
 
     var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
     if (sizingType == 3) {
         RIContext.$HTMLParent.addClass("overflow-hidden");
     }
 
-    $NewObj.attr("src", Src);
-    $NewObj.attr("Style", Style);
-    $NewObj.attr("alt", "Cannot display image");
-    $NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
+    $NewObj.src = Src;
+    $NewObj.style = Style; 
+    $NewObj.alt = "Cannot display image";
+
+    $NewObj.onload = function () {
+        WriteActionImageMapAreas(RIContext, this.width, this.height);
+        ResizeImage(this, sizingType, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
+    };
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         var $node = $("<a/>");
@@ -751,49 +782,54 @@ function WriteActionImageMapAreas(RIContext, width, height) {
         RIContext.$HTMLParent.append($Map);
     }
 }
-function ResizeImage(img, sizingType, maxHeight, maxWidth) {
+function ResizeImage(img, sizingType, maxHeight, maxWidth) {    
     var ratio = 0;
-    var height = ConvertToMM($(img).height() + "px");
-    var width = ConvertToMM($(img).width() + "px");
+    var height = 0;
+    var width = 0;
 
-    switch (sizingType) {
-        case 0://AutoSize
-            $(img).css("height",height + "mm");
-            $(img).css("width", width + "mm");
-            break;
-        case 1://Fit
-            $(img).css("height", maxHeight + "mm");
-            $(img).css("width", maxWidth + "mm");
-            break;
-        case 2://Fit Proportional
-            if (height / maxHeight > 1 | width / maxWidth > 1) {
-                if ((height / maxHeight) >= (width / maxWidth)) {
-                    ratio = maxHeight / height;
+    height = ConvertToMM($(img).height() + "px");
+    width = ConvertToMM($(img).width() + "px");
+    if (height != 0 & width != 0) {
+        switch (sizingType) {
+            case 0://AutoSize
+                $(img).css("height", height + "mm");
+                $(img).css("width", width + "mm");
+                break;
+            case 1://Fit
+                $(img).css("height", maxHeight + "mm");
+                $(img).css("width", maxWidth + "mm");
+                break;
+            case 2://Fit Proportional
+                if (height / maxHeight > 1 | width / maxWidth > 1) {
+                    if ((height / maxHeight) >= (width / maxWidth)) {
+                        ratio = maxHeight / height;
 
-                    $(img).css("height", maxHeight + "mm");
-                    $(img).css("width", width * ratio + "mm");                   
-                    $(img).css("max-height", maxHeight + "mm");
-                    $(img).css("max-width", width * ratio + "mm");
+                        $(img).css("height", maxHeight + "mm");
+                        $(img).css("width", width * ratio + "mm");
+                        $(img).css("max-height", maxHeight + "mm");
+                        $(img).css("max-width", width * ratio + "mm");
+                    }
+                    else {
+                        ratio = maxWidth / width;
+
+                        $(img).css("width", maxWidth + "mm");
+                        $(img).css("height", height * ratio + "mm");
+                        $(img).css("max-width", maxWidth + "mm");
+                        $(img).css("max-height", height * ratio + "mm");
+                    }
                 }
-                else {
-                    ratio = maxWidth / width;
-
-                    $(img).css("width", maxWidth + "mm");
-                    $(img).css("height", height * ratio + "mm");
-                    $(img).css("max-width", maxWidth + "mm");
-                    $(img).css("max-height", height * ratio + "mm");
-                }
-            }
-            break;
-        case 3://Clip
-            $(img).css("height", ConvertToMM(img.naturalHeight + "px") + "mm");
-            $(img).css("width", ConvertToMM(img.naturalWidth + "px") + "mm");
-            $(img).css("max-height", ConvertToMM(img.naturalHeight + "px") + "mm");
-            $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
-            //Also add style overflow:hidden to it's parent container
-            break;
+                break;
+            case 3://Clip
+                $(img).css("height", ConvertToMM(img.naturalHeight + "px") + "mm");
+                $(img).css("width", ConvertToMM(img.naturalWidth + "px") + "mm");
+                $(img).css("max-height", ConvertToMM(img.naturalHeight + "px") + "mm");
+                $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
+                //Also add style overflow:hidden to it's parent container
+                break;
+            default:
+                break;
+        }
     }
-   
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");
@@ -937,8 +973,6 @@ function WriteSubreport(RIContext) {
         RIContext.$HTMLParent.append($LocDiv);
     });
 
-    //$EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
-    //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
 function WriteLine(RIContext) {
@@ -956,7 +990,26 @@ function WriteLine(RIContext) {
     return RIContext.$HTMLParent;
 
 }
+function WriteRadio(Name, ValueArray, $Container) {
+    var $lable = new $("<span/>");
+    $lable.html(Name);
+    $Container.append($lable);
 
+    for (value in ValueArray) {        
+        var $radioItem = new $("<input/>");
+        $radioItem.attr("type", "radio");
+        $radioItem.attr("name", Name + "_radio");
+        $radioItem.attr("value", "rb" + ValueArray[value]);
+        $radioItem.attr("id", Name + "_radio" + "_" + ValueArray[value]);
+
+        var $lableTrue = new $("<lable/>");
+        $lableTrue.html(ValueArray[value]);
+        $lableTrue.attr("for", Name + "_radio" + "_" + ValueArray[value]);
+        
+        $Container.append($radioItem);
+        $Container.append($lableTrue);
+    }   
+}
 
 //Helper fucntions
 function GetHeight($Obj) {

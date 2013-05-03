@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using Jayrock.Json;
 using System.Threading;
+using System.Reflection;
 
 namespace Forerunner.ReportViewer
 {
@@ -114,7 +115,7 @@ namespace Forerunner.ReportViewer
             script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
             return script;
         }
-        public string GetReportJson(string reportPath,string SessionID,string PageNum)
+        public string GetReportJson(string reportPath,string SessionID,string PageNum,ParameterValue[] parametersList=null)
         {
             byte[] result = null;
             string format = "RPL";
@@ -165,28 +166,40 @@ namespace Forerunner.ReportViewer
             try
             {
 
-                if (NewSession != "")           
+                if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else
                     execInfo = rs.LoadReport(reportPath, historyID);
-            
 
-                //rs.SetExecutionParameters(parameters, "en-us");
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
+                if (execInfo.ParametersRequired)
+                {
+                    if (parametersList == null)
+                    {
+                        ReportParameter[] reportParameter = execInfo.Parameters;
+                        return ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
+                    }
+                    else
+                    {
+                        rs.SetExecutionParameters(parametersList, "en-us");
+                    }
+                }
+                
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
                     return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
                 else
                     return "";
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 return e.Message;
             }
-        }
+        }        
+      
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum,string PageHeight, string PageWidth)
         {
             byte[] result = null;
@@ -301,6 +314,91 @@ namespace Forerunner.ReportViewer
 
         }
 
+        private string ConvertParamemterToJSON(ReportParameter[] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("SessionID");
+            w.WriteString(SessionID);
+            w.WriteMember("ReportServerURL");
+            w.WriteString(ReportServerURL);
+            w.WriteMember("ReportPath");
+            w.WriteString(reportPath);
+            w.WriteMember("NumPages");
+            w.WriteNumber(NumPages);
+
+            w.WriteMember("Type");
+            w.WriteString("Parameters");
+            w.WriteMember("Count");
+            w.WriteString(parametersList.Length.ToString());
+            w.WriteMember("ParametersList");
+            w.WriteStartArray();
+            foreach (ReportParameter parameter in parametersList)
+            {
+                w.WriteStartObject();
+                foreach (PropertyInfo proInfo in parameter.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (!proInfo.PropertyType.IsArray)
+                    {
+                        w.WriteMember(proInfo.Name);
+                        Object obj = proInfo.GetValue(parameter, null);
+
+                        if (obj == null)
+                            w.WriteString("");
+                        else
+                            w.WriteString(proInfo.GetValue(parameter, null).ToString());
+                    }                  
+                }
+
+                w.WriteMember("DefaultValues");
+                if (parameter.DefaultValues != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.DefaultValues)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
+                w.WriteMember("Dependencies");
+                if (parameter.Dependencies != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.Dependencies)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
+                w.WriteMember("ValidValues");
+                if (parameter.ValidValues != null)
+                {
+                    w.WriteStartArray();
+                    foreach (ValidValue item in parameter.ValidValues)
+                    {
+                        w.WriteStartObject();
+                        w.WriteMember(item.Label);
+                        w.WriteString(item.Value);
+                        w.WriteEndObject();
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+                w.WriteEndObject();
+            }
+
+            w.WriteEndArray();
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
     }
 
      class RPLReader
@@ -1960,7 +2058,7 @@ namespace Forerunner.ReportViewer
              prop.Add("Description", "String", 0x09);
              prop.Add("Location", "String", 0x0A);
              prop.Add("Language", "String", 0x0B);
-             prop.Add("ExecTime", "Int64", 0x0C);
+             prop.Add("ExecTime", "DateTime", 0x0C);
              prop.Add("Author", "String", 0x0D);
              prop.Add("AutoRefresh", "Int32", 0x0E);
              prop.Add("ReportName", "String", 0x0F);

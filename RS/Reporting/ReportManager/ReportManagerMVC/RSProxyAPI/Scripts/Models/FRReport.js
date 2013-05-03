@@ -444,9 +444,14 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     RS.NumPages = Data.NumPages;
 
     RemoveLoadingIndicator(RS);
-    if (!LoadOnly) {
-        RenderPage(RS, NewPageNum);
-        SetPage(RS, NewPageNum, OldPage);
+    if (Data.Type != undefined && Data.Type == "Parameters") {
+        WriteParameterPanel(new ReportItemContext(RS, null, null, Data, $Report, ""));
+    }
+    else {
+        if (!LoadOnly) {
+            RenderPage(RS, NewPageNum);
+            SetPage(RS, NewPageNum, OldPage);
+        }
     }
 }
 function RenderPage(RS, pageNum) {
@@ -458,6 +463,29 @@ function RenderPage(RS, pageNum) {
     RS.Pages[pageNum].IsRendered = true;
    
 
+}
+function WriteParameterPanel(RIContext) {
+    $.each(RIContext.CurrObjParent.ParametersList, function (Index, Obj) {
+        var $ParameterContainer = $("<Div/>");
+        switch (Obj.Type) {
+            case "Boolean":
+                var radioValues = new Array();
+                radioValues[0] = "True";
+                radioValues[1] = "False";
+                WriteRadio(Obj.Name, radioValues, $ParameterContainer);
+                break;
+            case "DateTime":
+                break;
+            case "Integer":
+                break;
+            case "Float":
+                break;
+            case "String":
+                break;
+        }
+
+        RIContext.$HTMLParent.append($ParameterContainer);
+    });
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
@@ -1013,6 +1041,26 @@ function WriteLine(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
     return RIContext.$HTMLParent;
 
+}
+function WriteRadio(Name, ValueArray, $Container) {
+    var $lable = new $("<span/>");
+    $lable.html(Name);
+    $Container.append($lable);
+
+    for (value in ValueArray) {
+        var $radioItem = new $("<input/>");
+        $radioItem.attr("type", "radio");
+        $radioItem.attr("name", Name + "_radio");
+        $radioItem.attr("value", "rb" + ValueArray[value]);
+        $radioItem.attr("id", Name + "_radio" + "_" + ValueArray[value]);
+
+        var $lableTrue = new $("<lable/>");
+        $lableTrue.html(ValueArray[value]);
+        $lableTrue.attr("for", Name + "_radio" + "_" + ValueArray[value]);
+
+        $Container.append($radioItem);
+        $Container.append($lableTrue);
+    }
 }
 
 

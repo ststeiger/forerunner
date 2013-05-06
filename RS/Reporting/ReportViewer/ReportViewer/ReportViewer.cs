@@ -202,7 +202,7 @@ namespace Forerunner.ReportViewer
                         rs.SetExecutionParameters(parametersList, "en-us");
                     }
                 }
-                
+
                 if (execInfo.ParametersRequired)
                 {
                     if (parametersList == null)
@@ -229,8 +229,8 @@ namespace Forerunner.ReportViewer
                 Console.WriteLine(e.Message);
                 return e.Message;
             }
-        }        
-      
+        }
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, string PageHeight, string PageWidth)
         {
             byte[] result = null;
@@ -442,35 +442,7 @@ namespace Forerunner.ReportViewer
 
             return w.ToString();
         }
-                }
-                else
-                    w.WriteString("");
-
-                w.WriteMember("ValidValues");
-                if (parameter.ValidValues != null)
-                {
-                    w.WriteStartArray();
-                    foreach (ValidValue item in parameter.ValidValues)
-                    {
-                        w.WriteStartObject();
-                        w.WriteMember(item.Label);
-                        w.WriteString(item.Value);
-                        w.WriteEndObject();
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-                w.WriteEndObject();
-            }
-
-            w.WriteEndArray();
-            w.WriteEndObject();
-
-            return w.ToString();
-        }
     }
-
 
 
     class RPLReader

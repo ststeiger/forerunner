@@ -104,10 +104,10 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, [
                 'FRReportViewerMainView'], '',
                 g_App.FRReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            var callBack = function (RS) {
-                CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
-            };
-            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', callBack);
+           // var callBack = function (RS) {
+            //    CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
+            //};
+            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', 'bottomdiv');
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

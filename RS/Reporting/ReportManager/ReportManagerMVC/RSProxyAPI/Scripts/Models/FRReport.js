@@ -1,5 +1,6 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
+setInterval(function () { SessionPing(); }, 10000);
 
 // Structures
 function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style,CurrLocation) {
@@ -30,6 +31,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
+    this.CreateNav = false;
 }
 function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
     //This will be neeeded to Row/Col offsets and performance
@@ -42,6 +44,7 @@ function ReportPage($Container, ReportObj) {
     this.$Container = $Container;
     this.Image = null;
     this.$Img = new $("<IMG/>");
+    this.IsRendered = false;
 }
 function Layout() {
     this.ReportItems = new Object();
@@ -62,6 +65,19 @@ function ReportItemLocation(Index) {
 }
 
 //Page Management
+function SessionPing() {
+
+    $.each(Reports, function (Index, RS) {
+        $.get(RS.ReportViewerAPI + "/PingSession/", {
+            ReportServerURL: RS.ReportServerURL,
+            ReportPath: RS.ReportPath,
+            SessionID: RS.SessionID         
+        })
+        .done(function (Data) {  })
+        .fail(function () { console.log("error"); })
+    });
+
+}
 function UpdateTableHeaders() {
 
     $.each(Reports, function (repIndex, RS) {
@@ -69,8 +85,10 @@ function UpdateTableHeaders() {
             SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader, RS);
             SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader, RS);
         });
-        if (RS.HasToolbar)
-            SetRowHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar,RS);
+        if (RS.HasToolbar) {
+            SetRowHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar, RS);
+            SetColHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar, RS);
+        }
     });
 
     
@@ -84,14 +102,14 @@ function SetColHeaderOffset($Tablix, $ColHeader,RS) {
     offset = $Tablix.offset();
     scrollLeft = $(window).scrollLeft();
     
-    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
-        $ColHeader.fadeIn('slow');
+    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {        
         //$(".FloatingRow", this).css("display", "block");
         $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
+        $ColHeader.fadeIn('fast');
     }
     else {
         $ColHeader.css("display", "none");
-        $ColHeader.css("left", "0px");
+        //$ColHeader.css("left", "0px");
     }
 }
 function SetRowHeaderOffset($Tablix,$RowHeader,RS){
@@ -108,14 +126,14 @@ function SetRowHeaderOffset($Tablix,$RowHeader,RS){
     offset = $Tablix.offset();
     scrollTop = $(window).scrollTop();
     //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
-    if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {
-        $RowHeader.fadeIn('slow');
+    if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
         //$(".FloatingRow", this).css("display", "block");
         $RowHeader.css("top", Math.min(scrollTop - offset.top + toolbarOffset, $Tablix.height() - $RowHeader.height() + toolbarOffset) + "px");
+        $RowHeader.fadeIn('fast');
     }
     else {
         $RowHeader.css("display", "none");
-        $RowHeader.css("top", "0px");
+        //$RowHeader.css("top", "0px");
     }
 }
 function HideTableHeaders() {
@@ -125,7 +143,10 @@ function HideTableHeaders() {
             if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
             if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
         });
+        if (RS.HasToolbar)
+            RS.$FloatingToolbar.css("display", "none");
     });
+    
 
 }
 function SetActionCursor(Ob) {
@@ -138,6 +159,8 @@ function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
 function SetPage(RS, NewPageNum, OldPage) {
+    if (!RS.Pages[NewPageNum].IsRendered)
+        RenderPage(RS, NewPageNum);
     RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
     RS.Pages[NewPageNum].$Container.fadeIn("normal");
     if (OldPage != null)
@@ -236,11 +259,12 @@ function NavToPage(RS, NewPageNum) {
 function ShowParms() {
     alert("Show");
 }
-function LoadAllPages(RS) {
+function LoadAllPages(RS,InitPage) {
 
     for (var i = 1; i <= RS.NumPages; i++)
         if (RS.Pages[i] == null)
-            LoadPage(RS, i, null, true);
+            if (i != InitPage)
+                LoadPage(RS, i, null, true);
 
 }
 function SetImage(Data, RS) {
@@ -248,8 +272,8 @@ function SetImage(Data, RS) {
         RS.Pages[PageNum] = new ReportPage(null, null);
     RS.Pages[PageNum].Image = Data;
 }
-function CreateSlider(RS, ReportViewerUID, SliderUID) {
-    $Container = $('#' + SliderUID);
+function CreateSlider(RS, ReportViewerUID) {
+    $Container = RS.$PageNav;
     $Slider = new $('<DIV />');
     $Slider.attr('class', 'sky-carousel');
     $Slider.attr('style', 'height: 150px');
@@ -258,13 +282,21 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     $Slider.append($SliderWrapper);
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
-    for (var i = 1; i <= RS.NumPages; i++) {
-        
-        pHeight ="11in",
-        pWidth = "11in";
-        //pHeight = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageHeight * 0.0393700787 + "in",
-        //pWidth = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageWidth * 0.0393700787 + "in",
 
+    var i
+    var pHeight = 0;
+    var pWidth = 0;
+
+    for (i = 1; i <= RS.NumPages; i++) {
+        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height > pHeight)
+            pHeight = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height
+        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width > pWidth)
+        pWidth = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width
+    }
+    pHeight = (pHeight * 0.0393700787) + "in";
+    pWidth = (pWidth * 0.0393700787) + "in";
+    for ( i = 1; i <= RS.NumPages; i++) {
+        
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
                 + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
         $ListItem = new $('<LI />');
@@ -283,7 +315,7 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     $Container.append($Slider);
 
     $Slider.carousel({
-        itemWidth: 85,
+        itemWidth: 120,
         itemHeight: 120,
         distance: 8,
         selectedItemDistance: 25,
@@ -291,7 +323,7 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
         unselectedItemZoomFactor: 0.67,
         unselectedItemAlpha: 0.6,
         motionStartDistance: 85,
-        topMargin: 60,
+        topMargin: 30,
         gradientStartPoint: 0.35,
         gradientOverlayColor: "#f5f5f5",
         gradientOverlaySize: 95,
@@ -303,9 +335,12 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     });
 
     RS.$PageNav = $Container;
-    RS.$PageNav.css("display","none");
+    RS.$PageNav.css("display", "none");
+    RS.CreateNav = true;
 }
 function ShowNav(UID) {
+    if (!Reports[UID].CreateNav)
+        CreateSlider(Reports[UID], UID);
     if (Reports[UID].$PageNav.is(":visible"))
         Reports[UID].$PageNav.fadeOut("slow")
     else
@@ -316,7 +351,7 @@ function ShowNav(UID) {
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
     InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null)
 }
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, callback) {
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID) {
     var $Table = new $("<table/>");
     var $Row = new $("<TR/>");
     var $Cell;
@@ -324,10 +359,14 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, HasToolbar, $Row);
     
     Reports[UID] = RS;
+    if (NavUID != null) {
+        RS.$PageNav = $("#" + NavUID);
+        RS.$PageNav.css("display", "none");
+    }
     
     if (HasToolbar) {
         var $tb = GetToolbar(UID);
-        RS.ToolbarHeight = GetHeight($tb) * 3.78;
+        RS.ToolbarHeight = GetHeight($tb) * 3.78;  //convert to px
 
         if (ToolbarUID == null) {
             $Row = new $("<TR/>");            
@@ -342,6 +381,11 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
         } else {
             $Container = $('#' + ToolbarUID);
             $Container.append($tb);
+
+            //Total hack for now
+            if ($("#mainSectionHeader") != null) {                
+                RS.ToolbarHeight += $("#mainSectionHeader").outerHeight();                
+            }
         }
 
     }
@@ -359,11 +403,10 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     RS.$ReportContainer.append($Table);
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    LoadPage(RS, PageNum, null, false, callback);    
-
+    LoadPage(RS, PageNum, null, false, NavUID);    
 }
 
-function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  
+function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {  
     if (OldPage != null)
         if (OldPage.$Container != null)
             OldPage.$Container.fadeOut("fast");
@@ -381,7 +424,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {
         SessionID: RS.SessionID,
         PageNumber: NewPageNum
     })
-    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (callback != null) callback(RS); })
+    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (!LoadOnly) LoadAllPages(RS, NewPageNum); })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 
 }
@@ -401,18 +444,23 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     RS.NumPages = Data.NumPages;
 
     //Sections
+    RemoveLoadingIndicator(RS);
     if (Data.Type != undefined && Data.Type == "Parameters") {
         WriteParameterPanel(new ReportItemContext(RS, null, null, Data, $Report, ""));
     }
     else {
-        //Write Style   
-        $Report.attr("Style", GetStyle(Data.Report.PageContent.PageStyle));
-        $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
+        if (!LoadOnly) {
+            RenderPage(RS, NewPageNum);
+            SetPage(RS, NewPageNum, OldPage);
+        }
     }
-
-    RemoveLoadingIndicator(RS);
-    if (!LoadOnly)
-        SetPage(RS, NewPageNum, OldPage);
+}
+function RenderPage(RS, pageNum) {
+        //Write Style   
+    RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
+    $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
+    RS.Pages[pageNum].IsRendered = true;
+   
 
 }
 function WriteParameterPanel(RIContext) {
@@ -646,7 +694,7 @@ function WriteRichText(RIContext) {
 }
 function WriteImage(RIContext) {
     //var $NewObj = $("<IMG/>");   
-    //$NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");    
+    //$NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
 
     var $NewObj = new Image();
 
@@ -664,7 +712,7 @@ function WriteImage(RIContext) {
     }
 
     $NewObj.src = Src;
-    $NewObj.style = Style; 
+    $NewObj.style = Style;
     $NewObj.alt = "Cannot display image";
 
     $NewObj.onload = function () {
@@ -677,6 +725,7 @@ function WriteImage(RIContext) {
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
         RIContext.$HTMLParent.append($node);
     }
+
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
@@ -697,7 +746,7 @@ function WriteChartImage(RIContext) {
     $NewObj.alt = "Cannot display chart image";
     $NewObj.onload = function () {
         WriteActionImageMapAreas(RIContext, this.width, this.height);
-        //ResizeImage(this);
+        ResizeImage(this, 0, "", "");
     };
 
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
@@ -808,6 +857,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                         $(img).css("width", width * ratio + "mm");
                         $(img).css("max-height", maxHeight + "mm");
                         $(img).css("max-width", width * ratio + "mm");
+                    $(img).css("min-height", maxHeight + "mm");
+                    $(img).css("min-width", width * ratio + "mm");
                     }
                     else {
                         ratio = maxWidth / width;
@@ -816,6 +867,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                         $(img).css("height", height * ratio + "mm");
                         $(img).css("max-width", maxWidth + "mm");
                         $(img).css("max-height", height * ratio + "mm");
+                    $(img).css("min-width", maxWidth + "mm");
+                    $(img).css("min-height", height * ratio + "mm");
                     }
                 }
                 break;
@@ -989,6 +1042,26 @@ function WriteLine(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
     return RIContext.$HTMLParent;
 
+}
+function WriteRadio(Name, ValueArray, $Container) {
+    var $lable = new $("<span/>");
+    $lable.html(Name);
+    $Container.append($lable);
+
+    for (value in ValueArray) {
+        var $radioItem = new $("<input/>");
+        $radioItem.attr("type", "radio");
+        $radioItem.attr("name", Name + "_radio");
+        $radioItem.attr("value", "rb" + ValueArray[value]);
+        $radioItem.attr("id", Name + "_radio" + "_" + ValueArray[value]);
+
+        var $lableTrue = new $("<lable/>");
+        $lableTrue.html(ValueArray[value]);
+        $lableTrue.attr("for", Name + "_radio" + "_" + ValueArray[value]);
+
+        $Container.append($radioItem);
+        $Container.append($lableTrue);
+    }
 }
 function WriteRadio(Name, ValueArray, $Container) {
     var $lable = new $("<span/>");

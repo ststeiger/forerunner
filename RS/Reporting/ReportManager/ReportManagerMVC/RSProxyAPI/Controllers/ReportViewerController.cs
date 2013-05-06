@@ -16,6 +16,7 @@ namespace RSProxyAPI.Controllers
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
+        
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
@@ -76,5 +77,22 @@ namespace RSProxyAPI.Controllers
 
             return resp;
         }
+
+        [HttpGet]
+        public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            HttpResponseMessage resp;
+
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            rep.pingSession(ReportPath,SessionID);
+            resp = this.Request.CreateResponse();
+            resp.StatusCode = HttpStatusCode.OK;
+            return resp;
+            
+        }
+
     }
 }

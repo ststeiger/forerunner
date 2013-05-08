@@ -115,7 +115,6 @@ namespace Forerunner.ReportViewer
             script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
             return script;
         }
-
         public void pingSession(string reportPath, string SessionID)
         {
             byte[] result = null;
@@ -134,7 +133,7 @@ namespace Forerunner.ReportViewer
             result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
         }
 
-        public string GetReportJson(string reportPath, string SessionID, string PageNum, ParameterValue[] parametersList = null)
+        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
             byte[] result = null;
             string format = "RPL";
@@ -164,18 +163,6 @@ namespace Forerunner.ReportViewer
             //Delay just for testing
             //Thread.Sleep(1000);
 
-            // Prepare report parameter.
-            //ParameterValue[] parameters = new ParameterValue[3];
-            //parameters[0] = new ParameterValue();
-            //parameters[0].Name = "EmpID";
-            //parameters[0].Value = "288";
-            //parameters[1] = new ParameterValue();
-            //parameters[1].Name = "ReportMonth";
-            //parameters[1].Value = "6"; // June
-            //parameters[2] = new ParameterValue();
-            //parameters[2].Name = "ReportYear";
-            //parameters[2].Value = "2004";
-
             DataSourceCredentials[] credentials = null;
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
@@ -184,7 +171,6 @@ namespace Forerunner.ReportViewer
 
             try
             {
-
                 if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else
@@ -192,7 +178,7 @@ namespace Forerunner.ReportViewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (execInfo.ParametersRequired)
+                if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
                     if (parametersList == null)
                     {
@@ -201,7 +187,7 @@ namespace Forerunner.ReportViewer
                     }
                     else
                     {
-                        rs.SetExecutionParameters(parametersList, "en-us");
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
                 }
 
@@ -211,6 +197,7 @@ namespace Forerunner.ReportViewer
                     return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
                 else
                     return "";
+
             }
             catch (Exception e)
             {
@@ -218,6 +205,7 @@ namespace Forerunner.ReportViewer
                 return e.Message;
             }
         }
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, string PageHeight, string PageWidth)
         {
             byte[] result = null;
@@ -393,6 +381,19 @@ namespace Forerunner.ReportViewer
                 else
                     w.WriteString("");
 
+                w.WriteMember("Dependencies");
+                if (parameter.Dependencies != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.Dependencies)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
                 w.WriteMember("ValidValues");
                 if (parameter.ValidValues != null)
                 {
@@ -400,7 +401,9 @@ namespace Forerunner.ReportViewer
                     foreach (ValidValue item in parameter.ValidValues)
                     {
                         w.WriteStartObject();
-                        w.WriteMember(item.Label);
+                        w.WriteMember("Key");
+                        w.WriteString(item.Label);
+                        w.WriteMember("Value");
                         w.WriteString(item.Value);
                         w.WriteEndObject();
                     }
@@ -417,7 +420,6 @@ namespace Forerunner.ReportViewer
             return w.ToString();
         }
     }
-
 
 
     class RPLReader
@@ -2200,5 +2202,33 @@ namespace Forerunner.ReportViewer
             Index += Advance;
         }
 
+    }
+
+    public static class JsonUtility
+    {
+        public static ParameterValue[] GetParameterValue(string parameterList)
+        {
+            List<ParameterValue> list = new List<ParameterValue>();
+
+            using ( JsonTextReader reader = new JsonTextReader(new StringReader(parameterList)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+
+                JsonArray parameterArray = jsonObj["ParamsList"] as JsonArray;
+
+                foreach (JsonObject obj in parameterArray)
+                {
+                    ParameterValue pv = new ParameterValue();
+                    pv.Label = obj["Parameter"].ToString();
+                    pv.Name = obj["Parameter"].ToString();
+                    pv.Value = obj["Value"].ToString();
+
+                    list.Add(pv);
+                }
+            }
+
+            return list.ToArray();
+        }
     }
 }

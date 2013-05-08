@@ -31,6 +31,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
+    this.$Slider;
     this.CreateNav = false;
 }
 function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
@@ -274,9 +275,10 @@ function SetImage(Data, RS) {
 }
 function CreateSlider(RS, ReportViewerUID) {
     $Container = RS.$PageNav;
+    $Container.css("display", "block");
     $Slider = new $('<DIV />');
     $Slider.attr('class', 'sky-carousel');
-    $Slider.attr('style', 'height: 150px');
+    $Slider.attr('style', 'height: 150px; display: none;'); // Need to make this none
     $SliderWrapper = new $('<DIV />');
     $SliderWrapper.attr('class', 'sky-carousel-wrapper');
     $Slider.append($SliderWrapper);
@@ -301,13 +303,15 @@ function CreateSlider(RS, ReportViewerUID) {
                 + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
         $ListItem = new $('<LI />');
         $List.append($ListItem);
+        $Caption = new $('<DIV />');
+        $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
+        $Caption.attr('class', 'center');
         $Thumbnail = new $('<IMG />');
         $Thumbnail.attr('class', 'pagethumb');
         $Thumbnail.attr('src', url);
         $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i + ")");
-        $Caption = new $('<DIV />');
-        $Caption.attr('class', 'sc-content');
         // Need to add onclick
+        $ListItem.append($Caption);
         $ListItem.append($Thumbnail);
     }
 
@@ -335,16 +339,20 @@ function CreateSlider(RS, ReportViewerUID) {
     });
 
     RS.$PageNav = $Container;
-    RS.$PageNav.css("display", "none");
+    RS.$Slider = $Slider;
     RS.CreateNav = true;
 }
 function ShowNav(UID) {
     if (!Reports[UID].CreateNav)
         CreateSlider(Reports[UID], UID);
-    if (Reports[UID].$PageNav.is(":visible"))
-        Reports[UID].$PageNav.fadeOut("slow")
-    else
-        Reports[UID].$PageNav.fadeIn("slow")    
+    if (Reports[UID].$Slider.is(":visible")) {
+        Reports[UID].$Slider.fadeOut("slow");
+        Reports[UID].$PageNav.fadeOut("fast");
+    }
+    else {
+        Reports[UID].$PageNav.fadeIn("fast");
+        Reports[UID].$Slider.fadeIn("slow");
+    }
 }
 
 //Page Loading
@@ -1184,8 +1192,7 @@ function GetParameterControlStyle(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
     if (Obj.QueryParameter == "True")
-        $Control.addClass("required");
-
+        $Control.addClass("required"); 
     //$Control.attr("QueryParameter", Obj.QueryParameter);
     if (Obj.PromptUser == "True") {
         $Control.attr("Title", Obj.Prompt);

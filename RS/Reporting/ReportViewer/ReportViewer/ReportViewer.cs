@@ -177,6 +177,18 @@ namespace Forerunner.ReportViewer
                     execInfo = rs.LoadReport(reportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
+                if (execInfo.ParametersRequired)
+                {
+                    if (parametersList == null)
+                    {
+                        ReportParameter[] reportParameter = execInfo.Parameters;
+                        return ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
+                    }
+                    else
+                    {
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    }
+                }
 
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {

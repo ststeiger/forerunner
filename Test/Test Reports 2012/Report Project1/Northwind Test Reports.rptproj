@@ -43,6 +43,10 @@
       <FullPath>Lines.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Parameters.rdl</Name>
+      <FullPath>Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ProductSales.rdl</Name>
       <FullPath>ProductSales.rdl</FullPath>
     </ProjectItem>
@@ -71,8 +75,8 @@
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameters.rdl</Name>
-      <FullPath>Parameters.rdl</FullPath>
+      <Name>Customer Data.rdl</Name>
+      <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

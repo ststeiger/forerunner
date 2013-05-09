@@ -140,8 +140,8 @@ function SetRowHeaderOffset($Tablix,$RowHeader,RS){
     scrollTop = $(window).scrollTop();
     //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
     if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
-        //$(".FloatingRow", this).css("display", "block");
-        $RowHeader.css("top", Math.min(scrollTop - offset.top + toolbarOffset, $Tablix.height() - $RowHeader.height() + toolbarOffset) + "px");
+        //$RowHeader.css("display", "block");
+        $RowHeader.css("top", Math.min((scrollTop - offset.top) + toolbarOffset, ($Tablix.height() - $RowHeader.height()) + toolbarOffset) + "px");
         $RowHeader.fadeIn('fast');
     }
     else {
@@ -948,15 +948,15 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     else
         RowIndex = BodyCellRowIndex;
 
-        width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
-        height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
-        Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
+    width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
+    height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
+    Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
 
-        //Row and column span
-        if (Obj.RowSpan != null)
-            $Cell.attr("rowspan", Obj.RowSpan);
-        if (Obj.ColSpan != null)
-            $Cell.attr("colspan", Obj.ColSpan);
+    //Row and column span
+    if (Obj.RowSpan != null)
+        $Cell.attr("rowspan", Obj.RowSpan);
+    if (Obj.ColSpan != null)
+        $Cell.attr("colspan", Obj.ColSpan);
 
     //Background color goes on the cell
     if ((Obj.Cell.ReportItem.Elements.SharedElements.Style !=null) && (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null))
@@ -991,7 +991,7 @@ function WriteTablix(RIContext) {
             $Tablix.append($Row);
             
             //Handle fixed col header
-            if (RIContext.CurrObj.TablixRows[Index - 1].Type == "ColumnHeader")
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex-1].FixRows == 1)
                 $FixedColHeader.append($Row.clone(true, true));
 
             $Row = new $("<TR/>");
@@ -1022,12 +1022,12 @@ function WriteTablix(RIContext) {
     })
     $Tablix.append($Row);
 
-    if (HasFixedCols)
+    if (HasFixedRows)
         $Tablix.append($FixedColHeader);
     else
         $FixedColHeader = null;
 
-    if (HasFixedRows)
+    if (HasFixedCols)
         $Tablix.append($FixedRowHeader);
     else
         $FixedRowHeader = null;

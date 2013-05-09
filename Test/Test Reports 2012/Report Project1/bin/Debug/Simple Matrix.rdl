@@ -448,7 +448,8 @@
             <FixedColumnHeaders>true</FixedColumnHeaders>
             <FixedRowHeaders>true</FixedRowHeaders>
             <DataSetName>DataSet1</DataSetName>
-            <Top>0.36in</Top>
+            <Top>0.50931in</Top>
+            <Left>0.19792in</Left>
             <Height>0.71in</Height>
             <Width>3in</Width>
             <Style />
@@ -484,10 +485,10 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>1.07in</Height>
+        <Height>1.91722in</Height>
         <Style />
       </Body>
-      <Width>5in</Width>
+      <Width>5.70833in</Width>
       <Page>
         <LeftMargin>1in</LeftMargin>
         <RightMargin>1in</RightMargin>

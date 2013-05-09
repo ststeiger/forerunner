@@ -444,7 +444,15 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         PageNumber: NewPageNum,
         ParameterList: null
     })
-    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (!LoadOnly) LoadAllPages(RS, NewPageNum); })
+    .done(function (Data) {
+        if (Data.Type != undefined && Data.Type == "Parameters") {
+            WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
+        }
+        else {
+            WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
+            if (!LoadOnly) LoadAllPages(RS, NewPageNum);
+        }
+    })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
@@ -464,10 +472,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
 
     //Sections
     RemoveLoadingIndicator(RS);
-    if (Data.Type != undefined && Data.Type == "Parameters") {
-        WriteParameterPanel(RS, NewPageNum);
-    }
-    else if (!LoadOnly) {
+    if (!LoadOnly) {
         RenderPage(RS, NewPageNum);
         SetPage(RS, NewPageNum, OldPage);
     }
@@ -478,19 +483,19 @@ function RenderPage(RS, pageNum) {
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
     RS.Pages[pageNum].IsRendered = true;
 }
-function WriteParameterPanel(RS, pageNum) {
+function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
     var LoadOnly = false;
     var $ParameterContainer = GetDefaultHTMLTable();
-    $ParameterContainer.attr("class", "ParameterPanel");
+    $ParameterContainer.attr("class", "Parameter-Panel");
     var $Row = new $("<TR />");
     var $Col = $("<TD/>");
 
     var $Form = new $("<Form />");
     $Form.attr("id", "ParamsForm");
     var $SecondContainer = GetDefaultHTMLTable();
-    $SecondContainer.attr("style", "margin:10px 6px");
+    $SecondContainer.addClass("Parameter-Form");
 
-    $.each(RS.Pages[pageNum].ReportObj.ParametersList, function (Index, Obj) {        
+    $.each(Data.ParametersList, function (Index, Obj) {        
         $SecondContainer.append(WriteParameterControl(new ReportItemContext(RS, Obj, Index, RS.CurrObj, new $("<TR />"), "", "")));
     });
 
@@ -505,11 +510,14 @@ function WriteParameterPanel(RS, pageNum) {
     $ViewReport.attr("id", "Parameter_ViewReport");
     $ViewReport.attr("type", "button");
     $ViewReport.attr("value", "View Report");
-    $ViewReport.on("click", { ID: "CategoryID" }, function () {
+    $ViewReport.on("click", function () {
+        if (RS.Pages[pageNum] != null) {
+            RS.Pages[pageNum].$Container.detach();
+        }
         AddLoadingIndicator(RS);
-        //ValidateParams();
+        ValidateParams();
         var parameterList = GetParamsList();
-        
+
         $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
             ReportServerURL: RS.ReportServerURL,
             ReportPath: RS.ReportPath,
@@ -517,19 +525,30 @@ function WriteParameterPanel(RS, pageNum) {
             PageNumber: pageNum,
             ParameterList: parameterList
         })
-        .done(function (Data) { WritePage(Data, RS, pageNum, null, LoadOnly); if (!LoadOnly) LoadAllPages(RS, pageNum); })
-        .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+         .done(function (Data) {
+             WritePage(Data, RS, pageNum, null, LoadOnly);
+             if (!LoadOnly) LoadAllPages(RS, pageNum);
+         })
+        .fail(function () {
+            console.log("error");
+            RemoveLoadingIndicator(RS);
+        })
     });
 
     $ViewReport_TD.append($ViewReport);
     $Row.append($ViewReport_TD);    
-    $ParameterContainer.append($Row);    
+    
+    var $SpaceTD = new $("<TD />");
+    $SpaceTD.html("&nbsp");
+    $Row.append($SpaceTD);
 
-    RS.Pages[pageNum].$Container.append($ParameterContainer);
-    RS.Pages[pageNum].$Container.append(WriteParameterToggle());
-
-    RS.$PageContainer.append(RS.Pages[pageNum].$Container);
-    RS.Pages[pageNum].IsRendered = true;
+    $ParameterContainer.append($Row);
+    
+    //Same Hierarchy with Toolbar
+    RS.$PageContainer.append($ParameterContainer);
+    RS.$PageContainer.append(WriteParameterToggle());
+    //RS.$ReportContainer.append(RS.$PageContainer);   
+    RemoveLoadingIndicator(RS);
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
@@ -1187,7 +1206,7 @@ function WriteParameterToggle() {
     $Container.on("mouseover", function (event) { SetActionCursor(this); });
 
     $Container.on("click", function () {
-        $(".ParameterPanel").slideToggle("fast");
+        $(".Parameter-Panel").slideToggle("fast");
         if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
             $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
         else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
@@ -1201,8 +1220,8 @@ function GetParameterControlStyle(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
     if (Obj.QueryParameter == "True")
-        $Control.addClass("required"); 
-    //$Control.attr("QueryParameter", Obj.QueryParameter);
+        $Control.attr("required", "");
+    
     if (Obj.PromptUser == "True") {
         $Control.attr("Title", Obj.Prompt);
     }

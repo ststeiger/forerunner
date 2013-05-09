@@ -180,18 +180,6 @@ namespace Forerunner.ReportViewer
                     execInfo = rs.LoadReport(reportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
-                if (execInfo.ParametersRequired)
-                {
-                    if (parametersList == null)
-                    {
-                        ReportParameter[] reportParameter = execInfo.Parameters;
-                        return ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
-                    }
-                    else
-                    {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
-                    }
-                }
 
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
@@ -379,19 +367,6 @@ namespace Forerunner.ReportViewer
                 {
                     w.WriteStartArray();
                     foreach (string item in parameter.DefaultValues)
-                    {
-                        w.WriteString(item);
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-
-                w.WriteMember("Dependencies");
-                if (parameter.Dependencies != null)
-                {
-                    w.WriteStartArray();
-                    foreach (string item in parameter.Dependencies)
                     {
                         w.WriteString(item);
                     }

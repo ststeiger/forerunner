@@ -358,8 +358,13 @@ only screen and (min-device-pixel-ratio : 1.5)  {
     text-align:center;
     background-color:#A4B7D8;
 }
-
-.ParameterPanel{
+.Parameter{
+    margin:4px;
+    border-width:1px;
+    border-style:solid;
+    width:180px;
+}
+.Parameter-Panel{
     background-color:rgb(222,231,242);
     margin:4px 0px;
     margin-bottom:0px;
@@ -368,11 +373,8 @@ only screen and (min-device-pixel-ratio : 1.5)  {
     width:100%;
     height:100%;
 }
-.Parameter{
-    margin:4px;
-    border-width:1px;
-    border-style:solid;
-    width:180px;
+.Parameter-Form{
+    margin:10px 6px;
 }
 .Parameter-Lable{
     margin:4px;
@@ -385,6 +387,10 @@ only screen and (min-device-pixel-ratio : 1.5)  {
 }
 .Parameter-Radio{
     width:35px;
+}
+.Parameter-ViewReport{
+    margin:4px;
+    text-align:center
 }
 .Parameter-Enable
 {

@@ -19,6 +19,10 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Customer Data.rdl</Name>
+      <FullPath>Customer Data.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
@@ -75,8 +79,8 @@
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Customer Data.rdl</Name>
-      <FullPath>Customer Data.rdl</FullPath>
+      <Name>Simple Parameter.rdl</Name>
+      <FullPath>Simple Parameter.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

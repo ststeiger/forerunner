@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <!--<script type="text/javascript" src="../Scripts/Carousel/js/jquery-1.9.1.min.js"></script>-->
+    <script type="text/javascript" src="../Scripts/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+        $().ready(function () {
+            // validate the comment form when it is submitted
+            $("#commentForm").validate();
+            $("#reload").click(function () {
+                window.location.reload();
+            });
+        });
+    </script>
+</head>
+<body>
+<form class="cmxform" id="commentForm" method="get" action="">
+	<fieldset>
+		<legend>Please provide your name, email address (won't be published) and a comment</legend>
+		<p>
+			<label for="cname">Name (required="", at least 2 characters)</label>
+			<input id="cname" name="name" minlength="2" type="text" required="" />
+		<p>
+			<label for="cemail">E-Mail (required="")</label>
+			<input id="cemail" type="email" name="email" required="" />
+		</p>
+		<p>
+			<label for="curl">URL (optional)</label>
+			<input id="curl" type="url" name="url" />
+		</p>
+		<p>
+			<label for="ccomment">Your comment (required="")</label>
+			<textarea id="ccomment" name="comment" required=""></textarea>
+		</p>
+		<p>
+			<input class="submit" type="submit" value="Submit"/>
+            <input class="reload" type="button" value="reload"/>
+		</p>
+	</fieldset>
+</form>
+</body>
+</html>

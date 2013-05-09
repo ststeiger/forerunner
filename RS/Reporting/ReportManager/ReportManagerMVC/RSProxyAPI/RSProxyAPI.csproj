@@ -139,6 +139,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\FormValidate.htm" />
     <Content Include="Content\HtmlPage2.html" />
     <Content Include="Content\StellaViewerTest.html" />
     <Content Include="Content\HtmlPage1.html" />

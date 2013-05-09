@@ -71,13 +71,14 @@ function SessionPing() {
 
     // Ping each report so that the seesion does not expire on the report server
     $.each(Reports, function (Index, RS) {
-        $.get(RS.ReportViewerAPI + "/PingSession/", {
-            ReportServerURL: RS.ReportServerURL,
-            ReportPath: RS.ReportPath,
-            SessionID: RS.SessionID         
-        })
-        .done(function (Data) {  })
-        .fail(function () { console.log("error"); })
+        if (RS.SessionID != null)
+            $.get(RS.ReportViewerAPI + "/PingSession/", {
+                ReportServerURL: RS.ReportServerURL,
+                ReportPath: RS.ReportPath,
+                SessionID: RS.SessionID         
+            })
+            .done(function (Data) {  })
+            .fail(function () { console.log("error"); })
     });
 
 }
@@ -184,8 +185,8 @@ function SetPage(RS, NewPageNum, OldPage) {
 function RefreshReport(RS) {
     Page = RS.Pages[RS.CurPage];
 
-    RS.SessionID = ""; http://localhost:9000/Images
-        RS.Pages = new Object();
+    RS.SessionID = "";
+    RS.Pages = new Object();
     LoadPage(RS, 1, Page, false);
 }
 function GetToolbar(UID) {
@@ -466,15 +467,13 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     if (Data.Type != undefined && Data.Type == "Parameters") {
         WriteParameterPanel(RS, NewPageNum);
     }
-    else {
-        if (!LoadOnly) {
-            RenderPage(RS, NewPageNum);            
-        }
+    else if (!LoadOnly) {
+        RenderPage(RS, NewPageNum);
+        SetPage(RS, NewPageNum, OldPage);
     }
-    SetPage(RS, NewPageNum, OldPage);
 }
 function RenderPage(RS, pageNum) {
-        //Write Style   
+     //Write Style   
     RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
     RS.Pages[pageNum].IsRendered = true;

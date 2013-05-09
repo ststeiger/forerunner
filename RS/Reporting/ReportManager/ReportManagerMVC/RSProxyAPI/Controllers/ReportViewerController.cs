@@ -74,7 +74,7 @@ namespace RSProxyAPI.Controllers
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString()));            
+            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));            
             resp.Content = new ByteArrayContent(result); ;
             resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
 

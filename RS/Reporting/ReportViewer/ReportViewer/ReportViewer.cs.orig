@@ -11,9 +11,12 @@ using System.Diagnostics;
 using System.Net;
 using Jayrock.Json;
 using System.Threading;
+<<<<<<< HEAD
 using WebsitesScreenshot;
-using System.Reflection;
 
+=======
+using System.Reflection;
+>>>>>>> c94fd1b7158d8171930cedea55190228602ab896
 
 namespace Forerunner.ReportViewer
 {
@@ -117,7 +120,11 @@ namespace Forerunner.ReportViewer
             script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
             return script;
         }
+<<<<<<< HEAD
 
+
+=======
+>>>>>>> c94fd1b7158d8171930cedea55190228602ab896
         public void pingSession(string reportPath, string SessionID)
         {
             byte[] result = null;
@@ -157,7 +164,7 @@ namespace Forerunner.ReportViewer
                 NewSession = SessionID;
 
             //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info
@@ -268,6 +275,7 @@ namespace Forerunner.ReportViewer
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
+<<<<<<< HEAD
 
                 WebsitesScreenshot.WebsitesScreenshot _WebsitesScreenshot = new WebsitesScreenshot.WebsitesScreenshot();
                 _WebsitesScreenshot.ImageHeight = 300;
@@ -285,6 +293,9 @@ namespace Forerunner.ReportViewer
                 else 
                     return null;
                 
+=======
+                return result;
+>>>>>>> c94fd1b7158d8171930cedea55190228602ab896
 
             }
             catch (Exception e)

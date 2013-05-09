@@ -8,3 +8,4 @@ C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewer\obj\Debug\ReportViewer.csproj.GenerateResource.Cache
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewer\obj\Debug\ReportViewer.dll
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewer\obj\Debug\ReportViewer.pdb
+C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewer\bin\Debug\WebsitesScreenshot.dll

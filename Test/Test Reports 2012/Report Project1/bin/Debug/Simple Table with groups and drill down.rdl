@@ -280,16 +280,31 @@
                                 <TablixCells>
                                   <TablixCell>
                                     <CellContents>
-                                      <Image Name="Image2">
-                                        <Source>Embedded</Source>
-                                        <Value>DSC00058</Value>
-                                        <Sizing>FitProportional</Sizing>
+                                      <Textbox Name="Textbox3">
+                                        <CanGrow>true</CanGrow>
+                                        <KeepTogether>true</KeepTogether>
+                                        <Paragraphs>
+                                          <Paragraph>
+                                            <TextRuns>
+                                              <TextRun>
+                                                <Value />
+                                                <Style />
+                                              </TextRun>
+                                            </TextRuns>
+                                            <Style />
+                                          </Paragraph>
+                                        </Paragraphs>
+                                        <rd:DefaultName>Textbox3</rd:DefaultName>
                                         <Style>
                                           <Border>
                                             <Style>None</Style>
                                           </Border>
+                                          <PaddingLeft>2pt</PaddingLeft>
+                                          <PaddingRight>2pt</PaddingRight>
+                                          <PaddingTop>2pt</PaddingTop>
+                                          <PaddingBottom>2pt</PaddingBottom>
                                         </Style>
-                                      </Image>
+                                      </Textbox>
                                     </CellContents>
                                   </TablixCell>
                                   <TablixCell>
@@ -610,21 +625,6 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Image Name="Image1">
-        <Source>Embedded</Source>
-        <Value>DSC00058</Value>
-        <Sizing>Fit</Sizing>
-        <Top>1.13417in</Top>
-        <Left>4.94667in</Left>
-        <Height>3.16667in</Height>
-        <Width>6.04167in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Image>
     </ReportItems>
     <Height>6.5925in</Height>
     <Style />

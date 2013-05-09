@@ -23,19 +23,19 @@ namespace RSProxyAPI.Controllers
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             string mimeType;
             byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse(); 
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = rep.GetImage(SessionID, ImageID, out mimeType);
-            resp = this.Request.CreateResponse();
+            result = rep.GetImage(SessionID, ImageID, out mimeType);            
             if (result != null)
-            {
-                ByteArrayContent content = new ByteArrayContent(result);                
-                resp.Content = content;
+            {                
+                resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
 
             return resp;
         }
@@ -43,19 +43,23 @@ namespace RSProxyAPI.Controllers
         [HttpGet]
         public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string PageHeight, string PageWidth)
         {
+
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse();;
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
             result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), PageHeight, PageWidth);
-            ByteArrayContent content = new ByteArrayContent(result);
-            resp = this.Request.CreateResponse();
-            resp.Content = content;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
 
+            if (result != null)
+            {                
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
+            }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
+            
             return resp;
         }
 
@@ -64,15 +68,13 @@ namespace RSProxyAPI.Controllers
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse(); 
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString()));
-            ByteArrayContent content = new ByteArrayContent(result);
-            resp = this.Request.CreateResponse();
-            resp.Content = content;
+            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString()));            
+            resp.Content = new ByteArrayContent(result); ;
             resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
 
             return resp;
@@ -82,13 +84,12 @@ namespace RSProxyAPI.Controllers
         public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse();
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            rep.pingSession(ReportPath,SessionID);
-            resp = this.Request.CreateResponse();
+            rep.pingSession(ReportPath,SessionID);            
             resp.StatusCode = HttpStatusCode.OK;
             return resp;
             

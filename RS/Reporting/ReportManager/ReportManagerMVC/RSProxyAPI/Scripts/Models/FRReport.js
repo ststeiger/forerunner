@@ -67,6 +67,7 @@ function ReportItemLocation(Index) {
 //Page Management
 function SessionPing() {
 
+    // Ping each report so that the seesion does not expire on the report server
     $.each(Reports, function (Index, RS) {
         $.get(RS.ReportViewerAPI + "/PingSession/", {
             ReportServerURL: RS.ReportServerURL,

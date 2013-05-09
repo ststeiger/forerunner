@@ -11,6 +11,8 @@ using System.Diagnostics;
 using System.Net;
 using Jayrock.Json;
 using System.Threading;
+using WebsitesScreenshot;
+
 
 namespace Forerunner.ReportViewer
 {
@@ -115,6 +117,7 @@ namespace Forerunner.ReportViewer
             return script;
         }
 
+
         public void pingSession(string reportPath, string SessionID)
         {
             byte[] result = null;
@@ -209,7 +212,7 @@ namespace Forerunner.ReportViewer
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum,string PageHeight, string PageWidth)
         {
             byte[] result = null;
-            string format = "Image";
+            string format = "HTML4.0";
             string historyID = null;
             string showHideToggle = null;
             string encoding;
@@ -219,7 +222,7 @@ namespace Forerunner.ReportViewer
             ParameterValue[] reportHistoryParameters = null;
             string[] streamIDs = null;
             string NewSession;
-
+            MemoryStream ms = new MemoryStream();
 
             if (SessionID == null)
                 NewSession = "";
@@ -227,24 +230,13 @@ namespace Forerunner.ReportViewer
                 NewSession = SessionID;
 
             //Device Info
-            string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
+            string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
+            //string devInfo = @"<DeviceInfo>";
             //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
+            devInfo += @"<Section>" + PageNum + "</Section>";
+           // devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
             //End Device Info
             devInfo += @"</DeviceInfo>";
-
-            // Prepare report parameter.
-            //ParameterValue[] parameters = new ParameterValue[3];
-            //parameters[0] = new ParameterValue();
-            //parameters[0].Name = "EmpID";
-            //parameters[0].Value = "288";
-            //parameters[1] = new ParameterValue();
-            //parameters[1].Name = "ReportMonth";
-            //parameters[1].Value = "6"; // June
-            //parameters[2] = new ParameterValue();
-            //parameters[2].Name = "ReportYear";
-            //parameters[2].Value = "2004";
 
             DataSourceCredentials[] credentials = null;
             ExecutionInfo execInfo = new ExecutionInfo();
@@ -260,13 +252,28 @@ namespace Forerunner.ReportViewer
                 else
                     execInfo = rs.LoadReport(reportPath, historyID);
 
-                //rs.SetExecutionParameters(parameters, "en-us");
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
-                return result;
+
+                WebsitesScreenshot.WebsitesScreenshot _WebsitesScreenshot = new WebsitesScreenshot.WebsitesScreenshot();
+                _WebsitesScreenshot.ImageHeight = 300;
+                _WebsitesScreenshot.ImageWidth = 200;
+                WebsitesScreenshot.WebsitesScreenshot.Result _Result;
                 
+                _Result =_WebsitesScreenshot.CaptureHTML(Encoding.UTF8.GetString(result));
+
+                if (_Result == WebsitesScreenshot.WebsitesScreenshot.Result.Captured)
+                {
+                    _WebsitesScreenshot.GetImage().Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    _WebsitesScreenshot.Dispose();
+                    return ms.ToArray();
+                }
+                else 
+                    return null;
+                
+
             }
             catch (Exception e)
             {

@@ -268,9 +268,13 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
-      <DataSourceReference>Northwind</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>b45622cd-03d5-4b35-b5fc-ca03fb66fe27</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=.\mssql2012;Initial Catalog=Northwnd</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>6d0ec3eb-0b6b-47ae-a30a-f62c49934089</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -278,21 +282,106 @@
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="CategoryID">
+          <QueryParameter Name="@CategoryID">
             <Value>=Parameters!CategoryID.Value</Value>
-            <rd:UserDefined>true</rd:UserDefined>
+          </QueryParameter>
+          <QueryParameter Name="@ProductName">
+            <Value>=Parameters!ProductName.Value</Value>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT  CategoryID, ProductName, UnitPrice FROM Products 
-WHERE CategoryID=@CategoryID
+WHERE CategoryID=@CategoryID or ProductName like @ProductName
 ORDER BY CategoryID </CommandText>
       </Query>
+      <Fields>
+        <Field Name="CategoryID">
+          <DataField>CategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ProductName">
+          <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+      </Fields>
     </DataSet>
   </DataSets>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
       <Prompt>CategoryID</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Test1</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Test2</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Test3</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ProductName">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ProductName</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IsCheap">
+      <DataType>Boolean</DataType>
+      <Prompt>Is Cheap</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ProductionDate">
+      <DataType>DateTime</DataType>
+      <Prompt>ProductionDate</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IntegerTest">
+      <DataType>Integer</DataType>
+      <Prompt>IntegerTest</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="FloatTest">
+      <DataType>Float</DataType>
+      <Prompt>FloatTest</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="MultipleValues">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>MultipleValues</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Test1</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Test2</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Test3</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>Test4</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>

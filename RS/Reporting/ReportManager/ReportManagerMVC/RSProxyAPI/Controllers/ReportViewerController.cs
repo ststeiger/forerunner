@@ -8,6 +8,7 @@ using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
 using Forerunner.ReportViewer;
+using System.IO;
 
 namespace RSProxyAPI.Controllers
 {
@@ -16,7 +17,7 @@ namespace RSProxyAPI.Controllers
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
-        
+
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
@@ -64,7 +65,7 @@ namespace RSProxyAPI.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result;
@@ -92,8 +93,7 @@ namespace RSProxyAPI.Controllers
             rep.pingSession(ReportPath,SessionID);            
             resp.StatusCode = HttpStatusCode.OK;
             return resp;
-            
-        }
 
+        }
     }
 }

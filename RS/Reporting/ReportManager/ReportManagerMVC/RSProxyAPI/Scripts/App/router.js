@@ -107,7 +107,12 @@ var ApplicationRouter = Backbone.Router.extend({
            // var callBack = function (RS) {
             //    CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
             //};
-            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', 'bottomdiv');
+            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', 'bottomdiv', this.toolbarHeight);
+        },
+
+        toolbarHeight : function()
+        {
+            return $("#topdiv").outerHeight();
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {

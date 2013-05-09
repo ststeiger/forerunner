@@ -32,6 +32,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.FloatingHeaders = [];
     this.$PageNav;
     this.$Slider;
+    this.externalToolbarHeight;
     this.CreateNav = false;
 }
 function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
@@ -113,6 +114,15 @@ function SetColHeaderOffset($Tablix, $ColHeader,RS) {
         //$ColHeader.css("left", "0px");
     }
 }
+
+function getToolbarHeightWithOffset(rs) {
+    if (rs.externalToolbarHeight == null) {
+        return rs.ToolbarHeight;
+    }
+
+    return rs.externalToolbarHeight();
+}
+
 function SetRowHeaderOffset($Tablix,$RowHeader,RS){
 
     if ($RowHeader == null)
@@ -120,7 +130,7 @@ function SetRowHeaderOffset($Tablix,$RowHeader,RS){
 
     toolbarOffset = 0;
     if (RS.HasToolbar)
-        toolbarOffset = RS.ToolbarHeight;
+        toolbarOffset = getToolbarHeightWithOffset(RS);
     if ($RowHeader == RS.$FloatingToolbar)
         toolbarOffset = 0;
 
@@ -357,9 +367,9 @@ function ShowNav(UID) {
 
 //Page Loading
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
-    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null)
+    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null, 0)
 }
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID) {
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID, toolbarOffset) {
     var $Table = new $("<table/>");
     var $Row = new $("<TR/>");
     var $Cell;
@@ -390,13 +400,12 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
             $Container = $('#' + ToolbarUID);
             $Container.append($tb);
 
-            //Total hack for now
-            if ($("#mainSectionHeader") != null) {                
-                RS.ToolbarHeight += $("#mainSectionHeader").outerHeight();                
+            if (toolbarOffset != null) {
+                RS.externalToolbarHeight = toolbarOffset;
             }
         }
-
     }
+
     $(window).scroll(UpdateTableHeaders);
     $(window).bind('touchmove', HideTableHeaders);
     //window.addEventListener("gesturechange", UpdateTableHeaders, false);

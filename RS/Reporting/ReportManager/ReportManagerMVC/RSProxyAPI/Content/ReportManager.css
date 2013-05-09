@@ -184,6 +184,27 @@ and (orientation : landscape) {
 #footerspacer {
   display: none;
 }
+
+header#topdiv {
+  border-top: 10px solid black;
+  border-bottom: 1px solid black;
+  position: fixed;
+  top:0px;
+  left:0px;
+  width:100%;
+  height: 35px;
+  background-color: white;
+  z-index: 1;
+}
+
+#headerspacer {
+  height:46px;
+  display:block;
+}
+
+#mainSectionHeader {
+    display:none;
+}
 }
 
 /* Smartphones (portrait) ----------- */
@@ -225,6 +246,28 @@ and (orientation : portrait) {
 
 #footerspacer {
   display: none;
+}
+
+header#topdiv {
+  border-top: 10px solid black;
+  border-bottom: 1px solid black;
+  position: fixed;
+  top:0px;
+  left:0px;
+  width:100%;
+  height: 35px;
+  background-color: white;
+  z-index: 1;
+}
+
+#headerspacer {
+  height:46px;
+  display:block;
+}
+
+#mainSectionHeader {
+    display:none;
+    height:0px;
 }
 }
 

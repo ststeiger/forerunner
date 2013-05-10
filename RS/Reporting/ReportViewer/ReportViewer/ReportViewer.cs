@@ -779,7 +779,6 @@ namespace Forerunner.ReportViewer
                     //w.WriteMember("Measurments");                    
                     //w.WriteStartObject();                                        
                     WriteJSONMeasurements();
-
                     //w.WriteEndObject();
 
 
@@ -799,7 +798,7 @@ namespace Forerunner.ReportViewer
         }
         public Boolean WriteJSONBodyElement()
         {
-            if (InspectByte() == 0x06)
+            while (InspectByte() == 0x06)
             {
                 //Advance over the the 0x06
                 Seek(1);
@@ -823,8 +822,8 @@ namespace Forerunner.ReportViewer
 
                 w.WriteEndObject();
             }
-            else
-                ThrowParseError();
+            //else
+            //    ThrowParseError();
 
             return true;
         }
@@ -1971,7 +1970,9 @@ namespace Forerunner.ReportViewer
             w.WriteMember("SubReportProperties");
             WriteJSONElements();
             w.WriteMember("BodyElements");
+            w.WriteStartArray();
             WriteJSONBodyElement();
+            w.WriteEndArray();
 
             WriteJSONMeasurements();
 
@@ -2214,9 +2215,8 @@ namespace Forerunner.ReportViewer
                 foreach (JsonObject obj in parameterArray)
                 {
                     ParameterValue pv = new ParameterValue();
-                    pv.Label = obj["Parameter"].ToString();
                     pv.Name = obj["Parameter"].ToString();
-                    pv.Value = obj["Value"].ToString();
+                    pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
 
                     list.Add(pv);
                 }
@@ -2224,5 +2224,7 @@ namespace Forerunner.ReportViewer
 
             return list.ToArray();
         }
+
+        
     }
 }

@@ -146,6 +146,7 @@
     <Content Include="Images\ajax-loader1.gif" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
+    <Content Include="Images\OpenDropDown.png" />
     <Content Include="Images\Parameter_Collapse.png" />
     <Content Include="Images\Parameter_Expand.png" />
     <Content Include="Images\Report-icon.png" />

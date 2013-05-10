@@ -402,3 +402,27 @@ only screen and (min-device-pixel-ratio : 1.5)  {
     background-color:rgb(222,231,242);
     color:rgb(84,84,84);
 }
+.Parameter-DropDown
+{
+     padding:4px;
+     margin:0px 4px 4px 4px;
+     border-color: DarkGray; 
+     border-width: 1px; 
+     border-style: solid; 
+     overflow: auto; 
+     background-color: window; 
+     position: absolute; 
+     z-index: 11;
+}
+.Parameter-DropDown lable, checkbox
+{
+    margin:4px;
+}
+.Parameter-DropDown-Input
+{
+    margin-bottom:0px;
+}
+.Parameter-Dropdown-Hidden
+{
+    display:none;
+}

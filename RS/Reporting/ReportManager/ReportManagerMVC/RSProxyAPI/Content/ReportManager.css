@@ -358,7 +358,7 @@ only screen and (min-device-pixel-ratio : 1.5)  {
     text-align:center;
     background-color:#A4B7D8;
 }
-.Parameter{
+.Parameter, .ParameterClient{
     margin:4px;
     border-width:1px;
     border-style:solid;
@@ -425,4 +425,13 @@ only screen and (min-device-pixel-ratio : 1.5)  {
 .Parameter-Dropdown-Hidden
 {
     display:none;
+}
+.Parameter-Dropdown-Show
+{
+    display:block;
+}
+.Parameter-Error
+{
+    border-width:thin;
+    border-color:red;
 }

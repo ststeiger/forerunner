@@ -500,6 +500,22 @@ function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
     });
 
     $Form.append($SecondContainer);
+    $Form.validate({
+        //errorClass: "Parameter-Error",
+        //successClass:"Parameter-Error",
+        errorPlacement: function (error, element) {
+            error.appendTo(element.parent("td").next("td"));
+        },
+        highlight: function (element) {
+            $(element).addClass("Parameter-Error");           
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("Parameter-Error");
+        },
+        success: function(label) {
+            label.text("Ok!");
+        } 
+    });
     $Col.append($Form);
     $Row.append($Col);
 
@@ -511,37 +527,30 @@ function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
     $ViewReport.attr("type", "button");
     $ViewReport.attr("value", "View Report");
     $ViewReport.on("click", function () {
-        if (RS.Pages[pageNum] != null) {
-            RS.Pages[pageNum].$Container.detach();
-        }
-        AddLoadingIndicator(RS);
-        //ValidateParams();
-        var parameterList = GetParamsList();
-        //alert(parameterList);
+        if ($("#ParamsForm").valid() == true) {
+            if (RS.Pages[pageNum] != null) {
+                RS.Pages[pageNum].$Container.detach();
+            }
+            AddLoadingIndicator(RS);
+            var parameterList = GetParamsList();
 
-        $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
-            ReportServerURL: RS.ReportServerURL,
-            ReportPath: RS.ReportPath,
-            SessionID: RS.SessionID,
-            PageNumber: pageNum,
-            ParameterList: parameterList
-        })
-         .done(function (Data) {
-             WritePage(Data, RS, pageNum, null, LoadOnly);
-             if (!LoadOnly) LoadAllPages(RS, pageNum);
-         })
-        .fail(function () {
-            console.log("error");
-            RemoveLoadingIndicator(RS);
-        })
+            $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
+                ReportServerURL: RS.ReportServerURL,
+                ReportPath: RS.ReportPath,
+                SessionID: RS.SessionID,
+                PageNumber: pageNum,
+                ParameterList: parameterList
+            })
+            .done(function (Data) { WritePage(Data, RS, pageNum, null, LoadOnly); if (!LoadOnly) LoadAllPages(RS, pageNum); })
+            .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+        }
     });
 
     $ViewReport_TD.append($ViewReport);
-    $Row.append($ViewReport_TD);    
-    
     var $SpaceTD = new $("<TD />");
     $SpaceTD.html("&nbsp");
     $Row.append($SpaceTD);
+    $Row.append($ViewReport_TD);
 
     $ParameterContainer.append($Row);
     
@@ -1100,7 +1109,7 @@ function WriteParameterControl(RIContext) {
         //dropdown with checkbox
         if (RIContext.CurrObj.MultiValue == "True") {
             $element = new $("<Div />");
-            WriteDropDownWichCheckBox(RIContext.CurrObj, $element);
+            WriteDropDownWithCheckBox(RIContext.CurrObj, $element);
         }
         else {
             $element = new $("<select />");
@@ -1117,6 +1126,7 @@ function WriteParameterControl(RIContext) {
             for (value in radioValues) {
                 var $radioItem = new $("<input/>");
                 $radioItem.addClass("Parameter");
+                $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
                 $radioItem.addClass("Parameter-Radio");
                 $element.attr("DataType", RIContext.CurrObj.Type);
                 $radioItem.addClass(RIContext.CurrObj.Name);
@@ -1126,7 +1136,7 @@ function WriteParameterControl(RIContext) {
                 $radioItem.attr("value", radioValues[value]);
                 $radioItem.attr("id", RIContext.CurrObj.Name + "_radio" + "_" + radioValues[value]);
                 $radioItem.attr("DataType", RIContext.CurrObj.Type);
-                GetParameterControlStyle(RIContext.CurrObj, $radioItem);
+                GetParameterControlProperty(RIContext.CurrObj, $radioItem);
 
                 var $lableTrue = new $("<lable/>");
                 $lableTrue.html(radioValues[value]);
@@ -1139,31 +1149,36 @@ function WriteParameterControl(RIContext) {
         else {
             $element = new $("<input/>");
             $element.attr("class", "Parameter");
+            $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
             $element.attr("DataType", RIContext.CurrObj.Type);
             $element.attr("type", "text");
             $element.attr("size", "30");
             $element.attr("id", Name);
 
-            GetParameterControlStyle(RIContext.CurrObj, $element);
+            GetParameterControlProperty(RIContext.CurrObj, $element);
 
             switch (RIContext.CurrObj.Type) {
                 case "DateTime":
-                    $element.datepicker();
+                    //Format: ISO8601
+                    $element.datepicker({ dateFormat: 'yy-mm-dd' });
+                    $element.attr("dateISO", "true");
                     break;
                 case "Integer":
-                    break;
                 case "Float":
+                    $element.attr("number", "true");
                     break;
                 case "String":
                     break;
             }
         }
-    }
-    
+    }    
     $TD_Control.append($element);
     $TD_Control.append(AddNullableCheckBox(RIContext.CurrObj, $element));
+    var $TD_Status = new $("<TD/>");
+    $TD_Status.addClass("Status");
     RIContext.$HTMLParent.append($TD_Lable);
     RIContext.$HTMLParent.append($TD_Control);
+    RIContext.$HTMLParent.append($TD_Status);
 
     return RIContext.$HTMLParent;
 }
@@ -1178,7 +1193,7 @@ function WriteParameterToggle() {
     $Container.on("mouseover", function (event) { SetActionCursor(this); });
 
     $Container.on("click", function () {
-        $(".Parameter-Panel").slideToggle("fast");
+        $(".Parameter-Panel").toggle("fast");
         if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
             $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
         else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
@@ -1188,15 +1203,15 @@ function WriteParameterToggle() {
     $Container.append($ToggleIcon);
     return $Container;   
 }
-function GetParameterControlStyle(Obj, $Control) {
+function GetParameterControlProperty(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
-    if (Obj.QueryParameter == "True" | Obj.Nullable == "True")
+    if (Obj.QueryParameter == "True" | Obj.Nullable != "True")
         $Control.attr("required", "");
     
-    if (Obj.PromptUser == "True") {
-        $Control.attr("Title", Obj.Prompt);
-    }
+    //if (Obj.PromptUser == "True") {
+    //    $Control.attr("Title", Obj.Prompt);
+    //}
     $Control.attr("ErrorMessage", Obj.ErrorMessage);
 }
 function AddNullableCheckBox(Obj, $Control) {
@@ -1245,10 +1260,11 @@ function AddNullableCheckBox(Obj, $Control) {
 }
 function WriteDropDownControl(Obj, $Control) {    
     $Control.addClass("Parameter");
+    $Control.attr("IsMultiple", Obj.MultiValue);
     $Control.addClass("Parameter-Select");
     $Control.attr("id", Obj.Name);
     $Control.attr("DataType", Obj.Type);
-    GetParameterControlStyle(Obj, $Control);
+    GetParameterControlProperty(Obj, $Control);
 
     var $defaultOption = new $("<option />");
     $defaultOption.attr("value", "");        
@@ -1263,20 +1279,26 @@ function WriteDropDownControl(Obj, $Control) {
         $Control.append($option);
     }
 }
-function WriteDropDownWichCheckBox(Obj, $Control) {
+function WriteDropDownWithCheckBox(Obj, $Control) {
     var $MultipleCheckBox = new $("<Input />");
     $MultipleCheckBox.attr("type", "text");
     $MultipleCheckBox.attr("id", Obj.Name);
-    $MultipleCheckBox.attr("class", "Parameter");
+    $MultipleCheckBox.attr("class", "ParameterClient");
     $MultipleCheckBox.attr("DataType", Obj.Type);
+    $MultipleCheckBox.on("click", function () { PopupDropDownPanel(Obj); });
+
+    var $HiddenCheckBox = new $("<Input />");
+    $HiddenCheckBox.attr("type", "hidden");
+    $HiddenCheckBox.attr("name", Obj.Name);
+    $HiddenCheckBox.attr("IsMultiple", Obj.MultiValue);
+    $HiddenCheckBox.attr("id", Obj.Name + "_hidden");
+    $HiddenCheckBox.attr("class", "Parameter");
+    $HiddenCheckBox.attr("DataType", Obj.Type);
 
     var $OpenDropDown = new $("<Img />");
     $OpenDropDown.attr("src", "/Images/OpenDropDown.png");
     $OpenDropDown.attr("alt", "Open DropDown List");
-    $OpenDropDown.on("click", function () {
-        $("#" + Obj.Name + "_DropDown").width($("#" + Obj.Name).width());
-        $("#" + Obj.Name + "_DropDown").slideToggle("fast");
-    });
+    $OpenDropDown.on("click", function () { PopupDropDownPanel(Obj); });
 
     var $DropDownContainer = new $("<Div />");
     $DropDownContainer.attr("id", Obj.Name + "_DropDown");
@@ -1284,19 +1306,19 @@ function WriteDropDownWichCheckBox(Obj, $Control) {
     $DropDownContainer.addClass("Parameter-Dropdown-Hidden");
 
     var $Table = GetDefaultHTMLTable();
-    Obj.ValidValues.push({ Key: "Select All", Value: "" });
+    Obj.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
     for (index in Obj.ValidValues) {
         var key;
         var value;
         if (index == 0) {
-            var SelectAll = Obj.ValidValues.pop();
+            var SelectAll = Obj.ValidValues[Obj.ValidValues.length - 1];
             key = SelectAll.Key;
             value = SelectAll.Value;
         }
         else {
-            key = Obj.ValidValues[index - 1].Key;
-            value = Obj.ValidValues[index - 1].Value;
+            key = Obj.ValidValues[index-1].Key;
+            value = Obj.ValidValues[index-1].Value;
         }
 
         var $Row = new $("<TR />");
@@ -1305,15 +1327,16 @@ function WriteDropDownWichCheckBox(Obj, $Control) {
         var $Checkbox = new $("<Input />");
         $Checkbox.attr("type", "checkbox");
         $Checkbox.attr("id", Obj.Name + "_DropDown_" + value);
-        $Checkbox.attr("class",Obj.Name+"_DropDown_CB");
+        $Checkbox.attr("class", Obj.Name + "_DropDown_CB");
+        $Checkbox.attr("name", Obj.Name + "_DropDown_CB");
         $Checkbox.attr("value", value);
         $Checkbox.on("click", function () {
-            if (this.value == "" & this.checked == true) {
+            if (this.value == "Select All" & this.checked == true) {
                 $("." + Obj.Name + "_DropDown_CB").each(function (i) {
                     this.checked = true;
                 });
             }
-            if (this.value == "" & this.checked == false) {
+            if (this.value == "Select All" & this.checked == false) {
                 $("." + Obj.Name + "_DropDown_CB").each(function (i) {
                     this.checked = false;
                 });
@@ -1322,6 +1345,7 @@ function WriteDropDownWichCheckBox(Obj, $Control) {
 
         var $Lable = new $("<Lable />");
         $Lable.attr("for", Obj.Name + "_DropDown_" + value);
+        $Lable.attr("id", Obj.Name + "_DropDown_" + value + "_lable");
         $Lable.html(key);
 
         $Col.append($Checkbox);
@@ -1332,8 +1356,33 @@ function WriteDropDownWichCheckBox(Obj, $Control) {
     $DropDownContainer.append($Table);
 
     $Control.append($MultipleCheckBox);
+    $Control.append($HiddenCheckBox);
     $Control.append($OpenDropDown);
     $Control.append($DropDownContainer);
+}
+function PopupDropDownPanel(Obj) {
+    $("#" + Obj.Name + "_DropDown").width($("#" + Obj.Name).width());
+    if ($("#" + Obj.Name + "_DropDown").hasClass("Parameter-Dropdown-Hidden")) {
+        $("#" + Obj.Name + "_DropDown").fadeOut("fast");
+        $("#" + Obj.Name + "_DropDown").removeClass("Parameter-Dropdown-Hidden");
+        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Show");
+    }
+    else {
+        $("#" + Obj.Name + "_DropDown").fadeIn("fast", function () {
+            var ShowValue = "";
+            var HiddenValue = "";
+            $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                if (this.checked & this.value != "Select All") {
+                    ShowValue += $("#" + Obj.Name + "_DropDown_" + this.value + "_lable").html() + ",";
+                    HiddenValue += this.value + ",";
+                }
+            });
+            $("#" + Obj.Name).val(ShowValue.substr(0, ShowValue.length - 1));
+            $("#" + Obj.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
+        });
+        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Hidden");
+        $("#" + Obj.Name + "_DropDown").removeClass("Parameter-Dropdown-Show");
+    }
 }
 //Helper fucntions
 function GetHeight($Obj) {
@@ -1764,23 +1813,19 @@ function ConvertToMM(ConvertFrom) {
     //This is an error
     return value;
 }
-function ValidateParams() {
-    //TODO: validate parameter forms 
-
-    //Something blocked
-    //$("#ParamsForm").validate();
-}
 function GetParamsList() {
     var a = [];
     //Text
     $(".Parameter").filter(":text").each(function (i) {
-        a.push({ name: this.name, type:$(this).attr("datatype"), value: IsParamNullable(this) });
-
+        a.push({ name: this.name, ismultiple:$(this).attr("ismultiple"), type:$(this).attr("datatype"), value: IsParamNullable(this) });
+    });
+    //Hidden
+    $(".Parameter").filter(":hidden").each(function (i) {
+        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
     });
     //dropdown
     $(".Parameter").filter("select").each(function (i) {
-        a.push({ name: this.name, type: $(this).attr("datatype"), value: IsParamNullable(this) });
-
+        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
     });
     var RadioList = new Object();
     //radio-group by radio name, default value: null
@@ -1793,7 +1838,7 @@ function GetParamsList() {
         }
     });
     for (var RadioName in RadioList) {
-        a.push({ name: RadioName, type: 'Boolean', value: RadioList[RadioName] });
+        a.push({ name: RadioName, ismultiple: "", type: 'Boolean', value: RadioList[RadioName] });
     }
     //combobox - multiple values
     var temp_cb = "";
@@ -1815,18 +1860,18 @@ function GetParamsList() {
                 cb_value += this.value + ",";
 
         });
-        a.push({ name: cb_name, type: $(this).attr("datatype"), value: cb_value });
+        a.push({ name: cb_name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: cb_value });
     }
 
     //Combined to JSON String, format as below
-    //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID", "Value":"'+ $("#CategoryID").val()+'" }] }';
+    //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
     var temp_json = "[";
     for (var json_i = 0; json_i < a.length; json_i++) {
         if (json_i != a.length - 1) {
-            temp_json += '{"Parameter":"' + a[json_i].name + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"},';
+            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"},';
         }
         else {
-            temp_json += '{"Parameter":"' + a[json_i].name + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"}';
+            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"}';
         }
     }
     temp_json += "]";

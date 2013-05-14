@@ -341,6 +341,7 @@ namespace Forerunner.ReportViewer
                 }
                 else
                     w.WriteString("");
+                 
 
                 w.WriteMember("Dependencies");
                 if (parameter.Dependencies != null)
@@ -376,6 +377,7 @@ namespace Forerunner.ReportViewer
             }
 
             w.WriteEndArray();
+         
             w.WriteEndObject();
 
             return w.ToString();

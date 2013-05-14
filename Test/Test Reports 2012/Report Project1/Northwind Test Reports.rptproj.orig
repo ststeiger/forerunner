@@ -9,6 +9,10 @@
   </DataSources>
   <DataSets>
     <ProjectItem>
+      <Name>OrderStatsByCustomer.rsd</Name>
+      <FullPath>OrderStatsByCustomer.rsd</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ProductsByLocation.rsd</Name>
       <FullPath>ProductsByLocation.rsd</FullPath>
     </ProjectItem>
@@ -19,26 +23,54 @@
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Customer Data.rdl</Name>
+      <FullPath>Customer Data.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report 2.rdl</Name>
+      <FullPath>Image Report 2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report.rdl</Name>
+      <FullPath>Image Report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>ImageMapTest.rdl</Name>
       <FullPath>ImageMapTest.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Layout.rdl</Name>
+      <FullPath>Layout.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Lines.rdl</Name>
+      <FullPath>Lines.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameters.rdl</Name>
+      <FullPath>Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ProductSales.rdl</Name>
       <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Gauge.rdl</Name>
+      <FullPath>Simple Gauge.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Richtextbox.rdl</Name>
+      <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Chart.rdl</Name>
       <FullPath>Simple Chart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-<<<<<<< HEAD
-      <Name>Layout.rdl</Name>
-      <FullPath>Layout.rdl</FullPath>
-=======
       <Name>Simple Matrix.rdl</Name>
       <FullPath>Simple Matrix.rdl</FullPath>
     </ProjectItem>
@@ -47,18 +79,20 @@
       <FullPath>Simple Table with groups and drill down.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Subreport.rdl</Name>
+      <FullPath>Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
+<<<<<<< HEAD
+=======
     <ProjectItem>
-      <Name>Richtextbox.rdl</Name>
-      <FullPath>Richtextbox.rdl</FullPath>
+      <Name>Simple Parameter.rdl</Name>
+      <FullPath>Simple Parameter.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Subreport.rdl</Name>
-      <FullPath>Subreport.rdl</FullPath>
->>>>>>> 2e12b07e54af6a23a2b70d12ae75cb4f4e42088b
-    </ProjectItem>
+>>>>>>> 70189b2d49c613b308f43b2ce340de9fd684e7f0
   </Reports>
   <Configurations>
     <Configuration>

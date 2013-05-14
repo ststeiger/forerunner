@@ -25,6 +25,11 @@
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/ImageMapTest", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/TwoChartReport", true, 1, "Div1")
         //example with Image Resize
+<<<<<<< HEAD
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Simple Table with groups and drill down", true, 1, "Div1")
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Subreport", true, 1, "Div1")
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Richtextbox", true, 1, "Div1")
+=======
         //InitReport("localhost/ReportServer_SQLEXPRESS", "/api/ReportViewer", "/ReportTest/Simple Table with groups and drill down", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Customer", true, 1, "Div1");
         InitReport("localhost/ReportServer_SQLEXPRESS", "/api/ReportViewer", "/ReportTest/QueryProductList", true, 1, "Div1")
@@ -33,6 +38,7 @@
         //InitReport("localhost/ReportServer_SQLEXPRESS", "/api/ReportViewer", "/ReportTest/Subreport", true, 1, "Div1")
         //InitReport("localhost/ReportServer_SQLEXPRESS", "/api/ReportViewer", "/ReportTest/ColumnChartReport", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Subreport", true, 1, "Div1")
+>>>>>>> 70189b2d49c613b308f43b2ce340de9fd684e7f0
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/SimpleImage", true, 1, "Div1")
         InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Simple Gauge", true, 1, "Div1")
     </script>

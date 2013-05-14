@@ -9,6 +9,10 @@
   </DataSources>
   <DataSets>
     <ProjectItem>
+      <Name>OrderStatsByCustomer.rsd</Name>
+      <FullPath>OrderStatsByCustomer.rsd</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ProductsByLocation.rsd</Name>
       <FullPath>ProductsByLocation.rsd</FullPath>
     </ProjectItem>
@@ -49,6 +53,10 @@
     <ProjectItem>
       <Name>ProductSales.rdl</Name>
       <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Gauge.rdl</Name>
+      <FullPath>Simple Gauge.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Richtextbox.rdl</Name>

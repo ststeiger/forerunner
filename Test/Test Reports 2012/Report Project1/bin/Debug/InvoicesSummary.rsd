@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="">
+    <Query>
+      <DataSourceReference>Northwind</DataSourceReference>
+      <CommandText>SELECT        Customers.ContactName, Orders.CustomerID, [Order Details].OrderID, Orders.OrderDate, Orders.ShipCountry, 
+                         SUM([Order Details].UnitPrice * [Order Details].Quantity) AS Amount, Orders.Freight, SUM([Order Details].UnitPrice * [Order Details].Quantity) 
+                         + Orders.Freight AS Total
+FROM            [Order Details] INNER JOIN
+                         Orders ON [Order Details].OrderID = Orders.OrderID INNER JOIN
+                         Customers ON Orders.CustomerID = Customers.CustomerID
+GROUP BY [Order Details].OrderID, Orders.CustomerID, Orders.Freight, Orders.OrderDate, Orders.ShipCountry, Customers.ContactName
+ORDER BY Orders.CustomerID</CommandText>
+    </Query>
+    <Fields>
+      <Field Name="ContactName">
+        <DataField>ContactName</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="CustomerID">
+        <DataField>CustomerID</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="OrderID">
+        <DataField>OrderID</DataField>
+        <rd:TypeName>System.Int32</rd:TypeName>
+      </Field>
+      <Field Name="OrderDate">
+        <DataField>OrderDate</DataField>
+        <rd:TypeName>System.DateTime</rd:TypeName>
+      </Field>
+      <Field Name="ShipCountry">
+        <DataField>ShipCountry</DataField>
+        <rd:TypeName>System.String</rd:TypeName>
+      </Field>
+      <Field Name="Amount">
+        <DataField>Amount</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="Freight">
+        <DataField>Freight</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+      <Field Name="Total">
+        <DataField>Total</DataField>
+        <rd:TypeName>System.Decimal</rd:TypeName>
+      </Field>
+    </Fields>
+  </DataSet>
+</SharedDataSet>

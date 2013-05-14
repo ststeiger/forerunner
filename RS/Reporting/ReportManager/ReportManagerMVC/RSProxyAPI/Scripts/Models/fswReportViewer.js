@@ -1,8 +1,10 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
-//setInterval(function () { SessionPing(); }, 10000);
+setInterval(function () { SessionPing(); }, 10000);
 
-// Structures
+// ********************* Structures ***************************************
+
+//  The ReportIemContext simplifies the signature for all of the functions to pass context around
 function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style,CurrLocation) {
     this.RS = RS;
     this.CurrObj = CurrObj;
@@ -12,6 +14,7 @@ function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent,
     this.Style = Style;
     this.CurrLocation = CurrLocation;
 }
+//  The ReportState Object holds all of the pointers needed to easily manage the report on the client
 function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, HasToolbar, $PageContainer) {
     this.UID = UID;
     this.$ReportOuterDiv = $ReportOuterDiv;       
@@ -27,7 +30,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = new $("<div style='position:relative'></div");
+    this.$ReportContainer = new $("<div class 'report-contaioner' style='position:relative'></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
@@ -35,28 +38,30 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.externalToolbarHeight;
     this.CreateNav = false;
 }
-function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
-    //This will be neeeded to Row/Col offsets and performance
+// The Floating header object holds pointers to the tablix and its row and col header objects
+function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
     this.$Tablix = $Tablix;
     this.$RowHeader = $RowHeader;
     this.$ColHeader = $ColHeader;
 }
+// The page object holds the data for each page
 function ReportPage($Container, ReportObj) {
     this.ReportObj = ReportObj;    
     this.$Container = $Container;
-    this.Image = null;
-    this.$Img = new $("<IMG/>");
     this.IsRendered = false;
 }
+// Layout is used to determine the placement of report items in a rectangle or rectangle/section/column
 function Layout() {
     this.ReportItems = new Object();
     this.Height = 0;
     this.LowestIndex;
 }
+// Temp measurement mimics the server measurement object
 function TempMeasurement(Height, Width) {
     this.Height = Height;
     this.Width = Width;
 }
+//  Report Item Location is used my the layout to absolute position objects in a rectangle/section/column
 function ReportItemLocation(Index) {
     this.TopDelta = 0;
     this.Height = 0;
@@ -66,11 +71,11 @@ function ReportItemLocation(Index) {
     this.NewTop;
 }
 
-//Page Management
+// ******************** Page Management ***********************************
 function SessionPing() {
 
     // Ping each report so that the seesion does not expire on the report server
-    $.each(Reports, function (Index, RS) {
+    $.each(Reports, function (index, RS) {
         if (RS.SessionID != null)
             $.get(RS.ReportViewerAPI + "/PingSession/", {
                 ReportServerURL: RS.ReportServerURL,
@@ -84,6 +89,8 @@ function SessionPing() {
 }
 function UpdateTableHeaders() {
 
+    // For each report on the page call chack to see if a floating header needs updating
+    // Update the toolbar
     $.each(Reports, function (repIndex, RS) {
         $.each(RS.FloatingHeaders, function (Index, Obj) {
             SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader, RS);
@@ -100,23 +107,21 @@ function UpdateTableHeaders() {
 }
 function SetColHeaderOffset($Tablix, $ColHeader,RS) {
 
+    //Update floating column headers
     if ($ColHeader == null)
         return;
 
     offset = $Tablix.offset();
-    scrollLeft = $(window).scrollLeft();
-    
-    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {        
-        //$(".FloatingRow", this).css("display", "block");
+    scrollLeft = $(window).scrollLeft();    
+    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {                
         $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
         $ColHeader.fadeIn('fast');
     }
     else {
         $ColHeader.css("display", "none");
-        //$ColHeader.css("left", "0px");
+        
     }
 }
-
 function getToolbarHeightWithOffset(rs) {
     if (rs.externalToolbarHeight == null) {
         return rs.ToolbarHeight;
@@ -124,13 +129,15 @@ function getToolbarHeightWithOffset(rs) {
 
     return rs.externalToolbarHeight();
 }
-
 function SetRowHeaderOffset($Tablix,$RowHeader,RS){
+    //  Update floating row headers
 
     if ($RowHeader == null)
         return;
 
     toolbarOffset = 0;
+
+    // Handle toolbar special
     if (RS.HasToolbar)
         toolbarOffset = getToolbarHeightWithOffset(RS);
     if ($RowHeader == RS.$FloatingToolbar)
@@ -138,18 +145,16 @@ function SetRowHeaderOffset($Tablix,$RowHeader,RS){
 
     offset = $Tablix.offset();
     scrollTop = $(window).scrollTop();
-    //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
     if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
-        //$RowHeader.css("display", "block");
         $RowHeader.css("top", Math.min((scrollTop - offset.top) + toolbarOffset, ($Tablix.height() - $RowHeader.height()) + toolbarOffset) + "px");
         $RowHeader.fadeIn('fast');
     }
     else {
         $RowHeader.css("display", "none");
-        //$RowHeader.css("top", "0px");
     }
 }
 function HideTableHeaders() {
+    // On a touch device hide the headers during a scroll if possible
     
     $.each(Reports, function (repIndex, RS) {
         $.each(RS.FloatingHeaders, function (Index, Obj) {
@@ -172,6 +177,8 @@ function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
 function SetPage(RS, NewPageNum, OldPage) {
+    //  Load a new page into the screen and udpate the toolbar
+
     if (!RS.Pages[NewPageNum].IsRendered)
         RenderPage(RS, NewPageNum);
     RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
@@ -183,8 +190,8 @@ function SetPage(RS, NewPageNum, OldPage) {
     RS.Lock = 0;
 }
 function RefreshReport(RS) {
+    // Remove all cached data on the report and re-run
     Page = RS.Pages[RS.CurPage];
-
     RS.SessionID = "";
     RS.Pages = new Object();
     LoadPage(RS, 1, Page, false);
@@ -254,7 +261,7 @@ function GetToolbar(UID) {
     $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
+    $Cell = new $("<TD/>");    
     $Cell.attr("style", "width:100%;");
     $Row.append($Cell);
 

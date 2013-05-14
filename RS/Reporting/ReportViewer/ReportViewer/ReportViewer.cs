@@ -375,4 +375,31 @@ namespace Forerunner.ReportViewer
     }
 
 
+            while (InspectByte() == 0x06)
+            //else
+            //    ThrowParseError();
+            w.WriteStartArray();
+            w.WriteEndArray();
+                    if (obj["IsMultiple"].ToString() == "True")
+                    {   
+                        string temp = obj["Value"].ToString();
+                        foreach (string str in temp.Split(','))
+                        {
+                            ParameterValue pv = new ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
+                            pv.Value = str;
+                            list.Add(pv);
+                        }
+                    }
+                    else
+                    {
+                        ParameterValue pv = new ParameterValue();
+                        pv.Name = obj["Parameter"].ToString();
+                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
+                        list.Add(pv);
+                    }
+                }
+            }
+
+        
 }

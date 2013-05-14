@@ -147,6 +147,7 @@
     <Content Include="Images\ajax-loader1.gif" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
+    <Content Include="Images\OpenDropDown.png" />
     <Content Include="Images\Parameter_Collapse.png" />
     <Content Include="Images\Parameter_Expand.png" />
     <Content Include="Images\Report-icon.png" />
@@ -265,6 +266,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.validate1.11.1.min.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />

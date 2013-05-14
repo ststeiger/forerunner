@@ -296,3 +296,38 @@ only screen and (min-device-pixel-ratio : 1.5)  {
   max-height: 160px;
 }
 
+
+.Parameter, .ParameterClient{
+}
+.Parameter-DropDown
+{
+     padding:4px;
+     margin:0px 4px 4px 4px;
+     border-color: DarkGray; 
+     border-width: 1px; 
+     border-style: solid; 
+     overflow: auto; 
+     background-color: window; 
+     position: absolute; 
+     z-index: 11;
+}
+.Parameter-DropDown lable, checkbox
+{
+    margin:4px;
+}
+.Parameter-DropDown-Input
+{
+    margin-bottom:0px;
+}
+.Parameter-Dropdown-Hidden
+{
+    display:none;
+}
+.Parameter-Dropdown-Show
+{
+    display:block;
+}
+.Parameter-Error
+{
+    border-width:thin;
+    border-color:red;

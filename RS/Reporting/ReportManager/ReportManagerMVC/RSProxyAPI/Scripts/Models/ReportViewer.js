@@ -1,7 +1,10 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
+setInterval(function () { SessionPing(); }, 10000);
 
-// Structures
+// ********************* Structures ***************************************
+
+//  The ReportIemContext simplifies the signature for all of the functions to pass context around
 function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style,CurrLocation) {
     this.RS = RS;
     this.CurrObj = CurrObj;
@@ -11,6 +14,7 @@ function ReportItemContext(RS,CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent,
     this.Style = Style;
     this.CurrLocation = CurrLocation;
 }
+//  The ReportState Object holds all of the pointers needed to easily manage the report on the client
 function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, ReportPath, HasToolbar, $PageContainer) {
     this.UID = UID;
     this.$ReportOuterDiv = $ReportOuterDiv;       
@@ -26,32 +30,38 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = new $("<div style='position:relative'></div");
+    this.$ReportContainer = new $("<div class 'report-contaioner' style='position:relative'></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
+    this.$Slider;
+    this.externalToolbarHeight;
+    this.CreateNav = false;
 }
-function FloatingHeader($Tablix,$RowHeader,$ColHeader) {
-    //This will be neeeded to Row/Col offsets and performance
+// The Floating header object holds pointers to the tablix and its row and col header objects
+function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
     this.$Tablix = $Tablix;
     this.$RowHeader = $RowHeader;
     this.$ColHeader = $ColHeader;
 }
+// The page object holds the data for each page
 function ReportPage($Container, ReportObj) {
     this.ReportObj = ReportObj;    
     this.$Container = $Container;
-    this.Image = null;
-    this.$Img = new $("<IMG/>");
+    this.IsRendered = false;
 }
+// Layout is used to determine the placement of report items in a rectangle or rectangle/section/column
 function Layout() {
     this.ReportItems = new Object();
     this.Height = 0;
     this.LowestIndex;
 }
+// Temp measurement mimics the server measurement object
 function TempMeasurement(Height, Width) {
     this.Height = Height;
     this.Width = Width;
 }
+//  Report Item Location is used my the layout to absolute position objects in a rectangle/section/column
 function ReportItemLocation(Index) {
     this.TopDelta = 0;
     this.Height = 0;
@@ -61,16 +71,35 @@ function ReportItemLocation(Index) {
     this.NewTop;
 }
 
-//Page Management
+// ******************** Page Management ***********************************
+function SessionPing() {
+
+    // Ping each report so that the seesion does not expire on the report server
+    $.each(Reports, function (index, RS) {
+        if (RS.SessionID != null)
+            $.get(RS.ReportViewerAPI + "/PingSession/", {
+                ReportServerURL: RS.ReportServerURL,
+                ReportPath: RS.ReportPath,
+                SessionID: RS.SessionID         
+            })
+            .done(function (Data) {  })
+            .fail(function () { console.log("error"); })
+    });
+
+}
 function UpdateTableHeaders() {
 
+    // For each report on the page call chack to see if a floating header needs updating
+    // Update the toolbar
     $.each(Reports, function (repIndex, RS) {
         $.each(RS.FloatingHeaders, function (Index, Obj) {
             SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader, RS);
             SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader, RS);
         });
-        if (RS.HasToolbar)
-            SetRowHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar,RS);
+        if (RS.HasToolbar) {
+            SetRowHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar, RS);
+            SetColHeaderOffset(RS.$ReportContainer, RS.$FloatingToolbar, RS);
+        }
     });
 
     
@@ -78,54 +107,64 @@ function UpdateTableHeaders() {
 }
 function SetColHeaderOffset($Tablix, $ColHeader,RS) {
 
+    //Update floating column headers
     if ($ColHeader == null)
         return;
 
     offset = $Tablix.offset();
-    scrollLeft = $(window).scrollLeft();
-    
-    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {        
-        //$(".FloatingRow", this).css("display", "block");
+    scrollLeft = $(window).scrollLeft();    
+    if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {                
         $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
         $ColHeader.fadeIn('fast');
     }
     else {
         $ColHeader.css("display", "none");
-        $ColHeader.css("left", "0px");
+        
     }
 }
+function getToolbarHeightWithOffset(rs) {
+    if (rs.externalToolbarHeight == null) {
+        return rs.ToolbarHeight;
+    }
+
+    return rs.externalToolbarHeight();
+}
 function SetRowHeaderOffset($Tablix,$RowHeader,RS){
+    //  Update floating row headers
 
     if ($RowHeader == null)
         return;
 
     toolbarOffset = 0;
+
+    // Handle toolbar special
     if (RS.HasToolbar)
-        toolbarOffset = RS.ToolbarHeight;
+        toolbarOffset = getToolbarHeightWithOffset(RS);
     if ($RowHeader == RS.$FloatingToolbar)
         toolbarOffset = 0;
 
     offset = $Tablix.offset();
     scrollTop = $(window).scrollTop();
-    //scrollTop = (window.pageYOffset == undefined) ? document.body.scrollTop : window.pageYOffset;
     if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
-        //$(".FloatingRow", this).css("display", "block");
-        $RowHeader.css("top", Math.min(scrollTop - offset.top + toolbarOffset, $Tablix.height() - $RowHeader.height() + toolbarOffset) + "px");
+        $RowHeader.css("top", Math.min((scrollTop - offset.top) + toolbarOffset, ($Tablix.height() - $RowHeader.height()) + toolbarOffset) + "px");
         $RowHeader.fadeIn('fast');
     }
     else {
         $RowHeader.css("display", "none");
-        $RowHeader.css("top", "0px");
     }
 }
 function HideTableHeaders() {
+    // On a touch device hide the headers during a scroll if possible
     
     $.each(Reports, function (repIndex, RS) {
         $.each(RS.FloatingHeaders, function (Index, Obj) {
             if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
             if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
         });
+        if (RS.HasToolbar)
+            RS.$FloatingToolbar.css("display", "none");
     });
+    
 
 }
 function SetActionCursor(Ob) {
@@ -138,6 +177,10 @@ function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
 function SetPage(RS, NewPageNum, OldPage) {
+    //  Load a new page into the screen and udpate the toolbar
+
+    if (!RS.Pages[NewPageNum].IsRendered)
+        RenderPage(RS, NewPageNum);
     RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
     RS.Pages[NewPageNum].$Container.fadeIn("normal");
     if (OldPage != null)
@@ -147,10 +190,10 @@ function SetPage(RS, NewPageNum, OldPage) {
     RS.Lock = 0;
 }
 function RefreshReport(RS) {
+    // Remove all cached data on the report and re-run
     Page = RS.Pages[RS.CurPage];
-
-    RS.SessionID = ""; http://localhost:9000/Images
-        RS.Pages = new Object();
+    RS.SessionID = "";
+    RS.Pages = new Object();
     LoadPage(RS, 1, Page, false);
 }
 function GetToolbar(UID) {
@@ -218,7 +261,7 @@ function GetToolbar(UID) {
     $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
+    $Cell = new $("<TD/>");    
     $Cell.attr("style", "width:100%;");
     $Row.append($Cell);
 
@@ -236,11 +279,12 @@ function NavToPage(RS, NewPageNum) {
 function ShowParms() {
     alert("Show");
 }
-function LoadAllPages(RS) {
+function LoadAllPages(RS,InitPage) {
 
     for (var i = 1; i <= RS.NumPages; i++)
         if (RS.Pages[i] == null)
-            LoadPage(RS, i, null, true);
+            if (i != InitPage)
+                LoadPage(RS, i, null, true);
 
 }
 function SetImage(Data, RS) {
@@ -248,34 +292,45 @@ function SetImage(Data, RS) {
         RS.Pages[PageNum] = new ReportPage(null, null);
     RS.Pages[PageNum].Image = Data;
 }
-function CreateSlider(RS, ReportViewerUID, SliderUID) {
-    $Container = $('#' + SliderUID);
+function CreateSlider(RS, ReportViewerUID) {
+    $Container = RS.$PageNav;
+    $Container.css("display", "block");
     $Slider = new $('<DIV />');
     $Slider.attr('class', 'sky-carousel');
-    $Slider.attr('style', 'height: 150px');
+    $Slider.attr('style', 'height: 150px; display: none;'); // Need to make this none
     $SliderWrapper = new $('<DIV />');
     $SliderWrapper.attr('class', 'sky-carousel-wrapper');
     $Slider.append($SliderWrapper);
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
-    for (var i = 1; i <= RS.NumPages; i++) {
-        
-        pHeight ="11in",
-        pWidth = "11in";
-        //pHeight = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageHeight * 0.0393700787 + "in",
-        //pWidth = RS.Pages[NewPageNum].ReportObj.Report.PageContent.PageLayoutStart.PageWidth * 0.0393700787 + "in",
 
+    var i
+    var pHeight = 0;
+    var pWidth = 0;
+
+    for (i = 1; i <= RS.NumPages; i++) {
+        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height > pHeight)
+            pHeight = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height
+        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width > pWidth)
+        pWidth = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width
+    }
+    pHeight = (pHeight * 0.0393700787) + "in";
+    pWidth = (pWidth * 0.0393700787) + "in";
+    for ( i = 1; i <= RS.NumPages; i++) {
+        
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
                 + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
         $ListItem = new $('<LI />');
         $List.append($ListItem);
+        $Caption = new $('<DIV />');
+        $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
+        $Caption.attr('class', 'center');
         $Thumbnail = new $('<IMG />');
         $Thumbnail.attr('class', 'pagethumb');
         $Thumbnail.attr('src', url);
         $Thumbnail.attr("onclick", "NavToPage(Reports['" + ReportViewerUID + "']," + i + ")");
-        $Caption = new $('<DIV />');
-        $Caption.attr('class', 'sc-content');
         // Need to add onclick
+        $ListItem.append($Caption);
         $ListItem.append($Thumbnail);
     }
 
@@ -303,20 +358,27 @@ function CreateSlider(RS, ReportViewerUID, SliderUID) {
     });
 
     RS.$PageNav = $Container;
-    RS.$PageNav.css("display","none");
+    RS.$Slider = $Slider;
+    RS.CreateNav = true;
 }
 function ShowNav(UID) {
-    if (Reports[UID].$PageNav.is(":visible"))
-        Reports[UID].$PageNav.fadeOut("slow")
-    else
-        Reports[UID].$PageNav.fadeIn("slow")    
+    if (!Reports[UID].CreateNav)
+        CreateSlider(Reports[UID], UID);
+    if (Reports[UID].$Slider.is(":visible")) {
+        Reports[UID].$Slider.fadeOut("slow");
+        Reports[UID].$PageNav.fadeOut("fast");
+    }
+    else {
+        Reports[UID].$PageNav.fadeIn("fast");
+        Reports[UID].$Slider.fadeIn("slow");
+    }
 }
 
 //Page Loading
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
-    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null)
+    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null, 0)
 }
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, callback) {
+function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID, toolbarOffset) {
     var $Table = new $("<table/>");
     var $Row = new $("<TR/>");
     var $Cell;
@@ -324,6 +386,10 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, HasToolbar, $Row);
     
     Reports[UID] = RS;
+    if (NavUID != null) {
+        RS.$PageNav = $("#" + NavUID);
+        RS.$PageNav.css("display", "none");
+    }
     
     if (HasToolbar) {
         var $tb = GetToolbar(UID);
@@ -343,13 +409,12 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
             $Container = $('#' + ToolbarUID);
             $Container.append($tb);
 
-            //Total hack for now
-            if ($("#mainSectionHeader") != null) {                
-                RS.ToolbarHeight += $("#mainSectionHeader").outerHeight();                
+            if (toolbarOffset != null) {
+                RS.externalToolbarHeight = toolbarOffset;
             }
         }
-
     }
+
     $(window).scroll(UpdateTableHeaders);
     $(window).bind('touchmove', HideTableHeaders);
     //window.addEventListener("gesturechange", UpdateTableHeaders, false);
@@ -364,11 +429,10 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     RS.$ReportContainer.append($Table);
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    LoadPage(RS, PageNum, null, false, callback);    
-
+    LoadPage(RS, PageNum, null, false, NavUID);    
 }
 
-function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {  
+function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     if (OldPage != null)
         if (OldPage.$Container != null)
             OldPage.$Container.fadeOut("fast");
@@ -384,15 +448,23 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly, callback) {
         ReportServerURL: RS.ReportServerURL,
         ReportPath: RS.ReportPath,
         SessionID: RS.SessionID,
-        PageNumber: NewPageNum
+        PageNumber: NewPageNum,
+        ParameterList: null
     })
-    .done(function (Data) { WritePage(Data, RS, NewPageNum, OldPage, LoadOnly); if (callback != null) callback(RS); })
+    .done(function (Data) {
+        if (Data.Type != undefined && Data.Type == "Parameters") {
+            WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
+        }
+        else {
+            WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
+            if (!LoadOnly) LoadAllPages(RS, NewPageNum);
+        }
+    })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
-
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     var $Report = $("<Div/>");
-
+    
     //Error, need to handle this better
     if (Data == null) return;
 
@@ -405,16 +477,95 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     RS.SessionID = Data.SessionID;
     RS.NumPages = Data.NumPages;
 
-
-    //Write Style   
-    $Report.attr("Style", GetStyle(Data.Report.PageContent.PageStyle)); 
     //Sections
-    $.each(Data.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, Data.Report.PageContent, $Report, "")); });
-
     RemoveLoadingIndicator(RS);
-    if (!LoadOnly)
+    if (!LoadOnly) {
+        RenderPage(RS, NewPageNum);
         SetPage(RS, NewPageNum, OldPage);
+    }
+}
+function RenderPage(RS, pageNum) {
+     //Write Style   
+    RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
+    $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
+    RS.Pages[pageNum].IsRendered = true;
+}
+function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
+    var LoadOnly = false;
+    var $ParameterContainer = GetDefaultHTMLTable();
+    $ParameterContainer.attr("class", "Parameter-Panel");
+    var $Row = new $("<TR />");
+    var $Col = $("<TD/>");
 
+    var $Form = new $("<Form />");
+    $Form.attr("id", "ParamsForm");
+    var $SecondContainer = GetDefaultHTMLTable();
+    $SecondContainer.addClass("Parameter-Form");
+
+    $.each(Data.ParametersList, function (Index, Obj) {        
+        $SecondContainer.append(WriteParameterControl(new ReportItemContext(RS, Obj, Index, RS.CurrObj, new $("<TR />"), "", "")));
+    });
+
+    $Form.append($SecondContainer);
+    $Form.validate({
+        //errorClass: "Parameter-Error",
+        //successClass:"Parameter-Error",
+        errorPlacement: function (error, element) {
+            error.appendTo(element.parent("td").next("td"));
+        },
+        highlight: function (element) {
+            $(element).addClass("Parameter-Error");           
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("Parameter-Error");
+        },
+        success: function(label) {
+            label.text("Ok!");
+        } 
+    });
+    $Col.append($Form);
+    $Row.append($Col);
+
+    var $ViewReport_TD = new $("<TD/>");
+    $ViewReport_TD.attr("style", "margin:4px;text-align:center");
+
+    var $ViewReport = new $("<input/>");
+    $ViewReport.attr("id", "Parameter_ViewReport");
+    $ViewReport.attr("type", "button");
+    $ViewReport.attr("value", "View Report");
+    $ViewReport.on("click", function () {
+        if ($("#ParamsForm").valid() == true) {
+            if (RS.Pages[pageNum] != null) {
+                RS.Pages[pageNum].$Container.detach();
+            }
+            AddLoadingIndicator(RS);
+            var parameterList = GetParamsList();
+
+            $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
+                ReportServerURL: RS.ReportServerURL,
+                ReportPath: RS.ReportPath,
+                SessionID: RS.SessionID,
+                PageNumber: pageNum,
+                ParameterList: parameterList
+            })
+            .done(function (Data) { WritePage(Data, RS, pageNum, null, LoadOnly); if (!LoadOnly) LoadAllPages(RS, pageNum); })
+            .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+        }
+    });
+
+    $ViewReport_TD.append($ViewReport);
+    var $SpaceTD = new $("<TD />");
+    $SpaceTD.html("&nbsp");
+    $Row.append($SpaceTD);
+    $Row.append($ViewReport_TD);
+
+    $ParameterContainer.append($Row);
+    
+    //Same Hierarchy with Toolbar
+    RS.$PageContainer.append($ParameterContainer);
+    RS.$PageContainer.append(WriteParameterToggle());
+    //RS.$ReportContainer.append(RS.$PageContainer);   
+    RemoveLoadingIndicator(RS);
 }
 function WriteSection(RIContext) {
     var $NewObj = GetDefaultHTMLTable();
@@ -624,19 +775,18 @@ function WriteRichText(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
+    //var $NewObj = $("<IMG/>");   
+    //$NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
+
     var $NewObj = new Image();
 
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
     var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-
-    //Hack for Image size, need to handle clip, fit , fit proportional
+    
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-
-    var containerHeight = RIContext.CurrLocation.Height;
-    var containerWidth = RIContext.CurrLocation.Width;
 
     var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
     if (sizingType == 3) {
@@ -763,53 +913,58 @@ function WriteActionImageMapAreas(RIContext, width, height) {
         RIContext.$HTMLParent.append($Map);
     }
 }
-function ResizeImage(img, sizingType, maxHeight, maxWidth) {
+function ResizeImage(img, sizingType, maxHeight, maxWidth) {    
     var ratio = 0;
-    var height = ConvertToMM($(img).height() + "px");
-    var width = ConvertToMM($(img).width() + "px");
+    var height = 0;
+    var width = 0;
 
-    switch (sizingType) {
-        case 0://AutoSize
-            $(img).css("height",height + "mm");
-            $(img).css("width", width + "mm");
-            break;
-        case 1://Fit
-            $(img).css("height", maxHeight + "mm");
-            $(img).css("width", maxWidth + "mm");
-            break;
-        case 2://Fit Proportional
-            if (height / maxHeight > 1 | width / maxWidth > 1) {
-                if ((height / maxHeight) >= (width / maxWidth)) {
-                    ratio = maxHeight / height;
+    height = ConvertToMM($(img).height() + "px");
+    width = ConvertToMM($(img).width() + "px");
+    if (height != 0 & width != 0) {
+        switch (sizingType) {
+            case 0://AutoSize
+                $(img).css("height", height + "mm");
+                $(img).css("width", width + "mm");
+                break;
+            case 1://Fit
+                $(img).css("height", maxHeight + "mm");
+                $(img).css("width", maxWidth + "mm");
+                break;
+            case 2://Fit Proportional
+                if (height / maxHeight > 1 | width / maxWidth > 1) {
+                    if ((height / maxHeight) >= (width / maxWidth)) {
+                        ratio = maxHeight / height;
 
-                    $(img).css("height", maxHeight + "mm");
-                    $(img).css("width", width * ratio + "mm");                   
-                    $(img).css("max-height", maxHeight + "mm");
-                    $(img).css("max-width", width * ratio + "mm");
+                        $(img).css("height", maxHeight + "mm");
+                        $(img).css("width", width * ratio + "mm");
+                        $(img).css("max-height", maxHeight + "mm");
+                        $(img).css("max-width", width * ratio + "mm");
                     $(img).css("min-height", maxHeight + "mm");
                     $(img).css("min-width", width * ratio + "mm");
-                }
-                else {
-                    ratio = maxWidth / width;
+                    }
+                    else {
+                        ratio = maxWidth / width;
 
-                    $(img).css("width", maxWidth + "mm");
-                    $(img).css("height", height * ratio + "mm");
-                    $(img).css("max-width", maxWidth + "mm");
-                    $(img).css("max-height", height * ratio + "mm");
+                        $(img).css("width", maxWidth + "mm");
+                        $(img).css("height", height * ratio + "mm");
+                        $(img).css("max-width", maxWidth + "mm");
+                        $(img).css("max-height", height * ratio + "mm");
                     $(img).css("min-width", maxWidth + "mm");
                     $(img).css("min-height", height * ratio + "mm");
+                    }
                 }
-            }
-            break;
-        case 3://Clip
-            $(img).css("height", ConvertToMM(img.naturalHeight + "px") + "mm");
-            $(img).css("width", ConvertToMM(img.naturalWidth + "px") + "mm");
-            $(img).css("max-height", ConvertToMM(img.naturalHeight + "px") + "mm");
-            $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
-            //Also add style overflow:hidden to it's parent container
-            break;
+                break;
+            case 3://Clip
+                $(img).css("height", ConvertToMM(img.naturalHeight + "px") + "mm");
+                $(img).css("width", ConvertToMM(img.naturalWidth + "px") + "mm");
+                $(img).css("max-height", ConvertToMM(img.naturalHeight + "px") + "mm");
+                $(img).css("max-width", ConvertToMM(img.naturalWidth + "px") + "mm");
+                //Also add style overflow:hidden to it's parent container
+                break;
+            default:
+                break;
+        }
     }
-   
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");
@@ -830,15 +985,15 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     else
         RowIndex = BodyCellRowIndex;
 
-        width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
-        height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
-        Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
+    width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
+    height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
+    Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
 
-        //Row and column span
-        if (Obj.RowSpan != null)
-            $Cell.attr("rowspan", Obj.RowSpan);
-        if (Obj.ColSpan != null)
-            $Cell.attr("colspan", Obj.ColSpan);
+    //Row and column span
+    if (Obj.RowSpan != null)
+        $Cell.attr("rowspan", Obj.RowSpan);
+    if (Obj.ColSpan != null)
+        $Cell.attr("colspan", Obj.ColSpan);
 
     //Background color goes on the cell
     if ((Obj.Cell.ReportItem.Elements.SharedElements.Style !=null) && (Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor != null))
@@ -873,7 +1028,7 @@ function WriteTablix(RIContext) {
             $Tablix.append($Row);
             
             //Handle fixed col header
-            if (RIContext.CurrObj.TablixRows[Index - 1].Type == "ColumnHeader")
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex-1].FixRows == 1)
                 $FixedColHeader.append($Row.clone(true, true));
 
             $Row = new $("<TR/>");
@@ -904,12 +1059,12 @@ function WriteTablix(RIContext) {
     })
     $Tablix.append($Row);
 
-    if (HasFixedCols)
+    if (HasFixedRows)
         $Tablix.append($FixedColHeader);
     else
         $FixedColHeader = null;
 
-    if (HasFixedRows)
+    if (HasFixedCols)
         $Tablix.append($FixedRowHeader);
     else
         $FixedRowHeader = null;
@@ -920,41 +1075,15 @@ function WriteTablix(RIContext) {
     return ret;
 }
 function WriteSubreport(RIContext) {
-    //var $RI;        //This is the ReportItem Object
-    //var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else
-    var EmptyDivHeight = 0;
-    //var $EmptyDiv = $("<Div/>");
-    //var Measurements;
-    var NewTop = 0;
-
     RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.SubReportProperties));    
-    var subReportName = $("<h2/>").css("text-align", "center").html("SubReport: "+RIContext.CurrObj.SubReportProperties.SharedElements.ReportName);
-    RIContext.$HTMLParent.append(subReportName);
+    //var subReportName = $("<h2/>").css("text-align", "center").html("SubReport: "+RIContext.CurrObj.SubReportProperties.SharedElements.ReportName);
+    //RIContext.$HTMLParent.append(subReportName);
 
-    $.each(RIContext.CurrObj.BodyElements.ReportItems, function (Index, Obj) {
-        var $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        var Measurements = RIContext.CurrObj.Measurement.Measurements;
-
-        // Keep track of how much space we are using for top position offset       
-        var $LocDiv = new $("<Div/>");
-        $LocDiv.append($RI);
-        //add a solid/thin border for the subreport
-        $LocDiv.attr("Style", "border-style:solid;border-width:thin;position:relative;top:" + (Measurements[Index].Top - NewTop) + "mm;left:" + Measurements[Index].Left + "mm;");
-        NewTop += Measurements[Index].Height;
-
-        //Collect empty space, this needs to handle more complex layout       
-        if (Index > 0) {
-            if (Measurements[Index].Top > (Measurements[Index - 1].Top + Measurements[Index - 1].Height))
-                EmptyDivHeight += Measurements[Index].Top - (Measurements[Index - 1].Top + Measurements[Index - 1].Height);
-        }
-        else
-            EmptyDivHeight += Measurements[Index].Top;
-
-        RIContext.$HTMLParent.append($LocDiv);
+    $.each(RIContext.CurrObj.BodyElements, function (Index, Obj) {
+        var $RI = WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
+        RIContext.$HTMLParent.append($RI);
     });
 
-    //$EmptyDiv.attr("Style", "height:" + EmptyDivHeight + "mm;");
-    //RIContext.$HTMLParent.append($EmptyDiv);
     return RIContext.$HTMLParent;
 }
 function WriteLine(RIContext) {
@@ -972,8 +1101,297 @@ function WriteLine(RIContext) {
     return RIContext.$HTMLParent;
 
 }
+function WriteParameterControl(RIContext) {
+    var $TD_Lable = new $("<TD />");
+    var $lable = new $("<span />");
+    $lable.addClass("Parameter-Lable");
+    var Name = RIContext.CurrObj.Name;
+    $lable.html(Name);
 
+    $TD_Lable.append($lable);
 
+    //If the control have valid values, then generate a select control
+    var $TD_Control = new $("<TD />");
+    var $element = null;
+    if (RIContext.CurrObj.ValidValues != "") {
+        //dropdown with checkbox
+        if (RIContext.CurrObj.MultiValue == "True") {
+            $element = new $("<Div />");
+            WriteDropDownWithCheckBox(RIContext.CurrObj, $element);
+        }
+        else {
+            $element = new $("<select />");
+            WriteDropDownControl(RIContext.CurrObj, $element);
+        }
+    }
+    else {
+        if (RIContext.CurrObj.Type == "Boolean") {
+            var radioValues = new Array();
+            radioValues[0] = "True";
+            radioValues[1] = "False";
+
+            $element = new $("<Span />");
+            for (value in radioValues) {
+                var $radioItem = new $("<input/>");
+                $radioItem.addClass("Parameter");
+                $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
+                $radioItem.addClass("Parameter-Radio");
+                $element.attr("DataType", RIContext.CurrObj.Type);
+                $radioItem.addClass(RIContext.CurrObj.Name);
+                
+                $radioItem.attr("type", "radio");
+                $radioItem.attr("name", RIContext.CurrObj.Name);
+                $radioItem.attr("value", radioValues[value]);
+                $radioItem.attr("id", RIContext.CurrObj.Name + "_radio" + "_" + radioValues[value]);
+                $radioItem.attr("DataType", RIContext.CurrObj.Type);
+                GetParameterControlProperty(RIContext.CurrObj, $radioItem);
+
+                var $lableTrue = new $("<lable/>");
+                $lableTrue.html(radioValues[value]);
+                $lableTrue.attr("for", RIContext.CurrObj.Name + "_radio" + "_" + radioValues[value]);
+
+                $element.append($radioItem);
+                $element.append($lableTrue);
+            }
+        }
+        else {
+            $element = new $("<input/>");
+            $element.attr("class", "Parameter");
+            $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
+            $element.attr("DataType", RIContext.CurrObj.Type);
+            $element.attr("type", "text");
+            $element.attr("size", "30");
+            $element.attr("id", Name);
+
+            GetParameterControlProperty(RIContext.CurrObj, $element);
+
+            switch (RIContext.CurrObj.Type) {
+                case "DateTime":
+                    //Format: ISO8601
+                    $element.datepicker({ dateFormat: 'yy-mm-dd' });
+                    $element.attr("dateISO", "true");
+                    break;
+                case "Integer":
+                case "Float":
+                    $element.attr("number", "true");
+                    break;
+                case "String":
+                    break;
+            }
+        }
+    }    
+    $TD_Control.append($element);
+    $TD_Control.append(AddNullableCheckBox(RIContext.CurrObj, $element));
+    var $TD_Status = new $("<TD/>");
+    $TD_Status.addClass("Status");
+    RIContext.$HTMLParent.append($TD_Lable);
+    RIContext.$HTMLParent.append($TD_Control);
+    RIContext.$HTMLParent.append($TD_Status);
+
+    return RIContext.$HTMLParent;
+}
+function WriteParameterToggle() {
+    var $Container = new $("<Div />");
+    $Container.attr("class", "ToggleParam");
+
+    var $ToggleIcon = new $("<Img />");
+    $ToggleIcon.attr("alt", "Show / Hide Parameters");
+    $ToggleIcon.attr("title", "Show / Hide Parameters");
+    $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
+    $Container.on("mouseover", function (event) { SetActionCursor(this); });
+
+    $Container.on("click", function () {
+        $(".Parameter-Panel").toggle("fast");
+        if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
+            $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
+        else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
+            $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
+    });
+
+    $Container.append($ToggleIcon);
+    return $Container;   
+}
+function GetParameterControlProperty(Obj, $Control) {
+    $Control.attr("name", Obj.Name);
+    $Control.attr("AllowBlank", Obj.AllowBlank);
+    if (Obj.QueryParameter == "True" | Obj.Nullable != "True")
+        $Control.attr("required", "");
+    
+    //if (Obj.PromptUser == "True") {
+    //    $Control.attr("Title", Obj.Prompt);
+    //}
+    $Control.attr("ErrorMessage", Obj.ErrorMessage);
+}
+function AddNullableCheckBox(Obj, $Control) {
+    if (Obj.Nullable == "True") {
+        var $NullableSpan = new $("<Span />");
+
+        var $Checkbox = new $("<Input />");
+        $Checkbox.attr("type", "checkbox");
+        $Checkbox.attr("class", "Parameter-Checkbox");
+        $Checkbox.attr("name", Obj.Name);
+
+        $Checkbox.on("click", function () {
+            if ($Checkbox.attr("checked") == "checked") {
+                $Checkbox.removeAttr("checked");
+                if (Obj.Type == "Boolean") {
+                    $(".Parameter-Radio." + Obj.Name).removeAttr("disabled");
+                }
+                else {
+                    $Control.removeAttr("disabled");
+                    $Control.removeClass("Parameter-Disabled").addClass("Parameter-Enabled");
+                }
+            }
+            else {
+                $Checkbox.attr("checked", "true");
+                if (Obj.Type == "Boolean") {
+                    $(".Parameter-Radio." + Obj.Name).attr("disabled", "true");
+                }
+                else {
+                    $Control.attr("disabled", "true");
+                    $Control.removeClass("Parameter-Enable").addClass("Parameter-Disabled");
+                }
+            }
+        });
+
+        var $NullableLable = new $("<Lable />");
+        $NullableLable.html("NULL");
+        $NullableLable.addClass("Parameter-Lable");
+
+        $NullableSpan.append($Checkbox);
+        $NullableSpan.append($NullableLable);
+
+        return $NullableSpan;
+    }
+    else
+        return null;
+}
+function WriteDropDownControl(Obj, $Control) {    
+    $Control.addClass("Parameter");
+    $Control.attr("IsMultiple", Obj.MultiValue);
+    $Control.addClass("Parameter-Select");
+    $Control.attr("id", Obj.Name);
+    $Control.attr("DataType", Obj.Type);
+    GetParameterControlProperty(Obj, $Control);
+
+    var $defaultOption = new $("<option />");
+    $defaultOption.attr("value", "");        
+    $defaultOption.attr("multiple", "multiple");
+    $defaultOption.html("&#60Select a Value&#62");
+    $Control.append($defaultOption);
+
+    for (index in Obj.ValidValues) {
+        var $option = new $("<option />");
+        $option.attr("value", Obj.ValidValues[index].Value);
+        $option.html(Obj.ValidValues[index].Key);
+        $Control.append($option);
+    }
+}
+function WriteDropDownWithCheckBox(Obj, $Control) {
+    var $MultipleCheckBox = new $("<Input />");
+    $MultipleCheckBox.attr("type", "text");
+    $MultipleCheckBox.attr("id", Obj.Name);
+    $MultipleCheckBox.attr("class", "ParameterClient");
+    $MultipleCheckBox.attr("DataType", Obj.Type);
+    $MultipleCheckBox.on("click", function () { PopupDropDownPanel(Obj); });
+
+    var $HiddenCheckBox = new $("<Input />");
+    $HiddenCheckBox.attr("type", "hidden");
+    $HiddenCheckBox.attr("name", Obj.Name);
+    $HiddenCheckBox.attr("IsMultiple", Obj.MultiValue);
+    $HiddenCheckBox.attr("id", Obj.Name + "_hidden");
+    $HiddenCheckBox.attr("class", "Parameter");
+    $HiddenCheckBox.attr("DataType", Obj.Type);
+
+    var $OpenDropDown = new $("<Img />");
+    $OpenDropDown.attr("src", "/Images/OpenDropDown.png");
+    $OpenDropDown.attr("alt", "Open DropDown List");
+    $OpenDropDown.on("click", function () { PopupDropDownPanel(Obj); });
+
+    var $DropDownContainer = new $("<Div />");
+    $DropDownContainer.attr("id", Obj.Name + "_DropDown");
+    $DropDownContainer.addClass("Parameter-DropDown");
+    $DropDownContainer.addClass("Parameter-Dropdown-Hidden");
+
+    var $Table = GetDefaultHTMLTable();
+    Obj.ValidValues.push({ Key: "Select All", Value: "Select All" });
+
+    for (index in Obj.ValidValues) {
+        var key;
+        var value;
+        if (index == 0) {
+            var SelectAll = Obj.ValidValues[Obj.ValidValues.length - 1];
+            key = SelectAll.Key;
+            value = SelectAll.Value;
+        }
+        else {
+            key = Obj.ValidValues[index-1].Key;
+            value = Obj.ValidValues[index-1].Value;
+        }
+
+        var $Row = new $("<TR />");
+        var $Col = new $("<TD/>");
+
+        var $Checkbox = new $("<Input />");
+        $Checkbox.attr("type", "checkbox");
+        $Checkbox.attr("id", Obj.Name + "_DropDown_" + value);
+        $Checkbox.attr("class", Obj.Name + "_DropDown_CB");
+        $Checkbox.attr("name", Obj.Name + "_DropDown_CB");
+        $Checkbox.attr("value", value);
+        $Checkbox.on("click", function () {
+            if (this.value == "Select All" & this.checked == true) {
+                $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                    this.checked = true;
+                });
+            }
+            if (this.value == "Select All" & this.checked == false) {
+                $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                    this.checked = false;
+                });
+            }
+        });
+
+        var $Lable = new $("<Lable />");
+        $Lable.attr("for", Obj.Name + "_DropDown_" + value);
+        $Lable.attr("id", Obj.Name + "_DropDown_" + value + "_lable");
+        $Lable.html(key);
+
+        $Col.append($Checkbox);
+        $Col.append($Lable);
+        $Row.append($Col);
+        $Table.append($Row);
+    }
+    $DropDownContainer.append($Table);
+
+    $Control.append($MultipleCheckBox);
+    $Control.append($HiddenCheckBox);
+    $Control.append($OpenDropDown);
+    $Control.append($DropDownContainer);
+}
+function PopupDropDownPanel(Obj) {
+    $("#" + Obj.Name + "_DropDown").width($("#" + Obj.Name).width());
+    if ($("#" + Obj.Name + "_DropDown").hasClass("Parameter-Dropdown-Hidden")) {
+        $("#" + Obj.Name + "_DropDown").fadeOut("fast");
+        $("#" + Obj.Name + "_DropDown").removeClass("Parameter-Dropdown-Hidden");
+        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Show");
+    }
+    else {
+        $("#" + Obj.Name + "_DropDown").fadeIn("fast", function () {
+            var ShowValue = "";
+            var HiddenValue = "";
+            $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                if (this.checked & this.value != "Select All") {
+                    ShowValue += $("#" + Obj.Name + "_DropDown_" + this.value + "_lable").html() + ",";
+                    HiddenValue += this.value + ",";
+                }
+            });
+            $("#" + Obj.Name).val(ShowValue.substr(0, ShowValue.length - 1));
+            $("#" + Obj.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
+        });
+        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Hidden");
+        $("#" + Obj.Name + "_DropDown").removeClass("Parameter-Dropdown-Show");
+    }
+}
 //Helper fucntions
 function GetHeight($Obj) {
     var height;
@@ -990,7 +1408,7 @@ function GetHeight($Obj) {
     $copied_elem.find('img').remove();
 
     $("body").append($copied_elem);
-    height = $copied_elem.outerHeight() + "px";
+    height = $copied_elem.height() + "px";
 
     $copied_elem.remove();
 
@@ -1403,7 +1821,77 @@ function ConvertToMM(ConvertFrom) {
     //This is an error
     return value;
 }
+function GetParamsList() {
+    var a = [];
+    //Text
+    $(".Parameter").filter(":text").each(function (i) {
+        a.push({ name: this.name, ismultiple:$(this).attr("ismultiple"), type:$(this).attr("datatype"), value: IsParamNullable(this) });
+    });
+    //Hidden
+    $(".Parameter").filter(":hidden").each(function (i) {
+        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
+    });
+    //dropdown
+    $(".Parameter").filter("select").each(function (i) {
+        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
+    });
+    var RadioList = new Object();
+    //radio-group by radio name, default value: null
+    $(".Parameter").filter(":radio").each(function (i) {
+        if (!(this.name in RadioList)) {
+            RadioList[this.name] = null;
+        }
+        if (this.checked == true) {
+            RadioList[this.name] = IsParamNullable(this);
+        }
+    });
+    for (var RadioName in RadioList) {
+        a.push({ name: RadioName, ismultiple: "", type: 'Boolean', value: RadioList[RadioName] });
+    }
+    //combobox - multiple values
+    var temp_cb = "";
+    $(".Parameter").filter(":checkbox").filter(":checked").each(function (i) {
+        if (temp_cb.indexOf(this.name) == -1) {
+            temp_cb += this.name + ",";
+        }
+    });
+    var cb_array = temp_cb.split(",");
+    var cb_name = "";
+    var cb_value = "";
+    for (var cb_i = 0; cb_i < cb_array.length - 1; cb_i++) {
+        cb_name = cb_array[cb_i];
+        var cb_value_length = $("input[name='" + cb_array[cb_i] + "']:checked").length;
+        $("input[name='" + cb_array[cb_i] + "']:checked").each(function (i) {
+            if (i == cb_value_length - 1)
+                cb_value += this.value;
+            else
+                cb_value += this.value + ",";
 
+        });
+        a.push({ name: cb_name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: cb_value });
+    }
+
+    //Combined to JSON String, format as below
+    //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
+    var temp_json = "[";
+    for (var json_i = 0; json_i < a.length; json_i++) {
+        if (json_i != a.length - 1) {
+            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"},';
+        }
+        else {
+            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"}';
+        }
+    }
+    temp_json += "]";
+    return '{"ParamsList":' + temp_json + '}';
+}
+function IsParamNullable(Parameter) {
+    var checkbox = $(".Parameter-Checkbox").filter("[name='" + Parameter.name + "']").first();
+    if (checkbox.attr("checked") == "checked")
+        return null;
+    else
+        return Parameter.value;
+}
 
 
 

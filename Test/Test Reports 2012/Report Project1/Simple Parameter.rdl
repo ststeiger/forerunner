@@ -6,13 +6,13 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>0.97917in</Width>
+              <Width>1.07292in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.97917in</Width>
+              <Width>3.14583in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>1.21875in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -21,7 +21,7 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox11">
+                    <Textbox Name="Textbox1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -32,12 +32,10 @@
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox11</rd:DefaultName>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -53,7 +51,7 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox16">
+                    <Textbox Name="Textbox3">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -67,7 +65,7 @@
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox16</rd:DefaultName>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -83,7 +81,7 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox18">
+                    <Textbox Name="Textbox5">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -94,12 +92,10 @@
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox18</rd:DefaultName>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -131,9 +127,7 @@
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Center</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>CategoryID</rd:DefaultName>
@@ -193,9 +187,7 @@
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>UnitPrice</rd:DefaultName>
@@ -234,19 +226,10 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
-        <Filters>
-          <Filter>
-            <FilterExpression>=Fields!CategoryID.Value</FilterExpression>
-            <Operator>LessThanOrEqual</Operator>
-            <FilterValues>
-              <FilterValue DataType="Integer">5</FilterValue>
-            </FilterValues>
-          </Filter>
-        </Filters>
-        <Top>0.16542in</Top>
-        <Left>0.13417in</Left>
+        <Top>0.37375in</Top>
+        <Left>0.17583in</Left>
         <Height>0.5in</Height>
-        <Width>4.95834in</Width>
+        <Width>5.4375in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -270,11 +253,11 @@
     <DataSource Name="DataSource1">
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=.\mssql2012;Initial Catalog=Northwnd</ConnectString>
+        <ConnectString>Data Source=.\SQLEXPRESS;Initial Catalog=NORTHWND</ConnectString>
         <IntegratedSecurity>true</IntegratedSecurity>
       </ConnectionProperties>
       <rd:SecurityType>Integrated</rd:SecurityType>
-      <rd:DataSourceID>6d0ec3eb-0b6b-47ae-a30a-f62c49934089</rd:DataSourceID>
+      <rd:DataSourceID>d780a0bc-a2d1-480f-af87-535fb3ecd0d0</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -285,13 +268,9 @@
           <QueryParameter Name="@CategoryID">
             <Value>=Parameters!CategoryID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ProductName">
-            <Value>=Parameters!ProductName.Value</Value>
-          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT  CategoryID, ProductName, UnitPrice FROM Products 
-WHERE CategoryID=@CategoryID or ProductName like @ProductName
-ORDER BY CategoryID </CommandText>
+WHERE CategoryID=@CategoryID</CommandText>
       </Query>
       <Fields>
         <Field Name="CategoryID">
@@ -312,78 +291,9 @@ ORDER BY CategoryID </CommandText>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>2</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>CategoryID</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Test1</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Test2</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>Test3</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ProductName">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ProductName</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="IsCheap">
-      <DataType>Boolean</DataType>
-      <Prompt>Is Cheap</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ProductionDate">
-      <DataType>DateTime</DataType>
-      <Prompt>ProductionDate</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="IntegerTest">
-      <DataType>Integer</DataType>
-      <Prompt>IntegerTest</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="FloatTest">
-      <DataType>Float</DataType>
-      <Prompt>FloatTest</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="MultipleValues">
-      <DataType>String</DataType>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>MultipleValues</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Test1</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Test2</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>Test3</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>4</Value>
-            <Label>Test4</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
+      <Prompt>Category ID</Prompt>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>8475851e-5c18-4373-a637-326ce4d32b68</rd:ReportID>
+  <rd:ReportID>877d9966-160a-4385-b077-011de2813cdd</rd:ReportID>
 </Report>

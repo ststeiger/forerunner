@@ -8,6 +8,7 @@ using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
 using Forerunner.ReportViewer;
+using System.IO;
 
 namespace RSProxyAPI.Controllers
 {
@@ -16,25 +17,26 @@ namespace RSProxyAPI.Controllers
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
+
         [HttpGet]
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             string mimeType;
             byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse(); 
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = rep.GetImage(SessionID, ImageID, out mimeType);
-            resp = this.Request.CreateResponse();
+            result = rep.GetImage(SessionID, ImageID, out mimeType);            
             if (result != null)
-            {
-                ByteArrayContent content = new ByteArrayContent(result);                
-                resp.Content = content;
+            {                
+                resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
             }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
 
             return resp;
         }
@@ -42,39 +44,56 @@ namespace RSProxyAPI.Controllers
         [HttpGet]
         public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string PageHeight, string PageWidth)
         {
+
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse();;
+
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), PageHeight, PageWidth);
+
+            if (result != null)
+            {                
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
+            }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
+            
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse(); 
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), PageHeight, PageWidth);
-            ByteArrayContent content = new ByteArrayContent(result);
-            resp = this.Request.CreateResponse();
-            resp.Content = content;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
+            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));            
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
 
             return resp;
         }
 
         [HttpGet]
-        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp;
+            HttpResponseMessage resp = this.Request.CreateResponse();
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString()));
-            ByteArrayContent content = new ByteArrayContent(result);
-            resp = this.Request.CreateResponse();
-            resp.Content = content;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
+            rep.pingSession(ReportPath,SessionID);            
+            resp.StatusCode = HttpStatusCode.OK;
             return resp;
+
         }
     }
 }

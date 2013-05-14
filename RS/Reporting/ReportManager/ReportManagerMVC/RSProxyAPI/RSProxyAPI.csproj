@@ -51,6 +51,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -138,12 +139,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\FormValidate.htm" />
     <Content Include="Content\HtmlPage2.html" />
+    <Content Include="Content\ReportViewer.css" />
     <Content Include="Content\StellaViewerTest.html" />
     <Content Include="Content\HtmlPage1.html" />
     <Content Include="Images\ajax-loader1.gif" />
     <Content Include="Images\Folder-icon.png" />
     <Content Include="Images\Home-icon.png" />
+    <Content Include="Images\OpenDropDown.png" />
+    <Content Include="Images\Parameter_Collapse.png" />
+    <Content Include="Images\Parameter_Expand.png" />
     <Content Include="Images\Report-icon.png" />
     <Content Include="Images\ReportViewer\Backward.png" />
     <Content Include="Images\ReportViewer\FastFoward.png" />
@@ -182,6 +188,7 @@
     <Content Include="Scripts\Carousel\images\sc-graphics\prev_arrow.png" />
     <Content Include="Scripts\Carousel\images\sc-graphics\tooltip_skin_navigation.png" />
     <Content Include="Scripts\Carousel\js\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\Carousel\js\jquery.metadata.js" />
     <Content Include="Scripts\Carousel\js\jquery.sky.carousel-1.0.2.min.js" />
     <Content Include="Scripts\ContentFlowAddOn.js" />
     <Content Include="Content\ReportManager.css" />
@@ -250,6 +257,7 @@
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery-1.7.2.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -258,11 +266,12 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.validate1.11.1.min.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\laconic.js" />
-    <Content Include="Scripts\Models\FRReport.js" />
+    <Content Include="Scripts\Models\ReportViewer.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
@@ -278,7 +287,9 @@
     <Content Include="Scripts\Views\frreportviewermainview.js" />
     <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

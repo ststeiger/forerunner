@@ -341,9 +341,7 @@ namespace Forerunner.ReportViewer
                 }
                 else
                     w.WriteString("");
-                 case 0x0E:
-                     if (!CheckOnly) WriteJSONGauge();
-                     break;
+                 
 
                 w.WriteMember("Dependencies");
                 if (parameter.Dependencies != null)
@@ -379,9 +377,7 @@ namespace Forerunner.ReportViewer
             }
 
             w.WriteEndArray();
-         {
-             WriteJSONImageTypeElement(0x0E, "Gauge");
-         }
+         
             w.WriteEndObject();
 
             return w.ToString();

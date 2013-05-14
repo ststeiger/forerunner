@@ -340,7 +340,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value />
+                                  <Value>Gauge</Value>
                                   <Style />
                                 </TextRun>
                               </TextRuns>

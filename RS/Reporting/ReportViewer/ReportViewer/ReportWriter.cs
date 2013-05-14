@@ -935,6 +935,9 @@ namespace Forerunner
                 case 0x0C:
                     if (!CheckOnly) WriteJSONSubreport();
                     break;
+                case 0x0E:
+                    if (!CheckOnly) WriteJSONGauge();
+                    break;
                 case 0x15:
                     if (!CheckOnly) WriteJSONMap();
                     break;
@@ -1578,6 +1581,11 @@ namespace Forerunner
         private void WriteJSONMap()
         {
             WriteJSONImageTypeElement(0x15, "Map");
+        }
+
+        private void WriteJSONGauge()
+        {
+            WriteJSONImageTypeElement(0x0E, "Gauge");
         }
 
 

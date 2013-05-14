@@ -141,7 +141,7 @@
   <ItemGroup>
     <Content Include="Content\FormValidate.htm" />
     <Content Include="Content\HtmlPage2.html" />
-    <Content Include="Content\fswReportViewer.css" />
+    <Content Include="Content\ReportViewer.css" />
     <Content Include="Content\StellaViewerTest.html" />
     <Content Include="Content\HtmlPage1.html" />
     <Content Include="Images\ajax-loader1.gif" />
@@ -269,7 +269,7 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\laconic.js" />
-    <Content Include="Scripts\Models\fswReportViewer.js" />
+    <Content Include="Scripts\Models\ReportViewer.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />

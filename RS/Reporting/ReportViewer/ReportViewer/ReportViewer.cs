@@ -127,7 +127,7 @@ namespace Forerunner.ReportViewer
             string[] streamIDs = null;
             string devInfo = @"<DeviceInfo></DeviceInfo>";
 
-            if (SessionID != "")
+            if (SessionID != "" && SessionID != null)
             {
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;

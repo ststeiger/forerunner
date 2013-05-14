@@ -35,10 +35,6 @@
       <FullPath>Image Report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>ImageMapTest.rdl</Name>
-      <FullPath>ImageMapTest.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Layout.rdl</Name>
       <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
@@ -67,6 +63,10 @@
       <FullPath>Simple Matrix.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Simple Parameter.rdl</Name>
+      <FullPath>Simple Parameter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Simple Table with groups and drill down.rdl</Name>
       <FullPath>Simple Table with groups and drill down.rdl</FullPath>
     </ProjectItem>
@@ -78,10 +78,6 @@
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Parameter.rdl</Name>
-      <FullPath>Simple Parameter.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -89,8 +85,8 @@
       <Platform>Win32</Platform>
       <Options>
         <OutputPath>bin\Debug</OutputPath>
-        <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerVersion>SSRS2008</TargetServerVersion>
+        <TargetServerURL>http://localhost:2008/reportserver_SQL2008</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

@@ -53,6 +53,7 @@ namespace Forerunner
         
         private void _GetScreenShot()
         {
+            int length=0;
             webBrowser = new WebBrowser();
             webBrowser.ScrollBarsEnabled = false;
             webBrowser.Navigate("about:blank");
@@ -63,8 +64,10 @@ namespace Forerunner
             foreach (HtmlElement he in webBrowser.Document.Images)
             {
                 string src = he.GetAttribute("src");
-                string s = callback(src);
+                string s = callback(src);                
                 he.SetAttribute("src", s);
+                length += s.Length;
+                if (length > 1024*10000) break;  //Limit the size
             }
             webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
             webBrowser.Update();
@@ -77,6 +80,8 @@ namespace Forerunner
             
             int w = webBrowser.Document.Body.ScrollRectangle.Width;
             int h = webBrowser.Document.Body.ScrollRectangle.Height;
+            if (h > 2000) h = 2000;  //Set an upper bound to limit the size
+            if (w > 2000) w = 2000; //Set an upper bound to limit the size
             webBrowser.ClientSize = new Size(w,h );
             webBrowser.ScrollBarsEnabled = false;
             bmp = new Bitmap(w, h);

@@ -543,6 +543,7 @@ function WriteReportItems(RIContext) {
             return WriteSubreport(RIContext);
             break;
         case "Chart":
+        case "Gauge":
         case "Map":
             return WriteChartImage(RIContext);
             break;

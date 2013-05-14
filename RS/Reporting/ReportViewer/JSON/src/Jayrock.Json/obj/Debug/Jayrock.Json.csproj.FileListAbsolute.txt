@@ -13,3 +13,8 @@ C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.csprojResolveAssemblyReference.cache
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.dll
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.pdb
+C:\Users\Anne-Marie\Documents\Git\Forerunner\RS\Reporting\ReportViewer\JSON\bin\net-4.0\debug\Jayrock.Json.dll
+C:\Users\Anne-Marie\Documents\Git\Forerunner\RS\Reporting\ReportViewer\JSON\bin\net-4.0\debug\Jayrock.Json.pdb
+C:\Users\Anne-Marie\Documents\Git\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.csprojResolveAssemblyReference.cache
+C:\Users\Anne-Marie\Documents\Git\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.dll
+C:\Users\Anne-Marie\Documents\Git\Forerunner\RS\Reporting\ReportViewer\JSON\src\Jayrock.Json\obj\Debug\Jayrock.Json.pdb

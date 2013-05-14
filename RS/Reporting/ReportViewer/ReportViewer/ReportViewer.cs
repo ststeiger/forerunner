@@ -1187,6 +1187,9 @@ namespace Forerunner.ReportViewer
                  case 0x0C:
                      if (!CheckOnly) WriteJSONSubreport();
                      break;
+                 case 0x0E:
+                     if (!CheckOnly) WriteJSONGauge();
+                     break;
                  case 0x15:
                      if (!CheckOnly) WriteJSONMap();
                      break;
@@ -1826,7 +1829,10 @@ namespace Forerunner.ReportViewer
          {
              WriteJSONImageTypeElement(0x0B, "Chart");
          }
-
+         public void WriteJSONGauge()
+         {
+             WriteJSONImageTypeElement(0x0E, "Gauge");
+         }
          public void WriteJSONMap()
          {
              WriteJSONImageTypeElement(0x15, "Map");

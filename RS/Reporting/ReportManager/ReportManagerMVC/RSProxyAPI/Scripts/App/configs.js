@@ -6,7 +6,7 @@ var g_App = g_App || {};
 (function() {
 
   g_App.configs = {
-    apiBase: 'http://192.168.1.20:9000/api/',
+    apiBase: 'http://localhost:9000/api/',
     reportControllerBase: '/api/ReportViewer',
     reportServerUrl: 'localhost:8080/ReportServer/',
     reportServerViewer: 'http://localhost:8080/ReportServer/Pages/ReportViewer.aspx?',

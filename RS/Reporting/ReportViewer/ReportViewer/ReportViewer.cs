@@ -214,14 +214,21 @@ namespace Forerunner.ReportViewer
         private string getImageHandeler(string src)
         {
             byte[] img = null;
-            string retval;
+            string retval;            
             string mimeType;
-            int delim1 = src.IndexOf(":");
-            int delim = src.IndexOf(";");
 
-            img = GetImage(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+            // THis is a hack to ignore toggle images until we implement.
+            if (src.Substring(0, 10) == "about:Res;")
+                retval = "";
+            else
+            {
+                int delim1 = src.IndexOf(":");
+                int delim = src.IndexOf(";");
 
-            retval = "data:" + mimeType + ";base64, " + Convert.ToBase64String(img);
+                img = GetImage(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+
+                retval = "data:" + mimeType + ";base64, " + Convert.ToBase64String(img);
+            }
             return retval;
 
         }
@@ -268,6 +275,7 @@ namespace Forerunner.ReportViewer
                 devInfo += @"<Section>" + PageNum + "</Section>";
                 devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
                 devInfo += @"<ReplacementRoot></ReplacementRoot>";
+                devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
@@ -375,31 +383,6 @@ namespace Forerunner.ReportViewer
     }
 
 
-            while (InspectByte() == 0x06)
-            //else
-            //    ThrowParseError();
-            w.WriteStartArray();
-            w.WriteEndArray();
-                    if (obj["IsMultiple"].ToString() == "True")
-                    {   
-                        string temp = obj["Value"].ToString();
-                        foreach (string str in temp.Split(','))
-                        {
-                            ParameterValue pv = new ParameterValue();
-                            pv.Name = obj["Parameter"].ToString();
-                            pv.Value = str;
-                            list.Add(pv);
-                        }
-                    }
-                    else
-                    {
-                        ParameterValue pv = new ParameterValue();
-                        pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
-                        list.Add(pv);
-                    }
-                }
-            }
 
         
 }

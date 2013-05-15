@@ -786,7 +786,7 @@ function WriteImage(RIContext) {
     var $NewObj = new Image();
 
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
     
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
@@ -1066,16 +1066,11 @@ function WriteTablix(RIContext) {
     return ret;
 }
 function WriteSubreport(RIContext) {
-    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.SubReportProperties));    
-    //var subReportName = $("<h2/>").css("text-align", "center").html("SubReport: "+RIContext.CurrObj.SubReportProperties.SharedElements.ReportName);
-    //RIContext.$HTMLParent.append(subReportName);
-
-    $.each(RIContext.CurrObj.BodyElements, function (Index, Obj) {
-        var $RI = WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        RIContext.$HTMLParent.append($RI);
-    });
-
-    return RIContext.$HTMLParent;
+    
+    RIContext.Style += GetElementsStyle(RIContext.CurrObj.SubReportProperties);
+    RIContext.CurrObj = RIContext.CurrObj.BodyElements;
+    return WriteRectangle(RIContext);
+    
 }
 function WriteLine(RIContext) {
 

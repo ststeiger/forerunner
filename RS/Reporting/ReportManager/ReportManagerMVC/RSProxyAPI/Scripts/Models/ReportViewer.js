@@ -817,12 +817,12 @@ function WriteChartImage(RIContext) {
     Src += "&SessionID=" + RIContext.RS.SessionID;
     Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
 
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
 
     var $NewObj = new Image();
     $NewObj.src = Src;
-    $NewObj.style = Style;
+    $($NewObj).attr("style", Style);
     $NewObj.id = "img_" + RIContext.RS.SessionID;
     $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
     $NewObj.alt = "Cannot display chart image";

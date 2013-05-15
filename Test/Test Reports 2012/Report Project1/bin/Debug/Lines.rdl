@@ -1,1 +1,67 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition"><Body><ReportItems><Line Name="Line1"><Top>0.64458in</Top><Left>0.74875in</Left><Height>0in</Height><Width>3.28125in</Width><Style><Border><Style>Solid</Style></Border></Style></Line><Line Name="Line2"><Top>1.01958in</Top><Left>0.905in</Left><Height>0.63542in</Height><Width>0in</Width><ZIndex>1</ZIndex><Style><Border><Style>Solid</Style></Border></Style></Line><Line Name="Line3"><Top>1.41542in</Top><Left>1.74875in</Left><Height>-0.39583in</Height><Width>2in</Width><ZIndex>2</ZIndex><Style><Border><Style>Solid</Style></Border></Style></Line><Line Name="Line4"><Top>1.55083in</Top><Left>1.74875in</Left><Height>0.32292in</Height><Width>2in</Width><ZIndex>3</ZIndex><Style><Border><Style>Solid</Style></Border></Style></Line></ReportItems><Height>2in</Height><Style /></Body><Width>6.5in</Width><Page><LeftMargin>1in</LeftMargin><RightMargin>1in</RightMargin><TopMargin>1in</TopMargin><BottomMargin>1in</BottomMargin><Style /></Page><AutoRefresh>0</AutoRefresh><rd:ReportUnitType xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">Inch</rd:ReportUnitType><rd:ReportID xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">1dbf6e3c-f859-485f-ab79-9826f5f68ef0</rd:ReportID></Report>
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Line Name="Line1">
+        <Top>0.64458in</Top>
+        <Left>0.74875in</Left>
+        <Height>0in</Height>
+        <Width>3.28125in</Width>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line2">
+        <Top>1.01958in</Top>
+        <Left>0.905in</Left>
+        <Height>0.63542in</Height>
+        <Width>0in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line3">
+        <Top>1.41542in</Top>
+        <Left>1.74875in</Left>
+        <Height>-0.39583in</Height>
+        <Width>2in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line4">
+        <Top>1.55083in</Top>
+        <Left>1.74875in</Left>
+        <Height>0.32292in</Height>
+        <Width>2in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+    </ReportItems>
+    <Height>2in</Height>
+    <Style />
+  </Body>
+  <Width>6.5in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>1dbf6e3c-f859-485f-ab79-9826f5f68ef0</rd:ReportID>
+</Report>

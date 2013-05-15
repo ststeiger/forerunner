@@ -1,1 +1,124 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition"><Body><ReportItems><Textbox Name="Textbox1"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>click here to go to www.bing.com.cn. Try it with another text. this is like a very long sentence, maybe you will like it.</Value><ActionInfo><Actions><Action><Hyperlink>http://www.bing.com.cn</Hyperlink></Action></Actions></ActionInfo><Style /></TextRun></TextRuns><ListStyle>Numbered</ListStyle><ListLevel>1</ListLevel><Style /></Paragraph><Paragraph><TextRuns><TextRun><Value /><Style /></TextRun></TextRuns><ListStyle>Numbered</ListStyle><ListLevel>1</ListLevel><Style /></Paragraph><Paragraph><TextRuns><TextRun><Value>click here to go to another report. </Value><ActionInfo><Actions><Action><Drillthrough><ReportName>ImageMapTest</ReportName></Drillthrough></Action></Actions></ActionInfo><Style /></TextRun></TextRuns><ListStyle>Numbered</ListStyle><ListLevel>1</ListLevel><Style /></Paragraph><Paragraph><TextRuns><TextRun><Value /><Style /></TextRun></TextRuns><ListStyle>Numbered</ListStyle><ListLevel>1</ListLevel><Style /></Paragraph><Paragraph><TextRuns><TextRun><Value>An Empty string without any action. Try it with another text.</Value><Style /></TextRun></TextRuns><ListStyle>Numbered</ListStyle><ListLevel>1</ListLevel><Style /></Paragraph></Paragraphs><rd:DefaultName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">Textbox1</rd:DefaultName><Top>0.13417in</Top><Left>0.17583in</Left><Height>1.65625in</Height><Width>5.66667in</Width><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Subreport Name="Subreport2"><ReportName>ImageMapTest</ReportName><Top>1.98833in</Top><Left>0.17583in</Left><Height>3.59375in</Height><Width>5.66667in</Width><ZIndex>1</ZIndex><Style><Border><Style>None</Style></Border></Style></Subreport></ReportItems><Height>5.75in</Height><Style /></Body><Width>6.5in</Width><Page><LeftMargin>1in</LeftMargin><RightMargin>1in</RightMargin><TopMargin>1in</TopMargin><BottomMargin>1in</BottomMargin><Style /></Page><AutoRefresh>0</AutoRefresh><rd:ReportUnitType xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">Inch</rd:ReportUnitType><rd:ReportID xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">485f523d-6f18-44be-8896-56c350b3518e</rd:ReportID></Report>
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Textbox Name="Textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>click here to go to www.bing.com.cn. Try it with another text. this is like a very long sentence, maybe you will like it.</Value>
+                <ActionInfo>
+                  <Actions>
+                    <Action>
+                      <Hyperlink>http://www.bing.com.cn</Hyperlink>
+                    </Action>
+                  </Actions>
+                </ActionInfo>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <ListStyle>Numbered</ListStyle>
+            <ListLevel>1</ListLevel>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <ListStyle>Numbered</ListStyle>
+            <ListLevel>1</ListLevel>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>click here to go to another report. </Value>
+                <ActionInfo>
+                  <Actions>
+                    <Action>
+                      <Drillthrough>
+                        <ReportName>ImageMapTest</ReportName>
+                      </Drillthrough>
+                    </Action>
+                  </Actions>
+                </ActionInfo>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <ListStyle>Numbered</ListStyle>
+            <ListLevel>1</ListLevel>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <ListStyle>Numbered</ListStyle>
+            <ListLevel>1</ListLevel>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>An Empty string without any action. Try it with another text.</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <ListStyle>Numbered</ListStyle>
+            <ListLevel>1</ListLevel>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>0.13417in</Top>
+        <Left>0.17583in</Left>
+        <Height>1.65625in</Height>
+        <Width>5.66667in</Width>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Subreport Name="Subreport2">
+        <ReportName>ImageMapTest</ReportName>
+        <Top>1.98833in</Top>
+        <Left>0.17583in</Left>
+        <Height>3.59375in</Height>
+        <Width>5.66667in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Subreport>
+    </ReportItems>
+    <Height>5.75in</Height>
+    <Style />
+  </Body>
+  <Width>6.5in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>485f523d-6f18-44be-8896-56c350b3518e</rd:ReportID>
+</Report>

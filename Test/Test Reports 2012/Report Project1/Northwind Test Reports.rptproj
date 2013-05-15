@@ -55,16 +55,16 @@
       <FullPath>ProductSales.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Simple Gauge.rdl</Name>
-      <FullPath>Simple Gauge.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Richtextbox.rdl</Name>
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Chart.rdl</Name>
       <FullPath>Simple Chart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Gauge.rdl</Name>
+      <FullPath>Simple Gauge.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Matrix.rdl</Name>
@@ -93,8 +93,8 @@
       <Platform>Win32</Platform>
       <Options>
         <OutputPath>bin\Debug</OutputPath>
-        <TargetServerVersion>SSRS2008</TargetServerVersion>
-        <TargetServerURL>http://localhost:2008/reportserver_SQL2008</TargetServerURL>
+        <TargetServerVersion>SSRS2008R2</TargetServerVersion>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

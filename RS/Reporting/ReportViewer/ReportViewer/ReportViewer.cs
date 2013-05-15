@@ -234,9 +234,12 @@ namespace Forerunner.ReportViewer
         }
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, string PageHeight, string PageWidth)
         {                      
+            //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.
+            
             MemoryStream ms = new MemoryStream();
             byte[] result = null;
-            string format = "HTML4.0";
+            //string format = "HTML4.0";
+            string format = "MHTML";
             string historyID = null;
             string showHideToggle = null;
             string encoding;
@@ -273,15 +276,17 @@ namespace Forerunner.ReportViewer
                 //Device Info
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
-                devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
-                devInfo += @"<ReplacementRoot></ReplacementRoot>";
-                devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+                //devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
+                //devInfo += @"<ReplacementRoot></ReplacementRoot>";
+                //devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), 150, 200, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                WebSiteThumbnail.GetStreamThumbnail(result).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                
                 return ms.ToArray();
                           
 

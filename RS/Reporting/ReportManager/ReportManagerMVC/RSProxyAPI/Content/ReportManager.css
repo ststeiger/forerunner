@@ -86,6 +86,10 @@ section#pageSection {
   display: inline;
 }
 
+.reportitem {
+  background-color: white;
+}
+
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 

@@ -1,6 +1,6 @@
 ﻿//Global reference to all reports
 var Reports = new Object();
-setInterval(function () { SessionPing(); }, 10000);
+//setInterval(function () { SessionPing(); }, 10000);
 
 // ********************* Structures ***************************************
 
@@ -37,6 +37,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$Slider;
     this.externalToolbarHeight;
     this.CreateNav = false;
+    this.ParamLoaded = false;
 }
 // The Floating header object holds pointers to the tablix and its row and col header objects
 function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
@@ -205,7 +206,7 @@ function GetToolbar(UID) {
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
-    $Cell.on("click", { id: UID }, function (e) { alert("ShowTHis"); ShowParms(Reports[e.data.id]); });
+    $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
     $Cell.html("Par");
     $Row.append($Cell);
@@ -276,8 +277,10 @@ function NavToPage(RS, NewPageNum) {
     }
 
 }
-function ShowParms() {
-    alert("Show");
+function ShowParms(RS) {
+    //alert("Show");
+    if (RS.ParamLoaded == true)
+        $(".Parameter-Panel").animate({ height: 'toggle' }, 100);
 }
 function LoadAllPages(RS,InitPage) {
 
@@ -453,7 +456,11 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     })
     .done(function (Data) {
         if (Data.Type != undefined && Data.Type == "Parameters") {
+            if (RS.ParamLoaded == true) {
+                $(".Parameter-Panel").detach();
+            }
             WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
+            RS.ParamLoaded = true;
         }
         else {
             WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
@@ -507,21 +514,24 @@ function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
     });
 
     $Form.append($SecondContainer);
+    ResetValidateMessage();
     $Form.validate({
-        //errorClass: "Parameter-Error",
-        //successClass:"Parameter-Error",
         errorPlacement: function (error, element) {
-            error.appendTo(element.parent("td").next("td"));
+            if (element.is(":radio"))
+                error.appendTo(element.parent("span").parent("td").next("td"));
+            else {
+                if ($(element).attr("IsMultiple") == "True")
+                    error.appendTo(element.parent("div").parent("td").next("td"));
+                else
+                    error.appendTo(element.parent("td").next("td"));
+            }
         },
         highlight: function (element) {
             $(element).addClass("Parameter-Error");           
         },
         unhighlight: function (element) {
             $(element).removeClass("Parameter-Error");
-        },
-        success: function(label) {
-            label.text("Ok!");
-        } 
+        }
     });
     $Col.append($Form);
     $Row.append($Col);
@@ -540,7 +550,7 @@ function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
             }
             AddLoadingIndicator(RS);
             var parameterList = GetParamsList();
-
+            
             $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
                 ReportServerURL: RS.ReportServerURL,
                 ReportPath: RS.ReportPath,
@@ -563,7 +573,7 @@ function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
     
     //Same Hierarchy with Toolbar
     RS.$PageContainer.append($ParameterContainer);
-    RS.$PageContainer.append(WriteParameterToggle());
+    //RS.$PageContainer.append(WriteParameterToggle());
     //RS.$ReportContainer.append(RS.$PageContainer);   
     RemoveLoadingIndicator(RS);
 }
@@ -682,6 +692,9 @@ function WriteReportItems(RIContext) {
             return WriteRichText(RIContext);
             break;
         case "Image":
+        case "Chart":
+        case "Gauge":
+        case "Map":
             return WriteImage(RIContext);
             break;
         case "Tablix":
@@ -692,11 +705,6 @@ function WriteReportItems(RIContext) {
             break;
         case "SubReport":
             return WriteSubreport(RIContext);
-            break;
-        case "Chart":
-        case "Gauge":
-        case "Map":
-            return WriteChartImage(RIContext);
             break;
         case "Line":
             return WriteLine(RIContext);
@@ -775,9 +783,6 @@ function WriteRichText(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
-    //var $NewObj = $("<IMG/>");   
-    //$NewObj.attr("onload", "ResizeImage(this," + sizingType + "," + containerHeight + "," + containerWidth + ");");
-
     var $NewObj = new Image();
 
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
@@ -786,61 +791,36 @@ function WriteImage(RIContext) {
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
     Src += "&SessionID=" + RIContext.RS.SessionID;
-    Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
 
-    var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
-    if (sizingType == 3) {
-        RIContext.$HTMLParent.addClass("overflow-hidden");
+    if (RIContext.CurrObj.Type == "Image") {
+        var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+        Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
+        if (sizingType == 3) {
+            RIContext.$HTMLParent.addClass("overflow-hidden");
+        }
+    }
+    else {
+        Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
     }
 
     $NewObj.src = Src;
     $NewObj.style = Style;
     $NewObj.alt = "Cannot display image";
+    if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
+        $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
+    }
 
     $NewObj.onload = function () {
         WriteActionImageMapAreas(RIContext, this.width, this.height);
         ResizeImage(this, sizingType, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
     };
-
-    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
-        var $node = $("<a/>");
-        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-        RIContext.$HTMLParent.append($node);
-    }
+    WriteBookMark(RIContext);
+  
 
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
-function WriteChartImage(RIContext) {
-    var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
-    Src += "&SessionID=" + RIContext.RS.SessionID;
-    Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
-
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-
-    var $NewObj = new Image();
-    $NewObj.src = Src;
-    $NewObj.style = Style;
-    $NewObj.id = "img_" + RIContext.RS.SessionID;
-    $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
-    $NewObj.alt = "Cannot display chart image";
-    $NewObj.onload = function () {
-        WriteActionImageMapAreas(RIContext, this.width, this.height);
-        ResizeImage(this, 0, "", "");
-    };
-
-    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
-        var $node = $("<a/>");
-        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-        RIContext.$HTMLParent.append($node);
-    }
-
-    RIContext.$HTMLParent.append($NewObj);
-    return RIContext.$HTMLParent;
-}
-function WriteAction(Action, Control) {
+function WriteAction(RIContext,Action, Control) {
     if (Action.HyperLink != undefined) {
         Control.attr("href", Action.HyperLink);
     }
@@ -848,12 +828,14 @@ function WriteAction(Action, Control) {
         Control.attr("href", "#" + Action.BookmarkLink);
     }
     else {
-        Control.attr("href", Action.DrillthroughUrl);
-        //$(Control).click(function () {
-        //    //var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
-        //    //alert(reportPath);
-        //    //InitReport(RIContext.RS.ReportServerURL, RIContext.RS.ReportViewerAPI, reportPath, true, 1, RIContext.RS.UID);
-        //});
+        //Control.attr("href", Action.DrillthroughUrl);
+        $(Control).click(function () {
+            var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
+            //alert(reportPath);
+            RIContext.RS.ReportPath = reportPath;
+            LoadPage(RIContext.RS, RIContext.RS.CurPage, RIContext.RS.Pages[RIContext.RS.CurPage], false);
+            //InitReport(RIContext.RS.ReportServerURL, RIContext.RS.ReportViewerAPI, reportPath, true, 1, RIContext.RS.UID);
+        });
     }
 }
 function WriteActionImageMapAreas(RIContext, width, height) {
@@ -870,8 +852,10 @@ function WriteActionImageMapAreas(RIContext, width, height) {
                 var $Area = $("<AREA />");
                 $Area.attr("tabindex", i + 1);
                 $Area.attr("style", "text-decoration:none");
-                $Area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);               
-                WriteAction(element.Actions[0], $Area);
+                $Area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                if (element.Actions != undefined) {
+                    WriteAction(RIContext, element.Actions[0], $Area);
+                }
 
                 var shape;
                 var coords = "";
@@ -964,6 +948,13 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
             default:
                 break;
         }
+    }
+}
+function WriteBookMark(RIContext) {
+    if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
+        var $node = $("<a/>");
+        $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
+        RIContext.$HTMLParent.append($node);
     }
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
@@ -1191,31 +1182,33 @@ function WriteParameterControl(RIContext) {
     return RIContext.$HTMLParent;
 }
 function WriteParameterToggle() {
-    var $Container = new $("<Div />");
-    $Container.attr("class", "ToggleParam");
+    //var $Container = new $("<Div />");
+    //$Container.attr("class", "ToggleParam");
 
-    var $ToggleIcon = new $("<Img />");
-    $ToggleIcon.attr("alt", "Show / Hide Parameters");
-    $ToggleIcon.attr("title", "Show / Hide Parameters");
-    $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-    $Container.on("mouseover", function (event) { SetActionCursor(this); });
+    //var $ToggleIcon = new $("<Img />");
+    //$ToggleIcon.attr("alt", "Show / Hide Parameters");
+    //$ToggleIcon.attr("title", "Show / Hide Parameters");
+    //$ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
+    //$Container.on("mouseover", function (event) { SetActionCursor(this); });
 
-    $Container.on("click", function () {
-        $(".Parameter-Panel").toggle("fast");
-        if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
-            $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
-        else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
-            $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-    });
+    //$Container.on("click", function () {
+    //    $(".Parameter-Panel").toggle("fast");
+    //    if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
+    //        $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
+    //    else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
+    //        $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
+    //});
 
-    $Container.append($ToggleIcon);
-    return $Container;   
+    //$Container.append($ToggleIcon);
+    //return $Container;   
 }
 function GetParameterControlProperty(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
-    if (Obj.QueryParameter == "True" | Obj.Nullable != "True")
-        $Control.attr("required", "");
+    if (Obj.QueryParameter == "True" | Obj.Nullable != "True") {
+        $Control.attr("required", "true");
+        $Control.watermark("Required");
+    }
     
     //if (Obj.PromptUser == "True") {
     //    $Control.attr("Title", Obj.Prompt);
@@ -1292,7 +1285,9 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
     $MultipleCheckBox.attr("type", "text");
     $MultipleCheckBox.attr("id", Obj.Name);
     $MultipleCheckBox.attr("class", "ParameterClient");
+    $MultipleCheckBox.attr("IsMultiple", Obj.MultiValue);
     $MultipleCheckBox.attr("DataType", Obj.Type);
+    GetParameterControlProperty(Obj, $MultipleCheckBox);
     $MultipleCheckBox.on("click", function () { PopupDropDownPanel(Obj); });
 
     var $HiddenCheckBox = new $("<Input />");
@@ -1332,6 +1327,7 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
         var $Row = new $("<TR />");
         var $Col = new $("<TD/>");
 
+        var $Span = new $("<Span />");
         var $Checkbox = new $("<Input />");
         $Checkbox.attr("type", "checkbox");
         $Checkbox.attr("id", Obj.Name + "_DropDown_" + value);
@@ -1356,8 +1352,11 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
         $Lable.attr("id", Obj.Name + "_DropDown_" + value + "_lable");
         $Lable.html(key);
 
-        $Col.append($Checkbox);
-        $Col.append($Lable);
+        //$Col.append($Checkbox);
+        //$Col.append($Lable);
+        $Span.append($Checkbox);
+        $Span.append($Lable);
+        $Col.append($Span);
         $Row.append($Col);
         $Table.append($Row);
     }
@@ -1892,7 +1891,29 @@ function IsParamNullable(Parameter) {
     else
         return Parameter.value;
 }
-
+function ResetValidateMessage() {
+    jQuery.extend(jQuery.validator.messages, {
+        required: "Required.",
+        remote: "Please fix this field.",
+        email: "Invalid email address.",
+        url: "Invalid URL.",
+        date: "Invalid date.",
+        dateISO: "Invalid date",
+        dateDE: "Bitte geben Sie ein gltiges Datum ein.",
+        number: "Invalid number.",
+        numberDE: "Bitte geben Sie eine Nummer ein.",
+        digits: "Please enter only digits",
+        creditcard: "Please enter a valid credit card number.",
+        equalTo: "Please enter the same value again.",
+        accept: "Please enter a value with a valid extension.",
+        maxlength: $.validator.format("Please enter no more than {0} characters."),
+        minlength: $.validator.format("Please enter at least {0} characters."),
+        rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
+        range: $.validator.format("Please enter a value between {0} and {1}."),
+        max: $.validator.format("Please enter a value less than or equal to {0}."),
+        min: $.validator.format("Please enter a value greater than or equal to {0}.")
+    });
+}
 
 
 

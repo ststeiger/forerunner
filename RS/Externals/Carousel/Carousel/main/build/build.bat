@@ -1,0 +1,1 @@
+java -jar compiler.jar --js ../src/SKY.js --js ../src/Utils.js --js ../src/ImageLoader.js --js ../src/Timer.js --js ../src/CarouselItem.js --js ../src/Container.js --js ../src/Carousel.js --js ../src/Init.js --js_output_file ../source/js/jquery.sky.carousel-1.0.2.min.js

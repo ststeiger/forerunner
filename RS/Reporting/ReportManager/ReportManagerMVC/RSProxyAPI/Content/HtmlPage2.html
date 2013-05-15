@@ -6,6 +6,7 @@
     <link href="themes/base/minified/jquery.ui.core.min.css" rel="stylesheet"/>
     <link href="themes/base/minified/jquery.ui.datepicker.min.css" rel="stylesheet"/>
     <link href="/Content/ReportManager.css" rel="stylesheet"/>
+    <link href="/Content/ReportViewer.css" rel="stylesheet"/>
     <title></title>    
 </head>
 <body>
@@ -19,7 +20,8 @@
     <!--<script src="../Scripts/jquery-ui-1.8.20.min.js"></script>-->
     <script src="../Scripts/jquery-ui-1.10.3.custom.min.js"></script>
     <script src="../Scripts/jquery.validate1.11.1.min.js"></script>
-    <script src="/scripts/Models/FRReport.js"></script>
+    <script src="../Scripts/jquery.watermark.min.js"></script>
+    <script src="/scripts/Models/ReportViewer.js"></script>
     <script>
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/ColumnChartReport", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/ImageMapTest", true, 1, "Div1")
@@ -34,7 +36,7 @@
         //InitReport("localhost/ReportServer_SQLEXPRESS", "/api/ReportViewer", "/ReportTest/ColumnChartReport", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Subreport", true, 1, "Div1")
         //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/SimpleImage", true, 1, "Div1")
-        InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Simple Gauge", true, 1, "Div1")
+        //InitReport("localhost/ReportServer_MSSQL2012", "/api/ReportViewer", "/ReportTest/Simple Gauge", true, 1, "Div1")
     </script>
 </body>
 </html>

@@ -39,6 +39,7 @@ var g_App = g_App || {};
       render: function () {
           var data = this.model.toJSON();
           data.EncodedPath = String(data.Path).replace(/\//g, "%2f");
+          data.HasParameters = (String(data.Path).indexOf("Parameter") != -1) ? 1 : 0;
           data.ReportThumbnailPath = this.model.viewerUrl()
             + 'GetThumbnail/?ReportServerURL=' +this.model.reportServerUrl() + '&ReportPath='
             + data.Path + '&SessionID=&PageNumber=1&PageHeight=8in&PageWidth=11in'

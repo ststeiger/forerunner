@@ -35,6 +35,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.FloatingHeaders = [];
     this.$PageNav;
     this.$Slider;
+    this.$Carousel;
     this.externalToolbarHeight;
     this.CreateNav = false;
     this.ParamLoaded = false;
@@ -208,19 +209,19 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("Par");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Settings.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer20mm");
+    $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("Nav");
+    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Nav2.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer20mm");
-    $Row.append($Cell);
+    //$Cell = new $("<TD/>");
+    //$Cell.attr("class", "spacer20mm");
+    //$Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
@@ -229,9 +230,9 @@ function GetToolbar(UID) {
     $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
-    $Row.append($Cell);
+    //$Cell = new $("<TD/>");
+    //$Cell.attr("class", "spacer10mm");
+    //$Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
@@ -274,6 +275,9 @@ function NavToPage(RS, NewPageNum) {
     if (RS.Lock == 0) {
         RS.Lock = 1;
         LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+        if (RS.$Carousel != null) {
+            RS.$Carousel.select(NewPageNum - 1, 1);
+        }
     }
 
 }
@@ -340,7 +344,7 @@ function CreateSlider(RS, ReportViewerUID) {
     $SliderWrapper.append($List);
     $Container.append($Slider);
 
-    $Slider.carousel({
+    var carousel = $Slider.carousel({
         itemWidth: 120,
         itemHeight: 120,
         distance: 8,
@@ -359,9 +363,11 @@ function CreateSlider(RS, ReportViewerUID) {
         reflectionSize: 35,
         selectByClick: true
     });
+    carousel.select(0, 1);
 
     RS.$PageNav = $Container;
     RS.$Slider = $Slider;
+    RS.$Carousel = carousel;
     RS.CreateNav = true;
 }
 function ShowNav(UID) {

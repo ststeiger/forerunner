@@ -8,13 +8,17 @@ var g_App = g_App || {};
   g_App.ReportViewerMainView = Backbone.View.extend({
     initialize: function (options) {
         this.path = options.path;
+        this.reportServerUrl = options.reportServerUrl;
         _(this).bindAll('render');
     },
     render: function () {
-        var data = { url: g_App.configs.reportServerViewer + this.path + '&rs:Command=Render' };
+        var data = {};
         $(this.el).html(this.template(data));
         return this;
     },
+    sectionHeader: function () {
+        return 'Home' + this.path;
+    }
   });
 }());
 

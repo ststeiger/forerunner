@@ -190,7 +190,6 @@
     <Content Include="Scripts\Carousel\js\jquery-1.9.1.min.js" />
     <Content Include="Scripts\Carousel\js\jquery.metadata.js" />
     <Content Include="Scripts\Carousel\js\jquery.sky.carousel-1.0.2.min.js" />
-    <Content Include="Scripts\ContentFlowAddOn.js" />
     <Content Include="Content\ReportManager.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -252,11 +251,6 @@
     <Content Include="Scripts\backbone_ui.js" />
     <Content Include="Scripts\collection_view.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-1.7.2.js" />
-    <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
@@ -269,15 +263,12 @@
     <Content Include="Scripts\jquery.validate1.11.1.min.js" />
     <Content Include="Scripts\jquery.watermark.min.js" />
     <Content Include="Scripts\json2.js" />
-    <Content Include="Scripts\knockout-2.1.0.debug.js" />
-    <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\laconic.js" />
     <Content Include="Scripts\Models\ReportViewer.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\tpl\CatalogItemView.html" />
-    <Content Include="Scripts\tpl\FRReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportManagerMainView.html" />
     <Content Include="Scripts\underscore.js" />
@@ -285,7 +276,6 @@
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\tpl\AppPageView.html" />
-    <Content Include="Scripts\Views\frreportviewermainview.js" />
     <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
     <Content Include="Web.config">

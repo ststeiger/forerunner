@@ -7,7 +7,7 @@ var ApplicationRouter = Backbone.Router.extend({
         routes : {
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
-            "browse/:path": "transitionToFRReportViewer",
+            "browse/:path": "transitionToReportViewer",
             "test/:arg": "test",
             '*notFound': 'notFound'
         },
@@ -75,21 +75,6 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
-            if (path != null) {
-                path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
-            }
-            var appPageModel = new g_App.AppPageModel({
-                showBackButton : true,
-                pageTitle : 'ReportViewer',
-            });
-            this.appPageView.transitionMainSection(appPageModel, [
-                'ReportViewerMainView'], '',
-                g_App.ReportViewerMainView, {path: path});
-        },
-
-        transitionToFRReportViewer: function (path) {
             $('#footerspacer').attr('style', 'height: 150px');
             $('#bottomdiv').attr('style', 'height: 150px');
             if (path != null) {
@@ -102,11 +87,8 @@ var ApplicationRouter = Backbone.Router.extend({
                 pageTitle: 'ReportViewer',
             });
             this.appPageView.transitionMainSection(appPageModel, [
-                'FRReportViewerMainView'], '',
-                g_App.FRReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-           // var callBack = function (RS) {
-            //    CreateSlider(RS, 'FRReportViewer1', 'bottomdiv');
-            //};
+                'ReportViewerMainView'], '',
+                g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
             InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', 'bottomdiv', this.toolbarHeight);
         },
 
@@ -143,7 +125,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'FRReportViewerMainView'], '', function () {
+g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.start();

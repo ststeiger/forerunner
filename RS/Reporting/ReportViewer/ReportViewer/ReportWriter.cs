@@ -18,7 +18,7 @@ namespace Forerunner
         JsonWriter w = new JsonTextWriter();
         byte majorVersion;
         byte minorVersion;
-        Dictionary<string, TempProperty> TempPropertyBag;
+        Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string,TempProperty>() ;
 
         class TempProperty
         {
@@ -269,7 +269,7 @@ namespace Forerunner
                 WriteJSONRepProp();
 
                 //Report Content
-                WriteReportContent();
+                WriteJSONReportContent();
 
                 //End Report
                 w.WriteEndObject();
@@ -408,7 +408,56 @@ namespace Forerunner
                 return false;
         }
 
-        private void WriteReportContent()
+        private void WriteTempProperty(string PropName)
+        {            
+            if (!TempPropertyBag.ContainsKey(PropName))
+                return;
+
+            TempProperty tmp = TempPropertyBag[PropName];
+            w.WriteMember(PropName);
+            switch (tmp.Type)
+            {
+                case "String":
+                case "Char":
+                    w.WriteString((String)tmp.Value);
+                    break;
+                case "Int16":
+                    w.WriteNumber((Int16)tmp.Value);
+                    break;
+                case "Int32":
+                    w.WriteNumber((Int32)tmp.Value);
+                    break;
+                case "Int64":
+                    w.WriteNumber((Int64)tmp.Value);
+                    break;
+                case "Single":
+                    w.WriteNumber((Single)tmp.Value);
+                    break;
+                case "Float":
+                    w.WriteNumber((float)tmp.Value);
+                    break;
+                case "Decimal":
+                    w.WriteNumber((Decimal)tmp.Value);
+                    break;
+                case "Boolean":
+                    w.WriteBoolean((Boolean)tmp.Value);
+                    break;
+                case "Byte":
+                    w.WriteNumber((byte)tmp.Value);
+                    break;
+                case "DateTime":
+                    w.WriteNumber((Int64)((RPLDateTime)tmp.Value).MiliSec);
+                    //TODO Need to write datetime type
+                    break;
+                default:
+                    ThrowParseError();
+                    break;
+
+            }
+            
+
+        }
+        private void WriteJSONReportContent()
         {
 
             if (ReadByte() == 0x13)
@@ -427,7 +476,6 @@ namespace Forerunner
 
                     //Sections
                     LoopObjectArray("Sections", 0x15, this.WriteJSONSections);
-
 
                     //Measurments
                     WriteJSONMeasurements();
@@ -448,24 +496,54 @@ namespace Forerunner
                     w.WriteMember("PageContent");
                     w.WriteStartObject();
 
-                    //PageLayout Start
-                    w.WriteMember("PageLayoutStart");
-                    w.WriteStartObject();
-                    WriteJSONPageProp();
-                    w.WriteEndObject();
-
                     //Sections
                     //Add fake section
                     w.WriteMember("Sections");
                     w.WriteStartArray();
                     
+                    //Only one section
+                    w.WriteStartObject();
+                    
+                    //Write Columns
+                    //BodyArea
+                    w.WriteMember("Columns");
+                    w.WriteStartArray();
+                    if (InspectByte() == 0x14)
+                    {
+                        //Advance over the the 0x14
+                        Seek(1);
+                        while (InspectByte() == 0x06)
+                        {
+                            WriteJSONBodyElement();
+                        }                        
+                    }
+
                     w.WriteEndArray();
-                   
+
+                    // End Section
+                    w.WriteEndObject();
+                    w.WriteEndArray();
 
                     //Measurments
                     WriteJSONMeasurements();
+                                       
+                    //Report ElementEnd
+                    WriteJSONReportElementEnd();
 
-                    
+                    //PageLayout Start
+                    if (InspectByte() == 0x01)
+                    {
+                        Seek(1);
+                        w.WriteMember("PageLayoutStart");
+                        w.WriteStartObject();
+                        WriteJSONPageProp();
+                        w.WriteEndObject();
+
+                        //Write properties from page that belong on section
+                        WriteTempProperty("ColumnSpacing");
+                        WriteTempProperty("ColumnCount");
+
+                    }
 
                     w.WriteEndObject();
                 }
@@ -517,7 +595,9 @@ namespace Forerunner
         {
             RPLProperties prop = new RPLProperties(0x03);
 
-            prop.Add("PageHeight", "Single", 0x10);
+            prop.Add("ID", "String", 0x01);
+            prop.Add("UniqueName", "String", 0x00);
+            prop.Add("PageHeight", "Single", 0x10);            
             prop.Add("PageWidth", "Single", 0x11);
             prop.Add("MarginTop", "Single", 0x12);
             prop.Add("MarginLeft", "Single", 0x13);
@@ -574,28 +654,9 @@ namespace Forerunner
                 {
                     //Advance over the the 0x06
                     Seek(1);
-
-                    w.WriteStartObject();
-                    w.WriteMember("Elements");
-                    WriteJSONElements();
-                    //w.WriteEndObject();
-                    //Report Items
-
-                    w.WriteMember("ReportItems");
-                    WriteJSONReportItems();
-
-                    //Measurments
-                    //w.WriteMember("Measurments");                    
-                    //w.WriteStartObject();                                        
-                    WriteJSONMeasurements();
-
-                    //w.WriteEndObject();
-
-
-                    w.WriteEndObject();
+                    WriteJSONBodyElement();
                 }
-                // else
-                //   ThrowParseError();
+               
             }
 
             w.WriteEndArray();
@@ -616,20 +677,15 @@ namespace Forerunner
                 w.WriteStartObject();
                 w.WriteMember("Elements");
                 WriteJSONElements();
-                //w.WriteEndObject();
+                
                 //Report Items
-
                 w.WriteMember("ReportItems");
                 WriteJSONReportItems();
 
                 //Measurments
-                //w.WriteMember("Measurments");                    
-                //w.WriteStartObject();                                        
                 WriteJSONMeasurements();
                 WriteJSONReportElementEnd();
-                //w.WriteEndObject();
-
-
+  
                 w.WriteEndObject();
             }
             else

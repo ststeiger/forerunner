@@ -15,6 +15,16 @@ namespace Forerunner
         byte[] RPL;
         int Index = 0;
         JsonWriter w = new JsonTextWriter();
+        byte majorVersion;
+        byte minorVersion;
+        Dictionary<string, TempProperty> TempPropertyBag;
+
+        class TempProperty
+        {
+            public string Name;
+            public string Type;
+            public object Value;
+        }
 
         class RPLDateTime
         {
@@ -36,19 +46,19 @@ namespace Forerunner
                 public byte RPLCode;
                 public Func<Boolean> ObjFunction;
                 public Func<Byte, Boolean> ObjFunction2;
-
+                public Boolean MakeTemp = false;
             }
 
 
             public RPLProperties(byte RPLCode)
             {
                 RPLPropBagCode = RPLCode;
-                PropArray = new RPLProperty[50];
+                PropArray = new RPLProperty[50];  //Hard coded this should be changed to a collection
                 NumProp = 0;
             }
 
 
-            public void Add(string pName, string pType, byte pCode, Func<Byte, Boolean> f)
+            public void Add(string Name, string Type, byte Code, Func<Byte, Boolean> f, Boolean MakeTemp = false)
             {
 
                 //This is a Total Hack for OrigionalValue
@@ -58,26 +68,43 @@ namespace Forerunner
                     ThrowParseError();
 
                 PropArray[NumProp] = new RPLProperty();
-                PropArray[NumProp].Name = pName;
-                PropArray[NumProp].DataType = pType;
-                PropArray[NumProp].RPLCode = pCode;
+                PropArray[NumProp].Name = Name;
+                PropArray[NumProp].DataType = Type;
+                PropArray[NumProp].RPLCode = Code;
                 PropArray[NumProp].ObjFunction2 = f;
+                PropArray[NumProp].MakeTemp = MakeTemp;
                 NumProp++;
             }
 
-            public void Add(string pName, string pType, byte pCode, Func<Boolean> f = null)
+            public void Add(string Name, string Type, byte Code, Func<Boolean> f = null,Boolean MakeTemp = false)
             {
                 if (NumProp == PropArray.GetUpperBound(0))
                     //Need to Grow, throuw for now
                     ThrowParseError();
 
                 PropArray[NumProp] = new RPLProperty();
-                PropArray[NumProp].Name = pName;
-                PropArray[NumProp].DataType = pType;
-                PropArray[NumProp].RPLCode = pCode;
+                PropArray[NumProp].Name = Name;
+                PropArray[NumProp].DataType = Type;
+                PropArray[NumProp].RPLCode = Code;
                 PropArray[NumProp].ObjFunction = f;
+                PropArray[NumProp].MakeTemp = MakeTemp;
                 NumProp++;
             }
+
+            public void Add(string Name, string Type, byte Code, Boolean MakeTemp)
+            {
+                if (NumProp == PropArray.GetUpperBound(0))
+                    //Need to Grow, throuw for now
+                    ThrowParseError();
+
+                PropArray[NumProp] = new RPLProperty();
+                PropArray[NumProp].Name = Name;
+                PropArray[NumProp].DataType = Type;
+                PropArray[NumProp].RPLCode = Code;
+                PropArray[NumProp].MakeTemp = MakeTemp;
+                NumProp++;
+            }
+
             public void WriteMemeber(byte Code, ReportJSONWriter r)
             {
                 int i;
@@ -92,39 +119,49 @@ namespace Forerunner
 
                 if (i < NumProp)
                 {
-                    w.WriteMember(PropArray[i].Name);
+                    TempProperty tmp = new TempProperty();
+                    if (PropArray[i].MakeTemp)
+                    {                        
+                        tmp.Name = PropArray[i].Name;
+                        tmp.Type = PropArray[i].DataType;                    
+                        r.TempPropertyBag.Add(tmp.Name, tmp);
+                    }
+                    else
+                    {
+                        w.WriteMember(PropArray[i].Name);
+                    }
                     switch (PropArray[i].DataType)
                     {
                         case "Int32":
-                            w.WriteNumber(r.ReadInt32());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt32(); else w.WriteNumber(r.ReadInt32());                            
                             break;
                         case "Int64":
-                            w.WriteNumber(r.ReadInt64());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt64(); else w.WriteNumber(r.ReadInt64());
                             break;
                         case "Int16":
-                            w.WriteNumber(r.ReadInt16());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt16(); else w.WriteNumber(r.ReadInt16());
                             break;
                         case "String":
-                            w.WriteString(r.ReadString());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadString(); else w.WriteString(r.ReadString());
                             break;
                         case "Float":
-                            w.WriteNumber(r.ReadFloat());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadFloat(); else w.WriteNumber(r.ReadFloat());                            
                             break;
                         case "Single":
-                            w.WriteNumber(r.ReadSingle());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadSingle(); else w.WriteNumber(r.ReadSingle());                            
                             break;
                         case "Char":
-                            w.WriteString(r.ReadChar().ToString());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadChar().ToString(); else w.WriteString(r.ReadChar().ToString());                            
                             break;
                         case "DateTime":
-                            w.WriteNumber(r.ReadDateTime().MiliSec);
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDateTime().MiliSec; else w.WriteNumber(r.ReadDateTime().MiliSec);                            
                             //TODO Need to write datetime type
                             break;
                         case "Decimal":
-                            w.WriteNumber(r.ReadDecimal());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDecimal(); else w.WriteNumber(r.ReadDecimal()); 
                             break;
                         case "Boolean":
-                            w.WriteBoolean(r.ReadBoolean());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadBoolean(); else w.WriteBoolean(r.ReadBoolean()); 
                             break;
                         case "Byte":
                             //This is a Total Hack for OrigionalValue
@@ -135,9 +172,13 @@ namespace Forerunner
                                 w.WriteNumber(TypeCode);
                             }
                             else
-                                w.WriteNumber(r.ReadByte());
+                                if (PropArray[i].MakeTemp) tmp.Value = r.ReadByte(); else w.WriteNumber(r.ReadByte()); 
                             break;
                         case "Object":
+
+                            //TODO: Handle MakeTemp
+                            //if (PropArray[i].MakeTemp) tmp.Value = r.ReadFloat(); else w.WriteNumber(r.ReadFloat());                            
+
                             //This is a Total Hack for OrigionalValue
                             if (PropArray[i].Name == "OriginalValue")
                                 PropArray[i].ObjFunction2(TypeCode);
@@ -154,6 +195,7 @@ namespace Forerunner
                             ThrowParseError();
                             break;
                     }
+                    
                 }
                 else
                     ThrowParseError();
@@ -267,38 +309,75 @@ namespace Forerunner
             return true;
         }
 
+        private Boolean checkVersion(byte major, byte minor)
+        {
+            if (major == this.majorVersion && minor == this.minorVersion)
+                return true;
+            else
+                return false;
+        }
+
         private void WriteReportContent()
         {
 
             if (ReadByte() == 0x13)
             {
 
-                w.WriteMember("PageContent");
-                w.WriteStartObject();
-
-                //PageLayout Start
-                w.WriteMember("PageLayoutStart");
-                w.WriteStartObject();
-                WriteJSONPageProp();
-                w.WriteEndObject();
-
-                //Sections
-                LoopObjectArray("Sections", 0x15, this.WriteJSONSections);
-
-
-                //Measurments
-                WriteJSONMeasurements();
-
-                //PageLayout End
-                if (InspectByte() == 0x03)
+                if (checkVersion(10,6) || checkVersion(10,4) || checkVersion(10,5))
                 {
-                    w.WriteMember("PageLayoutEnd");
+                    w.WriteMember("PageContent");
+                    w.WriteStartObject();
+
+                    //PageLayout Start
+                    w.WriteMember("PageLayoutStart");
                     w.WriteStartObject();
                     WriteJSONPageProp();
                     w.WriteEndObject();
-                }
 
-                w.WriteEndObject();
+                    //Sections
+                    LoopObjectArray("Sections", 0x15, this.WriteJSONSections);
+
+
+                    //Measurments
+                    WriteJSONMeasurements();
+
+                    //PageLayout End
+                    if (InspectByte() == 0x03)
+                    {
+                        w.WriteMember("PageLayoutEnd");
+                        w.WriteStartObject();
+                        WriteJSONPageProp();
+                        w.WriteEndObject();
+                    }
+
+                    w.WriteEndObject();
+                }
+                else if (checkVersion(10, 3))
+                {
+                    w.WriteMember("PageContent");
+                    w.WriteStartObject();
+
+                    //PageLayout Start
+                    w.WriteMember("PageLayoutStart");
+                    w.WriteStartObject();
+                    WriteJSONPageProp();
+                    w.WriteEndObject();
+
+                    //Sections
+                    //Add fake section
+                    w.WriteMember("Sections");
+                    w.WriteStartArray();
+                    
+                    w.WriteEndArray();
+                   
+
+                    //Measurments
+                    WriteJSONMeasurements();
+
+                    
+
+                    w.WriteEndObject();
+                }
 
             }
         }
@@ -308,9 +387,11 @@ namespace Forerunner
             w.WriteMember("Version");
             w.WriteStartObject();
             w.WriteMember("Major");
-            w.WriteNumber(ReadByte());
+            majorVersion = ReadByte();
+            w.WriteNumber(majorVersion);
             w.WriteMember("Minor");
-            w.WriteNumber(ReadByte());
+            minorVersion = ReadByte();
+            w.WriteNumber(minorVersion);
             w.WriteMember("Build");
             w.WriteNumber(ReadInt32());
             w.WriteEndObject();
@@ -352,6 +433,8 @@ namespace Forerunner
             prop.Add("MarginBottom", "Single", 0x14);
             prop.Add("MarginRight", "Single", 0x15);
             prop.Add("PageName", "String", 0x30);
+            prop.Add("Columns", "Int32", 0x17,true);
+            prop.Add("ColumnSpacing", "Single", 0x16, true);
             prop.Add("PageStyle", "Object", 0x06, this.WriteJSONStyle);
 
             prop.Write(this);

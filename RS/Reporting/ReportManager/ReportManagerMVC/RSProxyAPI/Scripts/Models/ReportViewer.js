@@ -786,7 +786,7 @@ function WriteImage(RIContext) {
     var $NewObj = new Image();
 
     var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    var Style = "max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
     
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
@@ -804,7 +804,7 @@ function WriteImage(RIContext) {
     }
 
     $NewObj.src = Src;
-    $NewObj.style = Style;
+    $($NewObj).attr("style", Style);
     $NewObj.alt = "Cannot display image";
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
         $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
@@ -1066,16 +1066,11 @@ function WriteTablix(RIContext) {
     return ret;
 }
 function WriteSubreport(RIContext) {
-    RIContext.$HTMLParent.attr("Style", GetElementsStyle(RIContext.CurrObj.SubReportProperties));    
-    //var subReportName = $("<h2/>").css("text-align", "center").html("SubReport: "+RIContext.CurrObj.SubReportProperties.SharedElements.ReportName);
-    //RIContext.$HTMLParent.append(subReportName);
-
-    $.each(RIContext.CurrObj.BodyElements, function (Index, Obj) {
-        var $RI = WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), ""));
-        RIContext.$HTMLParent.append($RI);
-    });
-
-    return RIContext.$HTMLParent;
+    
+    RIContext.Style += GetElementsStyle(RIContext.CurrObj.SubReportProperties);
+    RIContext.CurrObj = RIContext.CurrObj.BodyElements;
+    return WriteRectangle(RIContext);
+    
 }
 function WriteLine(RIContext) {
 
@@ -1895,11 +1890,11 @@ function ResetValidateMessage() {
     jQuery.extend(jQuery.validator.messages, {
         required: "Required.",
         remote: "Please fix this field.",
-        email: "Please enter a valid email address.",
-        url: "Please enter a valid URL.",
+        email: "Invalid email address.",
+        url: "Invalid URL.",
         date: "Invalid date.",
         dateISO: "Invalid date",
-        dateDE: "Bitte geben Sie ein g眉ltiges Datum ein.",
+        dateDE: "Bitte geben Sie ein gltiges Datum ein.",
         number: "Invalid number.",
         numberDE: "Bitte geben Sie eine Nummer ein.",
         digits: "Please enter only digits",

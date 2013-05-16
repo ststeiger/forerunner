@@ -15,6 +15,7 @@ namespace Forerunner
     {
         private string HTML = null;      
         private Bitmap bmp = null;
+        private byte[] MHTML = null; 
 
         public Bitmap Image 
         {
@@ -25,21 +26,32 @@ namespace Forerunner
         }
         private ManualResetEvent mre = new ManualResetEvent(false);
         private WebBrowser webBrowser;
-        private Func<string, string> callback;
+        private Func<string, string> callback = null;
 
-        public static Bitmap GetStreamThumbnail(string HTML, int thumbWidth, int thumbHeight, Func<string, string> callback)
+        public static Bitmap GetStreamThumbnail(string HTML, Func<string, string> callback)
         {
             WebSiteThumbnail thumb = new WebSiteThumbnail(HTML, callback);
             Bitmap b = thumb.GetScreenShot();            
             return b;
         }
-       
+        public static Bitmap GetStreamThumbnail(byte[] MHTML)
+        {
+            WebSiteThumbnail thumb = new WebSiteThumbnail(MHTML);
+            Bitmap b = thumb.GetScreenShot();            
+            return b;
+        }
+        
         public WebSiteThumbnail(string HTML, Func<string, string> callback)
         {
             this.HTML = HTML;            
             this.callback = callback;
         }
 
+        public WebSiteThumbnail(byte[] MHTML)
+        {
+            this.MHTML = MHTML;
+            
+        }
         public Bitmap GetScreenShot()
         {
 
@@ -55,21 +67,40 @@ namespace Forerunner
         {
             webBrowser = new WebBrowser();
             webBrowser.ScrollBarsEnabled = false;
-            webBrowser.Navigate("about:blank");
-            webBrowser.Document.OpenNew(true);                
-            while (webBrowser.Document == null && webBrowser.Document.Body == null)
-                Application.DoEvents();
-            webBrowser.Document.Write(this.HTML);     
-            foreach (HtmlElement he in webBrowser.Document.Images)
-            {
-                string src = he.GetAttribute("src");
-                string s = callback(src);
-                he.SetAttribute("src", s);
-            }
-            webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
-            webBrowser.Update();
-            SetIamge(webBrowser);        
+            string fileName = null;
 
+            if (MHTML == null)
+            {
+                int length = 0;               
+                webBrowser.Navigate("about:blank");
+                webBrowser.Document.OpenNew(true);
+                while (webBrowser.Document == null && webBrowser.Document.Body == null)
+                    Application.DoEvents();
+                webBrowser.Document.Write(this.HTML);
+                foreach (HtmlElement he in webBrowser.Document.Images)
+                {
+                    string src = he.GetAttribute("src");
+                    string s = callback(src);
+                    he.SetAttribute("src", s);
+                    length += s.Length;
+                    if (length > 1024 * 10000) break;  //Limit the size
+                }
+                webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
+                webBrowser.Update();
+            }
+            else
+            {
+                fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
+                System.IO.File.WriteAllBytes(fileName, MHTML);
+                //webBrowser.Navigate(fileName);
+                webBrowser.Url = new System.Uri(fileName);
+                while ( webBrowser.ReadyState != WebBrowserReadyState.Complete )
+                    Application.DoEvents();
+            }
+            
+            SetIamge(webBrowser);
+            if (fileName != null)
+                File.Delete(fileName);
         }
 
         private void SetIamge(WebBrowser webBrowser)
@@ -77,6 +108,8 @@ namespace Forerunner
             
             int w = webBrowser.Document.Body.ScrollRectangle.Width;
             int h = webBrowser.Document.Body.ScrollRectangle.Height;
+            if (h > 2000) h = 2000;  //Set an upper bound to limit the size
+            if (w > 2000) w = 2000; //Set an upper bound to limit the size
             webBrowser.ClientSize = new Size(w,h );
             webBrowser.ScrollBarsEnabled = false;
             bmp = new Bitmap(w, h);

@@ -1,0 +1,2 @@
+Double click and run build.bat to create the minimal version out of the source files.
+The output file will be created under the js directory.

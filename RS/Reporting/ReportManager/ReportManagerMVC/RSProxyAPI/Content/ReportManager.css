@@ -61,6 +61,62 @@ section#pageSection {
   display:block;
 }
 
+.buttonicon {
+  height:30px;
+  background-color:transparent;
+  border-width:0px
+}
+
+.spacer20mm {
+  min-width:20mm;
+}
+
+.spacer10mm {
+  min-width:10mm;
+}
+
+.spacer5mm {
+  min-width:5mm;
+}
+
+.loading-indicator  {
+  border: solid 2px #86A5AD;
+  background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;
+  width: 148px; 
+  height: 28px; 
+  position: relative; 
+  margin:10px auto;
+  margin-top:50px;
+  padding: 10px 10px 10px 50px; 
+  text-align: left; 
+  line-height: 27px; 
+  font-weight: bold; 
+  z-index: 2010
+}
+
+.toolbar {    
+  background-color: transparent;
+  width:100%;
+  z-index:2001;
+  float: left;
+    clear:none;
+}
+
+.toolbartextbox {
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
+}
+
+.inlinetoolbar {
+  border-bottom: 1px solid gray;
+   width:100%;
+  z-index:2001;
+  float: left;
+    clear:none;
+    background-color: white;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -299,3 +355,4 @@ only screen and (min-device-pixel-ratio : 1.5)  {
   width: 120px;
   max-height: 160px;
 }
+

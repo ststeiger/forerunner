@@ -6,6 +6,7 @@ using Jayrock.Json;
 using Forerunner.RSExec;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Forerunner
 {
@@ -238,6 +239,96 @@ namespace Forerunner
             Debug.WriteLine(w);
             return w.ToString();
 
+        }
+
+        public string ConvertParamemterToJSON(ReportParameter[] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("SessionID");
+            w.WriteString(SessionID);
+            w.WriteMember("ReportServerURL");
+            w.WriteString(ReportServerURL);
+            w.WriteMember("ReportPath");
+            w.WriteString(reportPath);
+            w.WriteMember("NumPages");
+            w.WriteNumber(NumPages);
+
+            w.WriteMember("Type");
+            w.WriteString("Parameters");
+            w.WriteMember("Count");
+            w.WriteString(parametersList.Length.ToString());
+            w.WriteMember("ParametersList");
+            w.WriteStartArray();
+            foreach (ReportParameter parameter in parametersList)
+            {
+                w.WriteStartObject();
+                foreach (PropertyInfo proInfo in parameter.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (!proInfo.PropertyType.IsArray)
+                    {
+                        w.WriteMember(proInfo.Name);
+                        Object obj = proInfo.GetValue(parameter, null);
+
+                        if (obj == null)
+                            w.WriteString("");
+                        else
+                            w.WriteString(proInfo.GetValue(parameter, null).ToString());
+                    }
+                }
+
+                w.WriteMember("DefaultValues");
+                if (parameter.DefaultValues != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.DefaultValues)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
+
+                w.WriteMember("Dependencies");
+                if (parameter.Dependencies != null)
+                {
+                    w.WriteStartArray();
+                    foreach (string item in parameter.Dependencies)
+                    {
+                        w.WriteString(item);
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+
+                w.WriteMember("ValidValues");
+                if (parameter.ValidValues != null)
+                {
+                    w.WriteStartArray();
+                    foreach (ValidValue item in parameter.ValidValues)
+                    {
+                        w.WriteStartObject();
+                        w.WriteMember("Key");
+                        w.WriteString(item.Label);
+                        w.WriteMember("Value");
+                        w.WriteString(item.Value);
+                        w.WriteEndObject();
+                    }
+                    w.WriteEndArray();
+                }
+                else
+                    w.WriteString("");
+                w.WriteEndObject();
+            }
+
+            w.WriteEndArray();
+
+            w.WriteEndObject();
+
+            return w.ToString();
         }
 
         private Boolean DeReference(int StartIndex, Func<Boolean> DeFunction)

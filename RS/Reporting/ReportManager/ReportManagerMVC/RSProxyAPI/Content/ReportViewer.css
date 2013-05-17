@@ -1,0 +1,267 @@
+﻿body {
+    color: #333333;
+    font-family: "Segoe UI",Verdana,Helvetica,Sans-Serif;
+    font-size: 0.85em;
+}
+
+.buttonicon {
+  height:30px;
+  background-color:transparent;
+  border-width:0px
+}
+
+.spacer20mm {
+  min-width:20mm;
+}
+
+.spacer10mm {
+  min-width:10mm;
+}
+
+.spacer5mm {
+  min-width:5mm;
+}
+
+.loading-indicator  {
+  border: solid 2px #86A5AD;
+  background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;
+  width: 148px; 
+  height: 28px; 
+  position: relative; 
+  margin:10px auto;
+  margin-top:50px;
+  padding: 10px 10px 10px 50px; 
+  text-align: left; 
+  line-height: 27px; 
+  font-weight: bold; 
+  z-index: 2010
+}
+
+.toolbar {    
+  background-color: transparent;
+  width:100%;
+  z-index:2001;
+  float: left;
+  clear:none;
+}
+
+.toolbartextbox {
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
+}
+
+.inlinetoolbar {
+  border-bottom: 1px solid gray;
+  width:100%;
+  z-index:2001;
+  float: left;
+  clear:none;
+  background-color: white;
+}
+
+.report-container {
+  position:relative;
+  width:100%;
+}
+
+.top-level-report-table {
+  width:100%;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+    /* Styles */
+
+    .spacer20mm {
+        min-width: 1mm;
+    }
+
+    .spacer10mm {
+        min-width: 1mm;
+    }
+
+    .spacer5mm {
+        min-width: 1mm;
+    }
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    /* Styles */
+ 
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    /* Styles */
+ 
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+    /* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+    /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+    /* Styles */
+}
+
+.center { 
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+.centertext {
+  text-align:center;
+}
+
+.pagethumb {
+  width: 120px;
+  max-height: 160px;
+}
+
+.error {
+    color: #E80C4D;
+}
+
+label {
+    display: block;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+input, textarea, select {
+    border: 1px solid #e2e2e2;
+    background: #fff;
+    color: #333;
+    font-size: 1em;
+    margin: 5px 0 6px 0;
+    padding: 5px;
+    width: 300px;
+}
+
+input[type="checkbox"] {
+    background: none repeat scroll 0 0 transparent;
+    border: inherit;
+    width: auto;
+}
+
+input[type="submit"], input[type="button"], button
+{
+    background-color: #d3dce0;
+    border: 1px solid #787878;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 7px;
+    margin-right: 8px;
+    width: auto;
+}
+
+td input[type="submit"], td input[type="button"], td button
+{
+    font-size: 1em;
+    padding: 4px;
+    margin-right: 4px;
+}
+
+.ToggleParam{
+    font-family:Verdana;
+    font-size:3px;
+    text-align:center;
+    background-color:#A4B7D8;
+}
+.Parameter, .ParameterClient{
+    margin:4px;
+    border-width:1px;
+    border-style:solid;
+    width:180px;
+}
+.Parameter-Panel{
+    background-color:rgb(222,231,242);
+    margin:4px 0px;
+    margin-bottom:0px;
+    border-width:1px;
+    border-style:solid;
+    width:100%;
+    height:100%;
+}
+.Parameter-Form{
+    margin:10px 6px;
+}
+.Parameter-Lable{
+    margin:4px;
+}
+.Parameter-Checkbox{
+    margin-left:10px;
+}
+.Parameter-Select{
+    width:192px;
+}
+.Parameter-Radio{
+    width:35px;
+}
+.Parameter-ViewReport{
+    margin:4px;
+    text-align:center
+}
+.Parameter-Enable
+{
+    background-color:rgb(255,255,255);
+    color:rgb(0,0,0);
+}
+.Parameter-Disabled
+{
+    background-color:rgb(222,231,242);
+    color:rgb(84,84,84);
+}
+.Parameter-DropDown
+{
+     padding:4px;
+     margin:0px 4px 4px 5px;
+     border-color: DarkGray; 
+     border-width: 1px; 
+     border-style: solid; 
+     overflow: auto; 
+     background-color: window; 
+     position: absolute; 
+     z-index: 11;
+}
+.Parameter-DropDown lable, checkbox
+{
+    margin:4px;
+}
+.Parameter-DropDown-Input
+{
+    margin-bottom:0px;
+}
+.Parameter-Dropdown-Hidden
+{
+    display:none;
+}
+.Parameter-Dropdown-Show
+{
+    display:block;
+    margin-top:-4px;
+}
+.Parameter-Div
+{
+   display:inline-block;
+   margin:4px;
+   border:solid 1px;
+   border-color:transparent;
+   width:190px;
+}
+.Parameter-Error
+{
+    border-width: thin;
+    border-color: red;
+}

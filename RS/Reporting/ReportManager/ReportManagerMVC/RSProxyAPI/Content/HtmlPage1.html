@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" style="">
+<head>
+    <link href="/Content/site.css" rel="stylesheet"/>
+    <link href="/Content/ReportManager.css" rel="stylesheet"/>
+    <link href="/Content/fswReportViewer.css" rel="stylesheet"/>
+    <title></title>    
+</head>
+<body  >
+    <script src="/Scripts/Carousel/js/jquery-1.9.1.min.js"></script>
+    <script src="/scripts/Models/fswReportViewer.js"></script>
+
+
+
+
+    <div id="t">this is some text</div>
+    <table><tr><td style="vertical-align: top;"><div id="Div1" style="" ></div></td><td style="vertical-align: top;"><div id="Div2" style="vertical-align:top;"></div></td></tr>
+        <tr><td style="vertical-align: top;"><div>This is some text</div></td><td style="vertical-align: top;"><div>This is some text</div></td></tr>
+    </table>
+
+    <script>
+        
+        //InitReport("192.168.1.27/reportserver", "/api/ReportViewer","/AdventureWorks 2008R2/Sales By Sales Person", true, 1, "Div1");
+        //InitReport("192.168.1.27/reportserver","/api/ReportViewer", "/NW Test/Territory Sales Martix", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Simple Table with groups and drill down", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver", "/api/ReportViewer","/Northwind Test Reports/Simple Matrix", true, 1, "Div1")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Simple Chart", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Layout", true, 1, "Div1")
+        InitReport("localhost:8080/reportserver", "/api/ReportViewer", "/Northwind Test Reports/Simple Gauge", true, 1, "Div1")
+    </script>
+</body>
+</html>

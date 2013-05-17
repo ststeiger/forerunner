@@ -20,6 +20,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +51,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -129,12 +132,65 @@
     <Compile Include="Controllers\CatalogItemsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportManagerController.cs" />
+    <Compile Include="Controllers\ReportViewerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\FormValidate.htm" />
+    <Content Include="Content\HtmlPage2.html" />
+    <Content Include="Content\ReportViewer.css" />
+    <Content Include="Content\StellaViewerTest.html" />
+    <Content Include="Content\HtmlPage1.html" />
+    <Content Include="Images\ajax-loader1.gif" />
+    <Content Include="Images\Folder-icon.png" />
+    <Content Include="Images\Home-icon.png" />
+    <Content Include="Images\OpenDropDown.png" />
+    <Content Include="Images\Parameter_Collapse.png" />
+    <Content Include="Images\Parameter_Expand.png" />
+    <Content Include="Images\Report-icon.png" />
+    <Content Include="Images\ReportViewer\BackButton.png" />
+    <Content Include="Images\ReportViewer\Backward.png" />
+    <Content Include="Images\ReportViewer\FastFoward.png" />
+    <Content Include="Images\ReportViewer\Next.png" />
+    <Content Include="Images\ReportViewer\Previous.png" />
+    <Content Include="Images\ReportViewer\Refresh.png" />
+    <Content Include="Images\ReportViewer\Save.png" />
+    <Content Include="Images\ReportViewer\Search.png" />
+    <Content Include="Images\sc-graphics\closedhand.cur" />
+    <Content Include="Images\sc-graphics\closedhand.png" />
+    <Content Include="Images\sc-graphics\next_arrow.png" />
+    <Content Include="Images\sc-graphics\openhand.cur" />
+    <Content Include="Images\sc-graphics\openhand.png" />
+    <Content Include="Images\sc-graphics\preloader.gif" />
+    <Content Include="Images\sc-graphics\prev_arrow.png" />
+    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
+    <Content Include="Scripts\App\configs.js" />
+    <Content Include="Scripts\Carousel\css\default_skin.css" />
+    <Content Include="Scripts\Carousel\css\default_skin_variation.css" />
+    <Content Include="Scripts\Carousel\css\tooltip_skin.css" />
+    <Content Include="Scripts\Carousel\css\tooltip_skin_variation.css" />
+    <Content Include="Images\sc-graphics\closedhand.cur" />
+    <Content Include="Images\sc-graphics\closedhand.png" />
+    <Content Include="Images\sc-graphics\next_arrow.png" />
+    <Content Include="Images\sc-graphics\openhand.cur" />
+    <Content Include="Images\sc-graphics\openhand.png" />
+    <Content Include="Images\sc-graphics\preloader.gif" />
+    <Content Include="Images\sc-graphics\prev_arrow.png" />
+    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\closedhand.cur" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\closedhand.png" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\next_arrow.png" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\openhand.cur" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\openhand.png" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\preloader.gif" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\prev_arrow.png" />
+    <Content Include="Scripts\Carousel\images\sc-graphics\tooltip_skin_navigation.png" />
+    <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery.metadata.js" />
+    <Content Include="Scripts\Carousel\js\jquery.sky.carousel-1.0.2.min.js" />
     <Content Include="Content\ReportManager.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -196,11 +252,7 @@
     <Content Include="Scripts\backbone_ui.js" />
     <Content Include="Scripts\collection_view.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery-1.7.2.js" />
-    <Content Include="Scripts\jquery-1.8.3.js" />
+    <Content Include="Scripts\jquery-ui-1.10.3.custom.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
@@ -209,21 +261,28 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jquery.validate1.11.1.min.js" />
+    <Content Include="Scripts\jquery.watermark.min.js" />
     <Content Include="Scripts\json2.js" />
-    <Content Include="Scripts\knockout-2.1.0.debug.js" />
-    <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\laconic.js" />
+    <Content Include="Scripts\Models\ReportParameter.js" />
+    <Content Include="Scripts\Models\ReportViewer.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
     <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\tpl\CatalogItemView.html" />
+    <Content Include="Scripts\tpl\ReportViewerMainView.html" />
     <Content Include="Scripts\tpl\ReportManagerMainView.html" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\tpl\AppPageView.html" />
+    <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -261,6 +320,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\ReportViewer.csproj">
+      <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
+      <Name>ReportViewer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RSProxy\RSProxy.csproj">
       <Project>{9dedc6fb-5eb9-4648-8ac6-df82a81c1f23}</Project>
       <Name>RSProxy</Name>
@@ -280,20 +343,20 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>9000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:54671/</IISUrl>
+          <IISUrl>http://localhost:9000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://ludwig</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

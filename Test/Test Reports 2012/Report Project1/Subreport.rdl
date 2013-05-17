@@ -3,52 +3,33 @@
   <Body>
     <ReportItems>
       <Subreport Name="Subreport1">
-        <ReportName>Image table</ReportName>
+        <ReportName>Simple Chart</ReportName>
         <OmitBorderOnPageBreak>true</OmitBorderOnPageBreak>
-        <Top>0.95708in</Top>
-        <Left>1.62375in</Left>
-        <Height>3in</Height>
-        <Width>3in</Width>
+        <Top>0.18403in</Top>
+        <Left>0.45709in</Left>
+        <Height>4.24181in</Height>
+        <Width>4.55208in</Width>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Subreport>
-      <Textbox Name="Textbox1">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>SubReport Test</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.28in</Top>
-        <Left>1.62375in</Left>
-        <Height>0.25in</Height>
-        <Width>2.77083in</Width>
+      <Subreport Name="Subreport2">
+        <ReportName>Richtextbox</ReportName>
+        <Top>4.75917in</Top>
+        <Left>0.45709in</Left>
+        <Height>3in</Height>
+        <Width>4.55208in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
         </Style>
-      </Textbox>
+      </Subreport>
     </ReportItems>
-    <Height>3.95708in</Height>
+    <Height>8.74875in</Height>
     <Style />
   </Body>
   <Width>6.5in</Width>
@@ -61,5 +42,5 @@
   </Page>
   <AutoRefresh>0</AutoRefresh>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>2d151222-fc32-4f40-ac66-9f3571b30c37</rd:ReportID>
+  <rd:ReportID>83b85e46-1602-4cc6-a9b9-756f332628c5</rd:ReportID>
 </Report>

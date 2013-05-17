@@ -15,49 +15,63 @@ using System.Threading;
 
 namespace Forerunner.ReportControl
 {
-    public class Report
+    public class Credentials
     {
-        String ReportServerURL;
         public enum SecurityTypeEnum { Network = 0, Custom = 1 };
-        SecurityTypeEnum SecurityType;
-        string UserName;
-        string Domain;
-        string Password;
+        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
+        public string UserName;
+        public string Domain;
+        public string Password;
 
-        public Report(String ReportServerURL, SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
+        public Credentials() { }
+        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
         {
-            this.ReportServerURL = ReportServerURL;
             this.SecurityType = SecurityType;
             this.UserName = UserName;
             this.Password = Password;
             this.Domain = Domain;
         }
+    }
 
-        public void SetCustomSecurity(String UserName = "", string Domain = "", string Password = "")
-        {            
-            this.SecurityType = SecurityTypeEnum.Custom;
-            this.UserName = UserName;
-            this.Password = Password;
-            this.Domain = Domain;
+    
 
+    public class Report
+    {
+        String ReportServerURL;
+        Credentials Credentials = new Credentials();
+        ReportExecutionService rs = new ReportExecutionService();
+
+
+        public Report(String ReportServerURL, Credentials Credentials)
+        {
+            this.ReportServerURL = ReportServerURL;
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+            
+            SetCredentials(Credentials);
         }
+        public Report(String ReportServerURL)
+        {
+            this.ReportServerURL = ReportServerURL;
+            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
+        }
+
+        public void SetCredentials(Credentials Credentials)
+        {
+            this.Credentials = Credentials;
+            //Security
+            if (this.Credentials.SecurityType == Credentials.SecurityTypeEnum.Network)
+                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            else
+                rs.Credentials = new NetworkCredential(this.Credentials.UserName, this.Credentials.Password, this.Credentials.Domain);
+        }
+
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
-            ReportExecutionService rs = new ReportExecutionService();
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
             byte[] result = null;
             string encoding;
             
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password,this.Domain);
-
-            // Setup Request  TODO: Need to handle HTTPS
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
             rs.ExecutionHeaderValue = execHeader;
             rs.ExecutionHeaderValue.ExecutionID = SessionID;
             
@@ -111,22 +125,16 @@ namespace Forerunner.ReportControl
             else
                 NewSession = SessionID;
 
+            //Device Info
+            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
+            //Page number   
+            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
 
             //Delay just for testing
             //Thread.Sleep(1000);
-
-            ReportExecutionService rs = new ReportExecutionService();
-            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password, this.Domain);
-
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-            
-            
+                        
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];
             //parameters[0] = new ParameterValue();
@@ -145,28 +153,22 @@ namespace Forerunner.ReportControl
 
             rs.ExecutionHeaderValue = execHeader;
 
-            if (NewSession != "")           
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-            else
-                execInfo = rs.LoadReport(reportPath, historyID);
-            
-
-            //rs.SetExecutionParameters(parameters, "en-us");
-            NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>True</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>True</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>False</ImageConsolidation>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             try
             {
+
+                if (NewSession != "")           
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                else
+                    execInfo = rs.LoadReport(reportPath, historyID);
+            
+
+                //rs.SetExecutionParameters(parameters, "en-us");
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
-                    return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath);
+                    return ConvertRPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
                 else
                     return "";
             }
@@ -196,20 +198,13 @@ namespace Forerunner.ReportControl
             else
                 NewSession = SessionID;
 
-
-            //Delay just for testing
-            //Thread.Sleep(1000);
-
-            ReportExecutionService rs = new ReportExecutionService();
-            //rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-
-            //Security
-            if (this.SecurityType == SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
-            else
-                rs.Credentials = new NetworkCredential(this.UserName, this.Password, this.Domain);
-            rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-
+            //Device Info
+            string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
+            //Page number   
+            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
+            //End Device Info
+            devInfo += @"</DeviceInfo>";
 
             // Prepare report parameter.
             //ParameterValue[] parameters = new ParameterValue[3];
@@ -229,25 +224,17 @@ namespace Forerunner.ReportControl
 
             rs.ExecutionHeaderValue = execHeader;
 
-            if (NewSession != "")
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-            else
-                execInfo = rs.LoadReport(reportPath, historyID);
-
-
-            //rs.SetExecutionParameters(parameters, "en-us");
-            NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><OutputFormat>JPEG</OutputFormat>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            devInfo += @"<PageHeight >" + PageHeight + "</PageHeight ><PageWidth >" + PageWidth + "</PageWidth >";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             try
             {
+
+                if (NewSession != "")
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                else
+                    execInfo = rs.LoadReport(reportPath, historyID);
+
+                //rs.SetExecutionParameters(parameters, "en-us");
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 return result;
@@ -259,14 +246,13 @@ namespace Forerunner.ReportControl
                 return null;
             }
         }
-        private string ConvertRPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath)
+        private string ConvertRPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath, int NumPages)
         {
                 
             JsonWriter w = new JsonTextWriter();
             RPLReader r = new RPLReader(RPL,w);
            
             //Read Report Object
-            //Report = RPLStamp Version reportStart ReportProperties *PageContent OffsetsArrayElement ReportElementEnd Version
             w.WriteStartObject();
             w.WriteMember("SessionID");
             w.WriteString(SessionID);
@@ -274,6 +260,8 @@ namespace Forerunner.ReportControl
             w.WriteString(ReportServerURL);
             w.WriteMember("ReportPath");
             w.WriteString(reportPath);
+            w.WriteMember("NumPages");
+            w.WriteNumber(NumPages);
             w.WriteMember("RPLStamp");
             w.WriteString(r.ReadString());
             
@@ -299,6 +287,7 @@ namespace Forerunner.ReportControl
             //End RPL
             w.WriteEndObject();
 
+            Debug.Write(w);
             return w.ToString();
 
         }
@@ -901,18 +890,32 @@ namespace Forerunner.ReportControl
          }
          public Boolean WriteJSONActionImageMapAreas()
          {
-             int Count;           
+             int Count;
+
+             if (ReadByte() != 0x26)
+                 //This should never happen
+                 ThrowParseError();
+             
              w.WriteMember("Count");
              Count = ReadInt32();
              w.WriteNumber(Count);
 
-             w.WriteMember("ActionImageMap");
+             w.WriteMember("ActionInfoWithMaps");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
+                 if (ReadByte() != 0x07)
+                     //This should never happen
+                     ThrowParseError();
+
                  w.WriteStartObject();
-                 WriteJSONActionInfoContent();
-                 WriteJSONImageMapAreas();
+                 if (InspectByte() == 0x02)
+                    WriteJSONActionInfoContent();
+                 if (InspectByte() == 0x0A)
+                    WriteJSONImageMapAreas();
+                 if (ReadByte() != 0xFF)
+                     //This should never happen
+                     ThrowParseError();
                  w.WriteEndObject();
              }
 
@@ -926,9 +929,12 @@ namespace Forerunner.ReportControl
              int CorCount;
              RPLProperties prop;
 
+             
              if (ReadByte() == 0x0A)
              {
-                 w.WriteMember("MapAreaCount");
+                 w.WriteMember("ImageMapAreas");
+                 w.WriteStartObject();
+                 w.WriteMember("Count");
                  Count = ReadInt32();
                  w.WriteNumber(Count);
 
@@ -944,8 +950,8 @@ namespace Forerunner.ReportControl
                      w.WriteNumber(CorCount);
                      w.WriteMember("Coordinates");
                      w.WriteStartArray();
-                     for (int j = 0; j < CorCount; CorCount++)                     
-                         w.WriteNumber(ReadFloat());
+                     for (int j = 0; j < CorCount; j++)                     
+                         w.WriteNumber(ReadSingle());
                      w.WriteEndArray();
                      if (ReadByte() != 0xFF)
                      {
@@ -956,6 +962,7 @@ namespace Forerunner.ReportControl
                      w.WriteEndObject();
                  }
                  w.WriteEndArray();
+                 w.WriteEndObject();
              }
              else
                  //This cannot happen
@@ -983,6 +990,7 @@ namespace Forerunner.ReportControl
              Count = ReadInt32();
              w.WriteNumber(Count);
 
+             w.WriteMember("Actions");
              w.WriteStartArray();
              for (int i = 0; i < Count; i++)
              {
@@ -1176,6 +1184,7 @@ namespace Forerunner.ReportControl
             
              //Tablix Content
              //Either Row or ReportItem
+             w.SetShouldWrite(false);
              w.WriteMember("Content");
              w.WriteStartArray();
              while (InspectByte() == 0x12 || WriteJSONReportItem(true))
@@ -1188,10 +1197,10 @@ namespace Forerunner.ReportControl
                      w.WriteMember("Type");
                      w.WriteString("BodyRow");
                      w.WriteMember("RowIndex");
-                     w.WriteNumber(ReadInt32());
+                     w.WriteNumber(ReadInt32());                     
                      //WriteCells
                      LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
-                     w.WriteEndObject();
+                     //w.WriteEndObject();
                      if (ReadByte() != 0xFF)
                          //This should never happen
                          ThrowParseError();
@@ -1202,7 +1211,8 @@ namespace Forerunner.ReportControl
              }
           
              w.WriteEndArray();
-             
+             w.SetShouldWrite(true);
+
              //Tablix Structure
              if (ReadByte() == 0x11)
              {
@@ -1237,6 +1247,80 @@ namespace Forerunner.ReportControl
              w.WriteEndObject();
 
          }
+
+
+         public Boolean WriteJSONDeRefCellReportItem()
+         {
+             if (ReadByte() != 0x04)
+                 // THis must be a Cell reference Property
+                 ThrowParseError();             
+             int StartIndex = (int)ReadInt64();
+             int CurrIndex = this.Index;             
+             this.Index = StartIndex;
+
+
+             if (ReadByte() != 0xFE)
+                 // THis must be a ReportElementEnd record
+                 ThrowParseError();
+            //Jump to start of ReportItemEnd  This is differnt for each report item             
+             this.Index = (int)ReadInt64();
+             switch (InspectByte())
+             {
+                 case 0x12:
+                     //Rich textbox structure
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 case 0x11:
+                     //Tablix Structure
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 case 0x10:
+                     //Rectangle measurements
+                     ReadByte();
+                     this.Index = (int)ReadInt64();
+                     break;
+                 default:
+                     break;
+             }
+             w.WriteMember("ReportItem");
+             WriteJSONReportItem();
+
+
+             //Set back
+             this.Index = CurrIndex;
+             return true;
+
+         }
+         
+         public void WriteJSONDeRefTablixBodyCells()
+         {
+             int StartIndex = (int)ReadInt64();
+             int CurrIndex = this.Index;
+             this.Index = StartIndex;
+
+             
+             if (ReadByte() != 0x12)
+                 // THis must be a Cell reference Property
+                 ThrowParseError();
+             
+             //Tablix Row
+                w.WriteStartObject();
+                w.WriteMember("Type");
+                w.WriteString("BodyRow");
+                w.WriteMember("RowIndex");
+                w.WriteNumber(ReadInt32());
+                //WriteCells
+                LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
+                w.WriteEndObject();
+                if (ReadByte() != 0xFF)
+                    //This should never happen
+                    ThrowParseError();             
+             //Set back
+             this.Index = CurrIndex;             
+         }
+
          public Boolean WriteJSONTablixRow()
          {
              RPLProperties prop;
@@ -1250,7 +1334,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("Corner");
                          prop = new RPLProperties(0x0A);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1269,7 +1353,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("ColumnHeader");
                          prop = new RPLProperties(0x0B);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1296,7 +1380,7 @@ namespace Forerunner.ReportControl
                          w.WriteMember("Type");
                          w.WriteString("RowHeader");
                          prop = new RPLProperties(0x0C);
-                         prop.Add("CellItemOffset", "Int64", 0x04);
+                         prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
                          prop.Add("ColSpan", "Int32", 0x05);
                          prop.Add("RowSpan", "Int32", 0x06);
                          prop.Add("ColumnIndex", "Int32", 0x08);
@@ -1320,12 +1404,7 @@ namespace Forerunner.ReportControl
                      case 0x09:
                          //Tablix Body Cell      
                          Seek(1);
-                         w.WriteStartObject();
-                         w.WriteMember("Type");
-                         w.WriteString("BodyRowCells");
-                         w.WriteMember("OffSet");
-                         w.WriteNumber(ReadInt64());
-                         w.WriteEndObject();
+                         WriteJSONDeRefTablixBodyCells();
                          break;
                      default:
                          ThrowParseError();
@@ -1338,6 +1417,8 @@ namespace Forerunner.ReportControl
                  ThrowParseError();
              return true;
          }
+
+        
          public Boolean WriteJSONTablixColMemeber()
          {
              int Count;             
@@ -1450,13 +1531,16 @@ namespace Forerunner.ReportControl
 
              return true;
          }
+
+        
+
          public Boolean WriteJSONCells()
          {
              RPLProperties prop = new RPLProperties(0xFF);
 
 
              w.WriteStartObject();
-             prop.Add("CellItemOffset", "Int64", 0x04);
+             prop.Add("Cell", "Object", 0x04, this.WriteJSONDeRefCellReportItem);
              prop.Add("ColSpan", "Int32", 0x05);
              prop.Add("RowSpan", "Int32", 0x06);
              prop.Add("ColumnIndex", "Int32", 0x08);

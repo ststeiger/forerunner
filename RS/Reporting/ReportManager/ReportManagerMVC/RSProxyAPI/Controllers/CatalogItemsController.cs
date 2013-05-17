@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,21 +11,24 @@ namespace RSProxyAPI.Controllers
 {
     public class CatalogItemsController : ApiController
     {
-        // TODO:  Replace these with config settings
-        private string url = "http://meowlett/ReportServer_WinAuth/ReportService2005.asmx";
+        private string url = ConfigurationManager.AppSettings["ForeRunner.ReportServerWSUrl"];
+        private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
+        private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
+        private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
+        
         private bool useStub = false;
         // GET api/catalogitem
-        public IEnumerable<CatalogItem> Get()
+        public IEnumerable<CatalogItem> Get(bool isRecursive = false)
         {
-            RSProxy rs = new RSProxy(url);
+            RSProxy rs = new RSProxy(url, new Credentials(Credentials.SecurityTypeEnum.Network, accountName, domainName, accountPWD));
             rs.UseStub = useStub;
-            return rs.ListChildren("/", true); 
+            return rs.ListChildren("/", isRecursive); 
         }
 
         // GET api/catalogitem
         public IEnumerable<CatalogItem> Get(string path, bool isRecursive = false)
         {
-            RSProxy rs = new RSProxy(url);
+            RSProxy rs = new RSProxy(url, new Credentials(Credentials.SecurityTypeEnum.Network, accountName, domainName, accountPWD));
             rs.UseStub = useStub;
             return rs.ListChildren(path, isRecursive);
         }

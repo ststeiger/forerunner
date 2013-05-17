@@ -251,11 +251,7 @@
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
-      <ConnectionProperties>
-        <DataProvider>SQL</DataProvider>
-        <ConnectString>Data Source=.\SQLEXPRESS;Initial Catalog=NORTHWND</ConnectString>
-        <IntegratedSecurity>true</IntegratedSecurity>
-      </ConnectionProperties>
+      <DataSourceReference>Northwind</DataSourceReference>
       <rd:SecurityType>Integrated</rd:SecurityType>
       <rd:DataSourceID>d780a0bc-a2d1-480f-af87-535fb3ecd0d0</rd:DataSourceID>
     </DataSource>

@@ -9,7 +9,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>click here to go to www.bing.com.cn. Try it with another text. this is like a very long sentence, maybe you will like it.</Value>
+                <Value>click here to go to www.bing.com.cn. Try it with another text. this is like a very long </Value>
                 <ActionInfo>
                   <Actions>
                     <Action>
@@ -18,6 +18,19 @@
                   </Actions>
                 </ActionInfo>
                 <Style />
+              </TextRun>
+              <TextRun>
+                <Value>sentence, maybe you will like it.</Value>
+                <ActionInfo>
+                  <Actions>
+                    <Action>
+                      <Hyperlink>http://www.bing.com.cn</Hyperlink>
+                    </Action>
+                  </Actions>
+                </ActionInfo>
+                <Style>
+                  <Color>Red</Color>
+                </Style>
               </TextRun>
             </TextRuns>
             <ListStyle>Numbered</ListStyle>
@@ -48,7 +61,10 @@
                     </Action>
                   </Actions>
                 </ActionInfo>
-                <Style />
+                <Style>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                </Style>
               </TextRun>
             </TextRuns>
             <ListStyle>Numbered</ListStyle>

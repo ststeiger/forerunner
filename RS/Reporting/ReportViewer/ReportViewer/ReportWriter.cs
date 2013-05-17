@@ -652,8 +652,6 @@ namespace Forerunner
                 Seek(1);
                 while (InspectByte() == 0x06)
                 {
-                    //Advance over the the 0x06
-                    Seek(1);
                     WriteJSONBodyElement();
                 }
                
@@ -661,7 +659,7 @@ namespace Forerunner
 
             w.WriteEndArray();
             //Report ElementEnd
-            WriteJSONReportElementEnd();
+            //WriteJSONReportElementEnd();
             w.WriteEndObject();
 
             return true;
@@ -2086,16 +2084,29 @@ namespace Forerunner
 
                 foreach (JsonObject obj in parameterArray)
                 {
-                    ParameterValue pv = new ParameterValue();
-                    pv.Label = obj["Parameter"].ToString();
-                    pv.Name = obj["Parameter"].ToString();
-                    pv.Value = obj["Value"].ToString();
+                    if (obj["IsMultiple"].ToString() == "True")
+                    {
+                        string temp = obj["Value"].ToString();
+                        foreach (string str in temp.Split(','))
+                        {
+                            ParameterValue pv = new ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
+                            pv.Value = str;
+                            list.Add(pv);
+                        }
 
-                    list.Add(pv);
+                    }
+                    else
+                    {
+                        ParameterValue pv = new ParameterValue();
+                        pv.Name = obj["Parameter"].ToString();
+                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
+                        list.Add(pv);
+                    }
                 }
-            }
 
-            return list.ToArray();
+                return list.ToArray();
+            }
         }
     }
 }

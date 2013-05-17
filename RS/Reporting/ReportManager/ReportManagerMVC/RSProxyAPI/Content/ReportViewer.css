@@ -56,6 +56,15 @@
   background-color: white;
 }
 
+.report-container {
+  position:relative;
+  width:100%;
+}
+
+.top-level-report-table {
+  width:100%;
+}
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
     /* Styles */

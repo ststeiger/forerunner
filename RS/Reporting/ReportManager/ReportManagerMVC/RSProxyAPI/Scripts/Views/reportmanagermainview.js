@@ -27,6 +27,27 @@ var g_App = g_App || {};
     sectionHeader: function () {
         if (this.model.path == '/') return 'Home';
         return 'Home' + this.model.path;
+    },
+    postRender: function () {
+        $('#browse-carousel').carousel({
+            itemWidth: 250,
+            itemHeight: 350,
+            distance: 15,
+            selectedItemDistance: 50,
+            selectedItemZoomFactor: 1,
+            unselectedItemZoomFactor: 0.67,
+            unselectedItemAlpha: 0.6,
+            motionStartDistance: 250,
+            topMargin: 80,
+            gradientStartPoint: 0.35,
+            gradientOverlayColor: "#f5f5f5",
+            gradientOverlaySize: 200,
+            reflectionDistance: 1,
+            reflectionAlpha: 0.35,
+            reflectionVisible: true,
+            reflectionSize: 70,
+            selectByClick: true
+        });
     }
   });
   

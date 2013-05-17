@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ToolsVersion="2.0">
-  <State>$base64$PFNvdXJjZUNvbnRyb2xJbmZvIHhtbG5zOnhzZD0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zOmRkbDI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yIiB4bWxuczpkZGwyXzI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yLzIiIHhtbG5zOmRkbDEwMF8xMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDA4L2VuZ2luZS8xMDAvMTAwIiB4bWxuczpkZGwyMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAiIHhtbG5zOmRkbDIwMF8yMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAvMjAwIiB4bWxuczpkZGwzMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDExL2VuZ2luZS8zMDAiIHhtbG5zOmRkbDMwMF8zMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDExL2VuZ2luZS8zMDAvMzAwIiB4bWxuczpkZGw0MDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEyL2VuZ2luZS80MDAiIHhtbG5zOmRkbDQwMF80MDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEyL2VuZ2luZS80MDAvNDAwIiB4bWxuczpkd2Q9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vRGF0YVdhcmVob3VzZS9EZXNpZ25lci8xLjAiPg0KICA8RW5hYmxlZD5mYWxzZTwvRW5hYmxlZD4NCiAgPFByb2plY3ROYW1lPjwvUHJvamVjdE5hbWU+DQogIDxBdXhQYXRoPjwvQXV4UGF0aD4NCiAgPExvY2FsUGF0aD48L0xvY2FsUGF0aD4NCiAgPFByb3ZpZGVyPjwvUHJvdmlkZXI+DQo8L1NvdXJjZUNvbnRyb2xJbmZvPg==</State>
+  <State>$base64$PFNvdXJjZUNvbnRyb2xJbmZvIHhtbG5zOnhzZD0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiIHhtbG5zOnhzaT0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiIHhtbG5zOmRkbDI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yIiB4bWxuczpkZGwyXzI9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDAzL2VuZ2luZS8yLzIiIHhtbG5zOmRkbDEwMF8xMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDA4L2VuZ2luZS8xMDAvMTAwIiB4bWxuczpkZGwyMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAiIHhtbG5zOmRkbDIwMF8yMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDEwL2VuZ2luZS8yMDAvMjAwIiB4bWxuczpkZGwzMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDExL2VuZ2luZS8zMDAiIHhtbG5zOmRkbDMwMF8zMDA9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vYW5hbHlzaXNzZXJ2aWNlcy8yMDExL2VuZ2luZS8zMDAvMzAwIiB4bWxuczpkd2Q9Imh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vRGF0YVdhcmVob3VzZS9EZXNpZ25lci8xLjAiPg0KICA8RW5hYmxlZD5mYWxzZTwvRW5hYmxlZD4NCiAgPFByb2plY3ROYW1lPjwvUHJvamVjdE5hbWU+DQogIDxBdXhQYXRoPjwvQXV4UGF0aD4NCiAgPExvY2FsUGF0aD48L0xvY2FsUGF0aD4NCiAgPFByb3ZpZGVyPjwvUHJvdmlkZXI+DQo8L1NvdXJjZUNvbnRyb2xJbmZvPg==</State>
   <DataSources>
     <ProjectItem>
       <Name>Northwind.rds</Name>
@@ -11,10 +11,6 @@
     <ProjectItem>
       <Name>DataSet1.rsd</Name>
       <FullPath>DataSet1.rsd</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ProductsByLocation.rsd</Name>
-      <FullPath>ProductsByLocation.rsd</FullPath>
     </ProjectItem>
   </DataSets>
   <Reports>
@@ -51,10 +47,6 @@
       <FullPath>Guage to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Guage.rdl</Name>
-      <FullPath>Guage.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Image table.rdl</Name>
       <FullPath>Image table.rdl</FullPath>
     </ProjectItem>
@@ -63,24 +55,8 @@
       <FullPath>Line Chart 1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>map.rdl</Name>
-      <FullPath>map.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Martix2.rdl</Name>
-      <FullPath>Martix2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Matrix.rdl</Name>
-      <FullPath>Matrix.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>multichart.rdl</Name>
       <FullPath>multichart.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>no Action data bar.rdl</Name>
-      <FullPath>no Action data bar.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
@@ -99,18 +75,6 @@
       <FullPath>Subreport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>TwoChartReport.rdl</Name>
-      <FullPath>TwoChartReport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameter1.rdl</Name>
-      <FullPath>Parameter1.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Subreport.rdl</Name>
-      <FullPath>Subreport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
       <FullPath>Table Chart with background color.rdl</FullPath>
     </ProjectItem>
@@ -123,8 +87,60 @@
       <FullPath>Table with Subtotal.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Report1.rdl</Name>
-      <FullPath>Report1.rdl</FullPath>
+      <Name>Parameter Report 1.rdl</Name>
+      <FullPath>Parameter Report 1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ColumnChartReport.rdl</Name>
+      <FullPath>ColumnChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Customer Data.rdl</Name>
+      <FullPath>Customer Data.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustomerInfo.rdl</Name>
+      <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report 2.rdl</Name>
+      <FullPath>Image Report 2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report.rdl</Name>
+      <FullPath>Image Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Layout.rdl</Name>
+      <FullPath>Layout.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Lines.rdl</Name>
+      <FullPath>Lines.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter1.rdl</Name>
+      <FullPath>Parameter1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameters.rdl</Name>
+      <FullPath>Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ProductSales.rdl</Name>
+      <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Richtextbox.rdl</Name>
+      <FullPath>Richtextbox.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Matrix.rdl</Name>
+      <FullPath>Simple Matrix.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Parameter.rdl</Name>
+      <FullPath>Simple Parameter.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

@@ -277,8 +277,8 @@
         <DataSetName>DataSet1</DataSetName>
         <Top>0.47792in</Top>
         <Left>0.47792in</Left>
-        <Height>2.49083in</Height>
-        <Width>4.14583in</Width>
+        <Height>5.1575in</Height>
+        <Width>7.08333in</Width>
         <Style>
           <Border>
             <Color>LightGrey</Color>
@@ -319,10 +319,10 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>3.19792in</Height>
+    <Height>5.63542in</Height>
     <Style />
   </Body>
-  <Width>7.35417in</Width>
+  <Width>7.56125in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

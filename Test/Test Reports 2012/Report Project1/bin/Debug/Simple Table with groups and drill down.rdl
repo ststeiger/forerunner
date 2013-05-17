@@ -6,12 +6,12 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>4.60417in</Width>
+              <Width>4.86457in</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
-              <Height>1.96167in</Height>
+              <Height>4.48959in</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -444,8 +444,8 @@
                             </TablixMembers>
                           </TablixRowHierarchy>
                           <DataSetName>DataSet1</DataSetName>
-                          <Top>0.875in</Top>
-                          <Left>0.22917in</Left>
+                          <Top>0.74542in</Top>
+                          <Left>0.22916in</Left>
                           <Height>0.64in</Height>
                           <Width>3.63541in</Width>
                           <Style />
@@ -464,13 +464,29 @@
                                     <Color>SlateGray</Color>
                                   </Style>
                                 </TextRun>
+                                <TextRun>
+                                  <Value>,</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>14pt</FontSize>
+                                    <Color>SlateGray</Color>
+                                  </Style>
+                                </TextRun>
+                                <TextRun>
+                                  <Value>=Fields!City.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>14pt</FontSize>
+                                    <Color>SlateGray</Color>
+                                  </Style>
+                                </TextRun>
                               </TextRuns>
                               <Style />
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Country</rd:DefaultName>
-                          <Top>0.16056in</Top>
-                          <Left>1.625in</Left>
+                          <Top>0.20806in</Top>
+                          <Left>1.16667in</Left>
                           <Height>0.27in</Height>
                           <Width>2.125in</Width>
                           <ZIndex>1</ZIndex>
@@ -496,8 +512,8 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox24</rd:DefaultName>
-                          <Top>1.57056in</Top>
-                          <Left>1.625in</Left>
+                          <Top>1.42708in</Top>
+                          <Left>1.62499in</Left>
                           <Height>0.25in</Height>
                           <Width>1.23958in</Width>
                           <ZIndex>2</ZIndex>
@@ -513,7 +529,11 @@
                         </Textbox>
                       </ReportItems>
                       <KeepTogether>true</KeepTogether>
-                      <Style />
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                      </Style>
                     </Rectangle>
                   </CellContents>
                 </TablixCell>
@@ -553,8 +573,8 @@
         </PageBreak>
         <Top>0.64125in</Top>
         <Left>0.00001in</Left>
-        <Height>1.96167in</Height>
-        <Width>4.60417in</Width>
+        <Height>4.48959in</Height>
+        <Width>4.86457in</Width>
         <Style>
           <FontFamily>Tahoma</FontFamily>
           <FontSize>14pt</FontSize>
@@ -568,23 +588,30 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Simple Table with groups and drill down</Value>
+                <Value>Testing test boxes</Value>
                 <Style>
                   <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
+                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
-                  <Color>SteelBlue</Color>
+                  <TextDecoration>None</TextDecoration>
+                  <Color>LimeGreen</Color>
                 </Style>
               </TextRun>
             </TextRuns>
-            <Style />
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>textbox1</rd:DefaultName>
-        <Height>0.36in</Height>
+        <Left>0.22917in</Left>
+        <Height>0.28445in</Height>
         <Width>3.63542in</Width>
         <ZIndex>1</ZIndex>
         <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -592,7 +619,7 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>4.0925in</Height>
+    <Height>5.45708in</Height>
     <Style />
   </Body>
   <Width>5.23833in</Width>

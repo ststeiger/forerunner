@@ -7,11 +7,108 @@
       <FullPath>Northwind.rds</FullPath>
     </ProjectItem>
   </DataSources>
-  <DataSets />
+  <DataSets>
+    <ProjectItem>
+      <Name>DataSet1.rsd</Name>
+      <FullPath>DataSet1.rsd</FullPath>
+    </ProjectItem>
+  </DataSets>
   <Reports>
+    <ProjectItem>
+      <Name>action chart bookmark.rdl</Name>
+      <FullPath>action chart bookmark.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>action URL.rdl</Name>
+      <FullPath>action URL.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>action with bookmark data bar.rdl</Name>
+      <FullPath>action with bookmark data bar.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>area.rdl</Name>
+      <FullPath>area.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>bar chart.rdl</Name>
+      <FullPath>bar chart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>chart.rdl</Name>
+      <FullPath>chart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>data bar go to report .rdl</Name>
+      <FullPath>data bar go to report .rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Guage to report action.rdl</Name>
+      <FullPath>Guage to report action.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Guage.rdl</Name>
+      <FullPath>Guage.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image table.rdl</Name>
+      <FullPath>Image table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Line Chart 1.rdl</Name>
+      <FullPath>Line Chart 1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>map.rdl</Name>
+      <FullPath>map.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Martix2.rdl</Name>
+      <FullPath>Martix2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Matrix.rdl</Name>
+      <FullPath>Matrix.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>multichart.rdl</Name>
+      <FullPath>multichart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>no Action data bar.rdl</Name>
+      <FullPath>no Action data bar.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>pie chart.rdl</Name>
+      <FullPath>pie chart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report1 with action.rdl</Name>
+      <FullPath>Report1 with action.rdl</FullPath>
+    </ProjectItem>
     <ProjectItem>
       <Name>Simple Table with groups and drill down.rdl</Name>
       <FullPath>Simple Table with groups and drill down.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Subreport.rdl</Name>
+      <FullPath>Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Table Chart with background color.rdl</Name>
+      <FullPath>Table Chart with background color.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>table with side txt box.rdl</Name>
+      <FullPath>table with side txt box.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Table with Subtotal.rdl</Name>
+      <FullPath>Table with Subtotal.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report1.rdl</Name>
+      <FullPath>Report1.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -21,7 +118,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

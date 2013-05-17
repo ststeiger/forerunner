@@ -2086,12 +2086,25 @@ namespace Forerunner
 
                 foreach (JsonObject obj in parameterArray)
                 {
-                    ParameterValue pv = new ParameterValue();
-                    pv.Label = obj["Parameter"].ToString();
-                    pv.Name = obj["Parameter"].ToString();
-                    pv.Value = obj["Value"].ToString();
+                    if (obj["IsMultiple"].ToString() == "True")
+                    {
+                        string temp = obj["Value"].ToString();
+                        foreach (string str in temp.Split(','))
+                        {
+                            ParameterValue pv = new ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
+                            pv.Value = str;
+                            list.Add(pv);
+                        }
 
-                    list.Add(pv);
+                    }
+                    else
+                    {
+                        ParameterValue pv = new ParameterValue();
+                        pv.Name = obj["Parameter"].ToString();
+                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
+                        list.Add(pv);
+                    }
                 }
             }
 

@@ -1,4 +1,8 @@
-﻿
+﻿body {
+    color: #333333;
+    font-family: "Segoe UI",Verdana,Helvetica,Sans-Serif;
+    font-size: 0.85em;
+}
 
 .buttonicon {
   height:30px;
@@ -115,6 +119,51 @@
   max-height: 160px;
 }
 
+.error {
+    color: #E80C4D;
+}
+
+label {
+    display: block;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+input, textarea, select {
+    border: 1px solid #e2e2e2;
+    background: #fff;
+    color: #333;
+    font-size: 1em;
+    margin: 5px 0 6px 0;
+    padding: 5px;
+    width: 300px;
+}
+
+input[type="checkbox"] {
+    background: none repeat scroll 0 0 transparent;
+    border: inherit;
+    width: auto;
+}
+
+input[type="submit"], input[type="button"], button
+{
+    background-color: #d3dce0;
+    border: 1px solid #787878;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 600;
+    padding: 7px;
+    margin-right: 8px;
+    width: auto;
+}
+
+td input[type="submit"], td input[type="button"], td button
+{
+    font-size: 1em;
+    padding: 4px;
+    margin-right: 4px;
+}
+
 .ToggleParam{
     font-family:Verdana;
     font-size:3px;
@@ -168,7 +217,7 @@
 .Parameter-DropDown
 {
      padding:4px;
-     margin:0px 4px 4px 4px;
+     margin:0px 4px 4px 5px;
      border-color: DarkGray; 
      border-width: 1px; 
      border-style: solid; 
@@ -192,9 +241,22 @@
 .Parameter-Dropdown-Show
 {
     display:block;
+    margin-top:-4px;
 }
 .Parameter-Error
 {
     border-width: thin;
     border-color: red;
+}
+.Parameter-Div
+{
+   display:inline-block;
+   margin:4px;
+   border:solid 1px;
+   border-color:transparent;
+   width:190px;
+}
+.Parameter-Span-Error
+{
+   border-color:red;
 }

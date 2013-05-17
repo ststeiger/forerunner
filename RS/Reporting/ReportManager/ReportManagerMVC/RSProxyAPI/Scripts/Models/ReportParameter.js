@@ -21,8 +21,8 @@
     ResetValidateMessage();
     $Form.validate({
         errorPlacement: function (error, element) {
-            if (element.is(":radio"))
-                error.appendTo(element.parent("span").parent("td").next("td"));
+            if ($(element).is(":radio"))
+                error.appendTo(element.parent("div").parent("td").next("td"));
             else {
                 if ($(element).attr("IsMultiple") == "True")
                     error.appendTo(element.parent("div").parent("td").next("td"));
@@ -31,11 +31,18 @@
             }
         },
         highlight: function (element) {
-            $(element).addClass("Parameter-Error");
+            if ($(element).is(":radio")) 
+                $(element).parent("div").addClass("Parameter-Span-Error");
+            else
+                $(element).addClass("Parameter-Error");
         },
         unhighlight: function (element) {
+            if ($(element).is(":radio"))
+                $(element).parent("div").removeClass("Parameter-Span-Error");
+            else
             $(element).removeClass("Parameter-Error");
-        }
+        },
+        focusInvalid:true
     });
     $Col.append($Form);
     $Row.append($Col);
@@ -111,15 +118,16 @@ function WriteParameterControl(RIContext) {
             radioValues[0] = "True";
             radioValues[1] = "False";
 
-            $element = new $("<Span />");
+            $element = new $("<Div />");
+            $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
+            $element.attr("DataType", RIContext.CurrObj.Type);
+            $element.addClass("Parameter-Div");
             for (value in radioValues) {
                 var $radioItem = new $("<input/>");
                 $radioItem.addClass("Parameter");
-                $element.attr("IsMultiple", RIContext.CurrObj.MultiValue);
                 $radioItem.addClass("Parameter-Radio");
-                $element.attr("DataType", RIContext.CurrObj.Type);
                 $radioItem.addClass(RIContext.CurrObj.Name);
-
+                
                 $radioItem.attr("type", "radio");
                 $radioItem.attr("name", RIContext.CurrObj.Name);
                 $radioItem.attr("value", radioValues[value]);

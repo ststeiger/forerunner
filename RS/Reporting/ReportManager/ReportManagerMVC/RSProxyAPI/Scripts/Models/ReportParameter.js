@@ -32,17 +32,16 @@
         },
         highlight: function (element) {
             if ($(element).is(":radio")) 
-                $(element).parent("div").addClass("Parameter-Span-Error");
+                $(element).parent("div").addClass("Parameter-Error");
             else
                 $(element).addClass("Parameter-Error");
         },
         unhighlight: function (element) {
             if ($(element).is(":radio"))
-                $(element).parent("div").removeClass("Parameter-Span-Error");
+                $(element).parent("div").removeClass("Parameter-Error");
             else
             $(element).removeClass("Parameter-Error");
-        },
-        focusInvalid:true
+        }
     });
     $Col.append($Form);
     $Row.append($Col);

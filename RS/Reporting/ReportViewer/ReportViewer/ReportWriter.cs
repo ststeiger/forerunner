@@ -652,8 +652,6 @@ namespace Forerunner
                 Seek(1);
                 while (InspectByte() == 0x06)
                 {
-                    //Advance over the the 0x06
-                    Seek(1);
                     WriteJSONBodyElement();
                 }
                
@@ -661,7 +659,7 @@ namespace Forerunner
 
             w.WriteEndArray();
             //Report ElementEnd
-            WriteJSONReportElementEnd();
+            //WriteJSONReportElementEnd();
             w.WriteEndObject();
 
             return true;
@@ -2106,9 +2104,9 @@ namespace Forerunner
                         list.Add(pv);
                     }
                 }
-            }
 
-            return list.ToArray();
+                return list.ToArray();
+            }
         }
     }
 }

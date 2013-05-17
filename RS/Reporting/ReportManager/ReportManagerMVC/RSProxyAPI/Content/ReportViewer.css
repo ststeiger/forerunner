@@ -60,6 +60,15 @@
   background-color: white;
 }
 
+.report-container {
+  position:relative;
+  width:100%;
+}
+
+.top-level-report-table {
+  width:100%;
+}
+
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
     /* Styles */
@@ -243,11 +252,6 @@ td input[type="submit"], td input[type="button"], td button
     display:block;
     margin-top:-4px;
 }
-.Parameter-Error
-{
-    border-width: thin;
-    border-color: red;
-}
 .Parameter-Div
 {
    display:inline-block;
@@ -256,7 +260,8 @@ td input[type="submit"], td input[type="button"], td button
    border-color:transparent;
    width:190px;
 }
-.Parameter-Span-Error
+.Parameter-Error
 {
-   border-color:red;
+    border-width: thin;
+    border-color: red;
 }

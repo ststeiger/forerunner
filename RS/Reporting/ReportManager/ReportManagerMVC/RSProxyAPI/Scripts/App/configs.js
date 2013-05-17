@@ -8,8 +8,8 @@ var g_App = g_App || {};
   g_App.configs = {
     apiBase: 'http://192.168.1.20:9000/api/',
     reportControllerBase: '/api/ReportViewer',
-    reportServerUrl: 'localhost:2008/reportserver_sql2008/',
-    //reportServerUrl: 'localhost:8080/reportserver/',
+    //reportServerUrl: 'localhost:2008/reportserver_sql2008/',
+    reportServerUrl: 'localhost:8080/reportserver/',
     reportServerViewer: 'http://localhost:8080/ReportServer/Pages/ReportViewer.aspx?',
   };
 

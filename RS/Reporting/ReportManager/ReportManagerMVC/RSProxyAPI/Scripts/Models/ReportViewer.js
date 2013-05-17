@@ -31,7 +31,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$PageContainer = $PageContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = new $("<div class 'report-contaioner' style='position:relative'></div");
+    this.$ReportContainer = new $("<div class='report-container' style=''></div");
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
@@ -408,7 +408,7 @@ function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageN
     InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null, 0)
 }
 function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID, toolbarOffset) {
-    var $Table = new $("<table/>");
+    var $Table = new $("<table class='top-level-report-table'/>");
     var $Row = new $("<TR/>");
     var $Cell;
     var $FloatingToolbar;
@@ -680,7 +680,11 @@ function WriteRichText(RIContext) {
         $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
             var $Paragraph = new $("<DIV />");
             $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
-
+            if (Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
+                var $NumberSpan = new $("<Span />");
+                $NumberSpan.html(Obj.Paragraph.NonSharedElements.ParagraphNumber + ".&nbsp");
+                $Paragraph.append($NumberSpan);
+            }
             var ParagraphStyle = "";
             ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
             ParagraphStyle += GetElementsStyle(Obj.Paragraph);

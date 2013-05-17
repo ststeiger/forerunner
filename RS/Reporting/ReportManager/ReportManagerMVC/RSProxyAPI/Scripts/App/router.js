@@ -15,11 +15,6 @@ var ApplicationRouter = Backbone.Router.extend({
         // Application page view
         appPageView : null,
 
-        test: function (arg) {
-            alert('I am here');
-            alert(arg);
-        },
-
         notFound: function () {
             alert('Not found');
         },
@@ -46,26 +41,6 @@ var ApplicationRouter = Backbone.Router.extend({
                         thisObj.appPageView.transitionMainSection(appPageModel, [
                         'ReportManagerMainView'], '',
                         g_App.ReportManagerMainView, { model: catalogItemsModel });
-                        // Initialize the carousel
-                        $('#browse-carousel').carousel({
-                            itemWidth: 250,
-                            itemHeight: 350,
-                            distance: 15,
-                            selectedItemDistance: 50,
-                            selectedItemZoomFactor: 1,
-                            unselectedItemZoomFactor: 0.67,
-                            unselectedItemAlpha: 0.6,
-                            motionStartDistance: 250,
-                            topMargin: 80,
-                            gradientStartPoint: 0.35,
-                            gradientOverlayColor: "#f5f5f5",
-                            gradientOverlaySize: 200,
-                            reflectionDistance: 1,
-                            reflectionAlpha: 0.35,
-                            reflectionVisible: true,
-                            reflectionSize: 70,
-                            selectByClick: true
-                        });
                     },
                     error: function (model, response) {
                         console.log(response);
@@ -128,6 +103,18 @@ var ApplicationRouter = Backbone.Router.extend({
 g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
+    Backbone.history.length = 0;
+    Backbone.history.on('route', function () { ++this.length; });
+    g_App.router.back = function () {
+        Backbone.history.length -= 2;
+        window.history.back();
+    };
     Backbone.history.start();
+
+    
+    $('#rm-backbutton').on("click",
+    function (e) {
+        g_App.router.back();
+    });
 });
 

@@ -118,6 +118,9 @@ var g_App = g_App || {};
           } else {
               $('#mainSectionHeader').html(null);
           }
+          if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.postRender != null) {
+              appPageModel.attributes.mainSection.postRender();
+          }
       }
   });
   

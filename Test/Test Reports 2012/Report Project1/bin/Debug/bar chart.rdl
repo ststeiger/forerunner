@@ -8,32 +8,22 @@
             <ChartMember>
               <Group Name="Chart1_CategoryGroup">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!Region.Value</GroupExpression>
+                  <GroupExpression>=Fields!ProductName.Value</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!Region.Value</Value>
+                  <Value>=Fields!ProductName.Value</Value>
                 </SortExpression>
               </SortExpressions>
-              <Label>=Fields!Region.Value</Label>
+              <Label>=Fields!ProductName.Value</Label>
             </ChartMember>
           </ChartMembers>
         </ChartCategoryHierarchy>
         <ChartSeriesHierarchy>
           <ChartMembers>
             <ChartMember>
-              <Group Name="Chart1_SeriesGroup">
-                <GroupExpressions>
-                  <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
-                </GroupExpressions>
-              </Group>
-              <SortExpressions>
-                <SortExpression>
-                  <Value>=Fields!CategoryName.Value</Value>
-                </SortExpression>
-              </SortExpressions>
-              <Label>=Fields!CategoryName.Value</Label>
+              <Label>price</Label>
             </ChartMember>
           </ChartMembers>
         </ChartSeriesHierarchy>
@@ -276,6 +266,7 @@
             <VerticalAlign>Top</VerticalAlign>
           </Style>
         </ChartNoDataMessage>
+        <DataSetName>DataSet1</DataSetName>
         <Top>0.45708in</Top>
         <Left>1.23833in</Left>
         <Height>6.32292in</Height>

@@ -108,8 +108,8 @@ namespace Forerunner
             
             int w = webBrowser.Document.Body.ScrollRectangle.Width;
             int h = webBrowser.Document.Body.ScrollRectangle.Height;
-            if (h > 2000) h = 2000;  //Set an upper bound to limit the size
-            if (w > 2000) w = 2000; //Set an upper bound to limit the size
+            if (h > 1500) h = 1500;  //Set an upper bound to limit the size
+            if (w > 1500) w = 1500; //Set an upper bound to limit the size
             webBrowser.ClientSize = new Size(w,h );
             webBrowser.ScrollBarsEnabled = false;
             bmp = new Bitmap(w, h);

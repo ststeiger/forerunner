@@ -56,7 +56,7 @@
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>ImageMapTest</ReportName>
+                        <ReportName>bar chart</ReportName>
                       </Drillthrough>
                     </Action>
                   </Actions>

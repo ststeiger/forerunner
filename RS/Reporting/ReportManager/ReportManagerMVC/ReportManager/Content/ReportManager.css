@@ -81,7 +81,7 @@ section#pageSection {
 
 .loading-indicator  {
   border: solid 2px #86A5AD;
-  background: white url(/images/ajax-loader1.gif) no-repeat 10px 10px;
+  background: white url(../images/ajax-loader1.gif) no-repeat 10px 10px;
   width: 148px; 
   height: 28px; 
   position: relative; 

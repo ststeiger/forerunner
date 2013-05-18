@@ -210,14 +210,14 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Settings.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Settings.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Nav2.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Nav2.png'/>");
     $Row.append($Cell);
 
     //$Cell = new $("<TD/>");
@@ -228,14 +228,14 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { Back(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/BackButton.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/BackButton.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { RefreshReport(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Refresh.png'/>");
     $Row.append($Cell);
 
     //$Cell = new $("<TD/>");
@@ -246,7 +246,7 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Backward.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
@@ -254,7 +254,7 @@ function GetToolbar(UID) {
 
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[UID].CurPage - 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<input/>");
@@ -268,7 +268,7 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[e.data.id].CurPage + 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");    

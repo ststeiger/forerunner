@@ -17,8 +17,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.155in</Top>
-        <Left>1.88417in</Left>
+        <Top>0.29736in</Top>
+        <Left>2.1007in</Left>
         <Height>0.25in</Height>
         <Width>2.4375in</Width>
         <Style>
@@ -35,32 +35,17 @@
         <ChartCategoryHierarchy>
           <ChartMembers>
             <ChartMember>
-              <Group Name="Chart1_CategoryGroup1">
+              <Group Name="Chart1_CategoryGroup">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!Region.Value</GroupExpression>
+                  <GroupExpression>=Fields!ProductName.Value</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!Region.Value</Value>
+                  <Value>=Fields!ProductName.Value</Value>
                 </SortExpression>
               </SortExpressions>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="Chart1_CategoryGroup">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!CategoryName.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!CategoryName.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-              <Label>=Fields!Region.Value</Label>
+              <Label>=Fields!ProductName.Value</Label>
             </ChartMember>
           </ChartMembers>
         </ChartCategoryHierarchy>
@@ -85,12 +70,13 @@
                   <ActionInfo>
                     <Actions>
                       <Action>
-                        <BookmarkLink>=Fields!Country.Value</BookmarkLink>
+                        <BookmarkLink>=Fields!price.Value</BookmarkLink>
                       </Action>
                     </Actions>
                   </ActionInfo>
                   <Style />
                   <ChartMarker>
+                    <Type>Circle</Type>
                     <Style />
                   </ChartMarker>
                   <DataElementOutput>Output</DataElementOutput>
@@ -120,6 +106,41 @@
               </ChartSmartLabel>
             </ChartSeries>
           </ChartSeriesCollection>
+          <ChartDerivedSeriesCollection>
+            <ChartDerivedSeries>
+              <ChartSeries Name="DerivedSeries1">
+                <Type>Line</Type>
+                <Style />
+                <ChartMarker>
+                  <Style />
+                </ChartMarker>
+                <ChartDataLabel>
+                  <Style />
+                </ChartDataLabel>
+                <ChartEmptyPoints>
+                  <Style />
+                  <ChartMarker>
+                    <Style />
+                  </ChartMarker>
+                  <ChartDataLabel>
+                    <Style />
+                  </ChartDataLabel>
+                </ChartEmptyPoints>
+                <ChartItemInLegend>
+                  <LegendText>Median (price)</LegendText>
+                </ChartItemInLegend>
+                <ChartAreaName>Default</ChartAreaName>
+                <ValueAxisName>Primary</ValueAxisName>
+                <CategoryAxisName>Primary</CategoryAxisName>
+                <ChartSmartLabel>
+                  <CalloutLineColor>Black</CalloutLineColor>
+                  <MinMovingDistance>0pt</MinMovingDistance>
+                </ChartSmartLabel>
+              </ChartSeries>
+              <SourceChartSeriesName>price</SourceChartSeriesName>
+              <DerivedSeriesFormula>Median</DerivedSeriesFormula>
+            </ChartDerivedSeries>
+          </ChartDerivedSeriesCollection>
         </ChartData>
         <ChartAreas>
           <ChartArea Name="Default">
@@ -325,10 +346,10 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>0.56125in</Top>
-        <Left>0.81125in</Left>
-        <Height>3.4375in</Height>
-        <Width>6.73958in</Width>
+        <Top>0.60292in</Top>
+        <Left>0.97222in</Left>
+        <Height>4.46875in</Height>
+        <Width>7.73958in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -339,11 +360,189 @@
           <BackgroundGradientType>None</BackgroundGradientType>
         </Style>
       </Chart>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>side txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>1.75917in</Top>
+        <Left>0.02778in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox3">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>side txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>1.48438in</Top>
+        <Left>8.95611in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox4">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>bottom txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>5.04389in</Top>
+        <Left>3.81945in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox5">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>side txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>4.01264in</Top>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox6">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>side txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>3.74875in</Top>
+        <Left>8.78125in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>6</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox7">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>side txt box</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Left>6.89472in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>7</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
-    <Height>4.90625in</Height>
+    <Height>6.26958in</Height>
     <Style />
   </Body>
-  <Width>9.73958in</Width>
+  <Width>10.52902in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

@@ -2,36 +2,21 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Chart Name="DataBar1">
+      <Chart Name="Chart2">
         <ChartCategoryHierarchy>
           <ChartMembers>
             <ChartMember>
-              <Group Name="DataBar1_CategoryGroup">
+              <Group Name="Chart2_CategoryGroup">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!ProductName.Value</GroupExpression>
+                  <GroupExpression>=Fields!City.Value</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!ProductName.Value</Value>
+                  <Value>=Fields!City.Value</Value>
                 </SortExpression>
               </SortExpressions>
-              <ChartMembers>
-                <ChartMember>
-                  <Group Name="DataBar1_CategoryGroup1">
-                    <GroupExpressions>
-                      <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
-                    </GroupExpressions>
-                  </Group>
-                  <SortExpressions>
-                    <SortExpression>
-                      <Value>=Fields!CategoryName.Value</Value>
-                    </SortExpression>
-                  </SortExpressions>
-                  <Label>=Fields!CategoryName.Value</Label>
-                </ChartMember>
-              </ChartMembers>
-              <Label>=Fields!ProductName.Value</Label>
+              <Label>=Fields!City.Value</Label>
             </ChartMember>
           </ChartMembers>
         </ChartCategoryHierarchy>
@@ -57,7 +42,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Image table</ReportName>
+                          <ReportName>Simple Table with groups and drill down</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -69,7 +54,6 @@
                   <DataElementOutput>Output</DataElementOutput>
                 </ChartDataPoint>
               </ChartDataPoints>
-              <Type>Bar</Type>
               <Style />
               <ChartEmptyPoints>
                 <Style />
@@ -93,7 +77,6 @@
           <ChartArea Name="Default">
             <ChartCategoryAxes>
               <ChartAxis Name="Primary">
-                <Visible>False</Visible>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -103,7 +86,6 @@
                     <FontSize>8pt</FontSize>
                   </Style>
                 </ChartAxisTitle>
-                <Margin>False</Margin>
                 <ChartMajorGridLines>
                   <Enabled>False</Enabled>
                   <Style>
@@ -131,7 +113,6 @@
                 </ChartAxisScaleBreak>
               </ChartAxis>
               <ChartAxis Name="Secondary">
-                <Visible>False</Visible>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -141,7 +122,6 @@
                     <FontSize>8pt</FontSize>
                   </Style>
                 </ChartAxisTitle>
-                <Margin>False</Margin>
                 <ChartMajorGridLines>
                   <Enabled>False</Enabled>
                   <Style>
@@ -172,7 +152,6 @@
             </ChartCategoryAxes>
             <ChartValueAxes>
               <ChartAxis Name="Primary">
-                <Visible>False</Visible>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -201,14 +180,13 @@
                   <Length>0.5</Length>
                 </ChartMinorTickMarks>
                 <CrossAt>NaN</CrossAt>
-                <Minimum>0</Minimum>
+                <Minimum>NaN</Minimum>
                 <Maximum>NaN</Maximum>
                 <ChartAxisScaleBreak>
                   <Style />
                 </ChartAxisScaleBreak>
               </ChartAxis>
               <ChartAxis Name="Secondary">
-                <Visible>False</Visible>
                 <Style>
                   <FontSize>8pt</FontSize>
                 </Style>
@@ -246,17 +224,39 @@
               </ChartAxis>
             </ChartValueAxes>
             <Style>
-              <BackgroundColor>#00ffffff</BackgroundColor>
               <BackgroundGradientType>None</BackgroundGradientType>
             </Style>
-            <ChartElementPosition>
-              <Top>10</Top>
-              <Left>3</Left>
-              <Height>80</Height>
-              <Width>96</Width>
-            </ChartElementPosition>
           </ChartArea>
         </ChartAreas>
+        <ChartLegends>
+          <ChartLegend Name="Default">
+            <Style>
+              <BackgroundGradientType>None</BackgroundGradientType>
+              <FontSize>8pt</FontSize>
+            </Style>
+            <ChartLegendTitle>
+              <Caption />
+              <Style>
+                <FontSize>8pt</FontSize>
+                <FontWeight>Bold</FontWeight>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </ChartLegendTitle>
+            <HeaderSeparatorColor>Black</HeaderSeparatorColor>
+            <ColumnSeparatorColor>Black</ColumnSeparatorColor>
+          </ChartLegend>
+        </ChartLegends>
+        <ChartTitles>
+          <ChartTitle Name="Default">
+            <Caption>Chart Title</Caption>
+            <Style>
+              <BackgroundGradientType>None</BackgroundGradientType>
+              <FontWeight>Bold</FontWeight>
+              <TextAlign>General</TextAlign>
+              <VerticalAlign>Top</VerticalAlign>
+            </Style>
+          </ChartTitle>
+        </ChartTitles>
         <Palette>BrightPastel</Palette>
         <ChartBorderSkin>
           <Style>
@@ -273,12 +273,10 @@
             <VerticalAlign>Top</VerticalAlign>
           </Style>
         </ChartNoDataMessage>
-        <rd:DesignerMode>DataBar</rd:DesignerMode>
         <DataSetName>DataSet1</DataSetName>
-        <Top>0.47792in</Top>
-        <Left>0.47792in</Left>
-        <Height>5.1575in</Height>
-        <Width>7.08333in</Width>
+        <Top>0.58208in</Top>
+        <Height>2.30208in</Height>
+        <Width>6.5in</Width>
         <Style>
           <Border>
             <Color>LightGrey</Color>
@@ -295,7 +293,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Data Bar with Go to report action</Value>
+                <Value>Chart with Action - Go To Report</Value>
                 <Style />
               </TextRun>
             </TextRuns>
@@ -303,10 +301,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>0.13417in</Top>
-        <Left>1.45708in</Left>
-        <Height>0.27431in</Height>
-        <Width>2.45833in</Width>
+        <Top>0.24875in</Top>
+        <Left>1.70708in</Left>
+        <Height>0.25in</Height>
+        <Width>2.125in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -319,10 +317,10 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>5.63542in</Height>
+    <Height>3.12375in</Height>
     <Style />
   </Body>
-  <Width>9.405in</Width>
+  <Width>6.5in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -335,7 +333,7 @@
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>aea33ab7-d8ba-42bf-920b-029988be38e6</rd:DataSourceID>
+      <rd:DataSourceID>91e4a481-807d-4cc3-95ba-463fb9a84fa1</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -379,5 +377,5 @@ FROM            Orders INNER JOIN
     </DataSet>
   </DataSets>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>38019a94-4fc5-416d-a25f-80f2b14d4f6d</rd:ReportID>
+  <rd:ReportID>6097b563-f2c2-4f35-88f1-d376d52d5037</rd:ReportID>
 </Report>

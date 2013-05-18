@@ -10,10 +10,6 @@
   <DataSets />
   <Reports>
     <ProjectItem>
-      <Name>action chart bookmark.rdl</Name>
-      <FullPath>action chart bookmark.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>action URL.rdl</Name>
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
@@ -22,8 +18,8 @@
       <FullPath>action with bookmark data bar.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>area.rdl</Name>
-      <FullPath>area.rdl</FullPath>
+      <Name>area with lines and action.rdl</Name>
+      <FullPath>area with lines and action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>bar chart.rdl</Name>
@@ -58,8 +54,8 @@
       <FullPath>Image Report 2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Image Report.rdl</Name>
-      <FullPath>Image Report.rdl</FullPath>
+      <Name>chart go to report action.rdl</Name>
+      <FullPath>chart go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image table.rdl</Name>
@@ -136,6 +132,10 @@
     <ProjectItem>
       <Name>Table with Subtotal.rdl</Name>
       <FullPath>Table with Subtotal.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>txt box rt table.rdl</Name>
+      <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

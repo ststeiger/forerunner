@@ -33,6 +33,7 @@
               <ChartDataPoints>
                 <ChartDataPoint>
                   <ChartDataPointValues>
+                    <X>=Fields!ProductName.Value</X>
                     <Y>=Sum(Fields!price.Value)</Y>
                   </ChartDataPointValues>
                   <ChartDataLabel>
@@ -72,7 +73,7 @@
                   <FontSize>8pt</FontSize>
                 </Style>
                 <ChartAxisTitle>
-                  <Caption>Axis Title</Caption>
+                  <Caption>Product</Caption>
                   <Style>
                     <FontSize>8pt</FontSize>
                   </Style>
@@ -147,7 +148,7 @@
                   <FontSize>8pt</FontSize>
                 </Style>
                 <ChartAxisTitle>
-                  <Caption>Axis Title</Caption>
+                  <Caption>Price</Caption>
                   <Style>
                     <FontSize>8pt</FontSize>
                   </Style>
@@ -265,9 +266,10 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>2.85292in</Top>
-        <Height>2.98958in</Height>
-        <Width>4.63542in</Width>
+        <Top>0.36334in</Top>
+        <Left>0.20833in</Left>
+        <Height>5.29166in</Height>
+        <Width>9.05083in</Width>
         <Style>
           <Border>
             <Color>LightGrey</Color>
@@ -292,8 +294,6 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
-        <Top>1.73833in</Top>
-        <Left>1.54042in</Left>
         <Height>0.25in</Height>
         <Width>3.48958in</Width>
         <ZIndex>1</ZIndex>
@@ -311,7 +311,7 @@
     <Height>5.8425in</Height>
     <Style />
   </Body>
-  <Width>7.05083in</Width>
+  <Width>9.25916in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

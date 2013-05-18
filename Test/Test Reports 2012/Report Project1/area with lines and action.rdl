@@ -38,6 +38,15 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ActionInfo>
+                    <Actions>
+                      <Action>
+                        <Drillthrough>
+                          <ReportName>action chart bookmark random txt box</ReportName>
+                        </Drillthrough>
+                      </Action>
+                    </Actions>
+                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />
@@ -282,11 +291,98 @@
           <BackgroundGradientType>None</BackgroundGradientType>
         </Style>
       </Chart>
+      <Textbox Name="Textbox1">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Action - go to report and lines</Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value />
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox1</rd:DefaultName>
+        <Top>0.155in</Top>
+        <Left>0.80083in</Left>
+        <Height>0.25in</Height>
+        <Width>2.61458in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Line Name="Line1">
+        <Top>0.18625in</Top>
+        <Left>5.70708in</Left>
+        <Height>0.34375in</Height>
+        <Width>1.21875in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line2">
+        <Top>1.54042in</Top>
+        <Left>0.2175in</Left>
+        <Height>0.98958in</Height>
+        <Width>0in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line3">
+        <Top>4.37375in</Top>
+        <Left>1.79042in</Left>
+        <Height>0in</Height>
+        <Width>5.13542in</Width>
+        <ZIndex>4</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line4">
+        <Top>0.55083in</Top>
+        <Left>6.99875in</Left>
+        <Height>-0.39583in</Height>
+        <Width>1.08333in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
     </ReportItems>
-    <Height>4.61333in</Height>
+    <Height>6.48833in</Height>
     <Style />
   </Body>
-  <Width>7.97917in</Width>
+  <Width>9.92709in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

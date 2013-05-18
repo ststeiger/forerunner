@@ -109,9 +109,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RSProxyAPI\RSProxyAPI.csproj">
+    <ProjectReference Include="..\RSProxyAPI\ReportManager.csproj">
       <Project>{77D5B819-BCE7-48CE-B667-45646DE1BAA5}</Project>
-      <Name>RSProxyAPI</Name>
+      <Name>ReportManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\RSProxy\RSProxy.csproj">
       <Project>{9dedc6fb-5eb9-4648-8ac6-df82a81c1f23}</Project>

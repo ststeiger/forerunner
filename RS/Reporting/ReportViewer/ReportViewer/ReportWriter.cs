@@ -278,7 +278,7 @@ namespace Forerunner
             //End RPL
             w.WriteEndObject();
 
-            Debug.WriteLine(w);
+            Debug.WriteLine(w.ToString());
             return w.ToString();
 
         }
@@ -833,6 +833,11 @@ namespace Forerunner
         {
             RPLProperties prop;
 
+            
+            // If this is a Style Property eat the header byte
+            if (InspectByte() == 0x21)
+                ReadByte();
+                       
             if (ReadByte() != 0x2A)
                 //This should never happen
                 ThrowParseError();
@@ -1926,7 +1931,7 @@ namespace Forerunner
             prop.Add("WritingMode", "Byte", 0x1E);
             prop.Add("UnicodeBiDi", "Byte", 0x1F);
             prop.Add("Language", "String", 0x20);
-            prop.Add("BackgroundImage", "TempObject", 0x21);
+            prop.Add("BackgroundImage", "Object", 0x21,WriteJSONImageDataProperties);
             prop.Add("BackgroundColor", "String", 0x22);
             prop.Add("BackgroundRepeat", "Byte", 0x23);
             prop.Add("NumeralLanguage", "String", 0x24);

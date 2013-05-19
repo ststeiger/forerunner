@@ -295,7 +295,13 @@ function ShowParms(RS) {
 }
 function LoadAllPages(RS,InitPage) {
 
-    for (var i = 1; i <= RS.NumPages; i++)
+    //Just picked 5 could be more or less
+    var low = InitPage - 5;
+    var high = InitPage + 5;
+    if (low < 1) low = 1;
+    if (high > RS.NumPages) high = RS.NumPages;
+
+    for (var i = low; i <= high; i++)
         if (RS.Pages[i] == null)
             if (i != InitPage)
                 LoadPage(RS, i, null, true);

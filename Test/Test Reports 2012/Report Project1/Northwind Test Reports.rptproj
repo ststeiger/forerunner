@@ -7,12 +7,7 @@
       <FullPath>Northwind.rds</FullPath>
     </ProjectItem>
   </DataSources>
-  <DataSets>
-    <ProjectItem>
-      <Name>DataSet1.rsd</Name>
-      <FullPath>DataSet1.rsd</FullPath>
-    </ProjectItem>
-  </DataSets>
+  <DataSets />
   <Reports>
     <ProjectItem>
       <Name>action URL.rdl</Name>
@@ -139,12 +134,12 @@
       <FullPath>Table with Subtotal.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>txt box rt table.rdl</Name>
-      <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>txt box rt table.rdl</Name>
+      <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

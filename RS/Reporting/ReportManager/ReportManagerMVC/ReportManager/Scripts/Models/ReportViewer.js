@@ -672,18 +672,27 @@ function WriteRichText(RIContext) {
     }
     else {
         //Handle each paragraphs
+        var $ParagraphList = new $("<DIV />");
         $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
-            var $Paragraph = new $("<DIV />");
-            $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
-            if (Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
-                var $NumberSpan = new $("<Span />");
-                $NumberSpan.html(Obj.Paragraph.NonSharedElements.ParagraphNumber + ".&nbsp");
-                $Paragraph.append($NumberSpan);
+            var $ParagraphItem;          
+
+            if (Obj.Paragraph.SharedElements.ListStyle == 1 & Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
+                if ($ParagraphList.is("div")) $ParagraphList = new $("<OL />");
+                $ParagraphItem = new $("<LI />");
             }
+            else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
+                if ($ParagraphList.is("div")) $ParagraphList = new $("<UL />");
+                $ParagraphItem = new $("<LI />");
+            }
+            else {
+                $ParagraphItem = new $("<SPAN />");
+            }
+
             var ParagraphStyle = "";
             ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
             ParagraphStyle += GetElementsStyle(Obj.Paragraph);
-            $Paragraph.attr("Style", ParagraphStyle);
+            $ParagraphItem.attr("Style", ParagraphStyle);
+            $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
             //Handle each TextRun
             for (i = 0; i < Obj.TextRunCount; i++) {
@@ -696,7 +705,7 @@ function WriteRichText(RIContext) {
                 else {
                     $TextRun = new $("<A />");
                     for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
-                        WriteAction(Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
+                        WriteAction(RIContext, Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
                     }
                 }
 
@@ -720,11 +729,11 @@ function WriteRichText(RIContext) {
                     $TextRun.attr("Style", TextRunStyle);
                 }
 
-                $Paragraph.append($TextRun);
+                $ParagraphItem.append($TextRun);
+                $ParagraphList.append($ParagraphItem);
             }
-
-            $NewObj.append($Paragraph);
         });
+        $NewObj.append($ParagraphList);
     }
     return RIContext.$HTMLParent;
 }
@@ -766,7 +775,7 @@ function WriteImage(RIContext) {
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
-function WriteAction(RIContext, Action, Control) {
+function WriteAction(RIContext, Action, Control) {    
     if (Action.HyperLink != undefined) {
         Control.attr("href", Action.HyperLink);
     }
@@ -775,12 +784,12 @@ function WriteAction(RIContext, Action, Control) {
     }
     else {
         $(Control).on("mouseover", function (event) { SetActionCursor(this); });
-        $(Control).click(function () {
+        $(Control).on("click", function () {
             //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
             ActionHistory.push({ ReportPath: RIContext.RS.ReportPath, SessionID: RIContext.RS.SessionID, Container: $.extend(true, {}, RIContext.RS.Pages[RIContext.RS.CurPage].$Container) });
-            
+
             var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
-            RIContext.RS.ReportPath = reportPath;            
+            RIContext.RS.ReportPath = reportPath;
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container.detach();
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container = null;
             RIContext.RS.SessionID = null;

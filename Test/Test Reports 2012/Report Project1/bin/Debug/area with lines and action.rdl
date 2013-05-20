@@ -42,7 +42,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>action chart bookmark random txt box</ReportName>
+                          <ReportName>multichart</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>

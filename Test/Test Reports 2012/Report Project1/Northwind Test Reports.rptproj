@@ -31,8 +31,24 @@
       <FullPath>bar chart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>chart go to report action.rdl</Name>
+      <FullPath>chart go to report action.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>chart.rdl</Name>
       <FullPath>chart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ColumnChartReport.rdl</Name>
+      <FullPath>ColumnChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Customer Data.rdl</Name>
+      <FullPath>Customer Data.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustomerInfo.rdl</Name>
+      <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>data bar go to report .rdl</Name>
@@ -43,24 +59,64 @@
       <FullPath>Guage to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Image Report 2.rdl</Name>
+      <FullPath>Image Report 2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Image Report.rdl</Name>
+      <FullPath>Image Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Image table.rdl</Name>
       <FullPath>Image table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Layout.rdl</Name>
+      <FullPath>Layout.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Line Chart 1.rdl</Name>
       <FullPath>Line Chart 1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Lines.rdl</Name>
+      <FullPath>Lines.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multichart.rdl</Name>
       <FullPath>multichart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter Report 1.rdl</Name>
+      <FullPath>Parameter Report 1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter1.rdl</Name>
+      <FullPath>Parameter1.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameters.rdl</Name>
+      <FullPath>Parameters.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
       <FullPath>pie chart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>chart go to report action.rdl</Name>
-      <FullPath>chart go to report action.rdl</FullPath>
+      <Name>ProductSales.rdl</Name>
+      <FullPath>ProductSales.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Richtextbox.rdl</Name>
+      <FullPath>Richtextbox.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Matrix.rdl</Name>
+      <FullPath>Simple Matrix.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Parameter.rdl</Name>
+      <FullPath>Simple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Table with groups and drill down.rdl</Name>
@@ -83,64 +139,12 @@
       <FullPath>Table with Subtotal.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter Report 1.rdl</Name>
-      <FullPath>Parameter Report 1.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ColumnChartReport.rdl</Name>
-      <FullPath>ColumnChartReport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Customer Data.rdl</Name>
-      <FullPath>Customer Data.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>CustomerInfo.rdl</Name>
-      <FullPath>CustomerInfo.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Image Report 2.rdl</Name>
-      <FullPath>Image Report 2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Image Report.rdl</Name>
-      <FullPath>Image Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Layout.rdl</Name>
-      <FullPath>Layout.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Lines.rdl</Name>
-      <FullPath>Lines.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameter1.rdl</Name>
-      <FullPath>Parameter1.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameters.rdl</Name>
-      <FullPath>Parameters.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ProductSales.rdl</Name>
-      <FullPath>ProductSales.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Richtextbox.rdl</Name>
-      <FullPath>Richtextbox.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Matrix.rdl</Name>
-      <FullPath>Simple Matrix.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Parameter.rdl</Name>
-      <FullPath>Simple Parameter.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoChartReport.rdl</Name>
+      <FullPath>TwoChartReport.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -150,7 +154,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.20:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

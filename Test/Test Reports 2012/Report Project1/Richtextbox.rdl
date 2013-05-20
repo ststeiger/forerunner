@@ -56,7 +56,7 @@
                   <Actions>
                     <Action>
                       <Drillthrough>
-                        <ReportName>ImageMapTest</ReportName>
+                        <ReportName>action URL</ReportName>
                       </Drillthrough>
                     </Action>
                   </Actions>

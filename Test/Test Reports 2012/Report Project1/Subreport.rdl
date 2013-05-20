@@ -3,7 +3,7 @@
   <Body>
     <ReportItems>
       <Subreport Name="Subreport1">
-        <ReportName>Simple Chart</ReportName>
+        <ReportName>chart</ReportName>
         <OmitBorderOnPageBreak>true</OmitBorderOnPageBreak>
         <Top>0.18403in</Top>
         <Left>0.45709in</Left>

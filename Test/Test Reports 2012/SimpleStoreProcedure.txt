@@ -1,18 +1,18 @@
-1.
+Go
 create PROCEDURE ChartData
 AS
 BEGIN
 select top 8 ProductName,UnitPrice from Products order by UnitPrice desc
 END
 
-2.
+Go
 CREATE PROCEDURE Get_CustomerShortInfo
 AS
 BEGIN
 	SELECT CustomerID,CompanyName,[Address],Phone FROM [dbo].[Customers]
 END
 
-3.
+Go
 CREATE PROCEDURE ProductSales
 AS
 BEGIN

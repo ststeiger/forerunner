@@ -324,22 +324,11 @@ function CreateSlider(RS, ReportViewerUID) {
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
 
-    var i
-    var pHeight = 0;
-    var pWidth = 0;
-
-    for (i = 1; i <= RS.NumPages; i++) {
-        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height > pHeight)
-            pHeight = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height
-        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width > pWidth)
-        pWidth = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width
-    }
-    pHeight = (pHeight * 0.0393700787) + "in";
-    pWidth = (pWidth * 0.0393700787) + "in";
+    
     for ( i = 1; i <= RS.NumPages; i++) {
         
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
-                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
+                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=11&PageWidth=11';
         $ListItem = new $('<LI />');
         $List.append($ListItem);
         $Caption = new $('<DIV />');

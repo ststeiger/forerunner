@@ -1,8 +1,0 @@
-﻿<li class="rm-list-container-item">
-    <div class="center">
-        <h2 class="centertext"><%= Name%></h2>
-    </div>
-	<a href="#<%= Type=='1' ? 'explore' : 'browse'%>/<%= EncodedPath%>">
-		<img src="<%= Type=='1' ? 'Images/Folder-icon.png' : ( HasParameters=='1' ? 'Images/Report-icon.png' :ReportThumbnailPath)%>" class="catalogitem center <%= Type=='1' ? '' : 'reportitem'%>"/>
-	</a>
-</li>

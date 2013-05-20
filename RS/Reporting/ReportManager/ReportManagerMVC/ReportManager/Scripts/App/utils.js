@@ -14,7 +14,7 @@ var g_App = g_App || {};
       $.each(views, function(index, view) {
         if (g_App[view]) {
           var subPath = subfolder.length > 0 ? subfolder + '/' : '';
-          var templateURL = 'Scripts/tpl/' + subPath + view + '.html';
+          var templateURL = 'Scripts/views/' + subPath + view + '.html';
           deferreds.push($.get(templateURL, function(data) {
             g_App[view].prototype.template = _.template(data);
           }));

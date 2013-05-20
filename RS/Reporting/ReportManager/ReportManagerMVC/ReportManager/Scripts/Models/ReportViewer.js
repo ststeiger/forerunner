@@ -210,14 +210,14 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Settings.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Settings.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Nav2.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Nav2.png'/>");
     $Row.append($Cell);
 
     //$Cell = new $("<TD/>");
@@ -228,14 +228,14 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { Back(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/BackButton.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/BackButton.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { RefreshReport(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Refresh.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Refresh.png'/>");
     $Row.append($Cell);
 
     //$Cell = new $("<TD/>");
@@ -246,7 +246,7 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Backward.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Backward.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");
@@ -254,7 +254,7 @@ function GetToolbar(UID) {
 
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[UID].CurPage - 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Previous.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<input/>");
@@ -268,7 +268,7 @@ function GetToolbar(UID) {
     $Cell.attr("class", "spacer10mm");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[e.data.id].CurPage + 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='/Images/ReportViewer/Next.png'/>");
+    $Cell.html("<IMG class='buttonicon' src='./Images/ReportViewer/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");    
@@ -295,7 +295,13 @@ function ShowParms(RS) {
 }
 function LoadAllPages(RS,InitPage) {
 
-    for (var i = 1; i <= RS.NumPages; i++)
+    //Just picked 5 could be more or less
+    var low = InitPage - 5;
+    var high = InitPage + 5;
+    if (low < 1) low = 1;
+    if (high > RS.NumPages) high = RS.NumPages;
+
+    for (var i = low; i <= high; i++)
         if (RS.Pages[i] == null)
             if (i != InitPage)
                 LoadPage(RS, i, null, true);
@@ -318,22 +324,11 @@ function CreateSlider(RS, ReportViewerUID) {
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
 
-    var i
-    var pHeight = 0;
-    var pWidth = 0;
-
-    for (i = 1; i <= RS.NumPages; i++) {
-        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height > pHeight)
-            pHeight = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Height
-        if (RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width > pWidth)
-        pWidth = RS.Pages[i].ReportObj.Report.PageContent.Measurement.Measurements[0].Width
-    }
-    pHeight = (pHeight * 0.0393700787) + "in";
-    pWidth = (pWidth * 0.0393700787) + "in";
+    
     for ( i = 1; i <= RS.NumPages; i++) {
         
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
-                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight='+ pHeight + '&PageWidth=' + pWidth;
+                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=11&PageWidth=11';
         $ListItem = new $('<LI />');
         $List.append($ListItem);
         $Caption = new $('<DIV />');
@@ -677,18 +672,27 @@ function WriteRichText(RIContext) {
     }
     else {
         //Handle each paragraphs
+        var $ParagraphList = new $("<DIV />");
         $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
-            var $Paragraph = new $("<DIV />");
-            $Paragraph.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
-            if (Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
-                var $NumberSpan = new $("<Span />");
-                $NumberSpan.html(Obj.Paragraph.NonSharedElements.ParagraphNumber + ".&nbsp");
-                $Paragraph.append($NumberSpan);
+            var $ParagraphItem;          
+
+            if (Obj.Paragraph.SharedElements.ListStyle == 1 & Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
+                if ($ParagraphList.is("div")) $ParagraphList = new $("<OL />");
+                $ParagraphItem = new $("<LI />");
             }
+            else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
+                if ($ParagraphList.is("div")) $ParagraphList = new $("<UL />");
+                $ParagraphItem = new $("<LI />");
+            }
+            else {
+                $ParagraphItem = new $("<SPAN />");
+            }
+
             var ParagraphStyle = "";
             ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
             ParagraphStyle += GetElementsStyle(Obj.Paragraph);
-            $Paragraph.attr("Style", ParagraphStyle);
+            $ParagraphItem.attr("Style", ParagraphStyle);
+            $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
             //Handle each TextRun
             for (i = 0; i < Obj.TextRunCount; i++) {
@@ -701,7 +705,7 @@ function WriteRichText(RIContext) {
                 else {
                     $TextRun = new $("<A />");
                     for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
-                        WriteAction(Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
+                        WriteAction(RIContext, Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
                     }
                 }
 
@@ -725,11 +729,11 @@ function WriteRichText(RIContext) {
                     $TextRun.attr("Style", TextRunStyle);
                 }
 
-                $Paragraph.append($TextRun);
+                $ParagraphItem.append($TextRun);
+                $ParagraphList.append($ParagraphItem);
             }
-
-            $NewObj.append($Paragraph);
         });
+        $NewObj.append($ParagraphList);
     }
     return RIContext.$HTMLParent;
 }
@@ -771,7 +775,7 @@ function WriteImage(RIContext) {
     RIContext.$HTMLParent.append($NewObj);
     return RIContext.$HTMLParent;
 }
-function WriteAction(RIContext, Action, Control) {
+function WriteAction(RIContext, Action, Control) {    
     if (Action.HyperLink != undefined) {
         Control.attr("href", Action.HyperLink);
     }
@@ -780,12 +784,12 @@ function WriteAction(RIContext, Action, Control) {
     }
     else {
         $(Control).on("mouseover", function (event) { SetActionCursor(this); });
-        $(Control).click(function () {
+        $(Control).on("click", function () {
             //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
             ActionHistory.push({ ReportPath: RIContext.RS.ReportPath, SessionID: RIContext.RS.SessionID, Container: $.extend(true, {}, RIContext.RS.Pages[RIContext.RS.CurPage].$Container) });
-            
+
             var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
-            RIContext.RS.ReportPath = reportPath;            
+            RIContext.RS.ReportPath = reportPath;
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container.detach();
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container = null;
             RIContext.RS.SessionID = null;

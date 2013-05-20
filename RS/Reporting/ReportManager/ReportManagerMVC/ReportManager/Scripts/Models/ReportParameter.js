@@ -296,7 +296,7 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
     $HiddenCheckBox.attr("DataType", Obj.Type);
 
     var $OpenDropDown = new $("<Img />");
-    $OpenDropDown.attr("src", "/Images/OpenDropDown.png");
+    $OpenDropDown.attr("src", "/Images/reportviewer/OpenDropDown.png");
     $OpenDropDown.attr("alt", "Open DropDown List");
     $OpenDropDown.on("click", function () { PopupDropDownPanel(Obj); });
 

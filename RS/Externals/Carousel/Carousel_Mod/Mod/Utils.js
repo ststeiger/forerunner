@@ -109,13 +109,16 @@ SKY.Utils = {
 
 		switch (cursor) {
 			case 'openhand':
-				$('body').css('cursor', "url(images/sc-graphics/openhand.cur), auto");
+			    $('body').removeClass('sc-closedhand');
+			    $('body').addClass('sc-openhand');
 				break;
 			case 'closedhand':
-				$('body').css('cursor', "url(images/sc-graphics/closedhand.cur), auto");
+			    $('body').removeClass('sc-openhand');
+			    $('body').addClass('sc-closedhand');
 				break;
 			default:
-				$('body').css('cursor', cursor);
+			    $('body').removeClass('sc-openhand');
+			    $('body').removeClass('sc-closedhand');
 				break;
 		}
 

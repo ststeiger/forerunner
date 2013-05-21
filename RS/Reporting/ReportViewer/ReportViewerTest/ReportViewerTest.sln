@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportViewerTest", "ReportViewerTest\ReportViewerTest.csproj", "{D3068A73-EEDF-4CB9-98B7-DA45C1F31D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportViewer", "..\ReportViewer\ReportViewer.csproj", "{B5B587BB-5963-4114-854F-D1ECD5E77336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jayrock.Json", "..\JSON\src\Jayrock.Json\Jayrock.Json.csproj", "{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3068A73-EEDF-4CB9-98B7-DA45C1F31D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3068A73-EEDF-4CB9-98B7-DA45C1F31D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3068A73-EEDF-4CB9-98B7-DA45C1F31D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3068A73-EEDF-4CB9-98B7-DA45C1F31D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

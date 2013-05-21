@@ -1,0 +1,38 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+
+@section scripts{
+  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/Carousel/js/jquery.sky.carousel-1.0.2.min.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/ReportViewer.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/ReportParameter.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery-ui-1.10.3.custom.min.js"></script>
+}
+
+@section styles {
+    <link href="~/ReportViewer/Scripts/Carousel/css/default_skin_variation.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/ReportViewer.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/Scripts/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/Scripts/jquery.ui.core.min.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/Scripts/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+}
+
+<div id="t">this is some text</div>
+    <table><tr><td style="vertical-align: top;"><div id="Div1" style="" ></div></td><td style="vertical-align: top;"><div id="Div2" style="vertical-align:top;"></div></td></tr>
+        <tr><td style="vertical-align: top;"><div>This is some text</div></td><td style="vertical-align: top;"><div>This is some text</div></td></tr>
+    </table>
+
+    <script>
+        
+        //InitReport("192.168.1.27/reportserver", "/api/ReportViewer","/AdventureWorks 2008R2/Sales By Sales Person", true, 1, "Div1");
+        //InitReport("192.168.1.27/reportserver","/api/ReportViewer", "/NW Test/Territory Sales Martix", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Simple Table with groups and drill down", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver", "/api/ReportViewer","/Northwind Test Reports/Simple Matrix", true, 1, "Div1")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Simple Chart", true, 1, "Div2")
+        //InitReport("localhost:8080/reportserver","/api/ReportViewer", "/Northwind Test Reports/Layout", true, 1, "Div1")
+        InitReport("localhost:8080/reportserver", "/api/ReportViewer", "/Northwind Test Reports/Simple Gauge", true, 1, "Div1")
+    </script>

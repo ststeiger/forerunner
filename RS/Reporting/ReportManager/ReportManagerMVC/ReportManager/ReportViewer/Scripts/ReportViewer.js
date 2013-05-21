@@ -453,9 +453,45 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     RS.$ReportContainer.append($Table);
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    LoadPage(RS, PageNum, null, false, NavUID);    
+    //LoadPage(RS, PageNum, null, false, NavUID);
+    TryLoadParameterPage(RS, PageNum);
+
+    //demo code for sort test
+    $("#Sort").click(function () {
+        $.get(RS.ReportViewerAPI + "/SortReport/", {
+            ReportServerURL: RS.ReportServerURL,
+            SessionID: RS.SessionID,
+            SortItem: "34",
+            Direction: "Descending"
+        }).done(function () {
+            RS.Pages[RS.CurPage].$Container.detach();
+            RS.Pages = null;
+            RS.Pages = new Object();
+            LoadPage(RS, PageNum, null, false);
+        })
+        .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+    });
 }
 
+function TryLoadParameterPage(RS, PageNum) {
+    $.getJSON(RS.ReportViewerAPI + "/GetParameterJSON/", {
+        ReportServerURL: RS.ReportServerURL,
+        ReportPath: RS.ReportPath
+    })
+   .done(function (Data) {
+       if (Data.Type == "Parameters") {
+           if (RS.ParamLoaded == true) {
+               $("#ParameterContainer").detach();
+           }
+           WriteParameterPanel(Data, RS, PageNum, false);
+           RS.ParamLoaded = true;
+       }
+       else {
+           LoadPage(RS, PageNum, null, false);
+       }
+   })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+}
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     if (OldPage != null)
         if (OldPage.$Container != null)
@@ -478,17 +514,17 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         ParameterList: null
     })
     .done(function (Data) {
-        if (Data.Type != undefined && Data.Type == "Parameters") {
-            if (RS.ParamLoaded == true) {
-                $("#ParameterContainer").detach();
-            }
-            WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
-            RS.ParamLoaded = true;
-        }
-        else {
-            WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
-            if (!LoadOnly) CachePages(RS, NewPageNum);
-        }
+        //if (Data.Type != undefined && Data.Type == "Parameters") {
+        //    if (RS.ParamLoaded == true) {
+        //        $("#ParameterContainer").detach();
+        //    }
+        //    WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
+        //    RS.ParamLoaded = true;
+        //}
+        //else {
+        WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
+        if (!LoadOnly) CachePages(RS, NewPageNum);
+        //}
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }

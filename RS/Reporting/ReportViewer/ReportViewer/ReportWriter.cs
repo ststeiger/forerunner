@@ -1001,8 +1001,9 @@ namespace Forerunner
         }
         private Boolean WriteJSONActionInfo()
         {
-            if (ReadByte() == 0x0B || ReadByte() == 0x07)
+            if (InspectByte() == 0x0B || InspectByte() == 0x07)
             {
+                Seek(1);
                 WriteJSONActionInfoContent();
 
                 if (ReadByte() != 0xFF)

@@ -82,6 +82,32 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage GetParameterJSON(string ReportServerURL, string ReportPath)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            result = Encoding.UTF8.GetBytes(rep.GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;
+        }
+
+        [HttpGet]
+        public void SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            rep.SortReport(SessionID, SortItem, Direction);
+        }
+
+        [HttpGet]
         public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));

@@ -1,5 +1,5 @@
 ﻿function WriteParameterPanel(Data, RS, pageNum, LoadOnly) {
-    var LoadOnly = false;
+    //var LoadOnly = false;
     var $ParameterDiv = new $("<Div />");
     $ParameterDiv.attr("id", "ParameterContainer");
 

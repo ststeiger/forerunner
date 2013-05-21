@@ -140,14 +140,6 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
-    <Content Include="Images\sc-graphics\closedhand.cur" />
-    <Content Include="Images\sc-graphics\closedhand.png" />
-    <Content Include="Images\sc-graphics\next_arrow.png" />
-    <Content Include="Images\sc-graphics\openhand.cur" />
-    <Content Include="Images\sc-graphics\openhand.png" />
-    <Content Include="Images\sc-graphics\preloader.gif" />
-    <Content Include="Images\sc-graphics\prev_arrow.png" />
-    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
     <Content Include="ReportViewer\Images\ajax-loader1.gif" />
     <Content Include="ReportViewer\Images\BackButton.jpg" />
     <Content Include="ReportViewer\Images\BackButton.png" />
@@ -189,14 +181,6 @@
     <Content Include="ReportViewer\Scripts\ReportParameter.js" />
     <Content Include="ReportViewer\Scripts\ReportViewer.js" />
     <Content Include="Scripts\App\configs.js" />
-    <Content Include="Images\sc-graphics\closedhand.cur" />
-    <Content Include="Images\sc-graphics\closedhand.png" />
-    <Content Include="Images\sc-graphics\next_arrow.png" />
-    <Content Include="Images\sc-graphics\openhand.cur" />
-    <Content Include="Images\sc-graphics\openhand.png" />
-    <Content Include="Images\sc-graphics\preloader.gif" />
-    <Content Include="Images\sc-graphics\prev_arrow.png" />
-    <Content Include="Images\sc-graphics\tooltip_skin_navigation.png" />
     <Content Include="Scripts\Util\jquery-1.9.1.min.js" />
     <Content Include="Scripts\Util\jquery.metadata.js" />
     <Content Include="CSS\ReportManager.css" />

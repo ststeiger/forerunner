@@ -211,6 +211,66 @@ namespace Forerunner.ReportViewer
             }
         }
 
+        public string GetParameterJson(string ReportPath)
+        {
+            string historyID = null;
+            string NewSession;
+            ReportJSONWriter rw = new ReportJSONWriter();
+            ExecutionInfo execInfo = new ExecutionInfo();
+
+            try
+            {
+                execInfo = rs.LoadReport(ReportPath, historyID);
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                {
+                    ReportParameter[] reportParameter = execInfo.Parameters;
+                    return rw.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                }
+                return "{\"Type\":\"\"}";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Sort data by special column field and sort direction
+        /// </summary>
+        public void SortReport(string SessionID, string SortItem, string Direction)
+        {
+            try
+            {
+                string ReportItem = string.Empty;
+                int NumPages = 0;
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                SortDirectionEnum SortDirection;
+                switch (Direction)
+                {
+                    case "Ascending":
+                        SortDirection = SortDirectionEnum.Ascending;
+                        break;
+                    case "Descending":
+                        SortDirection = SortDirectionEnum.Descending;
+                        break;
+                    default:
+                        SortDirection = SortDirectionEnum.None;
+                        break;
+                }
+                rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
         private string getImageHandeler(string src)
         {
             byte[] img = null;

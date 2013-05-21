@@ -276,3 +276,11 @@
 	-ms-user-select: none;
 	user-select: none;
 }
+
+.sc-openhand {
+    cursor: url(../images/sc-graphics/openhand.cur), auto;
+}
+
+.sc-closedhand {
+    cursor: url(../images/sc-graphics/closedhand.cur), auto;
+}

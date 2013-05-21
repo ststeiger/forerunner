@@ -232,7 +232,7 @@ namespace Forerunner.ReportViewer
             return retval;
 
         }
-        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, string PageHeight, string PageWidth)
+        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum)
         {                      
             //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.
             

@@ -293,11 +293,11 @@ function ShowParms(RS) {
     if (RS.ParamLoaded == true)
         $("#ParameterContainer").animate({ height: 'toggle' }, 500);
 }
-function LoadAllPages(RS,InitPage) {
+function CachePages(RS, InitPage) {
 
-    //Just picked 5 could be more or less
-    var low = InitPage - 5;
-    var high = InitPage + 5;
+    //Just picked 2 could be more or less
+    var low = InitPage - 2;
+    var high = InitPage + 2;
     if (low < 1) low = 1;
     if (high > RS.NumPages) high = RS.NumPages;
 
@@ -328,7 +328,7 @@ function CreateSlider(RS, ReportViewerUID) {
     for ( i = 1; i <= RS.NumPages; i++) {
         
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
-                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' + i + '&PageHeight=11&PageWidth=11';
+                + RS.ReportPath + '&SessionID=' + RS.SessionID + '&PageNumber=' +  i;
         $ListItem = new $('<LI />');
         $List.append($ListItem);
         $Caption = new $('<DIV />');
@@ -463,8 +463,10 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
 
     if (RS.Pages[NewPageNum] != null)
         if (RS.Pages[NewPageNum].$Container != null) {
-            if (!LoadOnly)
+            if (!LoadOnly) {
                 SetPage(RS, NewPageNum);
+                CachePages(RS, NewPageNum);
+            }
             return;
         }
 
@@ -485,7 +487,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         }
         else {
             WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
-            if (!LoadOnly) LoadAllPages(RS, NewPageNum);
+            if (!LoadOnly) CachePages(RS, NewPageNum);
         }
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })

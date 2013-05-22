@@ -710,7 +710,8 @@ function WriteRichText(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {
-        $Sort = $("<img/>");
+        $Sort = $("<div/>");
+        $Sort.html("&nbsp");
         var Direction = "None";
         if (RIContext.CurrObj.Elements.NonSharedElements.SortState == 2) {
             $Sort.attr("class", "sort-descending");

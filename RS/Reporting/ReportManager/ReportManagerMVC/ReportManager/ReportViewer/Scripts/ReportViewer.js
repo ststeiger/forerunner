@@ -1077,18 +1077,33 @@ function WriteSubreport(RIContext) {
     
 }
 function WriteLine(RIContext) {
-
-    var Style = GetFullBorderStyle(RIContext.CurrObj);
     var measurement = GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-
-    Style += "width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
-
-    //TODO:Slant
-    if (RIContext.CurrObj.Elements.SharedElements.Slant == null || RIContext.CurrObj.Elements.SharedElements.Slant == 0)
-        a = 1
+    var Style = "position:relative;width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
+    
+    if (measurement.Width == 0 || measurement.Height == 0)
+        Style += GetFullBorderStyle(RIContext.CurrObj);
+    else {
+        var $line = $("<Div/>");
+        var newWidth = Math.sqrt(Math.pow(measurement.Height, 2) + Math.pow(measurement.Width, 2));
+        var rotate = Math.atan(measurement.Height / measurement.Width);
+        var newTop = newWidth / 2 + Math.sin(rotate);
+        var newLeft = newWidth / 2 - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
+        if (RIContext.CurrObj.Elements.SharedElements.Slant == null || RIContext.CurrObj.Elements.SharedElements.Slant == 0)
+            rotate = rotate;
+        else
+            rotate = rotate - (2 * rotate);
+        var lineStyle = "position:absolute;top:" + newTop + ";left:" + newLeft + ";";
+        lineStyle += GetFullBorderStyle(RIContext.CurrObj);
+        lineStyle += "width:" + newWidth + "mm;height:0;"
+        lineStyle += "-moz-transform: rotate(" + rotate + "rad);"
+        lineStyle += "-webkit-transform: rotate(" + rotate + "rad);"
+        lineStyle += "transform: rotate(" + rotate + "rad);"
+        $line.attr("Style", lineStyle);
+        RIContext.$HTMLParent.append($line);
+    }
 
     RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
-    return RIContext.$HTMLParent;
+     return RIContext.$HTMLParent;
 
 }
 

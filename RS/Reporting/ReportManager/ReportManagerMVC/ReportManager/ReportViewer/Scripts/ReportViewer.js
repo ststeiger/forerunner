@@ -278,7 +278,13 @@ function GetToolbar(UID) {
     $Toolbar.append($Row);
     return $Toolbar;
 }
-function NavToPage(RS, NewPageNum) {
+function NavToPage(RS, NewPageNum) {    
+    if (NewPageNum > RS.NumPages) {
+        NewPageNum = 1;
+    }
+    if (NewPageNum < 1) {
+        NewPageNum = RS.NumPages;
+    }
 
     if (RS.Lock == 0) {
         RS.Lock = 1;

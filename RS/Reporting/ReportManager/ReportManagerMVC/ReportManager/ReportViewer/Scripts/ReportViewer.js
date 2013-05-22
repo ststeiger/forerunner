@@ -805,9 +805,12 @@ function WriteRichText(RIContext) {
                 $ParagraphItem.append($TextRun);
                 $ParagraphList.append($ParagraphItem);
                 $TextObj.append($ParagraphList);
+                WriteBookMark(RIContext);
             }
         });
     }
+    WriteBookMark(RIContext);
+    
     RIContext.$HTMLParent.append($TextObj);
     if ($Sort != null) RIContext.$HTMLParent.append($Sort);
     return RIContext.$HTMLParent;
@@ -986,11 +989,16 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     }
 }
 function WriteBookMark(RIContext) {
+    var $node = $("<a/>");
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
-        var $node = $("<a/>");
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-        RIContext.$HTMLParent.append($node);
+        $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
     }
+    else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark != undefined) {
+        $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
+        $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
+    }
+    RIContext.$HTMLParent.append($node);
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");

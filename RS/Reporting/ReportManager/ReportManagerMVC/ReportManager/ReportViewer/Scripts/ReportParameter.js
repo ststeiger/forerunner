@@ -202,7 +202,8 @@ function WriteParameterToggle() {
 function GetParameterControlProperty(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
-    if (Obj.QueryParameter == "True" | Obj.Nullable != "True") {
+    //if (Obj.QueryParameter == "True" | Obj.Nullable != "True") {
+    if (Obj.Nullable != "True") {
         $Control.attr("required", "true");
         $Control.watermark("Required");
     }
@@ -262,6 +263,7 @@ function WriteDropDownControl(Obj, $Control) {
     $Control.addClass("Parameter-Select");
     $Control.attr("id", Obj.Name);
     $Control.attr("DataType", Obj.Type);
+    $Control.attr("readonly","true");
     GetParameterControlProperty(Obj, $Control);
 
     var $defaultOption = new $("<option />");
@@ -281,6 +283,7 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
     var $MultipleCheckBox = new $("<Input />");
     $MultipleCheckBox.attr("type", "text");
     $MultipleCheckBox.attr("id", Obj.Name);
+    $MultipleCheckBox.attr("readonly", "true");
     $MultipleCheckBox.attr("class", "ParameterClient");
     $MultipleCheckBox.attr("IsMultiple", Obj.MultiValue);
     $MultipleCheckBox.attr("DataType", Obj.Type);
@@ -469,7 +472,7 @@ function GetParamsList() {
 }
 function IsParamNullable(Parameter) {
     var checkbox = $(".Parameter-Checkbox").filter("[name='" + Parameter.name + "']").first();
-    if (checkbox.attr("checked") == "checked")
+    if (checkbox.attr("checked") == "checked" || Parameter.value == "")
         return null;
     else
         return Parameter.value;

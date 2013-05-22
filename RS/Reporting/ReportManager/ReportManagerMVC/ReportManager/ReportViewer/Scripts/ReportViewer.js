@@ -566,18 +566,10 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         PageNumber: NewPageNum,
         ParameterList: null
     })
-    .done(function (Data) {
-        //if (Data.Type != undefined && Data.Type == "Parameters") {
-        //    if (RS.ParamLoaded == true) {
-        //        $("#ParameterContainer").detach();
-        //    }
-        //    WriteParameterPanel(Data, RS, NewPageNum, LoadOnly);
-        //    RS.ParamLoaded = true;
-        //}
-        //else {
+    .done(function (Data) {       
         WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
-        if (!LoadOnly) CachePages(RS, NewPageNum);
-        //}
+        RenderPage(RS, NewPageNum);
+        if (!LoadOnly) CachePages(RS, NewPageNum);        
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }
@@ -605,7 +597,9 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     }
 }
 function RenderPage(RS, pageNum) {
-     //Write Style   
+    //Write Style   
+    if (RS.Pages[pageNum].IsRendered == true)
+        return;
     RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
     RS.Pages[pageNum].IsRendered = true;

@@ -240,7 +240,7 @@ namespace Forerunner.ReportViewer
         /// <summary>
         /// Sort data by special column field and sort direction
         /// </summary>
-        public void SortReport(string SessionID, string SortItem, string Direction)
+        public string SortReport(string SessionID, string SortItem, string Direction)
         {
             try
             {
@@ -263,11 +263,23 @@ namespace Forerunner.ReportViewer
                         SortDirection = SortDirectionEnum.None;
                         break;
                 }
-                rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("NewPage");
+                w.WriteNumber(newPage);
+                w.WriteMember("ReportItemID");
+                w.WriteString(ReportItem);
+                w.WriteMember("NumPages");
+                w.WriteNumber(NumPages);
+                w.WriteEndObject();
+                return w.ToString();
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                return e.Message;
             }
         }
 

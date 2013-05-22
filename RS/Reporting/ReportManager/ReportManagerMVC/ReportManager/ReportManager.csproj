@@ -149,6 +149,7 @@
     <Content Include="ReportViewer\Images\Nav.png" />
     <Content Include="ReportViewer\Images\Nav2.png" />
     <Content Include="ReportViewer\Images\Next.png" />
+    <Content Include="ReportViewer\Images\NotSorted.gif" />
     <Content Include="ReportViewer\Images\OpenDropDown.png" />
     <Content Include="ReportViewer\Images\Parameter_Collapse.png" />
     <Content Include="ReportViewer\Images\Parameter_Expand.png" />
@@ -157,6 +158,8 @@
     <Content Include="ReportViewer\Images\Save.png" />
     <Content Include="ReportViewer\Images\Search.png" />
     <Content Include="ReportViewer\Images\Settings.png" />
+    <Content Include="ReportViewer\Images\SortAccending.gif" />
+    <Content Include="ReportViewer\Images\SortDecending.gif" />
     <Content Include="ReportViewer\ReportViewer.css" />
     <Content Include="ReportViewer\Scripts\Carousel\css\default_skin.css" />
     <Content Include="ReportViewer\Scripts\Carousel\css\default_skin_variation.css" />

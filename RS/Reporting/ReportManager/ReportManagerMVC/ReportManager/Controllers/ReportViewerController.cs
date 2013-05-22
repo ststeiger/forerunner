@@ -98,13 +98,21 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public void SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
+        public HttpResponseMessage SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
         {
+           
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            rep.SortReport(SessionID, SortItem, Direction);
+            result = Encoding.UTF8.GetBytes(rep.SortReport(SessionID, SortItem, Direction));
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;
         }
 
         [HttpGet]

@@ -22,6 +22,17 @@
   min-width:5mm;
 }
 
+.sort-unsorted {
+    content:url("../reportviewer/Images/NotSorted.gif")
+}
+.sort-descending {
+    content:url("../reportviewer/Images/SortDecending.gif")
+}
+.sort-ascending {
+    content:url("../reportviewer/Images/SortAccending.gif")
+}
+
+
 .loading-indicator  {
   border: solid 2px #86A5AD;
   background: white url(../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;

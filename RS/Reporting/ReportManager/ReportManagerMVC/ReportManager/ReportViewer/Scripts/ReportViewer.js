@@ -384,7 +384,6 @@ function ShowNav(UID) {
         Reports[UID].$Slider.fadeIn("slow");
     }
 }
-
 function Back(RS) {
     var action = ActionHistory.pop();
     if (action != undefined) {
@@ -396,6 +395,29 @@ function Back(RS) {
         RS.Pages[RS.CurPage].$Container = action.Container;
         RS.$PageContainer.append(RS.Pages[RS.CurPage].$Container);
     }
+}
+function Sort(RS,Direction,ID) {
+
+    //Go the other dirction from current
+    var newDir;
+    if (Direction == "Ascending")
+        newDir = "Descending";
+    else
+        newDir = "Ascending";
+
+    $.getJSON(RS.ReportViewerAPI + "/SortReport/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        SortItem: ID,
+        Direction: newDir
+    }).done(function (Data) {
+        var pc = RS.Pages[RS.CurPage].$Container
+        RS.NumPages = Data.NumPages;
+        RS.Pages = new Object();
+        LoadPage(RS, (Data.NewPage), null, false);
+        pc.detach();
+    })
+    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
 
 //Page Loading
@@ -445,32 +467,13 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
   
     //Log in screen if needed
 
-    //If Parameters needed show Parameters
-
-
-    //load the report Page requested  
+     //load the report Page requested  
     $Table.append(RS.$PageContainer);    
     RS.$ReportContainer.append($Table);
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    //LoadPage(RS, PageNum, null, false, NavUID);
     TryLoadParameterPage(RS, PageNum);
-
-    //demo code for sort test
-    $("#Sort").click(function () {
-        $.get(RS.ReportViewerAPI + "/SortReport/", {
-            ReportServerURL: RS.ReportServerURL,
-            SessionID: RS.SessionID,
-            SortItem: "34",
-            Direction: "Descending"
-        }).done(function () {
-            RS.Pages[RS.CurPage].$Container.detach();
-            RS.Pages = null;
-            RS.Pages = new Object();
-            LoadPage(RS, PageNum, null, false);
-        })
-        .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
-    });
+    
 }
 
 function TryLoadParameterPage(RS, PageNum) {
@@ -693,20 +696,44 @@ function WriteReportItems(RIContext) {
 }
 function WriteRichText(RIContext) {
     var Style = RIContext.Style;
-    var $NewObj = RIContext.$HTMLParent;
+    var $TextObj = $("<div/>");
+    var $Sort = null;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    Style += GetElementsStyle(RIContext.CurrObj.Elements);
-    Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";      
-    $NewObj.attr("Style", Style);
+    Style += GetElementsNonTextStyle(RIContext.CurrObj.Elements);    
+    RIContext.$HTMLParent.attr("Style", Style);
+
+    if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {
+        $Sort = $("<img/>");
+        var Direction = "None";
+        if (RIContext.CurrObj.Elements.NonSharedElements.SortState == 2) {
+            $Sort.attr("class", "sort-descending");
+            Direction = "Descending";
+        }
+        else if (RIContext.CurrObj.Elements.NonSharedElements.SortState == 1) {
+            $Sort.attr("class", "sort-ascending");
+            Direction = "Ascending";
+        }
+        else
+            $Sort.attr("class", "sort-unsorted");
+
+        $Sort.on("click", { id: RIContext.RS.UID, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { Sort(Reports[e.data.id], e.data.Direction, e.data.SortID); });
+        $Sort.on("mouseover", function (event) { SetActionCursor(this); });
+        RIContext.$HTMLParent.append($Sort);
+    }
+
+
+    Style = "display:inline;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+    Style += GetElementsTextStyle(RIContext.CurrObj.Elements);
+    $TextObj.attr("Style", Style);
 
     if (RIContext.CurrObj.Paragraphs.length == 0) {
         if (RIContext.CurrObj.Elements.SharedElements.Value != null)
-            $NewObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+            $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
         else if (RIContext.CurrObj.Elements.NonSharedElements.Value != null)
-            $NewObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+            $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
         else
-            $NewObj.html("&nbsp");
+            $TextObj.html("&nbsp");
     }
     else {
         //Handle each paragraphs
@@ -771,8 +798,10 @@ function WriteRichText(RIContext) {
                 $ParagraphList.append($ParagraphItem);
             }
         });
-        $NewObj.append($ParagraphList);
+        $TextObj.append($ParagraphList);
     }
+    RIContext.$HTMLParent.append($TextObj);
+    if ($Sort != null) RIContext.$HTMLParent.append($Sort);
     return RIContext.$HTMLParent;
 }
 function WriteImage(RIContext) {
@@ -1132,6 +1161,20 @@ function GetElementsStyle(CurrObj) {
     Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);    
     return Style;
 }
+function GetElementsTextStyle(CurrObj) {
+    var Style = "";
+
+    Style += GetTextStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+    Style += GetTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+    return Style;
+}
+function GetElementsNonTextStyle(CurrObj) {
+    var Style = "";
+
+    Style += GetNonTextStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+    Style += GetNonTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+    return Style;
+}
 function GetBorderSize(CurrObj, Side) {
     var Obj;
     var DefaultStyle;
@@ -1238,16 +1281,19 @@ function GetStyle(CurrObj, TypeCodeObj) {
     if (CurrObj == null)
         return Style;
 
+    Style += GetNonTextStyle(CurrObj, TypeCodeObj);
+    Style += GetTextStyle(CurrObj, TypeCodeObj);
+
+    return Style;
+}
+function GetNonTextStyle(CurrObj, TypeCodeObj) {
+    var Style = "";
+
+    if (CurrObj == null)
+        return Style;
+
     if (CurrObj.BackgroundColor != null)
         Style += "background-color:" + CurrObj.BackgroundColor + ";";
-    if (CurrObj.UnicodeBiDi != null)
-        Style += "unicode-bidi:" + GetBiDi(CurrObj.UnicodeBiDi) + ";";
-    if (CurrObj.VerticalAlign != null)
-        Style += "vertical-align:" + GetVAligh(CurrObj.VerticalAlign) + ";";
-    if (CurrObj.WritingMode != null)
-        Style += "layout-flow:" + GetLayoutFlow(CurrObj.WritingMode) + ";";
-    if (CurrObj.Direction != null)
-        Style += "Direction:" + GetDirection(CurrObj.Direction) + ";";
     if (CurrObj.PaddingBottom != null)
         Style += "padding-bottom:" + CurrObj.PaddingBottom + ";";
     if (CurrObj.PaddingLeft != null)
@@ -1256,6 +1302,24 @@ function GetStyle(CurrObj, TypeCodeObj) {
         Style += "padding-right:" + CurrObj.PaddingRight + ";";
     if (CurrObj.PaddingTop != null)
         Style += "padding-top:" + CurrObj.PaddingTop + ";";
+    return Style;
+}
+function GetTextStyle(CurrObj, TypeCodeObj) {
+
+    var Style = "";
+
+    if (CurrObj == null)
+        return Style;
+
+    if (CurrObj.UnicodeBiDi != null)
+        Style += "unicode-bidi:" + GetBiDi(CurrObj.UnicodeBiDi) + ";";
+    if (CurrObj.VerticalAlign != null)
+        Style += "vertical-align:" + GetVAligh(CurrObj.VerticalAlign) + ";";
+    if (CurrObj.WritingMode != null)
+        Style += "layout-flow:" + GetLayoutFlow(CurrObj.WritingMode) + ";";
+    if (CurrObj.Direction != null)
+        Style += "Direction:" + GetDirection(CurrObj.Direction) + ";";
+
     if (CurrObj.TextAlign != null)
         Style += "text-align:" + GetTextAlign(CurrObj.TextAlign, TypeCodeObj) + ";";
     if (CurrObj.FontStyle != null)
@@ -1273,7 +1337,6 @@ function GetStyle(CurrObj, TypeCodeObj) {
     //   if (CurrObj.Calendar != null)
     //       Style += "calendar:" + GetCalendar(CurrObj.Calendar) + ";";
     //writing-mode:lr-tb;?
-
     return Style;
 }
 function GetCalendar(RPLCode) {

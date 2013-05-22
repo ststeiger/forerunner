@@ -278,7 +278,6 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="CSS\Site.css" />
     <Content Include="Images\ReportManager\accent.png" />
     <Content Include="Images\ReportManager\bullet.png" />
     <Content Include="Images\ReportManager\heroAccent.png" />

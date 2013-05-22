@@ -248,6 +248,7 @@
     <None Include="Scripts\Util\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\Util\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\Util\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\Util\jquery.touchSwipe.min.js" />
     <Content Include="Scripts\Util\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\Util\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\Util\jquery.validate.js" />
@@ -258,7 +259,6 @@
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
-    <Content Include="Scripts\Util\moment.js" />
     <Content Include="Scripts\Views\CatalogItemView.html" />
     <Content Include="Scripts\Views\ReportViewerMainView.html" />
     <Content Include="Scripts\Views\ReportManagerMainView.html" />

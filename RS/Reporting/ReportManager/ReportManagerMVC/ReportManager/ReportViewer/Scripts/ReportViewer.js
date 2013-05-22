@@ -29,6 +29,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$FloatingToolbar;
     this.SessionID = "";
     this.$PageContainer = $PageContainer;
+    this.$ReportAreaContainer;
     this.NumPages = 0;
     this.Lock = false;
     this.$ReportContainer = new $("<div class='report-container' style=''></div");
@@ -179,19 +180,62 @@ function AddLoadingIndicator(RS) {
 function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
+
+jQuery.fn.extend({
+    slideRightShow: function (delay) {
+        return this.each(function () {
+            $(this).show('slide', { direction: 'right', easing: 'easeInCubic' }, delay);
+        });
+    },
+    slideLeftHide: function (delay) {
+        return this.each(function () {
+            $(this).hide('slide', { direction: 'left', easing: 'easeOutCubic' }, delay);
+        });
+    },
+    slideRightHide: function (delay) {
+        return this.each(function () {
+            $(this).hide('slide', { direction: 'right', easing: 'easeOutCubic' }, delay);
+        });
+    },
+    slideLeftShow: function (delay) {
+        return this.each(function () {
+            $(this).show('slide', { direction: 'left', easing: 'easeInCubic' }, delay);
+        });
+    }
+});
+
 function SetPage(RS, NewPageNum, OldPage) {
     //  Load a new page into the screen and udpate the toolbar
 
     if (!RS.Pages[NewPageNum].IsRendered)
         RenderPage(RS, NewPageNum);
-    RS.$PageContainer.append(RS.Pages[NewPageNum].$Container)
-    RS.Pages[NewPageNum].$Container.fadeIn("normal");
-    if (OldPage != null)
-        OldPage.$Container.detach();
+    if (RS.$ReportAreaContainer == null) {
+        RS.$ReportAreaContainer = $("<Div/>");
+        RS.$ReportAreaContainer.attr("ID", "ReportArea");
+        RS.$PageContainer.append(RS.$ReportAreaContainer);
+        RS.$ReportAreaContainer.append(RS.Pages[NewPageNum].$Container);
+        RS.Pages[NewPageNum].$Container.fadeIn();
+    } else {
+        if (OldPage != null) {
+            OldPage.$Container.detach();
+        }
+
+        RS.$ReportAreaContainer.append(RS.Pages[NewPageNum].$Container);
+    
+        RS.Pages[NewPageNum].$Container.hide();
+        if (RS.CurPage != null && RS.CurPage > NewPageNum) {
+            RS.Pages[NewPageNum].$Container.slideLeftShow(1500);
+        } else {
+            RS.Pages[NewPageNum].$Container.slideRightShow(1500);
+        }
+    }
+
+    
     RS.CurPage = NewPageNum;
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
     RS.Lock = 0;
 }
+
 function RefreshReport(RS) {
     // Remove all cached data on the report and re-run
     Page = RS.Pages[RS.CurPage];
@@ -399,7 +443,7 @@ function Back(RS) {
         RS.Pages[RS.CurPage].$Container.detach();
         RS.Pages[RS.CurPage].$Container = null;
         RS.Pages[RS.CurPage].$Container = action.Container;
-        RS.$PageContainer.append(RS.Pages[RS.CurPage].$Container);
+        RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
     }
 }
 function Sort(RS,Direction,ID) {
@@ -539,6 +583,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     var $Report = $("<Div/>");
+    $Report.attr("ID", NewPageNum);
     
     //Error, need to handle this better
     if (Data == null) return;

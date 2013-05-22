@@ -744,8 +744,9 @@ function WriteRichText(RIContext) {
     }
     else {
         //Handle each paragraphs
-        var $ParagraphList = new $("<DIV />");
+        
         $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
+            var $ParagraphList = new $("<DIV />");
             var $ParagraphItem;          
 
             if (Obj.Paragraph.SharedElements.ListStyle == 1 & Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
@@ -803,9 +804,9 @@ function WriteRichText(RIContext) {
 
                 $ParagraphItem.append($TextRun);
                 $ParagraphList.append($ParagraphItem);
+                $TextObj.append($ParagraphList);
             }
         });
-        $TextObj.append($ParagraphList);
     }
     RIContext.$HTMLParent.append($TextObj);
     if ($Sort != null) RIContext.$HTMLParent.append($Sort);

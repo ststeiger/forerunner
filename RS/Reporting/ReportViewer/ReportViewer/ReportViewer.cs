@@ -185,14 +185,13 @@ namespace Forerunner.ReportViewer
 
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
-                    if (parametersList == null)
+                    if (parametersList != null)
                     {
-                        ReportParameter[] reportParameter = execInfo.Parameters;
-                        return rw.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
                     else
                     {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                        throw new Exception("Parameter list can not be null");
                     }
                 }
 

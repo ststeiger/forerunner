@@ -202,7 +202,8 @@ function WriteParameterToggle() {
 function GetParameterControlProperty(Obj, $Control) {
     $Control.attr("name", Obj.Name);
     $Control.attr("AllowBlank", Obj.AllowBlank);
-    if (Obj.QueryParameter == "True" | Obj.Nullable != "True") {
+    //if (Obj.QueryParameter == "True" | Obj.Nullable != "True") {
+    if (Obj.Nullable != "True") {
         $Control.attr("required", "true");
         $Control.watermark("Required");
     }
@@ -262,6 +263,7 @@ function WriteDropDownControl(Obj, $Control) {
     $Control.addClass("Parameter-Select");
     $Control.attr("id", Obj.Name);
     $Control.attr("DataType", Obj.Type);
+    $Control.attr("readonly","true");
     GetParameterControlProperty(Obj, $Control);
 
     var $defaultOption = new $("<option />");
@@ -281,6 +283,7 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
     var $MultipleCheckBox = new $("<Input />");
     $MultipleCheckBox.attr("type", "text");
     $MultipleCheckBox.attr("id", Obj.Name);
+    $MultipleCheckBox.attr("readonly", "true");
     $MultipleCheckBox.attr("class", "ParameterClient");
     $MultipleCheckBox.attr("IsMultiple", Obj.MultiValue);
     $MultipleCheckBox.attr("DataType", Obj.Type);
@@ -298,12 +301,21 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
     var $OpenDropDown = new $("<Img />");
     $OpenDropDown.attr("src", "./reportviewer/Images/OpenDropDown.png");
     $OpenDropDown.attr("alt", "Open DropDown List");
+    $OpenDropDown.attr("id", Obj.Name + "OpenDropDown");
     $OpenDropDown.on("click", function () { PopupDropDownPanel(Obj); });
 
     var $DropDownContainer = new $("<Div />");
     $DropDownContainer.attr("id", Obj.Name + "_DropDown");
     $DropDownContainer.addClass("Parameter-DropDown");
     $DropDownContainer.addClass("Parameter-Dropdown-Hidden");
+
+    $("body").click(function (e) {
+        if (!($(e.target).hasClass("Parameter-DropDown") | $(e.target).hasClass("ParameterClient") | $(e.target).hasClass(Obj.Name + "_DropDown_CB") | $(e.target).hasClass(Obj.Name + "_DropDown_lable"))) {
+            if ($(e.target).attr("id") != Obj.Name + "OpenDropDown") {
+                CloseDropDownPanel(Obj);
+            }
+        }
+    });
 
     var $Table = GetDefaultHTMLTable();
     Obj.ValidValues.push({ Key: "Select All", Value: "Select All" });
@@ -347,6 +359,7 @@ function WriteDropDownWithCheckBox(Obj, $Control) {
         var $Lable = new $("<Lable />");
         $Lable.attr("for", Obj.Name + "_DropDown_" + value);
         $Lable.attr("id", Obj.Name + "_DropDown_" + value + "_lable");
+        $Lable.attr("class", Obj.Name + "_DropDown_lable");
         $Lable.html(key);
 
         //$Col.append($Checkbox);
@@ -372,6 +385,11 @@ function PopupDropDownPanel(Obj) {
         $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Show");
     }
     else {
+        CloseDropDownPanel(Obj);
+    }
+}
+function CloseDropDownPanel(Obj) {
+    if ($("#" + Obj.Name + "_DropDown").hasClass("Parameter-Dropdown-Show")) {
         $("#" + Obj.Name + "_DropDown").fadeIn("fast", function () {
             var ShowValue = "";
             var HiddenValue = "";
@@ -454,7 +472,7 @@ function GetParamsList() {
 }
 function IsParamNullable(Parameter) {
     var checkbox = $(".Parameter-Checkbox").filter("[name='" + Parameter.name + "']").first();
-    if (checkbox.attr("checked") == "checked")
+    if (checkbox.attr("checked") == "checked" || Parameter.value == "")
         return null;
     else
         return Parameter.value;

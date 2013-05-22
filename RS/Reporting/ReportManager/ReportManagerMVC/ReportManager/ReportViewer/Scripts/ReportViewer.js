@@ -755,7 +755,8 @@ function WriteRichText(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {
-        $Sort = $("<img/>");
+        $Sort = $("<div/>");
+        $Sort.html("&nbsp");
         var Direction = "None";
         if (RIContext.CurrObj.Elements.NonSharedElements.SortState == 2) {
             $Sort.attr("class", "sort-descending");
@@ -788,8 +789,9 @@ function WriteRichText(RIContext) {
     }
     else {
         //Handle each paragraphs
-        var $ParagraphList = new $("<DIV />");
+        
         $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
+            var $ParagraphList = new $("<DIV />");
             var $ParagraphItem;          
 
             if (Obj.Paragraph.SharedElements.ListStyle == 1 & Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
@@ -847,10 +849,13 @@ function WriteRichText(RIContext) {
 
                 $ParagraphItem.append($TextRun);
                 $ParagraphList.append($ParagraphItem);
+                $TextObj.append($ParagraphList);
+                WriteBookMark(RIContext);
             }
         });
-        $TextObj.append($ParagraphList);
     }
+    WriteBookMark(RIContext);
+    
     RIContext.$HTMLParent.append($TextObj);
     if ($Sort != null) RIContext.$HTMLParent.append($Sort);
     return RIContext.$HTMLParent;
@@ -1029,11 +1034,16 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
     }
 }
 function WriteBookMark(RIContext) {
+    var $node = $("<a/>");
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
-        var $node = $("<a/>");
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-        RIContext.$HTMLParent.append($node);
+        $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
     }
+    else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark != undefined) {
+        $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
+        $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
+    }
+    RIContext.$HTMLParent.append($node);
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");

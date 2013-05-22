@@ -22,14 +22,36 @@
   min-width:5mm;
 }
 
-.sort-unsorted {
-    content:url("../reportviewer/Images/NotSorted.gif")
+.sort-unsorted {    
+    background-image:url('../reportviewer/Images/NotSorted.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
 }
+
 .sort-descending {
-    content:url("../reportviewer/Images/SortDecending.gif")
+    background-image:url(../reportviewer/Images/SortDecending.gif);
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
 }
 .sort-ascending {
-    content:url("../reportviewer/Images/SortAccending.gif")
+    background-image:url(../reportviewer/Images/SortAccending.gif);
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
 }
 
 

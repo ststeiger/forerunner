@@ -14,16 +14,8 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>area with lines and action.rdl</Name>
-      <FullPath>area with lines and action.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>bar chart.rdl</Name>
       <FullPath>bar chart.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>chart go to report action.rdl</Name>
-      <FullPath>chart go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>chart.rdl</Name>
@@ -42,12 +34,8 @@
       <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>data bar go to report .rdl</Name>
-      <FullPath>data bar go to report .rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Guage to report action.rdl</Name>
-      <FullPath>Guage to report action.rdl</FullPath>
+      <Name>Go To Report Action Test.rdl</Name>
+      <FullPath>Go To Report Action Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image Report 2.rdl</Name>
@@ -100,6 +88,10 @@
     <ProjectItem>
       <Name>Richtextbox.rdl</Name>
       <FullPath>Richtextbox.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Gauge.rdl</Name>
+      <FullPath>Simple Gauge.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Matrix.rdl</Name>

@@ -1150,6 +1150,90 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
+      <Line Name="Line2">
+        <Top>0.07167in</Top>
+        <Left>4.16542in</Left>
+        <Height>0.33333in</Height>
+        <Width>0.5625in</Width>
+        <ZIndex>11</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line4">
+        <Top>0.04042in</Top>
+        <Left>5.03in</Left>
+        <Height>0.375in</Height>
+        <Width>0in</Width>
+        <ZIndex>12</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line3">
+        <Top>0.41542in</Top>
+        <Left>3.5925in</Left>
+        <Height>0in</Height>
+        <Width>1.13542in</Width>
+        <ZIndex>13</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line5">
+        <Top>0.42583in</Top>
+        <Left>5.04042in</Left>
+        <Height>0in</Height>
+        <Width>0.34375in</Width>
+        <ZIndex>14</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line6">
+        <Top>0.07167in</Top>
+        <Left>5.04042in</Left>
+        <Height>0in</Height>
+        <Width>0.34375in</Width>
+        <ZIndex>15</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line7">
+        <Top>0.0925in</Top>
+        <Left>5.39458in</Left>
+        <Height>0.33333in</Height>
+        <Width>0in</Width>
+        <ZIndex>16</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
+      <Line Name="Line8">
+        <Top>0.41542in</Top>
+        <Left>3.52777in</Left>
+        <Height>0.25in</Height>
+        <Width>1in</Width>
+        <ZIndex>17</ZIndex>
+        <Style>
+          <Border>
+            <Style>Solid</Style>
+          </Border>
+        </Style>
+      </Line>
     </ReportItems>
     <Height>7.85292in</Height>
     <Style />

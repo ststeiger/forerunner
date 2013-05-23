@@ -246,7 +246,7 @@ function is_touch_device() {
 
 function touchNav(RS) {
     // Touch Events
-    RS.$ReportAreaContainer.swipe({
+    $(document).swipe({
         fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
             if (dir == 'left') {
                 NavToPage(RS, RS.CurPage + 1);

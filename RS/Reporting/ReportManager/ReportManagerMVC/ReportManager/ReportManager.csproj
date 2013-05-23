@@ -248,7 +248,7 @@
     <None Include="Scripts\Util\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\Util\jquery-ui-1.8.20.js" />
     <Content Include="Scripts\Util\jquery-ui-1.8.20.min.js" />
-    <Content Include="Scripts\Util\jquery.touchwipe.min.js" />
+    <Content Include="Scripts\Util\jquery.touchSwipe.min.js" />
     <Content Include="Scripts\Util\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\Util\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\Util\jquery.validate.js" />

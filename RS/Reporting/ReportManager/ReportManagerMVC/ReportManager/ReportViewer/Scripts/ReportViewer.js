@@ -245,13 +245,6 @@ function is_touch_device() {
 };
 
 function touchNav(RS) {
-    /*$(document).touchwipe({
-        wipeLeft: function () { NavToPage(RS, RS.CurPage + 1); },
-        wipeRight: function () { NavToPage(RS, RS.CurPage - 1); },
-        min_move_x: 20,
-        min_move_y: 20,
-        preventDefaultEvents: true
-    });*/
     // Touch Events
     $(document).swipe({
         fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
@@ -260,6 +253,9 @@ function touchNav(RS) {
             } else {
                 NavToPage(RS, RS.CurPage - 1);
             }
+        },
+        tap: function (event, target) {
+            $(target).trigger('click');
         }
     });
 }

@@ -593,7 +593,7 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
         ReportPath: RS.ReportPath,
         SessionID: RS.SessionID,
         PageNumber: NewPageNum,
-        ParameterList: null
+        ParameterList: GetParamsList()
     })
     .done(function (Data) {       
         WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
@@ -873,7 +873,7 @@ function WriteRichText(RIContext) {
                 $ParagraphItem.append($TextRun);
                 $ParagraphList.append($ParagraphItem);
                 $TextObj.append($ParagraphList);
-                WriteBookMark(RIContext);
+                //WriteBookMark(RIContext);
             }
         });
     }
@@ -927,6 +927,13 @@ function WriteAction(RIContext, Action, Control) {
     }
     else if (Action.BookmarkLink != undefined) {
         Control.attr("href", "#" + Action.BookmarkLink);
+        Control.on("click", function (e) {
+            e.preventDefault();
+            if ($("#" + Action.BookmarkLink).attr("name") == null) {
+                alert('not found in current page');
+            }
+            else $(document).scrollTop($("#" + Action.BookmarkLink).offset().top - 80);
+        });
     }
     else {
         $(Control).on("mouseover", function (event) { SetActionCursor(this); });
@@ -1061,11 +1068,15 @@ function WriteBookMark(RIContext) {
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
         $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
+        
+        //$node.html("Bookmark_" + RIContext.CurrObj.Elements.SharedElements.Bookmark);
     }
     else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark != undefined) {
         $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
         $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
+        //$node.html("Bookmark_" + RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
     }
+
     RIContext.$HTMLParent.append($node);
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {

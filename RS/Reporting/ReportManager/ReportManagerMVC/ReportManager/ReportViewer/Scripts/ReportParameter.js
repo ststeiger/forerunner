@@ -54,12 +54,12 @@
     $ViewReport.attr("type", "button");
     $ViewReport.attr("value", "View Report");
     $ViewReport.on("click", function () {
-        if ($("#ParamsForm").valid() == true) {
+        var parameterList = GetParamsList();
+        if (parameterList != null) {
             if (RS.Pages[pageNum] != null) {
                 RS.Pages[pageNum].$Container.detach();
             }
             AddLoadingIndicator(RS);
-            var parameterList = GetParamsList();
 
             $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
                 ReportServerURL: RS.ReportServerURL,
@@ -68,7 +68,11 @@
                 PageNumber: pageNum,
                 ParameterList: parameterList
             })
-            .done(function (Data) { WritePage(Data, RS, pageNum, null, LoadOnly); if (!LoadOnly) LoadAllPages(RS, pageNum); })
+            .done(function (Data) {
+                WritePage(Data, RS, pageNum, null, LoadOnly);
+                RenderPage(RS, pageNum);
+                if (!LoadOnly) CachePages(RS, pageNum);
+            })
             .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
         }
     });
@@ -407,68 +411,72 @@ function CloseDropDownPanel(Obj) {
     }
 }
 function GetParamsList() {
-    var a = [];
-    //Text
-    $(".Parameter").filter(":text").each(function (i) {
-        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
-    });
-    //Hidden
-    $(".Parameter").filter(":hidden").each(function (i) {
-        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
-    });
-    //dropdown
-    $(".Parameter").filter("select").each(function (i) {
-        a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
-    });
-    var RadioList = new Object();
-    //radio-group by radio name, default value: null
-    $(".Parameter").filter(":radio").each(function (i) {
-        if (!(this.name in RadioList)) {
-            RadioList[this.name] = null;
-        }
-        if (this.checked == true) {
-            RadioList[this.name] = IsParamNullable(this);
-        }
-    });
-    for (var RadioName in RadioList) {
-        a.push({ name: RadioName, ismultiple: "", type: 'Boolean', value: RadioList[RadioName] });
-    }
-    //combobox - multiple values
-    var temp_cb = "";
-    $(".Parameter").filter(":checkbox").filter(":checked").each(function (i) {
-        if (temp_cb.indexOf(this.name) == -1) {
-            temp_cb += this.name + ",";
-        }
-    });
-    var cb_array = temp_cb.split(",");
-    var cb_name = "";
-    var cb_value = "";
-    for (var cb_i = 0; cb_i < cb_array.length - 1; cb_i++) {
-        cb_name = cb_array[cb_i];
-        var cb_value_length = $("input[name='" + cb_array[cb_i] + "']:checked").length;
-        $("input[name='" + cb_array[cb_i] + "']:checked").each(function (i) {
-            if (i == cb_value_length - 1)
-                cb_value += this.value;
-            else
-                cb_value += this.value + ",";
-
+    if ($("#ParamsForm").length != 0 && $("#ParamsForm").valid() == true) {
+        var a = [];
+        //Text
+        $(".Parameter").filter(":text").each(function (i) {
+            a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
         });
-        a.push({ name: cb_name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: cb_value });
-    }
+        //Hidden
+        $(".Parameter").filter(":hidden").each(function (i) {
+            a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
+        });
+        //dropdown
+        $(".Parameter").filter("select").each(function (i) {
+            a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: IsParamNullable(this) });
+        });
+        var RadioList = new Object();
+        //radio-group by radio name, default value: null
+        $(".Parameter").filter(":radio").each(function (i) {
+            if (!(this.name in RadioList)) {
+                RadioList[this.name] = null;
+            }
+            if (this.checked == true) {
+                RadioList[this.name] = IsParamNullable(this);
+            }
+        });
+        for (var RadioName in RadioList) {
+            a.push({ name: RadioName, ismultiple: "", type: 'Boolean', value: RadioList[RadioName] });
+        }
+        //combobox - multiple values
+        var temp_cb = "";
+        $(".Parameter").filter(":checkbox").filter(":checked").each(function (i) {
+            if (temp_cb.indexOf(this.name) == -1) {
+                temp_cb += this.name + ",";
+            }
+        });
+        var cb_array = temp_cb.split(",");
+        var cb_name = "";
+        var cb_value = "";
+        for (var cb_i = 0; cb_i < cb_array.length - 1; cb_i++) {
+            cb_name = cb_array[cb_i];
+            var cb_value_length = $("input[name='" + cb_array[cb_i] + "']:checked").length;
+            $("input[name='" + cb_array[cb_i] + "']:checked").each(function (i) {
+                if (i == cb_value_length - 1)
+                    cb_value += this.value;
+                else
+                    cb_value += this.value + ",";
 
-    //Combined to JSON String, format as below
-    //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
-    var temp_json = "[";
-    for (var json_i = 0; json_i < a.length; json_i++) {
-        if (json_i != a.length - 1) {
-            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"},';
+            });
+            a.push({ name: cb_name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: cb_value });
         }
-        else {
-            temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"}';
+
+        //Combined to JSON String, format as below
+        //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
+        var temp_json = "[";
+        for (var json_i = 0; json_i < a.length; json_i++) {
+            if (json_i != a.length - 1) {
+                temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"},';
+            }
+            else {
+                temp_json += '{"Parameter":"' + a[json_i].name + '","IsMultiple":"' + a[json_i].ismultiple + '","Type":"' + a[json_i].type + '","Value":"' + a[json_i].value + '"}';
+            }
         }
+        temp_json += "]";
+        return '{"ParamsList":' + temp_json + '}';
+    } else {
+        return null;
     }
-    temp_json += "]";
-    return '{"ParamsList":' + temp_json + '}';
 }
 function IsParamNullable(Parameter) {
     var checkbox = $(".Parameter-Checkbox").filter("[name='" + Parameter.name + "']").first();

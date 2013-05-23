@@ -214,6 +214,9 @@ function SetPage(RS, NewPageNum, OldPage) {
         RS.$ReportAreaContainer.attr("ID", "ReportArea");
         RS.$PageContainer.append(RS.$ReportAreaContainer);
         RS.$ReportAreaContainer.append(RS.Pages[NewPageNum].$Container);
+        if (is_touch_device()) {
+            touchNav(RS);
+        }
         RS.Pages[NewPageNum].$Container.fadeIn();
     } else {
         if (OldPage != null) {
@@ -234,6 +237,24 @@ function SetPage(RS, NewPageNum, OldPage) {
     RS.CurPage = NewPageNum;
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
     RS.Lock = 0;
+}
+
+function is_touch_device() {
+    return !!('ontouchstart' in window) // works on most browsers 
+        || !!('onmsgesturechange' in window); // works on ie10
+};
+
+function touchNav(RS) {
+    // Touch Events
+    RS.$ReportAreaContainer.swipe({
+        fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
+            if (dir == 'left') {
+                NavToPage(RS, RS.CurPage + 1);
+            } else {
+                NavToPage(RS, RS.CurPage - 1);
+            }
+        }
+    });
 }
 
 function RefreshReport(RS) {
@@ -513,6 +534,7 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
 
     $(window).scroll(UpdateTableHeaders);
     $(window).bind('touchmove', HideTableHeaders);
+
     //window.addEventListener("gesturechange", UpdateTableHeaders, false);
   
     //Log in screen if needed

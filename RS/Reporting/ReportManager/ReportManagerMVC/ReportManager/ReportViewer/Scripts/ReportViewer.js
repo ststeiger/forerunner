@@ -350,15 +350,16 @@ function NavToPage(RS, NewPageNum) {
     if (NewPageNum < 1) {
         NewPageNum = RS.NumPages;
     }
+    if (NewPageNum != RS.CurPage) {
 
-    if (RS.Lock == 0) {
-        RS.Lock = 1;
-        LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
-        if (RS.$Carousel != null) {
-            RS.$Carousel.select(NewPageNum - 1, 1);
+        if (RS.Lock == 0) {
+            RS.Lock = 1;
+            LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
+            if (RS.$Carousel != null) {
+                RS.$Carousel.select(NewPageNum - 1, 1);
+            }
         }
     }
-
 }
 function ShowParms(RS) {
     if (RS.ParamLoaded == true)
@@ -395,7 +396,7 @@ function CreateSlider(RS, ReportViewerUID) {
     $List = new $('<UL />');
     $List.attr('class', 'sky-carousel-container');
 
-    
+    //if(GetParamsList()!
     for ( i = 1; i <= RS.NumPages; i++) {
         
         var url = RS.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + RS.ReportServerURL + '&ReportPath='
@@ -805,20 +806,50 @@ function WriteRichText(RIContext) {
     }
     else {
         //Handle each paragraphs
-        
-        $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
-            var $ParagraphList = new $("<DIV />");
-            var $ParagraphItem;          
+        var LowIndex = null;
+        var ParentName = new Object();
+        var ParagraphContainer = new Object();
+        ParagraphContainer["Root"] = '';
 
-            if (Obj.Paragraph.SharedElements.ListStyle == 1 & Obj.Paragraph.NonSharedElements.ParagraphNumber != undefined) {
-                if ($ParagraphList.is("div")) $ParagraphList = new $("<OL />");
+        //Build paragraph tree
+        $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
+            if (LowIndex == null) LowIndex = Obj.Paragraph.SharedElements.ListLevel;
+            if (ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] == null) ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
+            ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
+
+            if (ParentName[Obj.Paragraph.SharedElements.ListLevel - 1] == null)
+                item = "Root";
+            else
+                item = ParentName[Obj.Paragraph.SharedElements.ListLevel - 1];
+            item = { Parent: item, Value: Obj };
+            ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel].push(item);
+        });
+
+        WriteRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
+    }
+    WriteBookMark(RIContext);
+    
+    //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
+    RIContext.$HTMLParent.append($TextObj);
+    if ($Sort != null) RIContext.$HTMLParent.append($Sort);
+    return RIContext.$HTMLParent;
+}
+function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentContainer) {
+    var $ParagraphList = null;
+    $.each(Paragraphs[Index], function (SubIndex, Obj) {
+        if (Obj.Parent == ParentName) {
+            var $ParagraphItem;
+            Obj = Obj.Value;
+            if (Obj.Paragraph.SharedElements.ListStyle == 1) {
+                if ($ParagraphList == null) $ParagraphList = new $("<OL />");
                 $ParagraphItem = new $("<LI />");
             }
             else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
-                if ($ParagraphList.is("div")) $ParagraphList = new $("<UL />");
+                if ($ParagraphList == null) $ParagraphList = new $("<UL />");
                 $ParagraphItem = new $("<LI />");
             }
             else {
+                if ($ParagraphList == null) $ParagraphList = new $("<DIV />");
                 $ParagraphItem = new $("<SPAN />");
             }
 
@@ -834,7 +865,7 @@ function WriteRichText(RIContext) {
                 var flag = true;
                 //With or without Action in TextRun
                 if (Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo == undefined) {
-                    $TextRun = new $("<SPAN />");
+                    $TextRun = new $("<DIV />");
                 }
                 else {
                     $TextRun = new $("<A />");
@@ -864,17 +895,17 @@ function WriteRichText(RIContext) {
                 }
 
                 $ParagraphItem.append($TextRun);
-                $ParagraphList.append($ParagraphItem);
-                $TextObj.append($ParagraphList);
-                //WriteBookMark(RIContext);
             }
-        });
-    }
-    WriteBookMark(RIContext);
-    
-    RIContext.$HTMLParent.append($TextObj);
-    if ($Sort != null) RIContext.$HTMLParent.append($Sort);
-    return RIContext.$HTMLParent;
+            
+            if (Paragraphs[Index + 1] != null)
+                WriteRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
+
+            var $ItemBorder = new $("<DIV />");
+            $ItemBorder.append($ParagraphItem);
+            $ParagraphList.append($ItemBorder);
+            ParentContainer.append($ParagraphList);
+        }
+    });
 }
 function WriteImage(RIContext) {
     var $NewObj = new Image();

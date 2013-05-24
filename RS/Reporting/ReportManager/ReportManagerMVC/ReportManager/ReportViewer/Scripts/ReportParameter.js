@@ -54,26 +54,14 @@
     $ViewReport.attr("type", "button");
     $ViewReport.attr("value", "View Report");
     $ViewReport.on("click", function () {
-        var parameterList = GetParamsList();
-        if (parameterList != null) {
+        if (GetParamsList() != null) {
             if (RS.Pages[pageNum] != null) {
                 RS.Pages[pageNum].$Container.detach();
+                RS.Pages = new Object();
             }
-            AddLoadingIndicator(RS);
 
-            $.getJSON(RS.ReportViewerAPI + "/GetJSON/", {
-                ReportServerURL: RS.ReportServerURL,
-                ReportPath: RS.ReportPath,
-                SessionID: RS.SessionID,
-                PageNumber: pageNum,
-                ParameterList: parameterList
-            })
-            .done(function (Data) {
-                WritePage(Data, RS, pageNum, null, LoadOnly);
-                RenderPage(RS, pageNum);
-                if (!LoadOnly) CachePages(RS, pageNum);
-            })
-            .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+            AddLoadingIndicator(RS);
+            LoadPage(RS, pageNum, null, false);
         }
     });
 

@@ -770,6 +770,13 @@ function WriteRichText(RIContext) {
     var $TextObj = $("<div/>");
     var $Sort = null;
 
+    //if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null) {
+    //    $TextObj = new $("<A />");
+    //    for (i = 0; i < RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Count; i++) {
+    //        WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $TextObj);
+    //    }
+    //}
+
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
     RIContext.$HTMLParent.attr("Style", Style);
@@ -868,7 +875,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
                 var flag = true;
                 //With or without Action in TextRun
                 if (Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo == undefined) {
-                    $TextRun = new $("<DIV />");
+                    $TextRun = new $("<SPAN />");
                 }
                 else {
                     $TextRun = new $("<A />");
@@ -903,9 +910,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
             if (Paragraphs[Index + 1] != null)
                 WriteRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-            var $ItemBorder = new $("<DIV />");
-            $ItemBorder.append($ParagraphItem);
-            $ParagraphList.append($ItemBorder);
+            $ParagraphList.append($ParagraphItem);
             ParentContainer.append($ParagraphList);
         }
     });
@@ -918,7 +923,7 @@ function GetImageURL(RS, ImageName) {
     return Url;
 }
 function WriteImage(RIContext) {
-    var $NewObj = new Image();
+    var NewImage = new Image();
 
     var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
@@ -935,21 +940,21 @@ function WriteImage(RIContext) {
         ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
     }
 
-    $NewObj.src = GetImageURL(RIContext.RS, ImageName);
-    $($NewObj).attr("style", Style);
-    $NewObj.alt = "Cannot display image";
+    NewImage.src = GetImageURL(RIContext.RS, ImageName);
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
-        $NewObj.useMap = "#Map_" + RIContext.RS.SessionID;
+        NewImage.useMap = "#Map_" + RIContext.RS.SessionID;
     }
+    NewImage.onload = function () {
+        WriteActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
+        ResizeImage(this, sizingType, this.naturalHeight, this.naturalWidth, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
 
-    $NewObj.onload = function () {
-        WriteActionImageMapAreas(RIContext, this.width, this.height);
-        ResizeImage(this, sizingType, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
     };
+    $(NewImage).attr("style", Style);
+    NewImage.alt = "Cannot display image";
     WriteBookMark(RIContext);
   
 
-    RIContext.$HTMLParent.append($NewObj);
+    RIContext.$HTMLParent.append(NewImage);
     return RIContext.$HTMLParent;
 }
 function WriteAction(RIContext, Action, Control) {    
@@ -967,7 +972,8 @@ function WriteAction(RIContext, Action, Control) {
         });
     }
     else {
-        $(Control).on("mouseover", function (event) { SetActionCursor(this); });
+        //$(Control).on("mouseover", function (event) { SetActionCursor(this); });
+        $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
         $(Control).on("click", function () {
             //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
             ActionHistory.push({ ReportPath: RIContext.RS.ReportPath, SessionID: RIContext.RS.SessionID, Container: $.extend(true, {}, RIContext.RS.Pages[RIContext.RS.CurPage].$Container) });
@@ -976,6 +982,7 @@ function WriteAction(RIContext, Action, Control) {
             RIContext.RS.ReportPath = reportPath;
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container.detach();
             RIContext.RS.Pages[RIContext.RS.CurPage].$Container = null;
+            RIContext.RS.Pages[RIContext.RS.CurPage].IsRendered = false;
             RIContext.RS.SessionID = null;
             AddLoadingIndicator(RIContext.RS);
             LoadPage(RIContext.RS, RIContext.RS.CurPage, null, false);
@@ -1041,13 +1048,11 @@ function WriteActionImageMapAreas(RIContext, width, height) {
         RIContext.$HTMLParent.append($Map);
     }
 }
-function ResizeImage(img, sizingType, maxHeight, maxWidth) {    
+function ResizeImage(img, sizingType, height, width, maxHeight, maxWidth) {    
     var ratio = 0;
-    var height = 0;
-    var width = 0;
 
-    height = ConvertToMM($(img).height() + "px");
-    width = ConvertToMM($(img).width() + "px");
+    height = ConvertToMM(height + "px");
+    width = ConvertToMM(width + "px");
     if (height != 0 & width != 0) {
         switch (sizingType) {
             case 0://AutoSize
@@ -1067,8 +1072,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                         $(img).css("width", width * ratio + "mm");
                         $(img).css("max-height", maxHeight + "mm");
                         $(img).css("max-width", width * ratio + "mm");
-                    $(img).css("min-height", maxHeight + "mm");
-                    $(img).css("min-width", width * ratio + "mm");
+                        $(img).css("min-height", maxHeight + "mm");
+                        $(img).css("min-width", width * ratio + "mm");
                     }
                     else {
                         ratio = maxWidth / width;
@@ -1077,8 +1082,8 @@ function ResizeImage(img, sizingType, maxHeight, maxWidth) {
                         $(img).css("height", height * ratio + "mm");
                         $(img).css("max-width", maxWidth + "mm");
                         $(img).css("max-height", height * ratio + "mm");
-                    $(img).css("min-width", maxWidth + "mm");
-                    $(img).css("min-height", height * ratio + "mm");
+                        $(img).css("min-width", maxWidth + "mm");
+                        $(img).css("min-height", height * ratio + "mm");
                     }
                 }
                 break;
@@ -1099,16 +1104,13 @@ function WriteBookMark(RIContext) {
     if (RIContext.CurrObj.Elements.SharedElements.Bookmark != undefined) {
         $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
         $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-        
-        //$node.html("Bookmark_" + RIContext.CurrObj.Elements.SharedElements.Bookmark);
     }
     else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark != undefined) {
         $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
         $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-        //$node.html("Bookmark_" + RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
     }
-
-    RIContext.$HTMLParent.append($node);
+    if ($node.attr("id") != null)
+        RIContext.$HTMLParent.append($node);
 }
 function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var $Cell = new $("<TD/>");

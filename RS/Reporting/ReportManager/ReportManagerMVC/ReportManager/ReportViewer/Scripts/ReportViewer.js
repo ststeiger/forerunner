@@ -253,6 +253,9 @@ function touchNav(RS) {
             } else {
                 NavToPage(RS, RS.CurPage - 1);
             }
+        },
+        tap: function (event, target) {
+            $(target).trigger('click');
         }
     });
 }
@@ -623,7 +626,7 @@ function RenderPage(RS, pageNum) {
     //Write Style   
     if (RS.Pages[pageNum].IsRendered == true)
         return;
-    RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
+    RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS, RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
     RS.Pages[pageNum].IsRendered = true;
 }
@@ -684,7 +687,7 @@ function WriteRectangle(RIContext) {
         RIContext.$HTMLParent.append($LocDiv);
     });
 
-    Style = "position:relative;" + GetElementsStyle(RIContext.CurrObj.Elements);
+    Style = "position:relative;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
     if (RIContext.CurrLocation != null) {
         Style += "width:" + RIContext.CurrLocation.Width + "mm;"
         if (RIContext.CurrObj.ReportItems.length == 0)
@@ -768,7 +771,7 @@ function WriteRichText(RIContext) {
     var $Sort = null;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    Style += GetElementsNonTextStyle(RIContext.CurrObj.Elements);    
+    Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {
@@ -855,7 +858,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
 
             var ParagraphStyle = "";
             ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));
-            ParagraphStyle += GetElementsStyle(Obj.Paragraph);
+            ParagraphStyle += GetElementsStyle(RIContext.RS, Obj.Paragraph);
             $ParagraphItem.attr("Style", ParagraphStyle);
             $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
@@ -890,7 +893,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
                 if (flag) {
                     var TextRunStyle = "";
                     TextRunStyle += GetMeasurements(GetMeasurmentsObj(Obj.TextRuns[i], i));
-                    TextRunStyle += GetElementsStyle(Obj.TextRuns[i].Elements);
+                    TextRunStyle += GetElementsStyle(RIContext.RS, Obj.TextRuns[i].Elements);
                     $TextRun.attr("Style", TextRunStyle);
                 }
 
@@ -907,28 +910,32 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
         }
     });
 }
+function GetImageURL(RS, ImageName) {
+    var Url = RS.ReportViewerAPI + "/GetImage/?";
+    Url += "ReportServerURL=" + RS.ReportServerURL;
+    Url += "&SessionID=" + RS.SessionID;
+    Url += "&ImageID=" + ImageName;
+    return Url;
+}
 function WriteImage(RIContext) {
     var $NewObj = new Image();
 
-    var Src = RIContext.RS.ReportViewerAPI + "/GetImage/?";
-    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.CurrObj.Elements);
-    
+    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    Src += "ReportServerURL=" + RIContext.RS.ReportServerURL;
-    Src += "&SessionID=" + RIContext.RS.SessionID;
 
+    var ImageName;
     if (RIContext.CurrObj.Type == "Image") {
+        ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
         var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
-        Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
         if (sizingType == 3) {
             RIContext.$HTMLParent.addClass("overflow-hidden");
         }
     }
     else {
-        Src += "&ImageID=" + RIContext.CurrObj.Elements.NonSharedElements.StreamName;
+        ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
     }
 
-    $NewObj.src = Src;
+    $NewObj.src = GetImageURL(RIContext.RS, ImageName);
     $($NewObj).attr("style", Style);
     $NewObj.alt = "Cannot display image";
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
@@ -1154,7 +1161,7 @@ function WriteTablix(RIContext) {
     var HasFixedCols = false;
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
-    Style += GetElementsStyle(RIContext.CurrObj.Elements);
+    Style += GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
     $Tablix.attr("Style", Style);
     
     $Row = new $("<TR/>");
@@ -1213,7 +1220,7 @@ function WriteTablix(RIContext) {
 }
 function WriteSubreport(RIContext) {
     
-    RIContext.Style += GetElementsStyle(RIContext.CurrObj.SubReportProperties);
+    RIContext.Style += GetElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
     RIContext.CurrObj = RIContext.CurrObj.BodyElements;
     return WriteRectangle(RIContext);
     
@@ -1273,11 +1280,11 @@ function GetHeight($Obj) {
     return ConvertToMM(height);
 
 }
-function GetElementsStyle(CurrObj) {
+function GetElementsStyle(RS, CurrObj) {
     var Style = "";
 
-    Style += GetStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
-    Style += GetStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);    
+    Style += GetStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+    Style += GetStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);    
     return Style;
 }
 function GetElementsTextStyle(CurrObj) {
@@ -1287,11 +1294,11 @@ function GetElementsTextStyle(CurrObj) {
     Style += GetTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
     return Style;
 }
-function GetElementsNonTextStyle(CurrObj) {
+function GetElementsNonTextStyle(RS, CurrObj) {
     var Style = "";
 
-    Style += GetNonTextStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
-    Style += GetNonTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+    Style += GetNonTextStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+    Style += GetNonTextStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
     return Style;
 }
 function GetBorderSize(CurrObj, Side) {
@@ -1394,18 +1401,29 @@ function GetMeasurements(CurrObj) {
 
     return Style;
 }
-function GetStyle(CurrObj, TypeCodeObj) {
+function GetStyle(RS, CurrObj, TypeCodeObj) {
     var Style = "";
 
     if (CurrObj == null)
         return Style;
 
-    Style += GetNonTextStyle(CurrObj, TypeCodeObj);
+    Style += GetNonTextStyle(RS, CurrObj, TypeCodeObj);
     Style += GetTextStyle(CurrObj, TypeCodeObj);
 
     return Style;
 }
-function GetNonTextStyle(CurrObj, TypeCodeObj) {
+function BackgroundRepeatTypesMap() {
+    return {
+        0: "repeat",    // Repeat
+        1: "no-repeat", // Clip
+        2: "repeat-x",  // RepeatX
+        3: "repeat-y"   // RepeatY
+    };
+}
+function GetImageStyleURL(RS, ImageName) {
+    return "url(" + GetImageURL(RS, ImageName) + ")";
+}
+function GetNonTextStyle(RS, CurrObj, TypeCodeObj) {
     var Style = "";
 
     if (CurrObj == null)
@@ -1413,6 +1431,10 @@ function GetNonTextStyle(CurrObj, TypeCodeObj) {
 
     if (CurrObj.BackgroundColor != null)
         Style += "background-color:" + CurrObj.BackgroundColor + ";";
+    if (CurrObj.BackgroundImage != null)
+        Style += "background-image:" + GetImageStyleURL(RS, CurrObj.BackgroundImage.ImageName) + ";";
+    if (CurrObj.BackgroundRepeat != null && BackgroundRepeatTypesMap()[CurrObj.BackgroundRepeat] != undefined)
+        Style += "background-repeat:" + BackgroundRepeatTypesMap()[CurrObj.BackgroundRepeat] + ";";
     if (CurrObj.PaddingBottom != null)
         Style += "padding-bottom:" + CurrObj.PaddingBottom + ";";
     if (CurrObj.PaddingLeft != null)

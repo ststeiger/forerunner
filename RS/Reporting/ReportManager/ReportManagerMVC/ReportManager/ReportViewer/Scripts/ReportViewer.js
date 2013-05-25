@@ -688,6 +688,8 @@ function WriteRectangle(RIContext) {
     });
 
     Style = "position:relative;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+    Style += GetFullBorderStyle(RIContext.CurrObj);
+
     if (RIContext.CurrLocation != null) {
         Style += "width:" + RIContext.CurrLocation.Width + "mm;"
         if (RIContext.CurrObj.ReportItems.length == 0)

@@ -66,7 +66,8 @@
         <ZIndex>4</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Style>Solid</Style>
+            <Width>5pt</Width>
           </Border>
           <BackgroundColor>Blue</BackgroundColor>
         </Style>
@@ -103,7 +104,12 @@
       </Textbox>
     </ReportItems>
     <Height>7.98312in</Height>
-    <Style />
+    <Style>
+      <Border>
+        <Color>Lime</Color>
+        <Style>Solid</Style>
+      </Border>
+    </Style>
   </Body>
   <Width>9.405in</Width>
   <Page>

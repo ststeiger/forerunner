@@ -59,7 +59,7 @@ namespace Forerunner
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
             mre.WaitOne();            
-            t.Abort();       
+            //t.Abort();       
             return bmp;
         }
         
@@ -101,6 +101,8 @@ namespace Forerunner
             SetIamge(webBrowser);
             if (fileName != null)
                 File.Delete(fileName);
+            if (mre != null)
+                mre.Set();
         }
 
         private void SetIamge(WebBrowser webBrowser)
@@ -117,8 +119,7 @@ namespace Forerunner
             webBrowser.BringToFront();
             webBrowser.DrawToBitmap(bmp, webBrowser.Bounds);
             webBrowser.Dispose();
-            if (mre != null)
-                mre.Set();
+       
         }
 
     }

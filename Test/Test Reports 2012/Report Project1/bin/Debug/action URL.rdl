@@ -336,17 +336,7 @@
         <ChartSeriesHierarchy>
           <ChartMembers>
             <ChartMember>
-              <Group Name="Sparkline1_SeriesGroup">
-                <GroupExpressions>
-                  <GroupExpression>=Fields!Country.Value</GroupExpression>
-                </GroupExpressions>
-              </Group>
-              <SortExpressions>
-                <SortExpression>
-                  <Value>=Fields!Country.Value</Value>
-                </SortExpression>
-              </SortExpressions>
-              <Label>=Fields!Country.Value</Label>
+              <Label>price</Label>
             </ChartMember>
           </ChartMembers>
         </ChartSeriesHierarchy>
@@ -575,9 +565,9 @@
         <rd:DesignerMode>Sparkline</rd:DesignerMode>
         <DataSetName>DataSet1</DataSetName>
         <Top>4.68625in</Top>
-        <Left>0.37375in</Left>
+        <Left>0.23833in</Left>
         <Height>2.11458in</Height>
-        <Width>6.34375in</Width>
+        <Width>6.47917in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -589,7 +579,7 @@
         </Style>
       </Chart>
     </ReportItems>
-    <Height>10.50917in</Height>
+    <Height>11.13417in</Height>
     <Style />
   </Body>
   <Width>6.89584in</Width>

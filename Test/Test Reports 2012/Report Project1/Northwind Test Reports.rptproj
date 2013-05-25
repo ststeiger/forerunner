@@ -14,12 +14,8 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>bar chart.rdl</Name>
-      <FullPath>bar chart.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>chart.rdl</Name>
-      <FullPath>chart.rdl</FullPath>
+      <Name>bar chart with border and texture.rdl</Name>
+      <FullPath>bar chart with border and texture.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>ColumnChartReport.rdl</Name>
@@ -36,6 +32,10 @@
     <ProjectItem>
       <Name>Go To Report Action Test.rdl</Name>
       <FullPath>Go To Report Action Test.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Header footer indicator report.rdl</Name>
+      <FullPath>Header footer indicator report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image Report 2.rdl</Name>
@@ -62,20 +62,24 @@
       <FullPath>Lines.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>multichart.rdl</Name>
-      <FullPath>multichart.rdl</FullPath>
+      <Name>multi chart with go to report action.rdl</Name>
+      <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter Report 1.rdl</Name>
-      <FullPath>Parameter Report 1.rdl</FullPath>
+      <Name>multichart.rdl</Name>
+      <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Parameter1.rdl</Name>
       <FullPath>Parameter1.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameters.rdl</Name>
-      <FullPath>Parameters.rdl</FullPath>
+      <Name>Parameter2.rdl</Name>
+      <FullPath>Parameter2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameters3.rdl</Name>
+      <FullPath>Parameters3.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
@@ -102,8 +106,8 @@
       <FullPath>Simple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Simple Table with groups and drill down.rdl</Name>
-      <FullPath>Simple Table with groups and drill down.rdl</FullPath>
+      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
+      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Subreport.rdl</Name>

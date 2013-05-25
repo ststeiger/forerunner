@@ -185,14 +185,13 @@ namespace Forerunner.ReportViewer
 
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
-                    if (parametersList == null)
+                    if (parametersList != null)
                     {
-                        ReportParameter[] reportParameter = execInfo.Parameters;
-                        return rw.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
                     else
                     {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                        throw new Exception("Parameter list can not be null");
                     }
                 }
 
@@ -202,6 +201,78 @@ namespace Forerunner.ReportViewer
                     return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
                 else
                     return "";
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
+        public string GetParameterJson(string ReportPath)
+        {
+            string historyID = null;
+            string NewSession;
+            ReportJSONWriter rw = new ReportJSONWriter();
+            ExecutionInfo execInfo = new ExecutionInfo();
+
+            try
+            {
+                execInfo = rs.LoadReport(ReportPath, historyID);
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                {
+                    ReportParameter[] reportParameter = execInfo.Parameters;
+                    return rw.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                }
+                return "{\"Type\":\"\"}";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
+        /// <summary>
+        /// Sort data by special column field and sort direction
+        /// </summary>
+        public string SortReport(string SessionID, string SortItem, string Direction)
+        {
+            try
+            {
+                string ReportItem = string.Empty;
+                int NumPages = 0;
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                SortDirectionEnum SortDirection;
+                switch (Direction)
+                {
+                    case "Ascending":
+                        SortDirection = SortDirectionEnum.Ascending;
+                        break;
+                    case "Descending":
+                        SortDirection = SortDirectionEnum.Descending;
+                        break;
+                    default:
+                        SortDirection = SortDirectionEnum.None;
+                        break;
+                }
+                int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("NewPage");
+                w.WriteNumber(newPage);
+                w.WriteMember("ReportItemID");
+                w.WriteString(ReportItem);
+                w.WriteMember("NumPages");
+                w.WriteNumber(NumPages);
+                w.WriteEndObject();
+                return w.ToString();
 
             }
             catch (Exception e)

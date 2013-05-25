@@ -10,6 +10,7 @@ var g_App = g_App || {};
     reportControllerBase: './api/ReportViewer',
     //reportServerUrl: 'localhost:2008/reportserver_sql2008/',
     reportServerUrl: 'localhost:8080/reportserver/',
+    //reportServerUrl: 'localhost:8080/reportserver_mssql2012/',
   };
 
 }());

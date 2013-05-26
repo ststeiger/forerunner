@@ -658,7 +658,7 @@ function WriteRectangle(RIContext) {
     RecLayout = GetRectangleLayout(Measurements);
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "", Measurements[Index]));
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;" + GetFullBorderStyle(Obj), Measurements[Index]));
                        
         $LocDiv = new $("<Div/>");
         $LocDiv.append($RI);
@@ -676,11 +676,12 @@ function WriteRectangle(RIContext) {
             RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta)
         Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + Measurements[Index].Left + "mm;";
 
-        //Backgroundcolor goes on container        
+        //Background color and border go on container        
         if ((RIContext.CurrObj.ReportItems[Index].Element != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor != null))
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
         else if ((RIContext.CurrObj.ReportItems[Index].Element != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor != null))
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
+        //Style += GetFullBorderStyle(Obj);
 
         $LocDiv.attr("Style", Style);
         $LocDiv.append($RI);
@@ -1122,7 +1123,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var hbordersize = 0;
     var wbordersize = 0;
 
-    // Width and Border go on the Cell so we need to subtract out border width from content width, allign the TD to the Top in case another column grows
+    
     Style = "vertical-align:top;padding:0;margin:0;";
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;

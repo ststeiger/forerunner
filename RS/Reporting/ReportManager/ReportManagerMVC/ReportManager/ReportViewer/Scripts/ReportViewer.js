@@ -1391,6 +1391,9 @@ function GetFullBorderStyle(CurrObj) {
     var Style = "";
     var Obj;
 
+    if (CurrObj.Elements == null)
+        return "";
+
     //Need left, top, right bottom border
     Obj = CurrObj.Elements.SharedElements.Style;
     if (Obj != null) {

@@ -830,6 +830,7 @@ function WriteRichText(RIContext) {
             if (ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] == null) ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
             ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
 
+            var item;
             if (ParentName[Obj.Paragraph.SharedElements.ListLevel - 1] == null)
                 item = "Root";
             else

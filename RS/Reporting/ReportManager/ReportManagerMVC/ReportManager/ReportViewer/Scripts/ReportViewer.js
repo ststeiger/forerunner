@@ -247,9 +247,9 @@ function touchNav(RS) {
     $(document).swipe({
         fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
             if (dir == 'left') {
-                NavToPage(RS, RS.CurPage + 1);
+                NavToPage(RS, (RS.CurPage + 1));
             } else {
-                NavToPage(RS, RS.CurPage - 1);
+                NavToPage(RS, (RS.CurPage - 1));
             }
         },
         tap: function (event, target) {
@@ -656,7 +656,7 @@ function WriteRectangle(RIContext) {
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
          
-        Style = "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;" 
+        Style = "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
         if (Obj.Type != "Line")
             Style += GetFullBorderStyle(Obj);;
 
@@ -776,7 +776,8 @@ function WriteRichText(RIContext) {
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-    Style += "display:table;min-height:" + RIContext.CurrLocation.Height +"mm;height:"+ RIContext.CurrLocation.Height +"mm;";
+    Style += "display:table;min-height:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Height + "mm;max-height:" + RIContext.CurrLocation.Height + "mm;";
+    Style += "min-width:" + RIContext.CurrLocation.Width + "mm;width:" + RIContext.CurrLocation.Width + "mm;max-width:" + RIContext.CurrLocation.Width + "mm;";
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent == true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent == true) {

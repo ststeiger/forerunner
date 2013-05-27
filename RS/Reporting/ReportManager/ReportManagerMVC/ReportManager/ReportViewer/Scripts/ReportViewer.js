@@ -773,17 +773,44 @@ function WriteRichText(RIContext) {
     var $TextObj = $("<div/>");
     var $Sort = null;
 
-    //if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null) {
-    //    $TextObj = new $("<A />");
-    //    for (i = 0; i < RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Count; i++) {
-    //        WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $TextObj);
-    //    }
-    //}
-
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
     RIContext.$HTMLParent.attr("Style", Style);
 
+    if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent == true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent == true) {
+        $TextObj.addClass("Collapse");
+
+        $Drilldown = $("<div/>");
+        $Drilldown.html("&nbsp");
+        $Drilldown.addClass("Drilldown-Collapse");
+        
+        $Drilldown.on("click", function () {
+            if ($TextObj.hasClass("Collapse")) {
+                $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
+                    var firstchild = obj.firstChild.firstChild.firstChild;
+                    if (!$(firstchild).hasClass("Drilldown-Collapse")) {
+                        $(obj).attr("parent", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                        $(obj).fadeOut(0);
+                    }
+                    else
+                        return false;
+                });
+                $TextObj.removeClass("Collapse").addClass("Expand");
+                $Drilldown.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
+            }
+            else {
+                $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
+                    if ($(obj).attr("parent") != null && $(obj).attr("parent") == RIContext.CurrObj.Elements.NonSharedElements.UniqueName) {
+                        $(obj).removeAttr("parent");
+                        $(obj).fadeIn(0);
+                    }
+                });
+                $TextObj.removeClass("Expand").addClass("Collapse");
+                $Drilldown.removeClass("Drilldown-Expand").addClass("Drilldown-Collapse");
+            }
+        });
+        RIContext.$HTMLParent.append($Drilldown);
+    }
     if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {
         $Sort = $("<div/>");
         $Sort.html("&nbsp");
@@ -830,6 +857,7 @@ function WriteRichText(RIContext) {
             if (ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] == null) ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
             ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
 
+            var item;
             if (ParentName[Obj.Paragraph.SharedElements.ListLevel - 1] == null)
                 item = "Root";
             else
@@ -863,7 +891,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
             }
             else {
                 if ($ParagraphList == null) $ParagraphList = new $("<DIV />");
-                $ParagraphItem = new $("<SPAN />");
+                $ParagraphItem = new $("<DIV />");
             }
 
             var ParagraphStyle = "";

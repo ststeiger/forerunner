@@ -298,3 +298,23 @@ td input[type="submit"], td input[type="button"], td button
     border-width: thin;
     border-color: red;
 }
+.Drilldown-Collapse {    
+    background-image:url('../reportviewer/Images/Drilldown_Collapse.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
+}
+.Drilldown-Expand {    
+    background-image:url('../reportviewer/Images/Drilldown_Expand.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
+}

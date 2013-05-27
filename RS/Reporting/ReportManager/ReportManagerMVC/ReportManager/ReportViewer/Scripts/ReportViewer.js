@@ -180,7 +180,6 @@ function AddLoadingIndicator(RS) {
 function RemoveLoadingIndicator(RS) {
     RS.$LoadingIndicator.detach();
 }
-
 jQuery.fn.extend({
     slideRightShow: function (delay) {
         return this.each(function () {
@@ -203,7 +202,6 @@ jQuery.fn.extend({
         });
     }
 });
-
 function SetPage(RS, NewPageNum, OldPage) {
     //  Load a new page into the screen and udpate the toolbar
 
@@ -227,9 +225,11 @@ function SetPage(RS, NewPageNum, OldPage) {
     
         RS.Pages[NewPageNum].$Container.hide();
         if (RS.CurPage != null && RS.CurPage > NewPageNum) {
-            RS.Pages[NewPageNum].$Container.slideLeftShow(1500);
+            //RS.Pages[NewPageNum].$Container.slideLeftShow(1500);
+            RS.Pages[NewPageNum].$Container.fadeIn();
         } else {
-            RS.Pages[NewPageNum].$Container.slideRightShow(1500);
+            RS.Pages[NewPageNum].$Container.fadeIn();
+            //RS.Pages[NewPageNum].$Container.slideRightShow(1500);
         }
     }
 
@@ -238,12 +238,10 @@ function SetPage(RS, NewPageNum, OldPage) {
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
     RS.Lock = 0;
 }
-
 function is_touch_device() {
     return !!('ontouchstart' in window) // works on most browsers 
         || !!('onmsgesturechange' in window); // works on ie10
 };
-
 function touchNav(RS) {
     // Touch Events
     $(document).swipe({
@@ -259,7 +257,6 @@ function touchNav(RS) {
         }
     });
 }
-
 function RefreshReport(RS) {
     // Remove all cached data on the report and re-run
     Page = RS.Pages[RS.CurPage];
@@ -548,11 +545,11 @@ function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, Pag
     RS.$ReportContainer.append($Table);
     AddLoadingIndicator(RS);
     RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    TryLoadParameterPage(RS, PageNum);
+    LoadParameters(RS, PageNum);
     
 }
 
-function TryLoadParameterPage(RS, PageNum) {
+function LoadParameters(RS, PageNum) {
     $.getJSON(RS.ReportViewerAPI + "/GetParameterJSON/", {
         ReportServerURL: RS.ReportServerURL,
         ReportPath: RS.ReportPath
@@ -658,7 +655,12 @@ function WriteRectangle(RIContext) {
     RecLayout = GetRectangleLayout(Measurements);
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;" + GetFullBorderStyle(Obj), Measurements[Index]));
+         
+        Style = "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;" 
+        if (Obj.Type != "Line")
+            Style += GetFullBorderStyle(Obj);;
+
+        $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
                        
         $LocDiv = new $("<Div/>");
         $LocDiv.append($RI);

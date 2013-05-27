@@ -146,8 +146,9 @@ They'll be watching for safety issues that could affect other bridges.
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
-            <Style>None</Style>
+            <Style>Solid</Style>
           </Border>
+          <VerticalAlign>Middle</VerticalAlign>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -164,6 +165,7 @@ They'll be watching for safety issues that could affect other bridges.
     <RightMargin>1in</RightMargin>
     <TopMargin>1in</TopMargin>
     <BottomMargin>1in</BottomMargin>
+    <Columns>3</Columns>
     <Style />
   </Page>
   <AutoRefresh>0</AutoRefresh>

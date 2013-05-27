@@ -681,8 +681,7 @@ function WriteRectangle(RIContext) {
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
         else if ((RIContext.CurrObj.ReportItems[Index].Element != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style != null) && (RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor != null))
             Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
-        //Style += GetFullBorderStyle(Obj);
-
+        
         $LocDiv.attr("Style", Style);
         $LocDiv.append($RI);
         RIContext.$HTMLParent.append($LocDiv);
@@ -775,6 +774,7 @@ function WriteRichText(RIContext) {
 
     Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
     Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+    Style += "display:table;min-height:" + RIContext.CurrLocation.Height +"mm;height:"+ RIContext.CurrLocation.Height +"mm;";
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent == true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent == true) {
@@ -827,12 +827,11 @@ function WriteRichText(RIContext) {
             $Sort.attr("class", "sort-unsorted");
 
         $Sort.on("click", { id: RIContext.RS.UID, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { Sort(Reports[e.data.id], e.data.Direction, e.data.SortID); });
-        $Sort.on("mouseover", function (event) { SetActionCursor(this); });
         RIContext.$HTMLParent.append($Sort);
     }
 
 
-    Style = "display:inline;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+    Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
     Style += GetElementsTextStyle(RIContext.CurrObj.Elements);
     $TextObj.attr("Style", Style);
 
@@ -1179,7 +1178,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
         Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
     $Cell.attr("Style", Style);
-    $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;", new TempMeasurement(height, width))));
+    $Cell.append(WriteReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;width:100%;height:100%;", new TempMeasurement(height, width))));
     return $Cell;
 }
 function WriteTablix(RIContext) {

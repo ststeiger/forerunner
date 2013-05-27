@@ -31,6 +31,7 @@
     padding-top:2px;
     padding-bottom:2px;
     background-position: center;
+    cursor:pointer;
 }
 
 .sort-descending {
@@ -42,6 +43,7 @@
     padding-top:2px;
     padding-bottom:2px;
     background-position: center;
+    cursor:pointer;
 }
 .sort-ascending {
     background-image:url(../reportviewer/Images/SortAccending.gif);
@@ -52,6 +54,7 @@
     padding-top:2px;
     padding-bottom:2px;
     background-position: center;
+    cursor:pointer;
 }
 
 
@@ -307,6 +310,7 @@ td input[type="submit"], td input[type="button"], td button
     padding-top:2px;
     padding-bottom:2px;
     background-position: center;
+    cursor:pointer;
 }
 .Drilldown-Expand {    
     background-image:url('../reportviewer/Images/Drilldown_Expand.gif');
@@ -317,4 +321,5 @@ td input[type="submit"], td input[type="button"], td button
     padding-top:2px;
     padding-bottom:2px;
     background-position: center;
+    cursor:pointer;
 }

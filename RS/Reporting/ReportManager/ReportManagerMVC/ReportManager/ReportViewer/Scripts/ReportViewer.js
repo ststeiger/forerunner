@@ -864,8 +864,10 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
             }
             else {
                 if ($ParagraphList == null) $ParagraphList = new $("<DIV />");
-                $ParagraphItem = new $("<SPAN />");
+                $ParagraphItem = new $("<DIV />");
             }
+
+            if ($ParagraphList != null) $ParagraphList.css("padding:auto");
 
             var ParagraphStyle = "";
             ParagraphStyle += GetMeasurements(GetMeasurmentsObj(Obj, Index));

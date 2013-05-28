@@ -282,6 +282,36 @@ namespace Forerunner.ReportViewer
             }
         }
 
+        //Toggles the show/hide item in a report.
+        public string ToggleItem(string SessionID, string ToggleID)
+        {
+            try
+            {
+                string ReportItem = string.Empty;
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+
+                bool result = rs.ToggleItem(ToggleID);
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Result");
+                w.WriteBoolean(result);
+                w.WriteMember("ToggleID");
+                w.WriteString(ToggleID);
+                w.WriteEndObject();
+                return w.ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
         private string getImageHandeler(string src)
         {
             byte[] img = null;

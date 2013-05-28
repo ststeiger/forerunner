@@ -490,6 +490,20 @@ function Sort(RS,Direction,ID) {
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
+function ToggleItem(RS, ToggleID) {
+    $.getJSON(RS.ReportViewerAPI + "/ToggleItem/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        ToggleID: ToggleID
+    }).done(function (Data) {
+        var pc = RS.Pages[RS.CurPage].$Container
+        RS.NumPages = Data.NumPages;
+        RS.Pages = new Object();
+        LoadPage(RS, RS.CurPage, null, false);
+        pc.detach();
+    })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
 
 //Page Loading
 function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
@@ -786,31 +800,36 @@ function WriteRichText(RIContext) {
         $Drilldown.html("&nbsp");
         $Drilldown.addClass("Drilldown-Collapse");
         
-        $Drilldown.on("click", function () {
-            if ($TextObj.hasClass("Collapse")) {
-                $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
-                    var firstchild = obj.firstChild.firstChild.firstChild;
-                    if (!$(firstchild).hasClass("Drilldown-Collapse")) {
-                        $(obj).attr("parent", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-                        $(obj).fadeOut(0);
-                    }
-                    else
-                        return false;
-                });
-                $TextObj.removeClass("Collapse").addClass("Expand");
-                $Drilldown.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
-            }
-            else {
-                $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
-                    if ($(obj).attr("parent") != null && $(obj).attr("parent") == RIContext.CurrObj.Elements.NonSharedElements.UniqueName) {
-                        $(obj).removeAttr("parent");
-                        $(obj).fadeIn(0);
-                    }
-                });
-                $TextObj.removeClass("Expand").addClass("Collapse");
-                $Drilldown.removeClass("Drilldown-Expand").addClass("Drilldown-Collapse");
-            }
+        $Drilldown.on("click", { id: RIContext.RS.UID, ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName}, function (e) {
+        //$Drilldown.on("click", { id: RIContext.RS.UID, ToggleID: RIContext.CurrObj.Elements.SharedElements.ID }, function (e) {
+
+            ToggleItem(Reports[e.data.id], e.data.ToggleID);
+
+            //if ($TextObj.hasClass("Collapse")) {
+            //    $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
+            //        var firstchild = obj.firstChild.firstChild.firstChild;
+            //        if (!$(firstchild).hasClass("Drilldown-Collapse")) {
+            //            $(obj).attr("parent", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+            //            $(obj).fadeOut(0);
+            //        }
+            //        else
+            //            return false;
+            //    });
+            //    $TextObj.removeClass("Collapse").addClass("Expand");
+            //    $Drilldown.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
+            //}
+            //else {
+            //    $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
+            //        if ($(obj).attr("parent") != null && $(obj).attr("parent") == RIContext.CurrObj.Elements.NonSharedElements.UniqueName) {
+            //            $(obj).removeAttr("parent");
+            //            $(obj).fadeIn(0);
+            //        }
+            //    });
+            //    $TextObj.removeClass("Expand").addClass("Collapse");
+            //    $Drilldown.removeClass("Drilldown-Expand").addClass("Drilldown-Collapse");
+            //}
         });
+        $Drilldown.on("mouseover", function (event) { SetActionCursor(this); });
         RIContext.$HTMLParent.append($Drilldown);
     }
     if (RIContext.CurrObj.Elements.SharedElements.CanSort != null) {

@@ -246,11 +246,10 @@ function touchNav(RS) {
     // Touch Events
     $(document).swipe({
         fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
-            if (dir == 'left') {
+            if (dir == 'left' || dir == 'up' ) 
                 NavToPage(RS, (RS.CurPage + 1));
-            } else {
-                NavToPage(RS, (RS.CurPage - 1));
-            }
+            else 
+                NavToPage(RS, (RS.CurPage - 1));            
         },
         tap: function (event, target) {
             $(target).trigger('click');

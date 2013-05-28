@@ -496,3 +496,6 @@ function ResetValidateMessage() {
         min: $.validator.format("Please enter a value greater than or equal to {0}.")
     });
 }
+function RemoveParameter() {
+    $("#ParameterContainer").detach();
+}

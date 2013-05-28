@@ -2060,7 +2060,7 @@ namespace Forerunner
             if (Len > 128)
             {
                 retval = Len - 128;
-                retval += GetLength(Depth + 1) * Depth + 1 * 128;
+                retval += GetLength(Depth + 1) * (Depth + 1) * 128;
             }
             else
                 retval = Len;

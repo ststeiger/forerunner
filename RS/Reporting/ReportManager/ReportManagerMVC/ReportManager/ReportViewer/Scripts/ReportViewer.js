@@ -461,14 +461,19 @@ function Back(RS) {
         RS.ReportPath = action.ReportPath;
         RS.SessionID = action.SessionID;
 
-        RS.Pages[RS.CurPage].$Container.detach();
-        RS.Pages[RS.CurPage].$Container = null;
+        if (RS.ParamLoaded == true) {
+            RemoveParameter();
+            RS.paramloaded = false;
+        }
+        else {
+            RS.Pages[RS.CurPage].$Container.detach();
+            RS.Pages[RS.CurPage].$Container = null;
+        }
         RS.Pages[RS.CurPage].$Container = action.Container;
         RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
     }
 }
 function Sort(RS,Direction,ID) {
-
     //Go the other dirction from current
     var newDir;
     if (Direction == "Ascending")
@@ -1022,7 +1027,7 @@ function WriteImage(RIContext) {
 
     NewImage.src = GetImageURL(RIContext.RS, ImageName);
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
-        NewImage.useMap = "#Map_" + RIContext.RS.SessionID;
+        NewImage.useMap = "#Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
     }
     NewImage.onload = function () {
         WriteActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
@@ -1030,7 +1035,13 @@ function WriteImage(RIContext) {
 
     };
     NewImage.alt = "Cannot display image";
-    $(NewImage).attr("style", "display:block;");    
+    $(NewImage).attr("style", "display:block;");
+
+    if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
+        for (i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
+            WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], NewImage);
+        }
+    
     WriteBookMark(RIContext);
   
     RIContext.$HTMLParent.attr("style", Style);
@@ -1048,7 +1059,6 @@ function WriteAction(RIContext, Action, Control) {
         $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
     }
     else {
-        //$(Control).on("mouseover", function (event) { SetActionCursor(this); });
         $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
         $(Control).on("click", function () {
             BackupCurPage(RIContext.RS);
@@ -1060,7 +1070,8 @@ function WriteAction(RIContext, Action, Control) {
             RIContext.RS.Pages[RIContext.RS.CurPage].IsRendered = false;
             RIContext.RS.SessionID = null;
             AddLoadingIndicator(RIContext.RS);
-            LoadPage(RIContext.RS, RIContext.RS.CurPage, null, false);
+            LoadParameters(RIContext.RS, 1);
+            //LoadPage(RIContext.RS, RIContext.RS.CurPage, null, false);
         });
     }
 }
@@ -1068,8 +1079,8 @@ function WriteActionImageMapAreas(RIContext, width, height) {
     var ActionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
     if (ActionImageMapAreas != undefined) {
         var $Map = $("<MAP/>");
-        $Map.attr("name", "Map_" + RIContext.RS.SessionID);
-        $Map.attr("id", "Map_" + RIContext.RS.SessionID);
+        $Map.attr("name", "Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+        $Map.attr("id", "Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
         for (i = 0; i < ActionImageMapAreas.Count; i++) {
             var element = ActionImageMapAreas.ActionInfoWithMaps[i];
@@ -1327,6 +1338,13 @@ function WriteLine(RIContext) {
         $line.attr("Style", lineStyle);
         RIContext.$HTMLParent.append($line);
     }
+
+    if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
+        for (i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
+            WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], NewImage);
+        }
+
+    WriteBookMark(RIContext);
 
     RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
      return RIContext.$HTMLParent;

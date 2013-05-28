@@ -287,13 +287,13 @@ namespace Forerunner.ReportViewer
         {
             try
             {
-                string ReportItem = string.Empty;
+                bool result;
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
 
-                bool result = rs.ToggleItem(ToggleID);
+                result = rs.ToggleItem(ToggleID);
 
                 JsonWriter w = new JsonTextWriter();
                 w.WriteStartObject();
@@ -317,7 +317,6 @@ namespace Forerunner.ReportViewer
         {
             try
             {
-                string ReportItem = string.Empty;
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 

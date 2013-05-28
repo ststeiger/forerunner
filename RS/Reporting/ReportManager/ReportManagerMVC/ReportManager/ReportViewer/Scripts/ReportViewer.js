@@ -502,12 +502,10 @@ function ToggleItem(RS, ToggleID) {
         SessionID: RS.SessionID,
         ToggleID: ToggleID
     }).done(function (Data) {
-        var pc = RS.Pages[RS.CurPage].$Container
-        RS.NumPages = Data.NumPages;
-        RS.Pages = new Object();
-        pc.detach();
-        AddLoadingIndicator(RS);
-        LoadPage(RS, Data.CurPage, null, false);
+        var pc = RS.Pages[RS.CurPage];
+        pc.$Container.detach();
+        RS.Pages[RS.CurPage] = null;        
+        LoadPage(RS, RS.CurPage, null, false);
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
@@ -819,10 +817,11 @@ function WriteRichText(RIContext) {
     var $TextObj = $("<div/>");
     var $Sort = null;
 
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    Style += "display:table;";
+    if (GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) != "") 
+        Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex),true);
     Style += GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-    Style += "display:table;min-height:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Height + "mm;max-height:" + RIContext.CurrLocation.Height + "mm;";
-    Style += "min-width:" + RIContext.CurrLocation.Width + "mm;width:" + RIContext.CurrLocation.Width + "mm;max-width:" + RIContext.CurrLocation.Width + "mm;";
+    
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent == true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent == true) {

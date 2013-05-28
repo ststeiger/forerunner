@@ -671,7 +671,7 @@ function WriteRectangle(RIContext) {
          
         Style = "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
         if (Obj.Type != "Line")
-            Style += GetFullBorderStyle(Obj);;
+            Style += GetFullBorderStyle(Obj);
 
         $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
                        
@@ -981,20 +981,17 @@ function GetImageURL(RS, ImageName) {
 function WriteImage(RIContext) {
     var NewImage = new Image();
 
-    var Style = "display:block;max-height=100%;max-width:100%;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+    var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + GetElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+    Style += GetMeasurements(GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex),true);
+    Style += "overflow:hidden;"
 
     var ImageName;
-    if (RIContext.CurrObj.Type == "Image") {
+    var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+
+    if (RIContext.CurrObj.Type == "Image") 
         ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-        var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
-        if (sizingType == 3) {
-            RIContext.$HTMLParent.addClass("overflow-hidden");
-        }
-    }
-    else {
+    else 
         ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
-    }
 
     NewImage.src = GetImageURL(RIContext.RS, ImageName);
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
@@ -1005,11 +1002,11 @@ function WriteImage(RIContext) {
         ResizeImage(this, sizingType, this.naturalHeight, this.naturalWidth, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
 
     };
-    $(NewImage).attr("style", Style);
     NewImage.alt = "Cannot display image";
+    $(NewImage).attr("style", "display:block;");    
     WriteBookMark(RIContext);
   
-
+    RIContext.$HTMLParent.attr("style", Style);
     RIContext.$HTMLParent.append(NewImage);
     return RIContext.$HTMLParent;
 }
@@ -1177,7 +1174,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var wbordersize = 0;
 
     
-    Style = "vertical-align:top;padding:0;margin:0;";
+    Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;
 
@@ -1293,13 +1290,13 @@ function WriteLine(RIContext) {
         var $line = $("<Div/>");
         var newWidth = Math.sqrt(Math.pow(measurement.Height, 2) + Math.pow(measurement.Width, 2));
         var rotate = Math.atan(measurement.Height / measurement.Width);
-        var newTop = newWidth / 2 + Math.sin(rotate);
-        var newLeft = newWidth / 2 - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
+        var newTop = (newWidth / 2) * Math.sin(rotate);
+        var newLeft = (newWidth / 2) - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
         if (RIContext.CurrObj.Elements.SharedElements.Slant == null || RIContext.CurrObj.Elements.SharedElements.Slant == 0)
             rotate = rotate;
         else
             rotate = rotate - (2 * rotate);
-        var lineStyle = "position:absolute;top:" + newTop + ";left:" + newLeft + ";";
+        var lineStyle = "position:absolute;top:" + newTop + "mm;left:" + newLeft + "mm;";
         lineStyle += GetFullBorderStyle(RIContext.CurrObj);
         lineStyle += "width:" + newWidth + "mm;height:0;"
         lineStyle += "-moz-transform: rotate(" + rotate + "rad);"
@@ -1446,7 +1443,7 @@ function GetFullBorderStyle(CurrObj) {
     }
     return Style;
 }
-function GetMeasurements(CurrObj) {
+function GetMeasurements(CurrObj,includeHeight) {
     var Style = "";
     //TODO:  zIndex
 
@@ -1458,6 +1455,12 @@ function GetMeasurements(CurrObj) {
         Style += "width:" + CurrObj.Width + "mm;";
         Style += "min-width:" + CurrObj.Width + "mm;";
         Style += "max-width:" + (CurrObj.Width) + "mm;";
+    }
+
+    if (includeHeight && CurrObj.Height != null ){
+        Style += "height:" + CurrObj.Height + "mm;";
+        Style += "min-height:" + CurrObj.Height + "mm;";
+        Style += "max-height:" + (CurrObj.Height) + "mm;";
     }
 
     return Style;
@@ -1649,10 +1652,21 @@ function GetTextAlign(RPLCode, TypeCodeObj) {
             if (TypeCodeObj.TypeCode == null)
                 return "Left";
             switch (TypeCodeObj.TypeCode) {
-                case 3, 6, 7, 9, 11, 12, 13, 14, 15:
+                case 3:
+                case 6:
+                case 7: 
+                case 9: 
+                case 11: 
+                case 12:
+                case 13:
+                case 14: 
+                case 15:
+                case 16:              
                     return "Right";
                     break;
-                case 4, 17:
+                case 4:
+                case 17:
+                case 18:
                     return "Left";
                     break;
                 default:

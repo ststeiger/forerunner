@@ -10,16 +10,25 @@
   </DataSources>
   <DataSets>
     <DataSet Name="Orders">
-      <SharedDataSet>
-        <SharedDataSetReference>OrderStatsByCustomer</SharedDataSetReference>
-      </SharedDataSet>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        Orders.CustomerID, Customers.CompanyName, COUNT(Orders.OrderID) AS Orders, MIN(Orders.OrderDate) AS FirstOrder, MAX(Orders.OrderDate) 
+                         AS LastOrder, Orders.ShipCountry, SUM(Orders.Freight) AS Freigh, SUM([Order Subtotals].Subtotal) AS Subtotal, 
+                         SUM(Orders.Freight + [Order Subtotals].Subtotal) AS Total, MIN(Orders.Freight + [Order Subtotals].Subtotal) AS MinOrder, 
+                         MAX(Orders.Freight + [Order Subtotals].Subtotal) AS MaxOrder
+FROM            Orders INNER JOIN
+                         [Order Subtotals] ON Orders.OrderID = [Order Subtotals].OrderID INNER JOIN
+                         Customers ON Orders.CustomerID = Customers.CustomerID
+GROUP BY Orders.CustomerID, Customers.CompanyName, Orders.ShipCountry
+ORDER BY Total DESC, Orders.CustomerID</CommandText>
+      </Query>
       <Fields>
-        <Field Name="CompanyName">
-          <DataField>CompanyName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="CustomerID">
           <DataField>CustomerID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CompanyName">
+          <DataField>CompanyName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Orders">
@@ -30,24 +39,24 @@
           <DataField>FirstOrder</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="ShipCountry">
-          <DataField>ShipCountry</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="LastOrder">
           <DataField>LastOrder</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="ShipCountry">
+          <DataField>ShipCountry</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="Freigh">
           <DataField>Freigh</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="Total">
-          <DataField>Total</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
         <Field Name="Subtotal">
           <DataField>Subtotal</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="Total">
+          <DataField>Total</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
         <Field Name="MinOrder">

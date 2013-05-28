@@ -897,20 +897,25 @@ function WriteRichText(RIContext) {
 }
 function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentContainer) {
     var $ParagraphList = null;
+    
     $.each(Paragraphs[Index], function (SubIndex, Obj) {
         if (Obj.Parent == ParentName) {
             var $ParagraphItem;
             Obj = Obj.Value;
             if (Obj.Paragraph.SharedElements.ListStyle == 1) {
-                if ($ParagraphList == null) $ParagraphList = new $("<OL />");
+                if ($ParagraphList == null || !$ParagraphList.is("ol")) $ParagraphList = new $("<OL />");
+                $ParagraphList.addClass(GetListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
+
                 $ParagraphItem = new $("<LI />");
             }
             else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
-                if ($ParagraphList == null) $ParagraphList = new $("<UL />");
+                if ($ParagraphList == null || !$ParagraphList.is("ul")) $ParagraphList = new $("<UL />");
+                $ParagraphList.addClass(GetListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
+
                 $ParagraphItem = new $("<LI />");
             }
             else {
-                if ($ParagraphList == null) $ParagraphList = new $("<DIV />");
+                if ($ParagraphList == null || !$ParagraphList.is("div")) $ParagraphList = new $("<DIV />");
                 $ParagraphItem = new $("<DIV />");
             }
 
@@ -1789,6 +1794,38 @@ function ConvertToMM(ConvertFrom) {
 
     //This is an error
     return value;
+}
+function GetListStyle(Style, Level) {
+    var ListStyle;
+    //Numbered
+    if (Style == 1) {
+        switch (Level % 3) {
+            case 1:
+                ListStyle = "decimal";
+                break;
+            case 2:
+                ListStyle = "lower-roman";
+                break;
+            case 0:
+                ListStyle = "lower-latin";
+                break;
+        }
+    }
+    //Bulleted
+    else if (Style == 2) {
+        switch (Level % 3) {
+            case 0:
+                ListStyle = "square";
+                break;
+            case 1:
+                ListStyle = "disc";
+                break;
+            case 2:
+                ListStyle = "circle";
+                break;
+        }
+    }
+    return ListStyle;
 }
 
 

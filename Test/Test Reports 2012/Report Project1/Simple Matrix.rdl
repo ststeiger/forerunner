@@ -360,7 +360,7 @@ FROM            Orders INNER JOIN
                     </SortExpression>
                   </SortExpressions>
                   <TablixHeader>
-                    <Size>1in</Size>
+                    <Size>1.20833in</Size>
                     <CellContents>
                       <Textbox Name="CategoryName1">
                         <CanGrow>true</CanGrow>
@@ -408,7 +408,7 @@ FROM            Orders INNER JOIN
                         </SortExpression>
                       </SortExpressions>
                       <TablixHeader>
-                        <Size>1in</Size>
+                        <Size>1.29167in</Size>
                         <CellContents>
                           <Textbox Name="ProductName">
                             <CanGrow>true</CanGrow>
@@ -458,7 +458,7 @@ FROM            Orders INNER JOIN
             <Top>0.50931in</Top>
             <Left>0.19792in</Left>
             <Height>0.71in</Height>
-            <Width>3in</Width>
+            <Width>3.5in</Width>
             <Style />
           </Tablix>
           <Textbox Name="textbox1">

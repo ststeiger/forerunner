@@ -134,8 +134,12 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Column Report.rdl</Name>
-      <FullPath>Column Report.rdl</FullPath>
+      <Name>Long Text  Report.rdl</Name>
+      <FullPath>Long Text  Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>newspaper multi column.rdl</Name>
+      <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

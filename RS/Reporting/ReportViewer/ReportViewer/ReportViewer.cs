@@ -312,6 +312,36 @@ namespace Forerunner.ReportViewer
             }
         }
 
+        //Navigates to a specific bookmark in the report.
+        public string NavBookmark(string SessionID, string BookmarkID)
+        {
+            try
+            {
+                string ReportItem = string.Empty;
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                string UniqueName = string.Empty;
+                int NewPage = rs.NavigateBookmark(BookmarkID, out UniqueName);
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("NewPage");
+                w.WriteNumber(NewPage);
+                w.WriteMember("UniqueName");
+                w.WriteString(UniqueName);
+                w.WriteEndObject();
+                return w.ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
         private string getImageHandeler(string src)
         {
             byte[] img = null;

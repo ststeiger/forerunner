@@ -485,8 +485,9 @@ function Sort(RS,Direction,ID) {
         var pc = RS.Pages[RS.CurPage].$Container
         RS.NumPages = Data.NumPages;
         RS.Pages = new Object();
-        LoadPage(RS, (Data.NewPage), null, false);
         pc.detach();
+        AddLoadingIndicator(RS);
+        LoadPage(RS, (Data.NewPage), null, false);
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
@@ -499,10 +500,36 @@ function ToggleItem(RS, ToggleID) {
         var pc = RS.Pages[RS.CurPage].$Container
         RS.NumPages = Data.NumPages;
         RS.Pages = new Object();
-        LoadPage(RS, RS.CurPage, null, false);
         pc.detach();
+        AddLoadingIndicator(RS);
+        LoadPage(RS, Data.CurPage, null, false);
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
+function NavigateBookmark(RS, BookmarkID) {
+    $.getJSON(RS.ReportViewerAPI + "/NavigateBookmark/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        BookmarkID: BookmarkID
+    }).done(function (Data) {
+        if (Data.NewPage == RS.CurPage) {
+            $(document).scrollTop($("#" + BookmarkID).offset().top - 80);
+        } else {
+            BackupCurPage(RS);
+
+            var pc = RS.Pages[RS.CurPage].$Container
+            RS.NumPages = Data.NumPages;
+            RS.Pages = new Object();
+            pc.detach();
+            AddLoadingIndicator(RS);
+            LoadPage(RS, Data.NewPage, null, false);
+        }
+    })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
+function BackupCurPage(RS) {
+    //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
+    ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
 }
 
 //Page Loading
@@ -1010,26 +1037,21 @@ function WriteImage(RIContext) {
     RIContext.$HTMLParent.append(NewImage);
     return RIContext.$HTMLParent;
 }
-function WriteAction(RIContext, Action, Control) {    
+function WriteAction(RIContext, Action, Control) {
     if (Action.HyperLink != undefined) {
         Control.attr("href", Action.HyperLink);
     }
     else if (Action.BookmarkLink != undefined) {
-        Control.attr("href", "#" + Action.BookmarkLink);
-        Control.on("click", function (e) {
-            e.preventDefault();
-            if ($("#" + Action.BookmarkLink).attr("name") == null) {
-                alert('not found in current page');
-            }
-            else $(document).scrollTop($("#" + Action.BookmarkLink).offset().top - 80);
+        Control.on("click", { ID: RIContext.RS.UID, BookmarkID: Action.BookmarkLink }, function (e) {
+            NavigateBookmark(Reports[e.data.ID], e.data.BookmarkID);
         });
+        $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
     }
     else {
         //$(Control).on("mouseover", function (event) { SetActionCursor(this); });
         $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
         $(Control).on("click", function () {
-            //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
-            ActionHistory.push({ ReportPath: RIContext.RS.ReportPath, SessionID: RIContext.RS.SessionID, Container: $.extend(true, {}, RIContext.RS.Pages[RIContext.RS.CurPage].$Container) });
+            BackupCurPage(RIContext.RS);
 
             var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
             RIContext.RS.ReportPath = reportPath;

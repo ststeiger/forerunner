@@ -132,6 +132,23 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage NavigateBookmark(string ReportServerURL, string SessionID, string BookmarkID)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, BookmarkID));
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;
+        }
+
+        [HttpGet]
         public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));

@@ -112,7 +112,8 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.externalToolbarHeight;
     this.CreateNav = false;
     this.ParamLoaded = false;
-    this.ToggleID = null;
+    this.ScrollTop = 0;
+    this.ScrollLeft = 0;
 }
 // The Floating header object holds pointers to the tablix and its row and col header objects
 function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
@@ -277,6 +278,7 @@ jQuery.fn.extend({
 function SetPage(RS, NewPageNum, OldPage) {
     //  Load a new page into the screen and udpate the toolbar
 
+ 
     if (!RS.Pages[NewPageNum].IsRendered)
         RenderPage(RS, NewPageNum);
     if (RS.$ReportAreaContainer == null) {
@@ -284,31 +286,33 @@ function SetPage(RS, NewPageNum, OldPage) {
         RS.$ReportAreaContainer.attr("ID", "ReportArea");
         RS.$PageContainer.append(RS.$ReportAreaContainer);
         RS.$ReportAreaContainer.append(RS.Pages[NewPageNum].$Container);
-        if (is_touch_device()) {
+        if (is_touch_device())
             touchNav(RS);
-        }
         RS.Pages[NewPageNum].$Container.fadeIn();
-    } else {
-        if (OldPage != null) {
-            OldPage.$Container.detach();
-        }
+    }
+    else {
+        //if (OldPage != null)
+        //    OldPage.$Container.detach();
 
+        RS.$ReportAreaContainer.find("#Page").detach();
         RS.$ReportAreaContainer.append(RS.Pages[NewPageNum].$Container);
-    
-        RS.Pages[NewPageNum].$Container.hide();
+        
+        //RS.Pages[NewPageNum].$Container.hide();
         if (RS.CurPage != null && RS.CurPage > NewPageNum) {
             //RS.Pages[NewPageNum].$Container.slideLeftShow(1500);
-            RS.Pages[NewPageNum].$Container.fadeIn();
+            RS.Pages[NewPageNum].$Container.show();
         } else {
-            RS.Pages[NewPageNum].$Container.fadeIn();
+            RS.Pages[NewPageNum].$Container.show();
             //RS.Pages[NewPageNum].$Container.slideRightShow(1500);
         }
+        RS.Pages[NewPageNum] = null;
     }
-    if (RS.ToggleID != null)
-        NavToLink(RS.ToggleID);
-    
+   
     RS.CurPage = NewPageNum;
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
+    
+    $(window).scrollLeft(RS.ScrollLeft);
+    $(window).scrollTop(RS.ScrollTop);
     RS.Lock = 0;
 }
 function is_touch_device() {
@@ -418,6 +422,9 @@ function GetToolbar(UID) {
 function NavToPage(RS, NewPageNum) {    
     if (NewPageNum == RS.CurPage || RS.Lock == 1)
         return;
+
+    RS.ScrollLeft = 0;
+    RS.ScrollTop = 0;
 
     if (NewPageNum > RS.NumPages) {
         NewPageNum = 1;
@@ -538,17 +545,21 @@ function Back(RS) {
     if (action != undefined) {
         RS.ReportPath = action.ReportPath;
         RS.SessionID = action.SessionID;
+        RS.scrollLeft = action.scrollLeft;
+        RS.scrollTop = action.scrollTop;
 
         if (RS.ParamLoaded == true) {
             RemoveParameter();
             RS.paramloaded = false;
         }
         else {
-            RS.Pages[RS.CurPage].$Container.detach();
-            RS.Pages[RS.CurPage].$Container = null;
+            LoadPage(RS, action.CurrentPage, null, false);
+
+            //RS.Pages[RS.CurPage].$Container.detach();
+            //RS.Pages[RS.CurPage].$Container = null;
         }
-        RS.Pages[RS.CurPage].$Container = action.Container;
-        RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
+        //RS.Pages[RS.CurPage].$Container = action.Container;
+        //RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
     }
 }
 function Sort(RS,Direction,ID) {
@@ -583,9 +594,12 @@ function ToggleItem(RS, ToggleID) {
         ToggleID: ToggleID
     }).done(function (Data) {
         if (Data.Result == true) {
-            var pc = RS.Pages[RS.CurPage];
-            RS.Pages[RS.CurPage] = null;
-            pc.$Container.detach();
+            //var pc = RS.Pages[RS.CurPage];
+            //pc.$Container.detach();
+            RS.ScrollLeft = $(window).scrollLeft();
+            RS.ScrollTop = $(window).scrollTop();
+
+            RS.Pages[RS.CurPage] = null;            
             LoadPage(RS, RS.CurPage, null, false);
         }
     })
@@ -614,10 +628,11 @@ function NavigateBookmark(RS, BookmarkID) {
 }
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
-    ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
+    //ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
+    ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, CurrentPage: RS.CurPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
 }
 function NavToLink(ElementID) {
-    $(document).scrollTop($("#" + ElementID).offset().top - 85);
+   $(document).scrollTop($("#" + ElementID).offset().top - 85);
 }
 
 //Page Loading
@@ -641,9 +656,9 @@ function LoadParameters(RS, PageNum) {
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
-    if (OldPage != null)
-        if (OldPage.$Container != null)
-            OldPage.$Container.fadeOut("fast");
+    //if (OldPage != null)
+    //    if (OldPage.$Container != null)
+    //        OldPage.$Container.fadeOut("fast");
 
     if (RS.Pages[NewPageNum] != null)
         if (RS.Pages[NewPageNum].$Container != null) {
@@ -663,14 +678,14 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     })
     .done(function (Data) {       
         WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
-        RenderPage(RS, NewPageNum);
+        //RenderPage(RS, NewPageNum);
         if (!LoadOnly) CachePages(RS, NewPageNum);        
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }
 function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
     var $Report = $("<Div/>");
-    $Report.attr("ID", NewPageNum);
+    $Report.attr("ID", "Page");
     
     //Error, need to handle this better
     if (Data == null) return;
@@ -693,7 +708,7 @@ function WritePage(Data, RS, NewPageNum, OldPage, LoadOnly) {
 }
 function RenderPage(RS, pageNum) {
     //Write Style   
-    if (RS.Pages[pageNum].IsRendered == true)
+    if (RS.Pages[pageNum] != null && RS.Pages[pageNum].IsRendered == true)
         return;
     RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS, RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
@@ -1041,8 +1056,8 @@ function WriteImage(RIContext) {
     $(NewImage).attr("style", "display:block;");
 
     if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
-        for (i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
-            WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], NewImage);
+        for (i = 0; i < RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Count; i++) {
+            WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $(NewImage));
         }
     
     WriteBookMark(RIContext);
@@ -1056,7 +1071,7 @@ function WriteAction(RIContext, Action, Control) {
         Control.attr("href", Action.HyperLink);
     }
     else if (Action.BookmarkLink != undefined) {
-        sControl.attr("href", "#");
+        Control.attr("href", "#");
         Control.on("click", { ID: RIContext.RS.UID, BookmarkID: Action.BookmarkLink }, function (e) {
             StopDefaultEvent(e);
             NavigateBookmark(Reports[e.data.ID], e.data.BookmarkID);

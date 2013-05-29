@@ -438,6 +438,8 @@ function ShowParms(RS) {
 }
 function CachePages(RS, InitPage) {
 
+    return;
+
     //Just picked 2 could be more or less
     var low = InitPage - 2;
     var high = InitPage + 2;

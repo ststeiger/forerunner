@@ -294,7 +294,7 @@ namespace Forerunner.ReportViewer
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
 
                 result = rs.ToggleItem(ToggleID);
-
+     
                 JsonWriter w = new JsonTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("Result");

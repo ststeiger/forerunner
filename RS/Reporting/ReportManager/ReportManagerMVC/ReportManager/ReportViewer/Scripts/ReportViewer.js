@@ -112,6 +112,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.externalToolbarHeight;
     this.CreateNav = false;
     this.ParamLoaded = false;
+    this.ToggleID = null;
 }
 // The Floating header object holds pointers to the tablix and its row and col header objects
 function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
@@ -303,7 +304,8 @@ function SetPage(RS, NewPageNum, OldPage) {
             //RS.Pages[NewPageNum].$Container.slideRightShow(1500);
         }
     }
-
+    if (RS.ToggleID != null)
+        NavToLink(RS.ToggleID);
     
     RS.CurPage = NewPageNum;
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
@@ -573,15 +575,19 @@ function Sort(RS,Direction,ID) {
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
 function ToggleItem(RS, ToggleID) {
+    RS.ToggleID = ToggleID;
+
     $.getJSON(RS.ReportViewerAPI + "/ToggleItem/", {
         ReportServerURL: RS.ReportServerURL,
         SessionID: RS.SessionID,
         ToggleID: ToggleID
     }).done(function (Data) {
-        var pc = RS.Pages[RS.CurPage];
-        pc.$Container.detach();
-        RS.Pages[RS.CurPage] = null;        
-        LoadPage(RS, RS.CurPage, null, false);
+        if (Data.Result == true) {
+            var pc = RS.Pages[RS.CurPage];
+            RS.Pages[RS.CurPage] = null;
+            pc.$Container.detach();
+            LoadPage(RS, RS.CurPage, null, false);
+        }
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
@@ -609,6 +615,9 @@ function NavigateBookmark(RS, BookmarkID) {
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
     ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
+}
+function NavToLink(ElementID) {
+    $(document).scrollTop($("#" + ElementID).offset().top - 85);
 }
 
 //Page Loading
@@ -845,41 +854,16 @@ function WriteRichText(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style);
 
     if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent == true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent == true) {
-        $TextObj.addClass("Collapse");
-
         $Drilldown = $("<div/>");
+        $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
         $Drilldown.html("&nbsp");
-        $Drilldown.addClass("Drilldown-Collapse");
-        
-        $Drilldown.on("click", { id: RIContext.RS.UID, ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName}, function (e) {
-        //$Drilldown.on("click", { id: RIContext.RS.UID, ToggleID: RIContext.CurrObj.Elements.SharedElements.ID }, function (e) {
 
-            ToggleItem(Reports[e.data.id], e.data.ToggleID);
+        if (RIContext.CurrObj.Elements.NonSharedElements.ToggleState != null && RIContext.CurrObj.Elements.NonSharedElements.ToggleState == true)
+            $Drilldown.addClass("Drilldown-Expand");
+        else
+            $Drilldown.addClass("Drilldown-Collapse");
 
-            //if ($TextObj.hasClass("Collapse")) {
-            //    $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
-            //        var firstchild = obj.firstChild.firstChild.firstChild;
-            //        if (!$(firstchild).hasClass("Drilldown-Collapse")) {
-            //            $(obj).attr("parent", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-            //            $(obj).fadeOut(0);
-            //        }
-            //        else
-            //            return false;
-            //    });
-            //    $TextObj.removeClass("Collapse").addClass("Expand");
-            //    $Drilldown.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
-            //}
-            //else {
-            //    $.each($TextObj.parent("div").parent("td").parent("tr").nextAll(), function (index, obj) {
-            //        if ($(obj).attr("parent") != null && $(obj).attr("parent") == RIContext.CurrObj.Elements.NonSharedElements.UniqueName) {
-            //            $(obj).removeAttr("parent");
-            //            $(obj).fadeIn(0);
-            //        }
-            //    });
-            //    $TextObj.removeClass("Expand").addClass("Collapse");
-            //    $Drilldown.removeClass("Drilldown-Expand").addClass("Drilldown-Collapse");
-            //}
-        });
+        $Drilldown.on("click", { RS: RIContext.RS, ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { ToggleItem(e.data.RS, e.data.ToggleID); });
         $Drilldown.on("mouseover", function (event) { SetActionCursor(this); });
         RIContext.$HTMLParent.append($Drilldown);
     }

@@ -310,7 +310,7 @@ ORDER BY CategoryID </CommandText>
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>2</Value>
+          <Value>1</Value>
         </Values>
       </DefaultValue>
       <Prompt>CategoryID</Prompt>

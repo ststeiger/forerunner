@@ -358,6 +358,19 @@ FROM            Orders INNER JOIN
         </Field>
       </Fields>
     </DataSet>
+    <DataSet Name="Region">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT Region
+FROM            Customers</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="Region">
+          <DataField>Region</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
   </DataSets>
   <ReportParameters>
     <ReportParameter Name="ReportParameter1">
@@ -365,7 +378,7 @@ FROM            Orders INNER JOIN
       <Prompt>ReportParameter1</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>DataSet1</DataSetName>
+          <DataSetName>Region</DataSetName>
           <ValueField>Region</ValueField>
           <LabelField>Region</LabelField>
         </DataSetReference>

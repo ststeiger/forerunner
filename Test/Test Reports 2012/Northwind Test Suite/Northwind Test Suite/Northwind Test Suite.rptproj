@@ -42,8 +42,8 @@
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter1.rdl</Name>
-      <FullPath>Parameter1.rdl</FullPath>
+      <Name>Parameter by Region.rdl</Name>
+      <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Parameter2.rdl</Name>

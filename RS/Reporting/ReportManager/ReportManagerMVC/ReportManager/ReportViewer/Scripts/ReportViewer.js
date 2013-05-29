@@ -343,6 +343,9 @@ function GetToolbar(UID) {
     return $Toolbar;
 }
 function NavToPage(RS, NewPageNum) {    
+    if (NewPageNum == RS.CurPage || RS.Lock == 1)
+        return;
+
     if (NewPageNum > RS.NumPages) {
         NewPageNum = 1;
     }
@@ -350,13 +353,11 @@ function NavToPage(RS, NewPageNum) {
         NewPageNum = RS.NumPages;
     }
     if (NewPageNum != RS.CurPage) {
-
         if (RS.Lock == 0) {
             RS.Lock = 1;
             LoadPage(RS, NewPageNum, RS.Pages[RS.CurPage], false);
-            if (RS.$Carousel != null) {
+            if (RS.$Carousel != null)
                 RS.$Carousel.select(NewPageNum - 1, 1);
-            }
         }
     }
 }
@@ -451,6 +452,8 @@ function ShowNav(UID) {
         Reports[UID].$PageNav.fadeOut("fast");
     }
     else {
+        if (Reports[UID].$Carousel != null) 
+            Reports[UID].$Carousel.select(Reports[UID].CurPage -1, 1);        
         Reports[UID].$PageNav.fadeIn("fast");
         Reports[UID].$Slider.fadeIn("slow");
     }

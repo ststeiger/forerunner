@@ -64,7 +64,17 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, [
                 'ReportViewerMainView'], '',
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            InitReportEx(g_App.configs.reportServerUrl, g_App.configs.reportControllerBase, path, true, 1, 'FRReportViewer1', 'HeaderArea', 'bottomdiv', this.toolbarHeight);
+            $('#FRReportViewer1').reportviewer({
+                ReportServer: g_App.configs.reportServerUrl,
+                ReportViewerAPI: g_App.configs.reportControllerBase,
+                ReportPath: path,
+                HasToolbar: true,
+                PageNum: 1,
+                UID: 'FRReportViewer1',
+                ToolbarUID: 'HeaderArea',
+                NavUID: 'bottomdiv',
+                toolbarOffset: this.toolbarHeight
+            });
         },
 
         toolbarHeight : function()

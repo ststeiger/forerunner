@@ -276,6 +276,20 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
+                <Value />
+                <Style>
+                  <FontStyle>Italic</FontStyle>
+                  <TextDecoration>Underline</TextDecoration>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
                 <Value>Numbering</Value>
                 <Style>
                   <FontStyle>Italic</FontStyle>
@@ -286,13 +300,13 @@
             <ListStyle>Numbered</ListStyle>
             <ListLevel>1</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Indent number</Value>
+                <Value>indent number</Value>
                 <Style>
                   <FontStyle>Italic</FontStyle>
                   <TextDecoration>None</TextDecoration>
@@ -302,7 +316,7 @@
             <ListStyle>Numbered</ListStyle>
             <ListLevel>2</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -318,7 +332,7 @@
             <ListStyle>Numbered</ListStyle>
             <ListLevel>3</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -334,7 +348,7 @@
             <ListStyle>Numbered</ListStyle>
             <ListLevel>4</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -348,7 +362,7 @@
               </TextRun>
             </TextRuns>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -365,7 +379,7 @@
             <ListStyle>Bulleted</ListStyle>
             <ListLevel>1</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -382,7 +396,7 @@
             <ListStyle>Bulleted</ListStyle>
             <ListLevel>2</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -399,7 +413,7 @@
             <ListStyle>Bulleted</ListStyle>
             <ListLevel>3</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
           <Paragraph>
@@ -416,14 +430,14 @@
             <ListStyle>Bulleted</ListStyle>
             <ListLevel>4</ListLevel>
             <Style>
-              <TextAlign>Center</TextAlign>
+              <TextAlign>Left</TextAlign>
             </Style>
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox7</rd:DefaultName>
         <Top>0.60639in</Top>
         <Left>0.30431in</Left>
-        <Height>2.84375in</Height>
+        <Height>3.13542in</Height>
         <Width>2.8125in</Width>
         <ZIndex>1</ZIndex>
         <Style>

@@ -240,6 +240,15 @@
             <AspectRatio>1</AspectRatio>
             <Height>100</Height>
             <Width>100</Width>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>Parameter1</ReportName>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
           </RadialGauge>
         </RadialGauges>
         <AutoLayout>true</AutoLayout>
@@ -780,7 +789,7 @@
         <Top>5.57167in</Top>
         <Left>1.05556in</Left>
         <Height>0.6875in</Height>
-        <Width>2.79167in</Width>
+        <Width>2.79166in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>

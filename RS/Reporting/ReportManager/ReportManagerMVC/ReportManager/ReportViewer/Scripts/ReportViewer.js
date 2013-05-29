@@ -1056,14 +1056,16 @@ function WriteAction(RIContext, Action, Control) {
         Control.attr("href", Action.HyperLink);
     }
     else if (Action.BookmarkLink != undefined) {
+        sControl.attr("href", "#");
         Control.on("click", { ID: RIContext.RS.UID, BookmarkID: Action.BookmarkLink }, function (e) {
+            StopDefaultEvent(e);
             NavigateBookmark(Reports[e.data.ID], e.data.BookmarkID);
         });
-        $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
     }
     else {
-        $(Control).attr("style", "cursor:pointer;text-decoration:none;display:inline;");
-        $(Control).on("click", function () {
+        Control.attr("href", "#");
+        Control.on("click", function (e) {
+            StopDefaultEvent(e);
             BackupCurPage(RIContext.RS);
 
             var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
@@ -1074,7 +1076,6 @@ function WriteAction(RIContext, Action, Control) {
             RIContext.RS.SessionID = null;
             AddLoadingIndicator(RIContext.RS);
             LoadParameters(RIContext.RS, 1);
-            //LoadPage(RIContext.RS, RIContext.RS.CurPage, null, false);
         });
     }
 }
@@ -1884,7 +1885,15 @@ function GetListStyle(Style, Level) {
     }
     return ListStyle;
 }
-
+function StopDefaultEvent(e) {
+    //IE
+    if (window.ActiveXObject)
+        window.event.returnValue = false;
+    else {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+}
 
 
 

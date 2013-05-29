@@ -1,4 +1,75 @@
-﻿//Global reference to all reports
+﻿$(function () {
+    $.widget("reports.reportviewer", {
+        // Default options
+        options: {
+            ReportServer: null,
+            ReportViewerAPI: null,
+            ReportPath: null,
+            HasToolbar: true,
+            PageNum: 1,
+            UID: null,
+            ToolbarUID: null,
+            NavUID: null,
+            toolbarOffset: 0
+        },
+        // Constructor
+        _create: function () {
+            var $Table = new $("<table class='top-level-report-table'/>");
+            var $Row = new $("<TR/>");
+            var $Cell;
+            var $FloatingToolbar;
+            var RS = new ReportState(this.options.UID, $("#" + this.options.UID), this.options.ReportServer, this.options.ReportViewerAPI, this.options.ReportPath, this.options.HasToolbar, $Row);
+
+            Reports[this.options.UID] = RS;
+            if (this.options.NavUID != null) {
+                RS.$PageNav = $("#" + this.options.NavUID);
+                RS.$PageNav.css("display", "none");
+            }
+
+            if (this.options.HasToolbar) {
+                var $tb = GetToolbar(this.options.UID);
+                RS.ToolbarHeight = GetHeight($tb) * 3.78;  //convert to px
+
+                if (this.options.ToolbarUID == null) {
+                    $Row = new $("<TR/>");
+                    $Cell = new $("<TD/>");
+                    $Cell.append($tb);
+                    $Row.append($Cell);
+                    $Row.addClass('inlinetoolbar', 0, 0, null);
+                    $FloatingToolbar = $Row.clone(true, true).css({ display: "none", position: "absolute", top: "0px", left: "0px" });
+                    RS.$FloatingToolbar = $FloatingToolbar;
+                    $Table.append($Row);
+                    $Table.append($FloatingToolbar);
+                } else {
+                    $Container = $('#' + this.options.ToolbarUID);
+                    $Container.append($tb);
+
+                    if (this.options.toolbarOffset != null) {
+                        RS.externalToolbarHeight = this.options.toolbarOffset;
+                    }
+                }
+            }
+
+            $(window).scroll(UpdateTableHeaders);
+            $(window).bind('touchmove', HideTableHeaders);
+
+            //window.addEventListener("gesturechange", UpdateTableHeaders, false);
+
+            //Log in screen if needed
+
+            //load the report Page requested  
+            $Table.append(RS.$PageContainer);
+            this.element.append($Table);
+            this.element.addClass("report-container");
+            RS.$ReportContainer = this.element;
+            AddLoadingIndicator(RS);
+            RS.$ReportOuterDiv.append(RS.$ReportContainer);
+            LoadParameters(RS, this.options.PageNum);
+        }
+    });
+});
+
+//Global reference to all reports
 var Reports = new Object();
 var ActionHistory = [];
 //setInterval(function () { SessionPing(); }, 10000);
@@ -32,7 +103,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.$ReportAreaContainer;
     this.NumPages = 0;
     this.Lock = false;
-    this.$ReportContainer = new $("<div class='report-container' style=''></div");
+    this.$ReportContainer;
     this.$LoadingIndicator = new $("<div id='loadIndicator_" + UID + "' class='loading-indicator'></div>").text("Report loading...");
     this.FloatingHeaders = [];
     this.$PageNav;
@@ -538,62 +609,6 @@ function BackupCurPage(RS) {
 }
 
 //Page Loading
-function InitReport(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID) {
-    InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, null, 0)
-}
-function InitReportEx(ReportServer, ReportViewerAPI, ReportPath, HasToolbar, PageNum, UID, ToolbarUID, NavUID, toolbarOffset) {
-    var $Table = new $("<table class='top-level-report-table'/>");
-    var $Row = new $("<TR/>");
-    var $Cell;
-    var $FloatingToolbar;
-    var RS = new ReportState(UID, $("#" + UID), ReportServer,ReportViewerAPI, ReportPath, HasToolbar, $Row);
-    
-    Reports[UID] = RS;
-    if (NavUID != null) {
-        RS.$PageNav = $("#" + NavUID);
-        RS.$PageNav.css("display", "none");
-    }
-    
-    if (HasToolbar) {
-        var $tb = GetToolbar(UID);
-        RS.ToolbarHeight = GetHeight($tb) * 3.78;  //convert to px
-
-        if (ToolbarUID == null) {
-            $Row = new $("<TR/>");            
-            $Cell = new $("<TD/>");
-            $Cell.append($tb);            
-            $Row.append($Cell);
-            $Row.addClass('inlinetoolbar', 0, 0, null);
-            $FloatingToolbar = $Row.clone(true, true).css({ display: "none", position: "absolute", top: "0px", left: "0px" });
-            RS.$FloatingToolbar = $FloatingToolbar;
-            $Table.append($Row);
-            $Table.append($FloatingToolbar);
-        } else {
-            $Container = $('#' + ToolbarUID);
-            $Container.append($tb);
-
-            if (toolbarOffset != null) {
-                RS.externalToolbarHeight = toolbarOffset;
-            }
-        }
-    }
-
-    $(window).scroll(UpdateTableHeaders);
-    $(window).bind('touchmove', HideTableHeaders);
-
-    //window.addEventListener("gesturechange", UpdateTableHeaders, false);
-  
-    //Log in screen if needed
-
-     //load the report Page requested  
-    $Table.append(RS.$PageContainer);    
-    RS.$ReportContainer.append($Table);
-    AddLoadingIndicator(RS);
-    RS.$ReportOuterDiv.append(RS.$ReportContainer);
-    LoadParameters(RS, PageNum);
-    
-}
-
 function LoadParameters(RS, PageNum) {
     $.getJSON(RS.ReportViewerAPI + "/GetParameterJSON/", {
         ReportServerURL: RS.ReportServerURL,

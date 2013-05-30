@@ -731,10 +731,12 @@ function WriteRectangle(RIContext) {
     RecLayout = GetRectangleLayout(Measurements);
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-         
-        Style = "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
-        if (Obj.Type != "Line")
+        
+        Style = "";
+        if (Obj.Type != "Line") {
+            Style = "display:table;border-collapse:collapse;";
             Style += GetFullBorderStyle(Obj);
+        }
 
         $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
                        
@@ -1210,7 +1212,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var wbordersize = 0;
 
     
-    Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
+    Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;";
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;
 

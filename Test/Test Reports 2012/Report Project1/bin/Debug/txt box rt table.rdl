@@ -443,7 +443,6 @@
         <Style>
           <Border>
             <Style>Solid</Style>
-            <Width>12.5pt</Width>
           </Border>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>

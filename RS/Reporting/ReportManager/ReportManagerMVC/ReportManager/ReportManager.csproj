@@ -148,6 +148,7 @@
     <Content Include="ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="ReportViewer\Images\FastFoward.png" />
     <Content Include="ReportViewer\Images\Home-icon.png" />
+    <Content Include="ReportViewer\Images\icons-30x30.png" />
     <Content Include="ReportViewer\Images\Nav.png" />
     <Content Include="ReportViewer\Images\Nav2.png" />
     <Content Include="ReportViewer\Images\Next.png" />

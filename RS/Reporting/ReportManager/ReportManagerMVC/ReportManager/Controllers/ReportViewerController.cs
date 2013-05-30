@@ -42,7 +42,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 0)
         {
 
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
@@ -51,7 +51,7 @@ namespace ReportManager.Controllers
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString());
+            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
 
             if (result != null)
             {                
@@ -148,8 +148,27 @@ namespace ReportManager.Controllers
             return resp;
         }
 
+
         [HttpGet]
-        public HttpResponseMessage PingSession(string ReportServerURL, string ReportPath, string SessionID)
+        public HttpResponseMessage NavigateDrillthrough(string ReportServerURL, string SessionID, string DrillthroughID)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, DrillthroughID));
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;
+        }
+
+
+        [HttpGet]
+        public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             HttpResponseMessage resp = this.Request.CreateResponse();
@@ -157,7 +176,7 @@ namespace ReportManager.Controllers
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            rep.pingSession(ReportPath,SessionID);            
+            rep.pingSession(SessionID);            
             resp.StatusCode = HttpStatusCode.OK;
             return resp;
 

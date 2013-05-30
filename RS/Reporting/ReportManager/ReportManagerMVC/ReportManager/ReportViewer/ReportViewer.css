@@ -111,6 +111,10 @@ ol.lower-latin {
     cursor:pointer;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .sort-descending {
     background-image:url(../reportviewer/Images/SortDecending.gif);
     display:inline;

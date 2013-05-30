@@ -137,6 +137,10 @@ section#pageSection {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
 }
 
+.rm-list-container-item {
+  list-style-type: none;
+}
+
 .catalogitem {
   width: 250px;
   display: inline;

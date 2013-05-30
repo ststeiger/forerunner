@@ -362,7 +362,7 @@ namespace Forerunner.ReportViewer
             return retval;
 
         }
-        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum)
+        public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {                      
             //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.
             
@@ -415,7 +415,7 @@ namespace Forerunner.ReportViewer
                 execInfo = rs.GetExecutionInfo();
 
                 //WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                WebSiteThumbnail.GetStreamThumbnail(result).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                WebSiteThumbnail.GetStreamThumbnail(result, maxHeightToWidthRatio).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 
                 return ms.ToArray();
                           

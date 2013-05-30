@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportViewer", "..\..\Repor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSProxy", "RSProxy\RSProxy.csproj", "{9DEDC6FB-5EB9-4648-8AC6-DF82A81C1F23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "icongen", "icongen\icongen.csproj", "{575FA84E-A684-4B7D-9795-6F6C01D09B79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{9DEDC6FB-5EB9-4648-8AC6-DF82A81C1F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DEDC6FB-5EB9-4648-8AC6-DF82A81C1F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DEDC6FB-5EB9-4648-8AC6-DF82A81C1F23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{575FA84E-A684-4B7D-9795-6F6C01D09B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{575FA84E-A684-4B7D-9795-6F6C01D09B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{575FA84E-A684-4B7D-9795-6F6C01D09B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{575FA84E-A684-4B7D-9795-6F6C01D09B79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

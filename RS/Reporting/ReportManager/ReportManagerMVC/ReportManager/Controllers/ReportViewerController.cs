@@ -42,7 +42,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 0)
         {
 
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
@@ -51,7 +51,7 @@ namespace ReportManager.Controllers
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString());
+            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
 
             if (result != null)
             {                

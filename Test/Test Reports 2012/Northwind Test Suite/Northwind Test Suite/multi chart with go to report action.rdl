@@ -43,7 +43,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>bar chart with border and texture</ReportName>
+                          <ReportName>Simple Matrix</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>

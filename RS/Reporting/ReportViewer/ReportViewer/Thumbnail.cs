@@ -15,8 +15,8 @@ namespace Forerunner
     {
         private string HTML = null;      
         private Bitmap bmp = null;
-        private byte[] MHTML = null; 
-
+        private byte[] MHTML = null;
+        private double maxHeightToWidthRatio = 0;
         public Bitmap Image 
         {
             get 
@@ -28,28 +28,30 @@ namespace Forerunner
         private WebBrowser webBrowser;
         private Func<string, string> callback = null;
 
-        public static Bitmap GetStreamThumbnail(string HTML, Func<string, string> callback)
+        public static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, Func<string, string> callback)
         {
-            WebSiteThumbnail thumb = new WebSiteThumbnail(HTML, callback);
+            WebSiteThumbnail thumb = new WebSiteThumbnail(HTML, maxHeightToWidthRatio, callback);
             Bitmap b = thumb.GetScreenShot();            
             return b;
         }
-        public static Bitmap GetStreamThumbnail(byte[] MHTML)
+        public static Bitmap GetStreamThumbnail(byte[] MHTML, double maxHeightToWidthRatio)
         {
-            WebSiteThumbnail thumb = new WebSiteThumbnail(MHTML);
+            WebSiteThumbnail thumb = new WebSiteThumbnail(MHTML, maxHeightToWidthRatio);
             Bitmap b = thumb.GetScreenShot();            
             return b;
         }
         
-        public WebSiteThumbnail(string HTML, Func<string, string> callback)
+        public WebSiteThumbnail(string HTML, double maxHeightToWidthRatio, Func<string, string> callback)
         {
-            this.HTML = HTML;            
+            this.HTML = HTML;
+            this.maxHeightToWidthRatio = maxHeightToWidthRatio;
             this.callback = callback;
         }
 
-        public WebSiteThumbnail(byte[] MHTML)
+        public WebSiteThumbnail(byte[] MHTML, double maxHeightToWidthRatio)
         {
             this.MHTML = MHTML;
+            this.maxHeightToWidthRatio = maxHeightToWidthRatio;
             
         }
         public Bitmap GetScreenShot()
@@ -110,8 +112,13 @@ namespace Forerunner
             
             int w = webBrowser.Document.Body.ScrollRectangle.Width;
             int h = webBrowser.Document.Body.ScrollRectangle.Height;
-            if (h > 1500) h = 1500;  //Set an upper bound to limit the size
             if (w > 1500) w = 1500; //Set an upper bound to limit the size
+            if (maxHeightToWidthRatio > 0 && h > w * maxHeightToWidthRatio)
+            {
+                h = (int) (w * maxHeightToWidthRatio);
+            }
+            if (h > 1500) h = 1500;  //Set an upper bound to limit the size
+            
             webBrowser.ClientSize = new Size(w,h );
             webBrowser.ScrollBarsEnabled = false;
             bmp = new Bitmap(w, h);

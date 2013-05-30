@@ -29,7 +29,7 @@ var g_App = g_App || {};
         return 'Home' + this.model.path;
     },
     postRender: function () {
-        $('#browse-carousel').carousel({
+        var carousel = $('#browse-carousel').carousel({
             itemWidth: 250,
             itemHeight: 350,
             distance: 15,
@@ -48,6 +48,7 @@ var g_App = g_App || {};
             reflectionSize: 70,
             selectByClick: true
         });
+        carousel.select(0, 1);
     }
   });
   
@@ -63,7 +64,7 @@ var g_App = g_App || {};
           data.HasParameters = (String(data.Path).indexOf("Parameter") != -1) ? 1 : 0;
           data.ReportThumbnailPath = this.model.viewerUrl()
             + 'GetThumbnail/?ReportServerURL=' +this.model.reportServerUrl() + '&ReportPath='
-            + data.Path + '&SessionID=&PageNumber=1'
+            + data.Path + '&SessionID=&PageNumber=1&maxHeightToWidthRatio=1.1'
           $(this.el).html(this.template(data));
           return this;
       }

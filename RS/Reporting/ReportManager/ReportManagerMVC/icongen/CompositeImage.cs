@@ -136,9 +136,9 @@ namespace icongen
 
         public void Save(String filePath)
         {
-            if ((File.GetAttributes(filePath) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            if (File.Exists(filePath))
             {
-                throw new Exception(String.Format("file: {0} is readonly", Path.GetFileName(filePath)));
+                File.Delete(filePath);
             }
 
             imageBitmap.Save(filePath);
@@ -146,14 +146,10 @@ namespace icongen
 
         #endregion
 
-        #region Private functions
-
-        #endregion
-
         #region Private data
 
         private List<String> iconFiles;
-        String iconFolder;
+        private String iconFolder;
         
         private int iconWidth;
         private int iconHeight;

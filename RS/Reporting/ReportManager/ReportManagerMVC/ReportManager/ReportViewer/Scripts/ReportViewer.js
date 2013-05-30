@@ -347,55 +347,34 @@ function GetToolbar(UID) {
 
     $Toolbar.attr("class", "toolbar");
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-settings'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Settings.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-nav2'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Nav2.png'/>");
     $Row.append($Cell);
 
-    //$Cell = new $("<TD/>");
-    //$Cell.attr("class", "spacer20mm");
-    //$Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backbutton'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { Back(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/BackButton.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-refresh'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { RefreshReport(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Refresh.png'/>");
     $Row.append($Cell);
 
-    //$Cell = new $("<TD/>");
-    //$Cell.attr("class", "spacer10mm");
-    //$Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backward'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Backward.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer5mm");
-
+    $Cell = new $("<TD class='spacer5mm' ><DIV class='composite-icons30x30 icon-previous'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[UID].CurPage - 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<input/>");
@@ -405,11 +384,9 @@ function GetToolbar(UID) {
     $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) NavToPage(Reports[e.data.id], e.data.input.val()); });
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-next'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[e.data.id].CurPage + 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");    

@@ -36,13 +36,13 @@ namespace icongen
                     "    Displays this usage statement\n" +
                     "\n" +
                     "-config <config file>\n" +
-                    "    Fully qualified path to the configuration file\n" +
+                    "    Required. Fully qualified path to the configuration file\n" +
                     "\n" +
                     " -imageFolder <images folder path>\n" +
-                    "    Fully qualified path to the source images folder\n" +
+                    "    Required. Fully qualified path to the source images folder\n" +
                     "\n" +
                     " -outputFolder <output folder path>\n" +
-                    "    Fully qualified path to the output folder\n" +
+                    "    Required. Fully qualified path to the output folder\n" +
                     "\n");
                 return;
             }
@@ -65,10 +65,14 @@ namespace icongen
                 int width = Convert.ToInt32(compositeImageNode.Attributes["width"].InnerText);
                 int height = Convert.ToInt32(compositeImageNode.Attributes["height"].InnerText);
 
+                String compositeImageClassName = compositeImageNode.Attributes["classname"].InnerText;
+
                 List<String> sourceFileList = new List<String>();
+                List<String> imageClassNames = new List<String>();
                 foreach (XmlNode sourceFile in compositeImageNode.ChildNodes)
                 {
                     sourceFileList.Add(sourceFile.Attributes["name"].InnerText);
+                    imageClassNames.Add(sourceFile.Attributes["classname"].InnerText);
                 }
 
                 CompositeImage compositeImage = new CompositeImage(width, height, options.ImageFolder, sourceFileList);
@@ -78,6 +82,14 @@ namespace icongen
                 compositeImage.Save(outFilename);
 
                 Console.WriteLine(String.Format("\nIconGen - file: {0} written, iconWidth: {1}, iconHeight: {2}", Path.GetFileName(outFilename), width, height));
+
+                // Create the StyleSheet class and write out the CSS file
+                String relativeUrlPath = compositeImageNode.Attributes["relativeurlpath"].InnerText + "/" + compositeImageNode.Attributes["name"].InnerText;
+                StyleSheet styleSheet = new StyleSheet(width, height, relativeUrlPath, compositeImageClassName, imageClassNames);
+                String cssFilename = Path.Combine(options.OutputFolder, compositeImageNode.Attributes["cssname"].InnerText);
+                styleSheet.Save(cssFilename);
+
+                Console.WriteLine(String.Format("\nIconGen - file: {0} written", Path.GetFileName(cssFilename)));
             }
         }
         #endregion

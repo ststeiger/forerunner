@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <iconfiles>
-  <compositeimage name="icons-30x30.png" width="30" height="30">
-    <sourcefile name="BackButton.png"></sourcefile>
-    <sourcefile name="Backward.png"></sourcefile>
-    <sourcefile name="FastFoward.png"></sourcefile>
-    <sourcefile name="Home-icon.png"></sourcefile>
-    <sourcefile name="Nav.png"></sourcefile>
-    <sourcefile name="Nav2.png"></sourcefile>
-    <sourcefile name="Next.png"></sourcefile>
-    <sourcefile name="Previous.png"></sourcefile>
-    <sourcefile name="Refresh.png"></sourcefile>
-    <sourcefile name="Save.png"></sourcefile>
-    <sourcefile name="Search.png"></sourcefile>
-    <sourcefile name="Settings.png"></sourcefile>
+  <compositeimage name="icons-30x30.png" cssname="icons-30x30.css" classname="composite-icons30x30" relativeurlpath="../reportviewer/Images" width="30" height="30">
+    <sourcefile name="BackButton.png" classname="icon-backbutton"></sourcefile>
+    <sourcefile name="Backward.png" classname="icon-backward"></sourcefile>
+    <sourcefile name="FastFoward.png" classname="icon-fastforward"></sourcefile>
+    <sourcefile name="Home-icon.png" classname="icon-home"></sourcefile>
+    <sourcefile name="Nav.png" classname="icon-nav"></sourcefile>
+    <sourcefile name="Nav2.png" classname="icon-nav2"></sourcefile>
+    <sourcefile name="Next.png" classname="icon-next"></sourcefile>
+    <sourcefile name="Previous.png" classname="icon-previous"></sourcefile>
+    <sourcefile name="Refresh.png" classname="icon-refresh"></sourcefile>
+    <sourcefile name="Save.png" classname="icon-save"></sourcefile>
+    <sourcefile name="Search.png" classname="icon-search"></sourcefile>
+    <sourcefile name="Settings.png" classname="icon-settings"></sourcefile>
   </compositeimage>
 </iconfiles>

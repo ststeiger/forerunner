@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿$(function () {   
     $.widget("reports.reportviewer", {
         // Default options
         options: {
@@ -67,6 +67,7 @@
             LoadParameters(RS, this.options.PageNum);
         }
     });
+   
 });
 
 //Global reference to all reports

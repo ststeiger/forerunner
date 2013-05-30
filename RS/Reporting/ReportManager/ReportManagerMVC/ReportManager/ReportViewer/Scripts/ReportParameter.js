@@ -148,7 +148,12 @@ function WriteParameterControl(RIContext) {
             switch (RIContext.CurrObj.Type) {
                 case "DateTime":
                     //Format: ISO8601
-                    $element.datepicker({ dateFormat: 'yy-mm-dd' });
+                    $element.datepicker({
+                        dateFormat: 'yy-mm-dd',
+                        onClose: function () {
+                            $element.focus().blur();
+                        }
+                    });
                     $element.attr("dateISO", "true");
                     break;
                 case "Integer":
@@ -394,9 +399,10 @@ function CloseDropDownPanel(Obj) {
             $("#" + Obj.Name).val(ShowValue.substr(0, ShowValue.length - 1));
             $("#" + Obj.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
         });
-        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Hidden");
-        $("#" + Obj.Name + "_DropDown").removeClass("Parameter-Dropdown-Show");
+        $("#" + Obj.Name + "_DropDown").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
+        $("#" + Obj.Name).focus().blur();
     }
+    
 }
 function GetParamsList() {
     if ($("#ParamsForm").length != 0 && $("#ParamsForm").valid() == true) {

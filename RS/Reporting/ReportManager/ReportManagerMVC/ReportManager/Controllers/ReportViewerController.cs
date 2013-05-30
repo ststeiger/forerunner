@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
+//using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
 using Forerunner.ReportViewer;
 using System.IO;
+using System.Web.Mvc;
+using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
-    public class ReportViewerController : ApiController
+    [ErrorLog]
+    public class ReportViewerController : System.Web.Http.ApiController
     {
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
 
-        [HttpGet]
+        [HttpGet]        
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));

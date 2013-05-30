@@ -20,6 +20,7 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportManager: function (path) {
+            g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
             if (path != null) {
@@ -50,6 +51,7 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
+            g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
             $('#bottomdiv').attr('style', 'height: 150px');
             if (path != null) {

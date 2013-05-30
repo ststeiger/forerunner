@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
-//using System.Web.Http;
+using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
 using Forerunner.ReportViewer;
 using System.IO;
-using System.Web.Mvc;
 using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
-    [ErrorLog]
-    public class ReportViewerController : System.Web.Http.ApiController
+    [ExceptionLog]
+    [ActionLog]
+    public class ReportViewerController :ApiController
     {
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
-
+        
         [HttpGet]        
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
@@ -72,8 +72,7 @@ namespace ReportManager.Controllers
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse(); 
-
+            HttpResponseMessage resp = this.Request.CreateResponse();
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
@@ -164,6 +163,12 @@ namespace ReportManager.Controllers
             resp.StatusCode = HttpStatusCode.OK;
             return resp;
 
+        }
+
+        [HttpPost]
+        public void WriteClientErrorLog(string ReportPath, string ErrorMsg)
+        {
+            //write error message from client into the log file
         }
     }
 }

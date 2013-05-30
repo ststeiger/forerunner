@@ -72,7 +72,7 @@
 //Global reference to all reports
 var Reports = new Object();
 var ActionHistory = [];
-setInterval(function () { SessionPing(); }, 10000);
+setInterval(function () { SessionPing(); }, 300000);
 
 // ********************* Structures ***************************************
 
@@ -153,7 +153,7 @@ function SessionPing() {
 
     // Ping each report so that the seesion does not expire on the report server
     $.each(Reports, function (index, RS) {
-        if (RS.SessionID != null)
+        if (RS.SessionID != null && RS.SessionID != "")
             $.get(RS.ReportViewerAPI + "/PingSession/", {
                 ReportServerURL: RS.ReportServerURL,
                 SessionID: RS.SessionID         
@@ -614,7 +614,6 @@ function NavigateBookmark(RS, BookmarkID) {
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
-
 function NavigateDrillthrough(RS, DrillthroughID) {
     $.getJSON(RS.ReportViewerAPI + "/NavigateDrillthrough/", {
         ReportServerURL: RS.ReportServerURL,
@@ -634,9 +633,6 @@ function NavigateDrillthrough(RS, DrillthroughID) {
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
-
-
-
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
     //ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });

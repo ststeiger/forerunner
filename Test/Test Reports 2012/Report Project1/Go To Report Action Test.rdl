@@ -54,7 +54,7 @@
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>Parameter Report 1</ReportName>
+                            <ReportName>Parameter1</ReportName>
                           </Drillthrough>
                         </Action>
                       </Actions>
@@ -245,6 +245,11 @@
                 <Action>
                   <Drillthrough>
                     <ReportName>Parameter1</ReportName>
+                    <Parameters>
+                      <Parameter Name="ReportParameter1">
+                        <Value>="SP"</Value>
+                      </Parameter>
+                    </Parameters>
                   </Drillthrough>
                 </Action>
               </Actions>
@@ -359,7 +364,12 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Parameters</ReportName>
+                          <ReportName>Parameter1</ReportName>
+                          <Parameters>
+                            <Parameter Name="ReportParameter1">
+                              <Value>="NM"</Value>
+                            </Parameter>
+                          </Parameters>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -986,6 +996,11 @@
             <Action>
               <Drillthrough>
                 <ReportName>Parameter1</ReportName>
+                <Parameters>
+                  <Parameter Name="ReportParameter1">
+                    <Value>="WA"</Value>
+                  </Parameter>
+                </Parameters>
               </Drillthrough>
             </Action>
           </Actions>

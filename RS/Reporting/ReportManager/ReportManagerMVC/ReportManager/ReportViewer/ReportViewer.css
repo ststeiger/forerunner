@@ -24,10 +24,68 @@ ol.lower-latin {
 }
 
 .buttonicon {
+  width:30px;
   height:30px;
   background-color:transparent;
-  border-width:0px
+  border-width:0px;
 }
+
+/*** IconGen - start automatically generated, do not hand modify ***/
+.composite-icons30x30 {
+  width:30px;
+  height:30px;
+  background-image:url('../reportviewer/Images/icons-30x30.png');
+}
+
+.icon-backbutton {
+  background-position: 0 0;
+}
+
+.icon-backward {
+  background-position: -30px 0;
+}
+
+.icon-fastforward {
+  background-position: -60px 0;
+}
+
+.icon-home {
+  background-position: -90px 0;
+}
+
+.icon-nav {
+  background-position: 0 -30px;
+}
+
+.icon-nav2 {
+  background-position: -30px -30px;
+}
+
+.icon-next {
+  background-position: -60px -30px;
+}
+
+.icon-previous {
+  background-position: -90px -30px;
+}
+
+.icon-refresh {
+  background-position: 0 -60px;
+}
+
+.icon-save {
+  background-position: -30px -60px;
+}
+
+.icon-search {
+  background-position: -60px -60px;
+}
+
+.icon-settings {
+  background-position: -90px -60px;
+}
+/*** IconGen - end automatically generated, do not hand modify ***/
+
 
 .spacer20mm {
   min-width:20mm;
@@ -51,6 +109,10 @@ ol.lower-latin {
     padding-bottom:2px;
     background-position: center;
     cursor:pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 
 .sort-descending {

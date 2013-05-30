@@ -72,7 +72,7 @@
 //Global reference to all reports
 var Reports = new Object();
 var ActionHistory = [];
-//setInterval(function () { SessionPing(); }, 10000);
+setInterval(function () { SessionPing(); }, 300000);
 
 // ********************* Structures ***************************************
 
@@ -153,10 +153,9 @@ function SessionPing() {
 
     // Ping each report so that the seesion does not expire on the report server
     $.each(Reports, function (index, RS) {
-        if (RS.SessionID != null)
+        if (RS.SessionID != null && RS.SessionID != "")
             $.get(RS.ReportViewerAPI + "/PingSession/", {
                 ReportServerURL: RS.ReportServerURL,
-                ReportPath: RS.ReportPath,
                 SessionID: RS.SessionID         
             })
             .done(function (Data) {  })
@@ -347,55 +346,34 @@ function GetToolbar(UID) {
 
     $Toolbar.attr("class", "toolbar");
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-settings'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { ShowParms(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Settings.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-nav2'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { ShowNav(e.data.id); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Nav2.png'/>");
     $Row.append($Cell);
 
-    //$Cell = new $("<TD/>");
-    //$Cell.attr("class", "spacer20mm");
-    //$Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backbutton'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { Back(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/BackButton.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-refresh'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { RefreshReport(Reports[e.data.id]); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Refresh.png'/>");
     $Row.append($Cell);
 
-    //$Cell = new $("<TD/>");
-    //$Cell.attr("class", "spacer10mm");
-    //$Row.append($Cell);
-
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backward'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Backward.png'/>");
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer5mm");
-
+    $Cell = new $("<TD class='spacer5mm' ><DIV class='composite-icons30x30 icon-previous'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[UID].CurPage - 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Previous.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<input/>");
@@ -405,11 +383,9 @@ function GetToolbar(UID) {
     $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) NavToPage(Reports[e.data.id], e.data.input.val()); });
     $Row.append($Cell);
 
-    $Cell = new $("<TD/>");
-    $Cell.attr("class", "spacer10mm");
+    $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-next'></DIV></TD>");
     $Cell.on("click", { id: UID }, function (e) { NavToPage(Reports[e.data.id], Reports[e.data.id].CurPage + 1); });
     $Cell.on("mouseover", function (event) { SetActionCursor(this); });
-    $Cell.html("<IMG class='buttonicon' src='./reportviewer/Images/Next.png'/>");
     $Row.append($Cell);
 
     $Cell = new $("<TD/>");    
@@ -552,12 +528,10 @@ function Back(RS) {
             RemoveParameter();
             RS.paramloaded = false;
         }
-        else {
-            LoadPage(RS, action.CurrentPage, null, false);
+        LoadPage(RS, action.CurrentPage, null, false);
 
-            //RS.Pages[RS.CurPage].$Container.detach();
-            //RS.Pages[RS.CurPage].$Container = null;
-        }
+        //RS.Pages[RS.CurPage].$Container.detach();
+        //RS.Pages[RS.CurPage].$Container = null;
         //RS.Pages[RS.CurPage].$Container = action.Container;
         //RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
     }
@@ -617,6 +591,25 @@ function NavigateBookmark(RS, BookmarkID) {
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
+function NavigateDrillthrough(RS, DrillthroughID) {
+    $.getJSON(RS.ReportViewerAPI + "/NavigateDrillthrough/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        DrillthroughID: DrillthroughID
+    }).done(function (Data) {
+        BackupCurPage(RS);
+        RS.SessionID = Data.SessionID;
+        RS.Pages = new Object();
+
+        if (Data.ParametersRequired) {
+            RS.$ReportAreaContainer.find("#Page").detach();
+            ShowParameters(RS, 1, Data.Parameters);
+        }
+        else
+            LoadPage(RS, 1, null, false, null);
+    })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
     //ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
@@ -633,18 +626,21 @@ function LoadParameters(RS, PageNum) {
         ReportPath: RS.ReportPath
     })
    .done(function (Data) {
-       if (Data.Type == "Parameters") {
-           if (RS.ParamLoaded == true) {
-               $("#ParameterContainer").detach();
-           }
-           WriteParameterPanel(Data, RS, PageNum, false);
-           RS.ParamLoaded = true;
-       }
-       else {
-           LoadPage(RS, PageNum, null, false);
-       }
+       ShowParameters(RS,PageNum,Data);
    })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+}
+function ShowParameters(RS,PageNum,Data) {
+    if (Data.Type == "Parameters") {
+        if (RS.ParamLoaded == true) {
+            $("#ParameterContainer").detach();
+        }
+        WriteParameterPanel(Data, RS, PageNum, false);
+        RS.ParamLoaded = true;
+    }
+    else {
+        LoadPage(RS, PageNum, null, false);
+    }
 }
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly, BookmarkID) {
     //if (OldPage != null)
@@ -735,10 +731,12 @@ function WriteRectangle(RIContext) {
     RecLayout = GetRectangleLayout(Measurements);
 
     $.each(RIContext.CurrObj.ReportItems, function (Index, Obj) {
-         
-        Style = "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
-        if (Obj.Type != "Line")
+        
+        Style = "";
+        if (Obj.Type != "Line") {
+            Style = "display:table;border-collapse:collapse;";
             Style += GetFullBorderStyle(Obj);
+        }
 
         $RI = WriteReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
                        
@@ -1064,26 +1062,21 @@ function WriteAction(RIContext, Action, Control) {
         Control.attr("href", Action.HyperLink);
     }
     else if (Action.BookmarkLink != undefined) {
+        //HRef needed for ImageMap, Class needed for non image map
         Control.attr("href", "#");
+        Control.addClass("cursor-pointer");
         Control.on("click", { ID: RIContext.RS.UID, BookmarkID: Action.BookmarkLink }, function (e) {
             StopDefaultEvent(e);
             NavigateBookmark(Reports[e.data.ID], e.data.BookmarkID);
         });
     }
     else {
+        //HRef needed for ImageMap, Class needed for non image map
+        Control.addClass("cursor-pointer");
         Control.attr("href", "#");
-        Control.on("click", function (e) {
+        Control.on("click", { ID: RIContext.RS.UID, DrillthroughId: Action.DrillthroughId }, function (e) {
             StopDefaultEvent(e);
-            BackupCurPage(RIContext.RS);
-
-            var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
-            RIContext.RS.ReportPath = reportPath;
-            RIContext.RS.Pages[RIContext.RS.CurPage].$Container.detach();
-            RIContext.RS.Pages[RIContext.RS.CurPage].$Container = null;
-            RIContext.RS.Pages[RIContext.RS.CurPage].IsRendered = false;
-            RIContext.RS.SessionID = null;
-            AddLoadingIndicator(RIContext.RS);
-            LoadParameters(RIContext.RS, 1);
+            NavigateDrillthrough(Reports[e.data.ID], e.data.DrillthroughId);
         });
     }
 }
@@ -1219,7 +1212,7 @@ function WriteTablixCell(RIContext, Obj, Index, BodyCellRowIndex) {
     var wbordersize = 0;
 
     
-    Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;" 
+    Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;";
     Style += GetFullBorderStyle(Obj.Cell.ReportItem);
     var ColIndex = Obj.ColumnIndex;
 

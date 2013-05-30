@@ -116,24 +116,15 @@ namespace Forerunner.ReportViewer
             return script;
         }
 
-        public void pingSession(string reportPath, string SessionID)
+        public void pingSession(string SessionID)
         {
-            byte[] result = null;
-            string format = "RPL";
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings = null;
-            string[] streamIDs = null;
-            string devInfo = @"<DeviceInfo></DeviceInfo>";
-
+            
             if (SessionID != "" && SessionID != null)
             {
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
-
-                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                rs.GetExecutionInfo();                
             }
         }
 
@@ -183,16 +174,9 @@ namespace Forerunner.ReportViewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                if (parametersList != null)
                 {
-                    if (parametersList != null)
-                    {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
-                    }
-                    else
-                    {
-                        throw new Exception("Parameter list can not be null");
-                    }
+                    rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                 }
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
@@ -341,6 +325,42 @@ namespace Forerunner.ReportViewer
             }
         }
 
+
+        //Navigates to a Drillthough report
+        public string NavigateDrillthrough(string SessionID, string DrillthroughID)
+        {
+            try
+            {
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                
+               ExecutionInfo execInfo = rs.LoadDrillthroughTarget(DrillthroughID);
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("SessionID");
+                w.WriteString(execInfo.ExecutionID);
+                w.WriteMember("ParametersRequired");
+                w.WriteBoolean(execInfo.ParametersRequired);
+                w.WriteMember("Parameters");
+                if (execInfo.Parameters.Length != 0)
+                {
+                    ReportJSONWriter rw = new ReportJSONWriter();
+                    JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
+                    w.WriteFromReader(r);
+                }
+                w.WriteEndObject();
+                return w.ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
         private string getImageHandeler(string src)
         {
             byte[] img = null;

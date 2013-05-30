@@ -72,7 +72,7 @@
 //Global reference to all reports
 var Reports = new Object();
 var ActionHistory = [];
-//setInterval(function () { SessionPing(); }, 10000);
+setInterval(function () { SessionPing(); }, 10000);
 
 // ********************* Structures ***************************************
 
@@ -156,7 +156,6 @@ function SessionPing() {
         if (RS.SessionID != null)
             $.get(RS.ReportViewerAPI + "/PingSession/", {
                 ReportServerURL: RS.ReportServerURL,
-                ReportPath: RS.ReportPath,
                 SessionID: RS.SessionID         
             })
             .done(function (Data) {  })
@@ -552,12 +551,10 @@ function Back(RS) {
             RemoveParameter();
             RS.paramloaded = false;
         }
-        else {
-            LoadPage(RS, action.CurrentPage, null, false);
+        LoadPage(RS, action.CurrentPage, null, false);
 
-            //RS.Pages[RS.CurPage].$Container.detach();
-            //RS.Pages[RS.CurPage].$Container = null;
-        }
+        //RS.Pages[RS.CurPage].$Container.detach();
+        //RS.Pages[RS.CurPage].$Container = null;
         //RS.Pages[RS.CurPage].$Container = action.Container;
         //RS.$ReportAreaContainer.append(RS.Pages[RS.CurPage].$Container);
     }
@@ -617,6 +614,29 @@ function NavigateBookmark(RS, BookmarkID) {
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
+
+function NavigateDrillthrough(RS, DrillthroughID) {
+    $.getJSON(RS.ReportViewerAPI + "/NavigateDrillthrough/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        DrillthroughID: DrillthroughID
+    }).done(function (Data) {
+        BackupCurPage(RS);
+        RS.SessionID = Data.SessionID;
+        RS.Pages = new Object();
+
+        if (Data.ParametersRequired) {
+            RS.$ReportAreaContainer.find("#Page").detach();
+            ShowParameters(RS, 1, Data.Parameters);
+        }
+        else
+            LoadPage(RS, 1, null, false, null);
+    })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
+
+
+
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
     //ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
@@ -633,18 +653,21 @@ function LoadParameters(RS, PageNum) {
         ReportPath: RS.ReportPath
     })
    .done(function (Data) {
-       if (Data.Type == "Parameters") {
-           if (RS.ParamLoaded == true) {
-               $("#ParameterContainer").detach();
-           }
-           WriteParameterPanel(Data, RS, PageNum, false);
-           RS.ParamLoaded = true;
-       }
-       else {
-           LoadPage(RS, PageNum, null, false);
-       }
+       ShowParameters(RS,PageNum,Data);
    })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
+}
+function ShowParameters(RS,PageNum,Data) {
+    if (Data.Type == "Parameters") {
+        if (RS.ParamLoaded == true) {
+            $("#ParameterContainer").detach();
+        }
+        WriteParameterPanel(Data, RS, PageNum, false);
+        RS.ParamLoaded = true;
+    }
+    else {
+        LoadPage(RS, PageNum, null, false);
+    }
 }
 function LoadPage(RS, NewPageNum, OldPage, LoadOnly, BookmarkID) {
     //if (OldPage != null)
@@ -1064,26 +1087,21 @@ function WriteAction(RIContext, Action, Control) {
         Control.attr("href", Action.HyperLink);
     }
     else if (Action.BookmarkLink != undefined) {
+        //HRef needed for ImageMap, Class needed for non image map
         Control.attr("href", "#");
+        Control.addClass("cursor-pointer");
         Control.on("click", { ID: RIContext.RS.UID, BookmarkID: Action.BookmarkLink }, function (e) {
             StopDefaultEvent(e);
             NavigateBookmark(Reports[e.data.ID], e.data.BookmarkID);
         });
     }
     else {
+        //HRef needed for ImageMap, Class needed for non image map
+        Control.addClass("cursor-pointer");
         Control.attr("href", "#");
-        Control.on("click", function (e) {
+        Control.on("click", { ID: RIContext.RS.UID, DrillthroughId: Action.DrillthroughId }, function (e) {
             StopDefaultEvent(e);
-            BackupCurPage(RIContext.RS);
-
-            var reportPath = Action.DrillthroughUrl.substring(Action.DrillthroughUrl.indexOf('?') + 1).replace('%2F', '/');
-            RIContext.RS.ReportPath = reportPath;
-            RIContext.RS.Pages[RIContext.RS.CurPage].$Container.detach();
-            RIContext.RS.Pages[RIContext.RS.CurPage].$Container = null;
-            RIContext.RS.Pages[RIContext.RS.CurPage].IsRendered = false;
-            RIContext.RS.SessionID = null;
-            AddLoadingIndicator(RIContext.RS);
-            LoadParameters(RIContext.RS, 1);
+            NavigateDrillthrough(Reports[e.data.ID], e.data.DrillthroughId);
         });
     }
 }

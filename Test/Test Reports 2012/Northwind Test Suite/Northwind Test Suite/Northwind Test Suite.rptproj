@@ -66,8 +66,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Report1.rdl</Name>
-      <FullPath>Report1.rdl</FullPath>
+      <Name>Checkin Test Report.rdl</Name>
+      <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

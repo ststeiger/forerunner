@@ -113,7 +113,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.CreateNav = false;
     this.ParamLoaded = false;
     this.ScrollTop = 0;
-    this.ScrollLeft = 0;
+    this.ScrollLeft = 0;    
 }
 // The Floating header object holds pointers to the tablix and its row and col header objects
 function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
@@ -305,9 +305,9 @@ function SetPage(RS, NewPageNum, OldPage) {
             RS.Pages[NewPageNum].$Container.show();
             //RS.Pages[NewPageNum].$Container.slideRightShow(1500);
         }
-        RS.Pages[NewPageNum] = null;
+        
     }
-   
+    RS.Pages[NewPageNum] = null;
     RS.CurPage = NewPageNum;
     $("input." + RS.UID).each(function () { $(this).val(NewPageNum); });
     
@@ -545,8 +545,8 @@ function Back(RS) {
     if (action != undefined) {
         RS.ReportPath = action.ReportPath;
         RS.SessionID = action.SessionID;
-        RS.scrollLeft = action.scrollLeft;
-        RS.scrollTop = action.scrollTop;
+        RS.ScrollLeft = action.ScrollLeft;
+        RS.ScrollTop = action.ScrollTop;
 
         if (RS.ParamLoaded == true) {
             RemoveParameter();
@@ -576,11 +576,8 @@ function Sort(RS,Direction,ID) {
         SortItem: ID,
         Direction: newDir
     }).done(function (Data) {
-        var pc = RS.Pages[RS.CurPage].$Container
         RS.NumPages = Data.NumPages;
         RS.Pages = new Object();
-        pc.detach();
-        AddLoadingIndicator(RS);
         LoadPage(RS, (Data.NewPage), null, false);
     })
     .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
@@ -612,16 +609,10 @@ function NavigateBookmark(RS, BookmarkID) {
         BookmarkID: BookmarkID
     }).done(function (Data) {
         if (Data.NewPage == RS.CurPage) {
-            $(document).scrollTop($("#" + BookmarkID).offset().top - 80);
+            NavToLink(BookmarkID);
         } else {
             BackupCurPage(RS);
-
-            var pc = RS.Pages[RS.CurPage].$Container
-            RS.NumPages = Data.NumPages;
-            RS.Pages = new Object();
-            pc.detach();
-            AddLoadingIndicator(RS);
-            LoadPage(RS, Data.NewPage, null, false);
+            LoadPage(RS, Data.NewPage, null, false, BookmarkID);
         }
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
@@ -655,7 +646,7 @@ function LoadParameters(RS, PageNum) {
    })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); })
 }
-function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
+function LoadPage(RS, NewPageNum, OldPage, LoadOnly, BookmarkID) {
     //if (OldPage != null)
     //    if (OldPage.$Container != null)
     //        OldPage.$Container.fadeOut("fast");
@@ -678,6 +669,8 @@ function LoadPage(RS, NewPageNum, OldPage, LoadOnly) {
     })
     .done(function (Data) {       
         WritePage(Data, RS, NewPageNum, OldPage, LoadOnly);
+        if (BookmarkID != null)
+            NavToLink(BookmarkID);
         //RenderPage(RS, NewPageNum);
         if (!LoadOnly) CachePages(RS, NewPageNum);        
     })

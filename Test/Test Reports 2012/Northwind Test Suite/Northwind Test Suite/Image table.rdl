@@ -47,7 +47,6 @@
                             <Value>Product Name</Value>
                             <Style>
                               <FontWeight>Bold</FontWeight>
-                              <Color>White</Color>
                             </Style>
                           </TextRun>
                         </TextRuns>
@@ -74,7 +73,7 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.08334in</Width>
+              <Width>1.52084in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1in</Width>
@@ -96,7 +95,6 @@
                               <Value>=Sum(Fields!price.Value)</Value>
                               <Style>
                                 <FontWeight>Bold</FontWeight>
-                                <Color>White</Color>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -157,7 +155,6 @@
                             <Style>
                               <FontSize>11pt</FontSize>
                               <FontWeight>Bold</FontWeight>
-                              <Color>White</Color>
                             </Style>
                           </TextRun>
                         </TextRuns>
@@ -226,7 +223,6 @@
                             <Value>=Fields!ProductName.Value</Value>
                             <Style>
                               <FontWeight>Bold</FontWeight>
-                              <Color>White</Color>
                             </Style>
                           </TextRun>
                         </TextRuns>
@@ -257,7 +253,7 @@
         <Top>2.47792in</Top>
         <Left>0.25917in</Left>
         <Height>1.42708in</Height>
-        <Width>4.08334in</Width>
+        <Width>3.52084in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -292,7 +288,7 @@
       </BackgroundImage>
     </Style>
   </Body>
-  <Width>4.66542in</Width>
+  <Width>11.83209in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

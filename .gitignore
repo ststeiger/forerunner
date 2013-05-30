@@ -9,3 +9,5 @@ Test/Test Reports 2012/Report Project1/bin/
 Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/ReportViewer/Images/Thumbs.db
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Images/ReportManager/Thumbs.db
+RS/Reporting/ReportManager/ReportManagerMVC/icongen/bin/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/icongen/obj/Debug/*

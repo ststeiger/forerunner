@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<iconfiles>
+  <compositeimage name="icons-30x30.png" width="30" height="30">
+    <sourcefile name="BackButton.png"></sourcefile>
+    <sourcefile name="Backward.png"></sourcefile>
+    <sourcefile name="FastFoward.png"></sourcefile>
+    <sourcefile name="Home-icon.png"></sourcefile>
+    <sourcefile name="Nav.png"></sourcefile>
+    <sourcefile name="Nav2.png"></sourcefile>
+    <sourcefile name="Next.png"></sourcefile>
+    <sourcefile name="Previous.png"></sourcefile>
+    <sourcefile name="Refresh.png"></sourcefile>
+    <sourcefile name="Save.png"></sourcefile>
+    <sourcefile name="Search.png"></sourcefile>
+    <sourcefile name="Settings.png"></sourcefile>
+  </compositeimage>
+</iconfiles>

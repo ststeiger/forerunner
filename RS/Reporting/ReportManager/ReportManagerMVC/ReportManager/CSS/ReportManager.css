@@ -224,6 +224,10 @@ and (orientation : portrait) {
   width: 120px;
 }
 
+.rm-list-container-item {
+  padding-bottom: 50px;
+}
+
 .sc-content {
   display:inline;
 }
@@ -311,6 +315,10 @@ and (orientation : portrait) {
 /* Styles */
 .catalogitem {
   width: 250px;
+}
+
+.rm-list-container-item {
+  padding-bottom: 50px;
 }
 
 .sc-content {

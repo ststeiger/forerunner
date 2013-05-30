@@ -29,7 +29,7 @@ var g_App = g_App || {};
         return 'Home' + this.model.path;
     },
     postRender: function () {
-        $('#browse-carousel').carousel({
+        var carousel = $('#browse-carousel').carousel({
             itemWidth: 250,
             itemHeight: 350,
             distance: 15,
@@ -48,6 +48,7 @@ var g_App = g_App || {};
             reflectionSize: 70,
             selectByClick: true
         });
+        carousel.select(0, 1);
     }
   });
   

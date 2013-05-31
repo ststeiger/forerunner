@@ -404,3 +404,46 @@ td input[type="submit"], td input[type="button"], td button
     background-position: center;
     cursor:pointer;
 }
+td.DocMap
+{
+    vertical-align:top;
+    height:100%;
+    width:25%;
+}
+.DocMapBorder
+{
+    width:100%;
+    height:100%;
+}
+.DocMapHeader
+{
+    overflow:hidden;
+    white-space:nowrap;
+    width:auto;
+}
+.DocMapBar
+{
+    background-color:#DEE7F2;
+    height:28px;
+    line-height:28px;
+    padding-left:10px;
+    padding-right:10px;
+    border-bottom:1px solid #A4B7D8;
+}
+.DocMap-Hidden
+{
+    display:none;
+}
+.DocMap-Show
+{
+    display:block;
+}
+.DocMap-Item
+{
+    cursor:pointer;
+    text-decoration:none;
+    color:black;
+    font-family:Verdana;
+    font-size:8pt;
+    vertical-align:middle;
+}

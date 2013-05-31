@@ -102,6 +102,7 @@ function ReportState(UID, $ReportOuterDiv, ReportServer, ReportViewerAPI, Report
     this.SessionID = "";
     this.$PageContainer = $PageContainer;
     this.$ReportAreaContainer;
+    this.$DocumentMapContainer;
     this.NumPages = 0;
     this.Lock = false;
     this.$ReportContainer;
@@ -611,6 +612,18 @@ function NavigateDrillthrough(RS, DrillthroughID) {
     })
    .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
 }
+function NavigateDocumentMap(RS, DocumentMapID) {
+    $.getJSON(RS.ReportViewerAPI + "/NavigateDocumentMap/", {
+        ReportServerURL: RS.ReportServerURL,
+        SessionID: RS.SessionID,
+        DocMapID: DocumentMapID
+    }).done(function (Data) {
+        BackupCurPage(RS);
+        RS.Pages = new Object();
+        LoadPage(RS, Data.NewPage, null, false, null);
+    })
+   .fail(function () { console.log("error"); RemoveLoadingIndicator(RS); });
+}
 function BackupCurPage(RS) {
     //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
     //ActionHistory.push({ ReportPath: RS.ReportPath, SessionID: RS.SessionID, Container: $.extend(true, {}, RS.Pages[RS.CurPage].$Container) });
@@ -702,6 +715,10 @@ function RenderPage(RS, pageNum) {
         return;
     RS.Pages[pageNum].$Container.attr("Style", GetStyle(RS, RS.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
     $.each(RS.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { WriteSection(new ReportItemContext(RS, Obj, Index, RS.Pages[pageNum].ReportObj.Report.PageContent, RS.Pages[pageNum].$Container, "")); });
+
+    if (RS.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
+        WriteDocumentMap(new ReportItemContext(RS, RS.Pages[pageNum].ReportObj.Report.DocumentMap, null, null, RS.$PageContainer));
+    }
     RS.Pages[pageNum].IsRendered = true;
 }
 
@@ -1355,6 +1372,79 @@ function WriteLine(RIContext) {
     RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
      return RIContext.$HTMLParent;
 
+}
+function WriteDocumentMap(RIContext) {
+    var $TD = new $("<TD />");
+    $TD.addClass("DocMap");
+    var $DocMapContainer = new $("<DIV />");
+    $DocMapContainer.addClass("DocMapBorder");
+
+    var $Table = GetDefaultHTMLTable();
+    $Table.addClass("DocMapBorder");
+
+    var $RowBar = new $("<TR />");
+    var $Header = new $("<DIV />");
+    $Header.attr("id", "DocMapHeader").addClass("DocMapHeader");
+
+    var $DocMapBar = new $("<DIV />");
+    $DocMapBar.addClass("DocMapBar").html(" Document Map ");
+    $Header.append($DocMapBar);
+    $RowBar.append($Header);
+
+    var $Row = new $("<TR />");
+    var $TDMap = new $("<TD />");
+    $TDMap.addClass("DocMapBorder");
+    $TDMap.append(WriteDocumentMapItem(RIContext.RS, RIContext.CurrObj, 0));
+
+    $Row.append($TDMap);
+    $Table.append($RowBar);
+    $Table.append($Row);
+    $DocMapContainer.append($Table);
+    $TD.append($DocMapContainer);
+
+    RIContext.RS.$PageContainer.append($TD);
+}
+function WriteDocumentMapItem(RS, DocMap, Level) {
+    var $DocMap = new $("<DIV />");
+    $DocMap.css("margin-left:" + Level * 18 + "px;white-space:nowrap");
+
+    var $Icon = new $("<Image />");
+    var $Icon2 = new $("<Image />");
+    if (DocMap.Children == null) {
+        $DocMap.attr("level", Level);
+        $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
+    }
+    else {
+        $Icon.attr("src", "./reportviewer/Images/Drilldown_Collapse.gif").addClass("DocMap-Show");
+        $Icon.on("click", function () {
+            $Icon.addClass("DocMap-Hidden").removeClass("DocMap-Show");
+            $Icon2.addClass("DocMap-Show").removeClass("DocMap-Hidden");
+            $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+        });
+
+        $Icon2.attr("src", "./reportviewer/Images/Drilldown_Expand.gif").addClass("DocMap-Hidden");
+        $Icon2.on("click", function () {
+            $Icon.addClass("DocMap-Show").removeClass("DocMap-Hidden");
+            $Icon2.addClass("DocMap-Hidden").removeClass("DocMap-Show");
+            $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+        });
+    }
+
+    var $MapNode = new $("<A />");
+    $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
+    $MapNode.on("click", function () {
+        NavigateDocumentMap(RS, DocMap.UniqueName);
+    });
+
+    $DocMap.append($Icon).append($Icon2).append($MapNode);
+    
+    if (DocMap.Children != undefined) {
+        Level++;
+        $.each(DocMap.Children, function (Index, Obj) {
+            $DocMap.append(WriteDocumentMapItem(RS, Obj, Level));
+        });
+    }
+    return $DocMap;
 }
 
 //Helper fucntions

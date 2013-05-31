@@ -14,7 +14,6 @@ using ReportManager.Util.Logging;
 namespace ReportManager.Controllers
 {
     [ExceptionLog]
-    [ActionLog]
     public class ReportViewerController :ApiController
     {
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
@@ -70,17 +69,25 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+            try
+            {
+                ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+                byte[] result;
+                HttpResponseMessage resp = this.Request.CreateResponse();
+                //Application will need to handel security
+                rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));            
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+                result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
 
-            return resp;
+                return resp;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+            }
+            return null;
         }
 
         [HttpGet]
@@ -119,55 +126,26 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage ToggleItem(string ReportServerURL, string SessionID, string ToggleID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = Encoding.UTF8.GetBytes(rep.ToggleItem(SessionID, ToggleID));
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-            return resp;
+            return NavigateTo(NavType.Toggle, ReportServerURL, SessionID, ToggleID);
         }
 
         [HttpGet]
         public HttpResponseMessage NavigateBookmark(string ReportServerURL, string SessionID, string BookmarkID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, BookmarkID));
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-            return resp;
+            return NavigateTo(NavType.Bookmark, ReportServerURL, SessionID, BookmarkID);
         }
-
 
         [HttpGet]
         public HttpResponseMessage NavigateDrillthrough(string ReportServerURL, string SessionID, string DrillthroughID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, DrillthroughID));
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-            return resp;
+            return NavigateTo(NavType.DrillThrough, ReportServerURL, SessionID, DrillthroughID);
         }
 
+        [HttpGet]
+        public HttpResponseMessage NavigateDocumentMap(string ReportServerURL, string SessionID, string DocMapID)
+        {
+            return NavigateTo(NavType.DocumentMap, ReportServerURL, SessionID, DocMapID);
+        }
 
         [HttpGet]
         public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
@@ -188,6 +166,38 @@ namespace ReportManager.Controllers
         public void WriteClientErrorLog(string ReportPath, string ErrorMsg)
         {
             //write error message from client into the log file
+        }
+
+        private HttpResponseMessage NavigateTo(NavType type, string ReportServerURL, string SessionID, string UniqueID)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result = null;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            //Application will need to handel security
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+            switch (type)
+            {
+                case NavType.Toggle:
+                    result = Encoding.UTF8.GetBytes(rep.ToggleItem(SessionID, UniqueID));
+                    break;
+                case NavType.Bookmark:
+                    result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, UniqueID));
+                    break;
+                case NavType.DrillThrough:
+                    result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, UniqueID));
+                    break;
+                case NavType.DocumentMap:
+                    result = Encoding.UTF8.GetBytes(rep.NavigateDocumentMap(SessionID, UniqueID));
+                    break;
+            }
+
+            
+            resp.Content = new ByteArrayContent(result); ;
+            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+
+            return resp;
         }
     }
 }

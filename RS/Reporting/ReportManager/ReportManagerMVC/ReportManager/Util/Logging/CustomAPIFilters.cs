@@ -7,7 +7,7 @@ namespace ReportManager.Util.Logging
     public class ExceptionLogAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
-        {            
+        {
             string error = string.Format("[Time:{0}] \r\n [Type:{1}] \r\n [TargetSite:{2}] \r\n [Source:{3}] \r\n [Message:{4}] \r\n [StackTrace:{5}] ",
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),
                 actionExecutedContext.Exception.GetType(),              
@@ -42,6 +42,7 @@ namespace ReportManager.Util.Logging
 
         public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext)
         {
+            //Add some thing 
             base.OnActionExecuting(actionContext);
         }
 

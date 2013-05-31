@@ -33,6 +33,7 @@
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
             me.$DocumentMapContainer;
+
             me.NumPages = 0;
             me.Lock = false;
             me.$ReportContainer;

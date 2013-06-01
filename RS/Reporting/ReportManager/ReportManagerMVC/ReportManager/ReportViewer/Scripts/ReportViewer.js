@@ -78,10 +78,7 @@
                 }
             }
 
-            $(window).scroll(me.UpdateTableHeaders);
-            $(window).bind('touchmove', me.HideTableHeaders);
-
-            //window.addEventListener("gesturechange", me.UpdateTableHeaders, false);
+            $(window).scroll(UpdateTableHeaders);
 
             //Log in screen if needed
 
@@ -163,8 +160,7 @@
                 me.$ReportAreaContainer.attr("ID", "ReportArea");
                 me.$PageContainer.append(me.$ReportAreaContainer);
                 me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
-                if (is_touch_device())
-                    me.touchNav();
+                me.touchNav();
                 me.Pages[NewPageNum].$Container.fadeIn();
             }
             else {
@@ -196,11 +192,17 @@
             // Touch Events
             var me = this;
             $(document).swipe({
-                fallbackToMouseEvents: false, allowPageScroll: "auto", swipe: function (e, dir) {
+                fallbackToMouseEvents: false,
+                allowPageScroll: "auto",
+                swipe: function (e, dir) {
                     if (dir == 'left' || dir == 'up' ) 
                         me.NavToPage((me.CurPage + 1));
                     else 
                         me.NavToPage((me.CurPage - 1));            
+                },
+                swipeStatus: function (event, phase, direction, distance) {
+                    if (phase == "start")
+                        HideTableHeaders();
                 },
                 tap: function (event, target) {
                     $(target).trigger('click');
@@ -438,8 +440,11 @@
                     me.$ReportAreaContainer.find("#Page").detach();
                     me.ShowParameters(1, Data.Parameters);
                 }
-                else
+                else {
+                    me.SetScrollLocation(0, 0);
                     me.LoadPage(1, null, false, null);
+                }
+
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -462,7 +467,12 @@
             //ActionHistory.push({ ReportPath: me.ReportPath, SessionID: me.SessionID, Container: $.extend(true, {}, me.Pages[me.CurPage].$Container) });
             ActionHistory.push({ ReportPath: me.options.ReportPath, SessionID: me.SessionID, CurrentPage: me.CurPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
         },
-
+        SetScrollLocation: function (top, left) {
+            var me = this;
+            me.ScrollLeft = left;
+            me.ScrollTop = top;
+       },
+        
         //Page Loading
         LoadParameters: function (PageNum) {
             var me = this;
@@ -702,8 +712,7 @@ function HideTableHeaders() {
             if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
             if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
         });
-        if (RS.options.HasToolbar)
-            RS.$FloatingToolbar.css("display", "none");
+        if (RS.$FloatingToolbar != null) RS.$FloatingToolbar.css("display", "none");
     });
 };
 
@@ -932,7 +941,7 @@ function WriteRichText(RIContext) {
         $Sort.on("click", { id: RIContext.RS.options.UID, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { Reports[e.data.id].Sort(e.data.Direction, e.data.SortID); });
         RIContext.$HTMLParent.append($Sort);
     }
-
+    WriteActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
 
     Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
     Style += GetElementsTextStyle(RIContext.CurrObj.Elements);
@@ -1016,10 +1025,7 @@ function WriteRichTextItem(RIContext, Paragraphs, Index, ParentName, ParentConta
                     $TextRun = new $("<SPAN />");
                 }
                 else {
-                    $TextRun = new $("<A />");
-                    for (j = 0; j < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; j++) {
-                        WriteAction(RIContext, Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Actions[j], $TextRun);
-                    }
+                    WriteActions(RIContext, Obj.TextRuns[i].Elements.NonSharedElements, $TextRun);
                 }
 
                 if (Obj.TextRuns[i].Elements.SharedElements.Value != undefined & Obj.TextRuns[i].Elements.SharedElements.Value != "") {
@@ -1087,16 +1093,18 @@ function WriteImage(RIContext) {
     NewImage.alt = "Cannot display image";
     $(NewImage).attr("style", "display:block;");
 
-    if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
-        for (i = 0; i < RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Count; i++) {
-            WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $(NewImage));
-        }
-    
+    WriteActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));    
     WriteBookMark(RIContext);
   
     RIContext.$HTMLParent.attr("style", Style);
     RIContext.$HTMLParent.append(NewImage);
     return RIContext.$HTMLParent;
+}
+function WriteActions(RIContext, Elements, $Control) {
+    if (Elements.ActionInfo != null)
+        for (i = 0; i < Elements.ActionInfo.Count; i++) {
+            WriteAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
+        }
 }
 function WriteAction(RIContext, Action, Control) {
     if (Action.HyperLink != undefined) {
@@ -1380,6 +1388,7 @@ function WriteLine(RIContext) {
         lineStyle += "width:" + newWidth + "mm;height:0;"
         lineStyle += "-moz-transform: rotate(" + rotate + "rad);"
         lineStyle += "-webkit-transform: rotate(" + rotate + "rad);"
+        lineStyle += "-ms-transform: rotate(" + rotate + "rad);"
         lineStyle += "transform: rotate(" + rotate + "rad);"
         $line.attr("Style", lineStyle);
         RIContext.$HTMLParent.append($line);

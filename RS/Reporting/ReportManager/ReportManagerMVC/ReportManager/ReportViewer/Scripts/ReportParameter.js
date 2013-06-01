@@ -60,8 +60,8 @@
                 RS.Pages = new Object();
             }
 
-            AddLoadingIndicator(RS);
-            LoadPage(RS, pageNum, null, false);
+            RS.AddLoadingIndicator();
+            RS.LoadPage(pageNum, null, false);
         }
     });
 
@@ -78,7 +78,7 @@
     RS.$PageContainer.append($ParameterDiv);
     //RS.$PageContainer.append(WriteParameterToggle());
     //RS.$ReportContainer.append(RS.$PageContainer);   
-    RemoveLoadingIndicator(RS);
+    RS.RemoveLoadingIndicator();
 }
 function WriteParameterControl(RIContext) {
     var $TD_Lable = new $("<TD />");

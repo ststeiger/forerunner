@@ -779,6 +779,11 @@
                         <Action>
                           <Drillthrough>
                             <ReportName>Parameter by Region</ReportName>
+                            <Parameters>
+                              <Parameter Name="ReportParameter1">
+                                <Value>=Fields!Region.Value</Value>
+                              </Parameter>
+                            </Parameters>
                           </Drillthrough>
                         </Action>
                       </Actions>
@@ -794,6 +799,7 @@
                       <PaddingBottom>2pt</PaddingBottom>
                     </Style>
                   </Textbox>
+                  <rd:Selected>true</rd:Selected>
                 </CellContents>
               </TablixHeader>
             </TablixMember>

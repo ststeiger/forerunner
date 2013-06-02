@@ -168,7 +168,8 @@ namespace ReportManager.Controllers
             //write error message from client into the log file
         }
 
-        private HttpResponseMessage NavigateTo(NavType type, string ReportServerURL, string SessionID, string UniqueID)
+        [HttpGet]
+        public HttpResponseMessage NavigateTo(NavType type, string ReportServerURL, string SessionID, string UniqueID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result = null;

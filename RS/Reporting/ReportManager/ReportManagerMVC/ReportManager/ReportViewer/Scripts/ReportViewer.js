@@ -438,6 +438,7 @@
 
                 if (Data.ParametersRequired) {
                     me.$ReportAreaContainer.find("#Page").detach();
+                    me.SetScrollLocation(0, 0);
                     me.ShowParameters(1, Data.Parameters);
                 }
                 else {

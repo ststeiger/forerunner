@@ -30,8 +30,8 @@
       <FullPath>Image Report 2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Image Report.rdl</Name>
-      <FullPath>Image Report.rdl</FullPath>
+      <Name>Image Report with header.rdl</Name>
+      <FullPath>Image Report with header.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image table.rdl</Name>
@@ -46,12 +46,12 @@
       <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter2.rdl</Name>
-      <FullPath>Parameter2.rdl</FullPath>
+      <Name>Parameter by Category.rdl</Name>
+      <FullPath>Parameter by Category.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameters3.rdl</Name>
-      <FullPath>Parameters3.rdl</FullPath>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Gauge.rdl</Name>

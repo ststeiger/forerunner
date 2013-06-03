@@ -75,7 +75,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 UID: 'FRReportViewer1',
                 ToolbarUID: 'HeaderArea',
                 NavUID: 'bottomdiv',
-                toolbarOffset: this.toolbarHeight
+                toolbarOffset: this.toolbarHeight()
             });
         },
 

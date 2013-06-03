@@ -78,7 +78,8 @@
 
             if (me.HasToolbar) {
                 var $tb = me.GetToolbar(me.options.UID);
-                me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
+                if (me.ToolbarHeight == 0)
+                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
 
                 if (me.options.ToolbarUID == null) {
                     $Row = new $("<TR/>");
@@ -211,7 +212,7 @@
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase == "start")
-                        HideTableHeaders();
+                        me.HideTableHeaders();
                 },
                 tap: function (event, target) {
                     $(target).trigger('click');

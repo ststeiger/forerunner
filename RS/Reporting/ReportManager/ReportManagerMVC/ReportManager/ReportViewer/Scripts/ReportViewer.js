@@ -534,7 +534,7 @@
                 ReportPath: me.options.ReportPath,
                 SessionID: me.SessionID,
                 PageNumber: NewPageNum,
-                ParameterList: GetParamsList()
+                ParameterList: "" //GetParamsList()
             })
             .done(function (Data) {       
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);

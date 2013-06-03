@@ -1,6 +1,7 @@
 html,body {
   height: 100%;
   background-color: white;
+  position: relative;
 }
 
 * {
@@ -17,11 +18,34 @@ table,td,tr {
   z-index: 0;
 }
 
+#mainViewPort {
+    z-index: 1;
+    display: inline-block;
+}
+
+.mainViewPortShifted {
+    position: absolute;
+    top: 0px;
+    left: 290px;
+}
+
+#leftPane {
+    vertical-align: top;
+    width: 290px;
+    padding: 0px;
+    background-color: gray;
+    color: white;
+    z-index: 1;
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
 header#topdiv {
   border: 0px;
   position: fixed;
   top:0px;
-  left:0px;
   width:100%;
   height: auto;
   background-color: white;
@@ -109,6 +133,7 @@ section#pageSection {
 
 .sky-carousel {
   display: block;
+  min-height: 200px;
 }
 
 .rm-list {
@@ -184,7 +209,7 @@ and (orientation : landscape) {
 
 .sky-carousel {
   height: 250px;
-  width: device-width;
+  width: 100%;
 }
 
 .rm-list {
@@ -302,7 +327,8 @@ and (orientation : landscape) {
 
 .sky-carousel {
   display: block;
-  width: device-width;
+  width: 100%;
+  height: 600px;
 }
 
 .rm-list {

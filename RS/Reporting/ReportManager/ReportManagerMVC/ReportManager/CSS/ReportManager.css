@@ -40,7 +40,7 @@ footer#bottomdiv {
 }
 
 #headerspacer {
-  height:78px;
+  height:50px;
   display:block;
 }
 
@@ -136,12 +136,40 @@ section#pageSection {
   background-color: white;
 }
 
+.fr-buttonicon {
+  display: inline-block;
+}
+
+.fr-textbox {
+  display: inline-block;
+}
+
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 
 and (min-width : 400px) 
 and (orientation : landscape) {
 /* Styles */
+.fr-button-next {
+  display: none;
+}
+
+.fr-button-prev {
+  display: none;
+}
+
+.fr-button-firstpage {
+  display: none;
+}
+
+.fr-button-lastpage {
+  display: none;
+}
+
+.fr-textbox-reportpage {
+  display: none;
+}
+
 .catalogitem {
   width: 180px;
 }
@@ -178,22 +206,6 @@ and (orientation : landscape) {
 #footerspacer {
   display: none;
 }
-
-header#topdiv {
-  border-top: 10px solid black;
-  border-bottom: 1px solid black;
-  position: fixed;
-  top:0px;
-  left:0px;
-  width:100%;
-  height: 35px;
-  background-color: white;
-  z-index: 1;
-}
-
-#headerspacer {
-  height:50px;
-}
 }
 
 /* Smartphones (portrait) ----------- */
@@ -201,6 +213,26 @@ header#topdiv {
 and (max-width : 320px) 
 and (orientation : portrait) {
 /* Styles */
+.fr-button-next {
+  display: none;
+}
+
+.fr-button-prev {
+  display: none;
+}
+
+.fr-button-firstpage {
+  display: none;
+}
+
+.fr-button-lastpage {
+  display: none;
+}
+
+.fr-textbox-reportpage {
+  display: none;
+}
+
 .catalogitem {
   width: 120px;
 }
@@ -240,27 +272,6 @@ and (orientation : portrait) {
 #footerspacer {
   display: none;
 }
-
-header#topdiv {
-  border-top: 10px solid black;
-  border-bottom: 1px solid black;
-  position: fixed;
-  top:0px;
-  left:0px;
-  width:100%;
-  height: 35px;
-  background-color: white;
-  z-index: 1;
-}
-
-#headerspacer {
-  height:50px;
-  display:block;
-}
-
-#headerspacer {
-  height: 50px;
-}
 }
 
 /* iPads (landscape) ----------- */
@@ -284,10 +295,6 @@ and (orientation : landscape) {
 
 .rm-list {
   display: none;
-}
-
-#headerspacer {
-  height: 50px;
 }
 }
 
@@ -316,10 +323,6 @@ and (orientation : portrait) {
 .rm-list {
   display: block;
 }
-
-#headerspacer {
-  height: 50px;
-}
 }
 
 /* Desktops and laptops ----------- */
@@ -339,8 +342,24 @@ and (min-width : 1824px) {
 only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5)  {
 /* Styles */
-#headerspacer {
-  height: 50px;
+.fr-button-next {
+  display: none;
+}
+
+.fr-button-prev {
+  display: none;
+}
+
+.fr-button-firstpage {
+  display: none;
+}
+
+.fr-button-lastpage {
+  display: none;
+}
+
+.fr-textbox-reportpage {
+  display: none;
 }
 }
 

@@ -662,7 +662,7 @@
                 "<div class='fr-buttonicon fr-button-refresh'/>" +
                 "<div class='fr-buttonicon fr-button-firstpage'/>" +
                 "<div class='fr-buttonicon fr-button-prev'/>" +
-                "<input class='fr-textbox-reportpage' />" +
+                "<input class='fr-textbox fr-textbox-reportpage' />" +
                 "<div class='fr-buttonicon fr-button-next'/>" +
                 "<div class='fr-buttonicon fr-button-lastpage'/>" +
                 "</div>");

@@ -11,7 +11,6 @@
   margin: 6px;
   background-color:transparent;
   border-width:0px;
-  display: inline-block;
   vertical-align: top;
 }
 
@@ -65,5 +64,4 @@
   max-width:15mm;
   text-align:right;
   vertical-align: top;
-  display: inline-block;
 }

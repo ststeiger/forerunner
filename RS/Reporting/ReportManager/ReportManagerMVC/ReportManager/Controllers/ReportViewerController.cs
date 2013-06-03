@@ -162,7 +162,7 @@ namespace ReportManager.Controllers
                 case "bookmark":
                     result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, UniqueID));
                     break;
-                case "drillThrough":
+                case "drillthrough":
                     result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, UniqueID));
                     break;
                 case "documentMap":

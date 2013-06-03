@@ -343,7 +343,7 @@
         },
         Back: function () {
             var me = this;
-            var action = mr.ActionHistory.pop();
+            var action = me.ActionHistory.pop();
             if (action != undefined) {
                 me.options.ReportPath = action.ReportPath;
                 me.SessionID = action.SessionID;

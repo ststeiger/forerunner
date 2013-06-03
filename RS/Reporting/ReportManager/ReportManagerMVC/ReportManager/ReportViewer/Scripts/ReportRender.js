@@ -221,9 +221,9 @@
                 $Drilldown.html("&nbsp");
 
                 if (RIContext.CurrObj.Elements.NonSharedElements.ToggleState != null && RIContext.CurrObj.Elements.NonSharedElements.ToggleState == true)
-                    $Drilldown.addClass("Drilldown-Expand");
-                else
                     $Drilldown.addClass("Drilldown-Collapse");
+                else
+                    $Drilldown.addClass("Drilldown-Expand");
 
                 $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.ReportViewer.ToggleItem(e.data.ToggleID); });
                 $Drilldown.addClass("cursor-pointer");

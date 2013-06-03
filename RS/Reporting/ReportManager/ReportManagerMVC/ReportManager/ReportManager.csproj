@@ -142,10 +142,13 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
+    <Content Include="ReportViewer\Toolbar.css" />
     <Content Include="ReportViewer\Images\ajax-loader1.gif" />
     <Content Include="ReportViewer\Images\BackButton.jpg" />
     <Content Include="ReportViewer\Images\BackButton.png" />
     <Content Include="ReportViewer\Images\Backward.png" />
+    <Content Include="ReportViewer\Images\DocMap_Collapse.png" />
+    <Content Include="ReportViewer\Images\DocMap_Expand.png" />
     <Content Include="ReportViewer\Images\Drilldown_Collapse.gif" />
     <Content Include="ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="ReportViewer\Images\FastFoward.png" />
@@ -166,6 +169,16 @@
     <Content Include="ReportViewer\Images\Settings.png" />
     <Content Include="ReportViewer\Images\SortAccending.gif" />
     <Content Include="ReportViewer\Images\SortDecending.gif" />
+    <Content Include="ReportViewer\Images\Toolbar\align_just_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\arrow_left_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\burst_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\home_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\list_bullets_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\playback_ff_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\playback_next_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\playback_prev_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\playback_reload_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\playback_rew_icon.png" />
     <Content Include="ReportViewer\ReportViewer.css" />
     <Content Include="ReportViewer\Scripts\Carousel\css\default_skin.css" />
     <Content Include="ReportViewer\Scripts\Carousel\css\default_skin_variation.css" />
@@ -188,6 +201,7 @@
     <Content Include="ReportViewer\Scripts\jquery.validate1.11.1.min.js" />
     <Content Include="ReportViewer\Scripts\jquery.watermark.min.js" />
     <Content Include="ReportViewer\Scripts\ReportParameter.js" />
+    <Content Include="ReportViewer\Scripts\ReportRender.js" />
     <Content Include="ReportViewer\Scripts\ReportViewer.js" />
     <Content Include="Scripts\App\configs.js" />
     <Content Include="Scripts\Util\jquery-1.9.1.min.js" />
@@ -212,6 +226,8 @@
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
     <Content Include="Scripts\Views\CatalogItemView.html" />
+    <Content Include="Scripts\Views\ReportViewerHeaderView.html" />
+    <Content Include="Scripts\Views\ReportManagerHeaderView.html" />
     <Content Include="Scripts\Views\ReportViewerMainView.html" />
     <Content Include="Scripts\Views\ReportManagerMainView.html" />
     <Content Include="Scripts\Util\underscore.js" />

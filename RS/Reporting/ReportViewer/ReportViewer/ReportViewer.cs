@@ -34,14 +34,6 @@ namespace Forerunner.ReportViewer
         }
 
     }
-
-    public enum NavType
-    {
-        Toggle,
-        Bookmark,
-        DrillThrough,
-        DocumentMap
-    }
     
     public class ReportViewer
     {

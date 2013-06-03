@@ -404,20 +404,24 @@ td input[type="submit"], td input[type="button"], td button
     background-position: center;
     cursor:pointer;
 }
-td.DocMap
+td.DocMapPanel
 {
     vertical-align:top;
     height:100%;
     width:25%;
+    background-color:#EBF3FF;
 }
 .DocMapBorder
 {
-    width:100%;
+    width:255px;
     height:100%;
+    white-space:nowrap;
+    vertical-align:top;
+    overflow:hidden;
 }
 .DocMapHeader
 {
-    overflow:hidden;
+    overflow:auto;
     white-space:nowrap;
     width:auto;
 }
@@ -436,7 +440,9 @@ td.DocMap
 }
 .DocMap-Show
 {
-    display:block;
+    padding-left:6px;
+    padding-right:6px;
+    display:inline-block;
 }
 .DocMap-Item
 {
@@ -446,4 +452,48 @@ td.DocMap
     font-family:Verdana;
     font-size:8pt;
     vertical-align:middle;
+    margin-left:4px;
+    margin-right:4px;
+}
+.DocMap-Item-Highlight
+{
+    color:HighlightText;
+    background-color:Highlight;
+}
+.DocMap-Spliter
+{
+    font-family:Verdana;
+    font-size:3px;
+    width:4px;
+    text-align:center;
+    background-color:#A4B7D8;
+    cursor:w-resize;
+}
+.DocMap-Collapse {    
+    background-image:url('../reportviewer/Images/DocMap_Collapse.png');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px;
+    background-position: center;
+    cursor:pointer;
+}
+.DocMap-Expand {    
+    background-image:url('../reportviewer/Images/DocMap_Expand.png');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px;
+    background-position: center;
+    cursor:pointer;
+}
+.DocMap-Indent
+{
+    background-image:url('../reportviewer/Images/EmptyIndent.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding-left:7px;
+    padding-right:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    background-position: center;
+    cursor:pointer;
 }

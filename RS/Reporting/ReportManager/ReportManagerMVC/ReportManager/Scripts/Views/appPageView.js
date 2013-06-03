@@ -35,7 +35,6 @@ var g_App = g_App || {};
       customEvents: function() {
         return {
         'change:mainSection': this.onChangeMainSection,
-        'change:footerTitle': this.onChangeFooterTitle,
         };
       },
       
@@ -61,63 +60,26 @@ var g_App = g_App || {};
 
         return this;
       },
-      
-      onChangePageTitle: function() {
-        $(this.el).find("#pageTitle").text(this.model.attributes.pageTitle);
-      },
-      
-      onChangePageSubtitle: function() {
-        $(this.el).find("#pageSubtitle").text(this.model.attributes.pageSubtitle);
-      },
-      
-      onChangeShowBackButton: function() {
-        if (this.model.attributes.showBackButton) {
-          $(this.el).find("#backButton").show();
-        }
-        else {
-          $(this.el).find("#backButton").hide();
-        }
-      },
-      
+            
       // Append or transition to a mainSection
       onChangeMainSection: function() {
         // Append or transition the main section into the page
         var el = this.model.attributes.mainSection.el;
         $(this.el).find("#mainSection").html(el);
-        //  BUGBUG::  This messing up the sizing
-        /*  
-        if ($(this.el).find("#mainSection>div").length == 0) {
-          $(this.el).find("#mainSection").append(el);
-        }
-        else {
-          var mainSection = $(this.el).find("#mainSection>div");
-          mainSection.slideUp("slow", function () {
-            $(el).hide();
-            mainSection.replaceWith(el);
-            $(el).fadeIn("slow");
-          })
-        }*/
       },
       
-      onChangeFooterTitle: function() {
-        $(this.el).find("#footerTitle").text(this.model.attributes.footerTitle);
+      transitionHeader : function(headerSecionType) {
+          $('#mainSectionHeader').html(new headerSecionType().render().el);
       },
-      
-      
-      transitionMainSection: function(appPageModel, views, subfolder, mainSectionType, options) {
+
+      transitionMainSection: function(appPageModel, mainSectionType, options) {
         // First load the subordinate view templates, everything else will happen in the callback
           var thisObj = this;
           $('#bottomdiv').html(null);
-        //g_App.utils.loadTemplate(views, subfolder, function() {
           appPageModel.attributes.mainSection = new mainSectionType(options).render();
           thisObj.model.set(appPageModel);
-        //});
+
           $('#HeaderArea').html(null);
-          if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.sectionHeader != null) {
-              $('#mainSectionHeader').html(appPageModel.attributes.mainSection.sectionHeader());
-          } else {
-              $('#mainSectionHeader').html(null);
-          }
           if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.postRender != null) {
               appPageModel.attributes.mainSection.postRender();
           }

@@ -3,7 +3,16 @@ var g_App = g_App || {};
 
 // Everything inside this function is local unless assigned to a global variable such
 // as g_App
-(function() {
+(function () {
+  g_App.ReportManagerHeaderView = Backbone.View.extend({
+      initialize: function () {
+          _(this).bindAll('render');
+      },
+      render: function () {
+          $(this.el).html(this.template(null));
+          return this;
+      },
+  });
   // Views
   g_App.ReportManagerMainView = Backbone.View.extend({
     initialize: function (options) {
@@ -23,10 +32,6 @@ var g_App = g_App || {};
         }
 
         return this;
-    },
-    sectionHeader: function () {
-        if (this.model.path == '/') return 'Home';
-        return 'Home' + this.model.path;
     },
     postRender: function () {
         var carousel = $('#browse-carousel').carousel({

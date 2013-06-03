@@ -362,19 +362,19 @@
                 //me.$ReportAreaContainer.append(me.Pages[me.CurPage].$Container);
             }
         },
-        ShowNav: function (UID) {
+        ShowNav: function () {
             var me = this;
-            if (!Reports[UID].CreateNav)
-                Reports[UID].CreateSlider(UID);
-            if (Reports[UID].$Slider.is(":visible")) {
-                Reports[UID].$Slider.fadeOut("slow");
-                Reports[UID].$PageNav.fadeOut("fast");
+            if (!me.CreateNav)
+                me.CreateSlider(me.options.UID);
+            if (me.$Slider.is(":visible")) {
+                me.$Slider.fadeOut("slow");
+                me.$PageNav.fadeOut("fast");
             }
             else {
-                if (Reports[UID].$Carousel != null)
-                    Reports[UID].$Carousel.select(Reports[UID].CurPage - 1, 1);
-                Reports[UID].$PageNav.fadeIn("fast");
-                Reports[UID].$Slider.fadeIn("slow");
+                if (me.$Carousel != null)
+                    me.$Carousel.select(me.CurPage - 1, 1);
+                me.$PageNav.fadeIn("fast");
+                me.$Slider.fadeIn("slow");
             }
         },
         Sort: function (Direction, ID) {
@@ -599,7 +599,7 @@
             $Row.append($Cell);
 
             $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-nav2'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.ShowNav(e.data.id); });
+            $Cell.on("click", { id: UID }, function (e) { me.ShowNav(); });
             $Cell.addClass("cursor-pointer");
             $Row.append($Cell);
 

@@ -216,7 +216,18 @@
                 },
                 tap: function (event, target) {
                     $(target).trigger('click');
-                }
+                },
+                longTap: function (event, target) {
+                    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
+                        me.ShowNav();
+                    }
+                },
+                doubleTap: function (event, target) {
+                    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
+                        me.ShowNav();
+                    }
+                },
+                longTapThreshold: 1000,
             });
         },
         RefreshReport: function () {

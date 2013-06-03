@@ -302,13 +302,13 @@
                     Obj = Obj.Value;
                     if (Obj.Paragraph.SharedElements.ListStyle == 1) {
                         if ($ParagraphList == null || !$ParagraphList.is("ol")) $ParagraphList = new $("<OL />");
-                        $ParagraphList.addClass(this._GetListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._GetListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
 
                         $ParagraphItem = new $("<LI />");
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
                         if ($ParagraphList == null || !$ParagraphList.is("ul")) $ParagraphList = new $("<UL />");
-                        $ParagraphList.addClass(this._GetListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._GetListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
 
                         $ParagraphItem = new $("<LI />");
                     }
@@ -392,15 +392,13 @@
             NewImage.src = this._GetImageURL(RIContext.RS, ImageName);
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
                 NewImage.useMap = "#Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
-            }
-            me = this;
+            }            
             NewImage.onload = function () {
                 me._WriteActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
                 me._ResizeImage(this, sizingType, this.naturalHeight, this.naturalWidth, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
-
             };
             NewImage.alt = "Cannot display image";
-            $(NewImage).attr("style", "display:block;");
+            $(NewImage).attr("style", "display:block;" );
 
             this._WriteActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             this._WriteBookMark(RIContext);

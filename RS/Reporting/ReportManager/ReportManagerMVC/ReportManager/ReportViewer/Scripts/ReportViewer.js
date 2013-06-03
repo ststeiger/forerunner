@@ -317,7 +317,7 @@
                 $Thumbnail = new $('<IMG />');
                 $Thumbnail.attr('class', 'pagethumb');
                 $Thumbnail.attr('src', url);
-                $Thumbnail.attr("onclick", "Reports['" + ReportViewerUID + "'].NavToPage(" + i + ")");
+                $Thumbnail.on("click", { Index: i }, function (e) { me.NavToPage(e.data.Index); });
                 // Need to add onclick
                 $ListItem.append($Caption);
                 $ListItem.append($Thumbnail);
@@ -630,7 +630,7 @@
             $Row.append($Cell);
 
             $Cell = new $("<TD class='spacer5mm' ><DIV class='composite-icons30x30 icon-previous'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(Reports[e.data.id].CurPage - 1); });
+            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(me.CurPage - 1); });
             $Cell.addClass("cursor-pointer");
             $Row.append($Cell);
 
@@ -638,11 +638,11 @@
             $Cell.addClass("toolbartextbox");
             $Cell.addClass(UID);
             $Cell.attr("type", "number")
-            $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) Reports[e.data.id].NavToPage(e.data.input.val()); });
+            $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) me.NavToPage(e.data.input.val()); });
             $Row.append($Cell);
 
             $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-next'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(Reports[e.data.id].CurPage + 1); });
+            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(me.CurPage + 1); });
             $Cell.addClass("cursor-pointer");
             $Row.append($Cell);
 

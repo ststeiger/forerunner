@@ -66,7 +66,7 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, [
                 'ReportViewerMainView'], '',
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            $('#FRReportViewer1').reportviewer({
+            $('#FRReportViewer1').reportViewer({
                 ReportServer: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,

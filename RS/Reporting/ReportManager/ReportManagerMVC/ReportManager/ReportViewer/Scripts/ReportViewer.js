@@ -50,6 +50,7 @@
             me.ReportViewerAPI = this.options.ReportViewerAPI
             me.FloatingToolbarHeight;
             me.$FloatingToolbar;
+            me.$Toolbar;
             me.SessionID = "";
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
@@ -77,13 +78,11 @@
             }
 
             if (me.HasToolbar) {
-                var $tb = me.GetToolbar(me.options.UID);
-                if (me.ToolbarHeight == 0)
-                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
-
+                var $tb;
                 if (me.options.ToolbarUID == null) {
                     $Row = new $("<TR/>");
                     $Cell = new $("<TD/>");
+                    $tb = getDefaultToolbar();
                     $Cell.append($tb);
                     $Row.append($Cell);
                     $Row.addClass('inlinetoolbar', 0, 0, null);
@@ -92,8 +91,15 @@
                     $Table.append($Row);
                     $Table.append($FloatingToolbar);
                 } else {
-                    $Container = $('#' + me.options.ToolbarUID);
-                    $Container.append($tb);                    
+                    $tb = $('#' + me.options.ToolbarUID);
+                }
+                me.initToolbar();
+                me.$Toolbar = $tb;
+                if (me.ToolbarHeight == 0)
+                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
+                if (me.is_touch_device()) {
+                    me.ShowToolbar();
+                    me.ToolbarHeight = 0;
                 }
             }
 
@@ -192,7 +198,7 @@
             }
             me.Pages[NewPageNum] = null;
             me.CurPage = NewPageNum;
-            $("input." + me.options.UID).each(function () { $(this).val(NewPageNum); });
+            $("input.fr-textbox-reportpage", $('#' + me.options.ToolbarUID)).each(function () { $(this).val(NewPageNum); });
     
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -220,11 +226,13 @@
                 longTap: function (event, target) {
                     if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
                         me.ShowNav();
+                        me.ShowToolbar();
                     }
                 },
                 doubleTap: function (event, target) {
                     if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
                         me.ShowNav();
+                        me.ShowToolbar();
                     }
                 },
                 longTapThreshold: 1000,
@@ -305,7 +313,7 @@
             $List.attr('class', 'sky-carousel-container');
 
             //if(GetParamsList()!
-            for ( i = 1; i <= me.NumPages; i++) {
+            for (var i = 1; i <= me.NumPages; i++) {
         
                 var url = me.options.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + me.ReportServerURL + '&ReportPath='
                         + me.options.ReportPath + '&SessionID=' + me.SessionID + '&PageNumber=' +  i;
@@ -317,7 +325,12 @@
                 $Thumbnail = new $('<IMG />');
                 $Thumbnail.attr('class', 'pagethumb');
                 $Thumbnail.attr('src', url);
-                $Thumbnail.on("click", { Index: i }, function (e) { me.NavToPage(e.data.Index); });
+                $Thumbnail.data('pageNumber', i);
+                this._on($Thumbnail, {
+                    click: function (event) {
+                        me.NavToPage($(event.currentTarget).data('pageNumber'));
+                    }
+                });
                 // Need to add onclick
                 $ListItem.append($Caption);
                 $ListItem.append($Thumbnail);
@@ -386,6 +399,14 @@
                     me.$Carousel.select(me.CurPage - 1, 1);
                 me.$PageNav.fadeIn("fast");
                 me.$Slider.fadeIn("slow");
+            }
+        },
+        ShowToolbar: function() {
+            var me = this;
+            if (me.$Toolbar.is(":visible")) {
+                me.$Toolbar.hide();
+            } else {
+                me.$Toolbar.show();
             }
         },
         Sort: function (Direction, ID) {
@@ -475,7 +496,7 @@
         },
         NavigateDocumentMap: function (DocumentMapID) {
             var me = this;
-            $.getJSON(me.ReportViewerAPI + "/NavigateTo/", {
+            $.getJSON(me.options.ReportViewerAPI + "/NavigateDocumentMap/", {
                 NavType: "documentMap",
                 ReportServerURL: me.ReportServerURL,
                 SessionID: me.SessionID,
@@ -483,7 +504,8 @@
             }).done(function (Data) {
                 me.BackupCurPage();
                 me.Pages = new Object();
-                LoadPage(RS, Data.NewPage, null, false, null);
+                me.LoadPage(Data.NewPage, null, false, null);
+                //LoadPage(RS, Data.NewPage, null, false, null);
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -517,9 +539,10 @@
                 if (me.ParamLoaded == true) {
                     $("#ParameterContainer").detach();
                 }
-                $("#ParameterContainer").reporreportParameters({ ReportViewer: this });
-                $("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                
+                //$("#ParameterContainer").reportParameters({ ReportViewer: this });
+                //$("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
+                me.reportParameters({ ReportViewer: this });
+                me.reportParameters("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {
@@ -590,73 +613,63 @@
             //me.Pages[pageNum].$Container.reportRender({ ReportViewer: this });
             me.Pages[pageNum].$Container.reportRender("Render",pageNum);
 
-
             if (me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
                 WriteDocumentMap(new ReportItemContext(me, me.Pages[pageNum].ReportObj.Report.DocumentMap, null, null, me.$PageContainer));
             }
             me.Pages[pageNum].IsRendered = true;
         },
-        GetToolbar: function (UID) {
-            var me = this;
-            var $Toolbar = $("<Table/>");
-            var $Row = $("<TR/>");
+
+        initToolbar : function() {
+            var $Container = $('#' + this.options.ToolbarUID);
             var $Cell;
-
-            $Toolbar.attr("class", "toolbar");
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-settings'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.ShowParms(); });
+            var me = this;
+            $Cell = $('.fr-button-paramarea', $Container);
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowParms(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-nav2'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.ShowNav(); });
+            $Cell = $('.fr-button-nav');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowNav(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backbutton'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.Back(); });
+            $Cell = $('.fr-button-reportback');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.Back(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-refresh'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.RefreshReport(); });
+            $Cell = $('.fr-button-refresh');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.RefreshReport(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backward'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(1); });
+            $Cell = $('.fr-button-firstpage');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer5mm' ><DIV class='composite-icons30x30 icon-previous'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(me.CurPage - 1); });
+            $Cell = $('.fr-button-prev');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage - 1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
 
-            $Cell = new $("<input/>");
-            $Cell.addClass("toolbartextbox");
-            $Cell.addClass(UID);
+            $Cell = $('.fr-textbox-reportpage');
             $Cell.attr("type", "number")
-            $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) me.NavToPage(e.data.input.val()); });
-            $Row.append($Cell);
+            $Cell.on("keypress", { id: me.options.UID, input: $Cell }, function (e) { if (e.keyCode == 13) me.NavToPage(e.data.input.val()); });
 
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-next'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(me.CurPage + 1); });
+            $Cell = $('.fr-button-next');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage + 1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD/>");    
-            $Cell.attr("style", "width:100%;");
-            $Row.append($Cell);
-
-            $Toolbar.append($Row);
-            return $Toolbar;
+            $Cell = $('.fr-button-lastpage');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.NumPages); });
+            $Cell.addClass("cursor-pointer");
         },
 
+        getDefaultToolbar : function() {
+            return new $("<div class='fr-toolbar' id='ViewerToolbar'><a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
+                "<div class='fr-buttonicon fr-button-nav'/>" +
+                "<div class='fr-buttonicon fr-button-paramarea'/>" +
+                "<div class='fr-buttonicon fr-button-reportback'/>" +
+                "<div class='fr-buttonicon fr-button-refresh'/>" +
+                "<div class='fr-buttonicon fr-button-firstpage'/>" +
+                "<div class='fr-buttonicon fr-button-prev'/>" +
+                "<input class='fr-textbox fr-textbox-reportpage' />" +
+                "<div class='fr-buttonicon fr-button-next'/>" +
+                "<div class='fr-buttonicon fr-button-lastpage'/>" +
+                "</div>");
+        },
         WriteDocumentMap: function (RIContext) {
             var $TD = new $("<TD />");
-            $TD.addClass("DocMap");
+            $TD.addClass("DocMapPanel");
             var $DocMapContainer = new $("<DIV />");
             $DocMapContainer.addClass("DocMapBorder");
 
@@ -665,7 +678,7 @@
 
             var $RowBar = new $("<TR />");
             var $Header = new $("<DIV />");
-            $Header.attr("id", "DocMapHeader").addClass("DocMapHeader");
+            $Header.addClass("DocMapHeader");
 
             var $DocMapBar = new $("<DIV />");
             $DocMapBar.addClass("DocMapBar").html(" Document Map ");
@@ -684,50 +697,71 @@
             $TD.append($DocMapContainer);
 
             RIContext.RS.$PageContainer.append($TD);
-            },
+            RIContext.RS.$PageContainer.append($TDSpliter);
+        },
         WriteDocumentMapItem: function(RS, DocMap, Level) {
-        var $DocMap = new $("<DIV />");
-        $DocMap.css("margin-left:" + Level * 18 + "px;white-space:nowrap");
+            var $DocMap = new $("<DIV />");
+            $DocMap.attr("style", "margin-left:" + Level * 18 + "px;white-space:nowrap");
 
-        var $Icon = new $("<Image />");
-        var $Icon2 = new $("<Image />");
-        if (DocMap.Children == null) {
-            $DocMap.attr("level", Level);
-            $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
-        }
-        else {
-            $Icon.attr("src", "./reportviewer/Images/Drilldown_Collapse.gif").addClass("DocMap-Show");
-            $Icon.on("click", function () {
-                $Icon.addClass("DocMap-Hidden").removeClass("DocMap-Show");
-                $Icon2.addClass("DocMap-Show").removeClass("DocMap-Hidden");
-                $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+            var $Icon = new $("<DIV />");
+    
+            if (DocMap.Children == null) {
+                $DocMap.attr("level", Level);
+                $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
+            }
+            else {
+                $Icon.addClass("Drilldown-Collapse");
+                $Icon.on("click", function () {
+                    if ($Icon.hasClass("Drilldown-Collapse")) {
+                        $Icon.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
+                        $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+                    }
+                    else {
+                        $Icon.addClass("Drilldown-Collapse").removeClass("Drilldown-Expand");
+                        $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+                    }
+                });
+            }
+            $DocMap.append($Icon);
+
+            var $TDSpliter = new $("<TD />");
+            $TDSpliter.addClass("DocMap-Spliter");
+            $TDSpliter.on("mouseover", function (event) { SetActionCursor(this); });    
+            //$TDSpliter.on("mousemove", function (e) {
+        
+            //    var offset = $(this).offset();
+            //    //var x = e.pageX - offset.left;
+            //    //alert('e.pageX:' + e.pageX + ';x:' + x);
+            //    //$(".DocMapBorder").width(offset.left);
+            //});
+
+            var $Spliter = new $("<DIV />");
+            $Spliter.addClass("DocMap-Collapse");
+            $TDSpliter.on("click", function () {
+                $(".DocMapPanel").toggle("fast");
+                if ($Spliter.hasClass("DocMap-Collapse"))
+                    $Spliter.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
+                else
+                    $Spliter.removeClass("DocMap-Expand").addClass("DocMap-Collapse");
             });
-
-            $Icon2.attr("src", "./reportviewer/Images/Drilldown_Expand.gif").addClass("DocMap-Hidden");
-            $Icon2.on("click", function () {
-                $Icon.addClass("DocMap-Show").removeClass("DocMap-Hidden");
-                $Icon2.addClass("DocMap-Hidden").removeClass("DocMap-Show");
-                $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+            $TDSpliter.append($Spliter);
+    
+            var $MapNode = new $("<A />");
+            $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
+            $MapNode.on("click", { ID: RS.options.UID, UniqueName: DocMap.UniqueName }, function (e) {
+                Reports[e.data.ID].NavigateDocumentMap(e.data.UniqueName);
             });
-        }
+            $MapNode.hover(function () { $MapNode.addClass("DocMap-Item-Highlight"); }, function () { $MapNode.removeClass("DocMap-Item-Highlight"); });
+            $DocMap.append($MapNode);
 
-        var $MapNode = new $("<A />");
-        $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
-        $MapNode.on("click", function () {
-            NavigateDocumentMap(RS, DocMap.UniqueName);
-        });
-
-        $DocMap.append($Icon).append($Icon2).append($MapNode);
-
-        if (DocMap.Children != undefined) {
-            Level++;
-            $.each(DocMap.Children, function (Index, Obj) {
-                $DocMap.append(WriteDocumentMapItem(RS, Obj, Level));
-            });
-        }
-        return $DocMap;
-    },
-
+            if (DocMap.Children != undefined) {
+                Level++;
+                $.each(DocMap.Children, function (Index, Obj) {
+                    $DocMap.append(WriteDocumentMapItem(RS, Obj, Level));
+                });
+            }
+            return $DocMap;
+        },
         // Utility functions
         SessionPing: function() {
             // Ping each report so that the seesion does not expire on the report server
@@ -740,7 +774,7 @@
                 .done(function (Data) { })
                 .fail(function () { console.log("error"); })
     
-            },
+        },
         UpdateTableHeaders: function(me) {
             // Update the floating headers in this viewer
             // Update the toolbar
@@ -763,43 +797,45 @@
             });
             if (me.$FloatingToolbar != null) me.$FloatingToolbar.css("display", "none");
         },
-        is_touch_device: function() {
+        is_touch_device: function () {
+            var ua = navigator.userAgent;
             return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window); // works on ie10
+                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
+                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         NavToLink: function(ElementID) {
             $(this).scrollTop($("#" + ElementID).offset().top - 85);
         },
         StopDefaultEvent: function(e) {
-        //IE
+            //IE
             if (window.ActiveXObject)
                 window.event.returnValue = false;
             else {
                 e.preventDefault();
                 e.stopPropagation();
             }
-         },
+        },
         _GetHeight: function ($Obj) {
-        var height;
+            var height;
 
-        var $copied_elem = $Obj.clone()
-                            .css({
-                                visibility: "hidden"
-                            });
+            var $copied_elem = $Obj.clone()
+                                .css({
+                                    visibility: "hidden"
+                                });
 
             //Image size cannot change so do not load.
             //$copied_elem.find('img').removeAttr('src');
             //$copied_elem.find('img').removeAttr('onload');
             //$copied_elem.find('img').removeAttr('alt');
-        $copied_elem.find('img').remove();
+            $copied_elem.find('img').remove();
 
-        $("body").append($copied_elem);
-        height = $copied_elem.height() + "px";
+            $("body").append($copied_elem);
+            height = $copied_elem.height() + "px";
 
-        $copied_elem.remove();
+            $copied_elem.remove();
 
             //Return in mm
-        return this._ConvertToMM(height);
+            return this._ConvertToMM(height);
 
         },
         _ConvertToMM: function (ConvertFrom) {

@@ -1,0 +1,67 @@
+﻿.fr-toolbar {
+    background-color: black;
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+}
+
+.fr-buttonicon {
+  width:24px;
+  height:24px;
+  margin: 6px;
+  background-color:transparent;
+  border-width:0px;
+  vertical-align: top;
+}
+
+.fr-button-home {
+  background-image:url('../reportviewer/Images/Toolbar/home_icon.png');
+}
+
+.fr-button-back {
+  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
+}
+
+.fr-button-reportback {
+  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
+}
+
+.fr-button-next {
+  background-image:url('../reportviewer/Images/Toolbar/playback_next_icon.png');
+}
+
+.fr-button-prev {
+  background-image:url('../reportviewer/Images/Toolbar/playback_prev_icon.png');
+}
+
+.fr-button-firstpage {
+  background-image:url('../reportviewer/Images/Toolbar/playback_rew_icon.png');
+}
+
+.fr-button-lastpage {
+  background-image:url('../reportviewer/Images/Toolbar/playback_ff_icon.png');
+}
+
+.fr-button-refresh {
+  background-image:url('../reportviewer/Images/Toolbar/playback_reload_icon.png');
+}
+
+.fr-button-nav {
+  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+}
+
+.fr-button-menu {
+  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+}
+
+.fr-button-paramarea {
+  background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
+}
+
+.fr-textbox-reportpage {
+  background-color: white;
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
+  vertical-align: top;
+}

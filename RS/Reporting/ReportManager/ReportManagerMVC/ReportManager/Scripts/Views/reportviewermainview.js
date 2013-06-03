@@ -5,6 +5,15 @@ var g_App = g_App || {};
 // as g_App
 (function() {
   // Views
+  g_App.ReportViewerHeaderView = Backbone.View.extend({
+    initialize: function () {
+        _(this).bindAll('render');
+    },
+    render: function () {
+        $(this.el).html(this.template(null));
+        return this;
+    },
+  });
   g_App.ReportViewerMainView = Backbone.View.extend({
     initialize: function (options) {
         this.path = options.path;
@@ -16,9 +25,6 @@ var g_App = g_App || {};
         $(this.el).html(this.template(data));
         return this;
     },
-    sectionHeader: function () {
-        return 'Home' + this.path;
-    }
   });
 }());
 

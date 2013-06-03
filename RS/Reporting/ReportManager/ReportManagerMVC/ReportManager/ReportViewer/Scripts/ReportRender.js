@@ -302,13 +302,13 @@
                     Obj = Obj.Value;
                     if (Obj.Paragraph.SharedElements.ListStyle == 1) {
                         if ($ParagraphList == null || !$ParagraphList.is("ol")) $ParagraphList = new $("<OL />");
-                        $ParagraphList.addClass(this._GetListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._GetListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
 
                         $ParagraphItem = new $("<LI />");
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle == 2) {
                         if ($ParagraphList == null || !$ParagraphList.is("ul")) $ParagraphList = new $("<UL />");
-                        $ParagraphList.addClass(this._GetListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._GetListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
 
                         $ParagraphItem = new $("<LI />");
                     }

@@ -518,9 +518,10 @@
                 if (me.ParamLoaded == true) {
                     $("#ParameterContainer").detach();
                 }
-                $("#ParameterContainer").reporreportParameters({ ReportViewer: this });
-                $("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                
+                //$("#ParameterContainer").reportParameters({ ReportViewer: this });
+                //$("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
+                me.reportParameters({ ReportViewer: this });
+                me.reportParameters("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {
@@ -591,7 +592,6 @@
             //me.Pages[pageNum].$Container.reportRender({ ReportViewer: this });
             me.Pages[pageNum].$Container.reportRender("Render",pageNum);
 
-
             if (me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
                 WriteDocumentMap(new ReportItemContext(me, me.Pages[pageNum].ReportObj.Report.DocumentMap, null, null, me.$PageContainer));
             }
@@ -654,7 +654,6 @@
             $Toolbar.append($Row);
             return $Toolbar;
         },
-
         WriteDocumentMap: function (RIContext) {
             var $TD = new $("<TD />");
             $TD.addClass("DocMapPanel");
@@ -679,30 +678,6 @@
             $TDMap.append(WriteDocumentMapItem(RIContext.RS, RIContext.CurrObj, 0));
 
             $Row.append($TDMap);
-
-    var $TDSpliter = new $("<TD />");
-    $TDSpliter.addClass("DocMap-Spliter");
-    $TDSpliter.on("mouseover", function (event) { SetActionCursor(this); });    
-    //$TDSpliter.on("mousemove", function (e) {
-        
-    //    var offset = $(this).offset();
-    //    //var x = e.pageX - offset.left;
-    //    //alert('e.pageX:' + e.pageX + ';x:' + x);
-    //    //$(".DocMapBorder").width(offset.left);
-    //});
-   
-
-    var $Spliter = new $("<DIV />");
-    $Spliter.addClass("DocMap-Collapse");
-    $TDSpliter.on("click", function () {
-        $(".DocMapPanel").toggle("fast");
-        if ($Spliter.hasClass("DocMap-Collapse"))
-            $Spliter.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
-        else
-            $Spliter.removeClass("DocMap-Expand").addClass("DocMap-Collapse");
-    });
-    $TDSpliter.append($Spliter);
-
             $Table.append($RowBar);
             $Table.append($Row);
             $DocMapContainer.append($Table);
@@ -710,48 +685,70 @@
 
             RIContext.RS.$PageContainer.append($TD);
             RIContext.RS.$PageContainer.append($TDSpliter);
+        },
         WriteDocumentMapItem: function(RS, DocMap, Level) {
-        var $DocMap = new $("<DIV />");
-    $DocMap.attr("style", "margin-left:" + Level * 18 + "px;white-space:nowrap");
+            var $DocMap = new $("<DIV />");
+            $DocMap.attr("style", "margin-left:" + Level * 18 + "px;white-space:nowrap");
 
-    var $Icon = new $("<DIV />");
+            var $Icon = new $("<DIV />");
     
-        if (DocMap.Children == null) {
-            $DocMap.attr("level", Level);
-            $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
-        }
-        else {
-        $Icon.addClass("Drilldown-Collapse");
-            $Icon.on("click", function () {
-            if ($Icon.hasClass("Drilldown-Collapse")) {
-                $Icon.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
-                $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+            if (DocMap.Children == null) {
+                $DocMap.attr("level", Level);
+                $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
             }
             else {
-                $Icon.addClass("Drilldown-Collapse").removeClass("Drilldown-Expand");
-                $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+                $Icon.addClass("Drilldown-Collapse");
+                $Icon.on("click", function () {
+                    if ($Icon.hasClass("Drilldown-Collapse")) {
+                        $Icon.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
+                        $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+                    }
+                    else {
+                        $Icon.addClass("Drilldown-Collapse").removeClass("Drilldown-Expand");
+                        $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+                    }
+                });
             }
+            $DocMap.append($Icon);
+
+            var $TDSpliter = new $("<TD />");
+            $TDSpliter.addClass("DocMap-Spliter");
+            $TDSpliter.on("mouseover", function (event) { SetActionCursor(this); });    
+            //$TDSpliter.on("mousemove", function (e) {
+        
+            //    var offset = $(this).offset();
+            //    //var x = e.pageX - offset.left;
+            //    //alert('e.pageX:' + e.pageX + ';x:' + x);
+            //    //$(".DocMapBorder").width(offset.left);
+            //});
+
+            var $Spliter = new $("<DIV />");
+            $Spliter.addClass("DocMap-Collapse");
+            $TDSpliter.on("click", function () {
+                $(".DocMapPanel").toggle("fast");
+                if ($Spliter.hasClass("DocMap-Collapse"))
+                    $Spliter.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
+                else
+                    $Spliter.removeClass("DocMap-Expand").addClass("DocMap-Collapse");
             });
-        }
-    $DocMap.append($Icon);
+            $TDSpliter.append($Spliter);
     
-        var $MapNode = new $("<A />");
-        $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
-    $MapNode.on("click", { ID: RS.options.UID, UniqueName: DocMap.UniqueName }, function (e) {
-        Reports[e.data.ID].NavigateDocumentMap(e.data.UniqueName);
-        });
-    $MapNode.hover(function () { $MapNode.addClass("DocMap-Item-Highlight"); }, function () { $MapNode.removeClass("DocMap-Item-Highlight"); });
-    $DocMap.append($MapNode);
-
-        if (DocMap.Children != undefined) {
-            Level++;
-            $.each(DocMap.Children, function (Index, Obj) {
-                $DocMap.append(WriteDocumentMapItem(RS, Obj, Level));
+            var $MapNode = new $("<A />");
+            $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
+            $MapNode.on("click", { ID: RS.options.UID, UniqueName: DocMap.UniqueName }, function (e) {
+                Reports[e.data.ID].NavigateDocumentMap(e.data.UniqueName);
             });
-        }
-        return $DocMap;
-    },
+            $MapNode.hover(function () { $MapNode.addClass("DocMap-Item-Highlight"); }, function () { $MapNode.removeClass("DocMap-Item-Highlight"); });
+            $DocMap.append($MapNode);
 
+            if (DocMap.Children != undefined) {
+                Level++;
+                $.each(DocMap.Children, function (Index, Obj) {
+                    $DocMap.append(WriteDocumentMapItem(RS, Obj, Level));
+                });
+            }
+            return $DocMap;
+        },
         // Utility functions
         SessionPing: function() {
             // Ping each report so that the seesion does not expire on the report server
@@ -764,7 +761,7 @@
                 .done(function (Data) { })
                 .fail(function () { console.log("error"); })
     
-            },
+        },
         UpdateTableHeaders: function(me) {
             // Update the floating headers in this viewer
             // Update the toolbar
@@ -795,35 +792,35 @@
             $(this).scrollTop($("#" + ElementID).offset().top - 85);
         },
         StopDefaultEvent: function(e) {
-        //IE
+            //IE
             if (window.ActiveXObject)
                 window.event.returnValue = false;
             else {
                 e.preventDefault();
                 e.stopPropagation();
             }
-         },
+        },
         _GetHeight: function ($Obj) {
-        var height;
+            var height;
 
-        var $copied_elem = $Obj.clone()
-                            .css({
-                                visibility: "hidden"
-                            });
+            var $copied_elem = $Obj.clone()
+                                .css({
+                                    visibility: "hidden"
+                                });
 
             //Image size cannot change so do not load.
             //$copied_elem.find('img').removeAttr('src');
             //$copied_elem.find('img').removeAttr('onload');
             //$copied_elem.find('img').removeAttr('alt');
-        $copied_elem.find('img').remove();
+            $copied_elem.find('img').remove();
 
-        $("body").append($copied_elem);
-        height = $copied_elem.height() + "px";
+            $("body").append($copied_elem);
+            height = $copied_elem.height() + "px";
 
-        $copied_elem.remove();
+            $copied_elem.remove();
 
             //Return in mm
-        return this._ConvertToMM(height);
+            return this._ConvertToMM(height);
 
         },
         _ConvertToMM: function (ConvertFrom) {

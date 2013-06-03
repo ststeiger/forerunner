@@ -18,7 +18,7 @@ table,td,tr {
 }
 
 header#topdiv {
-  border-top: 10px solid black;
+  border: 0px;
   position: fixed;
   top:0px;
   left:0px;
@@ -47,14 +47,6 @@ footer#bottomdiv {
 #footerspacer {
   height:0px;
   display:block;
-}
-
-section#mainSectionHeader {
-  height: 20px;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  width:100%;
-  background-color: white;
 }
 
 section#pageSection {
@@ -100,12 +92,6 @@ section#pageSection {
   z-index:2001;
   float: left;
     clear:none;
-}
-
-.toolbartextbox {
-  min-width:10mm;
-  max-width:15mm;
-  text-align:right;
 }
 
 .inlinetoolbar {
@@ -209,10 +195,6 @@ header#topdiv {
   height:46px;
   display:block;
 }
-
-#mainSectionHeader {
-    display:none;
-}
 }
 
 /* Smartphones (portrait) ----------- */
@@ -275,11 +257,6 @@ header#topdiv {
 #headerspacer {
   height:46px;
   display:block;
-}
-
-#mainSectionHeader {
-    display:none;
-    height:0px;
 }
 }
 

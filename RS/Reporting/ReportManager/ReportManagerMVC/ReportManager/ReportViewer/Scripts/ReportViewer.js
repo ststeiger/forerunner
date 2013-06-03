@@ -77,13 +77,11 @@
             }
 
             if (me.HasToolbar) {
-                var $tb = me.GetToolbar(me.options.UID);
-                if (me.ToolbarHeight == 0)
-                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
-
+                var $tb;
                 if (me.options.ToolbarUID == null) {
                     $Row = new $("<TR/>");
                     $Cell = new $("<TD/>");
+                    $tb = getDefaultToolbar();
                     $Cell.append($tb);
                     $Row.append($Cell);
                     $Row.addClass('inlinetoolbar', 0, 0, null);
@@ -93,8 +91,11 @@
                     $Table.append($FloatingToolbar);
                 } else {
                     $Container = $('#' + me.options.ToolbarUID);
-                    $Container.append($tb);                    
+                    $tb = $('.fr-toolbar', $Container);
                 }
+                me.initToolbar();
+                if (me.ToolbarHeight == 0)
+                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
             }
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
@@ -192,7 +193,7 @@
             }
             me.Pages[NewPageNum] = null;
             me.CurPage = NewPageNum;
-            $("input." + me.options.UID).each(function () { $(this).val(NewPageNum); });
+            $("input.fr-textbox-reportpage", $('#' + me.options.ToolbarUID)).each(function () { $(this).val(NewPageNum); });
     
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -305,7 +306,7 @@
             $List.attr('class', 'sky-carousel-container');
 
             //if(GetParamsList()!
-            for ( i = 1; i <= me.NumPages; i++) {
+            for (var i = 1; i <= me.NumPages; i++) {
         
                 var url = me.options.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + me.ReportServerURL + '&ReportPath='
                         + me.options.ReportPath + '&SessionID=' + me.SessionID + '&PageNumber=' +  i;
@@ -317,7 +318,12 @@
                 $Thumbnail = new $('<IMG />');
                 $Thumbnail.attr('class', 'pagethumb');
                 $Thumbnail.attr('src', url);
-                $Thumbnail.attr("onclick", "Reports['" + ReportViewerUID + "'].NavToPage(" + i + ")");
+                $Thumbnail.data('pageNumber', i);
+                this._on($Thumbnail, {
+                    click: function (event) {
+                        me.NavToPage($(event.currentTarget).data('pageNumber'));
+                    }
+                });
                 // Need to add onclick
                 $ListItem.append($Caption);
                 $ListItem.append($Thumbnail);
@@ -596,62 +602,54 @@
             }
             me.Pages[pageNum].IsRendered = true;
         },
-        GetToolbar: function (UID) {
-            var me = this;
-            var $Toolbar = $("<Table/>");
-            var $Row = $("<TR/>");
+
+        initToolbar : function() {
+            var $Container = $('#' + this.options.ToolbarUID);
             var $Cell;
-
-            $Toolbar.attr("class", "toolbar");
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-settings'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.ShowParms(); });
+            var me = this;
+            $Cell = $('.fr-button-paramarea', $Container);
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowParms(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-nav2'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.ShowNav(); });
+            $Cell = $('.fr-button-nav');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowNav(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backbutton'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.Back(); });
+            $Cell = $('.fr-button-reportback');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.Back(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-refresh'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.RefreshReport(); });
+            $Cell = $('.fr-button-refresh');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.RefreshReport(); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-backward'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(1); });
+            $Cell = $('.fr-button-firstpage');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
-
-            $Cell = new $("<TD class='spacer5mm' ><DIV class='composite-icons30x30 icon-previous'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(Reports[e.data.id].CurPage - 1); });
+            $Cell = $('.fr-button-prev');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage - 1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
 
-            $Cell = new $("<input/>");
-            $Cell.addClass("toolbartextbox");
-            $Cell.addClass(UID);
+            $Cell = $('.fr-textbox-reportpage');
             $Cell.attr("type", "number")
-            $Cell.on("keypress", { id: UID, input: $Cell }, function (e) { if (e.keyCode == 13) Reports[e.data.id].NavToPage(e.data.input.val()); });
-            $Row.append($Cell);
+            $Cell.on("keypress", { id: me.options.UID, input: $Cell }, function (e) { if (e.keyCode == 13) me.NavToPage(e.data.input.val()); });
 
-            $Cell = new $("<TD class='spacer10mm' ><DIV class='composite-icons30x30 icon-next'></DIV></TD>");
-            $Cell.on("click", { id: UID }, function (e) { me.NavToPage(Reports[e.data.id].CurPage + 1); });
+            $Cell = $('.fr-button-next');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage + 1); });
             $Cell.addClass("cursor-pointer");
-            $Row.append($Cell);
+            $Cell = $('.fr-button-lastpage');
+            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.NumPages); });
+            $Cell.addClass("cursor-pointer");
+        },
 
-            $Cell = new $("<TD/>");    
-            $Cell.attr("style", "width:100%;");
-            $Row.append($Cell);
-
-            $Toolbar.append($Row);
-            return $Toolbar;
+        getDefaultToolbar : function() {
+            return new $("<div class='fr-toolbar' id='ViewerToolbar'><a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
+                "<div class='fr-buttonicon fr-button-nav'/>" +
+                "<div class='fr-buttonicon fr-button-paramarea'/>" +
+                "<div class='fr-buttonicon fr-button-reportback'/>" +
+                "<div class='fr-buttonicon fr-button-refresh'/>" +
+                "<div class='fr-buttonicon fr-button-firstpage'/>" +
+                "<div class='fr-buttonicon fr-button-prev'/>" +
+                "<input class='fr-textbox-reportpage' />" +
+                "<div class='fr-buttonicon fr-button-next'/>" +
+                "<div class='fr-buttonicon fr-button-lastpage'/>" +
+                "</div>");
         },
 
         WriteDocumentMap: function (RIContext) {

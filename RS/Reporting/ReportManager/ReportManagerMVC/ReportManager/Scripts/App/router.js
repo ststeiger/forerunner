@@ -35,19 +35,23 @@ var ApplicationRouter = Backbone.Router.extend({
             var catalogItemsModel = new g_App.CatalogItemCollection({
                 path: path
             });
-            var thisObj = this;
-            catalogItemsModel.fetch(
-                {
-                    success: function (catalogItemsModel, response, options) {
-                        thisObj.appPageView.transitionMainSection(appPageModel, [
-                        'ReportManagerMainView'], '',
-                        g_App.ReportManagerMainView, { model: catalogItemsModel });
-                    },
-                    error: function (model, response) {
-                        console.log(response);
-                        alert('Failed to load the catalogs from the server.  Please try again.');
-                    }
+            this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
+            $('.fr-button-back').on("click",
+                function (e) {
+                    g_App.router.back();
                 });
+            var thisObj = this;
+
+            catalogItemsModel.fetch({
+                success: function (catalogItemsModel, response, options) {
+                    thisObj.appPageView.transitionMainSection(appPageModel,
+                    g_App.ReportManagerMainView, { model: catalogItemsModel });
+                },
+                error: function (model, response) {
+                    console.log(response);
+                    alert('Failed to load the catalogs from the server.  Please try again.');
+                }
+            });
         },
 
         transitionToReportViewer: function (path) {
@@ -63,9 +67,11 @@ var ApplicationRouter = Backbone.Router.extend({
                 showBackButton: true,
                 pageTitle: 'ReportViewer',
             });
-            this.appPageView.transitionMainSection(appPageModel, [
-                'ReportViewerMainView'], '',
+            this.appPageView.transitionHeader(g_App.ReportViewerHeaderView);
+
+            this.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
+
             $('#FRReportViewer1').reportViewer({
                 ReportServer: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
@@ -73,15 +79,18 @@ var ApplicationRouter = Backbone.Router.extend({
                 HasToolbar: true,
                 PageNum: 1,
                 UID: 'FRReportViewer1',
-                ToolbarUID: 'HeaderArea',
+                ToolbarUID: 'ViewerToolbar',
                 NavUID: 'bottomdiv',
                 toolbarOffset: this.toolbarHeight()
             });
         },
 
-        toolbarHeight : function()
-        {
+        toolbarHeight : function() {
             return $("#topdiv").outerHeight();
+        },
+
+        historyBack: function () {
+            g_App.router.back();
         },
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
@@ -112,7 +121,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
+g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'ReportManagerHeaderView', 'CatalogItemView', 'ReportViewerHeaderView', 'ReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;
@@ -122,11 +131,5 @@ g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemVi
         window.history.back();
     };
     Backbone.history.start();
-
-    
-    $('#rm-backbutton').on("click",
-    function (e) {
-        g_App.router.back();
-    });
 });
 

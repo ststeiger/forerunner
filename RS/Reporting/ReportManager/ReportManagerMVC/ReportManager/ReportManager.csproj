@@ -190,6 +190,7 @@
     <Content Include="ReportViewer\Scripts\jquery.validate1.11.1.min.js" />
     <Content Include="ReportViewer\Scripts\jquery.watermark.min.js" />
     <Content Include="ReportViewer\Scripts\ReportParameter.js" />
+    <Content Include="ReportViewer\Scripts\ReportRender.js" />
     <Content Include="ReportViewer\Scripts\ReportViewer.js" />
     <Content Include="Scripts\App\configs.js" />
     <Content Include="Scripts\Util\jquery-1.9.1.min.js" />

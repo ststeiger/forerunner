@@ -67,7 +67,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        public HttpResponseMessage GetReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
             try
             {
@@ -124,30 +124,6 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ToggleItem(string ReportServerURL, string SessionID, string ToggleID)
-        {
-            return NavigateTo(NavType.Toggle, ReportServerURL, SessionID, ToggleID);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage NavigateBookmark(string ReportServerURL, string SessionID, string BookmarkID)
-        {
-            return NavigateTo(NavType.Bookmark, ReportServerURL, SessionID, BookmarkID);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage NavigateDrillthrough(string ReportServerURL, string SessionID, string DrillthroughID)
-        {
-            return NavigateTo(NavType.DrillThrough, ReportServerURL, SessionID, DrillthroughID);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage NavigateDocumentMap(string ReportServerURL, string SessionID, string DocMapID)
-        {
-            return NavigateTo(NavType.DocumentMap, ReportServerURL, SessionID, DocMapID);
-        }
-
-        [HttpGet]
         public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
@@ -168,7 +144,8 @@ namespace ReportManager.Controllers
             //write error message from client into the log file
         }
 
-        private HttpResponseMessage NavigateTo(NavType type, string ReportServerURL, string SessionID, string UniqueID)
+        [HttpGet]
+        public HttpResponseMessage NavigateTo(string NavType, string ReportServerURL, string SessionID, string UniqueID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
             byte[] result = null;
@@ -177,18 +154,18 @@ namespace ReportManager.Controllers
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
-            switch (type)
+            switch (NavType)
             {
-                case NavType.Toggle:
+                case "toggle":
                     result = Encoding.UTF8.GetBytes(rep.ToggleItem(SessionID, UniqueID));
                     break;
-                case NavType.Bookmark:
+                case "bookmark":
                     result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, UniqueID));
                     break;
-                case NavType.DrillThrough:
+                case "drillthrough":
                     result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, UniqueID));
                     break;
-                case NavType.DocumentMap:
+                case "documentMap":
                     result = Encoding.UTF8.GetBytes(rep.NavigateDocumentMap(SessionID, UniqueID));
                     break;
             }

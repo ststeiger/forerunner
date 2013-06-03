@@ -192,8 +192,7 @@ header#topdiv {
 }
 
 #headerspacer {
-  height:46px;
-  display:block;
+  height:50px;
 }
 }
 
@@ -255,8 +254,12 @@ header#topdiv {
 }
 
 #headerspacer {
-  height:46px;
+  height:50px;
   display:block;
+}
+
+#headerspacer {
+  height: 50px;
 }
 }
 
@@ -281,6 +284,10 @@ and (orientation : landscape) {
 
 .rm-list {
   display: none;
+}
+
+#headerspacer {
+  height: 50px;
 }
 }
 
@@ -309,6 +316,10 @@ and (orientation : portrait) {
 .rm-list {
   display: block;
 }
+
+#headerspacer {
+  height: 50px;
+}
 }
 
 /* Desktops and laptops ----------- */
@@ -328,6 +339,9 @@ and (min-width : 1824px) {
 only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5)  {
 /* Styles */
+#headerspacer {
+  height: 50px;
+}
 }
 
 .center { 

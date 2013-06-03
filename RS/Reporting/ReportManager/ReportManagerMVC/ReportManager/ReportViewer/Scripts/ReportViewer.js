@@ -50,6 +50,7 @@
             me.ReportViewerAPI = this.options.ReportViewerAPI
             me.FloatingToolbarHeight;
             me.$FloatingToolbar;
+            me.$Toolbar;
             me.SessionID = "";
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
@@ -90,12 +91,16 @@
                     $Table.append($Row);
                     $Table.append($FloatingToolbar);
                 } else {
-                    $Container = $('#' + me.options.ToolbarUID);
-                    $tb = $('.fr-toolbar', $Container);
+                    $tb = $('#' + me.options.ToolbarUID);
                 }
                 me.initToolbar();
+                me.$Toolbar = $tb;
                 if (me.ToolbarHeight == 0)
                     me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
+                if (me.is_touch_device()) {
+                    me.ShowToolbar();
+                    me.ToolbarHeight = 0;
+                }
             }
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
@@ -221,11 +226,13 @@
                 longTap: function (event, target) {
                     if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
                         me.ShowNav();
+                        me.ShowToolbar();
                     }
                 },
                 doubleTap: function (event, target) {
                     if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
                         me.ShowNav();
+                        me.ShowToolbar();
                     }
                 },
                 longTapThreshold: 1000,
@@ -392,6 +399,14 @@
                     me.$Carousel.select(me.CurPage - 1, 1);
                 me.$PageNav.fadeIn("fast");
                 me.$Slider.fadeIn("slow");
+            }
+        },
+        ShowToolbar: function() {
+            var me = this;
+            if (me.$Toolbar.is(":visible")) {
+                me.$Toolbar.hide();
+            } else {
+                me.$Toolbar.show();
             }
         },
         Sort: function (Direction, ID) {
@@ -782,9 +797,11 @@
             });
             if (me.$FloatingToolbar != null) me.$FloatingToolbar.css("display", "none");
         },
-        is_touch_device: function() {
+        is_touch_device: function () {
+            var ua = navigator.userAgent;
             return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window); // works on ie10
+                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
+                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         NavToLink: function(ElementID) {
             $(this).scrollTop($("#" + ElementID).offset().top - 85);

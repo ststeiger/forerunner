@@ -450,14 +450,15 @@
         },
         NavigateDocumentMap: function (DocumentMapID) {
             var me = this;
-            $.getJSON(me.ReportViewerAPI + "/NavigateDocumentMap/", {
+            $.getJSON(me.options.ReportViewerAPI + "/NavigateDocumentMap/", {
                 ReportServerURL: me.ReportServerURL,
                 SessionID: me.SessionID,
                 DocMapID: DocumentMapID
             }).done(function (Data) {
                 me.BackupCurPage();
                 me.Pages = new Object();
-                LoadPage(RS, Data.NewPage, null, false, null);
+                me.LoadPage(Data.NewPage, null, false, null);
+                //LoadPage(RS, Data.NewPage, null, false, null);
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -1408,7 +1409,7 @@ function WriteLine(RIContext) {
 
 function WriteDocumentMap(RIContext) {
     var $TD = new $("<TD />");
-    $TD.addClass("DocMap");
+    $TD.addClass("DocMapPanel");
     var $DocMapContainer = new $("<DIV />");
     $DocMapContainer.addClass("DocMapBorder");
 
@@ -1417,7 +1418,7 @@ function WriteDocumentMap(RIContext) {
 
     var $RowBar = new $("<TR />");
     var $Header = new $("<DIV />");
-    $Header.attr("id", "DocMapHeader").addClass("DocMapHeader");
+    $Header.addClass("DocMapHeader");
 
     var $DocMapBar = new $("<DIV />");
     $DocMapBar.addClass("DocMapBar").html(" Document Map ");
@@ -1430,46 +1431,70 @@ function WriteDocumentMap(RIContext) {
     $TDMap.append(WriteDocumentMapItem(RIContext.RS, RIContext.CurrObj, 0));
 
     $Row.append($TDMap);
+
+    var $TDSpliter = new $("<TD />");
+    $TDSpliter.addClass("DocMap-Spliter");
+    $TDSpliter.on("mouseover", function (event) { SetActionCursor(this); });    
+    //$TDSpliter.on("mousemove", function (e) {
+        
+    //    var offset = $(this).offset();
+    //    //var x = e.pageX - offset.left;
+    //    //alert('e.pageX:' + e.pageX + ';x:' + x);
+    //    //$(".DocMapBorder").width(offset.left);
+    //});
+   
+
+    var $Spliter = new $("<DIV />");
+    $Spliter.addClass("DocMap-Collapse");
+    $TDSpliter.on("click", function () {
+        $(".DocMapPanel").toggle("fast");
+        if ($Spliter.hasClass("DocMap-Collapse"))
+            $Spliter.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
+        else
+            $Spliter.removeClass("DocMap-Expand").addClass("DocMap-Collapse");
+    });
+    $TDSpliter.append($Spliter);
+
     $Table.append($RowBar);
     $Table.append($Row);
     $DocMapContainer.append($Table);
     $TD.append($DocMapContainer);
 
     RIContext.RS.$PageContainer.append($TD);
+    RIContext.RS.$PageContainer.append($TDSpliter);
 }
 function WriteDocumentMapItem(RS, DocMap, Level) {
     var $DocMap = new $("<DIV />");
-    $DocMap.css("margin-left:" + Level * 18 + "px;white-space:nowrap");
+    $DocMap.attr("style", "margin-left:" + Level * 18 + "px;white-space:nowrap");
 
-    var $Icon = new $("<Image />");
-    var $Icon2 = new $("<Image />");
+    var $Icon = new $("<DIV />");
+    
     if (DocMap.Children == null) {
         $DocMap.attr("level", Level);
         $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
     }
     else {
-        $Icon.attr("src", "./reportviewer/Images/Drilldown_Collapse.gif").addClass("DocMap-Show");
+        $Icon.addClass("Drilldown-Collapse");
         $Icon.on("click", function () {
-            $Icon.addClass("DocMap-Hidden").removeClass("DocMap-Show");
-            $Icon2.addClass("DocMap-Show").removeClass("DocMap-Hidden");
-            $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
-        });
-
-        $Icon2.attr("src", "./reportviewer/Images/Drilldown_Expand.gif").addClass("DocMap-Hidden");
-        $Icon2.on("click", function () {
-            $Icon.addClass("DocMap-Show").removeClass("DocMap-Hidden");
-            $Icon2.addClass("DocMap-Hidden").removeClass("DocMap-Show");
-            $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+            if ($Icon.hasClass("Drilldown-Collapse")) {
+                $Icon.removeClass("Drilldown-Collapse").addClass("Drilldown-Expand");
+                $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+            }
+            else {
+                $Icon.addClass("Drilldown-Collapse").removeClass("Drilldown-Expand");
+                $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+            }
         });
     }
-
+    $DocMap.append($Icon);
+    
     var $MapNode = new $("<A />");
     $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
-    $MapNode.on("click", function () {
-        NavigateDocumentMap(RS, DocMap.UniqueName);
+    $MapNode.on("click", { ID: RS.options.UID, UniqueName: DocMap.UniqueName }, function (e) {
+        Reports[e.data.ID].NavigateDocumentMap(e.data.UniqueName);
     });
-
-    $DocMap.append($Icon).append($Icon2).append($MapNode);
+    $MapNode.hover(function () { $MapNode.addClass("DocMap-Item-Highlight"); }, function () { $MapNode.removeClass("DocMap-Item-Highlight"); });
+    $DocMap.append($MapNode);
 
     if (DocMap.Children != undefined) {
         Level++;

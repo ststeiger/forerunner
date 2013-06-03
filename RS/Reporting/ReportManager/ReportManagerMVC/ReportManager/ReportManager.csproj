@@ -146,6 +146,8 @@
     <Content Include="ReportViewer\Images\BackButton.jpg" />
     <Content Include="ReportViewer\Images\BackButton.png" />
     <Content Include="ReportViewer\Images\Backward.png" />
+    <Content Include="ReportViewer\Images\DocMap_Collapse.png" />
+    <Content Include="ReportViewer\Images\DocMap_Expand.png" />
     <Content Include="ReportViewer\Images\Drilldown_Collapse.gif" />
     <Content Include="ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="ReportViewer\Images\FastFoward.png" />

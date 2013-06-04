@@ -79,11 +79,28 @@ var g_App = g_App || {};
           appPageModel.attributes.mainSection = new mainSectionType(options).render();
           thisObj.model.set(appPageModel);
 
-          $('#HeaderArea').html(null);
           if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.postRender != null) {
               appPageModel.attributes.mainSection.postRender();
           }
-      }
+      },
+
+      bindMenuButton: function () {
+          var thisObj = this;
+          $('.fr-button-menu').on('click', function (event) { thisObj.toggleLeftPane(); } );
+      },
+
+      toggleLeftPane: function () {
+          var mainViewPort = $('#mainViewPort');
+          var leftPane = $('#leftPane');
+          if (!mainViewPort.hasClass('mainViewPortShifted')) {
+              leftPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
+              leftPane.show();
+              mainViewPort.addClass('mainViewPortShifted');
+          } else {
+              mainViewPort.removeClass('mainViewPortShifted');
+              leftPane.hide();
+          }
+      },
   });
   
 }());

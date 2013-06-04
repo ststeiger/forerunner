@@ -97,10 +97,6 @@
                 me.$Toolbar = $tb;
                 if (me.ToolbarHeight == 0)
                     me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
-                if (me.is_touch_device()) {
-                    me.ShowToolbar();
-                    me.ToolbarHeight = 0;
-                }
             }
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
@@ -226,13 +222,11 @@
                 longTap: function (event, target) {
                     if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
                         me.ShowNav();
-                        me.ShowToolbar();
                     }
                 },
                 doubleTap: function (event, target) {
                     if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
                         me.ShowNav();
-                        me.ShowToolbar();
                     }
                 },
                 longTapThreshold: 1000,

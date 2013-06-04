@@ -30,14 +30,15 @@ table,td,tr {
 }
 
 .mainViewPortShifted {
-    position: absolute;
+    position: fixed;
     top: 0px;
-    left: 290px;
+    left: 280px;
+    overflow-x: hidden;
 }
 
 #leftPane {
     vertical-align: top;
-    width: 290px;
+    width: 280px;
     padding: 0px;
     margin: 0px;
     border: 0px;
@@ -45,7 +46,7 @@ table,td,tr {
     color: white;
     z-index: 1;
     display: none;
-    position: absolute;
+    position: fixed;
     left: 0px;
     top: 0px;
 }

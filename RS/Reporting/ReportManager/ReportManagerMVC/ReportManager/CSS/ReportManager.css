@@ -2,6 +2,9 @@ html,body {
   height: 100%;
   background-color: white;
   position: relative;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
 }
 
 * {
@@ -21,6 +24,9 @@ table,td,tr {
 #mainViewPort {
     z-index: 1;
     display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
 }
 
 .mainViewPortShifted {
@@ -33,6 +39,8 @@ table,td,tr {
     vertical-align: top;
     width: 290px;
     padding: 0px;
+    margin: 0px;
+    border: 0px;
     background-color: gray;
     color: white;
     z-index: 1;
@@ -48,6 +56,8 @@ header#topdiv {
   top:0px;
   width:100%;
   height: auto;
+  margin: 0px;
+  padding: 0px;
   background-color: white;
   z-index: 1;
 }

@@ -98,7 +98,7 @@ var g_App = g_App || {};
               mainViewPort.addClass('mainViewPortShifted');
           } else {
               mainViewPort.removeClass('mainViewPortShifted');
-              leftPane.fadeOut();
+              leftPane.hide();
           }
       },
   });

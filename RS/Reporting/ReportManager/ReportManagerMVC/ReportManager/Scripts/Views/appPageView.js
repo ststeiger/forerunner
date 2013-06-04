@@ -92,12 +92,15 @@ var g_App = g_App || {};
       toggleLeftPane: function () {
           var mainViewPort = $('#mainViewPort');
           var leftPane = $('#leftPane');
+          var topdiv = $('#topdiv');
           if (!mainViewPort.hasClass('mainViewPortShifted')) {
               leftPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
               leftPane.show();
               mainViewPort.addClass('mainViewPortShifted');
+              topdiv.addClass('mainViewPortShifted');
           } else {
               mainViewPort.removeClass('mainViewPortShifted');
+              topdiv.removeClass('mainViewPortShifted');
               leftPane.hide();
           }
       },

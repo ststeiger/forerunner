@@ -467,7 +467,7 @@ td.DocMapPanel
     width:4px;
     text-align:center;
     background-color:#A4B7D8;
-    cursor:w-resize;
+    cursor:pointer;
 }
 .DocMap-Collapse {    
     background-image:url('../reportviewer/Images/DocMap_Collapse.png');

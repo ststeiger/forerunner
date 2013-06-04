@@ -54,10 +54,8 @@
             me.SessionID = "";
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
-            me.$DocumentMapContainer;
             me.ToolbarHeight = this.options.toolbarOffset;
             me.HasToolbar = this.options.HasToolbar;
-
             me.NumPages = 0;
             me.Lock = false;
             me.$ReportContainer;

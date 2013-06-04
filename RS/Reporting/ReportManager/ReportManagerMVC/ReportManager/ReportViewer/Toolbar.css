@@ -14,6 +14,10 @@
   vertical-align: top;
 }
 
+.fr-button-menu {
+  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+}
+
 .fr-button-home {
   background-image:url('../reportviewer/Images/Toolbar/home_icon.png');
 }

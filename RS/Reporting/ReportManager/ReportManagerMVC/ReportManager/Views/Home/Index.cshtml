@@ -22,6 +22,7 @@
   <script type="text/javascript" src="~/ReportViewer/Scripts/ReportViewer.js"></script>
   <script type="text/javascript" src="~/ReportViewer/Scripts/ReportRender.js"></script>
   <script type="text/javascript" src="~/ReportViewer/Scripts/ReportParameter.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/Scripts/ReportDocumentMap.js"></script>
   <script type="text/javascript" src="~/Scripts/Views/reportviewermainview.js"></script>
   <script type="text/javascript" src="~/Scripts/App/router.js"></script>
   <script type="text/javascript" src="~/ReportViewer/Scripts/jquery.watermark.min.js"></script>
@@ -39,12 +40,15 @@
     <link href="~/ReportViewer/Scripts/jquery.ui.datepicker.min.css" rel="stylesheet"/>
 }
 
+<div id="leftPane">Parameters<br /> Nav <br /></div>
+<div id="mainViewPort">
 <header id="topdiv">
 <section id="mainSectionHeader"></section>
 </header>
 <section id="headerspacer"> </section>
-<section id="pageSection">
+<section id="pageSection"">
   <div id="modalViewContainer"></div>
 </section>
 <section id="footerspacer"></section>
 <footer id="bottomdiv"></footer>
+</div>

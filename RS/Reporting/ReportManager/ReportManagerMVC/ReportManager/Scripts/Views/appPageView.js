@@ -68,8 +68,10 @@ var g_App = g_App || {};
         $(this.el).find("#mainSection").html(el);
       },
       
-      transitionHeader : function(headerSecionType) {
-          $('#mainSectionHeader').html(new headerSecionType().render().el);
+      transitionHeader: function (headerSecionType) {
+          var headerSection = new headerSecionType().render();
+          $('#mainSectionHeader').html(headerSection.el);
+          return headerSection;
       },
 
       transitionMainSection: function(appPageModel, mainSectionType, options) {

@@ -350,9 +350,10 @@ namespace Forerunner.ReportViewer
                 w.WriteString(execInfo.ExecutionID);
                 w.WriteMember("ParametersRequired");
                 w.WriteBoolean(execInfo.ParametersRequired);
-                w.WriteMember("Parameters");
+                
                 if (execInfo.Parameters.Length != 0)
                 {
+                    w.WriteMember("Parameters");
                     ReportJSONWriter rw = new ReportJSONWriter();
                     JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
                     w.WriteFromReader(r);

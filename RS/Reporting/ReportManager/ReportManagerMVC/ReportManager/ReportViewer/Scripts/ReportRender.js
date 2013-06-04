@@ -150,7 +150,7 @@
                 else if (Obj.Top + Obj.Height > Measurements[l.LowestIndex].Top + Measurements[l.LowestIndex].Height)
                     l.LowestIndex = Index;
 
-                for (i = 0; i < Measurements.length; i++) {
+                for (var i = 0; i < Measurements.length; i++) {
                     var bottom =  Measurements[i].Top + Measurements[i].Height;
                     var right = Measurements[i].Left + Measurements[i].Width;
                     if ((Obj.Top > bottom) && (
@@ -324,7 +324,7 @@
                     $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
                     //Handle each TextRun
-                    for (i = 0; i < Obj.TextRunCount; i++) {
+                    for (var i = 0; i < Obj.TextRunCount; i++) {
                         var $TextRun;
                         var flag = true;
                         //With or without Action in TextRun
@@ -332,6 +332,7 @@
                             $TextRun = new $("<SPAN />");
                         }
                         else {
+                            $TextRun = new $("<A />");
                             me._WriteActions(RIContext, Obj.TextRuns[i].Elements.NonSharedElements, $TextRun);
                         }
 
@@ -409,29 +410,29 @@
         },
         _WriteActions: function (RIContext, Elements, $Control) {
             if (Elements.ActionInfo != null)
-                for (i = 0; i < Elements.ActionInfo.Count; i++) {
+                for (var i = 0; i < Elements.ActionInfo.Count; i++) {
                     this._WriteAction(RIContext, Elements.ActionInfo.Actions[i], $Control);
                 }
         },
         _WriteAction: function (RIContext, Action, Control) {
             var me = this;
             if (Action.HyperLink != undefined) {
-                Control.attr("href", Action.HyperLink);
+                $(Control).attr("href", Action.HyperLink);
             }
             else if (Action.BookmarkLink != undefined) {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.attr("href", "#");
-                Control.addClass("cursor-pointer");                
-                Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
+                $(Control).attr("href", "#");
+                $(Control).addClass("cursor-pointer");                
+                $(Control).on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._StopDefaultEvent(e);
                     me.ReportViewer.NavigateBookmark(e.data.BookmarkID);
                 });
             }
             else {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.addClass("cursor-pointer");
-                Control.attr("href", "#");
-                Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
+                $(Control).addClass("cursor-pointer");
+                $(Control).attr("href", "#");
+                $(Control).on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._StopDefaultEvent(e);
                     me.ReportViewer.NavigateDrillthrough(e.data.DrillthroughId);
                 });
@@ -446,10 +447,10 @@
                 $Map.attr("name", "Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $Map.attr("id", "Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-                for (i = 0; i < ActionImageMapAreas.Count; i++) {
+                for (var i = 0; i < ActionImageMapAreas.Count; i++) {
                     var element = ActionImageMapAreas.ActionInfoWithMaps[i];
 
-                    for (j = 0; j < element.ImageMapAreas.Count; j++) {
+                    for (var j = 0; j < element.ImageMapAreas.Count; j++) {
                         var $Area = $("<AREA />");
                         $Area.attr("tabindex", i + 1);
                         $Area.attr("style", "text-decoration:none");
@@ -471,7 +472,7 @@
                             case 1:
                                 shape = "poly";
                                 var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
-                                for (k = 0; k < coorCount; k++) {
+                                for (var k = 0; k < coorCount; k++) {
                                     if (k % 2 == 0) {
                                         coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100);
                                     }
@@ -709,7 +710,7 @@
             }
 
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
-                for (i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
+                for (var i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
                     me._WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], NewImage);
                 }
 
@@ -719,6 +720,7 @@
             return RIContext.$HTMLParent;
 
         },
+        
 
         //Helper fucntions
         _GetHeight: function ($Obj) {

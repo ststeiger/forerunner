@@ -255,6 +255,10 @@
             if (me.ParamLoaded == true)
                 $("#ParameterContainer").animate({ height: 'toggle' }, 500);
         },
+        ShowDocMap: function () {
+            if ($(".DocMapPanel").length > 0)
+                $(".DocMapPanel").animate({ height: 'toggle' }, 100);
+        },
         CachePages: function (InitPage) {
             var me = this;
 
@@ -520,10 +524,10 @@
                 if (me.ParamLoaded == true) {
                     $(".ParameterContainer").detach();
                 }
-                //$("#ParameterContainer").reportParameters({ ReportViewer: this });
-                //$("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                $(me).reportParameter({ ReportViewer: this });
-                $(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                $(".ParameterContainer").reportParameters({ ReportViewer: this });
+                $(".ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
+                //$(me).reportParameter({ ReportViewer: this });
+                //$(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {
@@ -579,8 +583,8 @@
             }
             me.SessionID = Data.SessionID;
             me.NumPages = Data.NumPages;
-
-            if (Data.Report.DocumentMap != null) {
+            
+            if ($(".DocMapPanel").length == 0 && Data.Report.DocumentMap != null) {
                 me.$PageContainer.reportDocumentMap({ ReportViewer: this });
                 me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }

@@ -419,22 +419,22 @@
         _WriteAction: function (RIContext, Action, Control) {
             var me = this;
             if (Action.HyperLink != undefined) {
-                $(Control).attr("href", Action.HyperLink);
+                Control.attr("href", Action.HyperLink);
             }
             else if (Action.BookmarkLink != undefined) {
                 //HRef needed for ImageMap, Class needed for non image map
-                $(Control).attr("href", "#");
-                $(Control).addClass("cursor-pointer");                
-                $(Control).on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
+                Control.attr("href", "#");
+                Control.addClass("cursor-pointer");                
+                Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._StopDefaultEvent(e);
                     me.ReportViewer.NavigateBookmark(e.data.BookmarkID);
                 });
             }
             else {
                 //HRef needed for ImageMap, Class needed for non image map
-                $(Control).addClass("cursor-pointer");
-                $(Control).attr("href", "#");
-                $(Control).on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
+                Control.addClass("cursor-pointer");
+                Control.attr("href", "#");
+                Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._StopDefaultEvent(e);
                     me.ReportViewer.NavigateDrillthrough(e.data.DrillthroughId);
                 });
@@ -708,13 +708,16 @@
                 lineStyle += "-ms-transform: rotate(" + rotate + "rad);"
                 lineStyle += "transform: rotate(" + rotate + "rad);"
                 $line.attr("Style", lineStyle);
+
+                if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
+                    for (var i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
+                        me._WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $line);
+                    }
+
                 RIContext.$HTMLParent.append($line);
             }
 
-            if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo != null)
-                for (var i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
-                    me._WriteAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], NewImage);
-                }
+            
 
             me._WriteBookMark(RIContext);
 

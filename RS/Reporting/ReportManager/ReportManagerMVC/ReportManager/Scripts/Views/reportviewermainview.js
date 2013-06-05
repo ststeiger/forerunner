@@ -44,6 +44,10 @@ var g_App = g_App || {};
         $Cell = $('.fr-button-lastpage');
         $Cell.on("click", function (e) { $FRReportViewer.reportViewer('NavToPage', $FRReportViewer.reportViewer('getNumPages')) });
         $Cell.addClass("cursor-pointer");
+
+        $Cell = $(".fr-button-documentmap");
+        $Cell.on("click", function (e) { $FRReportViewer.reportViewer("ShowDocMap") });
+        $Cell.addClass("cursor-pointer");
     },
 
   });

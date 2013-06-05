@@ -144,14 +144,14 @@ ol.lower-latin {
   background: white url(../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
   width: 148px; 
   height: 28px; 
-  position: relative; 
+  position: absolute; 
   margin:10px auto;
   margin-top:50px;
   padding: 10px 10px 10px 50px; 
   text-align: left; 
   line-height: 27px; 
   font-weight: bold; 
-  z-index: 2010
+  z-index: 2010;
 }
 
 .toolbar {    

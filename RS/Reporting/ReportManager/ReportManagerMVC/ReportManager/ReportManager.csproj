@@ -143,6 +143,7 @@
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
     <Content Include="ReportViewer\Scripts\ReportDocumentMap.js" />
+    <Content Include="ReportViewer\Scripts\Toolbar.js" />
     <Content Include="ReportViewer\Toolbar.css" />
     <Content Include="ReportViewer\Images\ajax-loader1.gif" />
     <Content Include="ReportViewer\Images\BackButton.jpg" />

@@ -62,6 +62,11 @@
   background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
 }
 
+.fr-button-documentmap
+{
+    background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
+}
+
 .fr-textbox-reportpage {
   background-color: white;
   min-width:10mm;

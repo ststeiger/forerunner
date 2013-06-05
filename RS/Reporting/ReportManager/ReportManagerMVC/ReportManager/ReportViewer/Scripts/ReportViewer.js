@@ -21,7 +21,6 @@
             ReportServer: null,
             ReportViewerAPI: null,
             ReportPath: null,
-            HasToolbar: true,
             PageNum: 1,
             UID: null,
             ToolbarUID: null,
@@ -50,14 +49,11 @@
             me.ReportViewerAPI = this.options.ReportViewerAPI
             me.FloatingToolbarHeight;
             me.$FloatingToolbar;
-            me.$Toolbar;
+            me.$Toolbar = null;
             me.SessionID = "";
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
-            me.$DocumentMapContainer;
             me.ToolbarHeight = this.options.toolbarOffset;
-            me.HasToolbar = this.options.HasToolbar;
-
             me.NumPages = 0;
             me.Lock = false;
             me.$ReportContainer;
@@ -77,26 +73,10 @@
                 me.$PageNav.css("display", "none");
             }
 
-            if (me.HasToolbar) {
-                var $tb;
-                if (me.options.ToolbarUID == null) {
-                    $Row = new $("<TR/>");
-                    $Cell = new $("<TD/>");
-                    $tb = getDefaultToolbar();
-                    $Cell.append($tb);
-                    $Row.append($Cell);
-                    $Row.addClass('inlinetoolbar', 0, 0, null);
-                    $FloatingToolbar = $Row.clone(true, true).css({ display: "none", position: "absolute", top: "0px", left: "0px" });
-                    me.$FloatingToolbar = $FloatingToolbar;
-                    $Table.append($Row);
-                    $Table.append($FloatingToolbar);
-                } else {
-                    $tb = $('#' + me.options.ToolbarUID);
-                }
-                me.initToolbar();
-                me.$Toolbar = $tb;
+            if (me.options.ToolbarUID != null) {
+                me.$Toolbar = $('#' + me.options.ToolbarUID);
                 if (me.ToolbarHeight == 0)
-                    me.ToolbarHeight = me._GetHeight($tb) * 3.78;  //convert to px
+                    me.ToolbarHeight = me._GetHeight(me.$Toolbar) * 3.78;  //convert to px
             }
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
@@ -112,7 +92,14 @@
             me.$ReportOuterDiv.append(me.$ReportContainer);
             me.LoadParameters(me.options.PageNum);
         },
-
+        getCurPage: function () {
+            var me = this;
+            return me.CurPage;
+        },
+        getNumPages: function() {
+            var me = this;
+            return me.NumPages;
+        },
         SetColHeaderOffset: function ($Tablix, $ColHeader) {
             //Update floating column headers
             var me = this;
@@ -267,6 +254,10 @@
             var me = this;
             if (me.ParamLoaded == true)
                 $("#ParameterContainer").animate({ height: 'toggle' }, 500);
+        },
+        ShowDocMap: function () {
+            if ($(".DocMapPanel").length > 0)
+                $(".DocMapPanel").animate({ height: 'toggle' }, 100);
         },
         CachePages: function (InitPage) {
             var me = this;
@@ -533,10 +524,10 @@
                 if (me.ParamLoaded == true) {
                     $(".ParameterContainer").detach();
                 }
-                //$("#ParameterContainer").reportParameters({ ReportViewer: this });
-                //$("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                $(me).reportParameter({ ReportViewer: this });
-                $(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                $(".ParameterContainer").reportParameters({ ReportViewer: this });
+                $(".ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
+                //$(me).reportParameter({ ReportViewer: this });
+                //$(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {
@@ -592,8 +583,8 @@
             }
             me.SessionID = Data.SessionID;
             me.NumPages = Data.NumPages;
-
-            if (Data.Report.DocumentMap != null) {
+            
+            if ($(".DocMapPanel").length == 0 && Data.Report.DocumentMap != null) {
                 me.$PageContainer.reportDocumentMap({ ReportViewer: this });
                 me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }
@@ -614,54 +605,6 @@
             me.Pages[pageNum].$Container.reportRender("Render", pageNum);
             me.Pages[pageNum].IsRendered = true;
         },
-        initToolbar : function() {
-            var $Container = $('#' + this.options.ToolbarUID);
-            var $Cell;
-            var me = this;
-            $Cell = $('.fr-button-paramarea', $Container);
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowParms(); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-nav');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.ShowNav(); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-reportback');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.Back(); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-refresh');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.RefreshReport(); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-firstpage');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(1); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-prev');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage - 1); });
-            $Cell.addClass("cursor-pointer");
-
-            $Cell = $('.fr-textbox-reportpage');
-            $Cell.attr("type", "number")
-            $Cell.on("keypress", { id: me.options.UID, input: $Cell }, function (e) { if (e.keyCode == 13) me.NavToPage(e.data.input.val()); });
-
-            $Cell = $('.fr-button-next');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.CurPage + 1); });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-lastpage');
-            $Cell.on("click", { id: me.options.UID }, function (e) { me.NavToPage(me.NumPages); });
-            $Cell.addClass("cursor-pointer");
-        },
-        getDefaultToolbar : function() {
-            return new $("<div class='fr-toolbar' id='ViewerToolbar'><a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
-                "<div class='fr-buttonicon fr-button-nav'/>" +
-                "<div class='fr-buttonicon fr-button-paramarea'/>" +
-                "<div class='fr-buttonicon fr-button-reportback'/>" +
-                "<div class='fr-buttonicon fr-button-refresh'/>" +
-                "<div class='fr-buttonicon fr-button-firstpage'/>" +
-                "<div class='fr-buttonicon fr-button-prev'/>" +
-                "<input class='fr-textbox fr-textbox-reportpage' />" +
-                "<div class='fr-buttonicon fr-button-next'/>" +
-                "<div class='fr-buttonicon fr-button-lastpage'/>" +
-                "</div>");
-        },
-
         // Utility functions
         SessionPing: function() {
             // Ping each report so that the seesion does not expire on the report server
@@ -683,7 +626,7 @@
                 me.SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader);
                 me.SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader);
             });
-            if (me.HasToolbar) {
+            if (me.ToolbarUID != null) {
                 me.SetRowHeaderOffset(me.$ReportContainer, me.$FloatingToolbar);
                 me.SetColHeaderOffset(me.$ReportContainer, me.$FloatingToolbar);
             }

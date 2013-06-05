@@ -77,23 +77,24 @@ var ApplicationRouter = Backbone.Router.extend({
                 showBackButton: true,
                 pageTitle: 'ReportViewer',
             });
-            this.appPageView.transitionHeader(g_App.ReportViewerHeaderView);
+            var $headerSection = this.appPageView.transitionHeader(g_App.ReportViewerHeaderView);
 
             this.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
 
             this.appPageView.bindMenuButton();
-            $('#FRReportViewer1').reportViewer({
+            var $viewer = $('#FRReportViewer1').reportViewer({
                 ReportServer: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
-                HasToolbar: true,
                 PageNum: 1,
                 UID: 'FRReportViewer1',
                 ToolbarUID: 'ViewerToolbar',
                 NavUID: 'bottomdiv',
                 toolbarOffset: this.toolbarHeight()
             });
+
+            $headerSection.initCallbacks($viewer);
         },
 
         toolbarHeight : function() {

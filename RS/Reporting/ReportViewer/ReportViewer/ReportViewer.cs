@@ -121,10 +121,16 @@ namespace Forerunner.ReportViewer
             
             if (SessionID != "" && SessionID != null)
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                rs.GetExecutionInfo();                
+                try
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    rs.GetExecutionInfo();
+                }
+                catch {
+                // Need to return a status that informs tht this session is not valid and to refresh, also set client session to ""
+                }
             }
         }
 

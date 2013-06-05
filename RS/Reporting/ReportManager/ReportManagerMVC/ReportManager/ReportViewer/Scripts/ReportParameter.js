@@ -9,7 +9,7 @@
         _create: function () {
             this.ReportViewer = this.options.ReportViewer;
         },
-        WriteParameterPanel: function(Data, RS, pageNum, LoadOnly) {
+        WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
             var $ParameterDiv = new $("<Div />");
             $ParameterDiv.attr("class", "ParameterContainer");
@@ -25,8 +25,8 @@
             var $SecondContainer = me._GetDefaultHTMLTable();
             $SecondContainer.addClass("Parameter-Form");
 
-            $.each(Data.ParametersList, function (Index, Obj) {
-                $SecondContainer.append(me._WriteParameterControl(Obj, new $("<TR />")));
+            $.each(Data.ParametersList, function (Index, Param) {
+                $SecondContainer.append(me._WriteParameterControl(Param, new $("<TR />")));
             });
 
             $Form.append($SecondContainer);
@@ -61,19 +61,16 @@
             var $ViewReport_TD = new $("<TD/>");
             $ViewReport_TD.attr("style", "margin:4px;text-align:center");
 
-            var $ViewReport = new $("<input/>");
-            $ViewReport.attr("name", "Parameter_ViewReport");
-            $ViewReport.attr("type", "button");
-            $ViewReport.attr("value", "View Report");
+            var $ViewReport = new $("<input name='Parameter_ViewReport' type='button' class='ViewReport' value='View Report'/>");
             $ViewReport.on("click", function () {
-                //me._CloseAllDropdown();
+                me._CloseAllDropdown();
                 if (me.GetParamsList() != null) {
-                    //if (me.ReportViewer.Pages[pageNum] != null) {
-                    //    me.ReportViewer.Pages[pageNum].$Container.detach();
+                    //if (me.ReportViewer.Pages[PageNum] != null) {
+                    //    me.ReportViewer.Pages[PageNum].$Container.detach();
                     //    me.ReportViewer.Pages = new Object();
                     //}
                     
-                    me.ReportViewer.LoadPage(pageNum, null, false, null, me.GetParamsList());
+                    me.ReportViewer.LoadPage(PageNum, null, false, null, me.GetParamsList());
                 }
             });
 
@@ -86,14 +83,17 @@
             $ParameterContainer.append($Row);
 
             $ParameterDiv.append($ParameterContainer);
-            me.ReportViewer.$PageContainer.append($ParameterDiv);
+            if (me.ReportViewer.$ReportAreaContainer == null || me.ReportViewer.$ReportAreaContainer.length == 0)
+                me.ReportViewer.$PageContainer.append($ParameterDiv);
+            else
+                $ParameterDiv.insertBefore(me.ReportViewer.$ReportAreaContainer);
             me.ReportViewer.RemoveLoadingIndicator();
         },
-        _WriteParameterControl: function(Obj, $Parent) {
+        _WriteParameterControl: function(Param, $Parent) {
             var $TD_Lable = new $("<TD />");
             var $lable = new $("<span />");
             $lable.addClass("Parameter-Label");
-            var Name = Obj.Name;
+            var Name = Param.Name;
             $lable.html(Name);
             var me = this;
 
@@ -102,43 +102,43 @@
             //If the control have valid values, then generate a select control
             var $TD_Control = new $("<TD />");
             var $element = null;
-            if (Obj.ValidValues != "") {
+            if (Param.ValidValues != "") {
                 //dropdown with checkbox
-                if (Obj.MultiValue == "True") {
+                if (Param.MultiValue == "True") {
                     $element = new $("<Div />");
-                    me._WriteDropDownWithCheckBox(Obj, $element);
+                    me._WriteDropDownWithCheckBox(Param, $element);
                 }
                 else {
                     $element = new $("<select />");
-                    me._WriteDropDownControl(Obj, $element);
+                    me._WriteDropDownControl(Param, $element);
                 }
             }
             else {
-                if (Obj.Type == "Boolean") {
+                if (Param.Type == "Boolean") {
                     var radioValues = new Array();
                     radioValues[0] = "True";
                     radioValues[1] = "False";
 
                     $element = new $("<Div />");
-                    $element.attr("IsMultiple", Obj.MultiValue);
-                    $element.attr("DataType", Obj.Type);
+                    $element.attr("IsMultiple", Param.MultiValue);
+                    $element.attr("DataType", Param.Type);
                     $element.addClass("Parameter-Div");
                     for (value in radioValues) {
                         var $radioItem = new $("<input/>");
                         $radioItem.addClass("Parameter");
                         $radioItem.addClass("Parameter-Radio");
-                        $radioItem.addClass(Obj.Name);
+                        $radioItem.addClass(Param.Name);
                 
                         $radioItem.attr("type", "radio");
-                        $radioItem.attr("name", Obj.Name);
+                        $radioItem.attr("name", Param.Name);
                         $radioItem.attr("value", radioValues[value]);
-                        $radioItem.attr("id", Obj.Name + "_radio" + "_" + radioValues[value]);
-                        $radioItem.attr("DataType", Obj.Type);
-                        me._GetParameterControlProperty(Obj, $radioItem);
+                        $radioItem.attr("id", Param.Name + "_radio" + "_" + radioValues[value]);
+                        $radioItem.attr("DataType", Param.Type);
+                        me._GetParameterControlProperty(Param, $radioItem);
 
                         var $lableTrue = new $("<Label/>");
                         $lableTrue.html(radioValues[value]);
-                        $lableTrue.attr("for", Obj.Name + "_radio" + "_" + radioValues[value]);
+                        $lableTrue.attr("for", Param.Name + "_radio" + "_" + radioValues[value]);
 
                         $element.append($radioItem);
                         $element.append($lableTrue);
@@ -147,15 +147,15 @@
                 else {
                     $element = new $("<input/>");
                     $element.attr("class", "Parameter");
-                    $element.attr("IsMultiple", Obj.MultiValue);
-                    $element.attr("DataType", Obj.Type);
+                    $element.attr("IsMultiple", Param.MultiValue);
+                    $element.attr("DataType", Param.Type);
                     $element.attr("type", "text");
                     $element.attr("size", "30");
                     $element.attr("name", Name);
 
-                    me._GetParameterControlProperty(Obj, $element);
+                    me._GetParameterControlProperty(Param, $element);
 
-                    switch (Obj.Type) {
+                    switch (Param.Type) {
                         case "DateTime":
                             //Format: ISO8601
                             $element.datepicker({
@@ -176,7 +176,7 @@
                 }
             }
             $TD_Control.append($element);
-            $TD_Control.append(me._AddNullableCheckBox(Obj, $element));
+            $TD_Control.append(me._AddNullableCheckBox(Param, $element));
             var $TD_Status = new $("<TD/>");
             $TD_Status.addClass("Status");
             $Parent.append($TD_Lable);
@@ -185,52 +185,31 @@
 
             return $Parent;
         },
-        _WriteParameterToggle: function() {
-            //var $Container = new $("<Div />");
-            //$Container.attr("class", "ToggleParam");
-
-            //var $ToggleIcon = new $("<Img />");
-            //$ToggleIcon.attr("alt", "Show / Hide Parameters");
-            //$ToggleIcon.attr("title", "Show / Hide Parameters");
-            //$ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-            //$Container.on("mouseover", function (event) { SetActionCursor(this); });
-
-            //$Container.on("click", function () {
-            //    $(".Parameter-Panel").toggle("fast");
-            //    if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
-            //        $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
-            //    else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
-            //        $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-            //});
-
-            //$Container.append($ToggleIcon);
-            //return $Container;   
-        },
-        _GetParameterControlProperty: function(Obj, $Control) {
+        _GetParameterControlProperty: function(Param, $Control) {
             var me = this;
-            //$Control.attr("name", Obj.Name);
-            $Control.attr("AllowBlank", Obj.AllowBlank);
-            if (Obj.Nullable != "True") {
+            //$Control.attr("name", Param.Name);
+            $Control.attr("AllowBlank", Param.AllowBlank);
+            if (Param.Nullable != "True") {
                 $Control.attr("required", "true");
                 $Control.watermark("Required");
             }
-            $Control.attr("ErrorMessage", Obj.ErrorMessage);
+            $Control.attr("ErrorMessage", Param.ErrorMessage);
         },
-        _AddNullableCheckBox: function(Obj, $Control) {
+        _AddNullableCheckBox: function(Param, $Control) {
             var me = this;
-            if (Obj.Nullable == "True") {
+            if (Param.Nullable == "True") {
                 var $NullableSpan = new $("<Span />");
 
                 var $Checkbox = new $("<Input />");
                 $Checkbox.attr("type", "checkbox");
                 $Checkbox.attr("class", "Parameter-Checkbox");
-                $Checkbox.attr("name", Obj.Name);
+                $Checkbox.attr("name", Param.Name);
 
                 $Checkbox.on("click", function () {
                     if ($Checkbox.attr("checked") == "checked") {
                         $Checkbox.removeAttr("checked");
-                        if (Obj.Type == "Boolean") {
-                            $(".Parameter-Radio." + Obj.Name).removeAttr("disabled");
+                        if (Param.Type == "Boolean") {
+                            $(".Parameter-Radio." + Param.Name).removeAttr("disabled");
                         }
                         else {
                             $Control.removeAttr("disabled");
@@ -239,8 +218,8 @@
                     }
                     else {
                         $Checkbox.attr("checked", "true");
-                        if (Obj.Type == "Boolean") {
-                            $(".Parameter-Radio." + Obj.Name).attr("disabled", "true");
+                        if (Param.Type == "Boolean") {
+                            $(".Parameter-Radio." + Param.Name).attr("disabled", "true");
                         }
                         else {
                             $Control.attr("disabled", "true");
@@ -261,15 +240,15 @@
             else
                 return null;
         },
-        _WriteDropDownControl: function (Obj, $Control) {
+        _WriteDropDownControl: function (Param, $Control) {
             var me = this;
             $Control.addClass("Parameter");
-            $Control.attr("IsMultiple", Obj.MultiValue);
+            $Control.attr("IsMultiple", Param.MultiValue);
             $Control.addClass("Parameter-Select");
-            $Control.attr("name", Obj.Name);
-            $Control.attr("DataType", Obj.Type);
+            $Control.attr("name", Param.Name);
+            $Control.attr("DataType", Param.Type);
             $Control.attr("readonly","true");
-            me._GetParameterControlProperty(Obj, $Control);
+            me._GetParameterControlProperty(Param, $Control);
 
             var $defaultOption = new $("<option />");
             $defaultOption.attr("value", "");
@@ -277,66 +256,68 @@
             $defaultOption.html("&#60Select a Value&#62");
             $Control.append($defaultOption);
 
-            for (index in Obj.ValidValues) {
+            for (index in Param.ValidValues) {
                 var $option = new $("<option />");
-                $option.attr("value", Obj.ValidValues[index].Value);
-                $option.html(Obj.ValidValues[index].Key);
+                $option.attr("value", Param.ValidValues[index].Value);
+                $option.html(Param.ValidValues[index].Key);
                 $Control.append($option);
             }
         },
-        _WriteDropDownWithCheckBox: function(Obj, $Control) {
+        _WriteDropDownWithCheckBox: function(Param, $Control) {
             var me = this;
             var $MultipleCheckBox = new $("<Input />");
             $MultipleCheckBox.attr("type", "text");
-            $MultipleCheckBox.attr("name", Obj.Name);
+            $MultipleCheckBox.attr("name", Param.Name);
             $MultipleCheckBox.attr("readonly", "true");
             $MultipleCheckBox.attr("class", "ParameterClient");
-            $MultipleCheckBox.attr("IsMultiple", Obj.MultiValue);
-            $MultipleCheckBox.attr("DataType", Obj.Type);
-            me._GetParameterControlProperty(Obj, $MultipleCheckBox);
-            $MultipleCheckBox.on("click", function () { me._PopupDropDownPanel(Obj); });
+            $MultipleCheckBox.attr("IsMultiple", Param.MultiValue);
+            $MultipleCheckBox.attr("DataType", Param.Type);
+            me._GetParameterControlProperty(Param, $MultipleCheckBox);
+            $MultipleCheckBox.on("click", function () { me._PopupDropDownPanel(Param); });
 
             var $HiddenCheckBox = new $("<Input />");
             $HiddenCheckBox.attr("type", "hidden");
-            $HiddenCheckBox.attr("name", Obj.Name);
-            $HiddenCheckBox.attr("IsMultiple", Obj.MultiValue);
-            $HiddenCheckBox.attr("id", Obj.Name + "_hidden");
+            $HiddenCheckBox.attr("name", Param.Name);
+            $HiddenCheckBox.attr("IsMultiple", Param.MultiValue);
+            $HiddenCheckBox.attr("id", Param.Name + "_hidden");
             $HiddenCheckBox.attr("class", "Parameter");
-            $HiddenCheckBox.attr("DataType", Obj.Type);
+            $HiddenCheckBox.attr("DataType", Param.Type);
 
             var $OpenDropDown = new $("<Img />");
             $OpenDropDown.attr("src", "./reportviewer/Images/OpenDropDown.png");
             $OpenDropDown.attr("alt", "Open DropDown List");
-            $OpenDropDown.attr("name", Obj.Name + "OpenDropDown");
-            $OpenDropDown.on("click", function () { me._PopupDropDownPanel(Obj); });
+            $OpenDropDown.attr("name", Param.Name + "OpenDropDown");
+            $OpenDropDown.on("click", function () { me._PopupDropDownPanel(Param); });
 
             var $DropDownContainer = new $("<Div />");
-            $DropDownContainer.attr("name", Obj.Name + "_DropDownContainer").attr("value", Obj.Name);
+            $DropDownContainer.attr("name", Param.Name + "_DropDownContainer").attr("value", Param.Name);
             $DropDownContainer.addClass("Parameter-DropDown");
             $DropDownContainer.addClass("Parameter-Dropdown-Hidden");
 
             $(document).click(function (e) {
-                if (!($(e.target).hasClass("Parameter-DropDown") | $(e.target).hasClass("ParameterClient") | $(e.target).hasClass(Obj.Name + "_DropDown_CB") | $(e.target).hasClass(Obj.Name + "_DropDown_lable"))) {
-                    if ($(e.target).attr("name") != Obj.Name + "OpenDropDown") {
-                        me._CloseDropDownPanel(Obj);
+                if ($(e.target).hasClass("ViewReport")) return;
+
+                if (!($(e.target).hasClass("Parameter-DropDown") || $(e.target).hasClass("ParameterClient") || $(e.target).hasClass(Param.Name + "_DropDown_CB") || $(e.target).hasClass(Param.Name + "_DropDown_lable"))) {
+                    if ($(e.target).attr("name") != Param.Name + "OpenDropDown") {
+                        me._CloseDropDownPanel(Param);
                     }
                 }
             });
 
             var $Table = me._GetDefaultHTMLTable();
-            Obj.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            Param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
-            for (index in Obj.ValidValues) {
+            for (index in Param.ValidValues) {
                 var key;
                 var value;
                 if (index == 0) {
-                    var SelectAll = Obj.ValidValues[Obj.ValidValues.length - 1];
+                    var SelectAll = Param.ValidValues[Param.ValidValues.length - 1];
                     key = SelectAll.Key;
                     value = SelectAll.Value;
                 }
                 else {
-                    key = Obj.ValidValues[index - 1].Key;
-                    value = Obj.ValidValues[index - 1].Value;
+                    key = Param.ValidValues[index - 1].Key;
+                    value = Param.ValidValues[index - 1].Value;
                 }
 
                 var $Row = new $("<TR />");
@@ -345,26 +326,26 @@
                 var $Span = new $("<Span />");
                 var $Checkbox = new $("<Input />");
                 $Checkbox.attr("type", "checkbox");
-                $Checkbox.attr("id", Obj.Name + "_DropDown_" + value);
-                $Checkbox.attr("class", Obj.Name + "_DropDown_CB");
+                $Checkbox.attr("id", Param.Name + "_DropDown_" + value);
+                $Checkbox.addClass(Param.Name + "_DropDown_CB");
                 $Checkbox.attr("value", value);
                 $Checkbox.on("click", function () {
                     if (this.value == "Select All" & this.checked == true) {
-                        $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                        $("." + Param.Name + "_DropDown_CB").each(function (i) {
                             this.checked = true;
                         });
                     }
                     if (this.value == "Select All" & this.checked == false) {
-                        $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                        $("." + Param.Name + "_DropDown_CB").each(function (i) {
                             this.checked = false;
                         });
                     }
                 });
 
                 var $Lable = new $("<Label />");
-                $Lable.attr("for", Obj.Name + "_DropDown_" + value);
-                $Lable.attr("name", Obj.Name + "_DropDown_" + value + "_lable");
-                $Lable.attr("class", Obj.Name + "_DropDown_lable");
+                $Lable.attr("for", Param.Name + "_DropDown_" + value);
+                $Lable.attr("name", Param.Name + "_DropDown_" + value + "_lable");
+                $Lable.attr("class", Param.Name + "_DropDown_lable");
                 $Lable.html(key);
 
                 $Span.append($Checkbox);
@@ -380,43 +361,42 @@
             $Control.append($OpenDropDown);
             $Control.append($DropDownContainer);
         },
-        _PopupDropDownPanel: function(Obj) {
+        _PopupDropDownPanel: function(Param) {
             var me = this;
-            $("[name='" + Obj.Name + "_DropDownContainer']").width($("#" + Obj.Name).width());
-            if ($("[name='" + Obj.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Hidden")) {
-                $("[name='" + Obj.Name + "_DropDownContainer']").fadeOut("fast");
-                $("[name='" + Obj.Name + "_DropDownContainer']").removeClass("Parameter-Dropdown-Hidden");
-                $("[name='" + Obj.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Show");
+            $("[name='" + Param.Name + "_DropDownContainer']").width($("#" + Param.Name).width());
+            if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Hidden")) {
+                $("[name='" + Param.Name + "_DropDownContainer']").fadeOut("fast");
+                $("[name='" + Param.Name + "_DropDownContainer']").removeClass("Parameter-Dropdown-Hidden");
+                $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Show");
             }
             else {
-                me._CloseDropDownPanel(Obj);
+                me._CloseDropDownPanel(Param);
             }
         },
-        _CloseDropDownPanel: function(Obj) {
+        _CloseDropDownPanel: function(Param) {
             var me = this;
-            if ($("[name='" + Obj.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Show")) {
-                $("[name='" + Obj.Name + "_DropDownContainer']").fadeIn("fast", function () {
+            if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Show")) {
+                $("[name='" + Param.Name + "_DropDownContainer']").fadeIn("fast", function () {
                     var ShowValue = "";
                     var HiddenValue = "";
-                    $("." + Obj.Name + "_DropDown_CB").each(function (i) {
+                    $("." + Param.Name + "_DropDown_CB").each(function (i) {
                         if (this.checked & this.value != "Select All") {
-                            ShowValue += $("[name='" + Obj.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
+                            ShowValue += $("[name='" + Param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
                             HiddenValue += this.value + ",";
                         }
                     });
-                    $("[name='" + Obj.Name + "']").val(ShowValue.substr(0, ShowValue.length - 1));
-                    $("[name='" + Obj.Name + "']").val(HiddenValue.substr(0, HiddenValue.length - 1));
+                    $("[name='" + Param.Name + "']").val(ShowValue.substr(0, ShowValue.length - 1));
+                    $("[name='" + Param.Name + "']").val(HiddenValue.substr(0, HiddenValue.length - 1));
                 });
-                $("[name='" + Obj.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
-                $("[name='" + Obj.Name + "']").focus().blur();
+                $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
+                $("[name='" + Param.Name + "']").focus().blur();
             }
     
         },
         _CloseAllDropdown: function () {
-            //alert('fafasdfasdf');
             var me = this;
-            $(".Parameter-DropDown").each(function (Index, Obj) {
-                me._CloseDropPanel($(Obj).attr("value"));
+            $(".Parameter-DropDown").each(function (Index, Param) {
+                me._CloseDropDownPanel({ Name: $(Param).attr("value") });
             });
         },
         GetParamsList: function() {
@@ -522,7 +502,7 @@
         },
         RemoveParameter: function () {
             var me = this;
-            $(".ParameterContainer").find("[name='" + me.options.SessionID + "']").detach();
+            $(".ParameterContainer").detach();
         },
         _GetDefaultHTMLTable: function() {
             var $NewObj = $("<Table/>");

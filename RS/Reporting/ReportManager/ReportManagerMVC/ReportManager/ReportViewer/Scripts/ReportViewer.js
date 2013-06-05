@@ -57,7 +57,7 @@
             me.NumPages = 0;
             me.Lock = false;
             me.$ReportContainer;
-            me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Report loading...");
+            me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Loading...");
             me.FloatingHeaders = [];
             me.$PageNav;
             me.$Slider;
@@ -68,6 +68,8 @@
             me.ScrollTop = 0;
             me.ScrollLeft = 0;
            
+            me.element.append(me.$LoadingIndicator);
+
             if (me.options.NavUID != null) {
                 me.$PageNav = $("#" + me.options.NavUID);
                 me.$PageNav.css("display", "none");
@@ -142,11 +144,16 @@
         },
         AddLoadingIndicator: function () {
             var me = this;
-            me.$ReportContainer.append(me.$LoadingIndicator);
+
+            // Need to center
+            me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
+            me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
+            me.$LoadingIndicator.show();
         },
         RemoveLoadingIndicator: function () {
             var me = this;
-            me.$LoadingIndicator.detach();
+            //me.$LoadingIndicator.detach();
+            me.$LoadingIndicator.hide();
         },
         SetPage: function (NewPageNum, OldPage) {
             //  Load a new page into the screen and udpate the toolbar
@@ -255,6 +262,10 @@
             if (me.ParamLoaded == true)
                 $("#ParameterContainer").animate({ height: 'toggle' }, 500);
         },
+        ShowDocMap: function () {
+            if ($(".DocMapPanel").length > 0)
+                $(".DocMapPanel").animate({ height: 'toggle' }, 100);
+        },
         CachePages: function (InitPage) {
             var me = this;
 
@@ -356,7 +367,7 @@
                 me.ScrollTop = action.ScrollTop;
 
                 if (me.ParamLoaded == true) {
-                    RemoveParameter();
+                    me.$ReportContainer.reportParameter("RemoveParameter");
                     me.paramloaded = false;
                 }
                 me.LoadPage(action.CurrentPage, null, false);
@@ -520,10 +531,10 @@
                 if (me.ParamLoaded == true) {
                     $(".ParameterContainer").detach();
                 }
-                //$("#ParameterContainer").reportParameters({ ReportViewer: this });
-                //$("#ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                $(me).reportParameter({ ReportViewer: this });
-                $(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                //$(".ParameterContainer").reportParameter({ ReportViewer: this });
+                //$(".ParameterContainer").reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                me.$ReportContainer.reportParameter({ ReportViewer: this });
+                me.$ReportContainer.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {
@@ -546,12 +557,16 @@
                 }
             if (ParameterList == null) ParameterList = "";
             
+            if (!LoadOnly) {
+                me.AddLoadingIndicator();
+            }
+
             $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
                 ReportServerURL: me.ReportServerURL,
                 ReportPath: me.options.ReportPath,
                 SessionID: me.SessionID,
                 PageNumber: NewPageNum,
-                ParameterList: ParameterList //GetParamsList()
+                ParameterList: ParameterList 
             })
             .done(function (Data) {       
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
@@ -579,8 +594,8 @@
             }
             me.SessionID = Data.SessionID;
             me.NumPages = Data.NumPages;
-
-            if (Data.Report.DocumentMap != null) {
+            
+            if ($(".DocMapPanel").length == 0 && Data.Report.DocumentMap != null) {
                 me.$PageContainer.reportDocumentMap({ ReportViewer: this });
                 me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }

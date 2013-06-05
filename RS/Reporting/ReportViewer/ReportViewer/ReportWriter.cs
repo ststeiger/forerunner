@@ -2086,7 +2086,7 @@ namespace Forerunner
             int retval;
 
             Len = ReadByte();
-            if (Len > 128)
+            if (Len > 127)
             {
                 retval = Len - 128;
                 retval += GetLength(Depth + 1) * (Depth + 1) * 128;

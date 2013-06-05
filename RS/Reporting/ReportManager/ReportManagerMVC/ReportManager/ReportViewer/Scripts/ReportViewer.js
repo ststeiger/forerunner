@@ -67,7 +67,7 @@
             me.ParamLoaded = false;
             me.ScrollTop = 0;
             me.ScrollLeft = 0;
-           
+            me.LoadLock = 0;
             me.element.append(me.$LoadingIndicator);
 
             if (me.options.NavUID != null) {
@@ -146,13 +146,28 @@
             var me = this;
 
             // Need to center
-            me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-            me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
-            me.$LoadingIndicator.show();
+            //me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
+            //me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
+            me.LoadLock = 1;
+            setTimeout(function () {me.ShowLoadingIndictator(me);},800)
+            //me.$PageContainer.css({ opacity: 0.25 });
+            //me.$LoadingIndicator.show();
+        },
+        ShowLoadingIndictator: function (me) {
+
+            if (me.LoadLock == 1) {
+                // Need to center
+                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
+                me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
+                me.$PageContainer.css({ opacity: 0.75 });
+                me.$LoadingIndicator.show();
+            }
         },
         RemoveLoadingIndicator: function () {
             var me = this;
             //me.$LoadingIndicator.detach();
+            me.LoadLock = 0;
+            me.$PageContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();
         },
         SetPage: function (NewPageNum, OldPage) {
@@ -600,10 +615,10 @@
                 me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }
 
-            //Sections
-            me.RemoveLoadingIndicator();
+            //Sections           
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
+                me.RemoveLoadingIndicator();
                 me.SetPage(NewPageNum, OldPage);
             }
         },

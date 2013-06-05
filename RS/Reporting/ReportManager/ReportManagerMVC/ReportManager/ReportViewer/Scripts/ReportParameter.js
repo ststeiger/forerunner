@@ -86,7 +86,10 @@
             $ParameterContainer.append($Row);
 
             $ParameterDiv.append($ParameterContainer);
-            me.ReportViewer.$PageContainer.append($ParameterDiv);
+            if (me.ReportViewer.$ReportAreaContainer == null || me.ReportViewer.$ReportAreaContainer.length == 0)
+                me.ReportViewer.$PageContainer.append($ParameterDiv);
+            else
+                $ParameterDiv.insertBefore(me.ReportViewer.$ReportAreaContainer);
             me.ReportViewer.RemoveLoadingIndicator();
         },
         _WriteParameterControl: function(Obj, $Parent) {
@@ -184,27 +187,6 @@
             $Parent.append($TD_Status);
 
             return $Parent;
-        },
-        _WriteParameterToggle: function() {
-            //var $Container = new $("<Div />");
-            //$Container.attr("class", "ToggleParam");
-
-            //var $ToggleIcon = new $("<Img />");
-            //$ToggleIcon.attr("alt", "Show / Hide Parameters");
-            //$ToggleIcon.attr("title", "Show / Hide Parameters");
-            //$ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-            //$Container.on("mouseover", function (event) { SetActionCursor(this); });
-
-            //$Container.on("click", function () {
-            //    $(".Parameter-Panel").toggle("fast");
-            //    if ($ToggleIcon.attr("src") == "/images/Parameter_Collapse.png") 
-            //        $ToggleIcon.attr("src", "/images/Parameter_Expand.png");
-            //    else if ($ToggleIcon.attr("src") == "/images/Parameter_Expand.png") 
-            //        $ToggleIcon.attr("src", "/images/Parameter_Collapse.png");
-            //});
-
-            //$Container.append($ToggleIcon);
-            //return $Container;   
         },
         _GetParameterControlProperty: function(Obj, $Control) {
             var me = this;

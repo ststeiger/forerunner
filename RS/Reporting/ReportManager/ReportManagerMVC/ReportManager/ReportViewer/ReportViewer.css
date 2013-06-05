@@ -144,8 +144,9 @@ ol.lower-latin {
   background: white url(../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
   width: 148px; 
   height: 28px; 
-  position: absolute; 
-  margin:10px auto;
+  position: relative; 
+  margin-left: auto;
+  margin-right:auto;
   margin-top:50px;
   padding: 10px 10px 10px 50px; 
   text-align: left; 
@@ -407,8 +408,8 @@ td input[type="submit"], td input[type="button"], td button
 td.DocMapPanel
 {
     vertical-align:top;
-    height:100%;
-    width:25%;
+    height:auto;
+    width:auto;
     background-color:#EBF3FF;
     display:none;
 }
@@ -418,7 +419,8 @@ td.DocMapPanel
     height:100%;
     white-space:nowrap;
     vertical-align:top;
-    overflow:hidden;    
+    overflow-x:scroll;  
+    overflow-y:hidden;
 }
 .DocMapHeader
 {

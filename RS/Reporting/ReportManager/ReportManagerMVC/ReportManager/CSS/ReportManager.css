@@ -27,6 +27,7 @@ table,td,tr {
     padding: 0px;
     margin: 0px;
     border: 0px;
+    width:100%;
 }
 
 .mainViewPortShifted {
@@ -86,6 +87,11 @@ footer#bottomdiv {
 
 section#pageSection {
   display:block;
+  width:100%;
+}
+section#mainSection {
+  display:block;
+  width:100%;
 }
 
 .buttonicon {
@@ -104,21 +110,6 @@ section#pageSection {
 
 .spacer5mm {
   min-width:5mm;
-}
-
-.loading-indicator  {
-  border: solid 2px #86A5AD;
-  background: white url(~/reportviewer/images/ajax-loader1.gif) no-repeat 10px 10px;
-  width: 148px; 
-  height: 28px; 
-  position: relative; 
-  margin:10px auto;
-  margin-top:50px;
-  padding: 10px 10px 10px 50px; 
-  text-align: left; 
-  line-height: 27px; 
-  font-weight: bold; 
-  z-index: 2010
 }
 
 .toolbar {    

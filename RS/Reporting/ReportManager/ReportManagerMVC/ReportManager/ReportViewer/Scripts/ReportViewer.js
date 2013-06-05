@@ -369,7 +369,7 @@
                 me.ScrollTop = action.ScrollTop;
 
                 if (me.ParamLoaded == true) {
-                    RemoveParameter();
+                    $(me).reportParameter("RemoveParameter");                    
                     me.paramloaded = false;
                 }
                 me.LoadPage(action.CurrentPage, null, false);

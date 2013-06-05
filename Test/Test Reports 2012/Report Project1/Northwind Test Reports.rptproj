@@ -62,12 +62,20 @@
       <FullPath>Lines.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Long Text  Report.rdl</Name>
+      <FullPath>Long Text  Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multi chart with go to report action.rdl</Name>
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>multichart.rdl</Name>
       <FullPath>multichart.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>newspaper multi column.rdl</Name>
+      <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Parameter1.rdl</Name>
@@ -133,14 +141,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Long Text  Report.rdl</Name>
-      <FullPath>Long Text  Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>newspaper multi column.rdl</Name>
-      <FullPath>newspaper multi column.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -149,7 +149,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.20:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.25/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

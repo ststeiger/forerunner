@@ -360,7 +360,7 @@
                 me.ScrollTop = action.ScrollTop;
 
                 if (me.ParamLoaded == true) {
-                    RemoveParameter();
+                    //RemoveParameter();
                     me.paramloaded = false;
                 }
                 me.LoadPage(action.CurrentPage, null, false);
@@ -524,10 +524,10 @@
                 if (me.ParamLoaded == true) {
                     $(".ParameterContainer").detach();
                 }
-                $(".ParameterContainer").reportParameters({ ReportViewer: this });
-                $(".ParameterContainer").reportParameters("WriteParameterPanel", Data, me, PageNum, false);
-                //$(me).reportParameter({ ReportViewer: this });
-                //$(me).reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                //$(".ParameterContainer").reportParameter({ ReportViewer: this });
+                //$(".ParameterContainer").reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                me.$ReportContainer.reportParameter({ ReportViewer: this });
+                me.$ReportContainer.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
             }
             else {

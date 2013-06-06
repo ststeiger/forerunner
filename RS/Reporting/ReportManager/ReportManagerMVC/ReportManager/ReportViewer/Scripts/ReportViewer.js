@@ -67,7 +67,7 @@
             me.ParamLoaded = false;
             me.ScrollTop = 0;
             me.ScrollLeft = 0;
-           
+            me.LoadLock = 0;
             me.element.append(me.$LoadingIndicator);
 
             if (me.options.NavUID != null) {
@@ -110,12 +110,13 @@
 
             offset = $Tablix.offset();
             scrollLeft = $(window).scrollLeft();    
-            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {                
+            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
+                $ColHeader.css("top", $Tablix.offset.top);
                 $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
                 $ColHeader.fadeIn('fast');
             }
             else {
-                $ColHeader.css("display", "none");
+                $ColHeader.hide();
         
             }
         },        
@@ -139,20 +140,29 @@
                 $RowHeader.fadeIn('fast');
             }
             else {
-                $RowHeader.css("display", "none");
+                $RowHeader.hide();
             }
         },
         AddLoadingIndicator: function () {
             var me = this;
 
-            // Need to center
-            me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-            me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
-            me.$LoadingIndicator.show();
+            me.LoadLock = 1;
+            setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
+        },
+        ShowLoadingIndictator: function (me) {
+
+            if (me.LoadLock == 1) {
+                // Need to center
+                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
+                me.$LoadingIndicator.css("left", $(window).scrollLeft());
+                me.$PageContainer.css({ opacity: 0.75 });
+                me.$LoadingIndicator.show();
+            }
         },
         RemoveLoadingIndicator: function () {
             var me = this;
-            //me.$LoadingIndicator.detach();
+            me.LoadLock = 0;
+            me.$PageContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();
         },
         SetPage: function (NewPageNum, OldPage) {
@@ -264,7 +274,9 @@
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
-                $(".DocMapPanel").animate({ height: 'toggle' }, 100);
+                $(".DocMapPanel").animate({ height: 'toggle' }, 100, function () {
+                    $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
+                });
         },
         CachePages: function (InitPage) {
             var me = this;
@@ -571,7 +583,7 @@
                 PageNumber: NewPageNum,
                 ParameterList: ParameterList 
             })
-            .done(function (Data) {       
+            .done(function (Data) {
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
                 if (BookmarkID != null)
                     NavToLink(BookmarkID);
@@ -603,10 +615,10 @@
                 me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }
 
-            //Sections
-            me.RemoveLoadingIndicator();
+            //Sections           
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
+                me.RemoveLoadingIndicator();
                 me.SetPage(NewPageNum, OldPage);
             }
         },
@@ -649,10 +661,10 @@
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.FloatingHeaders, function (Index, Obj) {
-                if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
-                if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
+                if (Obj.$RowHeader != null) Obj.$RowHeader.hide();
+                if (Obj.$ColHeader != null) Obj.$ColHeader.hide();
             });
-            if (me.$FloatingToolbar != null) me.$FloatingToolbar.css("display", "none");
+            if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
         },
         is_touch_device: function () {
             var ua = navigator.userAgent;

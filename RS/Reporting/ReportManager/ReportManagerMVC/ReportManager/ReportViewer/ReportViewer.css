@@ -153,6 +153,7 @@ ol.lower-latin {
   line-height: 27px; 
   font-weight: bold; 
   z-index: 2010;
+  display:block;
 }
 
 .toolbar {    
@@ -410,7 +411,6 @@ td.DocMapPanel
     vertical-align:top;
     height:auto;
     width:auto;
-    background-color:#EBF3FF;
     display:none;
 }
 .DocMapBorder
@@ -419,8 +419,9 @@ td.DocMapPanel
     height:100%;
     white-space:nowrap;
     vertical-align:top;
-    overflow-x:scroll;  
-    overflow-y:hidden;
+    overflow:auto;
+    background-color:#EBF3FF;
+    position:relative;
 }
 .DocMapHeader
 {

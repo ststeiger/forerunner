@@ -163,7 +163,7 @@ namespace Forerunner.ReportViewer
             devInfo += @"</DeviceInfo>";
 
             //Delay just for testing
-            //Thread.Sleep(1000);
+            //Thread.Sleep(2000);
 
             DataSourceCredentials[] credentials = null;
             ExecutionInfo execInfo = new ExecutionInfo();
@@ -196,7 +196,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);//return e.Message;
             }
         }
 
@@ -220,9 +220,9 @@ namespace Forerunner.ReportViewer
                 return "{\"Type\":\"\"}";
             }
             catch (Exception e)
-            {
+            {                
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -268,7 +268,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -298,7 +298,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -327,7 +327,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -365,7 +365,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);  //return e.Message;
             }
         }
 
@@ -391,7 +391,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
             }
         }
 
@@ -481,5 +481,6 @@ namespace Forerunner.ReportViewer
                 return null;
             }
         }
+
     }
 }

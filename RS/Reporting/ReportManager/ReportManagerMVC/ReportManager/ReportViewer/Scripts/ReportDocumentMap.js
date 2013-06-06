@@ -7,17 +7,20 @@
                 this.element = $("<td class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0'>" +
                     "<tr class='DocMapHeader'><td><div class='DocMapBar'> Document Map </div></td></tr>" +
                     "<tr><td class='DocMapItemContaienr'></td></tr></table></div></td>");
-                
                 //  "<td class='DocMap-Spliter'><div class='DocMap-Collapse'></div></td>"
-                this.options.ReportViewer.$PageContainer.append(this.element);
-                $(".DocMapBorder").resizable();
+                this.options.ReportViewer.$PageContainer.append(this.element);            
+                //$(".DocMapBorder").resizable();
+            
+                window.onresize = function () { $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top); };
+
+                $(window).scroll(function () { $(".DocMapBorder").css("top", $(window).scrollTop()); });
         },
         WriteDocumentMap: function (pageNum) {
             var me = this;
             var $Cell;          
             $Cell = $(".DocMapItemContaienr");
             $Cell.append(me._WriteDocumentMapItem(this.options.ReportViewer.Pages[pageNum].ReportObj.Report.DocumentMap, 0));
-
+            
             //$Cell = $(".DocMap-Spliter");
             //$Cell.on("click", function () {
             //    $(".DocMapPanel").toggle("fast");

@@ -382,7 +382,7 @@ namespace Forerunner
             return w.ToString();
         }
 
-        public void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap)
+        private void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap)
         {
             w.WriteMember("Label");
             w.WriteString(DocumentMap.Label);
@@ -2142,6 +2142,28 @@ namespace Forerunner
 
                 return list.ToArray();
             }
+        }
+
+        public static string WriteExceptionJSON(Exception e)
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Exception");
+            w.WriteStartObject();
+            w.WriteMember("Type");
+            w.WriteString(e.GetType().ToString());
+            w.WriteMember("TargetSite");
+            w.WriteString(e.TargetSite.ToString());
+            w.WriteMember("Source");
+            w.WriteString(e.Source);
+            w.WriteMember("Message");
+            w.WriteString(e.Message);
+            w.WriteMember("StackTrace");
+            w.WriteString(e.StackTrace);
+            w.WriteEndObject();
+            w.WriteEndObject();
+
+            return w.ToString();
         }
     }
 }

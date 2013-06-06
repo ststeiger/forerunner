@@ -587,7 +587,7 @@
 
             width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width 
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height
-            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;" + "min-width:" + width + "mm;" + "min-height:" + height + "mm;" + "height:" + height + "mm;";
+            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  + "height:" + height + "mm;";
 
             //Row and column span
             if (Obj.RowSpan != null)
@@ -610,8 +610,8 @@
             var Style = "border-collapse:collapse;padding:0;margin:0;";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<DIV/>").css({ display: "none", position: "absolute", top: "0px", left: "0px" });
-            var $FixedRowHeader = new $("<DIV/>").css({ display: "none", position: "absolute", top: "0px", left: "0px" });
+            var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
+            var $FixedRowHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;

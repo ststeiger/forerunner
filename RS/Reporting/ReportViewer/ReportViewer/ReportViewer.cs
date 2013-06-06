@@ -196,7 +196,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);//return e.Message;
             }
         }
 
@@ -220,9 +220,9 @@ namespace Forerunner.ReportViewer
                 return "{\"Type\":\"\"}";
             }
             catch (Exception e)
-            {
+            {                
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -268,7 +268,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -298,7 +298,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -327,7 +327,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
             }
         }
 
@@ -365,7 +365,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);  //return e.Message;
             }
         }
 
@@ -391,7 +391,7 @@ namespace Forerunner.ReportViewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
             }
         }
 
@@ -481,5 +481,6 @@ namespace Forerunner.ReportViewer
                 return null;
             }
         }
+
     }
 }

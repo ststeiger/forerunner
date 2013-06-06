@@ -147,21 +147,20 @@
             var me = this;
 
             me.LoadLock = 1;
-            setTimeout(function () {me.ShowLoadingIndictator(me);},800)            
+            setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
         },
         ShowLoadingIndictator: function (me) {
 
             if (me.LoadLock == 1) {
                 // Need to center
                 me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-                me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
+                me.$LoadingIndicator.css("left", $(window).scrollLeft());
                 me.$PageContainer.css({ opacity: 0.75 });
                 me.$LoadingIndicator.show();
             }
         },
         RemoveLoadingIndicator: function () {
             var me = this;
-            
             me.LoadLock = 0;
             me.$PageContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();
@@ -275,7 +274,9 @@
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
-                $(".DocMapPanel").animate({ height: 'toggle' }, 100);
+                $(".DocMapPanel").animate({ height: 'toggle' }, 100, function () {
+                    $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
+                });
         },
         CachePages: function (InitPage) {
             var me = this;
@@ -579,7 +580,7 @@
                 PageNumber: NewPageNum,
                 ParameterList: ParameterList 
             })
-            .done(function (Data) {       
+            .done(function (Data) {
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
                 if (BookmarkID != null)
                     NavToLink(BookmarkID);

@@ -110,12 +110,13 @@
 
             offset = $Tablix.offset();
             scrollLeft = $(window).scrollLeft();    
-            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {                
+            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
+                $ColHeader.css("top", $Tablix.offset.top);
                 $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
                 $ColHeader.fadeIn('fast');
             }
             else {
-                $ColHeader.css("display", "none");
+                $ColHeader.hide();
         
             }
         },        
@@ -139,7 +140,7 @@
                 $RowHeader.fadeIn('fast');
             }
             else {
-                $RowHeader.css("display", "none");
+                $RowHeader.hide();
             }
         },
         AddLoadingIndicator: function () {
@@ -656,10 +657,10 @@
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.FloatingHeaders, function (Index, Obj) {
-                if (Obj.$RowHeader != null) Obj.$RowHeader.css("display", "none");
-                if (Obj.$ColHeader != null) Obj.$ColHeader.css("display", "none");
+                if (Obj.$RowHeader != null) Obj.$RowHeader.hide();
+                if (Obj.$ColHeader != null) Obj.$ColHeader.hide();
             });
-            if (me.$FloatingToolbar != null) me.$FloatingToolbar.css("display", "none");
+            if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
         },
         is_touch_device: function () {
             var ua = navigator.userAgent;

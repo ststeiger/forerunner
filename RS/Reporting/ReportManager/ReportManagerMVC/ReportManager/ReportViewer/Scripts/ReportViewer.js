@@ -523,7 +523,10 @@
            .done(function (Data) {
                me.ShowParameters(PageNum, Data);
            })
-           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); })
+           .fail(function () {
+               console.log("error");
+               me.RemoveLoadingIndicator();
+           })
         },
         ShowParameters: function (PageNum, Data) {
             var me = this;

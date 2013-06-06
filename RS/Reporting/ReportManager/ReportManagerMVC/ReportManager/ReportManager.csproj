@@ -228,7 +228,6 @@
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
     <Content Include="Scripts\Views\CatalogItemView.html" />
-    <Content Include="Scripts\Views\ReportViewerHeaderView.html" />
     <Content Include="Scripts\Views\ReportManagerHeaderView.html" />
     <Content Include="Scripts\Views\ReportViewerMainView.html" />
     <Content Include="Scripts\Views\ReportManagerMainView.html" />

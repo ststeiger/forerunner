@@ -77,13 +77,16 @@ var ApplicationRouter = Backbone.Router.extend({
                 showBackButton: true,
                 pageTitle: 'ReportViewer',
             });
-            var $headerSection = this.appPageView.transitionHeader(g_App.ReportViewerHeaderView);
+
+            var $toolbar = $('#mainSectionHeader').toolbar();   // create the toolbar if need be
+            $toolbar.toolbar('render');                         // Re-render in case it was changed (e.g., by the reportmanager)
 
             this.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
 
             this.appPageView.bindMenuButton();
-            var $viewer = $('#FRReportViewer1').reportViewer({
+            var $viewer = $('#FRReportViewer1');
+            $viewer.reportViewer({
                 ReportServer: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
@@ -94,7 +97,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 toolbarOffset: this.toolbarHeight()
             });
 
-            $headerSection.initCallbacks($viewer);
+            $('#mainSectionHeader').toolbar('initCallbacks', $viewer);
         },
 
         toolbarHeight : function() {
@@ -133,7 +136,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-$(document).ready(g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'ReportManagerHeaderView', 'CatalogItemView', 'ReportViewerHeaderView', 'ReportViewerMainView'], '', function () {
+$(document).ready(g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'ReportManagerHeaderView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;

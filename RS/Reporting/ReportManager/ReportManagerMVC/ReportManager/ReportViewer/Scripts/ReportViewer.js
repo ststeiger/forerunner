@@ -145,13 +145,8 @@
         AddLoadingIndicator: function () {
             var me = this;
 
-            // Need to center
-            //me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-            //me.$LoadingIndicator.css("left", $(window).scrollLeft() + 100);
             me.LoadLock = 1;
-            setTimeout(function () {me.ShowLoadingIndictator(me);},800)
-            //me.$PageContainer.css({ opacity: 0.25 });
-            //me.$LoadingIndicator.show();
+            setTimeout(function () {me.ShowLoadingIndictator(me);},800)            
         },
         ShowLoadingIndictator: function (me) {
 
@@ -165,7 +160,7 @@
         },
         RemoveLoadingIndicator: function () {
             var me = this;
-            //me.$LoadingIndicator.detach();
+            
             me.LoadLock = 0;
             me.$PageContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();

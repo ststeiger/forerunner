@@ -163,7 +163,7 @@ namespace Forerunner.ReportViewer
             devInfo += @"</DeviceInfo>";
 
             //Delay just for testing
-            //Thread.Sleep(1000);
+            //Thread.Sleep(2000);
 
             DataSourceCredentials[] credentials = null;
             ExecutionInfo execInfo = new ExecutionInfo();

@@ -37,6 +37,11 @@
             $Cell = $('.fr-button-lastpage');
             $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
             $Cell.addClass("cursor-pointer");
+
+            $Cell = $(".fr-button-documentmap");
+            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
+            $Cell.addClass("cursor-pointer");
+
         },
         render: function () {
             var me = this;

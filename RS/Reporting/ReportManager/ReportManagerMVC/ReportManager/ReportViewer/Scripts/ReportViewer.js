@@ -23,9 +23,7 @@
             ReportPath: null,
             PageNum: 1,
             UID: null,
-            ToolbarUID: null,
             NavUID: null,
-            toolbarOffset: 0,
             PingInterval: 300000,
             ParameterDiv: null
         },
@@ -49,11 +47,9 @@
             me.ReportViewerAPI = this.options.ReportViewerAPI
             me.FloatingToolbarHeight;
             me.$FloatingToolbar;
-            me.$Toolbar = null;
             me.SessionID = "";
             me.$PageContainer = $Row;
             me.$ReportAreaContainer;
-            me.ToolbarHeight = this.options.toolbarOffset;
             me.NumPages = 0;
             me.Lock = false;
             me.$ReportContainer;
@@ -62,7 +58,6 @@
             me.$PageNav;
             me.$Slider;
             me.$Carousel;
-            me.ToolbarHeight;
             me.CreateNav = false;
             me.ParamLoaded = false;
             me.ScrollTop = 0;
@@ -73,12 +68,6 @@
             if (me.options.NavUID != null) {
                 me.$PageNav = $("#" + me.options.NavUID);
                 me.$PageNav.css("display", "none");
-            }
-
-            if (me.options.ToolbarUID != null) {
-                me.$Toolbar = $('#' + me.options.ToolbarUID);
-                if (me.ToolbarHeight == 0)
-                    me.ToolbarHeight = me._GetHeight(me.$Toolbar) * 3.78;  //convert to px
             }
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
@@ -126,17 +115,10 @@
             if ($RowHeader == null)
                 return;
 
-            toolbarOffset = 0;
-
-            // Handle toolbar special            
-            toolbarOffset = me.ToolbarHeight;
-            if ($RowHeader == me.$FloatingToolbar)
-                toolbarOffset = 0;
-
             offset = $Tablix.offset();
             scrollTop = $(window).scrollTop();
-            if ((scrollTop > offset.top - toolbarOffset) && (scrollTop < offset.top + $Tablix.height())) {        
-                $RowHeader.css("top", Math.min((scrollTop - offset.top) + toolbarOffset, ($Tablix.height() - $RowHeader.height()) + toolbarOffset) + "px");
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $Tablix.height())) {        
+                $RowHeader.css("top", Math.min((scrollTop - offset.top), ($Tablix.height() - $RowHeader.height())) + "px");
                 $RowHeader.fadeIn('fast');
             }
             else {
@@ -198,7 +180,9 @@
             }
             me.Pages[NewPageNum] = null;
             me.CurPage = NewPageNum;
-            $("input.fr-textbox-reportpage", $('#' + me.options.ToolbarUID)).each(function () { $(this).val(NewPageNum); });
+
+            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
+            me.element.trigger('changePage', NewPageNum);
     
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -403,14 +387,6 @@
                     me.$Carousel.select(me.CurPage - 1, 1);
                 me.$PageNav.fadeIn("fast");
                 me.$Slider.fadeIn("slow");
-            }
-        },
-        ShowToolbar: function() {
-            var me = this;
-            if (me.$Toolbar.is(":visible")) {
-                me.$Toolbar.hide();
-            } else {
-                me.$Toolbar.show();
             }
         },
         Sort: function (Direction, ID) {
@@ -652,10 +628,6 @@
                 me.SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader);
                 me.SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader);
             });
-            if (me.ToolbarUID != null) {
-                me.SetRowHeaderOffset(me.$ReportContainer, me.$FloatingToolbar);
-                me.SetColHeaderOffset(me.$ReportContainer, me.$FloatingToolbar);
-            }
         },
         HideTableHeaders: function() {
             // On a touch device hide the headers during a scroll if possible

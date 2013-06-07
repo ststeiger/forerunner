@@ -92,9 +92,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 ReportPath: path,
                 PageNum: 1,
                 UID: 'FRReportViewer1',
-                ToolbarUID: 'ViewerToolbar',
                 NavUID: 'bottomdiv',
-                toolbarOffset: this.toolbarHeight()
             });
 
             $('#mainSectionHeader').toolbar('initCallbacks', $viewer);

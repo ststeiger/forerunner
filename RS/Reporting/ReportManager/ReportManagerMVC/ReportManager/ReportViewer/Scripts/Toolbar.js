@@ -5,42 +5,50 @@
             $reportViewer: null
         },
         initCallbacks: function ($FRReportViewer) {
-            var $Cell;
+            var $cell;
             var me = this;
             me.options.$reportViewer = $FRReportViewer;
-            $Cell = $('.fr-button-paramarea', me.$el);
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-nav');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowNav') });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-reportback');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('Back') });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-refresh');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('RefreshReport') });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-firstpage');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', 1) });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-prev');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') - 1) });
-            $Cell.addClass("cursor-pointer");
 
-            $Cell = $('.fr-textbox-reportpage');
-            $Cell.attr("type", "number")
-            $Cell.on("keypress", { input: $Cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
+            // Hook up any / all custome events that the report viewer may trigger
+            me.options.$reportViewer.on('changePage', function (e, newPageNum) {
+                var $input = $("input.fr-textbox-reportpage", me.$el);
+                $input.val(newPageNum);
+            });
 
-            $Cell = $('.fr-button-next');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') + 1) });
-            $Cell.addClass("cursor-pointer");
-            $Cell = $('.fr-button-lastpage');
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
-            $Cell.addClass("cursor-pointer");
+            // Hook up the toolbar element events
+            $cell = $('.fr-button-paramarea', me.$el);
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-nav');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowNav') });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-reportback');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('Back') });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-refresh');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('RefreshReport') });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-firstpage');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', 1) });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-prev');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') - 1) });
+            $cell.addClass("cursor-pointer");
 
-            $Cell = $(".fr-button-documentmap");
-            $Cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
-            $Cell.addClass("cursor-pointer");
+            $cell = $('.fr-textbox-reportpage');
+            $cell.attr("type", "number")
+            $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
+
+            $cell = $('.fr-button-next');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') + 1) });
+            $cell.addClass("cursor-pointer");
+            $cell = $('.fr-button-lastpage');
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
+            $cell.addClass("cursor-pointer");
+
+            $cell = $(".fr-button-documentmap");
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
+            $cell.addClass("cursor-pointer");
 
         },
         render: function () {

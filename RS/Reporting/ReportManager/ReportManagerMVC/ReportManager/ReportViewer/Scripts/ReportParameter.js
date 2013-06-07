@@ -160,9 +160,7 @@
                             //Format: ISO8601
                             $element.datepicker({
                                 dateFormat: 'yy-mm-dd',
-                                onClose: function () {
-                                    $element.focus().blur();
-                                }
+                                onClose: function () { $element.valid(); },
                             });
                             $element.attr("dateISO", "true");
                             break;

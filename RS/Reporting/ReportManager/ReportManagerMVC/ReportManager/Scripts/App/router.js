@@ -87,12 +87,13 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.bindMenuButton();
             var $viewer = $('#FRReportViewer1');
             $viewer.reportViewer({
-                ReportServer: g_App.configs.reportServerUrl,
+                ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
                 PageNum: 1,
                 UID: 'FRReportViewer1',
                 NavUID: 'bottomdiv',
+                ToolbarHeight: this.toolbarHeight(),
             });
 
             $('#mainSectionHeader').toolbar('initCallbacks', $viewer);

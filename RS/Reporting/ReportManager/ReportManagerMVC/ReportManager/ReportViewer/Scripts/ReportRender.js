@@ -369,7 +369,7 @@
         },
         _GetImageURL: function (RS, ImageName) {
             var Url = this.ReportViewer.options.ReportViewerAPI + "/GetImage/?";
-            Url += "ReportServerURL=" + this.ReportViewer.ReportServerURL;
+            Url += "ReportServerURL=" + this.ReportViewer.options.ReportServerURL;
             Url += "&SessionID=" + this.ReportViewer.SessionID;
             Url += "&ImageID=" + ImageName;
             return Url;
@@ -660,17 +660,23 @@
             })
             $Tablix.append($Row);
 
-            if (HasFixedRows)
-                $Tablix.append($FixedColHeader);
+            if (HasFixedRows) {
+                $FixedColHeader.hide();
+               // $Tablix.append($FixedColHeader);
+            }
             else
                 $FixedColHeader = null;
 
-            if (HasFixedCols)
-                $Tablix.append($FixedRowHeader);
+            if (HasFixedCols) {
+                $FixedRowHeader.hide();
+                //$Tablix.append($FixedRowHeader);
+            }
             else
                 $FixedRowHeader = null;
 
-            var ret = $("<div class='divWithFloatingRow' style='position:relative'></div").append($FixedColHeader);
+            var ret = $("<div style='position:relative'></div");
+            ret.append($FixedColHeader);
+            ret.append($FixedRowHeader);
             ret.append($Tablix);
             RIContext.RS.FloatingHeaders.push(new FloatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;

@@ -18,44 +18,35 @@
     $.widget("Forerunner.reportViewer", {
         // Default options
         options: {
-            ReportServer: null,
+            ReportServerURL: null,
             ReportViewerAPI: null,
             ReportPath: null,
             PageNum: 1,
             UID: null,
             NavUID: null,
             PingInterval: 300000,
-            ParameterDiv: null
+            ParameterDiv: null,
+            ToolbarHeight: 0
         },
 
         // Constructor
         _create: function () {
             var me = this;
-            var $Table = new $("<table class='top-level-report-table'/>");
-            var $Row = new $("<TR/>");
-            var $Cell;
-            var $FloatingToolbar;
 
             setInterval(function () { me.SessionPing(); }, this.options.PingInterval);
 
             // ReportState
             me.ActionHistory = [];
-            me.$ReportOuterDiv = $("#" + me.options.UID);
             me.CurPage = 0;
             me.Pages = new Object();
-            me.ReportServerURL = this.options.ReportServer;
-            me.ReportViewerAPI = this.options.ReportViewerAPI
-            me.FloatingToolbarHeight;
-            me.$FloatingToolbar;
             me.SessionID = "";
-            me.$PageContainer = $Row;
-            me.$ReportAreaContainer;
             me.NumPages = 0;
             me.Lock = false;
-            me.$ReportContainer;
+            me.$ReportContainer = new $("<DIV class='report-container'/>");
+            me.$ReportAreaContainer - null;
             me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Loading...");
             me.FloatingHeaders = [];
-            me.$PageNav;
+            me.$PageNav = null;
             me.$Slider;
             me.$Carousel;
             me.CreateNav = false;
@@ -75,12 +66,8 @@
             //Log in screen if needed
 
             //load the report Page requested  
-            $Table.append(me.$PageContainer);
-            me.element.append($Table);
-            me.element.addClass("report-container");
-            me.$ReportContainer = me.element;
+            me.element.append(me.$ReportContainer);
             me.AddLoadingIndicator();
-            me.$ReportOuterDiv.append(me.$ReportContainer);
             me.LoadParameters(me.options.PageNum);
         },
         getCurPage: function () {
@@ -100,7 +87,7 @@
             offset = $Tablix.offset();
             scrollLeft = $(window).scrollLeft();    
             if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
-                $ColHeader.css("top", $Tablix.offset.top);
+                //$ColHeader.css("top", $Tablix.offset.top);
                 $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
                 $ColHeader.fadeIn('fast');
             }
@@ -118,7 +105,7 @@
             offset = $Tablix.offset();
             scrollTop = $(window).scrollTop();
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $Tablix.height())) {        
-                $RowHeader.css("top", Math.min((scrollTop - offset.top), ($Tablix.height() - $RowHeader.height())) + "px");
+                $RowHeader.css("top", (Math.min((scrollTop - offset.top), ($Tablix.height() - $RowHeader.height())) + me.options.ToolbarHeight) + "px");
                 $RowHeader.fadeIn('fast');
             }
             else {
@@ -137,14 +124,14 @@
                 // Need to center
                 me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
                 me.$LoadingIndicator.css("left", $(window).scrollLeft());
-                me.$PageContainer.css({ opacity: 0.75 });
+                me.$ReportContainer.css({ opacity: 0.75 });
                 me.$LoadingIndicator.show();
             }
         },
         RemoveLoadingIndicator: function () {
             var me = this;
             me.LoadLock = 0;
-            me.$PageContainer.css({ opacity: 1 });
+            me.$ReportContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();
         },
         SetPage: function (NewPageNum, OldPage) {
@@ -155,8 +142,8 @@
                 me.RenderPage(NewPageNum);
             if (me.$ReportAreaContainer == null) {
                 me.$ReportAreaContainer = $("<Div/>");
-                me.$ReportAreaContainer.attr("ID", "ReportArea");
-                me.$PageContainer.append(me.$ReportAreaContainer);
+                me.$ReportAreaContainer.addClass("report-area-container");
+                me.$ReportContainer.append(me.$ReportAreaContainer);
                 me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
                 me.touchNav();
                 me.Pages[NewPageNum].$Container.fadeIn();
@@ -165,7 +152,7 @@
                 //if (OldPage != null)
                 //    OldPage.$Container.detach();
 
-                me.$ReportAreaContainer.find("#Page").detach();
+                me.$ReportAreaContainer.find(".Page").detach();
                 me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
         
                 //me.Pages[NewPageNum].$Container.hide();
@@ -207,16 +194,16 @@
                 tap: function (event, target) {
                     $(target).trigger('click');
                 },
-                longTap: function (event, target) {
-                    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
-                        me.ShowNav();
-                    }
-                },
-                doubleTap: function (event, target) {
-                    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
-                        me.ShowNav();
-                    }
-                },
+                //longTap: function (event, target) {
+                //    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
+                //        me.ShowNav();
+                //    }
+                //},
+                //doubleTap: function (event, target) {
+                //    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
+                //        me.ShowNav();
+                //    }
+                //},
                 longTapThreshold: 1000,
             });
         },
@@ -280,13 +267,7 @@
                     if (i != InitPage)
                         me.LoadPage(i, null, true);
 
-        },
-        SetImage: function (Data) {
-            var me = this;
-            if (me.Pages[PageNum] == null)
-                me.Pages[PageNum] = new ReportPage(null, null);
-            me.Pages[PageNum].Image = Data;
-        },
+        },      
         CreateSlider: function (ReportViewerUID) {
             var me = this;
             $Container = me.$PageNav;
@@ -303,7 +284,7 @@
             //if(GetParamsList()!
             for (var i = 1; i <= me.NumPages; i++) {
         
-                var url = me.options.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + me.ReportServerURL + '&ReportPath='
+                var url = me.options.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + me.options.ReportServerURL + '&ReportPath='
                         + me.options.ReportPath + '&SessionID=' + me.SessionID + '&PageNumber=' +  i;
                 $ListItem = new $('<LI />');
                 $List.append($ListItem);
@@ -399,7 +380,7 @@
                 newDir = "Ascending";
 
             $.getJSON(me.options.ReportViewerAPI + "/SortReport/", {                
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 SessionID: me.SessionID,
                 SortItem: ID,
                 Direction: newDir
@@ -416,7 +397,7 @@
 
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "toggle",
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 SessionID: me.SessionID,
                 UniqueID: ToggleID
             }).done(function (Data) {
@@ -436,12 +417,12 @@
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "bookmark",
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 SessionID: me.SessionID,
                 UniqueID: BookmarkID
             }).done(function (Data) {
                 if (Data.NewPage == me.CurPage) {
-                    NavToLink(BookmarkID);
+                   me.NavToLink(BookmarkID);
                 } else {
                     me.BackupCurPage();
                     me.LoadPage(Data.NewPage, null, false, BookmarkID);
@@ -453,7 +434,7 @@
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "drillthrough",
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 SessionID: me.SessionID,
                 UniqueID: DrillthroughID
             }).done(function (Data) {
@@ -462,7 +443,7 @@
                 me.Pages = new Object();
 
                 if (Data.ParametersRequired) {
-                    me.$ReportAreaContainer.find("#Page").detach();
+                    me.$ReportAreaContainer.find(".Page").detach();
                     me.SetScrollLocation(0, 0);
                     me.ShowParameters(1, Data.Parameters);
                 }
@@ -478,7 +459,7 @@
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "documentMap",
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 SessionID: me.SessionID,
                 UniqueID: DocumentMapID
             }).done(function (Data) {
@@ -505,7 +486,7 @@
         LoadParameters: function (PageNum) {
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/GetParameterJSON/", {
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath
             })
            .done(function (Data) {
@@ -553,7 +534,7 @@
             }
 
             $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
-                ReportServerURL: me.ReportServerURL,
+                ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath,
                 SessionID: me.SessionID,
                 PageNumber: NewPageNum,
@@ -562,7 +543,7 @@
             .done(function (Data) {
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
                 if (BookmarkID != null)
-                    NavToLink(BookmarkID);
+                    me.NavToLink(BookmarkID);
                 //me.RenderPage(NewPageNum);
                 if (!LoadOnly) me.CachePages(NewPageNum);        
             })
@@ -571,7 +552,7 @@
         WritePage: function (Data, NewPageNum, OldPage, LoadOnly) {
             var me = this;
             var $Report = $("<Div/>");
-            $Report.attr("ID", "Page");
+            $Report.addClass("Page");
     
             //Error, need to handle this better
             if (Data == null) return;
@@ -587,8 +568,8 @@
             me.NumPages = Data.NumPages;
             
             if ($(".DocMapPanel").length == 0 && Data.Report.DocumentMap != null) {
-                me.$PageContainer.reportDocumentMap({ ReportViewer: this });
-                me.$PageContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
+                me.$ReportContainer.reportDocumentMap({ ReportViewer: this });
+                me.$ReportContainer.reportDocumentMap("WriteDocumentMap", NewPageNum);
             }
 
             //Sections           
@@ -612,8 +593,8 @@
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.SessionID != null && me.SessionID != "")
-                $.get(me.ReportViewerAPI + "/PingSession/", {
-                    ReportServerURL: me.ReportServerURL,
+                $.get(me.options.ReportViewerAPI + "/PingSession/", {
+                    ReportServerURL: me.options.ReportServerURL,
                     SessionID: me.SessionID
                 })
                 .done(function (Data) { })

@@ -144,7 +144,7 @@ ol.lower-latin {
   background: white url(../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
   width: 148px; 
   height: 28px; 
-  position: relative; 
+  position: absolute; 
   margin-left: auto;
   margin-right:auto;
   margin-top:50px;
@@ -182,6 +182,11 @@ ol.lower-latin {
 .report-container {
   position:relative;
   width:100%;
+ 
+}
+
+.report-area-container {
+    display:table-cell; 
 }
 
 .top-level-report-table {
@@ -406,12 +411,12 @@ td input[type="submit"], td input[type="button"], td button
     background-position: center;
     cursor:pointer;
 }
-td.DocMapPanel
+.DocMapPanel
 {
     vertical-align:top;
     height:auto;
     width:auto;
-    display:none;
+    display:table-cell;
 }
 .DocMapBorder
 {

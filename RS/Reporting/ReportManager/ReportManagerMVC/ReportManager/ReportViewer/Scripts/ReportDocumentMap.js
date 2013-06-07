@@ -4,11 +4,11 @@
             ReportViewer: null,
         },
         _create: function () {
-                this.element = $("<td class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0'>" +
+                this.element = $("<div class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0'>" +
                     "<tr class='DocMapHeader'><td><div class='DocMapBar'> Document Map </div></td></tr>" +
                     "<tr><td class='DocMapItemContaienr'></td></tr></table></div></td>");
                 //  "<td class='DocMap-Spliter'><div class='DocMap-Collapse'></div></td>"
-                this.options.ReportViewer.$PageContainer.append(this.element);            
+                this.options.ReportViewer.$ReportContainer.append(this.element);                
                 //$(".DocMapBorder").resizable();
             
                 window.onresize = function () { $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top); };

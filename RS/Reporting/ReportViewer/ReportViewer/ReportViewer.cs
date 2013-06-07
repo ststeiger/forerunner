@@ -170,9 +170,10 @@ namespace Forerunner.ReportViewer
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
-
+           
             try
             {
+                //throw new NullReferenceException("this is a test exception");
                 if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else
@@ -211,7 +212,7 @@ namespace Forerunner.ReportViewer
             {
                 execInfo = rs.LoadReport(ReportPath, historyID);
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
+                
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
                     ReportParameter[] reportParameter = execInfo.Parameters;

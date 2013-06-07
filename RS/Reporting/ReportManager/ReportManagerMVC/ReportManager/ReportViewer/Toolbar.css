@@ -74,3 +74,18 @@
   text-align:right;
   vertical-align: top;
 }
+.fr-textbox-keyword
+{
+    background-color: white;
+    min-width: 10mm;
+    max-width: 20mm;
+}
+.fr-button-find, .fr-button-findnext
+{
+    color: white;
+}
+.fr-span-find
+{
+    color:white;
+    height:35px;
+}

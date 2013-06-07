@@ -427,6 +427,9 @@ td input[type="submit"], td input[type="button"], td button
     overflow:auto;
     background-color:#EBF3FF;
     position:relative;
+    border-right-style:solid;
+    border-right-width:4px;    
+    border-right-color:#A4B7D8;
 }
 .DocMapHeader
 {
@@ -438,6 +441,7 @@ td input[type="submit"], td input[type="button"], td button
 {
     background-color:#DEE7F2;
     height:28px;
+    width:100%;
     line-height:28px;
     padding-left:10px;
     padding-right:10px;
@@ -499,10 +503,17 @@ td input[type="submit"], td input[type="button"], td button
     background-image:url('../reportviewer/Images/EmptyIndent.gif');
     display:inline;
     background-repeat: no-repeat; 
-    padding-left:7px;
-    padding-right:2px;
-    padding-top:2px;
-    padding-bottom:2px;
+    padding:2px;
     background-position: center;
     cursor:pointer;
+}
+.Error
+{
+    margin:4px;
+    left:10px;
+}
+.Error h3, h4
+{
+    color:red;
+    font-weight:bold;
 }

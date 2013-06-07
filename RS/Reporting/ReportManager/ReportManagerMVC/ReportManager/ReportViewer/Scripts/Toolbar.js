@@ -50,6 +50,13 @@
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
             $cell.addClass("cursor-pointer");
 
+            $cell = $(".fr-button-find");
+            $cell.on("click", { keyword: $(".fr-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("Find", e.data.keyword.val()) });
+            $cell.addClass("cursor-pointer");
+
+            $cell = $(".fr-button-findnext");
+            $cell.on("click", { keyword: $(".fr-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("FindNext", e.data.keyword.val()) });
+            $cell.addClass("cursor-pointer");
         },
         render: function () {
             var me = this;
@@ -67,6 +74,9 @@
                 "<div class='fr-buttonicon fr-button-next'/>" +
                 "<div class='fr-buttonicon fr-button-lastpage'/>" +
                 "<div class='fr-buttonicon fr-button-documentmap' />" +
+                "<input class='fr-textbox fr-textbox-keyword' />" +
+                "<div class='fr-buttonicon fr-button-find' >Find</div><span class='fr-span-find'> | </span>" +
+                "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
                 "</div>"));
 
             if (me.options.$reportViewer != null) {

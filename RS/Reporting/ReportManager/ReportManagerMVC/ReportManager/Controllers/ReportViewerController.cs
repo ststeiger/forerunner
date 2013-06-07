@@ -85,6 +85,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                //need to handle un-covered exception here, convert them to JSON string and send back to client
                 string error = e.Message;
             }
             return null;

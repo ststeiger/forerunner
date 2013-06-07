@@ -54,6 +54,35 @@
             ReportDiv.attr("Style", this._GetStyle(ReportViewer, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
             $.each(ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { me._WriteSection(new ReportItemContext(ReportViewer, Obj, Index, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent, ReportViewer.Pages[pageNum].$Container, "")); });
         },
+        WriteError: function (ErrorData) {
+            var me = this;
+            me.element.html($(
+                "<div class='Error'><h3>Exception Thrown From Server</h3>" +
+                "<div class='Error Error-Type'></div>" +
+                "<div class='Error Error-TargetSite'></div>" +
+                "<div class='Error Error-Source'></div>" +
+                "<div class='Error Error-Message'></div>" +
+                "<div class='Error Error-StackTrace'></div>" +
+                "</div>"));
+
+            if (me.options.ReportViewer != null) {
+                var $cell;
+                $cell = me.element.find(".Error-Type");
+                $cell.append("<h4>Type:</h4>" + ErrorData.Exception.Type);
+
+                $cell = me.element.find(".Error-TargetSite");
+                $cell.html("<h4>TargetSite:</h4>" + ErrorData.Exception.TargetSite);
+
+                $cell = me.element.find(".Error-Source");
+                $cell.html("<h4>Source:</h4>" + ErrorData.Exception.Source);
+
+                $cell = me.element.find(".Error-Message");
+                $cell.html("<h4>Message:</h4>" + ErrorData.Exception.Message);
+
+                $cell = me.element.find(".Error-StackTrace");
+                $cell.html("<h4>StackTrace:</h4>" + ErrorData.Exception.StackTrace);
+            };
+        },
 
         _WriteSection: function (RIContext) {
             var me = this;

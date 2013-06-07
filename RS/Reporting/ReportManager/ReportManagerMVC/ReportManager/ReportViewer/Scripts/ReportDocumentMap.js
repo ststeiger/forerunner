@@ -5,12 +5,12 @@
         },
         _create: function () {
                 this.element = $("<div class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0'>" +
-                    "<tr class='DocMapHeader'><td><div class='DocMapBar'> Document Map </div></td></tr>" +
-                    "<tr><td class='DocMapItemContaienr'></td></tr></table></div></td>");
-                //  "<td class='DocMap-Spliter'><div class='DocMap-Collapse'></div></td>"
+                "<tr class='DocMapHeader'><td><div class='DocMapBar'> Document Map </div></td></tr>" +
+                "<tr><td class='DocMapItemContaienr'></td></tr></table></div></td>");
+                  //"<td class='DocMap-Spliter'><div class='DocMap-Collapse'><1 /div></td>");
                 this.options.ReportViewer.$ReportContainer.append(this.element);                
-                //$(".DocMapBorder").resizable();
-            
+                $(".DocMapPanel").resizable();
+
                 window.onresize = function () { $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top); };
 
                 $(window).scroll(function () { $(".DocMapBorder").css("top", $(window).scrollTop()); });
@@ -36,10 +36,10 @@
             $DocMap.attr("style", "margin-left:" + Level * 18 + "px;white-space:nowrap");
 
             var $Icon = new $("<DIV />");
-
+            
             if (DocMap.Children == null) {
                 $DocMap.attr("level", Level);
-                $Icon.attr("src", "./reportviewer/Images/EmptyIndent.gif");
+                $Icon.addClass("DocMap-Indent");
             }
             else {
                 $Icon.addClass("Drilldown-Collapse");

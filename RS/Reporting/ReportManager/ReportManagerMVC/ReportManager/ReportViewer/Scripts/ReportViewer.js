@@ -576,10 +576,6 @@
             me.SessionID = Data.SessionID;
             me.NumPages = Data.NumPages;
 
-            
-           
-            }
-
             //Sections           
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
@@ -594,9 +590,9 @@
                 return;
 
             if (me.Pages[pageNum].ReportObj.Exception == null) {
-                if ($(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
-                    me.$PageContainer.reportDocumentMap({ ReportViewer: this });
-                    me.$PageContainer.reportDocumentMap("WriteDocumentMap", pageNum);
+                if (me.$ReportContainer.find(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
+                    me.$ReportContainer.reportDocumentMap({ ReportViewer: this });
+                    me.$ReportContainer.reportDocumentMap("WriteDocumentMap", pageNum);
                 }
 
                 me.Pages[pageNum].$Container.reportRender("Render", pageNum);

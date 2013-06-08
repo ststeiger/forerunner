@@ -24,9 +24,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
             if (g_App.utils.isTouchDevice()) {
-                $('#headerspacer').attr('style', 'height: 50px');
-            }
-
+                $('#headerspacer').attr('style', 'height:35px');
+            }            
             if ($('#mainViewPort').position().left != 0) this.appPageView.toggleLeftPane();
             $('#mainViewPort').css({ width: "100%" });
 
@@ -65,9 +64,10 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
             $('#bottomdiv').attr('style', 'height: 150px');
-            if (g_App.utils.isTouchDevice()) {
-                $('#headerspacer').attr('style', 'height: 0px');
-            }
+            //if (g_App.utils.isTouchDevice()) {
+            //    $('#headerspacer').attr('style', 'height: 0px');
+            //}
+            $('#headerspacer').attr('style', 'height: 50px');
             if (path != null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {

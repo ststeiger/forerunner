@@ -69,11 +69,13 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage GetReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
+            byte[] result = null;
+            HttpResponseMessage resp = this.Request.CreateResponse();
             try
             {
                 ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-                byte[] result;
-                HttpResponseMessage resp = this.Request.CreateResponse();
+                
+                
                 //Application will need to handel security
                 rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
 
@@ -86,7 +88,13 @@ namespace ReportManager.Controllers
             catch (Exception e)
             {
                 //need to handle un-covered exception here, convert them to JSON string and send back to client
+                result = Encoding.UTF8.GetBytes(Forerunner.JsonUtility.WriteExceptionJSON(e));
                 string error = e.Message;
+            }
+            finally
+            {
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
             }
             return null;
         }

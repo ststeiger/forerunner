@@ -12,7 +12,7 @@
                 
                 $(".DocMapPanel").resizable({
                     resize: function (event, ui) {
-                        alert('test');
+                        //alert('test');
                         $(".DocMapBorder").css("width", ui.size.width);
                         $(".DocMapHeader").css("width", ui.size.width);
                         $(".DocMapItemContaienr").css("width", ui.size.width);

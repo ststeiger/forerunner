@@ -124,9 +124,9 @@
                 // Need to center
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$ReportContainer.width() - 212;
-                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100 + 'px')
-                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px')
-                    .css("display", "block");
+
+                me.$LoadingIndicator.css("top", me.$ReportContainer.scrollTop() + 100 + 'px')
+                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
 
                 me.$ReportContainer.css({ opacity: 0.75 });
                 me.$LoadingIndicator.show();

@@ -239,7 +239,7 @@
 
             Style += "display:table;";
             if (me._GetMeasurements(me._GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) != "")
-                Style += this._GetMeasurements(me._GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+                Style += me._GetMeasurements(me._GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._GetElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
     
             RIContext.$HTMLParent.attr("Style", Style);
@@ -951,14 +951,7 @@
                 Style += "background-image:" + this._GetImageStyleURL(RS, CurrObj.BackgroundImage.ImageName) + ";";
             if (CurrObj.BackgroundRepeat != null && this._BackgroundRepeatTypesMap()[CurrObj.BackgroundRepeat] != undefined)
                 Style += "background-repeat:" + this._BackgroundRepeatTypesMap()[CurrObj.BackgroundRepeat] + ";";
-            if (CurrObj.PaddingBottom != null)
-                Style += "padding-bottom:" + CurrObj.PaddingBottom + ";";
-            if (CurrObj.PaddingLeft != null)
-                Style += "padding-left:" + CurrObj.PaddingLeft + ";";
-            if (CurrObj.PaddingRight != null)
-                Style += "padding-right:" + CurrObj.PaddingRight + ";";
-            if (CurrObj.PaddingTop != null)
-                Style += "padding-top:" + CurrObj.PaddingTop + ";";
+
             return Style;
         },
         _GetTextStyle: function (CurrObj, TypeCodeObj) {
@@ -968,6 +961,14 @@
             if (CurrObj == null)
                 return Style;
 
+            if (CurrObj.PaddingBottom != null)
+                Style += "padding-bottom:" + CurrObj.PaddingBottom + ";";
+            if (CurrObj.PaddingLeft != null)
+                Style += "padding-left:" + CurrObj.PaddingLeft + ";";
+            if (CurrObj.PaddingRight != null)
+                Style += "padding-right:" + CurrObj.PaddingRight + ";";
+            if (CurrObj.PaddingTop != null)
+                Style += "padding-top:" + CurrObj.PaddingTop + ";";
             if (CurrObj.UnicodeBiDi != null)
                 Style += "unicode-bidi:" + this._GetBiDi(CurrObj.UnicodeBiDi) + ";";
             if (CurrObj.VerticalAlign != null)

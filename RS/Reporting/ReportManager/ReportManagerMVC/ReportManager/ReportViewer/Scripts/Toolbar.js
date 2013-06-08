@@ -10,9 +10,9 @@
             me.options.$reportViewer = $FRReportViewer;
 
             // Hook up any / all custome events that the report viewer may trigger
-            me.options.$reportViewer.on('changePage', function (e, newPageNum) {
+            me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
                 var $input = $("input.fr-textbox-reportpage", me.$el);
-                $input.val(newPageNum);
+                $input.val(data.newPageNum);
             });
 
             // Hook up the toolbar element events

@@ -173,7 +173,7 @@
             me.CurPage = NewPageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me.element.trigger('changePage', NewPageNum);
+            me._trigger('changepage', null, { newPageNum: NewPageNum });
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);

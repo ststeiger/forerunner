@@ -142,6 +142,7 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
+    <Content Include="ReportViewer\Scripts\jquery-ui.js" />
     <Content Include="ReportViewer\Scripts\ReportDocumentMap.js" />
     <Content Include="ReportViewer\Scripts\Toolbar.js" />
     <Content Include="ReportViewer\Toolbar.css" />

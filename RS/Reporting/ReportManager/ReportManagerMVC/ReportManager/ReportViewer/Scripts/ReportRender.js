@@ -604,7 +604,7 @@
             var wbordersize = 0;
             var me = this;
     
-            Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;";
+            Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
             Style += this._GetFullBorderStyle(Obj.Cell.ReportItem);
             var ColIndex = Obj.ColumnIndex;
 
@@ -640,7 +640,9 @@
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
-            var $FixedRowHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedRowHeader = new $("<TABLE/>").css({ position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            $FixedRowHeader.attr("CELLSPACING", 0);
+            $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
             var HasFixedRows = false;
             var HasFixedCols = false;

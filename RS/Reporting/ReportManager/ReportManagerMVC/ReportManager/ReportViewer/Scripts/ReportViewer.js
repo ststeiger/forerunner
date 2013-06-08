@@ -114,7 +114,7 @@
         },
         AddLoadingIndicator: function () {
             var me = this;
-
+           
             me.LoadLock = 1;
             setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
         },
@@ -122,8 +122,12 @@
 
             if (me.LoadLock == 1) {
                 // Need to center
-                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-                me.$LoadingIndicator.css("left", $(window).scrollLeft());
+                //212 is static value for loading indicator width
+                var scrollLeft = me.$ReportContainer.width() - 212;
+                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100 + 'px')
+                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px')
+                    .css("display", "block");
+
                 me.$ReportContainer.css({ opacity: 0.75 });
                 me.$LoadingIndicator.show();
             }

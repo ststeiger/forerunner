@@ -637,12 +637,6 @@
             });
             if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
         },
-        is_touch_device: function () {
-            var ua = navigator.userAgent;
-            return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
-        },
         NavToLink: function (ElementID) {
             $(this).scrollTop($("#" + ElementID).offset().top - 85);
         },

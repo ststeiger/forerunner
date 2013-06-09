@@ -12,28 +12,11 @@ using System.Net;
 using Jayrock.Json;
 using System.Threading;
 using System.Reflection;
+using Forerunner;
 
 
-namespace Forerunner.ReportViewer
+namespace Forerunner.Viewer
 {
-    public class Credentials
-    {
-        public enum SecurityTypeEnum { Network = 0, Custom = 1 };
-        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
-        public string UserName;
-        public string Domain;
-        public string Password;
-
-        public Credentials() { }
-        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
-        {
-            this.SecurityType = SecurityType;
-            this.UserName = UserName;
-            this.Password = Password;
-            this.Domain = Domain;
-        }
-
-    }
     
     public class ReportViewer
     {
@@ -442,15 +425,13 @@ namespace Forerunner.ReportViewer
 
         }
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
-        {                      
-            //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.
-            
-            MemoryStream ms = new MemoryStream();
-            byte[] result = null;
+        {
+            byte[] result = null;                       
+            //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.          
+            MemoryStream ms = new MemoryStream();           
             //string format = "HTML4.0";
             string format = "MHTML";
             string historyID = null;
-            string showHideToggle = null;
             string encoding;
             string mimeType;
             string extension;
@@ -495,8 +476,9 @@ namespace Forerunner.ReportViewer
 
                 //WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 WebSiteThumbnail.GetStreamThumbnail(result, maxHeightToWidthRatio).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                result = ms.ToArray();
                 
-                return ms.ToArray();
+                return result; 
                           
 
             }

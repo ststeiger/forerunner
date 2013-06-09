@@ -43,6 +43,7 @@ table,td,tr {
     padding: 0px;
     margin: 0px;
     border: 0px;
+    overflow: auto;
     background-color: gray;
     color: white;
     z-index: 1;

@@ -7,7 +7,8 @@ using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
-using Forerunner.ReportViewer;
+using Forerunner.Viewer;
+using Forerunner;
 using System.IO;
 using ReportManager.Util.Logging;
 

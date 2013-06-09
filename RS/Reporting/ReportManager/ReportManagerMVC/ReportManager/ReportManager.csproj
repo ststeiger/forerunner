@@ -129,7 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CatalogItemsController.cs" />
+    <Compile Include="Controllers\ReportManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportViewerController.cs" />
     <Compile Include="Global.asax.cs">
@@ -142,8 +142,12 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
+    <Content Include="ReportViewer\ToolPane.css" />
+    <Content Include="ReportViewer\Scripts\forerunner.js" />
+    <Content Include="ReportViewer\Scripts\jquery-ui.js" />
     <Content Include="ReportViewer\Scripts\ReportDocumentMap.js" />
     <Content Include="ReportViewer\Scripts\Toolbar.js" />
+    <Content Include="ReportViewer\Scripts\ToolPane.js" />
     <Content Include="ReportViewer\Toolbar.css" />
     <Content Include="ReportViewer\Images\ajax-loader1.gif" />
     <Content Include="ReportViewer\Images\BackButton.jpg" />

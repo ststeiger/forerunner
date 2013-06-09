@@ -42,15 +42,16 @@ var ApplicationRouter = Backbone.Router.extend({
                 path: path
             });
             this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
+            var me = this;
+
             $('.fr-button-back').on("click",
                 function (e) {
                     g_App.router.back();
                 });
-            var thisObj = this;
 
             catalogItemsModel.fetch({
                 success: function (catalogItemsModel, response, options) {
-                    thisObj.appPageView.transitionMainSection(appPageModel,
+                    me.appPageView.transitionMainSection(appPageModel,
                     g_App.ReportManagerMainView, { model: catalogItemsModel });
                 },
                 error: function (model, response) {
@@ -61,6 +62,8 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
+            var me = this;
+
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
             $('#bottomdiv').attr('style', 'height: 150px');
@@ -97,7 +100,13 @@ var ApplicationRouter = Backbone.Router.extend({
             });
 
             $('#mainSectionHeader').toolbar('initCallbacks', $viewer);
+            if (!me.toolPaneInitialized) {
+                $("#leftPane").toolpane('initCallbacks', $viewer);
+                me.toolPaneInitialized = true;
+            }
         },
+
+        toolPaneInitialized: false,
 
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();
@@ -109,7 +118,7 @@ var ApplicationRouter = Backbone.Router.extend({
     
         showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
             // First load the subordinate view templates, everything else will happen in the callback
-            var thisObj = this;
+            var me = this;
             g_App.utils.loadTemplate(views, subfolder, function() {
                 var modalView = new modalViewType(options).render();
                 $('#modalViewContainer').append(modalView.el);
@@ -130,6 +139,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 model : appPageModel
             }).render();
             $("#pageSection").append(this.appPageView.el);
+            $("#leftPane").toolpane();
         }
     });
 

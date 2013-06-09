@@ -10,7 +10,25 @@ using System.Reflection;
 
 namespace Forerunner
 {
-    
+    public enum ReportServerProtocalEnum { HTTP, HTTPS };
+    public class Credentials
+    {
+        public enum SecurityTypeEnum { Network = 0, Custom = 1 };
+        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
+        public string UserName;
+        public string Domain;
+        public string Password;
+
+        public Credentials() { }
+        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
+        {
+            this.SecurityType = SecurityType;
+            this.UserName = UserName;
+            this.Password = Password;
+            this.Domain = Domain;
+        }
+
+    }
     public class WebSiteThumbnail
     {
         private string HTML = null;      

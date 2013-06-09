@@ -67,9 +67,8 @@ var g_App = g_App || {};
           var data = this.model.toJSON();
           data.EncodedPath = String(data.Path).replace(/\//g, "%2f");
           data.HasParameters = (String(data.Path).indexOf("Parameter") != -1) ? 1 : 0;
-          data.ReportThumbnailPath = this.model.viewerUrl()
-            + 'GetThumbnail/?ReportServerURL=' +this.model.reportServerUrl() + '&ReportPath='
-            + data.Path + '&SessionID=&PageNumber=1&maxHeightToWidthRatio=1.1'
+          data.ReportThumbnailPath = this.model.url()
+            + 'GetThumbnail/?ReportPath=' + data.Path 
           $(this.el).html(this.template(data));
           return this;
       }

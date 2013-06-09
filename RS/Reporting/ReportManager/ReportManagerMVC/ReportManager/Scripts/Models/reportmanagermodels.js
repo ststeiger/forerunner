@@ -9,7 +9,7 @@ var g_App = g_App || {};
   // Models
   g_App.CatalogItem = Backbone.Model.extend({
     url: function() {
-      return urlBase + 'CatalogItems/' + this.get('id');
+      return urlBase + 'ReportManager/' + this.get('id');
     },
     viewerUrl : function() {
       return urlBase + 'ReportViewer/';
@@ -26,9 +26,9 @@ var g_App = g_App || {};
     },
     url: function () {
       if (this.path != null && this.path != '/') {
-          return urlBase + 'CatalogItems?path=' + this.path + '&isRecursive=false';
+          return urlBase + 'ReportManager/GetItems?path=' + this.path + '&isRecursive=false';
       } else {
-          return urlBase + 'CatalogItems?isRecursive=false';
+          return urlBase + 'ReportManager/GetItems?isRecursive=false';
       }
     }
   });

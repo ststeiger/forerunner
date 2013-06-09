@@ -76,10 +76,10 @@ var g_App = g_App || {};
 
       transitionMainSection: function(appPageModel, mainSectionType, options) {
         // First load the subordinate view templates, everything else will happen in the callback
-          var thisObj = this;
+          var me = this;
           $('#bottomdiv').html(null);
           appPageModel.attributes.mainSection = new mainSectionType(options).render();
-          thisObj.model.set(appPageModel);
+          me.model.set(appPageModel);
 
           if (appPageModel.attributes.mainSection != null && appPageModel.attributes.mainSection.postRender != null) {
               appPageModel.attributes.mainSection.postRender();
@@ -87,8 +87,8 @@ var g_App = g_App || {};
       },
 
       bindMenuButton: function () {
-          var thisObj = this;
-          $('.fr-button-menu').on('click', function (event) { thisObj.toggleLeftPane(); } );
+          var me = this;
+          $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleLeftPane(); });
       },
 
       toggleLeftPane: function () {

@@ -1,0 +1,98 @@
+﻿.fr-toolpane {
+    background-color:black;
+    margin:0px;
+    padding:0px;
+    width:100%;
+    height:100%;
+}
+
+.fr-itemicon {
+  width:24px;
+  height:24px;
+  margin: 6px;
+  background-color:transparent;
+  border-width:0px;
+  vertical-align: top;
+  display:inline-block;
+}
+
+.fr-itemtext
+{
+  color: white;
+  vertical-align:bottom;
+}
+
+.fr-item-find, .fr-item-findnext
+{
+  width:24px;
+  height:24px;
+  color: white;
+  vertical-align:bottom;
+}
+
+.fr-item-textbox-reportpage {
+  background-color: white;
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
+  vertical-align: top;
+}
+.fr-item-textbox-keyword
+{
+  background-color: white;
+  min-width: 10mm;
+  max-width: 20mm;
+}
+
+.fr-item-menu {
+  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+}
+
+.fr-item-home {
+  background-image:url('../reportviewer/Images/Toolbar/home_icon.png');
+}
+
+.fr-item-back {
+  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
+}
+
+.fr-item-reportback {
+  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
+}
+
+.fr-item-next {
+  background-image:url('../reportviewer/Images/Toolbar/playback_next_icon.png');
+}
+
+.fr-item-prev {
+  background-image:url('../reportviewer/Images/Toolbar/playback_prev_icon.png');
+}
+
+.fr-item-firstpage {
+  background-image:url('../reportviewer/Images/Toolbar/playback_rew_icon.png');
+}
+
+.fr-item-lastpage {
+  background-image:url('../reportviewer/Images/Toolbar/playback_ff_icon.png');
+}
+
+.fr-item-refresh {
+  background-image:url('../reportviewer/Images/Toolbar/playback_reload_icon.png');
+}
+
+.fr-item-nav {
+  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+}
+
+.fr-item-menu {
+  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+}
+
+.fr-item-paramarea {
+  background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
+}
+
+.fr-item-documentmap
+{
+    background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
+}

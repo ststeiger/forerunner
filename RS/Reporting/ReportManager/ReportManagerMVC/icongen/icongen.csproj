@@ -50,7 +50,6 @@
     <Compile Include="StyleSheet.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="IconGen.cd" />
   </ItemGroup>
   <ItemGroup />

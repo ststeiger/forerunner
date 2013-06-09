@@ -114,7 +114,7 @@
         },
         AddLoadingIndicator: function () {
             var me = this;
-
+           
             me.LoadLock = 1;
             setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
         },
@@ -122,8 +122,12 @@
 
             if (me.LoadLock == 1) {
                 // Need to center
-                me.$LoadingIndicator.css("top", $(window).scrollTop() + 100);
-                me.$LoadingIndicator.css("left", $(window).scrollLeft());
+                //212 is static value for loading indicator width
+                var scrollLeft = me.$ReportContainer.width() - 212;
+
+                me.$LoadingIndicator.css("top", me.$ReportContainer.scrollTop() + 100 + 'px')
+                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
+
                 me.$ReportContainer.css({ opacity: 0.75 });
                 me.$LoadingIndicator.show();
             }
@@ -169,7 +173,7 @@
             me.CurPage = NewPageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me.element.trigger('changePage', NewPageNum);
+            me._trigger('changepage', null, { newPageNum: NewPageNum });
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -632,12 +636,6 @@
                 if (Obj.$ColHeader != null) Obj.$ColHeader.hide();
             });
             if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
-        },
-        is_touch_device: function () {
-            var ua = navigator.userAgent;
-            return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         NavToLink: function (ElementID) {
             $(this).scrollTop($("#" + ElementID).offset().top - 85);

@@ -156,7 +156,6 @@ namespace Forerunner.Viewer
            
             try
             {
-                //throw new NullReferenceException("this is a test exception");
                 if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else

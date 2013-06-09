@@ -51,11 +51,11 @@
             $cell.addClass("cursor-pointer");
 
             $cell = $(".fr-button-find");
-            $cell.on("click", { keyword: $(".fr-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("Find", e.data.keyword.val()) });
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("Find") });
             $cell.addClass("cursor-pointer");
 
             $cell = $(".fr-button-findnext");
-            $cell.on("click", { keyword: $(".fr-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("FindNext", e.data.keyword.val()) });
+            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("FindNext") });
             $cell.addClass("cursor-pointer");
         },
         render: function () {

@@ -533,3 +533,12 @@ td input[type="submit"], td input[type="button"], td button
     color:red;
     font-weight:bold;
 }
+/*.Find-Keyword
+{
+    color:red;
+}*/
+.Find-Highlight
+{
+    background-color:Highlight;
+    color:HighlightText;
+}

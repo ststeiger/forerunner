@@ -395,6 +395,31 @@ namespace Forerunner.ReportViewer
             }
         }
 
+        public string FindString(string SessionID, int StartPage, int EndPage, string FindString)
+        {
+            try
+            {
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                int NewPage = rs.FindString(StartPage, EndPage, FindString);
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("NewPage");
+                w.WriteNumber(NewPage);
+                w.WriteEndObject();
+                return w.ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
+            }
+        }
+
         private string getImageHandeler(string src)
         {
             byte[] img = null;

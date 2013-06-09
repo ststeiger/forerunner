@@ -207,5 +207,27 @@ namespace ReportManager.Controllers
             }
             return resp;
         }
+
+        [HttpGet]
+        public HttpResponseMessage FindString(string ReportServerURL, string SessionID, int StartPage, int EndPage, string FindValue)
+        {
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            byte[] result;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            {
+                //Application will need to handel security
+                rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+                result = Encoding.UTF8.GetBytes(rep.FindString(SessionID, StartPage, EndPage, FindValue));
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+            }
+            catch
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            return resp;
+        }
     }
 }

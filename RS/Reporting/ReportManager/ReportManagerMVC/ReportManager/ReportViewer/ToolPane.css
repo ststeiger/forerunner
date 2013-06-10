@@ -16,6 +16,10 @@
   display:inline-block;
 }
 
+.fr-item-disabled {
+  opacity:.3;
+}
+
 .fr-itemtext {
   line-height:36px;
   color: white;

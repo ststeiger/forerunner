@@ -8,73 +8,73 @@
         btnMenu: {
             selector: '.fr-button-menu',
             handler: function (e) {
-                e.data._trigger('menuclick', null, {});
+                e.data.me._trigger('menuclick', null, {});
             }
         },
         btnParamarea: {
             selector: '.fr-button-paramarea',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('ShowParms')
+                e.data.$reportViewer.reportViewer('ShowParms')
             }
         },
         btnNav: {
             selector: '.fr-button-nav',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('ShowNav')
+                e.data.$reportViewer.reportViewer('ShowNav')
             }
         },
         btnReportBack: {
             selector: '.fr-button-reportback',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('Back')
+                e.data.$reportViewer.reportViewer('Back')
             }
         },
         btnRefresh: {
             selector: '.fr-button-refresh',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('RefreshReport')
+                e.data.$reportViewer.reportViewer('RefreshReport')
             }
         },
         btnFirstPage: {
             selector: '.fr-button-firstpage',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('NavToPage', 1)
+                e.data.$reportViewer.reportViewer('NavToPage', 1)
             }
         },
         btnPrev: {
             selector: '.fr-button-prev',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getCurPage') - 1)
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
             }
         },
         btnNext: {
             selector: '.fr-button-next',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getCurPage') + 1)
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
             }
         },
         btnLastPage: {
             selector: '.fr-button-lastpage',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getNumPages'))
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
             }
         },
         btnDocumentMap: {
             selector: '.fr-button-documentmap',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer("ShowDocMap")
+                e.data.$reportViewer.reportViewer("ShowDocMap")
             }
         },
         btnFind: {
             selector: '.fr-button-find',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer("Find")
+                e.data.$reportViewer.reportViewer("Find")
             }
         },
         btnFindNext: {
             selector: '.fr-button-findnext',
             handler: function (e) {
-                e.data.options.$reportViewer.reportViewer("FindNext")
+                e.data.$reportViewer.reportViewer("FindNext")
             }
         },
         initCallbacks: function ($FRReportViewer) {
@@ -90,14 +90,14 @@
             });
 
             // Hook up the toolbar element events
-            me._enableButtons([me.btnMenu, me.btnParamarea, me.btnNav, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev]);
+            me._enableButtons([me.btnMenu, me.btnParamarea, me.btnNav, me.btnReportBack,
+                               me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnNext,
+                               me.btnLastPage, me.btnDocumentMap, me.btnFindNext, me.btnNext]);
 
+            // Hookup the page number input element events
             $cell = $('.fr-textbox-reportpage', me.$el);
             $cell.attr("type", "number")
             $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
-
-            me._enableButtons([me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnFindNext, me.btnNext]);
-
         },
         render: function () {
             var me = this;
@@ -126,7 +126,7 @@
                 var $btnEl = $(btnInfo.selector, me.$el);
                 $btnEl.removeClass('fr-button-disabled');
                 $btnEl.addClass('cursor-pointer');
-                $btnEl.on('click', null, me, btnInfo.handler);
+                $btnEl.on('click', null, { me: me, $reportViewer: me.options.$reportViewer }, btnInfo.handler);
             }, me);
         },
         _disableButtons: function (btnInfoArray) {

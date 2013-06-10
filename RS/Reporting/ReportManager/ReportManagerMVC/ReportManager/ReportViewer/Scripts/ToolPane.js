@@ -4,6 +4,73 @@
         options: {
             $reportViewer: null
         },
+        // Button Info
+        itemParamarea: {
+            selector: '.fr-id-paramarea',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('ShowParms')
+            }
+        },
+        itemNav: {
+            selector: '.fr-id-nav',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('ShowNav')
+            }
+        },
+        itemReportBack: {
+            selector: '.fr-id-reportback',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('Back')
+            }
+        },
+        itemRefresh: {
+            selector: '.fr-id-refresh',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('RefreshReport')
+            }
+        },
+        itemFirstPage: {
+            selector: '.fr-item-firstpage',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('NavToPage', 1)
+            }
+        },
+        itemPrev: {
+            selector: '.fr-item-prev',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+            }
+        },
+        itemNext: {
+            selector: '.fr-item-next',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+            }
+        },
+        itemLastPage: {
+            selector: '.fr-item-lastpage',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+            }
+        },
+        itemDocumentMap: {
+            selector: '.fr-id-documentmap',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer("ShowDocMap")
+            }
+        },
+        itemFind: {
+            selector: '.fr-item-find',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer("Find")
+            }
+        },
+        itemFindNext: {
+            selector: '.fr-item-findnext',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer("FindNext")
+            }
+        },
         initCallbacks: function ($FRReportViewer) {
             var $cell;
             var me = this;
@@ -11,52 +78,18 @@
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
-                var $input = $("input.fr-item-textbox-reportpage", me.$el);
-                $input.val(data.newPageNum);
+                $("input.fr-item-textbox-reportpage", me.$el).val(data.newPageNum);
+                var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
+                me._updateItemStates(data.newPageNum, maxNumPages);
             });
 
             // Hook up the toolbar element events
-            $cell = $('.fr-id-paramarea', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-id-nav', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowNav') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-id-reportback', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('Back') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-id-refresh', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('RefreshReport') });
-            $cell.addClass("cursor-pointer", me.$el);
-            $cell = $('.fr-item-firstpage', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', 1) });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-item-prev', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') - 1) });
-            $cell.addClass("cursor-pointer");
+            me._enableItems([me.itemParamarea, me.itemNav, me.itemReportBack, me.itemRefresh, me.itemFirstPage, me.itemPrev,
+                             me.itemNext, me.itemLastPage, me.itemDocumentMap, me.itemFind, me.itemFindNext]);
 
             $cell = $('.fr-item-textbox-reportpage', me.$el);
             $cell.attr("type", "number")
             $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
-
-            $cell = $('.fr-item-next', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') + 1) });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-item-lastpage', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
-            $cell.addClass("cursor-pointer");
-
-            $cell = $(".fr-id-documentmap", me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
-            $cell.addClass("cursor-pointer");
-
-            $cell = $(".fr-item-find", me.$el);
-            $cell.on("click", { keyword: $(".fr-item-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("Find", e.data.keyword.val()) });
-            $cell.addClass("cursor-pointer");
-
-            $cell = $(".fr-item-findnext", me.$el);
-            $cell.on("click", { keyword: $(".fr-item-textbox-keyword") }, function (e) { me.options.$reportViewer.reportViewer("FindNext", e.data.keyword.val()) });
-            $cell.addClass("cursor-pointer");
         },
         render: function () {
             var me = this;
@@ -103,6 +136,40 @@
                     "<span class='fr-itemtext'>&nbsp|&nbsp</span>" +
                     "<span class='fr-itemtext fr-item-findnext' >Next</span>" +
                 "</div>"));
+        },
+        _enableItems: function (itemInfoArray) {
+            var me = this;
+            itemInfoArray.forEach(function (itemInfo, index, array) {
+                var $itemEl = $(itemInfo.selector, me.$el);
+                $itemEl.removeClass('fr-item-disabled');
+                $itemEl.addClass('cursor-pointer');
+                $itemEl.on('click', null, { me: me, $reportViewer: me.options.$reportViewer }, itemInfo.handler);
+            }, me);
+        },
+        _disableItems: function (itemInfoArray) {
+            var me = this;
+            itemInfoArray.forEach(function (itemInfo, index, array) {
+                var $itemEl = $(itemInfo.selector, me.$el);
+                $itemEl.addClass('fr-item-disabled');
+                $itemEl.removeClass('cursor-pointer');
+                $itemEl.off('click');
+            }, me);
+        },
+        _updateItemStates: function (curPage, maxPage) {
+            var me = this;
+            if (curPage <= 1) {
+                me._disableItems([me.itemPrev, me.itemFirstPage]);
+            }
+            else {
+                me._enableItems([me.itemPrev, me.itemFirstPage]);
+            }
+
+            if (curPage >= maxPage) {
+                me._disableItems([me.itemNext, me.itemLastPage]);
+            }
+            else {
+                me._enableItems([me.itemNext, me.itemLastPage]);
+            }
         },
         _create: function () {
             var me = this;

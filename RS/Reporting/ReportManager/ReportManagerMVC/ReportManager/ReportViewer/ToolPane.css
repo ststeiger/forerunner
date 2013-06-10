@@ -25,6 +25,12 @@
   color: white;
 }
 
+.fr-itemtext:hover {
+  line-height:36px;
+  color: white;
+  background-color:darkgray;
+}
+
 .fr-item-spacer {
     height: 18px;
 }

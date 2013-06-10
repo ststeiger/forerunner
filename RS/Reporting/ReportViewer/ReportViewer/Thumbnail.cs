@@ -28,6 +28,13 @@ namespace Forerunner
             this.Domain = Domain;
         }
 
+        public string GetDomainUser()
+        {
+            return this.Domain + "\\" + this.UserName;
+
+        }
+
+
     }
     public class WebSiteThumbnail
     {

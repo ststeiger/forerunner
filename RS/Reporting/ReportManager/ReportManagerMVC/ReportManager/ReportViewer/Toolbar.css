@@ -92,16 +92,12 @@
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-button-menu {
-    display: none;
-}
 .fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
-  display:normal;
+  display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
-  display: normal;
+  display: none;
 }
-
 }  /* @media */
 
 /* Smartphones (portrait) ----------- */
@@ -148,27 +144,12 @@
 }  /* @media */
 
 /* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) and (orientation : portrait)  {
-.fr-button-menu {
-    display: normal;
-}
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
 .fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
   display: none;
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) and (orientation : landscape) {
-.fr-button-menu {
-    display: none;
-}
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
-  display:normal;
-}
-.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
-  display: normal;
 }
 
 }  /* @media */

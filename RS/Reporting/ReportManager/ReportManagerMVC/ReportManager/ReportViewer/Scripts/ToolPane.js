@@ -62,6 +62,14 @@
             var me = this;
             me.element.html($(
                 "<div class='fr-toolpane' id='ViewerToolPane'>" +
+                    // Page navigation
+                    "<div>" +
+                        "<div class='fr-itemicon fr-item-firstpage' />" +
+                        "<div class='fr-itemicon fr-item-prev' />" +
+                        "<input class='fr-item-textbox fr-item-textbox-reportpage' />" +
+                        "<div class='fr-itemicon fr-item-next' />" +
+                        "<div class='fr-itemicon fr-item-lastpage' />" +
+                    "</div>" +
                     // Home
                     "<div class='fr-itemtext'>" +
                         "<a href='#' class='fr-itemtext'><div class='fr-itemicon fr-item-home' />Home</a>" +
@@ -82,24 +90,18 @@
                     "<div class='fr-itemtext fr-id-refresh'>" + // fr-id... are used for selection only
                         "<div class='fr-itemicon fr-item-refresh' />Refresh" +
                     "</div>" +
-                    // Page navigation
-                    "<div>" +
-                        "<div class='fr-itemicon fr-item-firstpage' />" +
-                        "<div class='fr-itemicon fr-item-prev' />" +
-                        "<input class='fr-item-textbox fr-item-textbox-reportpage' />" +
-                        "<div class='fr-itemicon fr-item-next' />" +
-                        "<div class='fr-itemicon fr-item-lastpage' />" +
-                    "</div>" +
                     // document map
                     "<div class='fr-itemtext fr-id-documentmap'>" + // fr-id... are used for selection only
                         "<div class='fr-itemicon fr-item-documentmap' />Document map" +
                     "</div>" +
+                    // spacer
+                    "<div class='fr-item-spacer'></div>" +
                     // Find | Next
                     "<input class='fr-item-textbox fr-item-textbox-keyword' />" +
                     "<span class='fr-itemtext'>&nbsp&nbsp</span>" +
-                    "<span class='fr-item-find' >Find</span>" +
+                    "<span class='fr-itemtext fr-item-find'>Find</span>" +
                     "<span class='fr-itemtext'>&nbsp|&nbsp</span>" +
-                    "<span class='fr-item-findnext' >Next</span>" +
+                    "<span class='fr-itemtext fr-item-findnext' >Next</span>" +
                 "</div>"));
         },
         _create: function () {

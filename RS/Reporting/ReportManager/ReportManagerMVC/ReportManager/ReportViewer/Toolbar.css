@@ -113,16 +113,22 @@
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-button-menu {
-    display: none;
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display: none;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: none;
 }
 
 }  /* @media */
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-button-menu {
-    display: none;
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display: none;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: none;
 }
 
 }  /* @media */

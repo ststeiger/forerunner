@@ -4,6 +4,79 @@
         options: {
             $reportViewer: null
         },
+        // Button Info
+        btnMenu: {
+            selector: '.fr-button-menu',
+            handler: function (e) {
+                e.data._trigger('menuclick', null, {});
+            }
+        },
+        btnParamarea: {
+            selector: '.fr-button-paramarea',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('ShowParms')
+            }
+        },
+        btnNav: {
+            selector: '.fr-button-nav',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('ShowNav')
+            }
+        },
+        btnReportBack: {
+            selector: '.fr-button-reportback',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('Back')
+            }
+        },
+        btnRefresh: {
+            selector: '.fr-button-refresh',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('RefreshReport')
+            }
+        },
+        btnFirstPage: {
+            selector: '.fr-button-firstpage',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('NavToPage', 1)
+            }
+        },
+        btnPrev: {
+            selector: '.fr-button-prev',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getCurPage') - 1)
+            }
+        },
+        btnNext: {
+            selector: '.fr-button-next',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getCurPage') + 1)
+            }
+        },
+        btnLastPage: {
+            selector: '.fr-button-lastpage',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer('NavToPage', e.data.options.$reportViewer.reportViewer('getNumPages'))
+            }
+        },
+        btnDocumentMap: {
+            selector: '.fr-button-documentmap',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer("ShowDocMap")
+            }
+        },
+        btnFind: {
+            selector: '.fr-button-find',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer("Find")
+            }
+        },
+        btnFindNext: {
+            selector: '.fr-button-findnext',
+            handler: function (e) {
+                e.data.options.$reportViewer.reportViewer("FindNext")
+            }
+        },
         initCallbacks: function ($FRReportViewer) {
             var $cell;
             var me = this;
@@ -11,57 +84,20 @@
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
-                var $input = $("input.fr-textbox-reportpage", me.$el);
-                $input.val(data.newPageNum);
+                $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
+                var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
+                me._updateBtnStates(data.newPageNum, maxNumPages);
             });
 
             // Hook up the toolbar element events
-            $cell = $('.fr-button-menu', me.$el);
-            $cell.on("click", function (e) {
-                me._trigger('menuclick', null, {});
-            });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-paramarea', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-nav', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowNav') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-reportback', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('Back') });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-refresh', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('RefreshReport') });
-            $cell.addClass("cursor-pointer", me.$el);
-            $cell = $('.fr-button-firstpage', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', 1) });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-prev', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') - 1) });
-            $cell.addClass("cursor-pointer");
+            me._enableButtons([me.btnMenu, me.btnParamarea, me.btnNav, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev]);
 
             $cell = $('.fr-textbox-reportpage', me.$el);
             $cell.attr("type", "number")
             $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
 
-            $cell = $('.fr-button-next', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getCurPage') + 1) });
-            $cell.addClass("cursor-pointer");
-            $cell = $('.fr-button-lastpage', me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
-            $cell.addClass("cursor-pointer");
+            me._enableButtons([me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnFindNext, me.btnNext]);
 
-            $cell = $(".fr-button-documentmap", me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
-            $cell.addClass("cursor-pointer");
-
-            $cell = $(".fr-button-find", me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("Find") });
-            $cell.addClass("cursor-pointer");
-
-            $cell = $(".fr-button-findnext", me.$el);
-            $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("FindNext") });
-            $cell.addClass("cursor-pointer");
         },
         render: function () {
             var me = this;
@@ -83,6 +119,40 @@
                 "<div class='fr-buttonicon fr-button-find' >Find</div><span class='fr-span-find'> | </span>" +
                 "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
                 "</div>"));
+        },
+        _enableButtons: function (btnInfoArray) {
+            var me = this;
+            btnInfoArray.forEach(function (btnInfo, index, array) {
+                var $btnEl = $(btnInfo.selector, me.$el);
+                $btnEl.removeClass('fr-button-disabled');
+                $btnEl.addClass('cursor-pointer');
+                $btnEl.on('click', null, me, btnInfo.handler);
+            }, me);
+        },
+        _disableButtons: function (btnInfoArray) {
+            var me = this;
+            btnInfoArray.forEach(function (btnInfo, index, array) {
+                var $btnEl = $(btnInfo.selector, me.$el);
+                $btnEl.addClass('fr-button-disabled');
+                $btnEl.removeClass('cursor-pointer');
+                $btnEl.off('click');
+            }, me);
+        },
+        _updateBtnStates: function (curPage, maxPage) {
+            var me = this;
+            if (curPage <= 1) {
+                me._disableButtons([me.btnPrev, me.btnFirstPage]);
+            }
+            else {
+                me._enableButtons([me.btnPrev, me.btnFirstPage]);
+            }
+
+            if (curPage >= maxPage) {
+                me._disableButtons([me.btnNext, me.btnLastPage]);
+            }
+            else {
+                me._enableButtons([me.btnNext, me.btnLastPage]);
+            }
         },
         _create: function () {
             var me = this;

@@ -43,7 +43,7 @@ table,td,tr {
     padding: 0px;
     margin: 0px;
     border: 0px;
-    overflow: auto;
+    overflow:hidden;
     background-color: gray;
     color: white;
     z-index: 1;
@@ -178,30 +178,6 @@ and (max-height : 320px)
 and (min-width : 400px) 
 and (orientation : landscape) {
 /* Styles */
-.fr-button-nav {
-  display: none;
-}
-
-.fr-button-next {
-  display: none;
-}
-
-.fr-button-prev {
-  display: none;
-}
-
-.fr-button-firstpage {
-  display: none;
-}
-
-.fr-button-lastpage {
-  display: none;
-}
-
-.fr-textbox-reportpage {
-  display: none;
-}
-
 .catalogitem {
   width: 180px;
 }
@@ -244,31 +220,6 @@ and (orientation : landscape) {
 @media only screen 
 and (max-width : 320px) 
 and (orientation : portrait) {
-/* Styles */
-.fr-button-nav {
-  display: none;
-}
-
-.fr-button-next {
-  display: none;
-}
-
-.fr-button-prev {
-  display: none;
-}
-
-.fr-button-firstpage {
-  display: none;
-}
-
-.fr-button-lastpage {
-  display: none;
-}
-
-.fr-textbox-reportpage {
-  display: none;
-}
-
 .catalogitem {
   width: 120px;
 }
@@ -315,11 +266,6 @@ and (orientation : portrait) {
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : landscape) {
-/* Styles */
-.fr-button-nav {
-  display: none;
-}
-
 .catalogitem {
   width: 250px;
 }
@@ -344,11 +290,6 @@ and (orientation : landscape) {
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : portrait) {
-/* Styles */
-.fr-button-nav {
-  display: none;
-}
-
 .catalogitem {
   width: 250px;
 }
@@ -383,47 +324,25 @@ and (min-width : 1824px) {
 }
 
 /* iPhone 4 ----------- */
-@media
-only screen and (-webkit-min-device-pixel-ratio : 1.5),
-only screen and (min-device-pixel-ratio : 1.5)  {
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
 /* Styles */
-.fr-button-nav {
-  display: none;
+.center
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.fr-button-next {
-  display: none;
+.centertext
+{
+    text-align: center;
 }
 
-.fr-button-prev {
-  display: none;
+.pagethumb
+{
+    width: 120px;
+    max-height: 160px;
 }
 
-.fr-button-firstpage {
-  display: none;
-}
-
-.fr-button-lastpage {
-  display: none;
-}
-
-.fr-textbox-reportpage {
-  display: none;
-}
-}
-
-.center { 
-  display: block; 
-  margin-left: auto; 
-  margin-right: auto;
-}
-
-.centertext {
-  text-align:center;
-}
-
-.pagethumb {
-  width: 120px;
-  max-height: 160px;
 }
 

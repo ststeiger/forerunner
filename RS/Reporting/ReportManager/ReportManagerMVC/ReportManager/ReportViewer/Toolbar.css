@@ -54,10 +54,6 @@
   background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
 }
 
-.fr-button-menu {
-  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
-}
-
 .fr-button-paramarea {
   background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
 }
@@ -89,3 +85,86 @@
     color:white;
     height:35px;
 }
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+.fr-button-menu {
+    display: none;
+}
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display:normal;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: normal;
+}
+
+}  /* @media */
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) and (orientation : portrait) {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display: none;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: none;
+}
+
+}  /* @media */
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+.fr-button-menu {
+    display: none;
+}
+
+}  /* @media */
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+.fr-button-menu {
+    display: none;
+}
+
+}  /* @media */
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+.fr-button-menu {
+    display: none;
+}
+
+}  /* @media */
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+.fr-button-menu {
+    display: none;
+}
+
+}  /* @media */
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) and (orientation : portrait)  {
+.fr-button-menu {
+    display: normal;
+}
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display: none;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: none;
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) and (orientation : landscape) {
+.fr-button-menu {
+    display: none;
+}
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next {
+  display:normal;
+}
+.fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext {
+  display: normal;
+}
+
+}  /* @media */

@@ -65,34 +65,24 @@
         },
         render: function () {
             var me = this;
-            if ($.fn.forerunner().device.isTouch()) {
-                me.element.html($(
-                    "<div class='fr-toolbar' id='ViewerToolbar'>" +
-                    "<div class='fr-buttonicon fr-button-menu'/>" +
-                    "<div class='fr-buttonicon fr-button-reportback'/>" +
-                    "<input class='fr-textbox fr-textbox-reportpage' />" +
-                    "</div>"));
-            }
-            else {
-                me.element.html($(
-                    "<div class='fr-toolbar' id='ViewerToolbar'>" +
-                    "<a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
-                    "<div class='fr-buttonicon fr-button-menu'/>" +
-                    "<div class='fr-buttonicon fr-button-nav'/>" +
-                    "<div class='fr-buttonicon fr-button-paramarea'/>" +
-                    "<div class='fr-buttonicon fr-button-reportback'/>" +
-                    "<div class='fr-buttonicon fr-button-refresh'/>" +
-                    "<div class='fr-buttonicon fr-button-firstpage'/>" +
-                    "<div class='fr-buttonicon fr-button-prev'/>" +
-                    "<input class='fr-textbox fr-textbox-reportpage' />" +
-                    "<div class='fr-buttonicon fr-button-next'/>" +
-                    "<div class='fr-buttonicon fr-button-lastpage'/>" +
-                    "<div class='fr-buttonicon fr-button-documentmap' />" +
-                    "<input class='fr-textbox fr-textbox-keyword' />" +
-                    "<div class='fr-buttonicon fr-button-find' >Find</div><span class='fr-span-find'> | </span>" +
-                    "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
-                    "</div>"));
-            }
+            me.element.html($(
+                "<div class='fr-toolbar' id='ViewerToolbar'>" +
+                "<a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
+                "<div class='fr-buttonicon fr-button-menu'/>" +
+                "<div class='fr-buttonicon fr-button-nav'/>" +
+                "<div class='fr-buttonicon fr-button-paramarea'/>" +
+                "<div class='fr-buttonicon fr-button-reportback'/>" +
+                "<div class='fr-buttonicon fr-button-refresh'/>" +
+                "<div class='fr-buttonicon fr-button-firstpage'/>" +
+                "<div class='fr-buttonicon fr-button-prev'/>" +
+                "<input class='fr-textbox fr-textbox-reportpage' />" +
+                "<div class='fr-buttonicon fr-button-next'/>" +
+                "<div class='fr-buttonicon fr-button-lastpage'/>" +
+                "<div class='fr-buttonicon fr-button-documentmap' />" +
+                "<input class='fr-textbox fr-textbox-keyword' />" +
+                "<div class='fr-buttonicon fr-button-find' >Find</div><span class='fr-span-find'> | </span>" +
+                "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
+                "</div>"));
         },
         _create: function () {
             var me = this;

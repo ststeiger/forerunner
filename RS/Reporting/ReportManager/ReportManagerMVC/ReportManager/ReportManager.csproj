@@ -307,7 +307,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>9000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://192.168.1.149:9000/</IISUrl>
+          <IISUrl>http://192.168.1.20:9000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://ludwig</CustomServerUrl>

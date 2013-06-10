@@ -86,23 +86,34 @@ namespace Forerunner.Manager
 
         public void SaveImage(byte[] image, string path)
         {
-            string SQL = @"INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT ItemID,(SELECT UserID FROM Users WHERE UserName = @UserName),@Image,getdate() FROM Catalog WHERE Path = @Path";
+            string SQL = @"BEGIN
+                            DECLARE @UID uniqueidentifier
+                            DECLARE @IID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            IF EXISTS (SELECT * FROM ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID)
+	                            UPDATE ForerunnerCatalog SET ThumbnailImage = @Image, SaveDate = GETDATE() WHERE UserID = @UID AND ItemID = @IID
+                            ELSE
+	                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()
+                            END";
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
             SQLComm.Parameters.AddWithValue("@Path", path);
-            SQLComm.Parameters.AddWithValue("@Image", image);
+            SQLComm.Parameters.AddWithValue("@Image", image);            
             SQLComm.ExecuteNonQuery();
 
         }
         public byte[] GetDBImage(string path)
         {
             byte[] retval = null;
-            string SQL = @"SELECT ThumbnailImage FROM Users u INNER JOIN ForerunnerCatalog f on u.UserID = f.UserID INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE u.UserName = @UserName AND c.Path = @Path";
+            string SQL = @"SELECT ThumbnailImage FROM Users u INNER JOIN ForerunnerCatalog f on u.UserID = f.UserID INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (UserName = @UserName OR UserName = @DomainUser) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             //SQLComm.Prepare();
             SQLComm.Parameters.AddWithValue("@Path", path);
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
 
             SqlDataReader SQLReader;
             SQLReader = SQLComm.ExecuteReader();

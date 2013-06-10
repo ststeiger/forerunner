@@ -43,6 +43,7 @@ namespace ReportManager.Util.Logging
 
         public static void WriteLog(string Filename, string msg)
         {
+            return;
             try
             {
                 if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);

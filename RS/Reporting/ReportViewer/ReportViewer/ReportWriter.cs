@@ -238,7 +238,7 @@ namespace Forerunner
 
         public ReportJSONWriter(){}
 
-        public string RPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath, int NumPages)
+        public string RPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath, int NumPages, DocumentMapNode DocumentMap = null)
         {
 
             this.RPL = RPL;
@@ -270,6 +270,15 @@ namespace Forerunner
 
                 //Report Content
                 WriteJSONReportContent();
+
+                //Document Map
+                if (DocumentMap != null)
+                {
+                    w.WriteMember("DocumentMap");
+                    w.WriteStartObject();
+                    ConvertDocumentMapToJSON(DocumentMap);
+                    w.WriteEndObject();
+                }
 
                 //End Report
                 w.WriteEndObject();
@@ -371,6 +380,26 @@ namespace Forerunner
             w.WriteEndObject();
 
             return w.ToString();
+        }
+
+        public void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap)
+        {
+            w.WriteMember("Label");
+            w.WriteString(DocumentMap.Label);
+            w.WriteMember("UniqueName");
+            w.WriteString(DocumentMap.UniqueName);
+            if (DocumentMap.Children != null)
+            {
+                w.WriteMember("Children");
+                w.WriteStartArray();
+                foreach (DocumentMapNode Child in DocumentMap.Children)
+                {
+                    w.WriteStartObject();
+                    ConvertDocumentMapToJSON(Child);
+                    w.WriteEndObject();
+                }
+                w.WriteEndArray();
+            }
         }
 
         private Boolean DeReference(int StartIndex, Func<Boolean> DeFunction)

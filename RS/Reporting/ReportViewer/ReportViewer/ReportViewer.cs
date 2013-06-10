@@ -34,6 +34,14 @@ namespace Forerunner.ReportViewer
         }
 
     }
+
+    public enum NavType
+    {
+        Toggle,
+        Bookmark,
+        DrillThrough,
+        DocumentMap
+    }
     
     public class ReportViewer
     {
@@ -178,11 +186,11 @@ namespace Forerunner.ReportViewer
                 {
                     rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                 }
-
+                
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
-                    return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages);
+                    return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages, rs.GetDocumentMap());
                 else
                     return "";
 
@@ -361,6 +369,33 @@ namespace Forerunner.ReportViewer
                 return e.Message;
             }
         }
+
+        //Navigates to a documant map node
+        public string NavigateDocumentMap(string SessionID, string DocMapID)
+        {
+            try
+            {
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;               
+                int NewPage = rs.NavigateDocumentMap(DocMapID);
+
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("NewPage");
+                w.WriteNumber(NewPage);
+                w.WriteEndObject();
+                return w.ToString();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return e.Message;
+            }
+        }
+
         private string getImageHandeler(string src)
         {
             byte[] img = null;

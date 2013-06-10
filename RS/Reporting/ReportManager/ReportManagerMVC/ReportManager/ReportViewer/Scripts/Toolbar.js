@@ -92,7 +92,7 @@
             // Hook up the toolbar element events
             me._enableButtons([me.btnMenu, me.btnParamarea, me.btnNav, me.btnReportBack,
                                me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnNext,
-                               me.btnLastPage, me.btnDocumentMap, me.btnFindNext, me.btnNext]);
+                               me.btnLastPage, me.btnDocumentMap, me.btnFind, me.btnFindNext]);
 
             // Hookup the page number input element events
             $cell = $('.fr-textbox-reportpage', me.$el);

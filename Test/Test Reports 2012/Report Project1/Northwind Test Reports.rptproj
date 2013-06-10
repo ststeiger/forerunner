@@ -62,6 +62,10 @@
       <FullPath>Lines.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Long Text  Report.rdl</Name>
+      <FullPath>Long Text  Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multi chart with go to report action.rdl</Name>
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
@@ -70,16 +74,20 @@
       <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter1.rdl</Name>
-      <FullPath>Parameter1.rdl</FullPath>
+      <Name>newspaper multi column.rdl</Name>
+      <FullPath>newspaper multi column.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter by region.rdl</Name>
+      <FullPath>Parameter by region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Parameter2.rdl</Name>
       <FullPath>Parameter2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameters3.rdl</Name>
-      <FullPath>Parameters3.rdl</FullPath>
+      <Name>multiple parameter.rdl</Name>
+      <FullPath>multiple parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
@@ -132,14 +140,6 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Long Text  Report.rdl</Name>
-      <FullPath>Long Text  Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>newspaper multi column.rdl</Name>
-      <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

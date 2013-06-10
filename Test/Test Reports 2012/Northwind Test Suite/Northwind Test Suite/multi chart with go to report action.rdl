@@ -650,6 +650,15 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ActionInfo>
+                    <Actions>
+                      <Action>
+                        <Drillthrough>
+                          <ReportName>Simple Matrix</ReportName>
+                        </Drillthrough>
+                      </Action>
+                    </Actions>
+                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Type>Auto</Type>
@@ -926,10 +935,10 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>5.72444in</Top>
+        <Top>5.72445in</Top>
         <Left>4.32291in</Left>
         <Height>2.65972in</Height>
-        <Width>4.66542in</Width>
+        <Width>4.93625in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>

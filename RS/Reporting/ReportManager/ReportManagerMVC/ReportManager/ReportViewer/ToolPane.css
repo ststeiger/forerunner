@@ -16,18 +16,13 @@
   display:inline-block;
 }
 
-.fr-itemtext
-{
+.fr-itemtext {
+  line-height:36px;
   color: white;
-  vertical-align:bottom;
 }
 
-.fr-item-find, .fr-item-findnext
-{
-  width:24px;
-  height:24px;
-  color: white;
-  vertical-align:bottom;
+.fr-item-spacer {
+    height: 18px;
 }
 
 .fr-item-textbox-reportpage {

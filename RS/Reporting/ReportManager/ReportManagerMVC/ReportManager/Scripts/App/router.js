@@ -100,13 +100,14 @@ var ApplicationRouter = Backbone.Router.extend({
             });
 
             $('#mainSectionHeader').toolbar('initCallbacks', $viewer);
-            if (!me.toolPaneInitialized) {
+
+            if (!me.callbacksInitialized) {
                 $("#leftPane").toolpane('initCallbacks', $viewer);
-                me.toolPaneInitialized = true;
+                me.callbacksInitialized = true;
             }
         },
 
-        toolPaneInitialized: false,
+        callbacksInitialized: false,
 
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();

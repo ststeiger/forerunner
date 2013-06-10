@@ -142,6 +142,7 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
+    <Content Include="ReportViewer\Scripts\jquery-1.9.1.js" />
     <Content Include="ReportViewer\ToolPane.css" />
     <Content Include="ReportViewer\Scripts\forerunner.js" />
     <Content Include="ReportViewer\Scripts\jquery-ui.js" />
@@ -306,7 +307,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>9000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9000/</IISUrl>
+          <IISUrl>http://192.168.1.149:9000/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://ludwig</CustomServerUrl>

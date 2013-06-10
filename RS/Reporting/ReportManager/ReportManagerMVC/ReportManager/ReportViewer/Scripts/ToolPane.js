@@ -81,10 +81,6 @@
                     "<span class='fr-itemtext'>&nbsp|&nbsp</span>" +
                     "<span class='fr-item-findnext' >Next</span>" +
                 "</div>"));
-
-            if (me.options.$reportViewer != null) {
-                me.initCallbacks(me.options.$reportViewer);
-            };
         },
         _create: function () {
             var me = this;

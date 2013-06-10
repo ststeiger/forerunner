@@ -17,7 +17,9 @@
 
             // Hook up the toolbar element events
             $cell = $('.fr-button-menu', me.$el);
-            $cell.on("click", function (e) { me._trigger('menuclick', null, {}) });
+            $cell.on("click", function (e) {
+                me._trigger('menuclick', null, {});
+            });
             $cell.addClass("cursor-pointer");
             $cell = $('.fr-button-paramarea', me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
@@ -91,10 +93,6 @@
                     "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
                     "</div>"));
             }
-
-            if (me.options.$reportViewer != null) {
-                me.initCallbacks(me.options.$reportViewer);
-            };
         },
         _create: function () {
             var me = this;

@@ -86,9 +86,14 @@ var g_App = g_App || {};
           }
       },
 
+      menuButtonBound: false,
+
       bindMenuButton: function () {
-          var me = this;
-          $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleLeftPane(); });
+        var me = this;
+        if (!me.menuButtonBound) {
+            $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleLeftPane(); });
+            me.menuButtonBound = true;
+        }
       },
 
       toggleLeftPane: function () {

@@ -16,16 +16,16 @@
             });
 
             // Hook up the toolbar element events
-            $cell = $('.fr-item-paramarea', me.$el);
+            $cell = $('.fr-id-paramarea', me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowParms') });
             $cell.addClass("cursor-pointer");
-            $cell = $('.fr-item-nav', me.$el);
+            $cell = $('.fr-id-nav', me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('ShowNav') });
             $cell.addClass("cursor-pointer");
-            $cell = $('.fr-item-reportback', me.$el);
+            $cell = $('.fr-id-reportback', me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('Back') });
             $cell.addClass("cursor-pointer");
-            $cell = $('.fr-item-refresh', me.$el);
+            $cell = $('.fr-id-refresh', me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('RefreshReport') });
             $cell.addClass("cursor-pointer", me.$el);
             $cell = $('.fr-item-firstpage', me.$el);
@@ -46,7 +46,7 @@
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer('NavToPage', me.options.$reportViewer.reportViewer('getNumPages')) });
             $cell.addClass("cursor-pointer");
 
-            $cell = $(".fr-item-documentmap", me.$el);
+            $cell = $(".fr-id-documentmap", me.$el);
             $cell.on("click", function (e) { me.options.$reportViewer.reportViewer("ShowDocMap") });
             $cell.addClass("cursor-pointer");
 
@@ -62,11 +62,27 @@
             var me = this;
             me.element.html($(
                 "<div class='fr-toolpane' id='ViewerToolPane'>" +
-                    "<div><a href='#' class='fr-itemtext'><div class='fr-itemicon fr-item-home' />Home</a></div>" +
-                    "<div class='fr-itemtext'><div class='fr-itemicon fr-item-nav' />Navigation</div>" +
-                    "<div class='fr-itemtext'><div class='fr-itemicon fr-item-paramarea' />Paremeters</div>" +
-                    "<div class='fr-itemtext'><div class='fr-itemicon fr-item-reportback' />Back</div>" +
-                    "<div class='fr-itemtext'><div class='fr-itemicon fr-item-refresh' />Refresh</div>" +
+                    // Home
+                    "<div class='fr-itemtext'>" +
+                        "<a href='#' class='fr-itemtext'><div class='fr-itemicon fr-item-home' />Home</a>" +
+                    "</div>" +
+                    // Navigation
+                    "<div class='fr-itemtext fr-id-nav'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-item-nav' />Navigation" +
+                    "</div>" +
+                    // Parameters
+                    "<div class='fr-itemtext fr-id-paramarea'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-item-paramarea' />Paremeters" +
+                    "</div>" +
+                    // Back
+                    "<div class='fr-itemtext fr-id-reportback'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-item-reportback' />Back" +
+                    "</div>" +
+                    // Refresh
+                    "<div class='fr-itemtext fr-id-refresh'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-item-refresh' />Refresh" +
+                    "</div>" +
+                    // Page navigation
                     "<div>" +
                         "<div class='fr-itemicon fr-item-firstpage' />" +
                         "<div class='fr-itemicon fr-item-prev' />" +
@@ -74,7 +90,11 @@
                         "<div class='fr-itemicon fr-item-next' />" +
                         "<div class='fr-itemicon fr-item-lastpage' />" +
                     "</div>" +
-                    "<div class='fr-itemtext'><div class='fr-itemicon fr-item-documentmap' />Document map</div>" +
+                    // document map
+                    "<div class='fr-itemtext fr-id-documentmap'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-item-documentmap' />Document map" +
+                    "</div>" +
+                    // Find | Next
                     "<input class='fr-item-textbox fr-item-textbox-keyword' />" +
                     "<span class='fr-itemtext'>&nbsp&nbsp</span>" +
                     "<span class='fr-item-find' >Find</span>" +

@@ -180,7 +180,6 @@
         },
         _create: function () {
             var me = this;
-            me.render();
         },
     });  // $.widget
 });  // function()

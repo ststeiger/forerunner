@@ -100,6 +100,7 @@ var ApplicationRouter = Backbone.Router.extend({
             });
 
             $('#mainSectionHeader').toolbar('initCallbacks', $viewer);
+            $('#leftPane').toolpane('render');
             $('#leftPane').toolpane('initCallbacks', $viewer);
         },
 

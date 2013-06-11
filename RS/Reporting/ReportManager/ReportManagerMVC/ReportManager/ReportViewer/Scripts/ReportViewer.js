@@ -192,10 +192,6 @@
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger('changepage', null, { newPageNum: NewPageNum });
-            // BUGBUG:  Need to hook up to the changepage event...
-            if (me.CreateNav) {
-                me.$PageNav.pagenav('setCurrentPage', NewPageNum);
-            }
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -326,7 +322,7 @@
         CreatePageNav: function () {
             var me = this;
             me.$PageNav.pagenav({
-                $reportViewer: me,
+                $reportViewer: me.element,
             });
         },
         Sort: function (Direction, ID) {

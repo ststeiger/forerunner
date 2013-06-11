@@ -4,28 +4,19 @@
         options: {
             $reportViewer: null
         },
-        setCurrentPage: function (currentPageNum) {
+        _setCurrentPage: function (currentPageNum) {
             var me = this;
             me.$Carousel.select(currentPageNum - 1, 1);
         },
-        render: function () {
+        _renderList: function () {
             var me = this;
-            var $reportViewer = me.options.$reportViewer;
-
-            $Slider = new $('<DIV />');
-            $Slider.attr('class', 'sky-carousel');
-            $Slider.attr('style', 'height: 150px;'); // Need to make this none
-            $SliderWrapper = new $('<DIV />');
-            $SliderWrapper.attr('class', 'sky-carousel-wrapper');
-            $Slider.append($SliderWrapper);
             $List = new $('<UL />');
             $List.attr('class', 'sky-carousel-container');
-
-            var maxNumPages = me.options.$reportViewer.getNumPages();
-            var sessionID = me.options.$reportViewer.getSessionID();
-            var reportServerURL = me.options.$reportViewer.getReportServerURL();
-            var reportViewerAPI = me.options.$reportViewer.getReportViewerAPI();
-            var reportPath = me.options.$reportViewer.getReportPath();
+            var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
+            var sessionID = me.options.$reportViewer.reportViewer('getSessionID');
+            var reportServerURL = me.options.$reportViewer.reportViewer('getReportServerURL');
+            var reportViewerAPI = me.options.$reportViewer.reportViewer('getReportViewerAPI');
+            var reportPath = me.options.$reportViewer.reportViewer('getReportPath');
 
             for (var i = 1; i <= maxNumPages; i++) {
 
@@ -49,6 +40,23 @@
                 $ListItem.append($Caption);
                 $ListItem.append($Thumbnail);
             }
+
+            return $List;
+        },
+
+        render: function () {
+            var me = this;
+            var $reportViewer = me.options.$reportViewer;
+
+            $Slider = new $('<DIV />');
+            $Slider.attr('class', 'sky-carousel');
+            $Slider.attr('style', 'height: 150px;'); // Need to make this none
+            $SliderWrapper = new $('<DIV />');
+            $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+            $Slider.append($SliderWrapper);
+
+
+            $List = me._renderList();
 
             $SliderWrapper.append($List);
             me.element.css("display", "block");
@@ -86,10 +94,9 @@
             }
         },
         _initCallbacks: function () {
-            // BUGBUG:   Don't understand why this does not work.
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.bind('reportviewerchangepage', function (e, data) {
+            me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
                 me._setCurrentPage(data.newPageNum);
             });
         },
@@ -97,8 +104,7 @@
             var me = this;
             me.$Carousel;
             me.render();
-            // BUGBUG!
-            //me._initCallbacks();
+            me._initCallbacks();
         },
     });  // $.widget
 });  // function()

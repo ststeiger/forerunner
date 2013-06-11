@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="SAMLUtils.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+		<ProjectFiles Include="SAMLUtils\SAMLUtils.csproj" />
+		<ProjectFiles Include="TestSAMLUtils\TestSAMLUtils.csproj" />
+	</ItemGroup> 
+	<Import Project="SAMLUtils.traversal.targets"/> 
+	<!-- Insert any customizations for targets here --> 
+</Project>

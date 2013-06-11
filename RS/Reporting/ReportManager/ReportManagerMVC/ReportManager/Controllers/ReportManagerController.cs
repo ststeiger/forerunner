@@ -18,10 +18,12 @@ namespace ReportManager.Controllers
         private string accountPWD = ConfigurationManager.AppSettings["Forerunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["Forerunner.TestAccountDomain"];
 
+        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"]);
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
         private string ReportServerDBPWD = ConfigurationManager.AppSettings["Forerunner.ReportServerDBPWD"];
+        private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
 
         // GET api/ReportMananger/GetItems
@@ -30,7 +32,7 @@ namespace ReportManager.Controllers
         {
             Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, "", ReportServerDBPWD);
-            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB,DBCred);
+            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
             return rs.ListChildren("/", isRecursive); 
         }
 
@@ -39,8 +41,8 @@ namespace ReportManager.Controllers
         public IEnumerable<CatalogItem> GetItems(string path, bool isRecursive = false)
         {
             Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
-            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, "", ReportServerDBPWD);
-            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred); 
+            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity); 
             return rs.ListChildren(path, isRecursive);
         }
 
@@ -49,8 +51,8 @@ namespace ReportManager.Controllers
         {
 
             Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
-            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, "", ReportServerDBPWD);
-            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred);
+            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
 
             byte[] result = rs.GetCatalogImage(ReportPath);
             HttpResponseMessage resp = this.Request.CreateResponse(); ;

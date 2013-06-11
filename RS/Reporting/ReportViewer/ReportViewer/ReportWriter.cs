@@ -65,7 +65,7 @@ namespace Forerunner
                 //This is a Total Hack for OrigionalValue
 
                 if (NumProp == PropArray.GetUpperBound(0))
-                    //Need to Grow, throuw for now
+                    //Need to Grow, throw for now
                     ThrowParseError();
 
                 PropArray[NumProp] = new RPLProperty();
@@ -270,6 +270,16 @@ namespace Forerunner
 
                 //Report Content
                 WriteJSONReportContent();
+
+                //Do not need these, but read to end of stream
+                w.SetShouldWrite(false);
+                //OffSet
+                WriteJSONArrayOffset();
+                WriteJSONReportElementEnd();
+                //Version
+                WriteJSONVersion();
+                w.SetShouldWrite(true);
+
 
                 //Document Map
                 if (DocumentMap != null)
@@ -517,7 +527,8 @@ namespace Forerunner
                         WriteJSONPageProp();
                         w.WriteEndObject();
                     }
-
+                    //Report ElementEnd
+                    WriteJSONReportElementEnd();
                     w.WriteEndObject();
                 }
                 else if (checkVersion(10, 3))
@@ -612,12 +623,12 @@ namespace Forerunner
                 w.WriteNumber(PageCount);
                 w.WriteMember("PageContent");
                 w.WriteStartArray();
-                for (int i = 1; i < PageCount; i++)
+                for (int i = 0; i < PageCount; i++)
                 {
                     w.WriteNumber(ReadInt64());
                 }
                 w.WriteEndArray();
-                w.WriteStartObject();
+                w.WriteEndObject();
             }
         }
         private void WriteJSONPageProp()
@@ -687,8 +698,65 @@ namespace Forerunner
             }
 
             w.WriteEndArray();
-            //Report ElementEnd
-            //WriteJSONReportElementEnd();
+            WriteJSONMeasurements();
+            WriteJSONReportElementEnd();
+
+            //Page Footer
+            if (InspectByte() == 0x05)
+            {
+                Seek(1);
+                w.WriteMember("PageFooter");
+                w.WriteStartObject();
+
+                w.WriteMember("Elements");
+                WriteJSONElements();
+
+                //Report Items
+                w.WriteMember("ReportItems");
+                WriteJSONReportItems();
+
+                //Measurments
+                WriteJSONMeasurements();
+                WriteJSONReportElementEnd();
+                w.WriteEndObject();
+                //Skip the end 0xFF
+                if (InspectByte() == 0xFF)
+                    Seek(1);
+            }
+
+            //Page Header
+            if (InspectByte() == 0x04)
+            {
+                //Skip the 0x04
+                Seek(1);
+                w.WriteMember("PageHeader");
+                w.WriteStartObject();
+
+                w.WriteMember("Elements");
+                WriteJSONElements();
+
+                //Report Items
+                w.WriteMember("ReportItems");
+                WriteJSONReportItems();
+
+                //Measurments
+                WriteJSONMeasurements();
+                WriteJSONReportElementEnd();
+                w.WriteEndObject();
+
+                //Skip the end 0xFF
+                if (InspectByte() == 0xFF)
+                    Seek(1);
+            }
+            //Skip the end 0xFF
+            if (InspectByte() == 0xFF)
+                Seek(1);
+            //Measurments
+            WriteJSONMeasurements();
+            WriteJSONReportElementEnd();
+            //Skip the end 0xFF
+            if (InspectByte() == 0xFF)
+                Seek(1);
             w.WriteEndObject();
 
             return true;
@@ -1359,7 +1427,6 @@ namespace Forerunner
             return true;
 
         }
-
         private void WriteJSONDeRefTablixBodyCells()
         {
             int StartIndex = (int)ReadInt64();
@@ -1386,7 +1453,6 @@ namespace Forerunner
             //Set back
             this.Index = CurrIndex;
         }
-
         private Boolean WriteJSONTablixRow()
         {
             RPLProperties prop;
@@ -1483,8 +1549,6 @@ namespace Forerunner
                 ThrowParseError();
             return true;
         }
-
-
         private Boolean WriteJSONTablixColMemeber()
         {
             int Count;
@@ -1597,9 +1661,6 @@ namespace Forerunner
 
             return true;
         }
-
-
-
         private Boolean WriteJSONCells()
         {
             RPLProperties prop = new RPLProperties(0xFF);
@@ -1840,18 +1901,14 @@ namespace Forerunner
         {
             WriteJSONImageTypeElement(0x0B, "Chart");
         }
-
         private void WriteJSONMap()
         {
             WriteJSONImageTypeElement(0x15, "Map");
         }
-
         private void WriteJSONGauge()
         {
             WriteJSONImageTypeElement(0x0E, "Gauge");
         }
-
-
         private void WriteJSONImageTypeElement(byte type, string typeName)
         {
             if (ReadByte() != type)

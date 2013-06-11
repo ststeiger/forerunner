@@ -6,35 +6,36 @@
     height:100%;
 }
 
-.fr-itemicon {
-  width:24px;
-  height:24px;
-  margin: 6px;
-  background-color:transparent;
-  border-width:0px;
-  vertical-align: top;
-  display:inline-block;
-}
-
 .fr-item-disabled {
   opacity:.3;
 }
 
-.fr-itemtext {
+.fr-item-container {
   line-height:36px;
   color: white;
 }
 
-.fr-itemtext:hover {
+.fr-item-container:hover {
   line-height:36px;
   color: white;
   background-color:darkgrey;
 }
 
-.fr-itemtext:active {
+.fr-item-container:active {
   line-height:36px;
   color: white;
   background-color:darkslategrey;
+}
+
+
+.fr-itemicon {
+  width:24px;
+  height:24px;
+  margin: 5px;
+  background-color:transparent;
+  border-width:0px;
+  vertical-align: top;
+  display:inline-block;
 }
 
 .fr-item-spacer {
@@ -55,55 +56,3 @@
   max-width: 20mm;
 }
 
-.fr-item-menu {
-  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
-}
-
-.fr-item-home {
-  background-image:url('../reportviewer/Images/Toolbar/home_icon.png');
-}
-
-.fr-item-back {
-  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
-}
-
-.fr-item-reportback {
-  background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
-}
-
-.fr-item-next {
-  background-image:url('../reportviewer/Images/Toolbar/playback_next_icon.png');
-}
-
-.fr-item-prev {
-  background-image:url('../reportviewer/Images/Toolbar/playback_prev_icon.png');
-}
-
-.fr-item-firstpage {
-  background-image:url('../reportviewer/Images/Toolbar/playback_rew_icon.png');
-}
-
-.fr-item-lastpage {
-  background-image:url('../reportviewer/Images/Toolbar/playback_ff_icon.png');
-}
-
-.fr-item-refresh {
-  background-image:url('../reportviewer/Images/Toolbar/playback_reload_icon.png');
-}
-
-.fr-item-nav {
-  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
-}
-
-.fr-item-menu {
-  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
-}
-
-.fr-item-paramarea {
-  background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
-}
-
-.fr-item-documentmap
-{
-    background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
-}

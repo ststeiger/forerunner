@@ -30,25 +30,25 @@
             }
         },
         itemFirstPage: {
-            selector: '.fr-item-firstpage',
+            selector: '.fr-id-firstpage',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', 1)
             }
         },
         itemPrev: {
-            selector: '.fr-item-prev',
+            selector: '.fr-id-prev',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
             }
         },
         itemNext: {
-            selector: '.fr-item-next',
+            selector: '.fr-id-next',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
             }
         },
         itemLastPage: {
-            selector: '.fr-item-lastpage',
+            selector: '.fr-id-lastpage',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
             }
@@ -60,13 +60,13 @@
             }
         },
         itemFind: {
-            selector: '.fr-item-find',
+            selector: '.fr-id-find',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer("Find")
             }
         },
         itemFindNext: {
-            selector: '.fr-item-findnext',
+            selector: '.fr-id-findnext',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer("FindNext")
             }
@@ -96,45 +96,52 @@
             me.element.html($(
                 "<div class='fr-toolpane' id='ViewerToolPane'>" +
                     // Page navigation
-                    "<div>" +
-                        "<div class='fr-itemicon fr-item-firstpage' />" +
-                        "<div class='fr-itemicon fr-item-prev' />" +
-                        "<input class='fr-item-textbox fr-item-textbox-reportpage' />" +
-                        "<div class='fr-itemicon fr-item-next' />" +
-                        "<div class='fr-itemicon fr-item-lastpage' />" +
+                    "<div class='fr-button-container fr-id-firstpage'>" +
+                        "<div class='fr-itemicon fr-image-firstpage'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-id-prev'>" +
+                        "<div class='fr-itemicon fr-image-prev'/>" +
+                    "</div>" +
+                    // Page number input element
+                    "<input class='fr-textbox fr-textbox-reportpage' />" +
+                    "<div class='fr-button-container fr-id-next'>" +
+                        "<div class='fr-itemicon fr-image-next'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-id-lastpage'>" +
+                        "<div class='fr-itemicon fr-image-lastpage'/>" +
                     "</div>" +
                     // Home
-                    "<div class='fr-itemtext'>" +
-                        "<a href='#' class='fr-itemtext'><div class='fr-itemicon fr-item-home' />Home</a>" +
+                    "<div class='fr-item-container'>" +
+                        "<a href='#' class='fr-item-container'><div class='fr-itemicon fr-image-home' />Home</a>" +
                     "</div>" +
                     // Navigation
-                    "<div class='fr-itemtext fr-id-nav'>" + // fr-id... are used for selection only
-                        "<div class='fr-itemicon fr-item-nav' />Navigation" +
+                    "<div class='fr-item-container fr-id-nav'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-image-nav' />Navigation" +
                     "</div>" +
                     // Parameters
-                    "<div class='fr-itemtext fr-id-paramarea'>" + // fr-id... are used for selection only
-                        "<div class='fr-itemicon fr-item-paramarea' />Paremeters" +
+                    "<div class='fr-item-container fr-id-paramarea'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-image-paramarea' />Paremeters" +
                     "</div>" +
                     // Back
-                    "<div class='fr-itemtext fr-id-reportback'>" + // fr-id... are used for selection only
-                        "<div class='fr-itemicon fr-item-reportback' />Back" +
+                    "<div class='fr-item-container fr-id-reportback'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-image-reportback' />Back" +
                     "</div>" +
                     // Refresh
-                    "<div class='fr-itemtext fr-id-refresh'>" + // fr-id... are used for selection only
-                        "<div class='fr-itemicon fr-item-refresh' />Refresh" +
+                    "<div class='fr-item-container fr-id-refresh'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-image-refresh' />Refresh" +
                     "</div>" +
                     // document map
-                    "<div class='fr-itemtext fr-id-documentmap'>" + // fr-id... are used for selection only
-                        "<div class='fr-itemicon fr-item-documentmap' />Document map" +
+                    "<div class='fr-item-container fr-id-documentmap'>" + // fr-id... are used for selection only
+                        "<div class='fr-itemicon fr-image-documentmap' />Document map" +
                     "</div>" +
                     // spacer
                     "<div class='fr-item-spacer'></div>" +
                     // Find | Next
                     "<input class='fr-item-textbox fr-item-textbox-keyword' />" +
-                    "<span class='fr-itemtext'>&nbsp&nbsp</span>" +
-                    "<span class='fr-itemtext fr-item-find'>Find</span>" +
-                    "<span class='fr-itemtext'>&nbsp|&nbsp</span>" +
-                    "<span class='fr-itemtext fr-item-findnext' >Next</span>" +
+                    "<span class='fr-item-container'>&nbsp&nbsp</span>" +
+                    "<span class='fr-item-container fr-item-find'>Find</span>" +
+                    "<span class='fr-item-container'>&nbsp|&nbsp</span>" +
+                    "<span class='fr-item-container fr-item-findnext' >Next</span>" +
                 "</div>"));
         },
         _enableItems: function (itemInfoArray) {

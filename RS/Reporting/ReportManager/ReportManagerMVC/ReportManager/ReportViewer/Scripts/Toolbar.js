@@ -103,22 +103,51 @@
             var me = this;
             me.element.html($(
                 "<div class='fr-toolbar' id='ViewerToolbar'>" +
-                "<a href='#'><div class='fr-buttonicon fr-button-home'/></a>" +
-                "<div class='fr-buttonicon fr-button-menu'/>" +
-                "<div class='fr-buttonicon fr-button-nav'/>" +
-                "<div class='fr-buttonicon fr-button-paramarea'/>" +
-                "<div class='fr-buttonicon fr-button-reportback'/>" +
-                "<div class='fr-buttonicon fr-button-refresh'/>" +
-                "<div class='fr-buttonicon fr-button-firstpage'/>" +
-                "<div class='fr-buttonicon fr-button-prev'/>" +
-                "<input class='fr-textbox fr-textbox-reportpage' />" +
-                "<div class='fr-buttonicon fr-button-next'/>" +
-                "<div class='fr-buttonicon fr-button-lastpage'/>" +
-                "<div class='fr-buttonicon fr-button-documentmap' />" +
-                "<input class='fr-textbox fr-textbox-keyword' />" +
-                "<div class='fr-buttonicon fr-button-find' >Find</div><span class='fr-span-find'> | </span>" +
-                "<div class='fr-buttonicon fr-button-findnext' >Next</div>" +
-                "</div>"));
+                    "<div class='fr-button-container fr-button-home'>" +
+                        "<a href='#'><div class='fr-buttonicon fr-image-home'/></a>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-menu'>" +
+                        "<div class='fr-buttonicon fr-image-menu'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-nav'>" +
+                        "<div class='fr-buttonicon fr-image-nav'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-paramarea'>" +
+                        "<div class='fr-buttonicon fr-image-paramarea'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-reportback'>" +
+                        "<div class='fr-buttonicon fr-image-reportback'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-refresh'>" +
+                        "<div class='fr-buttonicon fr-image-refresh'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-firstpage'>" +
+                        "<div class='fr-buttonicon fr-image-firstpage'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-prev'>" +
+                        "<div class='fr-buttonicon fr-image-prev'/>" +
+                    "</div>" +
+                    // Page number input element
+                    "<input class='fr-textbox fr-textbox-reportpage' />" +
+                    "<div class='fr-button-container fr-button-next'>" +
+                        "<div class='fr-buttonicon fr-image-next'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-lastpage'>" +
+                        "<div class='fr-buttonicon fr-image-lastpage'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-documentmap'>" +
+                        "<div class='fr-buttonicon fr-image-documentmap' />" +
+                    "</div>" +
+                    // Find input element
+                    "<input class='fr-textbox fr-textbox-keyword' />" +
+                    "<div class='fr-button-container fr-button-find'>" +
+                        "<div class='fr-buttonicon fr-image-find' >Find</div>" +
+                    "</div>" +
+                    "<span class='fr-span-find'> | </span>" +
+                    "<div class='fr-button-container fr-button-findnext'>" +
+                        "<div class='fr-buttonicon fr-image-findnext' >Next</div>" +
+                    "</div>" +
+                "</div>"));  // id='ViewerToolbar'
         },
         _enableButtons: function (btnInfoArray) {
             var me = this;

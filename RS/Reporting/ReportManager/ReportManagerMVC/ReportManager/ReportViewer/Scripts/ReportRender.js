@@ -90,17 +90,47 @@
             var $Sec = $("<TR/>");
             var Location = me._GetMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
 
-            $Sec.attr("Style", "width:" + Location.Width + "mm;");
+            //Need to determine Header and footer Index
+            var HeaderIndex;
+            var FooterIndex;
+            if (RIContext.CurrObj.PageFooter != null) {
+                FooterIndex = RIContext.CurrObj.Columns.length;
+                HeaderIndex = FooterIndex + 1;
+            }
+            else
+                HeaderIndex = RIContext.CurrObj.Columns.length;
 
-                //Columns
+
+            //Page Header
+            if (RIContext.CurrObj.PageHeader != null) {
+                var $Header = $("<TR/>");
+                var HeadLoc = me._GetMeasurmentsObj(RIContext.CurrObj, HeaderIndex);
+                $Header.attr("Style", "width:" + HeadLoc.Width + "mm;");
+                $Header.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<Div/>"), null, HeadLoc)));
+                $NewObj.append($Header);
+            }
+            
+            $Sec.attr("Style", "width:" + Location.Width + "mm;");
+            //Columns
             $NewObj.append($Sec);
             $.each(RIContext.CurrObj.Columns, function (Index, Obj) {
                 var $col = new $("<TD/>");
                 $col.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), null, Location)));
                 $Sec.append($col)
             });
+
+            //Page Footer
+            if (RIContext.CurrObj.PageFooter != null) {
+                var $Footer = $("<TR/>");
+                var FootLoc = me._GetMeasurmentsObj(RIContext.CurrObj, FooterIndex);
+                $Footer.attr("Style", "width:" + FootLoc.Width + "mm;");
+                $Footer.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<Div/>"), null, FootLoc)));
+                $NewObj.append($Footer);
+            }
+
+
             RIContext.$HTMLParent.append($NewObj);
-        },
+        },        
         _WriteRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
             var $LocDiv;    //This DIV will have the top and left location set, location is not set anywhere else

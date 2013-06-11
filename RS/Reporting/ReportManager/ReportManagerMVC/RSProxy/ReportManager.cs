@@ -25,12 +25,13 @@ namespace Forerunner.Manager
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
         {
-            //Hack need to fix this for HTTP
-            rs.Url = "http://" + URL + "/ReportService2005.asmx";
-            this.URL = URL;
             this.WSCredentials = WSCredentials;
             this.DBCredentials = DBCredentials;
-
+            rs.Url =  URL + "/ReportService2005.asmx";
+            
+            
+            this.URL = URL;
+            
             rs.Credentials = new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;

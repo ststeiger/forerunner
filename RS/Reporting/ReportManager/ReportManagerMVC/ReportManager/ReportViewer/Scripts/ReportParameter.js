@@ -84,7 +84,7 @@
 
             $ParameterDiv.append($ParameterContainer);
             if (me.ReportViewer.$ReportAreaContainer == null || me.ReportViewer.$ReportAreaContainer.length == 0)
-                me.ReportViewer.$PageContainer.append($ParameterDiv);
+                me.ReportViewer.$ReportContainer.append($ParameterDiv);
             else
                 $ParameterDiv.insertBefore(me.ReportViewer.$ReportAreaContainer);
             me.ReportViewer.RemoveLoadingIndicator();

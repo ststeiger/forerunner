@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impersonator.cs" />
     <Compile Include="ReportingService2005.cs" />
     <Compile Include="ReportManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

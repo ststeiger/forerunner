@@ -6,6 +6,7 @@ using System.Net;
 using System.Data.SqlClient;
 using Forerunner;
 using Forerunner.Viewer;
+using Forerunner.Security;
 
 namespace Forerunner.Manager
 {
@@ -19,23 +20,34 @@ namespace Forerunner.Manager
         SqlConnection SQLConn = new SqlConnection();
         Credentials WSCredentials;
         Credentials DBCredentials;
+        Impersonator impersonator; 
         string URL;
 
-        public ReportManager(string URL,Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials)
+        public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
         {
+            //Hack need to fix this for HTTP
+            rs.Url = "http://" + URL + "/ReportService2005.asmx";
             this.URL = URL;
             this.WSCredentials = WSCredentials;
             this.DBCredentials = DBCredentials;
 
-            //Hack need to fix this for HTTP
-            rs.Url = "http://" + URL + "/ReportService2005.asmx";
             rs.Credentials = new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
-            builder.UserID = DBCredentials.UserName;
-            builder.Password = DBCredentials.Password;
+            if (useIntegratedSecurity)
+            {
+                impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
+                impersonator.Impersonate();
+                builder.IntegratedSecurity = true;
+            }
+            else
+            {
+                builder.UserID = DBCredentials.UserName;
+                builder.Password = DBCredentials.Password;
+            }
 
+            
             SQLConn.ConnectionString = builder.ConnectionString;
             SQLConn.Open();
             CheckSchema();

@@ -47,10 +47,6 @@
             me.$ReportAreaContainer - null;
             me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Loading...");
             me.FloatingHeaders = [];
-            me.$PageNav = null;
-            me.$Slider;
-            me.$Carousel;
-            me.CreateNav = false;
             me.ParamLoaded = false;
             me.ScrollTop = 0;
             me.ScrollLeft = 0;
@@ -60,6 +56,7 @@
             me.FindKeyword = null;
             me.element.append(me.$LoadingIndicator);
 
+            me.CreateNav = false;
             if (me.options.NavUID != null) {
                 me.$PageNav = $("#" + me.options.NavUID);
                 me.$PageNav.css("display", "none");
@@ -81,6 +78,22 @@
         getNumPages: function () {
             var me = this;
             return me.NumPages;
+        },
+        getReportViewerAPI: function () {
+            var me = this;
+            return me.options.ReportViewerAPI;
+        },
+        getReportServerURL: function () {
+            var me = this;
+            return me.options.ReportServerURL;
+        },
+        getReportPath: function () {
+            var me = this;
+            return me.options.ReportPath;
+        },
+        getSessionID: function () {
+            var me = this;
+            return me.SessionID;
         },
         SetColHeaderOffset: function ($Tablix, $ColHeader) {
             //Update floating column headers
@@ -179,6 +192,10 @@
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger('changepage', null, { newPageNum: NewPageNum });
+            // BUGBUG:  Need to hook up to the changepage event...
+            if (me.CreateNav) {
+                me.$PageNav.pagenav('setCurrentPage', NewPageNum);
+            }
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -243,8 +260,6 @@
                 if (me.Lock == 0) {
                     me.Lock = 1;
                     me.LoadPage(NewPageNum, me.Pages[me.CurPage], false);
-                    if (me.$Carousel != null)
-                        me.$Carousel.select(NewPageNum - 1, 1);
                 }
             }
         },
@@ -278,72 +293,6 @@
                         me.LoadPage(i, null, true);
 
         },      
-        CreateSlider: function (ReportViewerUID) {
-            var me = this;
-            $Container = me.$PageNav;
-            $Container.css("display", "block");
-            $Slider = new $('<DIV />');
-            $Slider.attr('class', 'sky-carousel');
-            $Slider.attr('style', 'height: 150px; display: none;'); // Need to make this none
-            $SliderWrapper = new $('<DIV />');
-            $SliderWrapper.attr('class', 'sky-carousel-wrapper');
-            $Slider.append($SliderWrapper);
-            $List = new $('<UL />');
-            $List.attr('class', 'sky-carousel-container');
-
-            //if(GetParamsList()!
-            for (var i = 1; i <= me.NumPages; i++) {
-
-                var url = me.options.ReportViewerAPI + '/GetThumbnail/?ReportServerURL=' + me.options.ReportServerURL + '&ReportPath='
-                        + me.options.ReportPath + '&SessionID=' + me.SessionID + '&PageNumber=' + i;
-                $ListItem = new $('<LI />');
-                $List.append($ListItem);
-                $Caption = new $('<DIV />');
-                $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
-                $Caption.attr('class', 'center');
-                $Thumbnail = new $('<IMG />');
-                $Thumbnail.attr('class', 'pagethumb');
-                $Thumbnail.attr('src', url);
-                $Thumbnail.data('pageNumber', i);
-                this._on($Thumbnail, {
-                    click: function (event) {
-                        me.NavToPage($(event.currentTarget).data('pageNumber'));
-                    }
-                });
-                // Need to add onclick
-                $ListItem.append($Caption);
-                $ListItem.append($Thumbnail);
-            }
-
-            $SliderWrapper.append($List);
-            $Container.append($Slider);
-
-            var carousel = $Slider.carousel({
-                itemWidth: 120,
-                itemHeight: 120,
-                distance: 8,
-                selectedItemDistance: 25,
-                selectedItemZoomFactor: 1,
-                unselectedItemZoomFactor: 0.67,
-                unselectedItemAlpha: 0.6,
-                motionStartDistance: 85,
-                topMargin: 30,
-                gradientStartPoint: 0.35,
-                gradientOverlayColor: "#f5f5f5",
-                gradientOverlaySize: 95,
-                reflectionDistance: 1,
-                reflectionAlpha: 0.35,
-                reflectionVisible: true,
-                reflectionSize: 35,
-                selectByClick: true
-            });
-            carousel.select(0, 1);
-
-            me.$PageNav = $Container;
-            me.$Slider = $Slider;
-            me.$Carousel = carousel;
-            me.CreateNav = true;
-        },
         Back: function () {
             var me = this;
             var action = me.ActionHistory.pop();
@@ -367,18 +316,18 @@
         },
         ShowNav: function () {
             var me = this;
-            if (!me.CreateNav)
-                me.CreateSlider(me.options.UID);
-            if (me.$Slider.is(":visible")) {
-                me.$Slider.fadeOut("slow");
-                me.$PageNav.fadeOut("fast");
+            if (!me.CreateNav) {
+                me.CreatePageNav();
+                me.CreateNav = true;
+            } else {
+                me.$PageNav.pagenav('showNav');
             }
-            else {
-                if (me.$Carousel != null)
-                    me.$Carousel.select(me.CurPage - 1, 1);
-                me.$PageNav.fadeIn("fast");
-                me.$Slider.fadeIn("slow");
-            }
+        },
+        CreatePageNav: function () {
+            var me = this;
+            me.$PageNav.pagenav({
+                $reportViewer: me,
+            });
         },
         Sort: function (Direction, ID) {
             //Go the other dirction from current

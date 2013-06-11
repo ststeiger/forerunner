@@ -6,17 +6,26 @@
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
-            me.$Carousel.select(currentPageNum - 1, 1);
+            if (me.$Carousel != null) {
+                me.$Carousel.select(currentPageNum - 1, 1);
+            }
         },
         _renderList: function () {
             var me = this;
-            $List = new $('<UL />');
-            $List.attr('class', 'sky-carousel-container');
+            var isTouch = me._isTouchDevice();
+            if (!isTouch) {
+                $List = new $('<UL />');
+                $List.addClass('sky-carousel-container');
+            } else {
+                $List = new $('<UL />');
+                $List.addClass('horizontal');
+            }
             var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
             var sessionID = me.options.$reportViewer.reportViewer('getSessionID');
             var reportServerURL = me.options.$reportViewer.reportViewer('getReportServerURL');
             var reportViewerAPI = me.options.$reportViewer.reportViewer('getReportViewerAPI');
             var reportPath = me.options.$reportViewer.reportViewer('getReportPath');
+            
 
             for (var i = 1; i <= maxNumPages; i++) {
 
@@ -26,14 +35,14 @@
                 $List.append($ListItem);
                 $Caption = new $('<DIV />');
                 $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
-                $Caption.attr('class', 'center');
+                $Caption.addClass('center');
                 $Thumbnail = new $('<IMG />');
-                $Thumbnail.attr('class', 'pagethumb');
+                $Thumbnail.addClass(isTouch ?  'navlithumb' : 'pagethumb');
                 $Thumbnail.attr('src', url);
                 $Thumbnail.data('pageNumber', i);
                 this._on($Thumbnail, {
                     click: function (event) {
-                        me.options.$reportViewer.NavToPage($(event.currentTarget).data('pageNumber'));
+                        me.options.$reportViewer.reportViewer('NavToPage', $(event.currentTarget).data('pageNumber'));
                     }
                 });
                 // Need to add onclick
@@ -46,13 +55,20 @@
 
         render: function () {
             var me = this;
+            me.element.html("");
             var $reportViewer = me.options.$reportViewer;
-
+            var isTouch = me._isTouchDevice();
             $Slider = new $('<DIV />');
-            $Slider.attr('class', 'sky-carousel');
-            $Slider.attr('style', 'height: 150px;'); // Need to make this none
+            if (!isTouch) {
+                $Slider.attr('class', 'sky-carousel');
+                $Slider.attr('style', 'height: 150px;'); // Need to make this none
+            } else {
+                $Slider.addClass('navcontainer');
+            }
             $SliderWrapper = new $('<DIV />');
-            $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+            if (!isTouch) {
+                $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+            }
             $Slider.append($SliderWrapper);
 
 
@@ -62,27 +78,30 @@
             me.element.css("display", "block");
             me.element.html($Slider);
 
-            var carousel = $Slider.carousel({
-                itemWidth: 120,
-                itemHeight: 120,
-                distance: 8,
-                selectedItemDistance: 25,
-                selectedItemZoomFactor: 1,
-                unselectedItemZoomFactor: 0.67,
-                unselectedItemAlpha: 0.6,
-                motionStartDistance: 85,
-                topMargin: 30,
-                gradientStartPoint: 0.35,
-                gradientOverlayColor: "#f5f5f5",
-                gradientOverlaySize: 95,
-                reflectionDistance: 1,
-                reflectionAlpha: 0.35,
-                reflectionVisible: true,
-                reflectionSize: 35,
-                selectByClick: true
-            });
-            carousel.select(0, 1);
-            me.$Carousel = carousel;
+            if (!isTouch) {
+                var carousel = $Slider.carousel({
+                    itemWidth: 120,
+                    itemHeight: 120,
+                    distance: 8,
+                    selectedItemDistance: 25,
+                    selectedItemZoomFactor: 1,
+                    unselectedItemZoomFactor: 0.67,
+                    unselectedItemAlpha: 0.6,
+                    motionStartDistance: 85,
+                    topMargin: 30,
+                    gradientStartPoint: 0.35,
+                    gradientOverlayColor: "#f5f5f5",
+                    gradientOverlaySize: 95,
+                    reflectionDistance: 1,
+                    reflectionAlpha: 0.35,
+                    reflectionVisible: true,
+                    reflectionSize: 35,
+                    selectByClick: true
+                });
+                carousel.select(0, 1);
+                me.$Carousel = carousel;
+            }
+            me._initCallbacks();
         },
         showNav: function () {
             var me = this;
@@ -103,8 +122,13 @@
         _create: function () {
             var me = this;
             me.$Carousel;
-            me.render();
-            me._initCallbacks();
+        },
+        _isTouchDevice: function () {
+            return false;
+            var ua = navigator.userAgent;
+            return !!('ontouchstart' in window) // works on most browsers 
+                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
+                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
     });  // $.widget
 });  // function()

@@ -324,6 +324,7 @@
             me.$PageNav.pagenav({
                 $reportViewer: me.element,
             });
+            me.$PageNav.pagenav('render');
         },
         Sort: function (Direction, ID) {
             //Go the other dirction from current

@@ -24,8 +24,6 @@ namespace Forerunner.Viewer
         Credentials Credentials = new Credentials();
         ReportExecutionService rs = new ReportExecutionService();
         string ReportViewerAPIPath = "/api/ReportViewer";
-        public enum ReportServerProtocalEnum { HTTP, HTTPS };
-        public ReportServerProtocalEnum ReportServerProtocal = ReportServerProtocalEnum.HTTP;
 
         public ReportViewer(String ReportServerURL, Credentials Credentials)
         {
@@ -35,16 +33,12 @@ namespace Forerunner.Viewer
         }
         private void SetRSURL()
         {
-            if (ReportServerProtocal == ReportServerProtocalEnum.HTTP)
-                rs.Url = "http://" + ReportServerURL + "/ReportExecution2005.asmx";
-            else
-                rs.Url = "https://" + ReportServerURL + "/ReportExecution2005.asmx";
+            rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
         }
-        public ReportViewer(String ReportServerURL, string ReportViewerAPIPath = "/api/ReportViewer", ReportServerProtocalEnum ReportServerProtocal = ReportServerProtocalEnum.HTTP)
+        public ReportViewer(String ReportServerURL, string ReportViewerAPIPath = "/api/ReportViewer")
         {
             this.ReportServerURL = ReportServerURL;
             this.ReportViewerAPIPath = ReportViewerAPIPath;
-            this.ReportServerProtocal = ReportServerProtocal;
             SetRSURL();
         }
 

@@ -748,6 +748,9 @@ namespace Forerunner
                 if (InspectByte() == 0xFF)
                     Seek(1);
             }
+            //Skip the end 0xFF
+            if (InspectByte() == 0xFF)
+                Seek(1);
             //Measurments
             WriteJSONMeasurements();
             WriteJSONReportElementEnd();

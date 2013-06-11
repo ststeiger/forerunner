@@ -5,64 +5,94 @@
     width: 100%;
 }
 
+.fr-button-container {
+  width: 36px;
+  height: 36px;
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  margin:1px;
+  display:inline-block;
+  background-color:transparent;
+}
+
+.fr-button-container:hover {
+  width: 36px;
+  height: 36px;
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  margin:1px;
+  display:inline-block;
+  background-color:darkgrey;
+}
+
+.fr-button-container:active {
+  width: 36px;
+  height: 36px;
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  margin:1px;
+  display:inline-block;
+  background-color:darkslategrey;
+}
+
 .fr-buttonicon {
   width:24px;
   height:24px;
-  margin: 6px;
-  background-color:transparent;
-  border-width:0px;
-  vertical-align: top;
+  margin: 5px;
 }
 
 .fr-button-disabled {
   opacity:.3;
 }
 
-.fr-button-menu {
+.fr-image-menu {
   background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
 }
 
-.fr-button-home {
+.fr-image-home {
   background-image:url('../reportviewer/Images/Toolbar/home_icon.png');
 }
 
-.fr-button-back {
+.fr-image-back {
   background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
 }
 
-.fr-button-reportback {
+.fr-image-reportback {
   background-image:url('../reportviewer/Images/Toolbar/arrow_left_icon.png');
 }
 
-.fr-button-next {
+.fr-image-next {
   background-image:url('../reportviewer/Images/Toolbar/playback_next_icon.png');
 }
 
-.fr-button-prev {
+.fr-image-prev {
   background-image:url('../reportviewer/Images/Toolbar/playback_prev_icon.png');
 }
 
-.fr-button-firstpage {
+.fr-image-firstpage {
   background-image:url('../reportviewer/Images/Toolbar/playback_rew_icon.png');
 }
 
-.fr-button-lastpage {
+.fr-image-lastpage {
   background-image:url('../reportviewer/Images/Toolbar/playback_ff_icon.png');
 }
 
-.fr-button-refresh {
+.fr-image-refresh {
   background-image:url('../reportviewer/Images/Toolbar/playback_reload_icon.png');
 }
 
-.fr-button-nav {
+.fr-image-nav {
   background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
 }
 
-.fr-button-paramarea {
+.fr-image-paramarea {
   background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
 }
 
-.fr-button-documentmap
+.fr-image-documentmap
 {
     background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
 }
@@ -135,6 +165,7 @@
 
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
+/*
 .fr-button-menu {
     display: none;
 }

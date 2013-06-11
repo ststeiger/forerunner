@@ -20,18 +20,18 @@
   opacity:.3;
 }
 
-.fr-itemtext {
+.fr-item-container {
   line-height:36px;
   color: white;
 }
 
-.fr-itemtext:hover {
+.fr-item-container:hover {
   line-height:36px;
   color: white;
   background-color:darkgrey;
 }
 
-.fr-itemtext:active {
+.fr-item-container:active {
   line-height:36px;
   color: white;
   background-color:darkslategrey;

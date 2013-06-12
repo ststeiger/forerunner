@@ -81,9 +81,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 pageTitle: 'ReportViewer',
             });
 
-            var $toolbar = $('#mainSectionHeader').toolbar();   // create the toolbar if need be
-            $toolbar.toolbar('render');                         // Re-render in case it was changed (e.g., by the reportmanager)
-
             this.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
 
@@ -96,12 +93,12 @@ var ApplicationRouter = Backbone.Router.extend({
                 PageNum: 1,
                 UID: 'FRReportViewer1',
                 NavUID: 'bottomdiv',
-                ToolbarHeight: this.toolbarHeight(),
+                //ToolbarHeight: this.toolbarHeight(),
             });
 
-            $('#mainSectionHeader').toolbar('initCallbacks', $viewer);
-            $('#leftPane').toolpane('render');
-            $('#leftPane').toolpane('initCallbacks', $viewer);
+            $('#mainSectionHeader').toolbar({ $reportViewer: $viewer });
+            $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
+            $('#leftPane').toolpane({ $reportViewer: $viewer });
         },
 
         toolbarHeight : function() {
@@ -135,7 +132,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 model : appPageModel
             }).render();
             $("#pageSection").append(this.appPageView.el);
-            $("#leftPane").toolpane();
         }
     });
 

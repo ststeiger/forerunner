@@ -30,6 +30,9 @@
             SetPageDone:null,
         },
 
+        _destroy: function () {
+        },
+
         // Constructor
         _create: function () {
             var me = this;

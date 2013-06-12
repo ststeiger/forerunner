@@ -77,10 +77,9 @@
                 e.data.$reportViewer.reportViewer("FindNext")
             }
         },
-        initCallbacks: function ($FRReportViewer) {
+        _initCallbacks: function () {
             var $cell;
             var me = this;
-            me.options.$reportViewer = $FRReportViewer;
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
@@ -99,9 +98,11 @@
             $cell.attr("type", "number")
             $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
         },
-        render: function () {
+        _init: function () {
             var me = this;
 
+            // TODO [jont]
+            //
             //////////////////////////////////////////////////////////////////////////////////////
             //// if me.element contains or a a child contains fr-toolbar don't replace the html
             //////////////////////////////////////////////////////////////////////////////////////
@@ -153,6 +154,10 @@
                         "<div class='fr-buttonicon fr-image-findnext' >Next</div>" +
                     "</div>" +
                 "</div>"));  // class='fr-toolbar'
+
+            if (me.options.$reportViewer) {
+                me._initCallbacks();
+            }
         },
         _enableButtons: function (btnInfoArray) {
             var me = this;
@@ -188,9 +193,12 @@
                 me._enableButtons([me.btnNext, me.btnLastPage]);
             }
         },
+
+        _destroy: function () {
+        },
+
         _create: function () {
             var me = this;
-            me.render();
         },
     });  // $.widget
 });  // function()

@@ -71,10 +71,9 @@
                 e.data.$reportViewer.reportViewer("FindNext")
             }
         },
-        initCallbacks: function ($FRReportViewer) {
+        _initCallbacks: function () {
             var $cell;
             var me = this;
-            me.options.$reportViewer = $FRReportViewer;
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
@@ -91,7 +90,7 @@
             $cell.attr("type", "number")
             $cell.on("keypress", { input: $cell }, function (e) { if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', e.data.input.val()) });
         },
-        render: function () {
+        _init: function () {
             var me = this;
             me.element.html($(
                 "<div class='fr-toolpane' id='ViewerToolPane'>" +
@@ -143,6 +142,9 @@
                     "<span class='fr-item-container'>&nbsp|&nbsp</span>" +
                     "<span class='fr-item-container fr-item-findnext' >Next</span>" +
                 "</div>"));
+            if (me.options.$reportViewer) {
+                me._initCallbacks();
+            }
         },
         _enableItems: function (itemInfoArray) {
             var me = this;
@@ -178,6 +180,10 @@
                 me._enableItems([me.itemNext, me.itemLastPage]);
             }
         },
+
+        _destroy: function () {
+        },
+
         _create: function () {
             var me = this;
         },

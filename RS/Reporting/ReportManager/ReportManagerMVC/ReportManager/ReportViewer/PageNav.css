@@ -24,12 +24,21 @@ ul.horizontal li{
   position: relative;
   vertical-align:top;
   width: 150px;
-  padding: 0 10px;  
+  height: 150px;
+  padding: 0 20px;  
   margin: 0 auto;
 }
 
 .navlithumb {
   max-height: 100px;
-  width: 130px;
+  width: 150px;
   display: inline-block;
+}
+
+ul.horizontal li:hover {
+  background-color:darkgrey;
+}
+
+ul.horizontal li:active {
+  background-color:darkslategrey;
 }

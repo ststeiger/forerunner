@@ -7,6 +7,9 @@ Test/Test Reports 2012/Report Project1/bin/
 *.cache
 *.exe
 *~
+*.swp
+*.fileListAbsolute.txt
+build/smtp.config.xml
 Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
 RS/Reporting/ReportManager/ReportManagerMVC/icongen/bin/Debug/*
 RS/Reporting/ReportManager/ReportManagerMVC/icongen/obj/Debug/*

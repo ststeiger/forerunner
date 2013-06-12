@@ -1,5 +1,0 @@
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\SAMLUtils\bin\Debug\ForeRunner.Reporting.Extensions.SAMLUtils.dll
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\SAMLUtils\bin\Debug\ForeRunner.Reporting.Extensions.SAMLUtils.pdb
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\SAMLUtils\obj\Debug\SAMLUtils.csprojResolveAssemblyReference.cache
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\SAMLUtils\obj\Debug\ForeRunner.Reporting.Extensions.SAMLUtils.dll
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\SAMLUtils\obj\Debug\ForeRunner.Reporting.Extensions.SAMLUtils.pdb

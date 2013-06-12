@@ -1,1 +1,0 @@
-C:\Code\Forerunner\RS\Reporting\SecurityExtensions\SAML\SAMLUtils\TestSAMLUtils\obj\Debug\TestSAMLUtils.csprojResolveAssemblyReference.cache

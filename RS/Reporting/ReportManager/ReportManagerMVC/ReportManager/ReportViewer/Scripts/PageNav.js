@@ -8,6 +8,8 @@
             var me = this;
             if (me.$Carousel != null) {
                 me.$Carousel.select(currentPageNum - 1, 1);
+            } else {
+                me.$UL.scrollLeft(me.listItems[currentPageNum - 1].position().left);
             }
         },
         _renderList: function () {
@@ -19,6 +21,7 @@
             } else {
                 $List = new $('<UL />');
                 $List.addClass('horizontal');
+                me.$UL = $List;
             }
             var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
             var sessionID = me.options.$reportViewer.reportViewer('getSessionID');
@@ -26,13 +29,14 @@
             var reportViewerAPI = me.options.$reportViewer.reportViewer('getReportViewerAPI');
             var reportPath = me.options.$reportViewer.reportViewer('getReportPath');
             
+            me.listItems = new Array(maxNumPages);
 
             for (var i = 1; i <= maxNumPages; i++) {
-
                 var url = reportViewerAPI + '/GetThumbnail/?ReportServerURL=' + reportServerURL + '&ReportPath='
                         + reportPath + '&SessionID=' + sessionID + '&PageNumber=' + i;
                 $ListItem = new $('<LI />');
                 $List.append($ListItem);
+                me.listItems[i - 1] = $ListItem;
                 $Caption = new $('<DIV />');
                 $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
                 $Caption.addClass('center');
@@ -77,7 +81,6 @@
             $SliderWrapper.append($List);
             me.element.css("display", "block");
             me.element.html($Slider);
-
             if (!isTouch) {
                 var carousel = $Slider.carousel({
                     itemWidth: 120,
@@ -103,14 +106,18 @@
             }
             me._initCallbacks();
         },
-        showNav: function () {
+        makeVisible: function (flag) {
             var me = this;
-            if (me.element.is(":visible")) {
+            if (!flag) {
                 me.element.fadeOut("fast");
             }
             else {
                 me.element.fadeIn("fast");
             }
+        },
+        showNav: function () {
+            var me = this;
+            me.makeVisible(!me.element.is(":visible")); 
         },
         _initCallbacks: function () {
             var me = this;
@@ -122,9 +129,10 @@
         _create: function () {
             var me = this;
             me.$Carousel;
+            me.listItems;
+            me.$UL;
         },
         _isTouchDevice: function () {
-            return false;
             var ua = navigator.userAgent;
             return !!('ontouchstart' in window) // works on most browsers 
                 || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)

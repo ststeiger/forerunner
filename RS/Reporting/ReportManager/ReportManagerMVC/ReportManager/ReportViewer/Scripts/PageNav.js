@@ -8,8 +8,14 @@
             var me = this;
             if (me.$Carousel != null) {
                 me.$Carousel.select(currentPageNum - 1, 1);
+                me.currentPageNum = currentPageNum;
             } else {
+                if (me.currentPageNum != currentPageNum && me.currentPageNum !== undefined) {
+                    me.listItems[me.currentPageNum - 1].removeClass('selected');
+                }
                 me.$UL.scrollLeft(me.listItems[currentPageNum - 1].position().left);
+                me.currentPageNum = currentPageNum;
+                me.listItems[me.currentPageNum - 1].addClass('selected');
             }
         },
         _renderList: function () {
@@ -57,7 +63,7 @@
             return $List;
         },
 
-        render: function () {
+        _render: function () {
             var me = this;
             me.element.html("");
             var $reportViewer = me.options.$reportViewer;
@@ -101,12 +107,12 @@
                     reflectionSize: 35,
                     selectByClick: true
                 });
-                carousel.select(0, 1);
                 me.$Carousel = carousel;
             }
             me._initCallbacks();
+            me._setCurrentPage(me.options.$reportViewer.reportViewer('getCurPage'));
         },
-        makeVisible: function (flag) {
+        _makeVisible: function (flag) {
             var me = this;
             if (!flag) {
                 me.element.fadeOut("fast");
@@ -117,7 +123,7 @@
         },
         showNav: function () {
             var me = this;
-            me.makeVisible(!me.element.is(":visible")); 
+            me._makeVisible(!me.element.is(":visible")); 
         },
         _initCallbacks: function () {
             var me = this;
@@ -126,11 +132,13 @@
                 me._setCurrentPage(data.newPageNum);
             });
         },
-        _create: function () {
+        _init: function () {
             var me = this;
             me.$Carousel;
             me.listItems;
-            me.$UL;
+            me.$UL
+            me.currentPageNum;
+            me._render();
         },
         _isTouchDevice: function () {
             var ua = navigator.userAgent;

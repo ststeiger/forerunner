@@ -101,13 +101,18 @@
         },
         render: function () {
             var me = this;
+
+            //////////////////////////////////////////////////////////////////////////////////////
+            //// if me.element contains or a a child contains fr-toolbar don't replace the html
+            //////////////////////////////////////////////////////////////////////////////////////
+
             me.element.html($(
-                "<div class='fr-toolbar' id='ViewerToolbar'>" +
-                    "<div class='fr-button-container fr-button-home'>" +
-                        "<a href='#'><div class='fr-buttonicon fr-image-home'/></a>" +
-                    "</div>" +
+                "<div class='fr-toolbar'>" +
                     "<div class='fr-button-container fr-button-menu'>" +
                         "<div class='fr-buttonicon fr-image-menu'/>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-home'>" +
+                        "<a href='#'><div class='fr-buttonicon fr-image-home'/></a>" +
                     "</div>" +
                     "<div class='fr-button-container fr-button-nav'>" +
                         "<div class='fr-buttonicon fr-image-nav'/>" +
@@ -147,7 +152,7 @@
                     "<div class='fr-button-container fr-button-findnext'>" +
                         "<div class='fr-buttonicon fr-image-findnext' >Next</div>" +
                     "</div>" +
-                "</div>"));  // id='ViewerToolbar'
+                "</div>"));  // class='fr-toolbar'
         },
         _enableButtons: function (btnInfoArray) {
             var me = this;

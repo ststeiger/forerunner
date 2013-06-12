@@ -30,8 +30,7 @@ namespace Forerunner
 
         public string GetDomainUser()
         {
-            return this.Domain + "\\" + this.UserName;
-
+            return this.Domain.Substring(0,15).ToUpper() + "\\" + this.UserName;
         }
 
 

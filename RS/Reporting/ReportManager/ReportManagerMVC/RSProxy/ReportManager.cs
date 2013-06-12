@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using Forerunner;
 using Forerunner.Viewer;
 using Forerunner.Security;
+using Jayrock.Json;
 
 namespace Forerunner.Manager
 {
@@ -91,10 +92,118 @@ namespace Forerunner.Manager
             string SQL = @"if not exists(SELECT * FROM sysobjects WHERE type = 'u' and name = 'ForerunnerCatalog')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END";
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.ExecuteNonQuery();
 
+        }
+
+        public string SaveFavorite(string path)
+        {
+            string SQL = @"BEGIN
+                            DECLARE @UID uniqueidentifier
+                            DECLARE @IID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            IF NOT EXISTS (SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID)
+                            BEGIN
+	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
+                            END";
+            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+
+            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.ExecuteNonQuery();
+
+            //Need to try catch and return error
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
+
+        }
+
+        public CatalogItem[] GetFavorites()
+        {
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem c;
+
+            string SQL = @"DECLARE @UID uniqueidentifier
+                           SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                           SELECT DISTINCT Path,Name FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+
+            SqlDataReader SQLReader;
+            SQLReader = SQLComm.ExecuteReader();
+
+            while (SQLReader.HasRows)
+            {
+                SQLReader.Read();
+                c = new CatalogItem();
+                c.Path = SQLReader.GetString(0);
+                c.Name = SQLReader.GetString(1);
+                c.Type = ItemTypeEnum.Report;
+                list.Add(c);
+
+            }
+            SQLReader.Close();
+            return list.ToArray();
+        }
+
+        public CatalogItem[] GetRecentReports()
+        {            
+            List<CatalogItem> list = new List<CatalogItem>();
+            CatalogItem c;
+
+            string SQL = @"SELECT DISTINCT Path,Name FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser and ReportAction = 6 and TimeStart > DATEADD(dd,-60,GETDATE())";
+            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+
+            SqlDataReader SQLReader;
+            SQLReader = SQLComm.ExecuteReader();
+
+            while (SQLReader.HasRows)
+            {
+                SQLReader.Read();
+                c = new CatalogItem();
+                c.Path = SQLReader.GetString(0);
+                c.Name = SQLReader.GetString(1);
+                c.Type = ItemTypeEnum.Report;
+                list.Add(c);
+                
+            }
+            SQLReader.Close();
+            return list.ToArray();
+        }
+
+        public string DeleteFavorite(string path)
+        {
+            string SQL = @"BEGIN
+                            DECLARE @UID uniqueidentifier
+                            DECLARE @IID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
+            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+
+            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.ExecuteNonQuery();
+            
+            //Need to try catch and return error
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("Status");
+            w.WriteString("Success");
+            w.WriteEndObject();
+            return w.ToString();
         }
 
         public void SaveImage(byte[] image, string path)

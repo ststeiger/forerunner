@@ -77,6 +77,12 @@
                 e.data.$reportViewer.reportViewer("FindNext")
             }
         },
+        btnFav: {
+            selector: '.fr-button-fav',
+            handler: function (e) {
+                e.data.$reportViewer.reportViewer('AddFavorite')
+            }
+        },
         initCallbacks: function ($FRReportViewer) {
             var $cell;
             var me = this;
@@ -146,6 +152,9 @@
                     "<span class='fr-span-find'> | </span>" +
                     "<div class='fr-button-container fr-button-findnext'>" +
                         "<div class='fr-buttonicon fr-image-findnext' >Next</div>" +
+                    "</div>" +
+                    "<div class='fr-button-container fr-button-fav'>" +
+                        "<div class='fr-buttonicon fr-image-fav'/>" +
                     "</div>" +
                 "</div>"));  // id='ViewerToolbar'
         },

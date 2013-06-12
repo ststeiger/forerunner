@@ -616,17 +616,21 @@
                 me.Pages[pageNum].$Container.reportRender("WriteError", me.Pages[pageNum].ReportObj);
             me.Pages[pageNum].IsRendered = true;
         },
-        
-        // Utility functions
+                
         SessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.SessionID != null && me.SessionID != "")
-                $.get(me.options.ReportViewerAPI + "/PingSession/", {
+                $.getJSON(me.options.ReportViewerAPI + "/PingSession/", {
                     ReportServerURL: me.options.ReportServerURL,
                     SessionID: me.SessionID
                 })
-                .done(function (Data) { })
+                .done(function (Data) {
+                    if (Data.Status == "Fail") {
+                        alert("Your session has expired");
+                        me.SessionID = "";
+                    }
+                })
                 .fail(function () { console.log("error"); })
 
         },

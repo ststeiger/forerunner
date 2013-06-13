@@ -427,9 +427,9 @@
             me.ScrollLeft = left;
             me.ScrollTop = top;
         },
-        Find: function (StartPage, EndPage) {
+        Find: function (value, StartPage, EndPage) {
             var me = this;
-            var KeyWord = $(".fr-textbox-keyword").val().trim();
+            var KeyWord = value.trim();
             if (KeyWord == '') return;
             
             if (me.FindKeyword == null || me.FindKeyword != KeyWord) { me.FindKeyword = KeyWord; me.FindStart = null; }

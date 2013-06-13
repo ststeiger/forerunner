@@ -22,12 +22,11 @@
             ReportViewerAPI: null,
             ReportPath: null,
             PageNum: 1,
-            UID: null,
-            NavUID: null,
             PingInterval: 300000,
             ParameterDiv: null,
             ToolbarHeight: 0,
-            SetPageDone:null,
+            SetPageDone: null,
+            PageNav: null,
         },
 
         _destroy: function () {
@@ -48,7 +47,7 @@
             me.Lock = false;
             me.$ReportContainer = new $("<DIV class='report-container'/>");
             me.$ReportAreaContainer - null;
-            me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Loading...");
+            me.$LoadingIndicator = new $("<div class='loading-indicator'></div>").text("Loading...");
             me.FloatingHeaders = [];
             me.ParamLoaded = false;
             me.ScrollTop = 0;
@@ -57,13 +56,7 @@
             me.Finding = false;
             me.FindStart = null;
             me.FindKeyword = null;
-            me.element.append(me.$LoadingIndicator);
-
-            me.CreateNav = false;
-            if (me.options.NavUID != null) {
-                me.$PageNav = $("#" + me.options.NavUID);
-                me.$PageNav.css("display", "none");
-            }
+            me.element.append(me.$LoadingIndicator);           
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
 
@@ -316,19 +309,11 @@
         },
         ShowNav: function () {
             var me = this;
-            if (!me.CreateNav) {
-                me.CreatePageNav();
-                me.CreateNav = true;
-            } else {
-                me.$PageNav.pagenav('showNav');
+            if (me.options.PageNav != null){
+                me.options.PageNav.pagenav('showNav');
             }
         },
-        CreatePageNav: function () {
-            var me = this;
-            me.$PageNav.pagenav({
-                $reportViewer: me.element,
-            });
-        },
+
         Sort: function (Direction, ID) {
             //Go the other dirction from current
             var me = this;

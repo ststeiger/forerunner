@@ -39,9 +39,7 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         _getFavoriteCatalogItemsUrl: function () {
-            // BUGBUG:  Jason to fill this in
-            alert("I am here!");
-            return "";
+            return 'ReportManager/GetItems?VDir=favorites';
         },
         _transitionToReportManager: function (path, isFavorite) {
             g_App.utils.allowZoom(false);
@@ -92,7 +90,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
-            $('#bottomdiv').attr('style', 'height: 150px');
+            $('#bottomdiv').attr('style', 'height: 150px;display: none;');
             //if (g_App.utils.isTouchDevice()) {
             //    $('#headerspacer').attr('style', 'height: 0px');
             //}
@@ -116,15 +114,16 @@ var ApplicationRouter = Backbone.Router.extend({
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
                 PageNum: 1,
-                UID: 'FRReportViewer1',
-                NavUID: 'bottomdiv',
+                //UID: 'FRReportViewer1',
+                //NavUID: 'bottomdiv',
                 //ToolbarHeight: this.toolbarHeight(),
             });
 
             $('#mainSectionHeader').toolbar({ $reportViewer: $viewer });
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
             $('#leftPane').toolpane({ $reportViewer: $viewer });
-
+            $('#bottomdiv').pagenav({$reportViewer: $viewer  });
+            $viewer.reportViewer('option', 'PageNav', $('#bottomdiv'));
             this.appPageView.bindEvents();
         },
 

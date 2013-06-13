@@ -120,11 +120,27 @@ var ApplicationRouter = Backbone.Router.extend({
                 //ToolbarHeight: this.toolbarHeight(),
             });
 
-            $('#mainSectionHeader').toolbar({ $reportViewer: $viewer });
-            $viewer.reportViewer('option', 'ToolbarHeight', me.toolbarHeight());
+            // Create / render the toolbar
+            var $toolbar = $('#mainSectionHeader');
+            $toolbar.toolbar({ $reportViewer: $viewer });
+            var btnHome = {
+                btnType: 0,
+                selectorClass: 'fr-button-home',
+                imageClass: 'fr-image-home',
+                click: function (e) {
+                    window.location.href = "#";
+                }
+            };
+            $toolbar.toolbar('addButtons', 2, true, [btnHome]);
+
+            // Let the report viewer know the height of the toolbar
+            $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
+
+            // Create / render the menu pane
             $('#leftPane').toolpane({ $reportViewer: $viewer });
             $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
 
+            // Bind the events to the Application Page
             me.appPageView.bindEvents();
         },
 

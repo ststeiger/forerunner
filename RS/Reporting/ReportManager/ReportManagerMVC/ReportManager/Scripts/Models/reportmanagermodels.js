@@ -21,15 +21,11 @@ var g_App = g_App || {};
 
   g_App.CatalogItemCollection = Backbone.Collection.extend({
     model: g_App.CatalogItem,
-    initialize: function(options) {
-      this.path = options.path;
+    initialize: function (options) {
+      this.options = options;
     },
     url: function () {
-      if (this.path != null && this.path != '/') {
-          return urlBase + 'ReportManager/GetItems?path=' + this.path + '&isRecursive=false';
-      } else {
-          return urlBase + 'ReportManager/GetItems?isRecursive=false';
-      }
+      return urlBase + this.options.catalogItemsUrl;
     }
   });
 }());

@@ -8,6 +8,7 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
+            "favorite" : "transitionToFavorite",
             "test/:arg": "test",
             '*notFound': 'notFound'
         },
@@ -19,7 +20,30 @@ var ApplicationRouter = Backbone.Router.extend({
             alert('Not found');
         },
 
+        
+
         transitionToReportManager: function (path) {
+            this._transitionToReportManager(path, false);
+        },
+
+        transitionToFavorite: function () {
+            this._transitionToReportManager(null, true);
+        },
+
+        _getCatalogItemsUrl: function (path) {
+            if (path != null && path != '/') {
+                return 'ReportManager/GetItems?path=' + path + '&isRecursive=false';
+            } else {
+                return 'ReportManager/GetItems?isRecursive=false';
+            }
+        },
+
+        _getFavoriteCatalogItemsUrl: function () {
+            // BUGBUG:  Jason to fill this in
+            alert("I am here!");
+            return "";
+        },
+        _transitionToReportManager: function (path, isFavorite) {
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
@@ -38,8 +62,10 @@ var ApplicationRouter = Backbone.Router.extend({
                 showBackButton: false,
                 pageTitle: path
             });
+
+            var catalogItemUrl = isFavorite ? this._getFavoriteCatalogItemsUrl () : this._getCatalogItemsUrl(path);
             var catalogItemsModel = new g_App.CatalogItemCollection({
-                path: path
+                catalogItemsUrl: catalogItemUrl
             });
             this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
             var me = this;

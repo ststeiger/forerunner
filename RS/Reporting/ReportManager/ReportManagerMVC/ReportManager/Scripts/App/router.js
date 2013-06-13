@@ -70,10 +70,9 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
             var me = this;
 
-            $('.fr-button-back').on("click",
-                function (e) {
-                    g_App.router.back();
-                });
+            $('.fr-image-back', $('#mainSectionHeader')).on('click', function (e, data) {
+                me.historyBack();
+            });
 
             catalogItemsModel.fetch({
                 success: function (catalogItemsModel, response, options) {
@@ -107,7 +106,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 pageTitle: 'ReportViewer',
             });
 
-            this.appPageView.transitionMainSection(appPageModel, 
+            me.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
 
             var $viewer = $('#FRReportViewer1');
@@ -122,10 +121,11 @@ var ApplicationRouter = Backbone.Router.extend({
             });
 
             $('#mainSectionHeader').toolbar({ $reportViewer: $viewer });
-            $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
+            $viewer.reportViewer('option', 'ToolbarHeight', me.toolbarHeight());
             $('#leftPane').toolpane({ $reportViewer: $viewer });
+            $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
 
-            this.appPageView.bindEvents();
+            me.appPageView.bindEvents();
         },
 
         toolbarHeight : function() {

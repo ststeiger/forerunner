@@ -311,6 +311,8 @@
                 //me.Pages[me.CurPage].$Container = null;
                 //me.Pages[me.CurPage].$Container = action.Container;
                 //me.$ReportAreaContainer.append(me.Pages[me.CurPage].$Container);
+            } else {
+                me._trigger('back');
             }
         },
         ShowNav: function () {

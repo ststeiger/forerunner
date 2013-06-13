@@ -148,14 +148,17 @@ namespace ReportManager.Controllers
         public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
         {
             ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            HttpResponseMessage resp = this.Request.CreateResponse(); 
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            byte[] result;
 
             //Application will need to handel security
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
             try
             {
                 rep.pingSession(SessionID);
-                resp.StatusCode = HttpStatusCode.OK;
+                result = Encoding.UTF8.GetBytes(rep.pingSession(SessionID));
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
             }
             catch
             {

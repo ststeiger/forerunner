@@ -66,7 +66,9 @@
             selectorClass: 'fr-textbox-reportpage',
             inputType: 'number',
             keypress: function (e) {
-                if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', this.val())
+                if (e.keyCode == 13) {
+                    e.data.$reportViewer.reportViewer('NavToPage', this.value)
+                }
             }
         },
         btnNext: {
@@ -97,7 +99,9 @@
             btnType: 1,
             selectorClass: 'fr-textbox-keyword',
             keypress: function (e) {
-                if (e.keyCode == 13) me.options.$reportViewer.reportViewer('NavToPage', this.val())
+                if (e.keyCode == 13) {
+                    e.data.$reportViewer.reportViewer('Find', this.value);
+                }
             }
         },
         btnFind: {
@@ -105,7 +109,8 @@
             selectorClass: 'fr-button-find',
             text: "Find",
             click: function (e) {
-                e.data.$reportViewer.reportViewer("Find")
+                var value = e.me.find('.fr-textbox-keyword').value;
+                e.data.$reportViewer.reportViewer("Find", value);
             }
         },
         btnSeparator: {
@@ -118,7 +123,7 @@
             selectorClass: 'fr-button-findnext',
             text: "Next",
             click: function (e) {
-                e.data.$reportViewer.reportViewer("FindNext")
+                e.data.$reportViewer.reportViewer("FindNext");
             }
         },
         _initCallbacks: function () {
@@ -146,10 +151,11 @@
         //  index - 1 based index of where to insert the button array
         //  enabled - true = enabled, false = dasbled
         //  btnInfoArray: [{
+        //      btnType: 0,             // 0 = button, 1 = <input>, 2 = text button, 3 = plain text
         //      selectorClass: '',
-        //      btnType: 0,           // 0 = button, 1 = <input>, 2 = text button, 3 = plain text
         //      imageClass: '',
         //      text: '',
+        //      inputType: 'number',    // Used with button type 1
         //      click: function (e) {
         //  }]
         addButtons: function (index, enabled, btnInfoArray) {
@@ -186,10 +192,10 @@
             var me = this;
             btnInfoArray.forEach(function (btnInfo, index, array) {
                 var $btnEl = $("." + btnInfo.selectorClass, me.element);
-                $btnEl.removeClass('fr-button-disabled');
+                $btnEl.removeClass('fr-button-disabled');   // Always remove any existing event, this will avoid getting two accidentally
                 $btnEl.addClass('cursor-pointer');
-                $btnEl.off('click');  // Always remove any existing event so as to avoid having two accidentally
-                $btnEl.on('click', null, { me: me, $reportViewer: me.options.$reportViewer }, btnInfo.click);
+                me._removeEvent($btnEl, btnInfo);
+                me._addEvents($btnEl, btnInfo)
             }, me);
         },
 
@@ -199,8 +205,24 @@
                 var $btnEl = $("." + btnInfo.selectorClass, me.element);
                 $btnEl.addClass('fr-button-disabled');
                 $btnEl.removeClass('cursor-pointer');
-                $btnEl.off('click');
+                me._removeEvent($btnEl, btnInfo);
             }, me);
+        },
+        _removeEvent: function ($btnEl, btnInfo) {
+            var me = this;
+            for (var key in btnInfo) {
+                if (typeof btnInfo[key] == 'function') {
+                    $btnEl.off(key);
+                }
+            }
+        },
+        _addEvents: function ($btnEl, btnInfo) {
+            var me = this;
+            for (var key in btnInfo) {
+                if (typeof btnInfo[key] == 'function') {
+                    $btnEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, btnInfo[key]);
+                }
+            }
         },
         _getButton: function (btnInfo) {
             if (btnInfo.btnType == 0) {

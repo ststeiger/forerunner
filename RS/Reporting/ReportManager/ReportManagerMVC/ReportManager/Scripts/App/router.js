@@ -8,7 +8,8 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
-            "favorite" : "transitionToFavorite",
+            "favorite": "transitionToFavorite",
+            "recent": "transitionToRecent",
             "test/:arg": "test",
             '*notFound': 'notFound'
         },
@@ -23,13 +24,15 @@ var ApplicationRouter = Backbone.Router.extend({
         
 
         transitionToReportManager: function (path) {
-            this._transitionToReportManager(path, false);
+            this._transitionToReportManager(path, null);
         },
 
         transitionToFavorite: function () {
-            this._transitionToReportManager(null, true);
+            this._transitionToReportManager(null, 'favorites');
         },
-
+        transitionToRecent: function () {
+            this._transitionToReportManager(null, 'recent');
+        },
         _getCatalogItemsUrl: function (path) {
             if (path != null && path != '/') {
                 return 'ReportManager/GetItems?path=' + path + '&isRecursive=false';
@@ -38,12 +41,11 @@ var ApplicationRouter = Backbone.Router.extend({
             }
         },
 
-        _getFavoriteCatalogItemsUrl: function () {
-            // BUGBUG:  Jason to fill this in
-            alert("I am here!");
-            return "";
+        _getViewCatalogItemsUrl: function (view) {
+            return 'ReportManager/GetItems?VDir=' + view;
         },
-        _transitionToReportManager: function (path, isFavorite) {
+
+        _transitionToReportManager: function (path, view) {
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
@@ -63,7 +65,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 pageTitle: path
             });
 
-            var catalogItemUrl = isFavorite ? this._getFavoriteCatalogItemsUrl () : this._getCatalogItemsUrl(path);
+            var catalogItemUrl = view != null ? this._getViewCatalogItemsUrl (view) : this._getCatalogItemsUrl(path);
             var catalogItemsModel = new g_App.CatalogItemCollection({
                 catalogItemsUrl: catalogItemUrl
             });
@@ -73,6 +75,17 @@ var ApplicationRouter = Backbone.Router.extend({
             $('.fr-image-back', $('#mainSectionHeader')).on('click', function (e, data) {
                 me.historyBack();
             });
+
+
+            $('.fr-button-fav').on("click",
+                function (e) {
+                    me.transitionToFavorite();
+                });
+
+            $('.fr-button-recent').on("click",
+                function (e) {
+                    me.transitionToRecent();
+                });
 
             catalogItemsModel.fetch({
                 success: function (catalogItemsModel, response, options) {
@@ -91,7 +104,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
-            $('#bottomdiv').attr('style', 'height: 150px');
+            $('#bottomdiv').attr('style', 'height: 150px;display: none;');
             //if (g_App.utils.isTouchDevice()) {
             //    $('#headerspacer').attr('style', 'height: 0px');
             //}
@@ -115,9 +128,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
                 PageNum: 1,
-                UID: 'FRReportViewer1',
-                NavUID: 'bottomdiv',
-                //ToolbarHeight: this.toolbarHeight(),
             });
 
             // Create / render the toolbar
@@ -132,15 +142,45 @@ var ApplicationRouter = Backbone.Router.extend({
                 }
             };
             $toolbar.toolbar('addButtons', 2, true, [btnHome]);
+            var btnAddFav = {
+                btnType: 0,
+                selectorClass: 'fr-button-addFav',
+                imageClass: 'fr-image-addFav',
+                click: function (e) {
+                    $.getJSON("./api/ReportManager/UpdateFavorite", {
+                        action: "add",
+                        path: path
+                    }).done(function (Data) {
+                        alert("Added");
+                    })
+                    .fail(function () { alert("Failed")});
+                }
+            };
+            $toolbar.toolbar('addButtons', 12, true, [btnAddFav]);
+            var btnDelFav = {
+                btnType: 0,
+                selectorClass: 'fr-button-delFav',
+                imageClass: 'fr-image-delFav',
+                click: function (e) {
+                    $.getJSON("./api/ReportManager/UpdateFavorite", {
+                        action: "delete",
+                        path: path
+                    }).done(function (Data) {
+                        alert("Removed");
+                    })
+                    .fail(function () { alert("Failed") });
+                }
+            };
+            $toolbar.toolbar('addButtons', 12, true, [btnDelFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
 
             // Create / render the menu pane
             $('#leftPane').toolpane({ $reportViewer: $viewer });
+            $('#bottomdiv').pagenav({$reportViewer: $viewer  });
             $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
-
-            // Bind the events to the Application Page
+            $viewer.reportViewer('option', 'PageNav', $('#bottomdiv'));
             me.appPageView.bindEvents();
         },
 

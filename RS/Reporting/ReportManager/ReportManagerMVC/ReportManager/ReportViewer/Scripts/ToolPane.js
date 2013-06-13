@@ -9,66 +9,77 @@
             selector: '.fr-id-paramarea',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('ShowParms')
+                e.data.me._trigger('actionstarted', null, e.data.me.itemParamarea);
             }
         },
         itemNav: {
             selector: '.fr-id-nav',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('ShowNav')
+                e.data.me._trigger('actionstarted', null, e.data.me.itemNav);
             }
         },
         itemReportBack: {
             selector: '.fr-id-reportback',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('Back')
+                e.data.me._trigger('actionstarted', null, e.data.me.itemReportBack);
             }
         },
         itemRefresh: {
             selector: '.fr-id-refresh',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('RefreshReport')
+                e.data.me._trigger('actionstarted', null, e.data.me.itemRefresh);
             }
         },
         itemFirstPage: {
             selector: '.fr-id-firstpage',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', 1)
+                e.data.me._trigger('actionstarted', null, e.data.me.itemFirstPage);
             }
         },
         itemPrev: {
             selector: '.fr-id-prev',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+                e.data.me._trigger('actionstarted', null, e.data.me.itemPrev);
             }
         },
         itemNext: {
             selector: '.fr-id-next',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+                e.data.me._trigger('actionstarted', null, e.data.me.itemNext);
             }
         },
         itemLastPage: {
             selector: '.fr-id-lastpage',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+                e.data.me._trigger('actionstarted', null, e.data.me.itemLastPage);
             }
         },
         itemDocumentMap: {
             selector: '.fr-id-documentmap',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer("ShowDocMap")
+                e.data.me._trigger('actionstarted', null, e.data.me.itemDocumentMap);
             }
         },
         itemFind: {
-            selector: '.fr-id-find',
+            selector: '.fr-item-find',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer("Find")
+                e.data.me._trigger('actionstarted', null, e.data.me.itemFind);
             }
         },
         itemFindNext: {
-            selector: '.fr-id-findnext',
+            selector: '.fr-item-findnext',
             handler: function (e) {
                 e.data.$reportViewer.reportViewer("FindNext")
+                e.data.me._trigger('actionstarted', null, e.data.me.itemFindNext);
             }
         },
         _initCallbacks: function () {
@@ -152,6 +163,7 @@
                 var $itemEl = $(itemInfo.selector, me.$el);
                 $itemEl.removeClass('fr-item-disabled');
                 $itemEl.addClass('cursor-pointer');
+                $itemEl.off('click');  // Always remove any existing event so as to avoid having two accidentally
                 $itemEl.on('click', null, { me: me, $reportViewer: me.options.$reportViewer }, itemInfo.handler);
             }, me);
         },
@@ -166,18 +178,19 @@
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;
-            if (curPage <= 1) {
-                me._disableItems([me.itemPrev, me.itemFirstPage]);
-            }
-            else {
+
+            if (curPage > 1) {
                 me._enableItems([me.itemPrev, me.itemFirstPage]);
             }
+            else {
+                me._disableItems([me.itemPrev, me.itemFirstPage]);
+            }
 
-            if (curPage >= maxPage) {
-                me._disableItems([me.itemNext, me.itemLastPage]);
+            if (curPage < maxPage) {
+                me._enableItems([me.itemNext, me.itemLastPage]);
             }
             else {
-                me._enableItems([me.itemNext, me.itemLastPage]);
+                me._disableItems([me.itemNext, me.itemLastPage]);
             }
         },
 

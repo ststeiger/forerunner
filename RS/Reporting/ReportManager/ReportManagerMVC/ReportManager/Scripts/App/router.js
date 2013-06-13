@@ -84,7 +84,6 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionMainSection(appPageModel, 
                 g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
 
-            this.appPageView.bindMenuButton();
             var $viewer = $('#FRReportViewer1');
             $viewer.reportViewer({
                 ReportServerURL: g_App.configs.reportServerUrl,
@@ -99,6 +98,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#mainSectionHeader').toolbar({ $reportViewer: $viewer });
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
             $('#leftPane').toolpane({ $reportViewer: $viewer });
+
+            this.appPageView.bindEvents();
         },
 
         toolbarHeight : function() {

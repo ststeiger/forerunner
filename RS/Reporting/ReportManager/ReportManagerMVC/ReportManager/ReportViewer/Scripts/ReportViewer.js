@@ -317,7 +317,6 @@
             var me = this;
             if (!me.CreateNav) {
                 me.CreatePageNav();
-                me.$PageNav.pagenav('makeVisible', true);
                 me.CreateNav = true;
             } else {
                 me.$PageNav.pagenav('showNav');
@@ -328,7 +327,6 @@
             me.$PageNav.pagenav({
                 $reportViewer: me.element,
             });
-            me.$PageNav.pagenav('render');
         },
         Sort: function (Direction, ID) {
             //Go the other dirction from current

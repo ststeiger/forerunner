@@ -86,13 +86,14 @@ var g_App = g_App || {};
           }
       },
 
-      menuButtonBound: false,
+      eventsBound: false,
 
-      bindMenuButton: function () {
+      bindEvents: function () {
         var me = this;
-        if (!me.menuButtonBound) {
+        if (!me.eventsBound) {
+            me.eventsBound = true;
             $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleLeftPane(); });
-            me.menuButtonBound = true;
+            $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.toggleLeftPane(); });
         }
       },
 

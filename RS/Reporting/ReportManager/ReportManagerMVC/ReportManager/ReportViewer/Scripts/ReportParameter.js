@@ -100,7 +100,7 @@
             $TD_Lable.append($lable);
 
             //If the control have valid values, then generate a select control
-            var $TD_Control = new $("<TD />");
+            var $TD_Control = new $("<TD style='white-space:nowrap'></TD>");
             var $element = null;
             if (Param.ValidValues != "") {
                 //dropdown with checkbox

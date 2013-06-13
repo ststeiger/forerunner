@@ -204,10 +204,11 @@
         touchNav: function () {
             // Touch Events
             var me = this;
-            $(document).swipe({
+            $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
+                    //alert("hi");
                     if (dir == 'left' || dir == 'up')
                         me.NavToPage((me.CurPage + 1));
                     else

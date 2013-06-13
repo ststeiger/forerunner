@@ -93,8 +93,10 @@ namespace Forerunner.Viewer
             return script;
         }
 
-        public void pingSession(string SessionID)
+        public string pingSession(string SessionID)
         {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
             
             if (SessionID != "" && SessionID != null)
             {
@@ -104,11 +106,29 @@ namespace Forerunner.Viewer
                     rs.ExecutionHeaderValue = execHeader;
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                     rs.GetExecutionInfo();
+                    w.WriteMember("Status");
+                    w.WriteString("Success");
+                   w.WriteEndObject();
+                    return w.ToString();
+           
                 }
-                catch {
-                // Need to return a status that informs tht this session is not valid and to refresh, also set client session to ""
+                catch (Exception e) {
+                    // Need to check the error, just retuen fail on all right now
+                    w.WriteMember("Status");
+                    w.WriteString("Fail");
+                    w.WriteMember("Error");
+                    w.WriteString(e.Message);
+                    w.WriteEndObject();
+                    return w.ToString();
+
                 }
             }
+            w.WriteMember("Status");
+            w.WriteString("Fail");
+            w.WriteMember("Error");
+            w.WriteString("No SessionID");
+            w.WriteEndObject();
+            return w.ToString();
         }
 
         public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)

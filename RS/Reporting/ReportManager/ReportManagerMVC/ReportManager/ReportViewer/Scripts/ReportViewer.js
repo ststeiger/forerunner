@@ -22,12 +22,11 @@
             ReportViewerAPI: null,
             ReportPath: null,
             PageNum: 1,
-            UID: null,
-            NavUID: null,
             PingInterval: 300000,
             ParameterDiv: null,
             ToolbarHeight: 0,
-            SetPageDone:null,
+            SetPageDone: null,
+            PageNav: null,
         },
 
         _destroy: function () {
@@ -48,7 +47,7 @@
             me.Lock = false;
             me.$ReportContainer = new $("<DIV class='report-container'/>");
             me.$ReportAreaContainer - null;
-            me.$LoadingIndicator = new $("<div id='loadIndicator_" + me.options.UID + "' class='loading-indicator'></div>").text("Loading...");
+            me.$LoadingIndicator = new $("<div class='loading-indicator'></div>").text("Loading...");
             me.FloatingHeaders = [];
             me.ParamLoaded = false;
             me.ScrollTop = 0;
@@ -57,13 +56,7 @@
             me.Finding = false;
             me.FindStart = null;
             me.FindKeyword = null;
-            me.element.append(me.$LoadingIndicator);
-
-            me.CreateNav = false;
-            if (me.options.NavUID != null) {
-                me.$PageNav = $("#" + me.options.NavUID);
-                me.$PageNav.css("display", "none");
-            }
+            me.element.append(me.$LoadingIndicator);           
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
 
@@ -204,10 +197,11 @@
         touchNav: function () {
             // Touch Events
             var me = this;
-            $(document).swipe({
+            $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
+                    //alert("hi");
                     if (dir == 'left' || dir == 'up')
                         me.NavToPage((me.CurPage + 1));
                     else
@@ -311,23 +305,17 @@
                 //me.Pages[me.CurPage].$Container = null;
                 //me.Pages[me.CurPage].$Container = action.Container;
                 //me.$ReportAreaContainer.append(me.Pages[me.CurPage].$Container);
+            } else {
+                me._trigger('back');
             }
         },
         ShowNav: function () {
             var me = this;
-            if (!me.CreateNav) {
-                me.CreatePageNav();
-                me.CreateNav = true;
-            } else {
-                me.$PageNav.pagenav('showNav');
+            if (me.options.PageNav != null){
+                me.options.PageNav.pagenav('showNav');
             }
         },
-        CreatePageNav: function () {
-            var me = this;
-            me.$PageNav.pagenav({
-                $reportViewer: me.element,
-            });
-        },
+
         Sort: function (Direction, ID) {
             //Go the other dirction from current
             var me = this;
@@ -618,17 +606,21 @@
                 me.Pages[pageNum].$Container.reportRender("WriteError", me.Pages[pageNum].ReportObj);
             me.Pages[pageNum].IsRendered = true;
         },
-        
-        // Utility functions
+                
         SessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.SessionID != null && me.SessionID != "")
-                $.get(me.options.ReportViewerAPI + "/PingSession/", {
+                $.getJSON(me.options.ReportViewerAPI + "/PingSession/", {
                     ReportServerURL: me.options.ReportServerURL,
                     SessionID: me.SessionID
                 })
-                .done(function (Data) { })
+                .done(function (Data) {
+                    if (Data.Status == "Fail") {
+                        alert("Your session has expired");
+                        me.SessionID = "";
+                    }
+                })
                 .fail(function () { console.log("error"); })
 
         },

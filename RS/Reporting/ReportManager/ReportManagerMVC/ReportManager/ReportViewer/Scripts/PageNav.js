@@ -85,7 +85,7 @@
             $List = me._renderList();
 
             $SliderWrapper.append($List);
-            me.element.css("display", "block");
+            me.element.css("display", "block");            
             me.element.html($Slider);
             if (!isTouch) {
                 var carousel = $Slider.carousel({
@@ -109,8 +109,9 @@
                 });
                 me.$Carousel = carousel;
             }
+            me.element.hide();
             me._initCallbacks();
-            me._setCurrentPage(me.options.$reportViewer.reportViewer('getCurPage'));
+            me._setCurrentPage(me.options.$reportViewer.reportViewer('getCurPage'));            
         },
         _makeVisible: function (flag) {
             var me = this;
@@ -123,6 +124,10 @@
         },
         showNav: function () {
             var me = this;
+            if (!me.isRendered) {
+                me._render();
+                me.isRendered = true;
+            }
             me._makeVisible(!me.element.is(":visible")); 
         },
         _initCallbacks: function () {
@@ -138,7 +143,8 @@
             me.listItems;
             me.$UL
             me.currentPageNum;
-            me._render();
+            me.isRendered = false;
+            
         },
         _isTouchDevice: function () {
             var ua = navigator.userAgent;

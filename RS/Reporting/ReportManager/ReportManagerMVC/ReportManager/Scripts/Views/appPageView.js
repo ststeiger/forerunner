@@ -24,14 +24,6 @@ var g_App = g_App || {};
         _(this).bindAll('render');
       },
       
-      events: {
-          "click #backButton": "onClickBackButton",
-      },
-
-      onClickBackButton: function() {
-        history.back();
-      },
-
       customEvents: function() {
         return {
         'change:mainSection': this.onChangeMainSection,
@@ -47,16 +39,6 @@ var g_App = g_App || {};
         
         var data = this.model.toJSON();
         $(this.el).html(this.template(data));
-
-        // BUGBUG:  Need to find out why this is not showing up in the UI
-        $(this.el).find("#pageTitle").text(this.model.attributes.pageTitle);
-
-        if (this.model.showBackButton) {
-          $(this.el).find("#backButton").show();
-        }
-        else {
-          $(this.el).find("#backButton").hide();
-        }
 
         return this;
       },

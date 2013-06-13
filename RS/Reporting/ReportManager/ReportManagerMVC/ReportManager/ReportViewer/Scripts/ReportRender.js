@@ -106,7 +106,7 @@
                 var $Header = $("<TR/>");
                 var HeadLoc = me._GetMeasurmentsObj(RIContext.CurrObj, HeaderIndex);
                 $Header.attr("Style", "width:" + HeadLoc.Width + "mm;");
-                $Header.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<Div/>"), null, HeadLoc)));
+                $Header.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<TD/>"), null, HeadLoc)));
                 $NewObj.append($Header);
             }
             
@@ -124,7 +124,7 @@
                 var $Footer = $("<TR/>");
                 var FootLoc = me._GetMeasurmentsObj(RIContext.CurrObj, FooterIndex);
                 $Footer.attr("Style", "width:" + FootLoc.Width + "mm;");
-                $Footer.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<Div/>"), null, FootLoc)));
+                $Footer.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<TD/>"), null, FootLoc)));
                 $NewObj.append($Footer);
             }
 

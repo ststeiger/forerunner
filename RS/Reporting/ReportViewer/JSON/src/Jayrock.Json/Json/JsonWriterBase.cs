@@ -39,7 +39,7 @@ namespace Jayrock.Json
     {
         private WriterStateStack _stateStack;
         private WriterState _state;
-        private int _maxDepth = 30;
+        private int _maxDepth = 60;
         private int ShouldWrite = 0;
 
 

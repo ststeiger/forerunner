@@ -165,6 +165,7 @@
                 var $btnEl = $(btnInfo.selector, me.$el);
                 $btnEl.removeClass('fr-button-disabled');
                 $btnEl.addClass('cursor-pointer');
+                $btnEl.off('click');  // Always remove any existing event so as to avoid having two accidentally
                 $btnEl.on('click', null, { me: me, $reportViewer: me.options.$reportViewer }, btnInfo.handler);
             }, me);
         },

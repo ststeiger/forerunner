@@ -172,6 +172,24 @@ section#mainSection {
   display: inline-block;
 }
 
+.fr-image-addFav {
+  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+}
+
+.fr-image-delFav {
+  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+}
+
+.fr-image-fav {
+  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+}
+
+.fr-image-recent {
+  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+}
+
+
+
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 

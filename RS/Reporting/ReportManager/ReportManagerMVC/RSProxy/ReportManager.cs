@@ -50,8 +50,7 @@ namespace Forerunner.Manager
             }
 
             
-            SQLConn.ConnectionString = builder.ConnectionString;
-            SQLConn.Open();
+            SQLConn.ConnectionString = builder.ConnectionString;            
             CheckSchema();
         }      
 
@@ -94,15 +93,16 @@ namespace Forerunner.Manager
 	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,PRIMARY KEY (ItemID,UserID))
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END";
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.ExecuteNonQuery();
+            SQLConn.Close();
 
         }
 
         public string SaveFavorite(string path)
         {
-            string SQL = @"BEGIN
-                            DECLARE @UID uniqueidentifier
+            string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
                             SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
@@ -110,12 +110,14 @@ namespace Forerunner.Manager
                             BEGIN
 	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
                             END";
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
             SQLComm.Parameters.AddWithValue("@Path", path);
             SQLComm.ExecuteNonQuery();
+            SQLConn.Close();
 
             //Need to try catch and return error
             JsonWriter w = new JsonTextWriter();
@@ -135,6 +137,7 @@ namespace Forerunner.Manager
             string SQL = @"DECLARE @UID uniqueidentifier
                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                            SELECT DISTINCT Path,Name FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
@@ -142,17 +145,16 @@ namespace Forerunner.Manager
             SqlDataReader SQLReader;
             SQLReader = SQLComm.ExecuteReader();
 
-            while (SQLReader.HasRows)
+            while (SQLReader.Read())
             {
-                SQLReader.Read();
                 c = new CatalogItem();
                 c.Path = SQLReader.GetString(0);
                 c.Name = SQLReader.GetString(1);
                 c.Type = ItemTypeEnum.Report;
                 list.Add(c);
-
             }
             SQLReader.Close();
+            SQLConn.Close();
             return list.ToArray();
         }
 
@@ -162,15 +164,16 @@ namespace Forerunner.Manager
             CatalogItem c;
 
             string SQL = @"SELECT DISTINCT Path,Name FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser and ReportAction = 6 and TimeStart > DATEADD(dd,-60,GETDATE())";
+
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
 
             SqlDataReader SQLReader;
             SQLReader = SQLComm.ExecuteReader();
 
-            while (SQLReader.HasRows)
+            while (SQLReader.Read())
             {
-                SQLReader.Read();
                 c = new CatalogItem();
                 c.Path = SQLReader.GetString(0);
                 c.Name = SQLReader.GetString(1);
@@ -179,24 +182,26 @@ namespace Forerunner.Manager
                 
             }
             SQLReader.Close();
+            SQLConn.Close();
             return list.ToArray();
         }
 
         public string DeleteFavorite(string path)
         {
-            string SQL = @"BEGIN
-                            DECLARE @UID uniqueidentifier
+            string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
                             SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
                             DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
             SQLComm.Parameters.AddWithValue("@Path", path);
             SQLComm.ExecuteNonQuery();
-            
+            SQLConn.Close();
+
             //Need to try catch and return error
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
@@ -208,8 +213,7 @@ namespace Forerunner.Manager
 
         public void SaveImage(byte[] image, string path)
         {
-            string SQL = @"BEGIN
-                            DECLARE @UID uniqueidentifier
+            string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
                             SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
@@ -217,7 +221,8 @@ namespace Forerunner.Manager
 	                            UPDATE ForerunnerCatalog SET ThumbnailImage = @Image, SaveDate = GETDATE() WHERE UserID = @UID AND ItemID = @IID
                             ELSE
 	                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()
-                            END";
+                            ";
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
@@ -225,12 +230,15 @@ namespace Forerunner.Manager
             SQLComm.Parameters.AddWithValue("@Path", path);
             SQLComm.Parameters.AddWithValue("@Image", image);            
             SQLComm.ExecuteNonQuery();
+            SQLConn.Close();
 
         }
         public byte[] GetDBImage(string path)
         {
             byte[] retval = null;
             string SQL = @"SELECT ThumbnailImage FROM Users u INNER JOIN ForerunnerCatalog f on u.UserID = f.UserID INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (UserName = @UserName OR UserName = @DomainUser) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
+
+            SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             //SQLComm.Prepare();
             SQLComm.Parameters.AddWithValue("@Path", path);
@@ -246,6 +254,7 @@ namespace Forerunner.Manager
                 retval = SQLReader.GetSqlBytes(0).Buffer;
             }
             SQLReader.Close();
+            SQLConn.Close();
             return retval;
         }
 

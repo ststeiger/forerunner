@@ -88,9 +88,13 @@ namespace Forerunner.Manager
         {
 
             //This should move to the install program
-            string SQL = @"if not exists(SELECT * FROM sysobjects WHERE type = 'u' and name = 'ForerunnerCatalog')
+            string SQL = @"IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
+                            END
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
+                            BEGIN	                            	                            
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END";
             SQLConn.Open();

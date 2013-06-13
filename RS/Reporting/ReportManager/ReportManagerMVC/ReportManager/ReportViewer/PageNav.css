@@ -10,6 +10,7 @@ ul.horizontal {
   white-space: nowrap;
   padding: 0;
   margin: 0;
+  border: 0;
   height: 150px;
   vertical-align: top;
   z-index: -100;
@@ -27,12 +28,16 @@ ul.horizontal li{
   height: 150px;
   padding: 0 20px;  
   margin: 0 auto;
+  border: 0;
 }
 
 .navlithumb {
   max-height: 100px;
   width: 150px;
   display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 ul.horizontal li:hover {
@@ -41,4 +46,8 @@ ul.horizontal li:hover {
 
 ul.horizontal li:active {
   background-color:darkslategrey;
+}
+
+.selected {
+  background-color:midnightblue;
 }

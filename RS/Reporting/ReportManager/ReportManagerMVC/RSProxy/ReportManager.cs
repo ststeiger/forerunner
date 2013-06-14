@@ -133,6 +133,35 @@ namespace Forerunner.Manager
 
         }
 
+        public string IsFavorite(string path)
+        {
+            string SQL = @" DECLARE @UID uniqueidentifier
+                            DECLARE @IID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
+            SQLConn.Open();
+            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+
+            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+            SQLComm.Parameters.AddWithValue("@Path", path);
+            SqlDataReader SQLReader;
+            SQLReader = SQLComm.ExecuteReader();
+            bool isFav = SQLReader.HasRows;
+            SQLReader.Close();
+            SQLConn.Close();
+
+            //Need to try catch and return error
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("IsFavorite");
+            w.WriteBoolean(isFav);
+            w.WriteEndObject();
+            return w.ToString();
+
+        }
+
         public CatalogItem[] GetFavorites()
         {
             List<CatalogItem> list = new List<CatalogItem>();
@@ -270,7 +299,7 @@ namespace Forerunner.Manager
             {
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetCredentials(this.WSCredentials);
-                retval = rep.GetThumbnail(path, "", "1", 0);
+                retval = rep.GetThumbnail(path, "", "1", 1.2);
                 SaveImage(retval, path);
             }
             return retval;

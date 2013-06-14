@@ -63,6 +63,10 @@
             return $List;
         },
 
+        hide: function () {
+            var me = this;
+            me.element.hide();
+        },
         _render: function () {
             var me = this;
             me.element.html("");

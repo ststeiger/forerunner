@@ -34,15 +34,12 @@ var ApplicationRouter = Backbone.Router.extend({
             this._transitionToReportManager(null, 'recent');
         },
         _getCatalogItemsUrl: function (path) {
-            if (path != null && path != '/') {
-                return 'ReportManager/GetItems?path=' + path + '&isRecursive=false';
-            } else {
-                return 'ReportManager/GetItems?isRecursive=false';
-            }
+            if (path == null) path = "/";
+            return 'ReportManager/GetItems?view=catalog&path=' + path;
         },
 
         _getViewCatalogItemsUrl: function (view) {
-            return 'ReportManager/GetItems?VDir=' + view;
+            return 'ReportManager/GetItems?view=' + view + '&path=';
         },
 
         _transitionToReportManager: function (path, view) {
@@ -134,56 +131,130 @@ var ApplicationRouter = Backbone.Router.extend({
             var $toolbar = $('#mainSectionHeader');
             $toolbar.toolbar({ $reportViewer: $viewer });
             var btnHome = {
-                btnType: 0,
+                toolType: 0,
                 selectorClass: 'fr-button-home',
                 imageClass: 'fr-image-home',
                 click: function (e) {
                     window.location.href = "#";
                 }
             };
-            $toolbar.toolbar('addButtons', 2, true, [btnHome]);
-            var btnAddFav = {
-                btnType: 0,
-                selectorClass: 'fr-button-addFav',
-                imageClass: 'fr-image-addFav',
-                click: function (e) {
-                    $.getJSON("./api/ReportManager/UpdateFavorite", {
-                        action: "add",
-                        path: path
-                    }).done(function (Data) {
-                        alert("Added");
-                    })
-                    .fail(function () { alert("Failed")});
-                }
-            };
-            $toolbar.toolbar('addButtons', 12, true, [btnAddFav]);
-            var btnDelFav = {
-                btnType: 0,
-                selectorClass: 'fr-button-delFav',
+            $toolbar.toolbar('addTools', 2, true, [btnHome]);
+
+            var btnFav = {
+                toolType: 0,
+                selectorClass: 'fr-button-Fav',
                 imageClass: 'fr-image-delFav',
                 click: function (e) {
-                    $.getJSON("./api/ReportManager/UpdateFavorite", {
-                        action: "delete",
+                    var action;
+                    var $img = $(e.target);
+                    if (!$img.hasClass('fr-tool-icon'))
+                        $img = $img.find('.fr-tool-icon');
+
+                    if ($img.hasClass('fr-image-delFav'))
+                        action = "delete";
+                    else
+                        action = "add";
+                    $.getJSON("./api/ReportManager/UpdateView", {
+                        view: "favorites",
+                        action: action,
                         path: path
                     }).done(function (Data) {
-                        alert("Removed");
-                    })
+                        if (action == "add") {
+                            $img.addClass('fr-image-delFav');
+                            $img.removeClass('fr-image-addFav');
+                        }
+                        else {
+                            $img.removeClass('fr-image-delFav');
+                            $img.addClass('fr-image-addFav');
+                        }
+                     })
                     .fail(function () { alert("Failed") });
                 }
             };
-            $toolbar.toolbar('addButtons', 12, true, [btnDelFav]);
+            $toolbar.toolbar('addTools', 12, true, [btnFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
 
             // Create / render the menu pane
-            $('#leftPane').toolpane({ $reportViewer: $viewer });
+            var $toolPane = $('#leftPane').toolpane({ $reportViewer: $viewer });
+            var itemHome = {
+                toolType: 4,
+                selectorClass: 'fr-id-home',
+                imageClass: 'fr-image-home',
+                text: 'home',
+                click: function (e) {
+                    window.location.href = "#";
+                }
+            };
+            $toolPane.toolpane('addTools', 6, true, [itemHome]);
+
+            var itemFav = {
+                toolType: 4,
+                selectorClass: 'fr-button-Fav',
+                imageClass: 'fr-image-delFav',
+                text: 'Favorites',
+                click: function (e) {
+                    var action;
+                    var $img = $(e.target);
+                    if (!$img.hasClass('fr-tool-icon'))
+                        $img = $img.find('.fr-tool-icon');
+
+                    if ($img.hasClass('fr-image-delFav'))
+                        action = "delete";
+                    else
+                        action = "add";
+                    $.getJSON("./api/ReportManager/UpdateView", {
+                        view: "favorites",
+                        action: action,
+                        path: path
+                    }).done(function (Data) {                       
+
+                        if (action == "add") {
+                            $img.addClass('fr-image-delFav');
+                            $img.removeClass('fr-image-addFav');
+                        }
+                        else {
+                            $img.removeClass('fr-image-delFav');
+                            $img.addClass('fr-image-addFav');
+                        }
+                    })
+                    .fail(function () { alert("Failed") });
+                }
+            };
+            $toolPane.toolpane('addTools', 10, true, [itemFav]);
+
             $('#bottomdiv').pagenav({$reportViewer: $viewer  });
             $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
             $viewer.reportViewer('option', 'PageNav', $('#bottomdiv'));
+            me.setFavoriteState(path, $toolbar);
             me.appPageView.bindEvents();
         },
 
+        setFavoriteState: function (path, toolbar) {
+            var me = this;
+            $.ajax({
+                url: './api/ReportManager/isFavorite?path=' + path,
+                dataType: 'json',
+                async: true,                
+                success: function (data) {
+                    $tb = $(toolbar).find('.fr-button-Fav').find("div");
+                    if (data.IsFavorite) {
+                        $tb.addClass('fr-image-delFav');
+                        $tb.removeClass('fr-image-addFav');
+                    }
+                    else {
+                        $tb.removeClass('fr-image-delFav');
+                        $tb.addClass('fr-image-addFav');
+                    }
+                },
+                fail: function () {
+                    toolbar.find('.fr-button-Fav').hide();
+                }
+            });
+           
+        },
+       
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();
         },

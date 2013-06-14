@@ -142,10 +142,16 @@
   <ItemGroup>
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
+    <Content Include="Images\ReportManager\clock_icon.png" />
+    <Content Include="ReportViewer\Images\Toolbar\page_layout_icon.png" />
+    <Content Include="Images\ReportManager\sq_minus_icon.png" />
+    <Content Include="Images\ReportManager\sq_plus_icon.png" />
+    <Content Include="Images\ReportManager\star_fav_icon.png" />
     <Content Include="ReportViewer\PageNav.css" />
     <Content Include="ReportViewer\Parameter.css" />
     <Content Include="ReportViewer\Scripts\PageNav.js" />
     <Content Include="ReportViewer\Scripts\jquery-1.9.1.js" />
+    <Content Include="ReportViewer\Scripts\Toolbase.js" />
     <Content Include="ReportViewer\ToolPane.css" />
     <Content Include="ReportViewer\Scripts\forerunner.js" />
     <Content Include="ReportViewer\Scripts\jquery-ui.js" />

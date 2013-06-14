@@ -4,8 +4,7 @@
     padding: 0px;
     width: 100%;
 }
-
-.fr-button-container {
+.fr-tool-container {
   width: 36px;
   height: 36px;
   border-width:0px;
@@ -16,45 +15,46 @@
   text-align:center;
   line-height:36px;
   color: white;
-  background-color:transparent;
 }
-
-.fr-button-container:hover {
-  width: 36px;
-  height: 36px;
-  border-width:0px;
-  vertical-align: top;
-  border-radius: 2px;
-  margin:1px;
-  display:inline-block;
-  text-align:center;
-  line-height:36px;
-  color: white;
-  background-color:darkgrey;
-}
-
-.fr-button-container:active {
-  width: 36px;
-  height: 36px;
-  border-width:0px;
-  vertical-align: top;
-  border-radius: 2px;
-  margin:1px;
-  display:inline-block;
-  text-align:center;
-  line-height:36px;
-  color: white;
-  background-color:darkslategrey;
-}
-
-.fr-buttonicon {
+.fr-toolbar .fr-tool-icon {
   width:24px;
   height:24px;
   margin: 5px;
 }
-
-.fr-button-disabled {
+.fr-tool-state {
+    background-color: transparent;
+}
+.fr-tool-state:hover {
+  background-color:darkgrey;
+}
+.fr-tool-state:active {
+  background-color:darkslategrey;
+}
+.fr-tool-disabled {
   opacity:.3;
+}
+.fr-textbox-reportpage {
+  background-color: white;
+  min-width:10mm;
+  max-width:15mm;
+  text-align:right;
+  vertical-align: top;
+}
+.fr-textbox-keyword
+{
+    background-color: white;
+    min-width: 10mm;
+    max-width: 20mm;
+}
+.fr-button-find, .fr-button-findnext
+{
+    color: white;
+}
+.fr-span-sparator
+{
+  color:white;
+  line-height:36px;
+  text-align:center;
 }
 
 .fr-image-menu {
@@ -105,30 +105,6 @@
 .fr-image-documentmap
 {
     background-image:url('../reportviewer/Images/Toolbar/list_bullets_icon.png');
-}
-
-.fr-textbox-reportpage {
-  background-color: white;
-  min-width:10mm;
-  max-width:15mm;
-  text-align:right;
-  vertical-align: top;
-}
-.fr-textbox-keyword
-{
-    background-color: white;
-    min-width: 10mm;
-    max-width: 20mm;
-}
-.fr-button-find, .fr-button-findnext
-{
-    color: white;
-}
-.fr-span-sparator
-{
-  color:white;
-  line-height:36px;
-  text-align:center;
 }
 
 /* Smartphones (landscape) ----------- */
@@ -185,10 +161,10 @@
 
 /* Large screens ----------- */
 @media only screen and (min-width : 1824px) {
-.fr-button-menu {
+/*/.fr-button-menu {
     display: none;
 }
-
+*/
 }  /* @media */
 
 /* iPhone 4 ----------- */

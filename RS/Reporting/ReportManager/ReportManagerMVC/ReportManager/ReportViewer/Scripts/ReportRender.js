@@ -104,9 +104,11 @@
             //Page Header
             if (RIContext.CurrObj.PageHeader != null) {
                 var $Header = $("<TR/>");
+                var $DTD = $("<TD/>");
+                $Header.append($HTD);
                 var HeadLoc = me._GetMeasurmentsObj(RIContext.CurrObj, HeaderIndex);
                 $Header.attr("Style", "width:" + HeadLoc.Width + "mm;");
-                $Header.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<TD/>"), null, HeadLoc)));
+                $DTD.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<DIV/>"), null, HeadLoc)));
                 $NewObj.append($Header);
             }
             
@@ -122,9 +124,11 @@
             //Page Footer
             if (RIContext.CurrObj.PageFooter != null) {
                 var $Footer = $("<TR/>");
+                var $FTD = $("<TD/>");
+                $Footer.append($FTD);
                 var FootLoc = me._GetMeasurmentsObj(RIContext.CurrObj, FooterIndex);
                 $Footer.attr("Style", "width:" + FootLoc.Width + "mm;");
-                $Footer.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<TD/>"), null, FootLoc)));
+                $FTD.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<DIV/>"), "", FootLoc)));
                 $NewObj.append($Footer);
             }
 
@@ -212,11 +216,12 @@
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom =  Measurements[i].Top + Measurements[i].Height;
                     var right = Measurements[i].Left + Measurements[i].Width;
-                    if ((Obj.Top > bottom) && (
-                            ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
-                            ((Obj.Left + Obj.Wifth > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
-                            ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))                    
-                        )) 
+                    if ((Obj.Top > bottom) //&& (
+                        //    ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
+                       //     ((Obj.Left + Obj.Width > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
+                       //     ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))                    
+                       // )
+                        ) 
             
                     {
                         if (curRI.IndexAbove ==null){
@@ -801,10 +806,6 @@
                                     visibility: "hidden"
                                 });
 
-            //Image size cannot change so do not load.
-            //$copied_elem.find('img').removeAttr('src');
-            //$copied_elem.find('img').removeAttr('onload');
-            //$copied_elem.find('img').removeAttr('alt');
             $copied_elem.find('img').remove();
 
             $("body").append($copied_elem);

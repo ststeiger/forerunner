@@ -166,6 +166,9 @@ section#mainSection {
 
 .fr-buttonicon {
   display: inline-block;
+  width:24px;
+  height:24px;
+  margin:5px;
 }
 
 .fr-textbox {
@@ -173,19 +176,19 @@ section#mainSection {
 }
 
 .fr-image-addFav {
-  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+  background-image:url('../Images/ReportManager/sq_plus_icon.png');
 }
 
 .fr-image-delFav {
-  background-image:url('../reportviewer/Images/Toolbar/align_just_icon.png');
+  background-image:url('../Images/ReportManager/sq_minus_icon.png');
 }
 
 .fr-image-fav {
-  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+  background-image:url('../Images/ReportManager/star_fav_icon.png');
 }
 
 .fr-image-recent {
-  background-image:url('../reportviewer/Images/Toolbar/burst_icon.png');
+  background-image:url('../Images/ReportManager/clock_icon.png');
 }
 
 

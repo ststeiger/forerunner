@@ -146,7 +146,11 @@ var ApplicationRouter = Backbone.Router.extend({
                 imageClass: 'fr-image-delFav',
                 click: function (e) {
                     var action;
-                    if ($(e.target).hasClass('fr-image-delFav'))
+                    var $img = $(e.target);
+                    if (!$img.hasClass('fr-tool-icon'))
+                        $img = $img.find('.fr-tool-icon');
+
+                    if ($img.hasClass('fr-image-delFav'))
                         action = "delete";
                     else
                         action = "add";
@@ -156,12 +160,12 @@ var ApplicationRouter = Backbone.Router.extend({
                         path: path
                     }).done(function (Data) {
                         if (action == "add") {
-                            $(e.target).addClass('fr-image-delFav');
-                            $(e.target).removeClass('fr-image-addFav');
+                            $img.addClass('fr-image-delFav');
+                            $img.removeClass('fr-image-addFav');
                         }
                         else {
-                            $(e.target).removeClass('fr-image-delFav');
-                            $(e.target).addClass('fr-image-addFav');
+                            $img.removeClass('fr-image-delFav');
+                            $img.addClass('fr-image-addFav');
                         }
                      })
                     .fail(function () { alert("Failed") });
@@ -192,7 +196,11 @@ var ApplicationRouter = Backbone.Router.extend({
                 text: 'Favorites',
                 click: function (e) {
                     var action;
-                    if ($(e.target).hasClass('fr-image-delFav'))
+                    var $img = $(e.target);
+                    if (!$img.hasClass('fr-tool-icon'))
+                        $img = $img.find('.fr-tool-icon');
+
+                    if ($img.hasClass('fr-image-delFav'))
                         action = "delete";
                     else
                         action = "add";
@@ -200,14 +208,15 @@ var ApplicationRouter = Backbone.Router.extend({
                         view: "favorites",
                         action: action,
                         path: path
-                    }).done(function (Data) {
+                    }).done(function (Data) {                       
+
                         if (action == "add") {
-                            $(e.target).addClass('fr-image-delFav');
-                            $(e.target).removeClass('fr-image-addFav');
+                            $img.addClass('fr-image-delFav');
+                            $img.removeClass('fr-image-addFav');
                         }
                         else {
-                            $(e.target).removeClass('fr-image-delFav');
-                            $(e.target).addClass('fr-image-addFav');
+                            $img.removeClass('fr-image-delFav');
+                            $img.addClass('fr-image-addFav');
                         }
                     })
                     .fail(function () { alert("Failed") });
@@ -227,7 +236,7 @@ var ApplicationRouter = Backbone.Router.extend({
             $.ajax({
                 url: './api/ReportManager/isFavorite?path=' + path,
                 dataType: 'json',
-                async: false,                
+                async: true,                
                 success: function (data) {
                     $tb = $(toolbar).find('.fr-button-Fav').find("div");
                     if (data.IsFavorite) {

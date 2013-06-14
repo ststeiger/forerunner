@@ -388,13 +388,15 @@
                 me.SessionID = Data.SessionID;
                 me.Pages = new Object();
 
+                if (me.options.PageNav != null)
+                    me.options.PageNav.pagenav('hide');
                 if (Data.ParametersRequired) {
                     me.$ReportAreaContainer.find(".Page").detach();
                     me.SetScrollLocation(0, 0);
                     me.ShowParameters(1, Data.Parameters);
                 }
                 else {
-                    me.SetScrollLocation(0, 0);
+                    me.SetScrollLocation(0, 0);                   
                     me.LoadPage(1, null, false, null);
                 }
 

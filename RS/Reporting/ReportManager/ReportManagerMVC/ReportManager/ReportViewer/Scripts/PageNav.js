@@ -63,6 +63,9 @@
             return $List;
         },
 
+        hide: function () {
+            me.element.hide();
+        },
         _render: function () {
             var me = this;
             me.element.html("");

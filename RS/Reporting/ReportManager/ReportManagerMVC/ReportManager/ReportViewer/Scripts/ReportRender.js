@@ -216,11 +216,12 @@
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom =  Measurements[i].Top + Measurements[i].Height;
                     var right = Measurements[i].Left + Measurements[i].Width;
-                    if ((Obj.Top > bottom) && (
-                            ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
-                            ((Obj.Left + Obj.Wifth > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
-                            ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))                    
-                        )) 
+                    if ((Obj.Top > bottom) //&& (
+                        //    ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
+                       //     ((Obj.Left + Obj.Width > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
+                       //     ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))                    
+                       // )
+                        ) 
             
                     {
                         if (curRI.IndexAbove ==null){
@@ -805,10 +806,6 @@
                                     visibility: "hidden"
                                 });
 
-            //Image size cannot change so do not load.
-            //$copied_elem.find('img').removeAttr('src');
-            //$copied_elem.find('img').removeAttr('onload');
-            //$copied_elem.find('img').removeAttr('alt');
             $copied_elem.find('img').remove();
 
             $("body").append($copied_elem);

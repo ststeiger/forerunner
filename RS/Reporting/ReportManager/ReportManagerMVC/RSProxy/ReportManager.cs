@@ -299,7 +299,7 @@ namespace Forerunner.Manager
             {
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetCredentials(this.WSCredentials);
-                retval = rep.GetThumbnail(path, "", "1", 0);
+                retval = rep.GetThumbnail(path, "", "1", 1.2);
                 SaveImage(retval, path);
             }
             return retval;

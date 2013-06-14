@@ -51,7 +51,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 0)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
             try

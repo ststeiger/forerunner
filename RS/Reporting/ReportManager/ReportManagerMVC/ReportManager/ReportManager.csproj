@@ -150,6 +150,7 @@
     <Content Include="ReportViewer\PageNav.css" />
     <Content Include="ReportViewer\Scripts\PageNav.js" />
     <Content Include="ReportViewer\Scripts\jquery-1.9.1.js" />
+    <Content Include="ReportViewer\Scripts\Toolbase.js" />
     <Content Include="ReportViewer\ToolPane.css" />
     <Content Include="ReportViewer\Scripts\forerunner.js" />
     <Content Include="ReportViewer\Scripts\jquery-ui.js" />

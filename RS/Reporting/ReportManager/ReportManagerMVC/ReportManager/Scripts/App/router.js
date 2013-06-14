@@ -131,18 +131,17 @@ var ApplicationRouter = Backbone.Router.extend({
             var $toolbar = $('#mainSectionHeader');
             $toolbar.toolbar({ $reportViewer: $viewer });
             var btnHome = {
-                btnType: 0,
+                toolType: 0,
                 selectorClass: 'fr-button-home',
                 imageClass: 'fr-image-home',
                 click: function (e) {
                     window.location.href = "#";
                 }
             };
-            $toolbar.toolbar('addButtons', 2, true, [btnHome]);
-
+            $toolbar.toolbar('addTools', 2, true, [btnHome]);
 
             var btnFav = {
-                btnType: 0,
+                toolType: 0,
                 selectorClass: 'fr-button-Fav',
                 imageClass: 'fr-image-delFav',
                 click: function (e) {
@@ -168,13 +167,54 @@ var ApplicationRouter = Backbone.Router.extend({
                     .fail(function () { alert("Failed") });
                 }
             };
-            $toolbar.toolbar('addButtons', 12, true, [btnFav]);
+            $toolbar.toolbar('addTools', 12, true, [btnFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
 
             // Create / render the menu pane
-            $('#leftPane').toolpane({ $reportViewer: $viewer });
+            var $toolPane = $('#leftPane').toolpane({ $reportViewer: $viewer });
+            var itemHome = {
+                toolType: 4,
+                selectorClass: 'fr-id-home',
+                imageClass: 'fr-image-home',
+                text: 'home',
+                click: function (e) {
+                    window.location.href = "#";
+                }
+            };
+            $toolPane.toolpane('addTools', 6, true, [itemHome]);
+
+            var itemFav = {
+                toolType: 4,
+                selectorClass: 'fr-button-Fav',
+                imageClass: 'fr-image-delFav',
+                text: 'Favorites',
+                click: function (e) {
+                    var action;
+                    if ($(e.target).hasClass('fr-image-delFav'))
+                        action = "delete";
+                    else
+                        action = "add";
+                    $.getJSON("./api/ReportManager/UpdateView", {
+                        view: "favorites",
+                        action: action,
+                        path: path
+                    }).done(function (Data) {
+                        if (action == "add") {
+                            $(e.target).addClass('fr-image-delFav');
+                            $(e.target).removeClass('fr-image-addFav');
+                        }
+                        else {
+                            $(e.target).removeClass('fr-image-delFav');
+                            $(e.target).addClass('fr-image-addFav');
+                        }
+                    })
+                    .fail(function () { alert("Failed") });
+                }
+            };
+            $toolPane.toolpane('addTools', 10, true, [itemFav]);
+
             $('#bottomdiv').pagenav({$reportViewer: $viewer  });
             $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
             $viewer.reportViewer('option', 'PageNav', $('#bottomdiv'));

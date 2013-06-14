@@ -166,6 +166,8 @@ section#mainSection {
 
 .fr-buttonicon {
   display: inline-block;
+  width:24px;
+  height:24px;
 }
 
 .fr-textbox {

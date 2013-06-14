@@ -143,6 +143,7 @@
     <Content Include="Images\ReportManager\Folder-icon.png" />
     <Content Include="Images\ReportManager\Report-icon.png" />
     <Content Include="ReportViewer\PageNav.css" />
+    <Content Include="ReportViewer\Parameter.css" />
     <Content Include="ReportViewer\Scripts\PageNav.js" />
     <Content Include="ReportViewer\Scripts\jquery-1.9.1.js" />
     <Content Include="ReportViewer\ToolPane.css" />

@@ -27,37 +27,20 @@ namespace ReportManager.Controllers
         private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
 
+       
         // GET api/ReportMananger/GetItems
         [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(bool isRecursive = false)
-        {
-            Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
-            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, "", ReportServerDBPWD);
-            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
-            return rs.ListChildren("/", isRecursive); 
-        }
-
-        // GET api/ReportMananger/GetItems
-        [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string path, bool isRecursive = false)
-        {
-            Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
-            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity); 
-            return rs.ListChildren(path, isRecursive);
-        }
-
-        // GET api/ReportMananger/GetItems
-        [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string VDir)
+        public IEnumerable<CatalogItem> GetItems(string view, string path )
         {
             Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
             Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
-            if (VDir == "favorites")
+            if (view == "favorites")
                 return rs.GetFavorites();
-            else if (VDir == "recent")
+            else if (view == "recent")
                 return rs.GetRecentReports();
+            else if (view == "catalog")
+                return rs.ListChildren(path, false);
             else
                 return null;
         }
@@ -86,7 +69,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage UpdateFavorite(string action, string path)
+        public HttpResponseMessage UpdateView(string view, string action, string path)
         {
             byte[] result = null;
             HttpResponseMessage resp = this.Request.CreateResponse();
@@ -94,10 +77,13 @@ namespace ReportManager.Controllers
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
             Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
 
-            if (action == "delete")
-                result = Encoding.UTF8.GetBytes(rs.DeleteFavorite(path));
-            else if (action == "add")
-                result = Encoding.UTF8.GetBytes(rs.SaveFavorite(path));
+            if (view == "favorites")
+            {
+                if (action == "delete")
+                    result = Encoding.UTF8.GetBytes(rs.DeleteFavorite(path));
+                else if (action == "add")
+                    result = Encoding.UTF8.GetBytes(rs.SaveFavorite(path));                
+            }
 
             if (result != null)
             {
@@ -106,6 +92,30 @@ namespace ReportManager.Controllers
             }
             else
                 resp.StatusCode = HttpStatusCode.NotFound;
+            
+
+            return resp;
+        }
+
+        [HttpGet]
+        public HttpResponseMessage isFavorite(string path)
+        {
+            byte[] result = null;
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
+            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+            Forerunner.Manager.ReportManager rs = new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
+
+            result = Encoding.UTF8.GetBytes(rs.IsFavorite(path));
+    
+            if (result != null)
+            {
+                resp.Content = new ByteArrayContent(result);
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
+            }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
+
 
             return resp;
         }

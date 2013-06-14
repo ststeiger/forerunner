@@ -161,11 +161,10 @@
 
 /* Large screens ----------- */
 @media only screen and (min-width : 1824px) {
-/*
-.fr-button-menu {
+/*/.fr-button-menu {
     display: none;
 }
-
+*/
 }  /* @media */
 
 /* iPhone 4 ----------- */

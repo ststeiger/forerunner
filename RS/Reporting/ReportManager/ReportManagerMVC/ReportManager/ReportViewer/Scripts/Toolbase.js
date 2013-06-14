@@ -88,14 +88,9 @@
         },
         _getToolHtml: function (toolInfo) {
             if (toolInfo.toolType == 0) {
-                var text = '';
-                if (toolInfo.text) {
-                    text = toolInfo.text;
-                }
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-tool-icon " + toolInfo.imageClass + "'/>" +
-                            text +
-                       "</div>";
+                            "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
+                        "</div>";
             }
             else if (toolInfo.toolType == 1) {
                 var type = "";
@@ -108,7 +103,17 @@
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + toolInfo.text + "</div>";
             }
             else if (toolInfo.toolType == 3) {
-                return "<span class='" + toolInfo.selectorClass + "'> " + toolInfo.text + "</span>";
+                    return "<span class='" + toolInfo.selectorClass + "'> " + toolInfo.text + "</span>";
+                }
+            else if (toolInfo.toolType == 4) {
+                var text = '';
+                if (toolInfo.text) {
+                    text = toolInfo.text;
+                }
+                return "<div class='fr-item-container fr-tool-state " + toolInfo.selectorClass + "'>" +
+                            "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
+                            text +
+                        "</div>";
             }
         },
         _destroy: function () {

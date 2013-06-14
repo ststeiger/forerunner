@@ -7,7 +7,7 @@
         },
         // Button Info
         itemParamarea: {
-            toolType: 0,
+            toolType: 4,
             selectorClass: 'fr-id-paramarea',
             imageClass: 'fr-image-paramarea',
             text: 'Parameters',
@@ -17,7 +17,7 @@
             }
         },
         itemNav: {
-            toolType: 0,
+            toolType: 4,
             selectorClass: 'fr-id-nav',
             imageClass: 'fr-image-nav',
             text: 'Navigation',
@@ -27,7 +27,7 @@
             }
         },
         itemReportBack: {
-            toolType: 0,
+            toolType: 4,
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
             text: 'back',
@@ -37,7 +37,7 @@
             }
         },
         itemRefresh: {
-            toolType: 0,
+            toolType: 4,
             selectorClass: 'fr-id-refresh',
             imageClass: 'fr-image-refresh',
             text: 'Refresh',
@@ -93,7 +93,7 @@
             }
         },
         itemDocumentMap: {
-            toolType: 0,
+            toolType: 4,
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
             text: 'document map',

@@ -18,6 +18,14 @@
   width:24px;
   height:24px;
   margin: 5px;
+  display:inline-block;
+}
+.fr-item-container {
+  border-width:0px;
+  vertical-align: top;
+  line-height:36px;
+  color: white;
+  display:block;
 }
 .fr-item-spacer {
     height: 18px;

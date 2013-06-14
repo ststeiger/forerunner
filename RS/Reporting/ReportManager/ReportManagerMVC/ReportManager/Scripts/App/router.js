@@ -131,7 +131,7 @@ var ApplicationRouter = Backbone.Router.extend({
             var $toolbar = $('#mainSectionHeader');
             $toolbar.toolbar({ $reportViewer: $viewer });
             var btnHome = {
-                btnType: 0,
+                toolType: 0,
                 selectorClass: 'fr-button-home',
                 imageClass: 'fr-image-home',
                 click: function (e) {
@@ -140,10 +140,8 @@ var ApplicationRouter = Backbone.Router.extend({
             };
             $toolbar.toolbar('addTools', 2, true, [btnHome]);
 
-
             var btnFav = {
-            $toolbar.toolbar('addTools', 12, true, [btnAddFav]);
-                btnType: 0,
+                toolType: 0,
                 selectorClass: 'fr-button-Fav',
                 imageClass: 'fr-image-delFav',
                 click: function (e) {

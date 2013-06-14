@@ -141,7 +141,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     window.location.href = "#";
                 }
             };
-            $toolbar.toolbar('addButtons', 2, true, [btnHome]);
+            $toolbar.toolbar('addTools', 2, true, [btnHome]);
             var btnAddFav = {
                 btnType: 0,
                 selectorClass: 'fr-button-addFav',
@@ -156,7 +156,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     .fail(function () { alert("Failed")});
                 }
             };
-            $toolbar.toolbar('addButtons', 12, true, [btnAddFav]);
+            $toolbar.toolbar('addTools', 12, true, [btnAddFav]);
             var btnDelFav = {
                 btnType: 0,
                 selectorClass: 'fr-button-delFav',
@@ -171,7 +171,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     .fail(function () { alert("Failed") });
                 }
             };
-            $toolbar.toolbar('addButtons', 12, true, [btnDelFav]);
+            $toolbar.toolbar('addTools', 12, true, [btnDelFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());

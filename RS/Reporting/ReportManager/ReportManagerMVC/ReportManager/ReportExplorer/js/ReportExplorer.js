@@ -29,13 +29,13 @@
             $img.addClass('catalogitem');
             $img.addClass('center');
             if (catalogItem.Type == '1') {
-                imageSrc = '../ReportExplorer/images/folder-icon.png'
+                imageSrc = './ReportExplorer/images/folder-icon.png'
                 targetUrl = '#explore/' + encodedPath;
             } else {
                 $img.addClass('reportitem');
                 targetUrl = '#browse/' + encodedPath;
                 if (hasParameters) {
-                    imageSrc = '../ReportExplorer/images/Report-icon.png'
+                    imageSrc = './ReportExplorer/images/Report-icon.png'
                 } else {
                     imageSrc = reportThumbnailPath;
                 }

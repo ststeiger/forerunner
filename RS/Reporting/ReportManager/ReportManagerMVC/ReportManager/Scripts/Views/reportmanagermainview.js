@@ -16,44 +16,18 @@ var g_App = g_App || {};
   // Views
   g_App.ReportManagerMainView = Backbone.View.extend({
     initialize: function (options) {
-        this.model = options.model;
+        this.options = options;
         _(this).bindAll('render');
     },
     render: function () {
-        var data = this.model.toJSON();
-        $(this.el).html(this.template(data));
-
-        var catalogitems = this.model.models;
-        var len = catalogitems.length;
-
-        for (var i = 0; i < len; i++) {
-            $('.sky-carousel-container', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
-            $('.rm-list-container', this.el).append(new g_App.CatalogItemView({ model: catalogitems[i] }).render().el.children[0]);
-        }
+        $(this.el).reportexplorer({
+            path: this.options.path, catalogItems: this.options.model.toJSON(), url : this.options.model.models[0].url()
+        });
 
         return this;
     },
     postRender: function () {
-        var carousel = $('#browse-carousel').carousel({
-            itemWidth: 250,
-            itemHeight: 350,
-            distance: 15,
-            selectedItemDistance: 50,
-            selectedItemZoomFactor: 1,
-            unselectedItemZoomFactor: 0.67,
-            unselectedItemAlpha: 0.6,
-            motionStartDistance: 250,
-            topMargin: 80,
-            gradientStartPoint: 0.35,
-            gradientOverlayColor: "#f5f5f5",
-            gradientOverlaySize: 200,
-            reflectionDistance: 1,
-            reflectionAlpha: 0.35,
-            reflectionVisible: true,
-            reflectionSize: 70,
-            selectByClick: true
-        });
-        carousel.select(0, 1);
+        $(this.el).reportexplorer('initCarousel');
     }
   });
   

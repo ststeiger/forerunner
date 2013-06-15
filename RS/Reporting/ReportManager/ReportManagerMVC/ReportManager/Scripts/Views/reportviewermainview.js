@@ -7,13 +7,9 @@ var g_App = g_App || {};
   // Views
   g_App.ReportViewerMainView = Backbone.View.extend({
     initialize: function (options) {
-        this.path = options.path;
-        this.reportServerUrl = options.reportServerUrl;
-        _(this).bindAll('render');
     },
     render: function () {
-        var data = {};
-        $(this.el).html(this.template(data));
+        $(this.el).attr('id', 'FRReportViewer1');
         return this;
     },
   });

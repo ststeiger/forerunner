@@ -187,7 +187,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     window.location.href = "#";
                 }
             };
-            $toolPane.toolpane('addTools', 6, true, [itemHome]);
+            $toolPane.toolpane('addTools', 8, true, [itemHome]);
 
             var itemFav = {
                 toolType: 4,

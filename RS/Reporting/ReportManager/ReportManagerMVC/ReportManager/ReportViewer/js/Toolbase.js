@@ -104,7 +104,7 @@
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType == 3) {
-                return "<div style='display:inline' class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</div>";
+                return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
                 }
             else if (toolInfo.toolType == 4) {
                 var text = '';

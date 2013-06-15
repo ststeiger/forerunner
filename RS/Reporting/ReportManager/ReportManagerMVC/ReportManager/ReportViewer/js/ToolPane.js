@@ -74,6 +74,16 @@
                 }
             }
         },
+        itemPageOf: {
+            toolType: 3,
+            selectorClass: 'fr-pageOf',
+            text: 'of'
+        },
+        itemNumPages: {
+            toolType: 3,
+            selectorClass: 'fr-num-pages',
+            text: ""
+        },
         itemNext: {
             toolType: 0,
             selectorClass: 'fr-id-next',
@@ -143,6 +153,7 @@
                 $("input.fr-item-textbox-reportpage", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
                 me._updateItemStates(data.newPageNum, maxNumPages);
+                me.element.find('.fr-num-pages').html(maxNumPages);
             });
 
             // Hook up the toolbar element events
@@ -158,7 +169,7 @@
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html($("<div class='fr-toolpane' />"));
-            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
+            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemSeparator, me.itemFindNext]);
 
             if (me.options.$reportViewer) {

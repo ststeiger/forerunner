@@ -46,19 +46,23 @@
     min-width: 10mm;
     max-width: 20mm;
 }
-.fr-button-find, .fr-button-findnext,.fr-pageOf,.fr-num-pages
+.fr-button-find, .fr-button-findnext
 {
     color: white;
 }
 
 .fr-pageOf {
     width: 15px;
+    color:white;
+    line-height:36px;
+    text-align:center;
 }
 .fr-num-pages {
   min-width:10mm;
   max-width:15mm;
-  text-align:right;
   padding-left: 4px;
+  color:white;
+  line-height:36px;
 }
 
 .fr-span-sparator

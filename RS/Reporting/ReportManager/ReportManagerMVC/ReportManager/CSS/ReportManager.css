@@ -101,18 +101,6 @@ section#mainSection {
   border-width:0px
 }
 
-.spacer20mm {
-  min-width:20mm;
-}
-
-.spacer10mm {
-  min-width:10mm;
-}
-
-.spacer5mm {
-  min-width:5mm;
-}
-
 .toolbar {    
   background-color: transparent;
   width:100%;
@@ -132,36 +120,6 @@ section#mainSection {
 
 .overflow-hidden {
   overflow: hidden;
-}
-
-.sky-carousel {
-  display: block;
-  min-height: 200px;
-}
-
-.rm-list {
-  display: none;
-  width: device-width;
-  background: -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 ); /* IE6-9 */
-}
-
-.rm-list-container-item {
-  list-style-type: none;
-}
-
-.catalogitem {
-  width: 250px;
-  display: inline;
-}
-
-.reportitem {
-  background-color: white;
 }
 
 .fr-buttonicon {
@@ -191,43 +149,12 @@ section#mainSection {
   background-image:url('../Images/ReportManager/clock_icon.png');
 }
 
-
-
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 
 and (min-width : 400px) 
 and (orientation : landscape) {
 /* Styles */
-.catalogitem {
-  width: 180px;
-}
-
-.sc-content {
-  display:inline;
-}
-
-.sky-carousel {
-  height: 250px;
-  width: 100%;
-}
-
-.rm-list {
-  display: none;
-}
-
-.spacer20mm {
-  min-width:1mm;
-}
-
-.spacer10mm {
-  min-width:1mm;
-}
-
-.spacer5mm {
-  min-width:1mm;
-}
-
 #bottomdiv {
   display: none;
 }
@@ -241,38 +168,6 @@ and (orientation : landscape) {
 @media only screen 
 and (max-width : 320px) 
 and (orientation : portrait) {
-.catalogitem {
-  width: 120px;
-}
-
-.rm-list-container-item {
-  padding-bottom: 50px;
-}
-
-.sc-content {
-  display:inline;
-}
-
-#browse-carousel {
-  display: none;
-}
-
-.rm-list {
-  display: block;
-}
-
-.spacer20mm {
-  min-width:1mm;
-}
-
-.spacer10mm {
-  min-width:1mm;
-}
-
-.spacer5mm {
-  min-width:1mm;
-}
-
 #bottomdiv {
   display: none;
 }
@@ -287,23 +182,6 @@ and (orientation : portrait) {
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : landscape) {
-.catalogitem {
-  width: 250px;
-}
-
-.sc-content {
-  display:inline;
-}
-
-.sky-carousel {
-  display: block;
-  width: 100%;
-  height: 600px;
-}
-
-.rm-list {
-  display: none;
-}
 }
 
 /* iPads (portrait) ----------- */
@@ -311,25 +189,6 @@ and (orientation : landscape) {
 and (min-device-width : 768px) 
 and (max-device-width : 1024px) 
 and (orientation : portrait) {
-.catalogitem {
-  width: 250px;
-}
-
-.rm-list-container-item {
-  padding-bottom: 50px;
-}
-
-.sc-content {
-  display:inline;
-}
-
-#browse-carousel {
-  display: none;
-}
-
-.rm-list {
-  display: block;
-}
 }
 
 /* Desktops and laptops ----------- */
@@ -347,23 +206,7 @@ and (min-width : 1824px) {
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
 /* Styles */
-.center
-{
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-.centertext
-{
-    text-align: center;
-}
 
-.pagethumb
-{
-    width: 120px;
-    max-height: 160px;
-}
-
-}
 

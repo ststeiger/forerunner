@@ -75,8 +75,30 @@
             me.$RMList = $('.rm-list', me.element);
             me._renderList();
         },
+        _initTouch: function () {
+            var me = this;
+            $(me.element).swipe({
+                fallbackToMouseEvents: false,
+                allowPageScroll: "auto",
+                tap: function (event, target) {
+                    $(target).trigger('click');
+                },
+                //longTap: function (event, target) {
+                //    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
+                //        me.ShowNav();
+                //    }
+                //},
+                //doubleTap: function (event, target) {
+                //    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
+                //        me.ShowNav();
+                //    }
+                //},
+                longTapThreshold: 1000,
+            });
+        },
         initCarousel: function () {
             var me = this;
+            me._initTouch();
             var carousel = me.$Carousel.carousel({
                 itemWidth: 250,
                 itemHeight: 350,

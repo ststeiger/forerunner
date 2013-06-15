@@ -104,11 +104,11 @@
             //Page Header
             if (RIContext.CurrObj.PageHeader != null) {
                 var $Header = $("<TR/>");
-                var $DTD = $("<TD/>");
+                var $HTD = $("<TD/>");
                 $Header.append($HTD);
                 var HeadLoc = me._GetMeasurmentsObj(RIContext.CurrObj, HeaderIndex);
                 $Header.attr("Style", "width:" + HeadLoc.Width + "mm;");
-                $DTD.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<DIV/>"), null, HeadLoc)));
+                $HTD.append(me._WriteRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<DIV/>"), null, HeadLoc)));
                 $NewObj.append($Header);
             }
             

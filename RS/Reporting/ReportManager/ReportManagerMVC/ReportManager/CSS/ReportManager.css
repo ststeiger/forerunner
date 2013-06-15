@@ -107,6 +107,18 @@ section#mainSection {
 }
 
 
+.fr-buttonicon {
+  display: inline-block;
+  width:24px;
+  height:24px;
+  margin:5px;
+}
+
+.fr-textbox {
+  display: inline-block;
+}
+
+
 .fr-image-addFav {
   background-image:url('../Images/ReportManager/sq_plus_icon.png');
 }

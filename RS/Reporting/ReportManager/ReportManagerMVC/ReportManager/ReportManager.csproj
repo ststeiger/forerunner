@@ -172,6 +172,7 @@
     <Content Include="Images\ReportManager\sq_plus_icon.png" />
     <Content Include="Images\ReportManager\star_fav_icon.png" />
     <Content Include="ReportViewer\PageNav.css" />
+    <Content Include="ReportViewer\Parameter.css" />
     <Content Include="ReportViewer\Scripts\PageNav.js" />
     <Content Include="ReportViewer\Scripts\jquery-1.9.1.js" />
     <Content Include="ReportViewer\Scripts\Toolbase.js" />

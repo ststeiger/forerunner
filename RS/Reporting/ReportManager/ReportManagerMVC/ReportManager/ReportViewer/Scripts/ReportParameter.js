@@ -5,15 +5,9 @@
         options: {
             ReportViewer: null,
         },      
-        // Constructor
-        _create: function () {
-            this.ReportViewer = this.options.ReportViewer;
-        },
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
-            var $ParameterDiv = new $("<Div />");
-            $ParameterDiv.attr("class", "ParameterContainer");
-            $ParameterDiv.attr("name", Data.SessionID);
+            var $ParameterDiv = new $("<div class='Parameter-Container Parameter-Layout' name='" + Data.SessionID + "'></div>");
 
             var $ParameterContainer = me._GetDefaultHTMLTable();
             $ParameterContainer.attr("class", "Parameter-Panel");
@@ -52,7 +46,7 @@
                     if ($(element).is(":radio"))
                         $(element).parent("div").removeClass("Parameter-Error");
                     else
-                    $(element).removeClass("Parameter-Error");
+                        $(element).removeClass("Parameter-Error");
                 }
             });
             $Col.append($Form);
@@ -64,30 +58,23 @@
             var $ViewReport = new $("<input name='Parameter_ViewReport' type='button' class='ViewReport' value='View Report'/>");
             $ViewReport.on("click", function () {
                 me._CloseAllDropdown();
-                if (me.GetParamsList() != null) {
-                    //if (me.ReportViewer.Pages[PageNum] != null) {
-                    //    me.ReportViewer.Pages[PageNum].$Container.detach();
-                    //    me.ReportViewer.Pages = new Object();
-                    //}
-                    
-                    me.ReportViewer.LoadPage(PageNum, null, false, null, me.GetParamsList());
-                }
+                if (me.GetParamsList() != null) 
+                    me.options.ReportViewer.LoadPage(PageNum, null, false, null, me.GetParamsList());
             });
 
             $ViewReport_TD.append($ViewReport);
             var $SpaceTD = new $("<TD />");
             $SpaceTD.html("&nbsp");
-            $Row.append($SpaceTD);
-            $Row.append($ViewReport_TD);
+            $Row.append($SpaceTD).append($ViewReport_TD);
 
             $ParameterContainer.append($Row);
 
             $ParameterDiv.append($ParameterContainer);
-            if (me.ReportViewer.$ReportAreaContainer == null || me.ReportViewer.$ReportAreaContainer.length == 0)
-                me.ReportViewer.$ReportContainer.append($ParameterDiv);
+            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
+                me.options.ReportViewer.$ReportContainer.append($ParameterDiv);
             else
-                $ParameterDiv.insertBefore(me.ReportViewer.$ReportAreaContainer);
-            me.ReportViewer.RemoveLoadingIndicator();
+                $ParameterDiv.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
+            me.options.ReportViewer.RemoveLoadingIndicator();
         },
         _WriteParameterControl: function(Param, $Parent) {
             var $TD_Lable = new $("<TD />");
@@ -102,196 +89,141 @@
             //If the control have valid values, then generate a select control
             var $TD_Control = new $("<TD style='white-space:nowrap'></TD>");
             var $element = null;
+
             if (Param.ValidValues != "") {
-                //dropdown with checkbox
-                if (Param.MultiValue == "True") {
-                    $element = new $("<Div />");
-                    me._WriteDropDownWithCheckBox(Param, $element);
-                }
-                else {
-                    $element = new $("<select />");
-                    me._WriteDropDownControl(Param, $element);
-                }
+                if (Param.MultiValue == "True")
+                    $element = me._WriteDropDownWithCheckBox(Param);
+                else
+                    $element = me._WriteDropDownControl(Param);
+                
             }
             else {
-                if (Param.Type == "Boolean") {
-                    var radioValues = new Array();
-                    radioValues[0] = "True";
-                    radioValues[1] = "False";
-
-                    $element = new $("<Div />");
-                    $element.attr("IsMultiple", Param.MultiValue);
-                    $element.attr("DataType", Param.Type);
-                    $element.addClass("Parameter-Div");
-                    for (value in radioValues) {
-                        var $radioItem = new $("<input/>");
-                        $radioItem.addClass("Parameter");
-                        $radioItem.addClass("Parameter-Radio");
-                        $radioItem.addClass(Param.Name);
-                
-                        $radioItem.attr("type", "radio");
-                        $radioItem.attr("name", Param.Name);
-                        $radioItem.attr("value", radioValues[value]);
-                        $radioItem.attr("id", Param.Name + "_radio" + "_" + radioValues[value]);
-                        $radioItem.attr("DataType", Param.Type);
-                        me._GetParameterControlProperty(Param, $radioItem);
-
-                        var $lableTrue = new $("<Label/>");
-                        $lableTrue.html(radioValues[value]);
-                        $lableTrue.attr("for", Param.Name + "_radio" + "_" + radioValues[value]);
-
-                        $element.append($radioItem);
-                        $element.append($lableTrue);
-                    }
-                }
-                else {
-                    $element = new $("<input/>");
-                    $element.attr("class", "Parameter");
-                    $element.attr("IsMultiple", Param.MultiValue);
-                    $element.attr("DataType", Param.Type);
-                    $element.attr("type", "text");
-                    $element.attr("size", "30");
-                    $element.attr("name", Name);
-
-                    me._GetParameterControlProperty(Param, $element);
-
-                    switch (Param.Type) {
-                        case "DateTime":
-                            //Format: ISO8601
-                            $element.datepicker({
-                                dateFormat: 'yy-mm-dd',
-                                onClose: function () { $element.valid(); },
-                            });
-                            $element.attr("dateISO", "true");
-                            break;
-                        case "Integer":
-                        case "Float":
-                            $element.attr("number", "true");
-                            break;
-                        case "String":
-                            break;
-                    }
-                }
+                if (Param.Type == "Boolean")
+                    $element = me._WriteCheckbox(Param);
+                else
+                    $element = me._WriteTextArea(Param);
             }
-            $TD_Control.append($element);
-            $TD_Control.append(me._AddNullableCheckBox(Param, $element));
-            var $TD_Status = new $("<TD/>");
-            $TD_Status.addClass("Status");
-            $Parent.append($TD_Lable);
-            $Parent.append($TD_Control);
-            $Parent.append($TD_Status);
+
+            $TD_Control.append($element).append(me._AddNullableCheckBox(Param, $element));
+            var $TD_Status = new $("<TD class='Status'/>");
+            $Parent.append($TD_Lable).append($TD_Control).append($TD_Status);
 
             return $Parent;
         },
-        _GetParameterControlProperty: function(Param, $Control) {
+        _GetParameterControlProperty: function (Param, $Control) {
             var me = this;
-            //$Control.attr("name", Param.Name);
             $Control.attr("AllowBlank", Param.AllowBlank);
             if (Param.Nullable != "True") {
-                $Control.attr("required", "true");
-                $Control.watermark("Required");
+                $Control.attr("required", "true").watermark("Required");
             }
             $Control.attr("ErrorMessage", Param.ErrorMessage);
         },
-        _AddNullableCheckBox: function(Param, $Control) {
+        _AddNullableCheckBox: function (Param, $Control) {
             var me = this;
             if (Param.Nullable == "True") {
                 var $NullableSpan = new $("<Span />");
 
-                var $Checkbox = new $("<Input />");
-                $Checkbox.attr("type", "checkbox");
-                $Checkbox.attr("class", "Parameter-Checkbox");
-                $Checkbox.attr("name", Param.Name);
+                var $Checkbox = new $("<Input type='checkbox' class='Parameter-Checkbox' name='" + Param.Name + "' />");
 
                 $Checkbox.on("click", function () {
                     if ($Checkbox.attr("checked") == "checked") {
                         $Checkbox.removeAttr("checked");
-                        if (Param.Type == "Boolean") {
+                        if (Param.Type == "Boolean")
                             $(".Parameter-Radio." + Param.Name).removeAttr("disabled");
-                        }
-                        else {
-                            $Control.removeAttr("disabled");
-                            $Control.removeClass("Parameter-Disabled").addClass("Parameter-Enabled");
-                        }
+                        else
+                            $Control.removeAttr("disabled").removeClass("Parameter-Disabled").addClass("Parameter-Enabled");
                     }
                     else {
                         $Checkbox.attr("checked", "true");
-                        if (Param.Type == "Boolean") {
+                        if (Param.Type == "Boolean")
                             $(".Parameter-Radio." + Param.Name).attr("disabled", "true");
-                        }
-                        else {
-                            $Control.attr("disabled", "true");
-                            $Control.removeClass("Parameter-Enable").addClass("Parameter-Disabled");
-                        }
+                        else
+                            $Control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
                     }
                 });
 
-                var $NullableLable = new $("<Label />");
+                var $NullableLable = new $("<Label class='Parameter-Label' />");
                 $NullableLable.html("NULL");
-                $NullableLable.addClass("Parameter-Label");
 
-                $NullableSpan.append($Checkbox);
-                $NullableSpan.append($NullableLable);
-
+                $NullableSpan.append($Checkbox).append($NullableLable);
                 return $NullableSpan;
             }
             else
                 return null;
         },
-        _WriteDropDownControl: function (Param, $Control) {
+        _WriteCheckbox: function (Param) {
             var me = this;
-            $Control.addClass("Parameter");
-            $Control.attr("IsMultiple", Param.MultiValue);
-            $Control.addClass("Parameter-Select");
-            $Control.attr("name", Param.Name);
-            $Control.attr("DataType", Param.Type);
-            $Control.attr("readonly","true");
+            var radioValues = new Array();
+            radioValues[0] = "True";
+            radioValues[1] = "False";
+
+            $Control = new $("<div class='Parameter-CheckboxBorder' ismultiple='" + Param.MultiValue + "' datatype='" + Param.Type + "' ></div>");
+
+            for (value in radioValues) {
+                var $radioItem = new $("<input type='radio' class='Parameter Parameter-Radio " + Param.Name + "' name='" + Param.Name + "' value='" + radioValues[value] +
+                    "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
+                me._GetParameterControlProperty(Param, $radioItem);
+
+                var $label = new $("<label for='" + Param.Name + "_radio" + "_" + radioValues[value] + "'>" + radioValues[value] + "</label>");
+
+                $Control.append($radioItem);
+                $Control.append($label);
+            }
+
+            return $Control;
+        },
+        _WriteTextArea: function (Param) {
+            var me = this;
+            $Control = new $("<input class='Parameter' type='text' size='30' ismultiple='" + Param.MultiValue + "' datatype='" + Param.Type + "'  name='" + Param.Name + "'/>");
             me._GetParameterControlProperty(Param, $Control);
 
-            var $defaultOption = new $("<option />");
-            $defaultOption.attr("value", "");
-            $defaultOption.attr("multiple", "multiple");
-            $defaultOption.html("&#60Select a Value&#62");
+            switch (Param.Type) {
+                case "DateTime":
+                    $Control.datepicker({
+                        dateFormat: 'yy-mm-dd',//Format: ISO8601
+                        onClose: function () { $("[name='" + Param.Name + "']").valid(); },
+                    });
+                    $Control.attr("dateISO", "true");
+                    break;
+                case "Integer":
+                case "Float":
+                    $Control.attr("number", "true");
+                    break;
+                case "String":
+                    break;
+            }
+
+            return $Control;
+        },
+        _WriteDropDownControl: function (Param, $Control) {
+            var me = this;
+            var $Control = $("<select class='Parameter Parameter-Select' ismultiple='" + Param.MultiValue + "' name='" + Param.Name + "' datatype='" + Param.Type + "' readonly='true'>");
+            me._GetParameterControlProperty(Param, $Control);
+
+            var $defaultOption = new $("<option value='' multiple='multiple'>&#60Select a Value&#62</option>");
             $Control.append($defaultOption);
 
             for (index in Param.ValidValues) {
-                var $option = new $("<option />");
-                $option.attr("value", Param.ValidValues[index].Value);
-                $option.html(Param.ValidValues[index].Key);
+                var $option = new $("<option value='" + Param.ValidValues[index].Value + "'>" + Param.ValidValues[index].Key + "</option>");
                 $Control.append($option);
             }
+
+            return $Control;
         },
         _WriteDropDownWithCheckBox: function(Param, $Control) {
             var me = this;
-            var $MultipleCheckBox = new $("<Input />");
-            $MultipleCheckBox.attr("type", "text");
-            $MultipleCheckBox.attr("name", Param.Name);
-            $MultipleCheckBox.attr("readonly", "true");
-            $MultipleCheckBox.attr("class", "ParameterClient");
-            $MultipleCheckBox.attr("IsMultiple", Param.MultiValue);
-            $MultipleCheckBox.attr("DataType", Param.Type);
+            var $Control = new $("<div style='display:inline-block;'/>");
+
+            var $MultipleCheckBox = new $("<Input type='text' class='ParameterClient' id='" + Param.Name + "_fore' name='" + Param.Name + "' readonly='true' ismultiple='" + Param.MultiValue + "' datatype='" + Param.Type + "'/>");
             me._GetParameterControlProperty(Param, $MultipleCheckBox);
             $MultipleCheckBox.on("click", function () { me._PopupDropDownPanel(Param); });
 
-            var $HiddenCheckBox = new $("<Input />");
-            $HiddenCheckBox.attr("type", "hidden");
-            $HiddenCheckBox.attr("name", Param.Name);
-            $HiddenCheckBox.attr("IsMultiple", Param.MultiValue);
-            $HiddenCheckBox.attr("id", Param.Name + "_hidden");
-            $HiddenCheckBox.attr("class", "Parameter");
-            $HiddenCheckBox.attr("DataType", Param.Type);
+            var $HiddenCheckBox = new $("<Input id='" + Param.Name + "_hidden' class='Parameter' type='hidden' name='" + Param.Name + "' ismultiple='" + Param.MultiValue + "' datatype='" + Param.Type + "'/>");
 
-            var $OpenDropDown = new $("<Img />");
-            $OpenDropDown.attr("src", "./reportviewer/Images/OpenDropDown.png");
-            $OpenDropDown.attr("alt", "Open DropDown List");
-            $OpenDropDown.attr("name", Param.Name + "OpenDropDown");
+            var $OpenDropDown = new $("<Img alt='Open DropDown List' src='./reportviewer/Images/OpenDropDown.png' name='" + Param.Name + "OpenDropDown' />");
             $OpenDropDown.on("click", function () { me._PopupDropDownPanel(Param); });
 
-            var $DropDownContainer = new $("<Div />");
-            $DropDownContainer.attr("name", Param.Name + "_DropDownContainer").attr("value", Param.Name);
-            $DropDownContainer.addClass("Parameter-DropDown");
-            $DropDownContainer.addClass("Parameter-Dropdown-Hidden");
-
+            var $DropDownContainer = new $("<div class='Parameter-DropDown Parameter-Dropdown-Hidden' name='" + Param.Name + "_DropDownContainer' value='" + Param.Name + "' />");
             $(document).click(function (e) {
                 if ($(e.target).hasClass("ViewReport")) return;
 
@@ -322,56 +254,49 @@
                 var $Col = new $("<TD/>");
 
                 var $Span = new $("<Span />");
-                var $Checkbox = new $("<Input />");
-                $Checkbox.attr("type", "checkbox");
-                $Checkbox.attr("id", Param.Name + "_DropDown_" + value);
-                $Checkbox.addClass(Param.Name + "_DropDown_CB");
-                $Checkbox.attr("value", value);
+                var $Checkbox = new $("<input type='checkbox' class='" + Param.Name + "_DropDown_CB' id='" + Param.Name + "_DropDown_" + value + "' value='" + value + "' />");
+
                 $Checkbox.on("click", function () {
-                    if (this.value == "Select All" & this.checked == true) {
-                        $("." + Param.Name + "_DropDown_CB").each(function (i) {
-                            this.checked = true;
-                        });
-                    }
-                    if (this.value == "Select All" & this.checked == false) {
-                        $("." + Param.Name + "_DropDown_CB").each(function (i) {
-                            this.checked = false;
-                        });
+                    if (this.value == "Select All") {
+                        if (this.checked == true) {
+                            $("." + Param.Name + "_DropDown_CB").each(function (i) {
+                                this.checked = true;
+                            });
+                        }
+                        if (this.value == "Select All" & this.checked == false) {
+                            $("." + Param.Name + "_DropDown_CB").each(function (i) {
+                                this.checked = false;
+                            });
+                        }
                     }
                 });
 
-                var $Lable = new $("<Label />");
-                $Lable.attr("for", Param.Name + "_DropDown_" + value);
-                $Lable.attr("name", Param.Name + "_DropDown_" + value + "_lable");
-                $Lable.attr("class", Param.Name + "_DropDown_lable");
-                $Lable.html(key);
+                var $Label = new $("<label for='" + Param.Name + "_DropDown_" + value + "' class='" + Param.Name + "_DropDown_lable" + "' name='"
+                    + Param.Name + "_DropDown_" + value + "_lable" + "'/>");
+                $Label.html(key);
 
-                $Span.append($Checkbox);
-                $Span.append($Lable);
+                $Span.append($Checkbox).append($Label);
                 $Col.append($Span);
                 $Row.append($Col);
                 $Table.append($Row);
             }
             $DropDownContainer.append($Table);
 
-            $Control.append($MultipleCheckBox);
-            $Control.append($HiddenCheckBox);
-            $Control.append($OpenDropDown);
-            $Control.append($DropDownContainer);
+            $Control.append($MultipleCheckBox).append($HiddenCheckBox).append($OpenDropDown).append($DropDownContainer);
+
+            return $Control;
         },
         _PopupDropDownPanel: function(Param) {
             var me = this;
-            $("[name='" + Param.Name + "_DropDownContainer']").width($("#" + Param.Name).width());
             if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Hidden")) {
-                $("[name='" + Param.Name + "_DropDownContainer']").fadeOut("fast");
-                $("[name='" + Param.Name + "_DropDownContainer']").removeClass("Parameter-Dropdown-Hidden");
-                $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Show");
+                $("[name='" + Param.Name + "_DropDownContainer']").width($("[name='" + Param.Name + "']").width()).fadeOut("fast").
+                    removeClass("Parameter-Dropdown-Hidden").addClass("Parameter-Dropdown-Show");
             }
             else {
                 me._CloseDropDownPanel(Param);
             }
         },
-        _CloseDropDownPanel: function(Param) {
+        _CloseDropDownPanel: function (Param) {
             var me = this;
             if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Show")) {
                 $("[name='" + Param.Name + "_DropDownContainer']").fadeIn("fast", function () {
@@ -383,13 +308,13 @@
                             HiddenValue += this.value + ",";
                         }
                     });
-                    $("[name='" + Param.Name + "']").val(ShowValue.substr(0, ShowValue.length - 1));
-                    $("[name='" + Param.Name + "']").val(HiddenValue.substr(0, HiddenValue.length - 1));
+                    $("#" + Param.Name + "_fore").val(ShowValue.substr(0, ShowValue.length - 1));
+                    $("#" + Param.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
                 });
                 $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
                 $("[name='" + Param.Name + "']").focus().blur();
             }
-    
+
         },
         _CloseAllDropdown: function () {
             var me = this;

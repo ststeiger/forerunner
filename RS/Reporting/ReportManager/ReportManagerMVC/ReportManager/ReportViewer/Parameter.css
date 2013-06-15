@@ -1,0 +1,145 @@
+﻿.Parameter-Container
+{
+    margin-left: 1px;
+    border-width: 1px;
+    border-style: solid;
+    min-width:490px;
+    background-color: rgb(222,231,242);
+}
+.Parameter-Panel
+{
+    margin: 4px 0px 0px 0px;
+    width: 100%;
+    height: 100%;
+}
+.Parameter, .ParameterClient{
+    margin:4px;
+    border-width:1px;
+    border-style:solid;
+    width:180px;
+}
+.Parameter-Form{
+    margin:10px 6px;
+}
+.Parameter-Label{
+    margin:4px;
+}
+.Parameter-Checkbox{
+    margin-left:10px;
+}
+.Parameter-Select{
+    width:192px;
+}
+.Parameter-Radio{
+    width:35px;
+}
+.Parameter-ViewReport{
+    margin:4px;
+    text-align:center
+}
+.Parameter-Enable
+{
+    background-color:rgb(255,255,255);
+    color:rgb(0,0,0);
+}
+.Parameter-Disabled
+{
+    background-color:rgb(222,231,242);
+    color:rgb(84,84,84);
+}
+.Parameter-DropDown
+{
+     padding:4px;
+     margin:0px 4px 4px 5px;
+     border-color: DarkGray; 
+     border-width: 1px; 
+     border-style: solid; 
+     overflow: auto; 
+     background-color: window; 
+     position: absolute; 
+     z-index: 11;
+}
+.Parameter-DropDown Label, checkbox
+{
+    margin:4px;
+}
+.Parameter-DropDown-Input
+{
+    margin-bottom:0px;
+}
+.Parameter-Dropdown-Hidden
+{
+    display:none;
+}
+.Parameter-Dropdown-Show
+{
+    display:block;
+    margin-top:-4px;
+}
+.Parameter-CheckboxBorder
+{
+   display:inline-block;
+   margin:2px 4px;
+   padding:2px 0px;
+   border:solid 1px;
+   border-color:white;
+   background-color:white;
+   width:190px;
+}
+.Parameter-Error
+{
+    border-width: thin;
+    border-color: red;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+/* Styles */
+    .Parameter-Layout
+    {
+        width: 100%;
+        min-width: 270px;
+    }
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) and (orientation : portrait)
+{
+    .Parameter-Layout
+    {
+        width: 100%;
+    }
+}
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape)
+{
+    .Parameter-Layout
+    {
+        width: 50%;
+    }
+}
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)
+{
+    .Parameter-Layout
+    {
+        width: 50%;
+    }
+}
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)
+{
+    /* Styles */
+    .Parameter-Layout
+    {
+        width: 100%;
+    }
+}
+/* pc or laptop */
+@media only screen and (min-device-width : 1224px)
+{
+   .Parameter-Layout
+    {
+        width: 100%;
+    }
+}

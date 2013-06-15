@@ -146,7 +146,7 @@
                 var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 me.element.find('.fr-num-pages').html(maxNumPages);
-                
+                me.element.find('.fr-textbox-reportpage').attr({ max: maxNumPages, min: 1 });
             });
 
             // Hook up the toolbar element events

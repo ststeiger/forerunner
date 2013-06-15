@@ -43,7 +43,7 @@ ol.lower-latin {
 }
 
 .sort-unsorted {    
-    background-image:url('../reportviewer/Images/NotSorted.gif');
+    background-image:url('../../reportviewer/Images/NotSorted.gif');
     display:inline;
     background-repeat: no-repeat; 
     padding-left:7px;
@@ -59,7 +59,7 @@ ol.lower-latin {
 }
 
 .sort-descending {
-    background-image:url(../reportviewer/Images/SortDecending.gif);
+    background-image:url(../../reportviewer/Images/SortDecending.gif);
     display:inline;
     background-repeat: no-repeat; 
     padding-left:7px;
@@ -70,7 +70,7 @@ ol.lower-latin {
     cursor:pointer;
 }
 .sort-ascending {
-    background-image:url(../reportviewer/Images/SortAccending.gif);
+    background-image:url(../../reportviewer/Images/SortAccending.gif);
     display:inline;
     background-repeat: no-repeat; 
     padding-left:7px;
@@ -84,7 +84,7 @@ ol.lower-latin {
 
 .loading-indicator  {
   border: solid 2px #86A5AD;
-  background: white url(../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
+  background: white url(../../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
   width: 148px; 
   height: 28px; 
   position: absolute; 
@@ -248,7 +248,7 @@ td input[type="submit"], td input[type="button"], td button
 }
 
 .Drilldown-Collapse {    
-    background-image:url('../reportviewer/Images/Drilldown_Collapse.gif');
+    background-image:url('../../reportviewer/Images/Drilldown_Collapse.gif');
     display:inline;
     background-repeat: no-repeat; 
     padding-left:7px;
@@ -259,7 +259,7 @@ td input[type="submit"], td input[type="button"], td button
     cursor:pointer;
 }
 .Drilldown-Expand {    
-    background-image:url('../reportviewer/Images/Drilldown_Expand.gif');
+    background-image:url('../../reportviewer/Images/Drilldown_Expand.gif');
     display:inline;
     background-repeat: no-repeat; 
     padding-left:7px;
@@ -354,7 +354,7 @@ td input[type="submit"], td input[type="button"], td button
     cursor:pointer;
 }
 .DocMap-Collapse {    
-    background-image:url('../reportviewer/Images/Drilldown_Collapse.gif');
+    background-image:url('../../reportviewer/Images/Drilldown_Collapse.gif');
     display:inline;
     background-repeat: no-repeat; 
     padding:6px;
@@ -363,7 +363,7 @@ td input[type="submit"], td input[type="button"], td button
     cursor:pointer;
 }
 .DocMap-Expand {    
-    background-image:url('../reportviewer/Images/Drilldown_Expand.gif');
+    background-image:url('../../reportviewer/Images/Drilldown_Expand.gif');
     display:inline;
     background-repeat: no-repeat; 
     margin:4px 4px 4px 10px;
@@ -373,7 +373,7 @@ td input[type="submit"], td input[type="button"], td button
 }
 .DocMap-Indent
 {
-    background-image:url('../reportviewer/Images/EmptyIndent.gif');
+    background-image:url('../../reportviewer/Images/EmptyIndent.gif');
     display:inline;
     background-repeat: no-repeat; 
     margin:4px 4px 4px 10px;

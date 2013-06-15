@@ -25,6 +25,7 @@
             $caption.append($captiontext);
             var imageSrc;
             var targetUrl;
+            $anchor = new $('<a />');
             $img = new $('<img />');
             $img.addClass('catalogitem');
             $img.addClass('center');
@@ -42,11 +43,12 @@
             }
               
             $img.attr('src', imageSrc);
-            $img.on('click', function (event) {
+            $anchor.on('click', function (event) {
                 // BUGBUG:: Need to move this to a call back
                 g_App.router.navigate(targetUrl, { trigger: true, replace: false });
             });
-            $ListItem.append($img);
+            $anchor.append($img);
+            $ListItem.append($anchor);
             return $ListItem;
         },
         _renderList: function () {
@@ -75,30 +77,8 @@
             me.$RMList = $('.rm-list', me.element);
             me._renderList();
         },
-        _initTouch: function () {
-            var me = this;
-            $(me.element).swipe({
-                fallbackToMouseEvents: false,
-                allowPageScroll: "auto",
-                tap: function (event, target) {
-                    $(target).trigger('click');
-                },
-                //longTap: function (event, target) {
-                //    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
-                //        me.ShowNav();
-                //    }
-                //},
-                //doubleTap: function (event, target) {
-                //    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
-                //        me.ShowNav();
-                //    }
-                //},
-                longTapThreshold: 1000,
-            });
-        },
         initCarousel: function () {
             var me = this;
-            me._initTouch();
             var carousel = me.$Carousel.carousel({
                 itemWidth: 250,
                 itemHeight: 350,

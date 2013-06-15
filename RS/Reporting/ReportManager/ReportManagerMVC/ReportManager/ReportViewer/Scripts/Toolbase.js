@@ -87,6 +87,7 @@
             }
         },
         _getToolHtml: function (toolInfo) {
+            var me = this;
             if (toolInfo.toolType == 0) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
@@ -100,21 +101,31 @@
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType == 2) {
-                return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + toolInfo.text + "</div>";
+                return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType == 3) {
-                    return "<span class='" + toolInfo.selectorClass + "'> " + toolInfo.text + "</span>";
+                return "<div style='display:inline' class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</div>";
                 }
             else if (toolInfo.toolType == 4) {
                 var text = '';
                 if (toolInfo.text) {
-                    text = toolInfo.text;
+                    text = me._getText(toolInfo);
                 }
                 return "<div class='fr-item-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                             text +
                         "</div>";
             }
+        },
+        _getText: function (toolInfo) {
+            var text;
+            var me = this;
+
+            if (typeof toolInfo.text == 'function')
+                text = toolInfo.text({ $reportViewer: me.options.$reportViewer });
+            else
+                text = toolInfo.text
+            return text;
         },
         _destroy: function () {
         },

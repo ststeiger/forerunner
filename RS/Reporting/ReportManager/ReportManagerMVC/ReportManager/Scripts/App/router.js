@@ -142,7 +142,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
             var btnFav = {
                 toolType: 0,
-                selectorClass: 'fr-button-Fav',
+                selectorClass: 'fr-button-fav',
                 imageClass: 'fr-image-delFav',
                 click: function (e) {
                     var action;

@@ -101,34 +101,6 @@ section#mainSection {
   border-width:0px
 }
 
-.spacer20mm {
-  min-width:20mm;
-}
-
-.spacer10mm {
-  min-width:10mm;
-}
-
-.spacer5mm {
-  min-width:5mm;
-}
-
-.toolbar {    
-  background-color: transparent;
-  width:100%;
-  z-index:2001;
-  float: left;
-    clear:none;
-}
-
-.inlinetoolbar {
-  border-bottom: 1px solid gray;
-   width:100%;
-  z-index:2001;
-  float: left;
-    clear:none;
-    background-color: white;
-}
 
 .overflow-hidden {
   overflow: hidden;
@@ -164,16 +136,6 @@ section#mainSection {
   background-color: white;
 }
 
-.fr-buttonicon {
-  display: inline-block;
-  width:24px;
-  height:24px;
-  margin:5px;
-}
-
-.fr-textbox {
-  display: inline-block;
-}
 
 .fr-image-addFav {
   background-image:url('../Images/ReportManager/sq_plus_icon.png');
@@ -216,18 +178,6 @@ and (orientation : landscape) {
   display: none;
 }
 
-.spacer20mm {
-  min-width:1mm;
-}
-
-.spacer10mm {
-  min-width:1mm;
-}
-
-.spacer5mm {
-  min-width:1mm;
-}
-
 #bottomdiv {
   display: none;
 }
@@ -259,18 +209,6 @@ and (orientation : portrait) {
 
 .rm-list {
   display: block;
-}
-
-.spacer20mm {
-  min-width:1mm;
-}
-
-.spacer10mm {
-  min-width:1mm;
-}
-
-.spacer5mm {
-  min-width:1mm;
 }
 
 #bottomdiv {

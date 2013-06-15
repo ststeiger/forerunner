@@ -72,6 +72,16 @@
                 }
             }
         },
+        btnPageOf: {
+            toolType: 3,
+            selectorClass: 'fr-pageOf',
+            text: 'of'
+        },
+        btnNumPages: {
+            toolType: 3,
+            selectorClass: 'fr-num-pages',
+            text: ""             
+        },
         btnNext: {
             toolType: 0,
             selectorClass: 'fr-button-next',
@@ -135,6 +145,8 @@
                 $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
                 me._updateBtnStates(data.newPageNum, maxNumPages);
+                me.element.find('.fr-num-pages').html(maxNumPages);
+                
             });
 
             // Hook up the toolbar element events
@@ -153,7 +165,7 @@
 
             me.element.html($("<div class='fr-toolbar' />"));
             me.addTools(1, true, [me.btnMenu, me.btnNav, me.btnParamarea, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                                   me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator, me.btnFindNext]);
+                                   me.btnPageOf, me.btnNumPages,me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator, me.btnFindNext]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

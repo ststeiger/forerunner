@@ -295,6 +295,8 @@
                 me.ScrollLeft = action.ScrollLeft;
                 me.ScrollTop = action.ScrollTop;
 
+                if (me.options.PageNav != null)
+                    me.options.PageNav.pagenav('reset');
                 if (me.ParamLoaded == true) {
                     me.$ReportContainer.reportParameter("RemoveParameter");
                     me.paramloaded = false;
@@ -389,7 +391,7 @@
                 me.Pages = new Object();
 
                 if (me.options.PageNav != null)
-                    me.options.PageNav.pagenav('hide');
+                    me.options.PageNav.pagenav('reset');
                 if (Data.ParametersRequired) {
                     me.$ReportAreaContainer.find(".Page").detach();
                     me.SetScrollLocation(0, 0);

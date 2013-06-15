@@ -63,9 +63,10 @@
             return $List;
         },
 
-        hide: function () {
+        reset: function () {
             var me = this;
             me.element.hide();
+            me.isRendered = false;
         },
         _render: function () {
             var me = this;
@@ -147,7 +148,7 @@
             me.listItems;
             me.$UL
             me.currentPageNum;
-            me.isRendered = false;
+            me.isRendered = false;       
             
         },
         _isTouchDevice: function () {

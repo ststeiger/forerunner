@@ -30,17 +30,6 @@ ol.lower-latin {
   border-width:0px;
 }
 
-.spacer20mm {
-  min-width:20mm;
-}
-
-.spacer10mm {
-  min-width:10mm;
-}
-
-.spacer5mm {
-  min-width:5mm;
-}
 
 .sort-unsorted {    
     background-image:url('../reportviewer/Images/NotSorted.gif');
@@ -113,14 +102,6 @@ ol.lower-latin {
   text-align:right;
 }
 
-.inlinetoolbar {
-  border-bottom: 1px solid gray;
-  width:100%;
-  z-index:2001;
-  float: left;
-  clear:none;
-  background-color: white;
-}
 
 .report-container {
   position:relative;
@@ -140,17 +121,7 @@ ol.lower-latin {
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
     /* Styles */
 
-    .spacer20mm {
-        min-width: 1mm;
-    }
 
-    .spacer10mm {
-        min-width: 1mm;
-    }
-
-    .spacer5mm {
-        min-width: 1mm;
-    }
 }
 
 /* iPads (landscape) ----------- */

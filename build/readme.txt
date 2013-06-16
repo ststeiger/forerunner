@@ -21,7 +21,7 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 8. Test the build: "msbuild dirs.proj"
 9. Setup E-Mail.
 	a. In Powershell, execute "Set-ExecutionPolicy Unrestricted"
-    b. Create stmp.config.xml under build.
+    b. Create smtp.config.xml under build.
 	The format of this file is:
 		<?xml version="1.0"?>
 		<SmtpConfiguration 

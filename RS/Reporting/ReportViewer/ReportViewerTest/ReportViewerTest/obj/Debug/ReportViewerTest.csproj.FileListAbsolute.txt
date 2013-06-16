@@ -33,3 +33,4 @@ C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewerTest\ReportViewerTest\obj\Debug\ReportViewerTest.csprojResolveAssemblyReference.cache
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewerTest\ReportViewerTest\obj\Debug\ReportViewerTest.dll
 C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportViewer\ReportViewerTest\ReportViewerTest\obj\Debug\ReportViewerTest.pdb
+C:\Code\Forerunner\RS\Reporting\ReportViewer\ReportViewerTest\ReportViewerTest\obj\Debug\ReportViewerTest.csprojResolveAssemblyReference.cache

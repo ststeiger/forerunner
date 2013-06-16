@@ -18,8 +18,9 @@ Setting up a New Build Machine
 about the passphrase. Keep that blank - otherwise all git operations will prompt and prevent automation from working.
 6. cd to the enlistment and run "git pull git@github.com:forerunnersw/Forerunner.git"
 7. Install .Net 3.5 and 2.0. (http://msdn.microsoft.com/en-us/library/hh506443.aspx)
-8. Test the build: "msbuild dirs.proj"
-9. Setup E-Mail.
+8. Install VS 2012.
+9. Test the build: "build\build.cmd"
+10. Setup E-Mail.
 	a. In Powershell, execute "Set-ExecutionPolicy Unrestricted"
     b. Create smtp.config.xml under build.
 	The format of this file is:
@@ -32,8 +33,10 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 	        UserName="motherplucker" 
     	    Password="***********" 
         	/>
-10. Setup Drop. TBD.
-11. Setup Daily Task Scheduler Job. TBD.
+11. Setup Daily Task Scheduler Job.
+	a. Import "Daily Build.xml" to Task Scheduler.
+	b. Run the job manually to make sure it is working.
+12. Setup Drop. TBD.
 
 Adding a new Project
 --------------------

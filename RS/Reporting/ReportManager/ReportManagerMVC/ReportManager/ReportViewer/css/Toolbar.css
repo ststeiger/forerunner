@@ -124,7 +124,7 @@
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-fav {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
@@ -134,7 +134,7 @@
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-fav {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
@@ -145,7 +145,7 @@
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-fav {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
@@ -156,7 +156,7 @@
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-fav {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
@@ -184,7 +184,7 @@
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
-.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-fav {
+.fr-button-home, .fr-button-nav, .fr-button-paramarea, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
   display: none;
 }
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {

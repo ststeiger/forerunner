@@ -132,7 +132,7 @@
         },
         itemSeparator: {
             toolType: 3,
-            selectorClass: 'fr-span-sparator',
+            selectorClass: 'fr-item-span-sparator',
             text: '|&nbsp'
         },
         itemFindNext: {

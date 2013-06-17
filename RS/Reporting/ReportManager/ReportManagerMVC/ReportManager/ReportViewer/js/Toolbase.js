@@ -20,10 +20,14 @@
         //      as a event handler. The event, i.e., the name of the property will be bound to the button
         //      when the button is enabled and removed when the button is disabled.
         //  }]
+      
         addTools: function (index, enabled, toolInfoArray) {
             var me = this;
             var $toolbar = me.element.find('.' + me.options.toolClass);
             var $firstTool = $(me._getToolHtml(toolInfoArray[0]));
+
+            if (me.tools == null)
+                me.tools = new Object();
 
             if (index <= 1) {
                 $toolbar.prepend($firstTool);
@@ -36,11 +40,13 @@
                 var $child = $toolbar.find(selector);
                 $child.before($firstTool);
             }
-
+            
             var $tool = $firstTool;
+            me.tools[toolInfoArray[0].selectorClass] =toolInfoArray[0];
             for (i = 1; i < toolInfoArray.length; i++) {
                 $tool.after(me._getToolHtml(toolInfoArray[i]));
                 $tool = $tool.next();
+                me.tools[toolInfoArray[i].selectorClass] = toolInfoArray[i];
             }
 
             if (enabled) {
@@ -131,6 +137,7 @@
         },
 
         _create: function () {
+           
         },
     });  // $.widget
 });  // function()

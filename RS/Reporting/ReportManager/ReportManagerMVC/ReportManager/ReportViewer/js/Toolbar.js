@@ -137,6 +137,19 @@
                 e.data.$reportViewer.reportViewer("FindNext");
             }
         },
+        btnSeparator2: {
+            toolType: 3,
+            selectorClass: 'fr-span-sparator',
+            text: '|&nbsp'
+        },
+        btnExport: {
+            toolType: 2,
+            selectorClass: 'fr-button-export',
+            text: "Export",
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("Export");
+            }
+        },
         _initCallbacks: function () {
             var me = this;
 
@@ -165,7 +178,7 @@
 
             me.element.html($("<div class='fr-toolbar' />"));
             me.addTools(1, true, [me.btnMenu, me.btnNav, me.btnParamarea, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                                   me.btnPageOf, me.btnNumPages,me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator, me.btnFindNext]);
+                                   me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator, me.btnFindNext, me.btnSeparator2, me.btnExport]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

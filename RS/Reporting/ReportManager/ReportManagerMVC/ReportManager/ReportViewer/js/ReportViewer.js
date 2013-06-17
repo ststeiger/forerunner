@@ -259,7 +259,7 @@
         ShowParms: function () {
             var me = this;
             if (me.ParamLoaded == true)
-                $("#ParameterContainer").animate({ height: 'toggle' }, 500);
+                $(".Parameter-Container").animate({ height: 'toggle' }, 500);
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
@@ -493,6 +493,11 @@
             //Highlight the first match.
             $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
             if (me.Finding == true) me.Finding = false;
+        },
+        Export: function () {
+            var me = this;
+            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=WORD"
+            window.open(url);
         },
 
         //Page Loading

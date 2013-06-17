@@ -17,7 +17,17 @@ using Forerunner;
 
 namespace Forerunner.Viewer
 {
-    
+    public enum RenderFormat
+    {
+        XML,
+        CSV,
+        PDF,
+        MHTML,
+        EXCEL,
+        IMAGE,
+        WORD
+    }
+
     public class ReportViewer
     {
         String ReportServerURL;
@@ -176,7 +186,7 @@ namespace Forerunner.Viewer
                     execInfo = rs.LoadReport(reportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
+               
                 if (parametersList != null)
                 {
                     rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
@@ -456,6 +466,7 @@ namespace Forerunner.Viewer
            
             if (SessionID == null)
                 NewSession = "";
+           
             else
                 NewSession = SessionID;
 
@@ -503,5 +514,52 @@ namespace Forerunner.Viewer
             }
         }
 
+        public byte[] GetRenderExtension(string ReportPath, string SessionID, string parametersList, RenderFormat Type, out string MimeType)
+        {
+            string historyID = null;
+            string encoding;
+            string extension;
+            Warning[] warnings = null;
+            string[] streamIDs = null;
+
+            string NewSession = SessionID == null ? "" : SessionID;
+
+            ExecutionInfo execInfo = new ExecutionInfo();
+            ExecutionHeader execHeader = new ExecutionHeader();
+
+            rs.ExecutionHeaderValue = execHeader;
+            try
+            {
+                if (NewSession != "")
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                else
+                    execInfo = rs.LoadReport(ReportPath, historyID);
+
+                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                if (rs.GetExecutionInfo().ParametersRequired)
+                {
+                    if (parametersList != null)
+                    {
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    }
+                    //else
+                    //{
+                    //    MimeType = "text/html";
+                    //    return System.Text.Encoding.Default.GetBytes("<h2 style='color:red;'>Parameter can't be empty</h2>");
+                    //}
+                }
+
+                string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
+
+                return rs.Render(Type.ToString(), devInfo, out extension, out MimeType, out encoding, out warnings, out streamIDs);
+            }
+            catch (Exception e)
+            {
+                MimeType = string.Empty;
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
     }
 }

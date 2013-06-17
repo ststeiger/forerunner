@@ -53,7 +53,7 @@
             $Row.append($Col);
 
             var $ViewReport_TD = new $("<TD/>");
-            $ViewReport_TD.attr("style", "margin:4px;text-align:center");
+            $ViewReport_TD.attr("style", "margin:4px;text-align:center;width:25%");
 
             var $ViewReport = new $("<input name='Parameter_ViewReport' type='button' class='ViewReport' value='View Report'/>");
             $ViewReport.on("click", function () {

@@ -57,16 +57,25 @@
         WriteError: function (ErrorData) {
             var me = this;
             me.element.html($(
+                "<div class='Error-Message'></div>" +
+                "<div class='Error-Details'>Click for my detail</div>" +
                 "<div class='Error'><h3>Exception Thrown From Server</h3>" +
                 "<div class='Error Error-Type'></div>" +
                 "<div class='Error Error-TargetSite'></div>" +
                 "<div class='Error Error-Source'></div>" +
-                "<div class='Error Error-Message'></div>" +
                 "<div class='Error Error-StackTrace'></div>" +
                 "</div>"));
 
             if (me.options.ReportViewer != null) {
                 var $cell;
+
+                $cell = me.element.find(".Error");
+                $cell.hide();
+
+                $cell = me.element.find(".Error-Details");
+                $cell.on("click", { $Detail: me.element.find(".Error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+
+
                 $cell = me.element.find(".Error-Type");
                 $cell.append("<h4>Type:</h4>" + ErrorData.Exception.Type);
 

@@ -587,8 +587,15 @@
                 me.Pages[NewPageNum].$Container = $Report;
                 me.Pages[NewPageNum].ReportObj = Data;
             }
-            me.SessionID = Data.SessionID;
-            me.NumPages = Data.NumPages;
+
+            if (Data.SessionID == null)
+                me.SessionID = "";
+            else
+                me.SessionID = Data.SessionID;
+            if (Data.NumPages == null)
+                me.NumPages = 0
+            else
+                me.NumPages = Data.NumPages;
 
             //Sections           
             if (!LoadOnly) {

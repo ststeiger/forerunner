@@ -26,6 +26,12 @@ echo %DATE% >> %BUILD_LOG%
 echo %TIME% >> %BUILD_LOG%
 echo %PROJECT_NAME% >> %BUILD_LOG%
 echo Syncing Tree from [%GITHUBSSH%] >> %BUILD_LOG%
+echo USERNAME [%USERNAME%] >> %BUILD_LOG%
+echo USERDOMAIN [%USERDOMAIN%] >> %BUILD_LOG%
+echo USERPROFILE [%USERPROFILE%] >> %BUILD_LOG%
+echo HOMEDRIVE [%HOMEDRIVE%] >> %BUILD_LOG%
+echo HOMEPATH [%HOMEPATH%] >> %BUILD_LOG%
+echo HOME [%HOME%] >> %BUILD_LOG%
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error

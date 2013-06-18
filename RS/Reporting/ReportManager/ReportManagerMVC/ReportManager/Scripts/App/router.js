@@ -190,7 +190,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 toolType: 4,
                 selectorClass: 'fr-id-home',
                 imageClass: 'fr-image-home',
-                text: 'home',
+                text: 'Home',
                 click: function (e) {
                     window.location.href = "#";
                 }

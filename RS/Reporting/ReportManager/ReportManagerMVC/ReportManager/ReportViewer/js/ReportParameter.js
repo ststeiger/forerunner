@@ -1,45 +1,48 @@
 ﻿$(function () {
-
     $.widget("Forerunner.reportParameter", {
-        // Default options
         options: {
             ReportViewer: null,
             PageNum:null,
-        },      
+        },
+        _create: function () {
+            var me = this;
+            this.element = new $("<div class='Parameter-Container Parameter-Layout'>" +
+                "<form name='ParameterForm'>" +
+                   "<div class='Parameter-ElementBorder'></div>" +
+                   "<div class='Parameter-SubmitBorder'>" +
+                      "<input name='Parameter_ViewReport' type='button' class='Parameter-ViewReport' value='View Report'/>" +
+                   "</div>" +
+                "</form></div>");
+
+            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
+                me.options.ReportViewer.$ReportContainer.append(this.element);
+            else
+                this.element.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
+        },
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
             me.options.PageNum = PageNum;
-            var $ParameterDiv = new $("<div class='Parameter-Container Parameter-Layout' name='" + Data.SessionID + "'></div>");
 
-            var $ParameterContainer = me._GetDefaultHTMLTable();
-            $ParameterContainer.attr("class", "Parameter-Panel");
-            var $Row = new $("<TR />");
-            var $Col = $("<TD/>");
-
-            var $Form = new $("<Form />");
-            $Form.attr("name", "ParamsForm");
-            var $SecondContainer = me._GetDefaultHTMLTable();
-            $SecondContainer.addClass("Parameter-Form");
-
+            var $ElementBorder = $(".Parameter-ElementBorder");
             $.each(Data.ParametersList, function (Index, Param) {
-                $SecondContainer.append(me._WriteParameterControl(Param, new $("<TR />")));
+                $ElementBorder.append(me._WriteParameterControl(Param, new $("<div />")));
             });
-
-            $Form.append($SecondContainer);
+            
+            me._ResetLabelWidth();
             me.ResetValidateMessage();
-            $Form.validate({
+            $("[name='ParameterForm']").validate({
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
-                        error.appendTo(element.parent("div").parent("td").next("td"));
+                        error.appendTo(element.parent("div").next("span"));
                     else {
                         if ($(element).attr("IsMultiple") == "True")
-                            error.appendTo(element.parent("div").parent("td").next("td"));
+                            error.appendTo(element.parent("div").next("span"));
                         else
-                            error.appendTo(element.parent("td").next("td"));
+                            error.appendTo(element.next("span"));
                     }
                 },
                 highlight: function (element) {
-                    if ($(element).is(":radio")) 
+                    if ($(element).is(":radio"))
                         $(element).parent("div").addClass("Parameter-Error");
                     else
                         $(element).addClass("Parameter-Error");
@@ -51,26 +54,8 @@
                         $(element).removeClass("Parameter-Error");
                 }
             });
-            $Col.append($Form);
-            $Row.append($Col);
-
-            var $ViewReport_TD = new $("<td style='margin:4px;text-align:center;width:25%' />");
-
-            var $ViewReport = new $("<input name='Parameter_ViewReport' type='button' class='ViewReport' value='View Report'/>");
-            $ViewReport.on("click", function () { me._SubmitForm(); });
-
-            $ViewReport_TD.append($ViewReport);
-            var $SpaceTD = new $("<TD />");
-            $SpaceTD.html("&nbsp");
-            $Row.append($SpaceTD).append($ViewReport_TD);
-
-            $ParameterContainer.append($Row);
-
-            $ParameterDiv.append($ParameterContainer);
-            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
-                me.options.ReportViewer.$ReportContainer.append($ParameterDiv);
-            else
-                $ParameterDiv.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
+            $(".Parameter-ViewReport").on("click", function () { me._SubmitForm();});
+            
             me.options.ReportViewer.RemoveLoadingIndicator();
         },
         _SubmitForm: function () {
@@ -80,26 +65,23 @@
             if (me.GetParamsList() != null)
                 me.options.ReportViewer.LoadPage(me.options.PageNum, null, false, null, me.GetParamsList());
         },
-        _WriteParameterControl: function(Param, $Parent) {
-            var $TD_Lable = new $("<TD />");
-            var $lable = new $("<span />");
-            $lable.addClass("Parameter-Label");
-            var Name = Param.Name;
-            $lable.html(Name);
+        _WriteParameterControl: function (Param, $Parent) {
             var me = this;
-
-            $TD_Lable.append($lable);
-
+            var $Lable = new $("<div class='Parameter-Label'>" + Param.Name + "</div>");
+            
             //If the control have valid values, then generate a select control
-            var $TD_Control = new $("<TD style='white-space:nowrap'></TD>");
+            var $Container = new $("<div class='Parameter-ItemContainer'></div>");
+            var $ErrorMessage = new $("<span class='ErrorPlaceHolder'/>");
             var $element = null;
 
             if (Param.ValidValues != "") {
-                if (Param.MultiValue == "True")
+                //dropdown with checkbox
+                if (Param.MultiValue == "True") {
                     $element = me._WriteDropDownWithCheckBox(Param);
-                else
+                }
+                else {
                     $element = me._WriteDropDownControl(Param);
-                
+                }
             }
             else {
                 if (Param.Type == "Boolean")
@@ -112,9 +94,8 @@
                 if (e.keyCode == 13) { me._SubmitForm() }; // Enter
             });
 
-            $TD_Control.append($element).append(me._AddNullableCheckBox(Param, $element));
-            var $TD_Status = new $("<TD class='Status'/>");
-            $Parent.append($TD_Lable).append($TD_Control).append($TD_Status);
+            $Container.append($element).append(me._AddNullableCheckBox(Param, $element)).append($ErrorMessage);
+            $Parent.append($Lable).append($Container);
 
             return $Parent;
         },
@@ -150,7 +131,7 @@
                     }
                 });
 
-                var $NullableLable = new $("<Label class='Parameter-Label' />");
+                var $NullableLable = new $("<Label class='Parameter-Null-Label' />");
                 $NullableLable.html("NULL");
 
                 $NullableSpan.append($Checkbox).append($NullableLable);
@@ -332,7 +313,7 @@
         },
         GetParamsList: function() {
             var me = this;
-            if ($("[name='ParamsForm']").length != 0 && $("[name='ParamsForm']").valid() == true) {
+            if ($("[name='ParameterForm']").length != 0 && $("[name='ParameterForm']").valid() == true) {
                 var a = [];
                 //Text
                 $(".Parameter").filter(":text").each(function (i) {
@@ -407,6 +388,15 @@
             else
                 return Parameter.value;
         },
+        _ResetLabelWidth: function () {
+            var max = 0;
+            $(".Parameter-Label").each(function (index, obj) {
+                if ($(obj).width() > max) max = $(obj).width();
+            });
+            $(".Parameter-Label").each(function (index, obj) {
+                $(obj).width(max);
+            });
+        },
         ResetValidateMessage: function() {
             var me = this;
             jQuery.extend(jQuery.validator.messages, {
@@ -436,10 +426,7 @@
             $(".Parameter-Container").detach();
         },
         _GetDefaultHTMLTable: function() {
-            var $NewObj = $("<Table/>");
-
-            $NewObj.attr("CELLSPACING", 0);
-            $NewObj.attr("CELLPADDING", 0);
+            var $NewObj = $("<Table cellspacing='0' cellpadding='0'/>");
             return $NewObj;
         }
     });  // $.widget

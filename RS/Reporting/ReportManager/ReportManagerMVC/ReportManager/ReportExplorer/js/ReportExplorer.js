@@ -1,11 +1,12 @@
 ﻿$(function () {
-    // Toolbar widget
+    // reportexplorer widget
     $.widget("Forerunner.reportexplorer", {
         options: {
             path: null,
             selectedItemPath: null,
             catalogItems: null,
             url: null,
+            $scrollBarOwner : null,
         },
         _generateListItem: function (catalogItem) {
             var me = this;
@@ -57,11 +58,17 @@
             me.element.addClass('reportexplorer');
             $carouselContainer = $('.sky-carousel-container', me.$Carousel);
             $rmListContainer = $('.rm-list-container', me.$RMList);
+            me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
+                if (me.options.selectedItemPath != null && me.options.selectedItemPath == catalogItem.Path) {
+                    me.selectedItem = i;
+                }
                 $carouselContainer.append(me._generateListItem(catalogItem));
-                $rmListContainer.append(me._generateListItem(catalogItem));
+                me.rmListItems[i] = me._generateListItem(catalogItem);
+                $rmListContainer.append(me.rmListItems[i]);
             }
+            me.$UL = $rmListContainer;
         },
         _render: function () {
             var me = this;
@@ -98,7 +105,55 @@
                 reflectionSize: 70,
                 selectByClick: true
             });
-            carousel.select(me._getSelectedItem(), 1);
+            me.$C = carousel;
+            me._selectCarouselItem();
+            me._scrollList();
+
+            me.$explorer.bind('scrollstop', function (e) {
+                if (!me.$Carousel.is(":visible")) {
+                    me._setSelectionFromScroll();
+                    me._selectCarouselItem();
+                }
+            });
+
+            me.$explorer.bind('selectionAnimationEnd.sc', function (e) {
+                me.selectedItem = me.$C.selectedItem.index();
+            });
+
+            me.$explorer.resize(function () {
+                if (!me.$Carousel.is(":visible")) {
+                    me._scrollList();
+                }
+            });
+        },
+        _setSelectionFromScroll: function () {
+            var me = this;
+            var ulPosition = me.$UL.position().top;
+            var position = me.$explorer.scrollTop();
+            var closest = 0;
+            var closestDistance = Math.abs(position - me.rmListItems[0].position().top);
+            for (var i = 1; i < me.rmListItems.length; i++) {
+                var distance = Math.abs(position - me.rmListItems[i].position().top);
+                if (distance < closestDistance) {
+                    closest = i;
+                    closestDistance = distance;
+                } else if (closest != 0) {
+                    // If closetst is no longer 0 and we are no longer approaching the closest break
+                    break;
+                }
+            }
+            me.selectedItem = closest;
+        },
+        _selectCarouselItem: function () {
+            var me = this;
+            me.$C.select(me._getSelectedItem(), 1);
+        },
+        _scrollList: function () {
+            var me = this;
+            var itemPosition = me.rmListItems[me.selectedItem].position().top;
+            var ulPosition = me.$UL.position().top;
+            var diff = Number(itemPosition - ulPosition);
+            me.$explorer.scrollTop(diff, 'slow');
         },
         _getSelectedItem: function () {
             var me = this;
@@ -112,8 +167,11 @@
             var me = this;
             me.$Carousel;
             me.$RMList;
+            me.$UL;
+            me.rmListItems;
             me.selectedItem = 0;
             me.isRendered = false;
+            me.$explorer = me.options.$scrollBarOwner != null ? me.options.$scrollBarOwner : $(window);
             me._render();
         },
         _isTouchDevice: function () {
@@ -121,6 +179,11 @@
             return !!('ontouchstart' in window) // works on most browsers 
                 || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
+        },
+        _isMobile : function () {
+            var ua = navigator.userAgent;
+            return (ua.match(/(iPhone|iPod|iPad)/)
+            || ua.match(/BlackBerry/) || ua.match(/Android/));
         },
     });  // $.widget
 });  // function()

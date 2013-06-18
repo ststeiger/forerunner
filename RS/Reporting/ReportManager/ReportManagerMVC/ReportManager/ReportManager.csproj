@@ -162,6 +162,7 @@
     <Content Include="Lib\jQuery\css\jquery.ui.datepicker.min.css" />
     <Content Include="Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Lib\jQuery\js\jquery.watermark.min.js" />
+    <Content Include="Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="ReportExplorer\css\ReportExplorer.css" />
     <Content Include="ReportExplorer\images\Folder-icon.png" />
     <Content Include="ReportExplorer\images\Report-icon.png" />

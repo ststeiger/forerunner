@@ -166,6 +166,7 @@
     <Content Include="ReportExplorer\css\ReportExplorer.css" />
     <Content Include="ReportExplorer\images\Folder-icon.png" />
     <Content Include="ReportExplorer\images\Report-icon.png" />
+    <Content Include="ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Images\ReportManager\clock_icon.png" />
     <Content Include="ReportViewer\images\Toolbar\page_layout_icon.png" />
@@ -230,12 +231,11 @@
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Models\reportmanagermodels.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
-    <Content Include="Scripts\Views\ReportManagerHeaderView.html" />
     <Content Include="Scripts\Util\underscore.js" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
-    <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\Views\AppPageView.html" />
+    <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Scripts\Views\reportmanagermainview.js" />
     <Content Include="Web.config">

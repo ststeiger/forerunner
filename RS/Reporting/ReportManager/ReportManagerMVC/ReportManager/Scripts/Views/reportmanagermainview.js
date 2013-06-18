@@ -9,7 +9,7 @@ var g_App = g_App || {};
           _(this).bindAll('render');
       },
       render: function () {
-          $(this.el).html(this.template(null));
+          $(this.el).reportexplorertoolbar({});
           return this;
       },
   });
@@ -23,7 +23,7 @@ var g_App = g_App || {};
         $(this.el).reportexplorer({
             path: this.options.path,
             catalogItems: this.options.model.toJSON(),
-            url: this.options.model.models[0].url(),
+            url: (this.options.model.models[0] != null ? this.options.model.models[0].url() : null),
             selectedItemPath: this.options.selectedItemPath,
             navigateTo: this.navigateTo
         });

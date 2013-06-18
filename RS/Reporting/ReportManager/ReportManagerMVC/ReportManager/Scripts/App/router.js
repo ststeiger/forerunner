@@ -29,11 +29,9 @@ var ApplicationRouter = Backbone.Router.extend({
 
         transitionToFavorite: function () {
             this._transitionToReportManager(null, 'favorites');
-            this._selectedItemPath = null;
         },
         transitionToRecent: function () {
             this._transitionToReportManager(null, 'recent');
-            this._selectedItemPath = null;
         },
         _getCatalogItemsUrl: function (path) {
             if (path == null) path = "/";
@@ -297,13 +295,12 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView = new g_App.AppPageView({
                 model : appPageModel
             }).render();
-            $("#pageSection").append(this.appPageView.el);
         }
     });
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-$(document).ready(g_App.utils.loadTemplate(['AppPageView',  'ReportManagerHeaderView'], '', function () {
+$(document).ready(g_App.utils.loadTemplate(['AppPageView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;

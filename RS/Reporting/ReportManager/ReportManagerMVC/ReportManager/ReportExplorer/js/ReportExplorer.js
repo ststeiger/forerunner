@@ -57,13 +57,14 @@
         _renderList: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
+            var decodedPath = me.options.selectedItemPath != null ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.element.addClass('reportexplorer');
             $carouselContainer = $('.sky-carousel-container', me.$Carousel);
             $rmListContainer = $('.rm-list-container', me.$RMList);
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (me.options.selectedItemPath != null && me.options.selectedItemPath == catalogItem.Path) {
+                if (decodedPath != null && decodedPath == decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 $carouselContainer.append(me._generateListItem(catalogItem));

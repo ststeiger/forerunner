@@ -6,11 +6,12 @@
             selectedItemPath: null,
             catalogItems: null,
             url: null,
-            $scrollBarOwner : null,
+            $scrollBarOwner: null,
+            navigateTo : null
         },
         _generateListItem: function (catalogItem) {
             var me = this;
-            var encodedPath = String(catalogItem.Path).replace(/\//g, "%2f");
+            
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
               + 'GetThumbnail/?ReportPath=' + catalogItem.Path;
@@ -32,21 +33,22 @@
             $img.addClass('center');
             if (catalogItem.Type == '1') {
                 imageSrc = './ReportExplorer/images/folder-icon.png'
-                targetUrl = '#explore/' + encodedPath;
             } else {
                 $img.addClass('reportitem');
-                targetUrl = '#browse/' + encodedPath;
                 if (hasParameters) {
                     imageSrc = './ReportExplorer/images/Report-icon.png'
                 } else {
                     imageSrc = reportThumbnailPath;
                 }
             }
+
+            var action = catalogItem.Type == '1' ? 'explore' : 'browse';
               
             $img.attr('src', imageSrc);
             $anchor.on('click', function (event) {
-                // BUGBUG:: Need to move this to a call back
-                g_App.router.navigate(targetUrl, { trigger: true, replace: false });
+                if (me.options.navigateTo != null) {
+                    me.options.navigateTo(action, catalogItem.Path);
+                }
             });
             $anchor.append($img);
             $ListItem.append($anchor);

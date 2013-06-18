@@ -140,19 +140,19 @@
     <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\Carousel\css\default_skin.css" />
-    <Content Include="Lib\Carousel\css\default_skin_variation.css" />
-    <Content Include="Lib\Carousel\css\tooltip_skin.css" />
-    <Content Include="Lib\Carousel\css\tooltip_skin_variation.css" />
-    <Content Include="Lib\Carousel\images\sc-graphics\closedhand.cur" />
-    <Content Include="Lib\Carousel\images\sc-graphics\closedhand.png" />
-    <Content Include="Lib\Carousel\images\sc-graphics\next_arrow.png" />
-    <Content Include="Lib\Carousel\images\sc-graphics\openhand.cur" />
-    <Content Include="Lib\Carousel\images\sc-graphics\openhand.png" />
-    <Content Include="Lib\Carousel\images\sc-graphics\preloader.gif" />
-    <Content Include="Lib\Carousel\images\sc-graphics\prev_arrow.png" />
-    <Content Include="Lib\Carousel\images\sc-graphics\tooltip_skin_navigation.png" />
-    <Content Include="Lib\Carousel\js\jquery.sky.carousel-1.0.2.min.js" />
+    <Content Include="Lib\Nav\css\default_skin.css" />
+    <Content Include="Lib\Nav\css\default_skin_variation.css" />
+    <Content Include="Lib\Nav\css\tooltip_skin.css" />
+    <Content Include="Lib\Nav\css\tooltip_skin_variation.css" />
+    <Content Include="Lib\Nav\images\sc-graphics\closedhand.cur" />
+    <Content Include="Lib\Nav\images\sc-graphics\closedhand.png" />
+    <Content Include="Lib\Nav\images\sc-graphics\next_arrow.png" />
+    <Content Include="Lib\Nav\images\sc-graphics\openhand.cur" />
+    <Content Include="Lib\Nav\images\sc-graphics\openhand.png" />
+    <Content Include="Lib\Nav\images\sc-graphics\preloader.gif" />
+    <Content Include="Lib\Nav\images\sc-graphics\prev_arrow.png" />
+    <Content Include="Lib\Nav\images\sc-graphics\tooltip_skin_navigation.png" />
+    <Content Include="Lib\Nav\js\jquery.sky.carousel-1.0.2.min.js" />
     <Content Include="Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />

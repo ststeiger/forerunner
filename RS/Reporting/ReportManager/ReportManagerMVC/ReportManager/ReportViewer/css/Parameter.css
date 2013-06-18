@@ -3,7 +3,7 @@
     margin-left: 1px;
     border-width: 1px;
     border-style: solid;
-    min-width:490px;
+    min-width:270px;
     background-color: rgb(222,231,242);
 }
 .Parameter-Panel
@@ -16,19 +16,22 @@
     margin:4px;
     border-width:1px;
     border-style:solid;
-    width:180px;
-}
-.Parameter-Form{
-    margin:10px 6px;
+    width:170px;
 }
 .Parameter-Label{
     margin:4px;
+    display:inline-block;    
+}
+.Parameter-ElementBorder
+{
+    margin: 10px 6px;
+    display: inline-block;
 }
 .Parameter-Checkbox{
     margin-left:10px;
 }
 .Parameter-Select{
-    width:192px;
+    width:182px;
 }
 .Parameter-Radio{
     width:35px;
@@ -84,12 +87,16 @@
    border:solid 1px;
    border-color:white;
    background-color:white;
-   width:190px;
+   width:180px;
 }
 .Parameter-Error
 {
     border-width: thin;
     border-color: red;
+}
+.ErrorPlaceHolder
+{
+    margin-left:4px;
 }
 
 /* Smartphones (landscape) ----------- */
@@ -116,14 +123,40 @@
     .Parameter-Layout
     {
         width: 50%;
+        display:inline-block;
+        left: 49.5%;
+        position:absolute;
+    }
+    .Parameter-ItemContainer
+    {
+        display: inline-block;
+        white-space: nowrap;
+    }
+    .Parameter-SubmitBorder
+    {
+        margin: 4px;
+        display: inline-block;
     }
 }
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait)
 {
-    .Parameter-Layout
+   .Parameter-Layout
     {
         width: 50%;
+        display:inline-block;
+        left: 49.5%;
+        position:absolute;
+    }
+    .Parameter-ItemContainer
+    {
+        display: inline-block;
+        white-space: nowrap;
+    }
+    .Parameter-SubmitBorder
+    {
+        margin: 4px;
+        display: inline-block;
     }
 }
 /* iPhone 4 ----------- */
@@ -134,12 +167,30 @@
     {
         width: 100%;
     }
+    .Parameter-ItemContainer
+    {
+        white-space: nowrap;
+    }
+    .Parameter-SubmitBorder
+    {
+        margin: 4px;
+    }
 }
 /* pc or laptop */
 @media only screen and (min-device-width : 1224px)
 {
-   .Parameter-Layout
+    .Parameter-Layout
     {
         width: 100%;
     }
+    .Parameter-ItemContainer
+    {
+        display: inline-block;
+        white-space: nowrap;
+    }
+    .Parameter-SubmitBorder
+    {
+        margin: 4px;
+        display: inline-block;
+    }    
 }

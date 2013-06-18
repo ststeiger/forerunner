@@ -198,7 +198,7 @@ namespace ReportManager.Controllers
                 result = GetReportViewer(ReportServerURL).GetRenderExtension(ReportPath, SessionID, ParameterList, Type, out mimeType);
                 return GetResponseFromBytes(result, mimeType);
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 return ReturnError(e);
             }

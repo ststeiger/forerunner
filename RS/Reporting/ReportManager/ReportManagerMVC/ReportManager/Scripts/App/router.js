@@ -303,7 +303,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-$(document).ready(g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'ReportManagerHeaderView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
+$(document).ready(g_App.utils.loadTemplate(['AppPageView',  'ReportManagerHeaderView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;

@@ -257,7 +257,7 @@ namespace ReportManager.Controllers
                 else
                     resp.StatusCode = HttpStatusCode.NotFound;
             }
-            catch(Exception e)
+            catch
             {
                 resp.StatusCode = HttpStatusCode.NotFound;
             }

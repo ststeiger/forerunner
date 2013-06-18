@@ -433,7 +433,7 @@
         },
         RemoveParameter: function () {
             var me = this;
-            $(".ParameterContainer").detach();
+            $(".Parameter-Container").detach();
         },
         _GetDefaultHTMLTable: function() {
             var $NewObj = $("<Table/>");

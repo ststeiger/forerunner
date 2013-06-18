@@ -59,6 +59,34 @@ namespace Forerunner.Manager
             rs.Credentials = new NetworkCredential(Credentials.UserName, Credentials.Password, Credentials.Domain);
         }
 
+        public byte[] UpdateView(string view, string action, string path)
+        {
+         
+            if (view == "favorites")
+            {
+                if (action == "delete")
+                    return Encoding.UTF8.GetBytes(this.DeleteFavorite(path));
+                else if (action == "add")
+                    return Encoding.UTF8.GetBytes(this.SaveFavorite(path));
+            }
+
+            return null;
+        }
+
+        public IEnumerable<CatalogItem> GetItems(string view, string path)
+        {
+            
+            if (view == "favorites")
+                return this.GetFavorites();
+            else if (view == "recent")
+                return this.GetRecentReports();
+            else if (view == "catalog")
+                return this.ListChildren(path, false);
+            else
+                return null;
+        }
+
+
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
         {
             List<CatalogItem> list = new List<CatalogItem>();

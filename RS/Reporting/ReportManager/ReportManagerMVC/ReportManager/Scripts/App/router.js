@@ -142,7 +142,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
             var btnFav = {
                 toolType: 0,
-                selectorClass: 'fr-button-fav',
+                selectorClass: 'fr-button-update-fav',
                 imageClass: 'fr-image-delFav',
                 click: function (e) {
                     var action;
@@ -154,6 +154,7 @@ var ApplicationRouter = Backbone.Router.extend({
                         action = "delete";
                     else
                         action = "add";
+                    
                     $.getJSON("./api/ReportManager/UpdateView", {
                         view: "favorites",
                         action: action,
@@ -191,7 +192,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
             var itemFav = {
                 toolType: 4,
-                selectorClass: 'fr-button-Fav',
+                selectorClass: 'fr-item-update-fav',
                 imageClass: 'fr-image-delFav',
                 text: 'Favorites',
                 click: function (e) {
@@ -204,6 +205,7 @@ var ApplicationRouter = Backbone.Router.extend({
                         action = "delete";
                     else
                         action = "add";
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-update-fav']);
                     $.getJSON("./api/ReportManager/UpdateView", {
                         view: "favorites",
                         action: action,

@@ -233,5 +233,35 @@ namespace ReportManager.Controllers
             }
             return resp;
         }
+
+        [HttpGet]
+        public HttpResponseMessage ExportReport(string ReportServerURL,string ReportPath, string SessionID, string ParameterList, string ExportType)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            try
+            {
+                ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+                byte[] result;
+                //Application will need to handel security
+                rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+
+                RenderFormat Type = (RenderFormat)Enum.Parse(typeof(RenderFormat), ExportType);
+                string MimeType = string.Empty;
+                result = rep.GetRenderExtension(ReportPath, SessionID, ParameterList, Type, out MimeType);
+
+                if (result != null)
+                {
+                    resp.Content = new ByteArrayContent(result);
+                    resp.Content.Headers.ContentType = new MediaTypeHeaderValue(MimeType);
+                }
+                else
+                    resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            catch(Exception e)
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            return resp;
+        }
     }
 }

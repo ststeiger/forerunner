@@ -3,6 +3,8 @@
 	<Import Project="Reporting.setting"/> 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
+		<ProjectFiles Include="ReportManager\ReportManagerMVC\dirs.proj" />
+		<ProjectFiles Include="ReportViewer\dirs.proj" />
 		<ProjectFiles Include="SecurityExtensions\dirs.proj"/> 
 	</ItemGroup> 
 	<Import Project="Reporting.traversal.targets"/> 

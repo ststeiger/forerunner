@@ -66,17 +66,23 @@ namespace Forerunner.Manager
 
             foreach (CatalogItem ci in items)
             {
-                if (ci.Type == ItemTypeEnum.Report|| ci.Type == ItemTypeEnum.LinkedReport)
-                    list.Add(ci);
-                if (ci.Type == ItemTypeEnum.Folder)
+                if (ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.LinkedReport)
+                {
+                    if (!ci.Hidden)
+                        list.Add(ci);
+                }
+                if (ci.Type == ItemTypeEnum.Folder && !ci.Hidden)
                 {                    
                     CatalogItem[] folder = rs.ListChildren(ci.Path,false);
                     foreach (CatalogItem fci in folder)
                     {
                         if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport || fci.Type == ItemTypeEnum.Folder)
                         {
-                            list.Add(ci);
-                            break;
+                            if (!ci.Hidden)
+                            {
+                                list.Add(ci);
+                                break;
+                            }
                         }
                     }
                 }

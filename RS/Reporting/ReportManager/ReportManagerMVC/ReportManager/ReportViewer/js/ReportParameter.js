@@ -4,9 +4,11 @@
         // Default options
         options: {
             ReportViewer: null,
+            PageNum:null,
         },      
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
+            me.options.PageNum = PageNum;
             var $ParameterDiv = new $("<div class='Parameter-Container Parameter-Layout' name='" + Data.SessionID + "'></div>");
 
             var $ParameterContainer = me._GetDefaultHTMLTable();
@@ -52,15 +54,10 @@
             $Col.append($Form);
             $Row.append($Col);
 
-            var $ViewReport_TD = new $("<TD/>");
-            $ViewReport_TD.attr("style", "margin:4px;text-align:center");
+            var $ViewReport_TD = new $("<td style='margin:4px;text-align:center;width:25%' />");
 
             var $ViewReport = new $("<input name='Parameter_ViewReport' type='button' class='ViewReport' value='View Report'/>");
-            $ViewReport.on("click", function () {
-                me._CloseAllDropdown();
-                if (me.GetParamsList() != null) 
-                    me.options.ReportViewer.LoadPage(PageNum, null, false, null, me.GetParamsList());
-            });
+            $ViewReport.on("click", function () { me._SubmitForm(); });
 
             $ViewReport_TD.append($ViewReport);
             var $SpaceTD = new $("<TD />");
@@ -75,6 +72,13 @@
             else
                 $ParameterDiv.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
             me.options.ReportViewer.RemoveLoadingIndicator();
+        },
+        _SubmitForm: function () {
+            var me = this;
+
+            me._CloseAllDropdown();
+            if (me.GetParamsList() != null)
+                me.options.ReportViewer.LoadPage(me.options.PageNum, null, false, null, me.GetParamsList());
         },
         _WriteParameterControl: function(Param, $Parent) {
             var $TD_Lable = new $("<TD />");
@@ -103,6 +107,10 @@
                 else
                     $element = me._WriteTextArea(Param);
             }
+
+            $element.on("keypress", function (e) {
+                if (e.keyCode == 13) { me._SubmitForm() }; // Enter
+            });
 
             $TD_Control.append($element).append(me._AddNullableCheckBox(Param, $element));
             var $TD_Status = new $("<TD class='Status'/>");
@@ -312,7 +320,7 @@
                     $("#" + Param.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
                 });
                 $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
-                $("[name='" + Param.Name + "']").focus().blur();
+                $("[name='" + Param.Name + "']").focus().blur().focus();
             }
 
         },

@@ -259,7 +259,7 @@
         ShowParms: function () {
             var me = this;
             if (me.ParamLoaded == true)
-                $("#ParameterContainer").animate({ height: 'toggle' }, 500);
+                $(".Parameter-Container").animate({ height: 'toggle' }, 500);
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
@@ -494,6 +494,11 @@
             $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
             if (me.Finding == true) me.Finding = false;
         },
+        Export: function () {
+            var me = this;
+            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=WORD"
+            window.open(url);
+        },
 
         //Page Loading
         LoadParameters: function (PageNum) {
@@ -582,8 +587,15 @@
                 me.Pages[NewPageNum].$Container = $Report;
                 me.Pages[NewPageNum].ReportObj = Data;
             }
-            me.SessionID = Data.SessionID;
-            me.NumPages = Data.NumPages;
+
+            if (Data.SessionID == null)
+                me.SessionID = "";
+            else
+                me.SessionID = Data.SessionID;
+            if (Data.NumPages == null)
+                me.NumPages = 0
+            else
+                me.NumPages = Data.NumPages;
 
             //Sections           
             if (!LoadOnly) {

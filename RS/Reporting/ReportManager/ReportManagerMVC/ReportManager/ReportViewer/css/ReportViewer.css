@@ -102,7 +102,10 @@ ol.lower-latin {
   text-align:right;
 }
 
-
+.Error-Details {
+    cursor:pointer;
+    color:blue;
+}
 .report-container {
   position:relative;
   width:100%;

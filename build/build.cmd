@@ -26,6 +26,12 @@ echo %DATE% >> %BUILD_LOG%
 echo %TIME% >> %BUILD_LOG%
 echo %PROJECT_NAME% >> %BUILD_LOG%
 echo Syncing Tree from [%GITHUBSSH%] >> %BUILD_LOG%
+echo USERNAME [%USERNAME%] >> %BUILD_LOG%
+echo USERDOMAIN [%USERDOMAIN%] >> %BUILD_LOG%
+echo USERPROFILE [%USERPROFILE%] >> %BUILD_LOG%
+echo HOMEDRIVE [%HOMEDRIVE%] >> %BUILD_LOG%
+echo HOMEPATH [%HOMEPATH%] >> %BUILD_LOG%
+echo HOME [%HOME%] >> %BUILD_LOG%
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
@@ -36,6 +42,8 @@ git commit %~dp0\..\build.txt -n -m "Official Build" >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
+
+echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
 
 git push %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
@@ -54,11 +62,11 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %BUILD_RELEASE%. See %BUILD_LOG% for more details."
+call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %BUILD_RELEASE%. See %BUILD_LOG% for more details." -Attachments %BUILD_RELEASE%\build.wrn
 exit /b 0
 
 
 :Error
 echo The Build Failed. >> %BUILD_LOG%
-call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %BUILD_LOG% for more details." -Attachments %BUILD_RELEASE%\build.err
+call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %BUILD_LOG% for more details." -Attachments %BUILD_RELEASE%\build.err,%BUILD_RELEASE%\build.wrn
 exit /b 1

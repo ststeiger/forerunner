@@ -1,5 +1,5 @@
 ﻿.fr-toolpane {
-    background-color:black;
+    background-color:#363B45;
     margin:0px;
     padding:0px;
     width:100%;
@@ -21,7 +21,9 @@
   display:inline-block;
 }
 .fr-item-container {
-  border-width:0px;
+  border-top-width:1px;
+  border-top-style:groove;
+  border-top-color: darkgray;
   vertical-align: top;
   line-height:36px;
   color: white;

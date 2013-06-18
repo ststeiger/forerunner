@@ -13,7 +13,7 @@
             text: 'Parameters',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('ShowParms')
-                e.data.me._trigger('actionstarted', null, e.data.me.itemParamarea);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-paramarea']);
             }
         },
         itemNav: {
@@ -23,7 +23,7 @@
             text: 'Navigation',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('ShowNav')
-                e.data.me._trigger('actionstarted', null, e.data.me.itemNav);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-nav']);
             }
         },
         itemReportBack: {
@@ -33,7 +33,7 @@
             text: 'back',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('Back')
-                e.data.me._trigger('actionstarted', null, e.data.me.itemReportBack);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-reportback']);
             }
         },
         itemRefresh: {
@@ -43,7 +43,7 @@
             text: 'Refresh',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('RefreshReport')
-                e.data.me._trigger('actionstarted', null, e.data.me.itemRefresh);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-refresh']);
             }
         },
         itemFirstPage: {
@@ -52,7 +52,7 @@
             imageClass: 'fr-image-firstpage',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.itemFirstPage);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-firstpage']);
             }
         },
         itemPrev: {
@@ -61,7 +61,7 @@
             imageClass: 'fr-image-prev',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.itemPrev);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-prev']);
             }
         },
         itemReportPage: {
@@ -90,7 +90,7 @@
             imageClass: 'fr-image-next',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.itemNext);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-next']);
             }
         },
         itemLastPage: {
@@ -99,7 +99,7 @@
             imageClass: 'fr-image-lastpage',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
-                e.data.me._trigger('actionstarted', null, e.data.me.itemLastPage);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-lastpage']);
             }
         },
         itemDocumentMap: {
@@ -109,7 +109,7 @@
             text: 'document map',
             click: function (e) {
                 e.data.$reportViewer.reportViewer("ShowDocMap")
-                e.data.me._trigger('actionstarted', null, e.data.me.itemDocumentMap);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-documentmap']);
             }
         },
         itemKeyword: {
@@ -127,12 +127,12 @@
             text: "Find",
             click: function (e) {
                 e.data.$reportViewer.reportViewer("Find")
-                e.data.me._trigger('actionstarted', null, e.data.me.itemFind);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-find']);
             }
         },
         itemSeparator: {
             toolType: 3,
-            selectorClass: 'fr-span-sparator',
+            selectorClass: 'fr-item-span-sparator',
             text: '|&nbsp'
         },
         itemFindNext: {
@@ -141,7 +141,7 @@
             text: "Next",
             click: function (e) {
                 e.data.$reportViewer.reportViewer("FindNext")
-                e.data.me._trigger('actionstarted', null, e.data.me.itemFindNext);
+                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-findnext']);
             }
         },
         _initCallbacks: function () {

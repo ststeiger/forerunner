@@ -21,7 +21,10 @@ var g_App = g_App || {};
     },
     render: function () {
         $(this.el).reportexplorer({
-            path: this.options.path, catalogItems: this.options.model.toJSON(), url : this.options.model.models[0].url()
+            path: this.options.path,
+            catalogItems: this.options.model.toJSON(),
+            url: this.options.model.models[0].url(),
+            selectedItemPath: this.options.selectedItemPath
         });
 
         return this;

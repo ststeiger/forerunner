@@ -308,7 +308,7 @@
                 //me.Pages[me.CurPage].$Container = action.Container;
                 //me.$ReportAreaContainer.append(me.Pages[me.CurPage].$Container);
             } else {
-                me._trigger('back');
+                me._trigger('back', null, {path: me.options.ReportPath});
             }
         },
         ShowNav: function () {

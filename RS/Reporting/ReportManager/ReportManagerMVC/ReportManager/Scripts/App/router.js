@@ -42,7 +42,10 @@ var ApplicationRouter = Backbone.Router.extend({
             return 'ReportManager/GetItems?view=' + view + '&path=';
         },
 
+        _selectedItemPath : null,
+
         _transitionToReportManager: function (path, view) {
+            var path0 = path;
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
@@ -87,7 +90,8 @@ var ApplicationRouter = Backbone.Router.extend({
             catalogItemsModel.fetch({
                 success: function (catalogItemsModel, response, options) {
                     me.appPageView.transitionMainSection(appPageModel,
-                    g_App.ReportManagerMainView, { model: catalogItemsModel });
+                    g_App.ReportManagerMainView, { model: catalogItemsModel, selectedItemPath: String(me._selectedItemPath).replace(/%2f/g, "/") });
+                    me._selectedItemPath = path0;
                 },
                 error: function (model, response) {
                     console.log(response);
@@ -98,6 +102,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
         transitionToReportViewer: function (path) {
             var me = this;
+            me._selectedItemPath = null;
 
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
@@ -227,7 +232,10 @@ var ApplicationRouter = Backbone.Router.extend({
             $toolPane.toolpane('addTools', 10, true, [itemFav]);
 
             $('#bottomdiv').pagenav({$reportViewer: $viewer  });
-            $viewer.on('reportviewerback', function (e, data) { me.historyBack(); });
+            $viewer.on('reportviewerback', function (e, data) {
+                me._selectedItemPath = data.path;
+                me.historyBack();
+            });
             $viewer.reportViewer('option', 'PageNav', $('#bottomdiv'));
             me.setFavoriteState(path, $toolbar);
             me.appPageView.bindEvents();
@@ -287,13 +295,12 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView = new g_App.AppPageView({
                 model : appPageModel
             }).render();
-            $("#pageSection").append(this.appPageView.el);
         }
     });
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-$(document).ready(g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'ReportManagerHeaderView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
+$(document).ready(g_App.utils.loadTemplate(['AppPageView'], '', function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;

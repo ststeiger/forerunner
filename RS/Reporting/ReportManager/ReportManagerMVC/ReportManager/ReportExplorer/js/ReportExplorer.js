@@ -6,11 +6,12 @@
             selectedItemPath: null,
             catalogItems: null,
             url: null,
-            $scrollBarOwner : null,
+            $scrollBarOwner: null,
+            navigateTo : null
         },
         _generateListItem: function (catalogItem) {
             var me = this;
-            var encodedPath = String(catalogItem.Path).replace(/\//g, "%2f");
+            
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
               + 'GetThumbnail/?ReportPath=' + catalogItem.Path;
@@ -32,21 +33,22 @@
             $img.addClass('center');
             if (catalogItem.Type == '1') {
                 imageSrc = './ReportExplorer/images/folder-icon.png'
-                targetUrl = '#explore/' + encodedPath;
             } else {
                 $img.addClass('reportitem');
-                targetUrl = '#browse/' + encodedPath;
                 if (hasParameters) {
                     imageSrc = './ReportExplorer/images/Report-icon.png'
                 } else {
                     imageSrc = reportThumbnailPath;
                 }
             }
+
+            var action = catalogItem.Type == '1' ? 'explore' : 'browse';
               
             $img.attr('src', imageSrc);
             $anchor.on('click', function (event) {
-                // BUGBUG:: Need to move this to a call back
-                g_App.router.navigate(targetUrl, { trigger: true, replace: false });
+                if (me.options.navigateTo != null) {
+                    me.options.navigateTo(action, catalogItem.Path);
+                }
             });
             $anchor.append($img);
             $ListItem.append($anchor);
@@ -55,13 +57,14 @@
         _renderList: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
+            var decodedPath = me.options.selectedItemPath != null ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.element.addClass('reportexplorer');
             $carouselContainer = $('.sky-carousel-container', me.$Carousel);
             $rmListContainer = $('.rm-list-container', me.$RMList);
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (me.options.selectedItemPath != null && me.options.selectedItemPath == catalogItem.Path) {
+                if (decodedPath != null && decodedPath == decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 $carouselContainer.append(me._generateListItem(catalogItem));
@@ -106,8 +109,10 @@
                 selectByClick: true
             });
             me.$C = carousel;
-            me._selectCarouselItem();
-            me._scrollList();
+            if (me.rmListItems.length > 0) {
+                me._selectCarouselItem();
+                me._scrollList();
+            }
 
             me.$explorer.bind('scrollstop', function (e) {
                 if (!me.$Carousel.is(":visible")) {
@@ -173,17 +178,6 @@
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner != null ? me.options.$scrollBarOwner : $(window);
             me._render();
-        },
-        _isTouchDevice: function () {
-            var ua = navigator.userAgent;
-            return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
-        },
-        _isMobile : function () {
-            var ua = navigator.userAgent;
-            return (ua.match(/(iPhone|iPod|iPad)/)
-            || ua.match(/BlackBerry/) || ua.match(/Android/));
-        },
+        }
     });  // $.widget
 });  // function()

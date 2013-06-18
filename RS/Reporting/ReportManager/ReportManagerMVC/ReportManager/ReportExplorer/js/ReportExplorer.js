@@ -127,8 +127,9 @@
 
             me.$explorer.resize(function () {
                 if (!me.$Carousel.is(":visible")) {
-                    me._scrollList();
-                }
+                    if (me.$explorer.scrollTop() == 0 && me.$UL.is(":visible"))
+                        me._scrollList();
+                } 
             });
         },
         _setSelectionFromScroll: function () {

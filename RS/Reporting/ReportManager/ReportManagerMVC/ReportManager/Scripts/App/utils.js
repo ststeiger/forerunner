@@ -7,6 +7,7 @@ var g_App = g_App || {};
 
   g_App.utils = {
     // Asynchronously load templates located in separate .html files
+    /*
     loadTemplate : function(views, subfolder, callback) {
 
       var deferreds = [];
@@ -25,6 +26,7 @@ var g_App = g_App || {};
 
       $.when.apply(null, deferreds).done(callback);
     },
+    */
 
     uploadFile : function(file, callbackSuccess) {
       var self = this;

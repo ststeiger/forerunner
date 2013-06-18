@@ -103,6 +103,24 @@ namespace Forerunner.Viewer
             return script;
         }
 
+        public byte[] NavigateTo(string NavType, string SessionID, string UniqueID)
+        {
+            
+            switch (NavType)
+            {
+                case "toggle":
+                    return Encoding.UTF8.GetBytes(this.ToggleItem(SessionID, UniqueID));
+                case "bookmark":
+                    return Encoding.UTF8.GetBytes(this.NavBookmark(SessionID, UniqueID));
+                case "drillthrough":
+                    return Encoding.UTF8.GetBytes(this.NavigateDrillthrough(SessionID, UniqueID));
+                case "documentMap":
+                    return Encoding.UTF8.GetBytes(this.NavigateDocumentMap(SessionID, UniqueID));
+            }
+            return null;
+
+        }
+
         public string pingSession(string SessionID)
         {
             JsonWriter w = new JsonTextWriter();

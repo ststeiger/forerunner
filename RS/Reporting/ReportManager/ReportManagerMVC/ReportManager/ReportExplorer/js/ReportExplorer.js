@@ -109,8 +109,10 @@
                 selectByClick: true
             });
             me.$C = carousel;
-            me._selectCarouselItem();
-            me._scrollList();
+            if (me.rmListItems.length > 0) {
+                me._selectCarouselItem();
+                me._scrollList();
+            }
 
             me.$explorer.bind('scrollstop', function (e) {
                 if (!me.$Carousel.is(":visible")) {
@@ -176,17 +178,6 @@
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner != null ? me.options.$scrollBarOwner : $(window);
             me._render();
-        },
-        _isTouchDevice: function () {
-            var ua = navigator.userAgent;
-            return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
-        },
-        _isMobile : function () {
-            var ua = navigator.userAgent;
-            return (ua.match(/(iPhone|iPod|iPad)/)
-            || ua.match(/BlackBerry/) || ua.match(/Android/));
-        },
+        }
     });  // $.widget
 });  // function()

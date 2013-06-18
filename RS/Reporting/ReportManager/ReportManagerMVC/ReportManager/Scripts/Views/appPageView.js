@@ -8,12 +8,6 @@ var g_App = g_App || {};
   //Models
   g_App.AppPageModel = Backbone.Model.extend({
     initialize: function(attributes) {
-    },
-
-    defaults: function() {
-      return {
-        'pageTitle': '',
-      };
     }
   });
 
@@ -36,9 +30,6 @@ var g_App = g_App || {};
           this.model.unbind(key, customEvents[key], this);
           this.model.bind(key, customEvents[key], this);
         }
-        
-        var data = this.model.toJSON();
-        $(this.el).html(this.template(data));
 
         return this;
       },
@@ -47,7 +38,7 @@ var g_App = g_App || {};
       onChangeMainSection: function() {
         // Append or transition the main section into the page
         var el = this.model.attributes.mainSection.el;
-        $(this.el).find("#mainSection").html(el);
+        $("#mainSection").html(el);
       },
       
       transitionHeader: function (headerSecionType) {

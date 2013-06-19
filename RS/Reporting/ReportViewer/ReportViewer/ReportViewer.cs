@@ -210,7 +210,7 @@ namespace Forerunner.Viewer
                     rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                 }
                 
-                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
                     return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages, rs.GetDocumentMap());

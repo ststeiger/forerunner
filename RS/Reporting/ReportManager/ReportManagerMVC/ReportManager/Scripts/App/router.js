@@ -72,21 +72,6 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
             var me = this;
 
-            $('.fr-image-back', $('#mainSectionHeader')).on('click', function (e, data) {
-                me.historyBack();
-            });
-
-
-            $('.fr-rm-button-fav').on("click",
-                function (e) {
-                    me.transitionToFavorite();
-                });
-
-            $('.fr-rm-button-recent').on("click",
-                function (e) {
-                    me.transitionToRecent();
-                });
-
             catalogItemsModel.fetch({
                 success: function (catalogItemsModel, response, options) {
                     me.appPageView.transitionMainSection(appPageModel,

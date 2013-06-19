@@ -44,6 +44,16 @@
   background-color: white;
 }
 
+.fr-button-back {
+    float:right;
+}
+
+.fr-rm-button-fav {
+    margin-left:85px;
+    margin-right:20px;
+}
+
+
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 

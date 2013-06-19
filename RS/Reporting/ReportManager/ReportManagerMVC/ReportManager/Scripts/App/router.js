@@ -77,12 +77,12 @@ var ApplicationRouter = Backbone.Router.extend({
             });
 
 
-            $('.fr-button-fav').on("click",
+            $('.fr-rm-button-fav').on("click",
                 function (e) {
                     me.transitionToFavorite();
                 });
 
-            $('.fr-button-recent').on("click",
+            $('.fr-rm-button-recent').on("click",
                 function (e) {
                     me.transitionToRecent();
                 });
@@ -177,7 +177,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     .fail(function () { alert("Failed") });
                 }
             };
-            $toolbar.toolbar('addTools', 12, true, [btnFav]);
+            $toolbar.toolbar('addTools', 14, true, [btnFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());

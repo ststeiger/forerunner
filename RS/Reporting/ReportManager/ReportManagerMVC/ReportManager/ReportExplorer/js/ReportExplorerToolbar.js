@@ -7,10 +7,10 @@
         _render: function () {
             var me = this;
             me.element.html("<div class='fr-toolbar'>" +
-            "<a href='#'><div class='fr-buttonicon fr-image-home'/></a>" +
-            "<div class='fr-buttonicon fr-image-back'/>" +
-            "<a href='#favorite'><div class='fr-buttonicon fr-button-fav fr-image-fav'/></a>" +
-            "<a href='#recent'><div class='fr-buttonicon fr-button-recent fr-image-recent'/></a>" +
+            "<a href='#'><div class='fr-buttonicon fr-image-home'/></a>" +            
+            "<div class='fr-buttonicon fr-button-back fr-image-back'/>" +
+            "<a href='#favorite'><div class='fr-buttonicon fr-rm-button-fav fr-image-fav'/></a>" +
+            "<a href='#recent'><div class='fr-buttonicon fr-rm-button-recent fr-image-recent'/></a>" +
             "<div id='HeaderArea'></div></div>"
             );
         },

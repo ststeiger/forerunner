@@ -208,8 +208,6 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
- .fr-textbox-reportpage {
-        margin-left:85px;
-    }
+
 
 }  /* @media */

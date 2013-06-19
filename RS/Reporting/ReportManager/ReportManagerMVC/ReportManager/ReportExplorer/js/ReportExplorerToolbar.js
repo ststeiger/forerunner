@@ -8,7 +8,7 @@
         // Button Info
         btnHome: {
             toolType: 0,
-            selectorClass: 'fr-button-home',
+            selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
             click: function (e) {
                 g_App.router.navigate('#', { trigger: true, replace: false });
@@ -24,7 +24,7 @@
         },
         btnFav: {
             toolType: 0,
-            selectorClass: 'fr-button-fav',
+            selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
             click: function (e) {
                 g_App.router.navigate('#favorite', { trigger: true, replace: false });
@@ -32,7 +32,7 @@
         },
         btnRecent: {
             toolType: 0,
-            selectorClass: 'fr-button-recent',
+            selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
             click: function (e) {
                 g_App.router.navigate('#recent', { trigger: true, replace: false });

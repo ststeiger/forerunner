@@ -49,7 +49,7 @@
 }
 
 .fr-rm-button-fav {
-    margin-left:85px;
+    margin-left:20px;
     margin-right:20px;
 }
 
@@ -101,6 +101,8 @@ and (orientation : portrait) {
 .rm-list {
   display: block;
 }
+
+
 }
 
 /* iPads (landscape) ----------- */
@@ -125,6 +127,7 @@ and (orientation : landscape) {
 .rm-list {
   display: none;
 }
+
 }
 
 /* iPads (portrait) ----------- */

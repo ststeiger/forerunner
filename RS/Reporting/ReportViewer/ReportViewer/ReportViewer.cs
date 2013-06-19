@@ -23,9 +23,9 @@ namespace Forerunner.Viewer
         CSV,
         PDF,
         MHTML,
-        EXCEL,
+        EXCELOPENXML,
         IMAGE,
-        WORD
+        WORDOPENXML
     }
 
     public class ReportViewer
@@ -561,11 +561,6 @@ namespace Forerunner.Viewer
                     {
                         rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
-                    //else
-                    //{
-                    //    MimeType = "text/html";
-                    //    return System.Text.Encoding.Default.GetBytes("<h2 style='color:red;'>Parameter can't be empty</h2>");
-                    //}
                 }
 
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";

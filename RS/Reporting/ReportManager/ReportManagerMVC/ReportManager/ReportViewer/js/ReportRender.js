@@ -51,6 +51,8 @@
             ReportViewer = this.ReportViewer
             var me = this;
 
+            me._WriteExportPanel();
+
             ReportDiv.attr("Style", this._GetStyle(ReportViewer, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
             $.each(ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { me._WriteSection(new ReportItemContext(ReportViewer, Obj, Index, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent, ReportViewer.Pages[pageNum].$Container, "")); });
         },
@@ -803,6 +805,50 @@
             RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
             return RIContext.$HTMLParent;
 
+        },
+        _WriteExportPanel: function () {
+            var me = this;
+            var $ExportPanel = $("<div class='Export-Panel'></div>");
+
+            var ExportList = [];
+            ExportList.push({ Name: 'XML file with report data', Type: 'XML' });
+            ExportList.push({ Name: 'CSV (comma delimited)', Type: 'CSV' });
+            ExportList.push({ Name: 'PDF', Type: 'PDF' });
+            ExportList.push({ Name: 'MHTML (web archive)', Type: 'MHTML' });
+            ExportList.push({ Name: 'Excel', Type: 'EXCELOPENXML' });
+            ExportList.push({ Name: 'TIFF file', Type: 'IMAGE' });
+            ExportList.push({ Name: 'Word', Type: 'WORDOPENXML' });
+
+            $.each(ExportList, function (Index, ExportObj) {
+                $ExportPanel.append(me._GetExportItem(ExportObj));
+            });
+
+            $(document).on("click", function (e) {
+                if (!$(e.target).hasClass("Export-Panel") && !$(e.target).hasClass("fr-button-export") && !$ExportPanel.is(":hidden")) {
+                    $ExportPanel.fadeOut("fast");
+                }
+            });
+
+            $(".fr-button-export").append($ExportPanel);
+        },
+        _GetExportItem: function (ExportObj) {
+            var me = this;
+            var $ExportItem = $("<div class='Export-Item'></div>");
+
+            $ExportItem.hover(function () {
+                $ExportItem.addClass("Export-Hover");
+            },
+            function () {
+                $ExportItem.removeClass("Export-Hover");
+            });
+
+            var $ExportLink = $("<a class='Export-Link' value='" + ExportObj.Type + "' href='javascript:void(0)'>" + ExportObj.Name + "</a>");
+            $ExportLink.on("click", function () {
+                me.options.ReportViewer.Export(ExportObj.Type);
+            });
+
+            $ExportItem.append($ExportLink);
+            return $ExportItem;
         },
         
 

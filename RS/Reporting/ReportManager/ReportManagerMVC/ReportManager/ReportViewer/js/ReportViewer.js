@@ -91,6 +91,10 @@
             var me = this;
             return me.SessionID;
         },
+        IsParameterLoaded: function () {
+            var me = this;
+            return me.ParamLoaded;
+        },
         SetColHeaderOffset: function ($Tablix, $ColHeader) {
             //Update floating column headers
             var me = this;
@@ -297,7 +301,7 @@
                     me.options.PageNav.pagenav('reset');
                 if (me.ParamLoaded == true) {
                     me.$ReportContainer.reportParameter("RemoveParameter");
-                    me.paramloaded = false;
+                    me.ParamLoaded = false;
                 }
                 me.LoadPage(action.CurrentPage, null, false);
 
@@ -492,11 +496,16 @@
             $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
             if (me.Finding == true) me.Finding = false;
         },
-        Export: function () {
+        ShowExport: function () {
+            if ($(".Export-Panel").is(":hidden"))
+                $(".Export-Panel").css("left", $(".fr-button-export").offset().left).css("top", $(".fr-button-export").offset().top + $(".fr-button-export").height() + 2);
+            $(".Export-Panel").toggle();
+        },
+        Export: function (ExportType) {
             var me = this;
-            alert("left:" + $(".fr-button-export").offset().left + "; top:" + $(".fr-button-export").offset().top + "; height" + $(".fr-button-export").height());
-            //var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=WORD"
-            //window.open(url);
+            $(".Export-Panel").toggle();
+            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + ExportType;
+            window.open(url);
         },
 
         //Page Loading
@@ -565,7 +574,7 @@
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);
-                //me.RenderPage(NewPageNum);
+                
                 if (!LoadOnly) me.CachePages(NewPageNum);
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); })

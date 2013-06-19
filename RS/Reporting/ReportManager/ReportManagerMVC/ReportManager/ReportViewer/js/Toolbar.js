@@ -147,7 +147,7 @@
             selectorClass: 'fr-button-export',
             text: "Export",
             click: function (e) {
-                e.data.$reportViewer.reportViewer("Export");
+                e.data.$reportViewer.reportViewer("ShowExport");
             }
         },
         _initCallbacks: function () {

@@ -2,7 +2,8 @@
     $.widget("Forerunner.reportParameter", {
         options: {
             ReportViewer: null,
-            PageNum:null,
+            PageNum: null,
+            ParamLoaded: false,
         },
         _create: function () {
             var me = this;
@@ -18,10 +19,19 @@
                 me.options.ReportViewer.$ReportContainer.append(this.element);
             else
                 this.element.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
+            me.options.ParamLoaded = true;
+        },
+        _AppendParameter: function () {
+            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
+                me.options.ReportViewer.$ReportContainer.append(this.element);
+            else
+                this.element.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
         },
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
             me.options.PageNum = PageNum;
+
+            if (me.options.ParamLoaded == false) me._create();
 
             var $ElementBorder = $(".Parameter-ElementBorder");
             $.each(Data.ParametersList, function (Index, Param) {
@@ -215,7 +225,7 @@
             $OpenDropDown.on("click", function () { me._PopupDropDownPanel(Param); });
 
             var $DropDownContainer = new $("<div class='Parameter-DropDown Parameter-Dropdown-Hidden' name='" + Param.Name + "_DropDownContainer' value='" + Param.Name + "' />");
-            $(document).click(function (e) {
+            $(document).on("click", function (e) {
                 if ($(e.target).hasClass("ViewReport")) return;
 
                 if (!($(e.target).hasClass("Parameter-DropDown") || $(e.target).hasClass("ParameterClient") || $(e.target).hasClass(Param.Name + "_DropDown_CB") || $(e.target).hasClass(Param.Name + "_DropDown_lable"))) {
@@ -425,6 +435,7 @@
         },
         RemoveParameter: function () {
             var me = this;
+            me.options.ParamLoaded = false;
             $(".Parameter-Container").detach();
         },
         _GetDefaultHTMLTable: function() {

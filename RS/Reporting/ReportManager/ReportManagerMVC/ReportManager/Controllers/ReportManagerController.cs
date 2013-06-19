@@ -34,7 +34,7 @@ namespace ReportManager.Controllers
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
             return new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
         }
-        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType)
+        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
@@ -42,6 +42,8 @@ namespace ReportManager.Controllers
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                if (cache)
+                    resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
             else
                 resp.StatusCode = HttpStatusCode.NotFound;
@@ -57,9 +59,9 @@ namespace ReportManager.Controllers
 
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportPath)
+        public HttpResponseMessage GetThumbnail(string ReportPath,string DefDate)
         {
-            return GetResponseFromBytes(GetReportManager().GetCatalogImage(ReportPath), "image/JPEG");            
+            return GetResponseFromBytes(GetReportManager().GetCatalogImage(ReportPath), "image/JPEG",true);            
         }
 
         [HttpGet]

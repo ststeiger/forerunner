@@ -55,7 +55,7 @@
     width: 15px;
     color:white;
     line-height:36px;
-    text-align:center;
+    text-align:center;    
 }
 .fr-num-pages {
   min-width:10mm;
@@ -71,6 +71,11 @@
   line-height:36px;
   text-align:center;
 }
+
+.fr-button-reportback {
+    float:right;
+}
+
 
 .fr-image-menu {
   background-image:url('../../reportviewer/Images/Toolbar/align_just_icon.png');
@@ -130,6 +135,9 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
+ .fr-textbox-reportpage {
+        margin-left:125px;
+    }
 }  /* @media */
 
 /* Smartphones (portrait) ----------- */
@@ -141,6 +149,10 @@
   display: none;
 }
 
+    .fr-textbox-reportpage {
+        margin-left:85px;
+    }
+
 }  /* @media */
 
 /* iPads (landscape) ----------- */
@@ -151,6 +163,9 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
+ .fr-textbox-reportpage {
+        margin-left:400px;
+    }
 
 }  /* @media */
 
@@ -162,6 +177,9 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
+ .fr-textbox-reportpage {
+        margin-left:250px;
+    }
 
 }  /* @media */
 
@@ -190,5 +208,6 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
+
 
 }  /* @media */

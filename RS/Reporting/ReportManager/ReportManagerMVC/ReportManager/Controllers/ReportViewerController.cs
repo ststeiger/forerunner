@@ -29,7 +29,7 @@ namespace ReportManager.Controllers
             return rep;
         }
 
-        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType)
+        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
@@ -37,6 +37,8 @@ namespace ReportManager.Controllers
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                if (cache)
+                    resp.Headers.Add("Cache-Control", "max-age=86400");
             }
             else
                 resp.StatusCode = HttpStatusCode.NotFound;
@@ -74,7 +76,7 @@ namespace ReportManager.Controllers
             {
                 byte[] result = null;
                 result = GetReportViewer(ReportServerURL).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
-                return GetResponseFromBytes(result, "image/JPEG");
+                return GetResponseFromBytes(result, "image/JPEG",true);
 
             }
             catch (Exception e)

@@ -162,7 +162,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     .fail(function () { alert("Failed") });
                 }
             };
-            $toolbar.toolbar('addTools', 12, true, [btnFav]);
+            $toolbar.toolbar('addTools', 14, true, [btnFav]);
 
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', this.toolbarHeight());
@@ -173,7 +173,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 toolType: 4,
                 selectorClass: 'fr-id-home',
                 imageClass: 'fr-image-home',
-                text: 'home',
+                text: 'Home',
                 click: function (e) {
                     window.location.href = "#";
                 }

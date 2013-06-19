@@ -44,6 +44,16 @@
   background-color: white;
 }
 
+.fr-button-back {
+    float:right;
+}
+
+.fr-rm-button-fav {
+    margin-left:20px;
+    margin-right:20px;
+}
+
+
 /* Smartphones (landscape) ----------- */
 @media only screen 
 and (max-height : 320px) 
@@ -91,6 +101,8 @@ and (orientation : portrait) {
 .rm-list {
   display: block;
 }
+
+
 }
 
 /* iPads (landscape) ----------- */
@@ -115,6 +127,7 @@ and (orientation : landscape) {
 .rm-list {
   display: none;
 }
+
 }
 
 /* iPads (portrait) ----------- */

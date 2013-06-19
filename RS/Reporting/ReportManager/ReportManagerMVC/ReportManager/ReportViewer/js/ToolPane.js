@@ -30,7 +30,7 @@
             toolType: 4,
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
-            text: 'back',
+            text: 'Back',
             click: function (e) {
                 e.data.$reportViewer.reportViewer('Back')
                 e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-reportback']);
@@ -106,7 +106,7 @@
             toolType: 4,
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
-            text: 'document map',
+            text: 'Document map',
             click: function (e) {
                 e.data.$reportViewer.reportViewer("ShowDocMap")
                 e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-documentmap']);

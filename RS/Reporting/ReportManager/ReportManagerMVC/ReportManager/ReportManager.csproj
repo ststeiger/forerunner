@@ -178,6 +178,7 @@
     <Content Include="ReportViewer\css\PageNav.css" />
     <Content Include="ReportViewer\css\Parameter.css" />
     <Content Include="ReportViewer\js\PageNav.js" />
+    <Content Include="Scripts\Views\ReportViewerInitializer.js" />
     <Content Include="ReportViewer\js\Toolbase.js" />
     <Content Include="ReportViewer\css\ToolPane.css" />
     <Content Include="ReportViewer\js\forerunner.js" />
@@ -258,7 +259,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Scripts\Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

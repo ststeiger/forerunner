@@ -236,7 +236,6 @@
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
-    <Content Include="Scripts\Views\reportviewermainview.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

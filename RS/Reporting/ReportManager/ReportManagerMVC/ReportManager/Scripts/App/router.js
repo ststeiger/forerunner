@@ -108,14 +108,10 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 path = "/";
             }
-            var appPageModel = new g_App.AppPageModel({
-                showBackButton: true,
-                pageTitle: 'ReportViewer',
-            });
 
-            me.appPageView.transitionMainSection(appPageModel, 
-                g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-
+            $('#mainSection').html(null);
+            $viewerContainer = new $('<DIV id="FRReportViewer1"/>');
+            $('#mainSection').append($viewerContainer);
             var $viewer = $('#FRReportViewer1');
             $viewer.reportViewer({
                 ReportServerURL: g_App.configs.reportServerUrl,
@@ -265,28 +261,10 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.router.back();
         },
     
-        showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
-            // First load the subordinate view templates, everything else will happen in the callback
-            var me = this;
-            g_App.utils.loadTemplate(views, subfolder, function() {
-                var modalView = new modalViewType(options).render();
-                $('#modalViewContainer').append(modalView.el);
-                $('#modalViewContainer').show();
-            });
-        },
-    
-        removeModalView: function() {
-            $('#modalViewContainer>div').remove();
-            $('#modalViewContainer').hide();
-        },
-
         initialize : function() {
             // Create the application page framework; specifically the header, main section and footer.
             // Then attach it to the page. The application page sections will be shared by all pages.
-            var appPageModel = new g_App.AppPageModel({});
-            this.appPageView = new g_App.AppPageView({
-                model : appPageModel
-            }).render();
+            this.appPageView = new g_App.AppPageView().render();
         }
     });
 

@@ -21,8 +21,6 @@ var ApplicationRouter = Backbone.Router.extend({
             alert('Not found');
         },
 
-        
-
         transitionToReportManager: function (path) {
             this._transitionToReportManager(path, null);
         },
@@ -47,15 +45,13 @@ var ApplicationRouter = Backbone.Router.extend({
             if ($('#mainViewPort').position().left != 0) this.appPageView.toggleLeftPane();
             $('#mainViewPort').css({ width: "100%" });
 
-            if (path != null) {
-                path = String(path).replace(/%2f/g,"/");
-            } else {
+            if (path == null) {
                 path = "/";
             }
 
             var catalogItemUrl = Forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
             var me = this;
-            var currentSelectedPath = String(me._selectedItemPath).replace(/%2f/g, "/");
+            var currentSelectedPath = me._selectedItemPath; //String(me._selectedItemPath).replace(/%2f/g, "/");
             var model = new Forerunner.CatalogItemsModel({ url: g_App.configs.apiBase + catalogItemUrl });
             model.fetch({
                 success: function (data) {
@@ -80,6 +76,7 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         navigateTo: function (action, path) {
+            if (path != null) path = String(path).replace(/%2f/g, "/");
             if (action == 'home') {
                 g_App.router.navigate('#', { trigger: true, replace: false });
             } else if (action == 'back') {

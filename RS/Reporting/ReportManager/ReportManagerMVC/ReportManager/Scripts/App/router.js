@@ -8,7 +8,7 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
-            "favorite": "transitionToFavorite",
+            "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
             '*notFound': 'notFound'
@@ -27,21 +27,13 @@ var ApplicationRouter = Backbone.Router.extend({
             this._transitionToReportManager(path, null);
         },
 
-        transitionToFavorite: function () {
+        transitionToFavorites: function () {
             this._transitionToReportManager(null, 'favorites');
         },
         transitionToRecent: function () {
             this._transitionToReportManager(null, 'recent');
         },
-        _getCatalogItemsUrl: function (path) {
-            if (path == null) path = "/";
-            return 'ReportManager/GetItems?view=catalog&path=' + path;
-        },
-
-        _getViewCatalogItemsUrl: function (view) {
-            return 'ReportManager/GetItems?view=' + view + '&path=';
-        },
-
+        
         _selectedItemPath : null,
 
         _transitionToReportManager: function (path, view) {
@@ -60,29 +52,47 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 path = "/";
             }
-            var appPageModel = new g_App.AppPageModel({
-                showBackButton: false,
-                pageTitle: path
-            });
 
-            var catalogItemUrl = view != null ? this._getViewCatalogItemsUrl (view) : this._getCatalogItemsUrl(path);
-            var catalogItemsModel = new g_App.CatalogItemCollection({
-                catalogItemsUrl: catalogItemUrl
-            });
-            this.appPageView.transitionHeader(g_App.ReportManagerHeaderView);
+            var catalogItemUrl = Forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
             var me = this;
-
-            catalogItemsModel.fetch({
-                success: function (catalogItemsModel, response, options) {
-                    me.appPageView.transitionMainSection(appPageModel,
-                    g_App.ReportManagerMainView, { model: catalogItemsModel, selectedItemPath: String(me._selectedItemPath).replace(/%2f/g, "/") });
-                    me._selectedItemPath = path0;
+            var currentSelectedPath = String(me._selectedItemPath).replace(/%2f/g, "/");
+            var model = new Forerunner.CatalogItemsModel({ url: g_App.configs.apiBase + catalogItemUrl });
+            model.fetch({
+                success: function (data) {
+                    var view = new Forerunner.CatalogItemsView({
+                        $toolbar: $('#mainSectionHeader'),
+                        $explorerview: $("#mainSection"),
+                        url: g_App.configs.apiBase + 'ReportManager/',
+                        path: path,
+                        data: data,
+                        selectedItemPath: currentSelectedPath,
+                        navigateTo: me.navigateTo
+                    });
+                    view.render();
                 },
-                error: function (model, response) {
-                    console.log(response);
+                error: function (data) {
+                    console.log(data);
                     alert('Failed to load the catalogs from the server.  Please try again.');
                 }
-            });
+            })
+
+            me._selectedItemPath = path0;
+        },
+
+        navigateTo: function (action, path) {
+            if (action == 'home') {
+                g_App.router.navigate('#', { trigger: true, replace: false });
+            } else if (action == 'back') {
+                g_App.router.back();
+            } else if (action == 'favorites') {
+                g_App.router.navigate('#favorites', { trigger: true, replace: false });
+            } else if (action == 'recent') {
+                g_App.router.navigate('#recent', { trigger: true, replace: false });
+            } else {
+                var encodedPath = String(path).replace(/\//g, "%2f");
+                var targetUrl = '#' + action + '/' + encodedPath;
+                g_App.router.navigate(targetUrl, { trigger: true, replace: false });
+            }
         },
 
         transitionToReportViewer: function (path) {

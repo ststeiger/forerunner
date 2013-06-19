@@ -2,7 +2,7 @@
     // Toolbar widget
     $.widget("Forerunner.reportexplorertoolbar", $.Forerunner.toolbase, {
         options: {
-            $reportExplorer: null,
+            navigateTo: null,
             toolClass: 'fr-toolbar'
         },
         // Button Info
@@ -11,7 +11,7 @@
             selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
             click: function (e) {
-                g_App.router.navigate('#', { trigger: true, replace: false });
+                e.data.me.options.navigateTo('home', null);
             }
         },
         btnBack: {
@@ -19,7 +19,7 @@
             selectorClass: 'fr-button-back',
             imageClass: 'fr-image-back',
             click: function (e) {
-                g_App.router.back();
+                e.data.me.options.navigateTo('back', null);
             }
         },
         btnFav: {
@@ -27,7 +27,7 @@
             selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
             click: function (e) {
-                g_App.router.navigate('#favorite', { trigger: true, replace: false });
+                e.data.me.options.navigateTo('favorites', null);
             }
         },
         btnRecent: {
@@ -35,7 +35,7 @@
             selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
             click: function (e) {
-                g_App.router.navigate('#recent', { trigger: true, replace: false });
+                e.data.me.options.navigateTo('recent', null);
             }
         },
         

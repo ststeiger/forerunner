@@ -14,7 +14,7 @@
             
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
-              + 'GetThumbnail/?ReportPath=' + catalogItem.Path;
+              + 'GetThumbnail/?ReportPath=' + catalogItem.Path + '&DefDate=' + catalogItem.ModifiedDate;
             $ListItem = new $('<li />');
             $ListItem.addClass('center');
             $ListItem.addClass('rm-list-container-item');

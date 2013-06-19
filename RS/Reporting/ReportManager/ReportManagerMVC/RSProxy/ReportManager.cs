@@ -203,7 +203,7 @@ namespace Forerunner.Manager
 
             string SQL = @"DECLARE @UID uniqueidentifier
                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                           SELECT DISTINCT Path,Name FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                           SELECT DISTINCT Path,Name,ModifiedDate FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
@@ -217,6 +217,7 @@ namespace Forerunner.Manager
                 c = new CatalogItem();
                 c.Path = SQLReader.GetString(0);
                 c.Name = SQLReader.GetString(1);
+                c.ModifiedDate = SQLReader.GetDateTime(2);
                 c.Type = ItemTypeEnum.Report;
                 list.Add(c);
             }

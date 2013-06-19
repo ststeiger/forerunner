@@ -132,9 +132,7 @@
             setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
         },
         ShowLoadingIndictator: function (me) {
-
-            if (me.LoadLock == 1) {
-                // Need to center
+            if (me.LoadLock == 1) {                
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$ReportContainer.width() - 212;
 
@@ -496,8 +494,9 @@
         },
         Export: function () {
             var me = this;
-            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=WORD"
-            window.open(url);
+            alert("left:" + $(".fr-button-export").offset().left + "; top:" + $(".fr-button-export").offset().top + "; height" + $(".fr-button-export").height());
+            //var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=WORD"
+            //window.open(url);
         },
 
         //Page Loading

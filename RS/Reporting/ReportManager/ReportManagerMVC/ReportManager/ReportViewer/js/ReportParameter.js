@@ -7,8 +7,8 @@
         _create: function () {
             var me = this;
             this.element = new $("<div class='Parameter-Container Parameter-Layout'>" +
-                "<form name='ParameterForm'>" +
-                   "<div class='Parameter-ElementBorder'></div>" +
+                "<form name='ParameterForm' onsubmit='return false'>" +
+                   "<div class='Parameter-ElementBorder'><input type='text' style='display:none'></div>" +
                    "<div class='Parameter-SubmitBorder'>" +
                       "<input name='Parameter_ViewReport' type='button' class='Parameter-ViewReport' value='View Report'/>" +
                    "</div>" +
@@ -91,7 +91,9 @@
             }
 
             $element.on("keypress", function (e) {
-                if (e.keyCode == 13) { me._SubmitForm() }; // Enter
+                if (e.keyCode == 13) {
+                    me._SubmitForm()
+                }; // Enter
             });
 
             $Container.append($element).append(me._AddNullableCheckBox(Param, $element)).append($ErrorMessage);

@@ -51,7 +51,19 @@ var ApplicationRouter = Backbone.Router.extend({
 
             var catalogItemUrl = Forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
             var me = this;
-            var currentSelectedPath = me._selectedItemPath; //String(me._selectedItemPath).replace(/%2f/g, "/");
+            var currentSelectedPath = me._selectedItemPath;
+
+            Forerunner.CatalogItemsView.fetchModelAndRenderView({
+                catalogItemUrl: g_App.configs.apiBase + catalogItemUrl,
+                $toolbar: $('#mainSectionHeader'),
+                $explorerview: $("#mainSection"),
+                reportManagerAPIUrl: g_App.configs.apiBase + 'ReportManager/',
+                path: path,
+                selectedItemPath: currentSelectedPath,
+                navigateTo: me.navigateTo
+            });
+
+            /*
             var model = new Forerunner.CatalogItemsModel({ url: g_App.configs.apiBase + catalogItemUrl });
             model.fetch({
                 success: function (data) {
@@ -71,7 +83,7 @@ var ApplicationRouter = Backbone.Router.extend({
                     alert('Failed to load the catalogs from the server.  Please try again.');
                 }
             })
-
+            */
             me._selectedItemPath = path0;
         },
 

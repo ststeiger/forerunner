@@ -45,3 +45,24 @@ Forerunner.CatalogItemsView.prototype = {
     }
 };
 
+Forerunner.CatalogItemsView.fetchModelAndRenderView = function (options) {
+    var model = new Forerunner.CatalogItemsModel({ url: options.catalogItemUrl });
+    model.fetch({
+        success: function (data) {
+            var view = new Forerunner.CatalogItemsView({
+                $toolbar: options.$toolbar,
+                $explorerview: options.$explorerview,
+                url: options.reportManagerAPIUrl,
+                path: options.path,
+                data: data,
+                selectedItemPath: options.selectedItemPath,
+                navigateTo: options.navigateTo
+            });
+            view.render();
+        },
+        error: function (data) {
+            console.log(data);
+            alert('Failed to load the catalogs from the server.  Please try again.');
+        }
+    })
+};

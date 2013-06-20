@@ -541,9 +541,6 @@
                 me.$ReportContainer.reportParameter({ ReportViewer: this });
                 me.$ReportContainer.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
-              
-                $("#mainSectionHeader").fadeOut('fast');
-                $("#headerspacer").fadeOut('fast');
             }
             else if (Data.Exception != null) {
                 me.$ReportContainer.reportRender({ ReportViewer: this });

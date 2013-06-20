@@ -6,10 +6,10 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>0.97917in</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1in</Width>
+              <Width>2.97917in</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1in</Width>
@@ -21,21 +21,23 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox1">
+                    <Textbox Name="Textbox11">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Category Name</Value>
+                              <Value>Category ID</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox1</rd:DefaultName>
+                      <rd:DefaultName>Textbox11</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -51,7 +53,7 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox3">
+                    <Textbox Name="Textbox16">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -65,7 +67,7 @@
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox3</rd:DefaultName>
+                      <rd:DefaultName>Textbox16</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -81,21 +83,23 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox5">
+                    <Textbox Name="Textbox18">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>price</Value>
+                              <Value>Unit Price</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox5</rd:DefaultName>
+                      <rd:DefaultName>Textbox18</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -116,21 +120,23 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="CategoryName">
+                    <Textbox Name="CategoryID">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!CategoryName.Value</Value>
+                              <Value>=Fields!CategoryID.Value</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>CategoryName</rd:DefaultName>
+                      <rd:DefaultName>CategoryID</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -176,23 +182,23 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="price">
+                    <Textbox Name="UnitPrice">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!price.Value</Value>
-                              <Style>
-                                <Format>'$'0.00;('$'0.00)</Format>
-                              </Style>
+                              <Value>=Fields!UnitPrice.Value</Value>
+                              <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>price</rd:DefaultName>
+                      <rd:DefaultName>UnitPrice</rd:DefaultName>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -202,7 +208,6 @@
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
                         <PaddingBottom>2pt</PaddingBottom>
-                        <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>
                       </Style>
                     </Textbox>
                   </CellContents>
@@ -229,81 +234,30 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
-        <Top>1.43625in</Top>
-        <Left>1.86333in</Left>
+        <Filters>
+          <Filter>
+            <FilterExpression>=Fields!CategoryID.Value</FilterExpression>
+            <Operator>LessThanOrEqual</Operator>
+            <FilterValues>
+              <FilterValue DataType="Integer">5</FilterValue>
+            </FilterValues>
+          </Filter>
+        </Filters>
+        <Top>0.16542in</Top>
+        <Left>0.13417in</Left>
         <Height>0.5in</Height>
-        <Width>3in</Width>
+        <Width>4.95834in</Width>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Tablix>
-      <Textbox Name="Textbox7">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Parameter Report 1 by Region</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox7</rd:DefaultName>
-        <Top>0.3425in</Top>
-        <Left>2.35292in</Left>
-        <Height>0.25in</Height>
-        <Width>3.84375in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!ReportParameter1.Value</Value>
-                <Style />
-              </TextRun>
-            </TextRuns>
-            <Style />
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox2</rd:DefaultName>
-        <Top>0.80083in</Top>
-        <Left>2.04042in</Left>
-        <Height>0.28472in</Height>
-        <Width>2.30208in</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
     </ReportItems>
-    <Height>4.875in</Height>
+    <Height>2in</Height>
     <Style />
   </Body>
-  <Width>8.9375in</Width>
+  <Width>6.5in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -315,79 +269,117 @@
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>562fbfe9-124b-4542-a839-44c94d896d92</rd:DataSourceID>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>6d0ec3eb-0b6b-47ae-a30a-f62c49934089</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="DataSet1">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT        Products.ProductName, Categories.CategoryName, [Order Details].UnitPrice * [Order Details].Quantity AS price, Customers.Region, Customers.City, 
-                         Customers.Country
-FROM            Orders INNER JOIN
-                         Customers ON Orders.CustomerID = Customers.CustomerID INNER JOIN
-                         [Order Details] ON Orders.OrderID = [Order Details].OrderID INNER JOIN
-                         Products ON [Order Details].ProductID = Products.ProductID INNER JOIN
-                         Categories ON Products.CategoryID = Categories.CategoryID</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@CategoryID">
+            <Value>=Parameters!CategoryID.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ProductName">
+            <Value>=Parameters!ProductName.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT  CategoryID, ProductName, UnitPrice FROM Products 
+WHERE CategoryID=@CategoryID or ProductName like @ProductName
+ORDER BY CategoryID </CommandText>
       </Query>
       <Fields>
+        <Field Name="CategoryID">
+          <DataField>CategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="ProductName">
           <DataField>ProductName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="CategoryName">
-          <DataField>CategoryName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="price">
-          <DataField>price</DataField>
+        <Field Name="UnitPrice">
+          <DataField>UnitPrice</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="Region">
-          <DataField>Region</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="City">
-          <DataField>City</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="Country">
-          <DataField>Country</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Region">
-      <Query>
-        <DataSourceName>DataSource1</DataSourceName>
-        <CommandText>SELECT DISTINCT Region
-FROM            Customers</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="Region">
-          <DataField>Region</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
   </DataSets>
   <ReportParameters>
-    <ReportParameter Name="ReportParameter1">
+    <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
-      <Prompt>ReportParameter1</Prompt>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>CategoryID</Prompt>
       <ValidValues>
-        <DataSetReference>
-          <DataSetName>Region</DataSetName>
-          <ValueField>Region</ValueField>
-          <LabelField>Region</LabelField>
-        </DataSetReference>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Test1</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Test2</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Test3</Label>
+          </ParameterValue>
+        </ParameterValues>
       </ValidValues>
-      <cl:ComponentMetadata xmlns:cl="http://schemas.microsoft.com/sqlserver/reporting/2010/01/componentdefinition">
-        <cl:HideUpdateNotifications>true</cl:HideUpdateNotifications>
-      </cl:ComponentMetadata>
+    </ReportParameter>
+    <ReportParameter Name="ProductName">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ProductName</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IsCheap">
+      <DataType>Boolean</DataType>
+      <Prompt>Is Cheap</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ProductionDate">
+      <DataType>DateTime</DataType>
+      <Prompt>ProductionDate</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="IntegerTest">
+      <DataType>Integer</DataType>
+      <Prompt>IntegerTest</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="FloatTest">
+      <DataType>Float</DataType>
+      <Prompt>FloatTest</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="MultipleValues">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>MultipleValues</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Test1</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Test2</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Test3</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>Test4</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>3bc03f13-d4ae-498d-a509-f5e75f78ebe0</rd:ReportID>
+  <rd:ReportID>8475851e-5c18-4373-a637-326ce4d32b68</rd:ReportID>
 </Report>

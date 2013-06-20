@@ -361,6 +361,11 @@
                       <Action>
                         <Drillthrough>
                           <ReportName>Parameter by Category</ReportName>
+                          <Parameters>
+                            <Parameter Name="ReportParameter1">
+                              <Value>WA</Value>
+                            </Parameter>
+                          </Parameters>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -775,6 +780,11 @@
                         <Action>
                           <Drillthrough>
                             <ReportName>Parameter by Region</ReportName>
+                            <Parameters>
+                              <Parameter Name="ReportParameter1">
+                                <Value>=Fields!Region.Value</Value>
+                              </Parameter>
+                            </Parameters>
                           </Drillthrough>
                         </Action>
                       </Actions>

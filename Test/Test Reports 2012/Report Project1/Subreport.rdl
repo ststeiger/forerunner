@@ -3,12 +3,11 @@
   <Body>
     <ReportItems>
       <Subreport Name="Subreport1">
-        <ReportName>chart</ReportName>
-        <OmitBorderOnPageBreak>true</OmitBorderOnPageBreak>
-        <Top>0.18403in</Top>
-        <Left>0.45709in</Left>
-        <Height>4.24181in</Height>
-        <Width>4.55208in</Width>
+        <ReportName>pie chart</ReportName>
+        <Top>2.44792in</Top>
+        <Left>0.79167in</Left>
+        <Height>3in</Height>
+        <Width>3in</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -17,10 +16,10 @@
       </Subreport>
       <Subreport Name="Subreport2">
         <ReportName>Richtextbox</ReportName>
-        <Top>4.75917in</Top>
-        <Left>0.45709in</Left>
-        <Height>3in</Height>
-        <Width>4.55208in</Width>
+        <Top>0.13417in</Top>
+        <Left>0.11333in</Left>
+        <Height>2.17708in</Height>
+        <Width>5.17708in</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -29,10 +28,10 @@
         </Style>
       </Subreport>
     </ReportItems>
-    <Height>8.74875in</Height>
+    <Height>5.5625in</Height>
     <Style />
   </Body>
-  <Width>6.5in</Width>
+  <Width>7.45833in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -41,6 +40,27 @@
     <Style />
   </Page>
   <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>Northwind</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>1607a3e5-1570-430a-b559-7f4873482c98</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        Products.ProductName, Categories.CategoryName, [Order Details].UnitPrice * [Order Details].Quantity AS price, Customers.Region, Customers.City, 
+                         Customers.Country
+FROM            Orders INNER JOIN
+                         Customers ON Orders.CustomerID = Customers.CustomerID INNER JOIN
+                         [Order Details] ON Orders.OrderID = [Order Details].OrderID INNER JOIN
+                         Products ON [Order Details].ProductID = Products.ProductID INNER JOIN
+                         Categories ON Products.CategoryID = Categories.CategoryID</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>83b85e46-1602-4cc6-a9b9-756f332628c5</rd:ReportID>
+  <rd:ReportID>6ee11221-223a-4083-a70c-fd6ba25a546c</rd:ReportID>
 </Report>

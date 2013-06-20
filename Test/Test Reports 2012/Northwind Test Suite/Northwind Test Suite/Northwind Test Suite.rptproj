@@ -14,6 +14,10 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Checkin Test Report.rdl</Name>
+      <FullPath>Checkin Test Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Customer Data.rdl</Name>
       <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
@@ -42,16 +46,16 @@
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter by Region.rdl</Name>
-      <FullPath>Parameter by Region.rdl</FullPath>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Parameter by Category.rdl</Name>
       <FullPath>Parameter by Category.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Mutiple Parameter.rdl</Name>
-      <FullPath>Mutiple Parameter.rdl</FullPath>
+      <Name>Parameter by Region.rdl</Name>
+      <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Gauge.rdl</Name>
@@ -66,8 +70,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Checkin Test Report.rdl</Name>
-      <FullPath>Checkin Test Report.rdl</FullPath>
+      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
+      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

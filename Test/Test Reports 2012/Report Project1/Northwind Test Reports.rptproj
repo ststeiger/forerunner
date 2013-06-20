@@ -74,20 +74,22 @@
       <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+    </ProjectItem>
+    <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
       <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter1.rdl</Name>
-      <FullPath>Parameter1.rdl</FullPath>
+      <Name>Parameter by Category.rdl</Name>
+      <FullPath>Parameter by Category.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Parameter2.rdl</Name>
-      <FullPath>Parameter2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameters3.rdl</Name>
-      <FullPath>Parameters3.rdl</FullPath>
+      <Name>Parameter by Region.rdl</Name>
+      <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
@@ -118,10 +120,6 @@
       <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Subreport.rdl</Name>
-      <FullPath>Subreport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
       <FullPath>Table Chart with background color.rdl</FullPath>
     </ProjectItem>
@@ -141,6 +139,8 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+      <Name>subreport.rdl</Name>
+      <FullPath>subreport.rdl</FullPath>
   </Reports>
   <Configurations>
     <Configuration>

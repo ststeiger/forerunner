@@ -70,6 +70,9 @@
                 if (e.keyCode == 13) {
                     e.data.$reportViewer.reportViewer('NavToPage', this.value)
                 }
+            },
+            click: function (e) {                
+                e.target.select();
             }
         },
         btnPageOf: {

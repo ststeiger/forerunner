@@ -34,8 +34,8 @@
       <FullPath>Image Report 2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Image Report.rdl</Name>
-      <FullPath>Image Report.rdl</FullPath>
+      <Name>Image Report with header.rdl</Name>
+      <FullPath>Image Report with header.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image table.rdl</Name>
@@ -46,16 +46,16 @@
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter by Category.rdl</Name>
+      <FullPath>Parameter by Category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Parameter by Region.rdl</Name>
       <FullPath>Parameter by Region.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameter2.rdl</Name>
-      <FullPath>Parameter2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameters3.rdl</Name>
-      <FullPath>Parameters3.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Simple Gauge.rdl</Name>
@@ -68,6 +68,10 @@
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
+      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

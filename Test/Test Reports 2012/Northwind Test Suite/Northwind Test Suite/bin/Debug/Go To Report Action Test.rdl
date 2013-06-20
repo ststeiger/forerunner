@@ -54,7 +54,7 @@
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>Parameter Report 1</ReportName>
+                            <ReportName>Parameter by Region</ReportName>
                           </Drillthrough>
                         </Action>
                       </Actions>
@@ -350,6 +350,7 @@
               <ChartDataPoints>
                 <ChartDataPoint>
                   <ChartDataPointValues>
+                    <X>=Fields!CategoryName.Value</X>
                     <Y>=Sum(Fields!price.Value)</Y>
                   </ChartDataPointValues>
                   <ChartDataLabel>
@@ -359,12 +360,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Parameter by Region</ReportName>
-                          <Parameters>
-                            <Parameter Name="ReportParameter1">
-                              <Value>WA</Value>
-                            </Parameter>
-                          </Parameters>
+                          <ReportName>Mutiple Parameter</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -597,10 +593,10 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>1.20708in</Top>
+        <Top>1.22097in</Top>
         <Left>3.05556in</Left>
         <Height>3.54167in</Height>
-        <Width>4.29042in</Width>
+        <Width>5.41542in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -799,7 +795,6 @@
                       <PaddingBottom>2pt</PaddingBottom>
                     </Style>
                   </Textbox>
-                  <rd:Selected>true</rd:Selected>
                 </CellContents>
               </TablixHeader>
             </TablixMember>
@@ -1267,7 +1262,7 @@
     <Height>7.85292in</Height>
     <Style />
   </Body>
-  <Width>7.44792in</Width>
+  <Width>8.63542in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

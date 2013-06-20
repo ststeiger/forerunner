@@ -109,24 +109,11 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Subreport Name="Subreport2">
-        <ReportName>ImageMapTest</ReportName>
-        <Top>1.98833in</Top>
-        <Left>0.17583in</Left>
-        <Height>3.59375in</Height>
-        <Width>5.66667in</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Subreport>
     </ReportItems>
-    <Height>5.75in</Height>
+    <Height>6.06125in</Height>
     <Style />
   </Body>
-  <Width>6.5in</Width>
+  <Width>7.04042in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -135,6 +122,27 @@
     <Style />
   </Page>
   <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>Northwind</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>13f993b9-0d03-4201-85e6-ba37a5d54250</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        Products.ProductName, Categories.CategoryName, [Order Details].UnitPrice * [Order Details].Quantity AS price, Customers.Region, Customers.City, 
+                         Customers.Country
+FROM            Orders INNER JOIN
+                         Customers ON Orders.CustomerID = Customers.CustomerID INNER JOIN
+                         [Order Details] ON Orders.OrderID = [Order Details].OrderID INNER JOIN
+                         Products ON [Order Details].ProductID = Products.ProductID INNER JOIN
+                         Categories ON Products.CategoryID = Categories.CategoryID</CommandText>
+      </Query>
+    </DataSet>
+  </DataSets>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
   <rd:ReportID>485f523d-6f18-44be-8896-56c350b3518e</rd:ReportID>
 </Report>

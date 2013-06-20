@@ -6,10 +6,17 @@ Test/Test Reports 2012/Report Project1/bin/
 *.orig
 *.cache
 *.exe
+*~
+*.swp
+*.fileListAbsolute.txt
+*.CodeAnalysisLog.xml
+*.lastcodeanalysissucceeded
+build/smtp.config.xml
 Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
 RS/Reporting/ReportManager/ReportManagerMVC/icongen/bin/Debug/*
 RS/Reporting/ReportManager/ReportManagerMVC/icongen/obj/Debug/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Images/ReportManager/Thumbs.db
+RS/Reporting/ReportViewer/ReportViewerTest/packages/*
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
@@ -21,3 +28,12 @@ Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/Northwind Test Suite.rptproj.user
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Go To Report Action Test.rdl
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/ReportViewer/Images/Thumbs.db
+Test/Test Reports 2012/Report Project1/Northwind Test Reports.rptproj.user
+Test/Test Reports 2012/Report Project1/bin/Debug/txt box rt table.rdl
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/ReportViewer/Images/Toolbar/Thumbs.db
+RS/Reporting/SecurityExtensions/SAML/SAMLExtension/SAMLExtension/bin/codeanalysis/*
+RS/Reporting/SecurityExtensions/SAML/SAMLExtension/SAMLExtensionTest/bin/codeanalysis/*
+RS/Reporting/SecurityExtensions/SAML/SAMLExtension/TestSSO2/bin/codeanalysis/_PublishedWebsites/TestSSO2/*
+RS/Reporting/SecurityExtensions/SAML/SAMLExtension/TestSSO2/bin/codeanalysis/_PublishedWebsites/TestSSO2/Scripts/*
+RS/Reporting/SecurityExtensions/SAML/SAMLUtils/TestSAMLUtils/bin/codeanalysis/*

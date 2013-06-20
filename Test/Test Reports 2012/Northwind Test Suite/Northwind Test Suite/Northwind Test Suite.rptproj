@@ -69,10 +69,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
-      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -81,7 +77,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.20:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://forerunner-sql2012/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

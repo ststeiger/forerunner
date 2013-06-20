@@ -1,0 +1,54 @@
+﻿.navcontainer {
+width:100%;
+color:#CCC;
+background:#333;
+height: 150px;
+}
+
+
+ul.horizontal {
+  display: block;
+  white-space: nowrap;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  height: 150px;
+  vertical-align: top;
+  z-index: -100;
+  width: device-width;
+  overflow-x: scroll;
+  list-style-type: square;
+  -webkit-overflow-scrolling: touch;
+}
+
+ul.horizontal li{
+  display: table-cell;
+  position: relative;
+  vertical-align:top;
+  width: 150px;
+  height: 150px;
+  padding: 0 20px;  
+  margin: 0 auto;
+  border: 0;
+}
+
+.navlithumb {
+  max-height: 100px;
+  width: 150px;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+ul.horizontal li:hover {
+  background-color:darkgrey;
+}
+
+ul.horizontal li:active {
+  background-color:darkslategrey;
+}
+
+.selected {
+  background-color:midnightblue;
+}

@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="ReportViewer.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+		<ProjectFiles Include="ReportViewer\ReportViewer.csproj" />
+<!--		<ProjectFiles Include="ReportViewerTest\ReportViewerTest\ReportViewerTest.csproj"/> -->
+	</ItemGroup> 
+	<Import Project="ReportViewer.traversal.targets"/> 
+	<!-- Insert any customizations for targets here --> 
+</Project>

@@ -8,6 +8,8 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
+            "favorites": "transitionToFavorites",
+            "recent": "transitionToRecent",
             "test/:arg": "test",
             '*notFound': 'notFound'
         },
@@ -20,99 +22,129 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportManager: function (path) {
+            this._transitionToReportManager(path, null);
+        },
+
+        transitionToFavorites: function () {
+            this._transitionToReportManager(null, 'favorites');
+        },
+        transitionToRecent: function () {
+            this._transitionToReportManager(null, 'recent');
+        },
+        
+        _selectedItemPath : null,
+
+        _transitionToReportManager: function (path, view) {
+            var path0 = path;
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
-            if (path != null) {
-                path = String(path).replace(/%2f/g,"/");
-            } else {
+            if (g_App.utils.isTouchDevice()) {
+                $('#headerspacer').attr('style', 'height:35px');
+            }            
+            if ($('#mainViewPort').position().left != 0) this.appPageView.toggleLeftPane();
+            $('#mainViewPort').css({ width: "100%" });
+
+            if (path == null) {
                 path = "/";
             }
-            var appPageModel = new g_App.AppPageModel({
-                showBackButton: false,
-                pageTitle: path
+
+            var catalogItemUrl = Forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
+            var me = this;
+            var currentSelectedPath = me._selectedItemPath;
+
+            Forerunner.CatalogItemsView.fetchModelAndRenderView({
+                catalogItemUrl: g_App.configs.apiBase + catalogItemUrl,
+                $toolbar: $('#mainSectionHeader'),
+                $explorerview: $("#mainSection"),
+                reportManagerAPIUrl: g_App.configs.apiBase + 'ReportManager/',
+                path: path,
+                selectedItemPath: currentSelectedPath,
+                navigateTo: me.navigateTo
             });
-            var catalogItemsModel = new g_App.CatalogItemCollection({
-                path: path
-            });
-            var thisObj = this;
-            catalogItemsModel.fetch(
-                {
-                    success: function (catalogItemsModel, response, options) {
-                        thisObj.appPageView.transitionMainSection(appPageModel, [
-                        'ReportManagerMainView'], '',
-                        g_App.ReportManagerMainView, { model: catalogItemsModel });
-                    },
-                    error: function (model, response) {
-                        console.log(response);
-                        alert('Failed to load the catalogs from the server.  Please try again.');
-                    }
-                });
+
+            me._selectedItemPath = path0;
+        },
+
+        navigateTo: function (action, path) {
+            if (path != null) path = String(path).replace(/%2f/g, "/");
+            if (action == 'home') {
+                g_App.router.navigate('#', { trigger: true, replace: false });
+            } else if (action == 'back') {
+                g_App.router.back();
+            } else if (action == 'favorites') {
+                g_App.router.navigate('#favorites', { trigger: true, replace: false });
+            } else if (action == 'recent') {
+                g_App.router.navigate('#recent', { trigger: true, replace: false });
+            } else {
+                var encodedPath = String(path).replace(/\//g, "%2f");
+                var targetUrl = '#' + action + '/' + encodedPath;
+                g_App.router.navigate(targetUrl, { trigger: true, replace: false });
+            }
         },
 
         transitionToReportViewer: function (path) {
+            var me = this;
+            me._selectedItemPath = null;
+
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
-            $('#bottomdiv').attr('style', 'height: 150px');
+            $('#bottomdiv').attr('style', 'height: 150px;display: none;');
+            //if (g_App.utils.isTouchDevice()) {
+            //    $('#headerspacer').attr('style', 'height: 0px');
+            //}
+            $('#headerspacer').attr('style', 'height: 50px');
             if (path != null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
                 path = "/";
             }
-            var appPageModel = new g_App.AppPageModel({
-                showBackButton: true,
-                pageTitle: 'ReportViewer',
-            });
-            this.appPageView.transitionMainSection(appPageModel, [
-                'ReportViewerMainView'], '',
-                g_App.ReportViewerMainView, { path: path, reportServerUrl: g_App.configs.reportServerUrl });
-            $('#FRReportViewer1').reportviewer({
-                ReportServer: g_App.configs.reportServerUrl,
+
+            $('#mainSection').html(null);
+            $viewerContainer = new $('<DIV id="FRReportViewer1"/>');
+            $('#mainSection').append($viewerContainer);
+
+            $viewer = $('#FRReportViewer1');
+            var initializer = new Forerunner.ReportViewerInitializer({
+                $toolbar: $('#mainSectionHeader'),
+                $toolPane: $('#leftPane'),
+                $viewer: $viewer,
+                $nav: $('#bottomdiv'),
+                ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
-                HasToolbar: true,
-                PageNum: 1,
-                UID: 'FRReportViewer1',
-                ToolbarUID: 'HeaderArea',
-                NavUID: 'bottomdiv',
-                toolbarOffset: this.toolbarHeight
+                toolbarHeight: me.toolbarHeight,
+                navigateTo: me.navigateTo
             });
-        },
 
-        toolbarHeight : function()
-        {
+            initializer.render();
+
+            $viewer.on('reportviewerback', function (e, data) {
+                me._selectedItemPath = data.path;
+                me.historyBack();
+            });
+
+            me.appPageView.bindEvents();
+        },
+       
+        toolbarHeight : function() {
             return $("#topdiv").outerHeight();
         },
-    
-        showModalView: function(appPageModel, views, subfolder, modalViewType, options) {
-            // First load the subordinate view templates, everything else will happen in the callback
-            var thisObj = this;
-            g_App.utils.loadTemplate(views, subfolder, function() {
-                var modalView = new modalViewType(options).render();
-                $('#modalViewContainer').append(modalView.el);
-                $('#modalViewContainer').show();
-            });
-        },
-    
-        removeModalView: function() {
-            $('#modalViewContainer>div').remove();
-            $('#modalViewContainer').hide();
-        },
 
+        historyBack: function () {
+            g_App.router.back();
+        },
+    
         initialize : function() {
             // Create the application page framework; specifically the header, main section and footer.
             // Then attach it to the page. The application page sections will be shared by all pages.
-            var appPageModel = new g_App.AppPageModel({});
-            this.appPageView = new g_App.AppPageView({
-                model : appPageModel
-            }).render();
-            $("#pageSection").append(this.appPageView.el);
+            this.appPageView = new g_App.AppPageView().render();
         }
     });
 
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
-g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemView', 'ReportViewerMainView'], '', function () {
+$(document).ready(function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;
@@ -122,11 +154,5 @@ g_App.utils.loadTemplate(['AppPageView', 'ReportManagerMainView', 'CatalogItemVi
         window.history.back();
     };
     Backbone.history.start();
-
-    
-    $('#rm-backbutton').on("click",
-    function (e) {
-        g_App.router.back();
-    });
 });
 

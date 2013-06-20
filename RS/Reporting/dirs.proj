@@ -1,0 +1,12 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="Reporting.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+		<ProjectFiles Include="ReportManager\ReportManagerMVC\dirs.proj" />
+		<ProjectFiles Include="ReportViewer\dirs.proj" />
+		<ProjectFiles Include="SecurityExtensions\dirs.proj"/> 
+	</ItemGroup> 
+	<Import Project="Reporting.traversal.targets"/> 
+	<!-- Insert any customizations for targets here --> 
+</Project>

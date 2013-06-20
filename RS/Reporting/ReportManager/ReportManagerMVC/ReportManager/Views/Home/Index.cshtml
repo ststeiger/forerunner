@@ -4,45 +4,62 @@
 }
 
 @section scripts{
-  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="~/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
   <script type="text/javascript" src="~/Scripts/util/underscore.js"></script>
   <script type="text/javascript" src="~/Scripts/util/json2.js"></script>
   <script type="text/javascript" src="~/Scripts/util/backbone.js"></script>
-  <script type="text/javascript" src="~/Scripts/util/laconic.js"></script>
-  <script type="text/javascript" src="~/Scripts/util/backbone_ui.js"></script>
-  <script type="text/javascript" src="~/Scripts/util/collection_view.js"></script>
-  <script type="text/javascript" src="~/Scripts/util/jquery.touchswipe.min.js"></script>
+  <!--<script type="text/javascript" src="~/Scripts/util/laconic.js"></script>-->
+  <!--<script type="text/javascript" src="~/Scripts/util/backbone_ui.js"></script>-->
+  <!--<script type="text/javascript" src="~/Scripts/util/collection_view.js"></script>-->
+  <script type="text/javascript" src="~/Scripts/util/jquery.touchswipe.js"></script>
   <script type="text/javascript" src="~/Scripts/App/configs.js"></script>
   <script type="text/javascript" src="~/Scripts/App/utils.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/Carousel/js/jquery.sky.carousel-1.0.2.min.js"></script>
-  <script type="text/javascript" src="~/Scripts/Models/reportmanagermodels.js"></script>
+  <script type="text/javascript" src="~/Lib/Nav/js/jquery.sky.carousel-1.0.2.min.js"></script>
+  <script type="text/javascript" src="~/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/forerunner.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/ReportViewer.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/Toolbase.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/Toolbar.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/ToolPane.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/PageNav.js"></script>
+  <script type="text/javascript" src="~/ReportExplorer/js/CatalogItemsModel.js"></script>
+  <script type="text/javascript" src="~/ReportExplorer/js/ReportExplorerToolbar.js"></script>
+  <script type="text/javascript" src="~/ReportExplorer/js/ReportExplorer.js"></script>
+  <script type="text/javascript" src="~/ReportExplorer/js/CatalogItemsView.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/ReportRender.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/ReportParameter.js"></script>
+  <script type="text/javascript" src="~/ReportViewer/js/ReportDocumentMap.js"></script>
+  <script type="text/javascript" src="~/Lib/jQuery/js/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="~/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="~/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script>
   <script type="text/javascript" src="~/Scripts/Views/appPageView.js"></script>
-  <script type="text/javascript" src="~/Scripts/Views/reportmanagermainview.js"></script>
-  <script type="text/javascript" src="~/Scripts/Views/reportviewermainview.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/ReportViewer.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/ReportParameter.js"></script>
-  <script type="text/javascript" src="~/Scripts/Views/reportviewermainview.js"></script>
+  <script type="text/javascript" src="~/Scripts/Views/ReportViewerInitializer.js"></script>
   <script type="text/javascript" src="~/Scripts/App/router.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery.watermark.min.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery.validate1.11.1.min.js"></script>
-  <script type="text/javascript" src="~/ReportViewer/Scripts/jquery-ui-1.10.3.custom.min.js"></script>
 }
 
 @section styles {
-    <link href="~/ReportViewer/Scripts/Carousel/css/default_skin_variation.css" rel="stylesheet"/>
+    <link href="~/Lib/Nav/css/default_skin_variation.css" rel="stylesheet"/>
     <link href="~/css/reportmanager.css" rel="stylesheet"/>
-    <link href="~/ReportViewer/ReportViewer.css" rel="stylesheet"/>
-    <link href="~/ReportViewer/Scripts/jquery-ui.min.css" rel="stylesheet"/>
-    <link href="~/ReportViewer/Scripts/jquery.ui.core.min.css" rel="stylesheet"/>
-    <link href="~/ReportViewer/Scripts/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/css/ReportViewer.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/css/Toolbar.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/css/ToolPane.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/css/PageNav.css" rel="stylesheet"/>
+    <link href="~/ReportViewer/css/Parameter.css" rel="stylesheet"/>
+    <link href="~/ReportExplorer/css/ReportExplorer.css" rel="stylesheet"/>
+    <link href="~/Lib/jQuery/css/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="~/Lib/jQuery/css/jquery.ui.core.min.css" rel="stylesheet"/>
+    <link href="~/Lib/jQuery/css/jquery.ui.datepicker.min.css" rel="stylesheet"/>
 }
 
-<header id="topdiv"><table><tr><td><a href="#"><img src="./reportviewer/Images/Home-icon.png" class="buttonicon"/></a><br /></td><td class="spacer10mm"><IMG class='buttonicon' id='rm-backbutton' src='./ReportViewer/Images/BackButton.png'/></td><td><div id="HeaderArea"></div></td></tr></table>
+<div id="leftPane"></div>
+<div id="mainViewPort">
+<header id="topdiv">
 <section id="mainSectionHeader"></section>
 </header>
-<section id="headerspacer"> </section>
+<section id="headerspacer"></section>
 <section id="pageSection">
-  <div id="modalViewContainer"></div>
+  <div id="mainSection"></div>
 </section>
 <section id="footerspacer"></section>
 <footer id="bottomdiv"></footer>
+</div>

@@ -7,7 +7,8 @@ using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
-using Forerunner.ReportViewer;
+using Forerunner.Viewer;
+using Forerunner;
 using System.IO;
 using ReportManager.Util.Logging;
 
@@ -19,146 +20,133 @@ namespace ReportManager.Controllers
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
-        
+
+        private ReportViewer GetReportViewer(string ReportServerURL)
+        {
+            //Put application security here
+            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+            return rep;
+        }
+
+        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
+        {
+            HttpResponseMessage resp = this.Request.CreateResponse();
+
+            if (result != null)
+            {
+                resp.Content = new ByteArrayContent(result); ;
+                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+                if (cache)
+                    resp.Headers.Add("Cache-Control", "max-age=86400");
+            }
+            else
+                resp.StatusCode = HttpStatusCode.NotFound;
+
+            return resp;
+        }
+        private HttpResponseMessage ReturnError(Exception e)
+        {
+            byte[] result = null;
+            result = Encoding.UTF8.GetBytes(Forerunner.JsonUtility.WriteExceptionJSON(e));
+            return GetResponseFromBytes(result, "text/JSON");
+        }
+
         [HttpGet]        
         public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            string mimeType;
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse(); 
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = rep.GetImage(SessionID, ImageID, out mimeType);            
-            if (result != null)
-            {                
-                resp.Content = new ByteArrayContent(result); ;
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+            try
+            {
+                byte[] result = null;
+                string mimeType;
+                result = GetReportViewer(ReportServerURL).GetImage(SessionID, ImageID, out mimeType);
+                return GetResponseFromBytes(result, mimeType);
             }
-            else
-                resp.StatusCode = HttpStatusCode.NotFound;
-
-            return resp;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 0)
-        {
-
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();;
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-            result = rep.GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
-
-            if (result != null)
-            {                
-                resp.Content = new ByteArrayContent(result); ;
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("image/JPEG");
+            catch(Exception e)
+            {
+                return ReturnError(e);
             }
-            else
-                resp.StatusCode = HttpStatusCode.NotFound;
             
-            return resp;
         }
 
         [HttpGet]
-        public HttpResponseMessage GetJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
         {
             try
             {
-                ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-                byte[] result;
-                HttpResponseMessage resp = this.Request.CreateResponse();
-                //Application will need to handel security
-                rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+                byte[] result = null;
+                result = GetReportViewer(ReportServerURL).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
+                return GetResponseFromBytes(result, "image/JPEG",true);
 
-                result = Encoding.UTF8.GetBytes(rep.GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
-                resp.Content = new ByteArrayContent(result); ;
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-                return resp;
             }
             catch (Exception e)
             {
-                string error = e.Message;
+                return ReturnError(e);
+            }            
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        {
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
+                return GetResponseFromBytes(result, "text/JSON");
             }
-            return null;
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }        
         }
 
         [HttpGet]
         public HttpResponseMessage GetParameterJSON(string ReportServerURL, string ReportPath)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = Encoding.UTF8.GetBytes(rep.GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-            return resp;
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }       
+            
         }
 
         [HttpGet]
         public HttpResponseMessage SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
-        {           
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            result = Encoding.UTF8.GetBytes(rep.SortReport(SessionID, SortItem, Direction));
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
-
-            return resp;
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ToggleItem(string ReportServerURL, string SessionID, string ToggleID)
         {
-            return NavigateTo(NavType.Toggle, ReportServerURL, SessionID, ToggleID);
-        }
 
-        [HttpGet]
-        public HttpResponseMessage NavigateBookmark(string ReportServerURL, string SessionID, string BookmarkID)
-        {
-            return NavigateTo(NavType.Bookmark, ReportServerURL, SessionID, BookmarkID);
-        }
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).SortReport(SessionID, SortItem, Direction));
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }
 
-        [HttpGet]
-        public HttpResponseMessage NavigateDrillthrough(string ReportServerURL, string SessionID, string DrillthroughID)
-        {
-            return NavigateTo(NavType.DrillThrough, ReportServerURL, SessionID, DrillthroughID);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage NavigateDocumentMap(string ReportServerURL, string SessionID, string DocMapID)
-        {
-            return NavigateTo(NavType.DocumentMap, ReportServerURL, SessionID, DocMapID);
         }
 
         [HttpGet]
         public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            rep.pingSession(SessionID);            
-            resp.StatusCode = HttpStatusCode.OK;
-            return resp;
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).pingSession(SessionID));
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }
+         
 
         }
 
@@ -168,36 +156,54 @@ namespace ReportManager.Controllers
             //write error message from client into the log file
         }
 
-        private HttpResponseMessage NavigateTo(NavType type, string ReportServerURL, string SessionID, string UniqueID)
+        [HttpGet]
+        public HttpResponseMessage NavigateTo(string NavType, string ReportServerURL, string SessionID, string UniqueID)
         {
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
-            byte[] result = null;
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            //Application will need to handel security
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
-
-            switch (type)
+            try
             {
-                case NavType.Toggle:
-                    result = Encoding.UTF8.GetBytes(rep.ToggleItem(SessionID, UniqueID));
-                    break;
-                case NavType.Bookmark:
-                    result = Encoding.UTF8.GetBytes(rep.NavBookmark(SessionID, UniqueID));
-                    break;
-                case NavType.DrillThrough:
-                    result = Encoding.UTF8.GetBytes(rep.NavigateDrillthrough(SessionID, UniqueID));
-                    break;
-                case NavType.DocumentMap:
-                    result = Encoding.UTF8.GetBytes(rep.NavigateDocumentMap(SessionID, UniqueID));
-                    break;
+                byte[] result = null;
+                result = GetReportViewer(ReportServerURL).NavigateTo(NavType,SessionID,UniqueID);
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
             }
 
-            
-            resp.Content = new ByteArrayContent(result); ;
-            resp.Content.Headers.ContentType = new MediaTypeHeaderValue("text/JSON");
+        }
 
-            return resp;
+        [HttpGet]
+        public HttpResponseMessage FindString(string ReportServerURL, string SessionID, int StartPage, int EndPage, string FindValue)
+        {
+
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).FindString(SessionID, StartPage, EndPage, FindValue));
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ExportReport(string ReportServerURL,string ReportPath, string SessionID, string ParameterList, string ExportType)
+        {
+            try
+            {
+                byte[] result = null;
+                string mimeType;
+                result = GetReportViewer(ReportServerURL).GetRenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType);
+                return GetResponseFromBytes(result, mimeType);
+            }
+            catch(Exception e)
+            {
+                return ReturnError(e);
+            }
+         
         }
     }
 }

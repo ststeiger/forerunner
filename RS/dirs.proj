@@ -1,0 +1,10 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="RS.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+		<ProjectFiles Include="Reporting\dirs.proj"/> 
+	</ItemGroup> 
+	<Import Project="RS.traversal.targets"/> 
+	<!-- Insert any customizations for targets here --> 
+</Project>

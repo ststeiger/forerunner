@@ -46,9 +46,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WebsitesScreenshot">
-      <HintPath>.\WebsitesScreenshot.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -64,17 +61,13 @@
     <Compile Include="ReportViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportWriter.cs" />
+    <Compile Include="ReportExecutionService2005.cs" />
     <Compile Include="Service References\RSService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Thumbnail.cs" />
-    <Compile Include="Web References\RSExec\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.map</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -194,26 +187,6 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\RSService\ReportExecution2005.wsdl" />
-    <None Include="Web References\RSExec\DocumentMapNode1.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\RSExec\ExecutionInfo1.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\RSExec\ExecutionInfo21.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\RSExec\Extension1.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
-    <None Include="Web References\RSExec\Reference.map">
-      <Generator>MSDiscoCodeGenerator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Web References\RSExec\ReportExecution2005.wsdl" />
-    <None Include="Web References\RSExec\Warning1.datasource">
-      <DependentUpon>Reference.map</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\RSService\" />
@@ -232,19 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WebReferenceUrl Include="http://192.168.1.27/ReportServer/ReportExecution2005.asmx">
-      <UrlBehavior>Dynamic</UrlBehavior>
-      <RelPath>Web References\RSExec\</RelPath>
-      <UpdateFromURL>http://192.168.1.27/ReportServer/ReportExecution2005.asmx</UpdateFromURL>
-      <ServiceLocationURL>
-      </ServiceLocationURL>
-      <CachedDynamicPropName>
-      </CachedDynamicPropName>
-      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
-      <CachedSettingsPropName>ReportControl_RSExec_ReportExecutionService</CachedSettingsPropName>
-    </WebReferenceUrl>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">

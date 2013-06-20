@@ -1,0 +1,12 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+	<!-- Insert any customizations for settings here --> 
+	<Import Project="SAMLExtension.setting"/> 
+	<!-- Define all ProjectFiles here --> 
+	<ItemGroup>
+		<ProjectFiles Include="SAMLExtension\SAMLExtension.csproj"/> 
+		<ProjectFiles Include="SAMLExtensionTest\SAMLExtensionTest.csproj" />
+		<ProjectFiles Include="TestSSO2\TestSSO2.csproj" />
+	</ItemGroup> 
+	<Import Project="SAMLExtension.traversal.targets"/> 
+	<!-- Insert any customizations for targets here --> 
+</Project>

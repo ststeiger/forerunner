@@ -124,8 +124,7 @@ namespace Forerunner.Manager
             //This should move to the install program
             string SQL = @"IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
-	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,PRIMARY KEY (ItemID,UserID))
-                                CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
+	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
@@ -281,20 +280,36 @@ namespace Forerunner.Manager
 
         public void SaveImage(byte[] image, string path)
         {
+            Property[] props = new Property[2];
+            Property retrieveProp = new Property();
+            retrieveProp.Name = "HasUserProfileQueryDependencies";          
+            props[0] = retrieveProp;
+            retrieveProp = new Property();
+            retrieveProp.Name = "HasUserProfileReportDependencies";
+            props[1] = retrieveProp;
+            int IsUserSpecific = 1;  //Boolean not working in SQL very well so used int
+
+            Property[] properties = rs.GetProperties(path, props);
+
+            if (properties.Length == 2 && properties[0].Value.ToLower() == "false" && properties[0].Value.ToLower() == "false")
+                IsUserSpecific = 0;
+
             string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                            IF EXISTS (SELECT * FROM ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID)
-	                            UPDATE ForerunnerCatalog SET ThumbnailImage = @Image, SaveDate = GETDATE() WHERE UserID = @UID AND ItemID = @IID
+                            IF (@UserSpecific = 1)
+                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             ELSE
-	                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()
+                                SELECT @UID = NULL
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
+                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()
                             ";
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+            SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
             SQLComm.Parameters.AddWithValue("@Path", path);
             SQLComm.Parameters.AddWithValue("@Image", image);            
             SQLComm.ExecuteNonQuery();
@@ -304,7 +319,10 @@ namespace Forerunner.Manager
         public byte[] GetDBImage(string path)
         {
             byte[] retval = null;
-            string SQL = @"SELECT ThumbnailImage FROM Users u INNER JOIN ForerunnerCatalog f on u.UserID = f.UserID INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (UserName = @UserName OR UserName = @DomainUser) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
+            string SQL = @"DECLARE @IID uniqueidentifier
+                           DECLARE @UID uniqueidentifier
+                           SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                           SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
 
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

@@ -196,8 +196,7 @@ namespace ReportManager.Controllers
             {
                 byte[] result = null;
                 string mimeType;
-                RenderFormat Type = (RenderFormat)Enum.Parse(typeof(RenderFormat), ExportType);
-                result = GetReportViewer(ReportServerURL).GetRenderExtension(ReportPath, SessionID, ParameterList, Type, out mimeType);
+                result = GetReportViewer(ReportServerURL).GetRenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType);
                 return GetResponseFromBytes(result, mimeType);
             }
             catch(Exception e)

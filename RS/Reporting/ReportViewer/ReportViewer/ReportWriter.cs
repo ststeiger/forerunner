@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Jayrock.Json;
-using Forerunner.RSExec;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
+using System.Text;
+using Forerunner.RSExec;
+using Jayrock.Json;
 
 namespace Forerunner
 {
@@ -1047,7 +1046,6 @@ namespace Forerunner
         {
             int Count;
             int CorCount;
-            RPLProperties prop;
 
             if (ReadByte() == 0x0A)
             {

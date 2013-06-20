@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.IO;
-using System.Web.Services;
-using Forerunner.RSExec;
-using System.Diagnostics;
 using System.Net;
+using System.Text;
+using Forerunner.RSExec;
 using Jayrock.Json;
-using System.Threading;
-using System.Reflection;
-using Forerunner;
-
 
 namespace Forerunner.Viewer
 {
@@ -164,12 +154,10 @@ namespace Forerunner.Viewer
             byte[] result = null;
             string format = "RPL";
             string historyID = null;
-            string showHideToggle = null;
             string encoding;
             string mimeType;
             string extension;
             Warning[] warnings = null;
-            ParameterValue[] reportHistoryParameters = null;
             string[] streamIDs = null;
             string NewSession;
             ReportJSONWriter rw = new ReportJSONWriter();
@@ -186,11 +174,7 @@ namespace Forerunner.Viewer
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info
             devInfo += @"</DeviceInfo>";
-
-            //Delay just for testing
-            //Thread.Sleep(2000);
-
-            DataSourceCredentials[] credentials = null;
+                        
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
 
@@ -204,14 +188,14 @@ namespace Forerunner.Viewer
                     execInfo = rs.LoadReport(reportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
-               
-                if (parametersList != null)
+
+                if (rs.GetExecutionInfo().Parameters.Length != 0 && parametersList != null)
                 {
                     rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                 }
                 
                 result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
-                execInfo = rs.GetExecutionInfo();
+                execInfo = rs.GetExecutionInfo(); 
                 if (result.Length != 0)
                     return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages, rs.GetDocumentMap());
                 else
@@ -368,13 +352,15 @@ namespace Forerunner.Viewer
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 
                ExecutionInfo execInfo = rs.LoadDrillthroughTarget(DrillthroughID);
-
+                
                 JsonWriter w = new JsonTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("SessionID");
                 w.WriteString(execInfo.ExecutionID);
                 w.WriteMember("ParametersRequired");
                 w.WriteBoolean(execInfo.ParametersRequired);
+                w.WriteMember("ReportPath");
+                w.WriteString(execInfo.ReportPath);
                 
                 if (execInfo.Parameters.Length != 0)
                 {
@@ -478,24 +464,18 @@ namespace Forerunner.Viewer
             string mimeType;
             string extension;
             Warning[] warnings = null;
-            ParameterValue[] reportHistoryParameters = null;
             string[] streamIDs = null;
             string NewSession;
            
             if (SessionID == null)
                 NewSession = "";
-           
             else
                 NewSession = SessionID;
 
-            
-
-            DataSourceCredentials[] credentials = null;
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
-
             try
             {
 
@@ -532,7 +512,7 @@ namespace Forerunner.Viewer
             }
         }
 
-        public byte[] GetRenderExtension(string ReportPath, string SessionID, string parametersList, RenderFormat Type, out string MimeType)
+        public byte[] GetRenderExtension(string ReportPath, string SessionID, string parametersList, string ExportType, out string MimeType)
         {
             string historyID = null;
             string encoding;
@@ -555,6 +535,16 @@ namespace Forerunner.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
+           //       if (ExportType.Equals("WORDOPENXML") || ExportType.Equals("EXCELOPENXML"))
+           //{
+           //     var flag = false;                foreach (Extension ext in rs.ListRenderingExtensions())
+           //     {                    if (ext.Name.Equals(ExportType))
+           //         {
+           //             flag = true;
+           //            break;
+           //        }                }
+           //     if (flag) {ExportType.Replace("OPENXML", "");            }
+
                 if (rs.GetExecutionInfo().ParametersRequired)
                 {
                     if (parametersList != null)
@@ -565,7 +555,7 @@ namespace Forerunner.Viewer
 
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
 
-                return rs.Render(Type.ToString(), devInfo, out extension, out MimeType, out encoding, out warnings, out streamIDs);
+                return rs.Render(ExportType, devInfo, out extension, out MimeType, out encoding, out warnings, out streamIDs);
             }
             catch (Exception e)
             {

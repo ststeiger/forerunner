@@ -111,7 +111,7 @@
             selectorClass: 'fr-textbox-keyword',
             keypress: function (e) {
                 if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('Find', this.value);
+                    e.data.$reportViewer.reportViewer('Find');
                 }
             }
         },
@@ -120,8 +120,7 @@
             selectorClass: 'fr-button-find',
             text: "Find",
             click: function (e) {
-                var value = e.me.find('.fr-textbox-keyword').value;
-                e.data.$reportViewer.reportViewer("Find", value);
+                e.data.$reportViewer.reportViewer("Find");
             }
         },
         btnSeparator: {
@@ -199,7 +198,6 @@
                 me.enableTools([me.btnNext, me.btnLastPage]);
             }
         },
-
         _destroy: function () {
         },
 

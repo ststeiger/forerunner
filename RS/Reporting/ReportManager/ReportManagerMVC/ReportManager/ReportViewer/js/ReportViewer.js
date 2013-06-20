@@ -91,10 +91,6 @@
             var me = this;
             return me.SessionID;
         },
-        IsParameterLoaded: function () {
-            var me = this;
-            return me.ParamLoaded;
-        },
         SetColHeaderOffset: function ($Tablix, $ColHeader) {
             //Update floating column headers
             var me = this;
@@ -170,7 +166,7 @@
             else {
                 //if (OldPage != null)
                 //    OldPage.$Container.detach();
-
+                
                 me.$ReportAreaContainer.find(".Page").detach();
                 me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
 
@@ -190,6 +186,11 @@
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger('changepage', null, { newPageNum: NewPageNum });
+            
+            if (me.ParamLoaded == true) {
+                $("#mainSectionHeader").fadeIn('fast');
+                $("#headerspacer").fadeIn('fast');
+            }
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -235,7 +236,13 @@
             Page = me.Pages[me.CurPage];
             me.SessionID = "";
             me.Pages = new Object();
-            me.LoadPage(1, Page, false);
+            if (me.ParamLoaded == true) {
+                me.LoadPage(1, Page, false, null, me.$ReportContainer.reportParameter("GetParamsList"));
+                me.TryRemoveParameters();
+            }
+            else {
+                me.LoadPage(1, Page, false);
+            }
         },
         NavToPage: function (NewPageNum) {
             var me = this;
@@ -299,10 +306,8 @@
 
                 if (me.options.PageNav != null)
                     me.options.PageNav.pagenav('reset');
-                if (me.ParamLoaded == true) {
-                    me.$ReportContainer.reportParameter("RemoveParameter");
-                    me.ParamLoaded = false;
-                }
+
+                me.TryRemoveParameters();
                 me.LoadPage(action.CurrentPage, null, false);
 
                 //me.Pages[me.CurPage].$Container.detach();
@@ -390,6 +395,7 @@
             }).done(function (Data) {
                 me.BackupCurPage();
                 me.SessionID = Data.SessionID;
+                me.options.ReportPath = Data.ReportPath;
                 me.Pages = new Object();
 
                 if (me.options.PageNav != null)
@@ -433,9 +439,9 @@
             me.ScrollLeft = left;
             me.ScrollTop = top;
         },
-        Find: function (value, StartPage, EndPage) {
+        Find: function (StartPage, EndPage) {
             var me = this;
-            var KeyWord = value.trim();
+            var KeyWord = $(".fr-textbox-keyword").val().trim();
             if (KeyWord == '') return;
             
             if (me.FindKeyword == null || me.FindKeyword != KeyWord) { me.FindKeyword = KeyWord; me.FindStart = null; }
@@ -462,8 +468,12 @@
                         me.SetFindHighlight(KeyWord);
                     }
                 }
-                else
-                    console.log("Keyword not found");
+                else {
+                    if (me.Finding == true)
+                        alert('End of the report');
+                    else
+                        alert('Keyword not found');
+                }
             })
           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -474,7 +484,7 @@
 
             var $NextWord = $(".Find-Keyword").filter('.Unread').first();
             if ($NextWord.length > 0)
-                $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+                $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
             else {
                 if (me.getNumPages() == 1) { alert('End of the Report'); return; }
 
@@ -494,7 +504,7 @@
 
             //Highlight the first match.
             $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
-            if (me.Finding == true) me.Finding = false;
+            //if (me.Finding == true) me.Finding = false;
         },
         ShowExport: function () {
             if ($(".Export-Panel").is(":hidden"))
@@ -526,13 +536,14 @@
         ShowParameters: function (PageNum, Data) {
             var me = this;
             if (Data.Type == "Parameters") {
-                if (me.ParamLoaded == true) {
-                    $(".ParameterContainer").detach();
-                }
+                me.TryRemoveParameters();
                 
                 me.$ReportContainer.reportParameter({ ReportViewer: this });
                 me.$ReportContainer.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
                 me.ParamLoaded = true;
+              
+                $("#mainSectionHeader").fadeOut('fast');
+                $("#headerspacer").fadeOut('fast');
             }
             else if (Data.Exception != null) {
                 me.$ReportContainer.reportRender({ ReportViewer: this });
@@ -541,6 +552,13 @@
             }
             else {
                 me.LoadPage(PageNum, null, false);
+            }
+        },
+        TryRemoveParameters: function () {
+            var me = this;
+            if (me.ParamLoaded == true) {
+                me.$ReportContainer.reportParameter("RemoveParameter");
+                me.ParamLoaded = false;
             }
         },
         LoadPage: function (NewPageNum, OldPage, LoadOnly, BookmarkID, ParameterList) {
@@ -558,7 +576,7 @@
                     return;
                 }
             if (ParameterList == null) ParameterList = "";
-
+            
             if (!LoadOnly) {
                 me.AddLoadingIndicator();
             }

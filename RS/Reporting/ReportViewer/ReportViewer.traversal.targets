@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5"> 
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0"> 
 	<!-- Targets used to build all the projects --> 
 	<PropertyGroup> 
 		<BuildDependsOn> $(BuildDependsOn); CoreBuild </BuildDependsOn> 
@@ -21,5 +21,17 @@
 	<Target Name="Clean" DependsOnTargets="$(CleanDependsOn)" /> 
 	<Target Name="CoreClean"> 
 		<MSBuild Projects="@(ProjectFiles)" BuildInParallel="$(BuildInParallel)" SkipNonexistentProjects="$(SkipNonexistentProjects)" Targets="Clean" /> 
+	</Target> 
+	<PropertyGroup> 
+		<CodeAnalysisRebuildDependsOn> $(CodeAnalysisRebuildDependsOn); CoreCodeAnalysisRebuild </CodeAnalysisRebuildDependsOn> 
+	</PropertyGroup> 
+	<Target Name="CodeAnalysisRebuild" DependsOnTargets="$(CodeAnalysisRebuildDependsOn)" /> 
+	<Target Name="CoreCodeAnalysisRebuild"> 
+		<MSBuild 
+			Projects="@(ProjectFiles)" 
+			BuildInParallel="$(BuildInParallel)" 
+			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
+			Targets="Rebuild"
+		    Properties="RunCodeAnalysis=true;OutputPath=bin\codeanalysis;VisualStudioVersion=$(VisualStudioVersion)" /> 
 	</Target> 
 </Project>

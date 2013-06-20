@@ -1,7 +1,8 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5"> 
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0"> 
 	<!-- Global properties defined in this file --> 
 	<PropertyGroup> 
 		<BuildInParallel Condition="'$(BuildInParallel)'==''">true</BuildInParallel> 
 		<SkipNonexistentProjects Condition="'$(SkipNonexistentProjects)'==''">false</SkipNonexistentProjects> 
+		<VisualStudioVersion>11.0</VisualStudioVersion>
 	</PropertyGroup> 
 </Project>

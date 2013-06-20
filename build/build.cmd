@@ -44,6 +44,8 @@ if ERRORLEVEL 1 (
 )
 
 echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
+echo %PROJECT_NAME% Code Analysis Warnings... >> %BUILD_RELEASE%\codeanalysis.wrn
+echo %PROJECT_NAME% Code Analysis Errors... >> %BUILD_RELEASE%\codeanalysis.err
 
 git push %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
@@ -62,11 +64,17 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %BUILD_RELEASE%. See %BUILD_LOG% for more details." -Attachments %BUILD_RELEASE%\build.wrn
+echo Running Code Analysis >> %BUILD_LOG%
+msbuild dirs.proj /flp:LogFile=%BUILD_LOG%;Append=True /flp1:warningsonly;logfile=%BUILD_RELEASE%\codeanalysis.wrn;Append=True /flp2:errorsonly;LogFile=%BUILD_RELEASE%\codeanalysis.err /t:CodeAnalysisRebuild
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
+call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %BUILD_RELEASE%. See %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 0
 
 
 :Error
 echo The Build Failed. >> %BUILD_LOG%
-call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %BUILD_LOG% for more details." -Attachments %BUILD_RELEASE%\build.err,%BUILD_RELEASE%\build.wrn
+call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 1

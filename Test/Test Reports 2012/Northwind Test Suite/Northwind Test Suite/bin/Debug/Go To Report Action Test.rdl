@@ -360,12 +360,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Parameter by Category</ReportName>
-                          <Parameters>
-                            <Parameter Name="ReportParameter1">
-                              <Value>WA</Value>
-                            </Parameter>
-                          </Parameters>
+                          <ReportName>Mutiple Parameter</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -933,7 +928,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>

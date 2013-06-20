@@ -69,6 +69,10 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
+      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

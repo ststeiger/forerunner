@@ -89,7 +89,7 @@ var g_App = g_App || {};
             $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
         } else {
             $('head meta[name=viewport]').remove();
-            $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0" />');
+            $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
         }
     },
 

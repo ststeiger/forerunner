@@ -19,6 +19,9 @@ g_App.AppPageView.prototype = {
             $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
             $('#leftPane').on('toolpaneparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
             $('#rightPane').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
+            $(window).resize(function () {
+                $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
+            });
         }
     },
 
@@ -36,6 +39,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
+            g_App.utils.allowZoom(true);
         }
     },
     showSlideoutPane: function (isLeftPane) {
@@ -54,6 +58,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.addClass(className, delay);
             topdiv.addClass(className, delay);
+            g_App.utils.allowZoom(false);
         }
     },
     toggleSlideoutPane: function (isLeftPane) {

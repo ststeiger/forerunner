@@ -6,16 +6,6 @@
             toolClass: 'fr-toolpane'
         },
         // Button Info
-        itemParamarea: {
-            toolType: 4,
-            selectorClass: 'fr-id-paramarea',
-            imageClass: 'fr-image-paramarea',
-            text: 'Parameters',
-            click: function (e) {
-                e.data.me._trigger('paramareaclick');
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-paramarea']);
-            }
-        },
         itemNav: {
             toolType: 4,
             selectorClass: 'fr-id-nav',
@@ -155,19 +145,12 @@
                 me._updateItemStates(data.newPageNum, maxNumPages);
                 me.element.find('.fr-num-pages').html(maxNumPages);
                 me.element.find('.fr-item-textbox-reportpage').attr({ max: maxNumPages, min: 1 });
-
-                if (data.paramLoaded == false)
-                    me.disableTools([me.itemParamarea]);
-                else
-                    me._enableParamButtons();
             });
 
-            me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
-                me._disableParamButtons();
-            });
+          
 
             // Hook up the toolbar element events
-            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
+            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemNext, me.itemLastPage, me.itemNav,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemFind, me.itemFindNext]);
         },
         _init: function () {
@@ -179,7 +162,7 @@
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html($("<div class='fr-toolpane' />"));
-            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
+            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemSeparator, me.itemFindNext]);
 
             if (me.options.$reportViewer) {
@@ -202,19 +185,8 @@
             else {
                 me.disableTools([me.itemNext, me.itemLastPage]);
             }
-        },
-        _disableParamButtons: function () {
-            var me = this;
-            me.disableTools([me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage,
-                me.itemNav, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemFindNext]);
-        },
-        _enableParamButtons: function () {
-            var me = this;
-            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage,
-                me.itemNav, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemFindNext]);
-        },
-        _destroy: function () {
-        },
+        },       
+
 
         _create: function () {
             var me = this;

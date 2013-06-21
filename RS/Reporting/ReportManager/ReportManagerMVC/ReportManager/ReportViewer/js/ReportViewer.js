@@ -477,14 +477,14 @@
             if ($NextWord.length > 0)
                 $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
             else {
-                if (me.getNumPages() == 1) { alert('End of the Report'); return; }
+                if (me.getNumPages() == 1) { alert('The entire report has been searched.'); return; }
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
                     me.Find(me.getCurPage() + 1);
                 else if (me.FindStart > 1)
                     me.Find(1, me.FindStart - 1);
                 else
-                    alert('End of the Report');
+                    alert('The entire report has been searched.');
             }
         },
         SetFindHighlight: function (KeyWord) {

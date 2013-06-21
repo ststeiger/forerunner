@@ -2,9 +2,10 @@
     $.widget("Forerunner.reportParameter", {
         options: {
             $reportViewer: null,
-            PageNum: null,            
+            PageNum: null,
         },
-        _formInit : false,
+        _formInit: false,
+        _paramCount:0,
         _init: function () {
             var me = this;
             me.element.html(null);
@@ -29,6 +30,8 @@
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
             me.options.PageNum = PageNum;
+            me._paramCount = Data.Count;
+
             me._trigger('render');
 
             me._render();
@@ -170,6 +173,9 @@
                     "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
                 me._GetParameterControlProperty(Param, $radioItem);
 
+                if (me._paramCount == 1)
+                    $radioItem.on("click", function () { me._SubmitForm(); });
+
                 var $label = new $("<label class='Parameter-RadioLabel' for='" + Param.Name + "_radio" + "_" + radioValues[value] + "'>" + radioValues[value] + "</label>");
 
                 $Control.append($radioItem);
@@ -187,7 +193,12 @@
                 case "DateTime":
                     $Control.datepicker({
                         dateFormat: 'yy-mm-dd',//Format: ISO8601
-                        onClose: function () { $("[name='" + Param.Name + "']").valid(); },
+                        onClose: function () {
+                            $("[name='" + Param.Name + "']").valid();
+
+                            if (me._paramCount == 1)
+                                me._SubmitForm();
+                        },
                     });
                     $Control.attr("dateISO", "true");
                     break;
@@ -206,12 +217,16 @@
             var $Control = $("<select class='Parameter Parameter-Select' ismultiple='" + Param.MultiValue + "' name='" + Param.Name + "' datatype='" + Param.Type + "' readonly='true'>");
             me._GetParameterControlProperty(Param, $Control);
 
-            var $defaultOption = new $("<option value='' multiple='multiple'>&#60Select a Value&#62</option>");
+            var $defaultOption = new $("<option value=''>&#60Select a Value&#62</option>");
             $Control.append($defaultOption);
 
             for (index in Param.ValidValues) {
                 var $option = new $("<option value='" + Param.ValidValues[index].Value + "'>" + Param.ValidValues[index].Key + "</option>");
                 $Control.append($option);
+            }
+
+            if (me._paramCount == 1) {
+                $Control.on('change', function () { me._SubmitForm(); });
             }
 
             return $Control;
@@ -261,7 +276,7 @@
 
                 var $Span = new $("<Span />");
                 var $Checkbox = new $("<input type='checkbox' class='" + Param.Name + "_DropDown_CB' id='" + Param.Name + "_DropDown_" + value + "' value='" + value + "' />");
-
+                
                 $Checkbox.on("click", function () {
                     if (this.value == "Select All") {
                         if (this.checked == true) {

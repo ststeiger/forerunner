@@ -36,6 +36,8 @@ var ApplicationRouter = Backbone.Router.extend({
 
         _transitionToReportManager: function (path, view) {
             var path0 = path;
+            this.appPageView.hideSlideoutPane(true);
+            this.appPageView.hideSlideoutPane(false);
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
@@ -43,10 +45,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 $('#headerspacer').attr('style', 'height:35px');
             }            
       
-            this.appPageView.hideSlideoutPane(true);
-
-            this.appPageView.hideSlideoutPane(false);
-     
             $('#mainViewPort').css({ width: "100%" });
 
             if (path == null) {

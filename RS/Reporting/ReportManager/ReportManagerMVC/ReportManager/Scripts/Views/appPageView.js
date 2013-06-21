@@ -18,6 +18,9 @@ g_App.AppPageView.prototype = {
             $('#rightPane').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
             $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
             $('#rightPane').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
+            $(window).resize(function () {
+                $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
+            });
         }
     },
 
@@ -35,6 +38,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
+            g_App.utils.allowZoom(true);
         }
     },
     showSlideoutPane: function (isLeftPane) {
@@ -53,6 +57,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.addClass(className, delay);
             topdiv.addClass(className, delay);
+            g_App.utils.allowZoom(false);
         }
     },
     toggleSlideoutPane: function (isLeftPane) {

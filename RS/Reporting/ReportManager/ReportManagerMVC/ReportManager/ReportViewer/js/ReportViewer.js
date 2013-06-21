@@ -56,6 +56,7 @@
             me.LoadLock = 0;
             me.Finding = false;
             me.FindStart = null;
+            me.HasDocMap = false;
             me.FindKeyword = null;
             me.element.append(me.$LoadingIndicator);           
 
@@ -91,6 +92,10 @@
         getSessionID: function () {
             var me = this;
             return me.SessionID;
+        },
+        getHasDocMap: function () {
+            var me = this;
+            return me.HasDocMap;
         },
         SetColHeaderOffset: function ($Tablix, $ColHeader) {
             //Update floating column headers
@@ -631,6 +636,7 @@
 
             if (me.Pages[pageNum].ReportObj.Exception == null) {
                 if (me.$ReportContainer.find(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
+                    me.getHasDocMap = true;
                     me.$ReportContainer.reportDocumentMap({ ReportViewer: this });
                     me.$ReportContainer.reportDocumentMap("WriteDocumentMap", pageNum);
                 }
@@ -652,8 +658,8 @@
                 })
                 .done(function (Data) {
                     if (Data.Status == "Fail") {
-                        alert("Your session has expired");
                         me.SessionID = "";
+                        alert("Your session has expired");                        
                     }
                 })
                 .fail(function () { console.log("error"); })

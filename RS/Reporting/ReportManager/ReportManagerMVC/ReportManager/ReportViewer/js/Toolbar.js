@@ -161,8 +161,7 @@
                 $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
                 me._updateBtnStates(data.newPageNum, maxNumPages);
-                me.element.find('.fr-num-pages').html(maxNumPages);
-                me.element.find('.fr-textbox-reportpage').attr({ max: maxNumPages, min: 1 });
+                
 
                 if (data.paramLoaded == false)
                     me.disableTools([me.btnParamarea]);
@@ -198,6 +197,14 @@
         },
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
+            me.element.find('.fr-num-pages').html(maxPage);
+            me.element.find('.fr-textbox-reportpage').attr({ max: maxPage, min: 1 });
+
+            if (me.options.$reportViewer.reportViewer('getHasDocMap'))
+                me.enableTools([me.btnDocumentMap]);
+            else
+                me.disableTools([me.btnDocumentMap]);
+
             if (curPage <= 1) {
                 me.disableTools([me.btnPrev, me.btnFirstPage]);
             }
@@ -210,7 +217,11 @@
             }
             else {
                 me.enableTools([me.btnNext, me.btnLastPage]);
-            }
+            }       
+            if (maxPage ==1 )
+                me.disableTools([me.btnNav]);
+            else
+                me.enableTools([me.btnNav]);
         },
         _disableParamButtons: function () {
             var me = this;

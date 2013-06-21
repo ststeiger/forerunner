@@ -186,12 +186,7 @@
             me.CurPage = NewPageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger('changepage', null, { newPageNum: NewPageNum });
-            
-            if (me.ParamLoaded == true) {
-                $("#mainSectionHeader").fadeIn('fast');
-                $("#headerspacer").fadeIn('fast');
-            }
+            me._trigger('changepage', null, { newPageNum: NewPageNum, paramLoaded: me.ParamLoaded });
 
             $(window).scrollLeft(me.ScrollLeft);
             $(window).scrollTop(me.ScrollTop);
@@ -238,8 +233,8 @@
             me.SessionID = "";
             me.Pages = new Object();
             if (me.ParamLoaded == true) {
-                me.LoadPage(1, Page, false, null, me.$ReportContainer.reportParameter("GetParamsList"));
-                me.TryRemoveParameters();
+                var $ParamArea = me.options.ParamArea;
+                me.LoadPage(1, Page, false, null, $ParamArea.reportParameter("GetParamsList"));
             }
             else {
                 me.LoadPage(1, Page, false);

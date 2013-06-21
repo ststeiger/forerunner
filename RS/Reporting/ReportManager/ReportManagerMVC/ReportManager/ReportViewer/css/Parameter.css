@@ -22,6 +22,10 @@
     margin:4px;
     display:inline-block;    
 }
+.Parameter-RadioLabel
+{
+    color:black;
+}
 .Parameter-ElementBorder
 {
     margin: 10px 6px;
@@ -37,8 +41,8 @@
     width:35px;
 }
 .Parameter-ViewReport{
-    margin:4px;
-    text-align:center
+    margin:4px 4px 4px 10px;    
+    text-align:center;
 }
 .Parameter-Enable
 {

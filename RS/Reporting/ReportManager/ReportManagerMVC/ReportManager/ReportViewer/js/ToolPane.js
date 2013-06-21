@@ -12,7 +12,7 @@
             imageClass: 'fr-image-paramarea',
             text: 'Parameters',
             click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowParms')
+                e.data.me._trigger('paramareaclick');
                 e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-paramarea']);
             }
         },
@@ -155,6 +155,15 @@
                 me._updateItemStates(data.newPageNum, maxNumPages);
                 me.element.find('.fr-num-pages').html(maxNumPages);
                 me.element.find('.fr-item-textbox-reportpage').attr({ max: maxNumPages, min: 1 });
+
+                if (data.paramLoaded == false)
+                    me.disableTools([me.itemParamarea]);
+                else
+                    me._enableParamButtons();
+            });
+
+            me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
+                me._disableParamButtons();
             });
 
             // Hook up the toolbar element events
@@ -194,7 +203,16 @@
                 me.disableTools([me.itemNext, me.itemLastPage]);
             }
         },
-
+        _disableParamButtons: function () {
+            var me = this;
+            me.disableTools([me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage,
+                me.itemNav, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemFindNext]);
+        },
+        _enableParamButtons: function () {
+            var me = this;
+            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage,
+                me.itemNav, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemFindNext]);
+        },
         _destroy: function () {
         },
 

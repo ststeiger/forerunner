@@ -163,6 +163,15 @@
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 me.element.find('.fr-num-pages').html(maxNumPages);
                 me.element.find('.fr-textbox-reportpage').attr({ max: maxNumPages, min: 1 });
+
+                if (data.paramLoaded == false)
+                    me.disableTools([me.btnParamarea]);
+                else
+                    me._enableParamButtons();
+            });
+
+            me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
+                me._disableParamButtons();
             });
 
             // Hook up the toolbar element events
@@ -181,7 +190,8 @@
 
             me.element.html($("<div class='fr-toolbar' />"));
             me.addTools(1, true, [me.btnMenu, me.btnNav, me.btnParamarea, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                                   me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator, me.btnFindNext, me.btnSeparator2, me.btnExport]);
+                                   me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator,
+                                   me.btnFindNext, me.btnSeparator2, me.btnExport]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -201,6 +211,16 @@
             else {
                 me.enableTools([me.btnNext, me.btnLastPage]);
             }
+        },
+        _disableParamButtons: function () {
+            var me = this;
+            me.disableTools([me.btnNav, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
+                             me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnFindNext, me.btnExport]);
+        },
+        _enableParamButtons: function () {
+            var me = this;
+            me.enableTools([me.btnNav, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
+                             me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnFindNext, me.btnExport]);
         },
         _destroy: function () {
         },

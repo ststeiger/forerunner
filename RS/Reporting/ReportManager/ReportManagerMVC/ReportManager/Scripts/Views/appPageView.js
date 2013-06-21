@@ -17,6 +17,7 @@ g_App.AppPageView.prototype = {
             $('#mainSectionHeader').on('toolbarparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
             $('#rightPane').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
             $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
+            $('#leftPane').on('toolpaneparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
             $('#rightPane').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
         }
     },
@@ -56,7 +57,7 @@ g_App.AppPageView.prototype = {
         }
     },
     toggleSlideoutPane: function (isLeftPane) {
-        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');
+        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');    
         if (slideoutPane.is(':visible')) {
             this.hideSlideoutPane(isLeftPane);
         } else {

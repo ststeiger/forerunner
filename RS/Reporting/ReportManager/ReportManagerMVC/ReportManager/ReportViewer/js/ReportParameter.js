@@ -2,9 +2,7 @@
     $.widget("Forerunner.reportParameter", {
         options: {
             $reportViewer: null,
-            ReportViewer: null,
-            PageNum: null,
-            ParamLoaded: false,
+            PageNum: null,            
         },
         _formInit : false,
         _init: function () {
@@ -76,8 +74,9 @@
             var me = this;
 
             me._CloseAllDropdown();
-            if (me.GetParamsList() != null) {
-                me.options.$reportViewer.reportViewer('LoadPage', me.options.PageNum, null, false, null, me.GetParamsList());
+            var paramList = me.GetParamsList();
+            if (paramList != null) {
+                me.options.$reportViewer.reportViewer('LoadPage', me.options.PageNum, null, false, null, paramList);
                 me._trigger('submit');
             }
         },
@@ -101,7 +100,7 @@
             }
             else {
                 if (Param.Type == "Boolean")
-                    $element = me._WriteCheckbox(Param);
+                    $element = me._WriteRadioButton(Param);
                 else
                     $element = me._WriteTextArea(Param);
             }
@@ -158,7 +157,7 @@
             else
                 return null;
         },
-        _WriteCheckbox: function (Param) {
+        _WriteRadioButton: function (Param) {
             var me = this;
             var radioValues = new Array();
             radioValues[0] = "True";
@@ -171,7 +170,7 @@
                     "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
                 me._GetParameterControlProperty(Param, $radioItem);
 
-                var $label = new $("<label for='" + Param.Name + "_radio" + "_" + radioValues[value] + "'>" + radioValues[value] + "</label>");
+                var $label = new $("<label class='Parameter-RadioLabel' for='" + Param.Name + "_radio" + "_" + radioValues[value] + "'>" + radioValues[value] + "</label>");
 
                 $Control.append($radioItem);
                 $Control.append($label);
@@ -338,7 +337,7 @@
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._IsParamNullable(this) });
                 });
                 //Hidden
-                $(".Parameter").filter(":hidden").each(function (i) {
+                $(".Parameter").filter("[type='hidden']").each(function (i) {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._IsParamNullable(this) });
                 });
                 //dropdown

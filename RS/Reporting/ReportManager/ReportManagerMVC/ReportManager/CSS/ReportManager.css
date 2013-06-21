@@ -30,10 +30,17 @@ table,td,tr {
     width:100%;
 }
 
-.mainViewPortShifted {
+.mainViewPortShiftedRight {
     position: fixed;
     top: 0px;
     left: 280px;
+    overflow-x: hidden;
+}
+
+.mainViewPortShiftedLeft {
+    position: fixed;
+    top: 0px;
+    right: 280px;
     overflow-x: hidden;
 }
 
@@ -48,8 +55,24 @@ table,td,tr {
     color: white;
     z-index: 1;
     display: none;
-    position: fixed;
+    position: absolute;
     left: 0px;
+    top: 0px;
+}
+
+#rightPane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    overflow:hidden;
+    background-color: gray;
+    color: white;
+    z-index: 1;
+    display: none;
+    position: fixed;
+    right: 0px;
     top: 0px;
 }
 

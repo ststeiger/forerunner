@@ -27,7 +27,8 @@
             selectorClass: 'fr-button-paramarea',
             imageClass: 'fr-image-paramarea',
             click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowParms')
+                e.data.me._trigger('paramareaclick', null, {});
+                //e.data.$reportViewer.reportViewer('ShowParms')
             }
         },
         btnReportBack: {

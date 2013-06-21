@@ -6,6 +6,7 @@ Forerunner.ReportViewerInitializer = function (options) {
         $toolPane : null,
         $viewer: null,
         $nav: null,
+        $paramarea: null,
         ReportServerURL: null,
         ReportViewerAPI: null,
         ReportPath: null,
@@ -133,6 +134,12 @@ Forerunner.ReportViewerInitializer.prototype = {
         if ($nav != null) {
             $nav.pagenav({ $reportViewer: $viewer });
             $viewer.reportViewer('option', 'PageNav', $nav);
+        }
+
+        $paramarea = me.options.$paramarea;
+        if ($paramarea != null) {
+            $paramarea.reportParameter({ $reportViewer: $viewer });
+            $viewer.reportViewer('option', 'ParamArea', $paramarea);
         }
         me.setFavoriteState(me.options.ReportPath);
     },

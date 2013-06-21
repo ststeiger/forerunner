@@ -42,7 +42,11 @@ var ApplicationRouter = Backbone.Router.extend({
             if (g_App.utils.isTouchDevice()) {
                 $('#headerspacer').attr('style', 'height:35px');
             }            
-            if ($('#mainViewPort').position().left != 0) this.appPageView.toggleLeftPane();
+      
+            this.appPageView.hideSlideoutPane(true);
+
+            this.appPageView.hideSlideoutPane(false);
+     
             $('#mainViewPort').css({ width: "100%" });
 
             if (path == null) {
@@ -110,6 +114,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 $toolPane: $('#leftPane'),
                 $viewer: $viewer,
                 $nav: $('#bottomdiv'),
+                $paramarea: $('#rightPane'),
                 ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,

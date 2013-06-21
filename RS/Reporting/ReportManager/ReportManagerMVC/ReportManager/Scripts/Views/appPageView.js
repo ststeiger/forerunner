@@ -13,24 +13,54 @@ g_App.AppPageView.prototype = {
         var me = this;
         if (!me.eventsBound) {
             me.eventsBound = true;
-            $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleLeftPane(); });
-            $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.toggleLeftPane(); });
+            $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleSlideoutPane(true); });
+            $('#mainSectionHeader').on('toolbarparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
+            $('#rightPane').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
+            $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
+            $('#rightPane').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
         }
     },
 
-    toggleLeftPane: function () {
+    hideSlideoutPane: function (isLeftPane) {
+        var className = isLeftPane ? 'mainViewPortShiftedRight' : 'mainViewPortShiftedLeft';
         var mainViewPort = $('#mainViewPort');
-        var leftPane = $('#leftPane');
+        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');
         var topdiv = $('#topdiv');
-        if (!mainViewPort.hasClass('mainViewPortShifted')) {
-            leftPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
-            leftPane.show();
-            mainViewPort.addClass('mainViewPortShifted');
-            topdiv.addClass('mainViewPortShifted');
+        var delay = Number(200);
+        if (slideoutPane.is(':visible')) {
+            if (isLeftPane) {
+                slideoutPane.slideRightHide(delay * 0.5);
+            } else {
+                slideoutPane.slideLeftHide(delay * 0.5);
+            }
+            mainViewPort.removeClass(className, delay);
+            topdiv.removeClass(className, delay);
+        }
+    },
+    showSlideoutPane: function (isLeftPane) {
+        var className = isLeftPane ? 'mainViewPortShiftedRight' : 'mainViewPortShiftedLeft';
+        var mainViewPort = $('#mainViewPort');
+        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');
+        var topdiv = $('#topdiv');
+        var delay = Number(200);
+        if (!slideoutPane.is(':visible')) {
+            slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
+            //slideoutPane.show();
+            if (isLeftPane) {
+                slideoutPane.slideLeftShow(delay);
+            } else {
+                slideoutPane.slideRightShow(delay);
+            }
+            mainViewPort.addClass(className, delay);
+            topdiv.addClass(className, delay);
+        }
+    },
+    toggleSlideoutPane: function (isLeftPane) {
+        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');
+        if (slideoutPane.is(':visible')) {
+            this.hideSlideoutPane(isLeftPane);
         } else {
-            mainViewPort.removeClass('mainViewPortShifted');
-            topdiv.removeClass('mainViewPortShifted');
-            leftPane.hide();
+            this.showSlideoutPane(isLeftPane);
         }
     },
 };

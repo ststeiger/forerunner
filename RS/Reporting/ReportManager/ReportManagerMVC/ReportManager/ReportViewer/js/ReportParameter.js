@@ -1,37 +1,39 @@
 ﻿$(function () {
     $.widget("Forerunner.reportParameter", {
         options: {
+            $reportViewer: null,
             ReportViewer: null,
             PageNum: null,
             ParamLoaded: false,
         },
-        _create: function () {
+        _formInit : false,
+        _init: function () {
             var me = this;
-            this.element = new $("<div class='Parameter-Container Parameter-Layout'>" +
+            me.element.html(null);
+        },
+        _destroy: function() {
+        },
+        _render: function () {
+            var me = this;
+            me.element.html(null);
+            $params = new $("<div class='Parameter-Container Parameter-Layout'>" +
                 "<form name='ParameterForm' onsubmit='return false'>" +
                    "<div class='Parameter-ElementBorder'><input type='text' style='display:none'></div>" +
                    "<div class='Parameter-SubmitBorder'>" +
                       "<input name='Parameter_ViewReport' type='button' class='Parameter-ViewReport' value='View Report'/>" +
                    "</div>" +
                 "</form></div>");
+            me.element.css("display", "block");
+            me.element.html($params);
 
-            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
-                me.options.ReportViewer.$ReportContainer.append(this.element);
-            else
-                this.element.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
-            me.options.ParamLoaded = true;
-        },
-        _AppendParameter: function () {
-            if (me.options.ReportViewer.$ReportAreaContainer == null || me.options.ReportViewer.$ReportAreaContainer.length == 0)
-                me.options.ReportViewer.$ReportContainer.append(this.element);
-            else
-                this.element.insertBefore(me.options.ReportViewer.$ReportAreaContainer);
+            me._formInit = true;
         },
         WriteParameterPanel: function(Data, RS, PageNum, LoadOnly) {
             var me = this;
             me.options.PageNum = PageNum;
+            me._trigger('render');
 
-            if (me.options.ParamLoaded == false) me._create();
+            me._render();
 
             var $ElementBorder = $(".Parameter-ElementBorder");
             $.each(Data.ParametersList, function (Index, Param) {
@@ -64,16 +66,20 @@
                         $(element).removeClass("Parameter-Error");
                 }
             });
-            $(".Parameter-ViewReport").on("click", function () { me._SubmitForm();});
+            $(".Parameter-ViewReport").on("click", function () {
+                me._SubmitForm();
+            });
             
-            me.options.ReportViewer.RemoveLoadingIndicator();
+            me.options.$reportViewer.reportViewer('RemoveLoadingIndicator');
         },
         _SubmitForm: function () {
             var me = this;
 
             me._CloseAllDropdown();
-            if (me.GetParamsList() != null)
-                me.options.ReportViewer.LoadPage(me.options.PageNum, null, false, null, me.GetParamsList());
+            if (me.GetParamsList() != null) {
+                me.options.$reportViewer.reportViewer('LoadPage', me.options.PageNum, null, false, null, me.GetParamsList());
+                me._trigger('submit');
+            }
         },
         _WriteParameterControl: function (Param, $Parent) {
             var me = this;
@@ -435,8 +441,8 @@
         },
         RemoveParameter: function () {
             var me = this;
-            me.options.ParamLoaded = false;
-            $(".Parameter-Container").detach();
+            me._formInit = false;
+            $(".Parameter-Container", this.element).detach();
         },
         _GetDefaultHTMLTable: function() {
             var $NewObj = $("<Table cellspacing='0' cellpadding='0'/>");

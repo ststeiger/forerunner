@@ -27,6 +27,7 @@
             ToolbarHeight: 0,
             SetPageDone: null,
             PageNav: null,
+            ParamArea: null
         },
 
         _destroy: function () {
@@ -264,11 +265,6 @@
                     me.LoadPage(NewPageNum, me.Pages[me.CurPage], false);
                 }
             }
-        },
-        ShowParms: function () {
-            var me = this;
-            if (me.ParamLoaded == true)
-                $(".Parameter-Container").animate({ height: 'toggle' }, 500);
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
@@ -537,10 +533,12 @@
             var me = this;
             if (Data.Type == "Parameters") {
                 me.TryRemoveParameters();
-                
-                me.$ReportContainer.reportParameter({ ReportViewer: this });
-                me.$ReportContainer.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
-                me.ParamLoaded = true;
+                $ParamArea = me.options.ParamArea;
+                if ($ParamArea != null) {
+                    me._trigger('showparamarea');
+                    $ParamArea.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                    me.ParamLoaded = true;
+                }
             }
             else if (Data.Exception != null) {
                 me.$ReportContainer.reportRender({ ReportViewer: this });
@@ -554,8 +552,11 @@
         TryRemoveParameters: function () {
             var me = this;
             if (me.ParamLoaded == true) {
-                me.$ReportContainer.reportParameter("RemoveParameter");
-                me.ParamLoaded = false;
+                $ParamArea = me.options.ParamArea;
+                if ($ParamArea != null) {
+                    $ParamArea.reportParameter("RemoveParameter");
+                    me.ParamLoaded = false;
+                }
             }
         },
         LoadPage: function (NewPageNum, OldPage, LoadOnly, BookmarkID, ParameterList) {

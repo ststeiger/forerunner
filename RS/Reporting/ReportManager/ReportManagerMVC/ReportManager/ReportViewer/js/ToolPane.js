@@ -6,16 +6,6 @@
             toolClass: 'fr-toolpane'
         },
         // Button Info
-        itemParamarea: {
-            toolType: 4,
-            selectorClass: 'fr-id-paramarea',
-            imageClass: 'fr-image-paramarea',
-            text: 'Parameters',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowParms')
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-paramarea']);
-            }
-        },
         itemNav: {
             toolType: 4,
             selectorClass: 'fr-id-nav',
@@ -158,7 +148,7 @@
             });
 
             // Hook up the toolbar element events
-            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
+            me.enableTools([me.itemFirstPage, me.itemPrev, me.itemNext, me.itemLastPage, me.itemNav,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemFind, me.itemFindNext]);
         },
         _init: function () {
@@ -170,7 +160,7 @@
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html($("<div class='fr-toolpane' />"));
-            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav, me.itemParamarea,
+            me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemSeparator, me.itemFindNext]);
 
             if (me.options.$reportViewer) {

@@ -309,6 +309,28 @@
             }
         },
 
+        _PrepareAction: function () {
+            var me = this;
+
+            if (me.TogglePageNum != me.CurPage || me.TogglePageNum  == 0) {
+                $.ajax({
+                    url: me.options.ReportViewerAPI + "/GetReportJSON/",
+                    data: {
+                        ReportServerURL: me.options.ReportServerURL,
+                        ReportPath: me.options.ReportPath,
+                        SessionID: me.SessionID,
+                        PageNumber: me.CurPage,
+                        ParameterList: ""
+                    },
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        me.TogglePageNum = me.CurPage;
+                    },
+                    fail: function () { }
+                });
+            }
+        },
         Sort: function (Direction, ID) {
             //Go the other dirction from current
             var me = this;
@@ -333,24 +355,7 @@
         ToggleItem: function (ToggleID) {
             var me = this;
             me.ToggleID = ToggleID;
-
-            if (me.TogglePageNum != me.CurPage) {
-                $.ajax({                    
-                    url: me.options.ReportViewerAPI + "/GetReportJSON/",
-                    data: {
-                        ReportServerURL: me.options.ReportServerURL,
-                        ReportPath: me.options.ReportPath,
-                        SessionID: me.SessionID,
-                        PageNumber: me.CurPage,
-                        ParameterList:""},
-                    dataType: 'json',
-                    async: false,
-                    success: function (data) {
-                        me.TogglePageNum = me.CurPage;
-                    },
-                    fail: function () { }
-                });
-            }
+            me._PrepareAction();
 
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "toggle",
@@ -372,6 +377,7 @@
         },
         NavigateBookmark: function (BookmarkID) {
             var me = this;
+            me._PrepareAction();
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "bookmark",
                 ReportServerURL: me.options.ReportServerURL,
@@ -389,6 +395,7 @@
         },
         NavigateDrillthrough: function (DrillthroughID) {
             var me = this;
+            me._PrepareAction();
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "drillthrough",
                 ReportServerURL: me.options.ReportServerURL,

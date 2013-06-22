@@ -76,7 +76,9 @@
     float:right;
 }
 
-
+.fr-image-export {
+  background-image:url('../../reportviewer/Images/Toolbar/export.jpg');
+}
 .fr-image-menu {
   background-image:url('../../reportviewer/Images/Toolbar/align_just_icon.png');
 }

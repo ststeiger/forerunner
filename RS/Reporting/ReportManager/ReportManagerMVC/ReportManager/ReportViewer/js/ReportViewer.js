@@ -57,6 +57,7 @@
             me.Finding = false;
             me.FindStart = null;
             me.HasDocMap = false;
+            me.TogglePageNum = 0;
             me.FindKeyword = null;
             me.element.append(me.$LoadingIndicator);           
 
@@ -170,24 +171,18 @@
                 me.Pages[NewPageNum].$Container.fadeIn();
             }
             else {
-                //if (OldPage != null)
-                //    OldPage.$Container.detach();
-                
                 me.$ReportAreaContainer.find(".Page").detach();
                 me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
 
-                //me.Pages[NewPageNum].$Container.hide();
                 if (me.CurPage != null && me.CurPage > NewPageNum) {
-                    //me.Pages[NewPageNum].$Container.slideLeftShow(1500);
                     me.Pages[NewPageNum].$Container.show();
                 } else {
                     me.Pages[NewPageNum].$Container.show();
-                    //me.Pages[NewPageNum].$Container.slideRightShow(1500);
                 }
 
             }
             
-            me.Pages[NewPageNum] = null;
+            //me.Pages[NewPageNum] = null;
             me.CurPage = NewPageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
@@ -274,14 +269,9 @@
         },
         CachePages: function (InitPage) {
             var me = this;
-
-            // TODO [jasonc]
-            // Put back caching
-            return;
-
-            //Just picked 2 could be more or less
-            var low = InitPage - 2;
-            var high = InitPage + 2;
+             
+            var low = InitPage - 1;
+            var high = InitPage + 1;
             if (low < 1) low = 1;
             if (high > me.NumPages) high = me.NumPages;
 
@@ -295,6 +285,7 @@
             var me = this;
             var action = me.ActionHistory.pop();
             if (action != undefined) {
+                me.Pages = new Object();
                 me.options.ReportPath = action.ReportPath;
                 me.SessionID = action.SessionID;
                 me.ScrollLeft = action.ScrollLeft;
@@ -306,11 +297,8 @@
                 me.TryRemoveParameters();
                 me.LoadPage(action.CurrentPage, null, false);
 
-                //me.Pages[me.CurPage].$Container.detach();
-                //me.Pages[me.CurPage].$Container = null;
-                //me.Pages[me.CurPage].$Container = action.Container;
-                //me.$ReportAreaContainer.append(me.Pages[me.CurPage].$Container);
-            } else {
+            }
+            else {
                 me._trigger('back', null, {path: me.options.ReportPath});
             }
         },
@@ -345,6 +333,24 @@
         ToggleItem: function (ToggleID) {
             var me = this;
             me.ToggleID = ToggleID;
+
+            if (me.TogglePageNum != me.CurPage) {
+                $.ajax({                    
+                    url: me.options.ReportViewerAPI + "/GetReportJSON/",
+                    data: {
+                        ReportServerURL: me.options.ReportServerURL,
+                        ReportPath: me.options.ReportPath,
+                        SessionID: me.SessionID,
+                        PageNumber: me.CurPage,
+                        ParameterList:""},
+                    dataType: 'json',
+                    async: false,
+                    success: function (data) {
+                        me.TogglePageNum = me.CurPage;
+                    },
+                    fail: function () { }
+                });
+            }
 
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
                 NavType: "toggle",
@@ -418,16 +424,14 @@
                 UniqueID: DocumentMapID
             }).done(function (Data) {
                 me.BackupCurPage();
-                me.Pages = new Object();
-                me.LoadPage(Data.NewPage, null, false, null);
-                //LoadPage(RS, Data.NewPage, null, false, null);
+                //me.Pages = new Object();
+                me.LoadPage(Data.NewPage, null, false, null);                
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
         BackupCurPage: function () {
             var me = this;
-            //deep clone current page container, the different between current page and drill report is ReportPath,SessionID and Container
-            //ActionHistory.push({ ReportPath: me.ReportPath, SessionID: me.SessionID, Container: $.extend(true, {}, me.Pages[me.CurPage].$Container) });
+
             me.ActionHistory.push({ ReportPath: me.options.ReportPath, SessionID: me.SessionID, CurrentPage: me.CurPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
         },
         SetScrollLocation: function (top, left) {
@@ -561,9 +565,6 @@
         },
         LoadPage: function (NewPageNum, OldPage, LoadOnly, BookmarkID, ParameterList) {
             var me = this;
-            //if (OldPage != null)
-            //    if (OldPage.$Container != null)
-            //        OldPage.$Container.fadeOut("fast");
            
             if (me.Pages[NewPageNum] != null)
                 if (me.Pages[NewPageNum].$Container != null) {
@@ -587,6 +588,7 @@
                 ParameterList: ParameterList
             })
             .done(function (Data) {
+                me.TogglePageNum = NewPageNum;
                 me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);

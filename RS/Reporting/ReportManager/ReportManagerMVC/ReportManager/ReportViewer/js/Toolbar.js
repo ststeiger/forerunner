@@ -148,6 +148,7 @@
         btnExport: {
             toolType: 2,
             selectorClass: 'fr-button-export',
+            //imageClass: 'fr-image-export',
             text: "Export",
             click: function (e) {
                 e.data.$reportViewer.reportViewer("ShowExport");

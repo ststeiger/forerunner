@@ -34,14 +34,14 @@ table,td,tr {
 {
     position: fixed;
     top: 0px;
-    left: 280px;
+    left: 0px;
     overflow: hidden;
 }
 
 .mainViewPortShiftedLeft {
     position: fixed;
     top: 0px;
-    right: 280px;
+    right: 0px;
     overflow: hidden;
 }
 
@@ -52,13 +52,22 @@ table,td,tr {
     margin: 0px;
     border: 0px;
     overflow:hidden;
-    background-color: gray;
+    background-color: #363B45;
     color: white;
-    z-index: 1;
+    z-index: 2;
     display: none;
     position: absolute;
     left: 0px;
     top: 0px;
+}
+
+#leftPaneContent {
+    height: 100%;
+    width: 280px;
+    overflow: auto;
+    display:block;
+    position: fixed;
+    left: 0px;
 }
 
 #rightPane {
@@ -68,13 +77,20 @@ table,td,tr {
     margin: 0px;
     border: 0px;
     overflow:hidden;
-    background-color: gray;
+    background-color: #363B45;
     color: white;
-    z-index: 1;
+    z-index: 2;
     display: none;
     position: absolute;
     right: 0px;
     top: 0px;
+}
+
+#rightPaneContent {
+    height: 100%;
+    width: 280px;
+    overflow: auto;
+    display:block;
 }
 
 header#topdiv {
@@ -102,6 +118,56 @@ footer#bottomdiv {
 
 #headerspacer {
   height:50px;
+  display:block;
+}
+
+#rightheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  right: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+#rightheader .fr-button-home, #rightheader .fr-button-nav, #rightheader .fr-button-refresh, #rightheader .fr-button-firstpage, #rightheader .fr-button-prev, 
+#rightheader .fr-button-next, #rightheader .fr-button-update-fav, #rightheader .fr-button-export, #rightheader .fr-textbox-reportpage,
+#rightheader .fr-pageOf, #rightheader .fr-num-pages {
+  display: none;
+}
+#rightheader .fr-button-lastpage, #rightheader .fr-button-documentmap, #rightheader .fr-textbox-keyword, #rightheader .fr-button-find, #rightheader .fr-span-find, 
+#rightheader .fr-button-findnext, #rightheader .fr-span-sparator, #rightheader .fr-button-menu {
+  display: none;
+}
+
+#rightheader .fr-button-reportback, #rightheader .fr-button-paramarea {
+    float: left;
+}
+
+#leftheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+#leftheader .fr-button-home, #leftheader .fr-button-nav, #leftheader .fr-button-refresh, #leftheader .fr-button-firstpage, #leftheader .fr-button-prev, 
+#leftheader .fr-button-next, #leftheader .fr-button-update-fav, #leftheader .fr-button-export, #leftheader .fr-textbox-reportpage,
+#leftheader .fr-pageOf, #leftheader .fr-num-pages {
+  display: none;
+}
+#leftheader .fr-button-lastpage, #leftheader .fr-button-documentmap, #leftheader .fr-textbox-keyword, #leftheader .fr-button-find, #leftheader .fr-span-find, 
+#leftheader .fr-button-findnext, #leftheader .fr-span-sparator, #leftheader .fr-button-reportback, #leftheader .fr-button-paramarea {
+  display: none;
+}
+
+#leftheader .fr-button-menu {
+    float: right;
+}
+
+#leftheaderspacer {
   display:block;
 }
 

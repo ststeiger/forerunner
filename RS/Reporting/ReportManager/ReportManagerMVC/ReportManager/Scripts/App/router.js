@@ -65,6 +65,11 @@ var ApplicationRouter = Backbone.Router.extend({
                 navigateTo: me.navigateTo
             });
 
+            $('#rightheader').height($('#topdiv').height());
+            $('#leftheader').height($('#topdiv').height());
+            $('#rightheaderspacer').height($('#topdiv').height());
+            $('#leftheaderspacer').height($('#topdiv').height());
+
             me._selectedItemPath = path0;
         },
 
@@ -92,9 +97,6 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.utils.allowZoom(true);
             $('#footerspacer').attr('style', 'height: 150px');
             $('#bottomdiv').attr('style', 'height: 150px;display: none;');
-            //if (g_App.utils.isTouchDevice()) {
-            //    $('#headerspacer').attr('style', 'height: 0px');
-            //}
             $('#headerspacer').attr('style', 'height: 50px');
             if (path != null) {
                 path = String(path).replace(/%2f/g, "/");
@@ -109,10 +111,12 @@ var ApplicationRouter = Backbone.Router.extend({
             $viewer = $('#FRReportViewer1');
             var initializer = new Forerunner.ReportViewerInitializer({
                 $toolbar: $('#mainSectionHeader'),
-                $toolPane: $('#leftPane'),
+                $toolPane: $('#leftPaneContent'),
                 $viewer: $viewer,
                 $nav: $('#bottomdiv'),
-                $paramarea: $('#rightPane'),
+                $paramarea: $('#rightPaneContent'),
+                $lefttoolbar: $('#leftheader'),
+                $righttoolbar: $('#rightheader'),
                 ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
@@ -127,6 +131,10 @@ var ApplicationRouter = Backbone.Router.extend({
                 me.historyBack();
             });
 
+            //$('#rightheader').height( $('#topdiv').height());
+            //$('#leftheader').height($('#topdiv').height());
+            $('#rightheaderspacer').height($('#topdiv').height());
+            $('#leftheaderspacer').height($('#topdiv').height());
             me.appPageView.bindEvents();
         },
        

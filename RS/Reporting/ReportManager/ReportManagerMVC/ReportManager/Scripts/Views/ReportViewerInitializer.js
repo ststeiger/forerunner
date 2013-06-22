@@ -7,6 +7,8 @@ Forerunner.ReportViewerInitializer = function (options) {
         $viewer: null,
         $nav: null,
         $paramarea: null,
+        $lefttoolbar: null,
+        $righttoolbar: null,
         ReportServerURL: null,
         ReportViewerAPI: null,
         ReportPath: null,
@@ -80,6 +82,16 @@ Forerunner.ReportViewerInitializer.prototype = {
 
         // Let the report viewer know the height of the toolbar
         $viewer.reportViewer('option', 'ToolbarHeight', me.options.toolbarHeight());
+
+        $lefttoolbar = me.options.$lefttoolbar;
+        if ($lefttoolbar != null) {
+            $lefttoolbar.toolbar({ $reportViewer: $viewer });
+        }
+
+        $righttoolbar = me.options.$righttoolbar;
+        if ($righttoolbar != null) {
+            $righttoolbar.toolbar({ $reportViewer: $viewer });
+        }
 
         // Create / render the menu pane
         var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });

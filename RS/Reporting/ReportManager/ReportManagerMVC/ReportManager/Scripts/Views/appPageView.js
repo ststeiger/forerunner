@@ -15,12 +15,16 @@ g_App.AppPageView.prototype = {
             me.eventsBound = true;
             $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleSlideoutPane(true); });
             $('#mainSectionHeader').on('toolbarparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
-            $('#rightPane').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
-            $('#leftPane').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
-            $('#leftPane').on('toolpaneparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
-            $('#rightPane').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
+            $('#rightPaneContent').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
+            $('#leftheader').on('toolbarmenuclick', function (e, data) { me.hideSlideoutPane(true); });
+            $('#rightheader').on('toolbarparamareaclick', function (e, data) { me.hideSlideoutPane(false); });
+            $('#leftPaneContent').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
+            $('#rightPaneContent').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
             $(window).resize(function () {
+                $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
                 $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
+                $('#leftPaneContent').css({ height: '100%' });
+                $('#rightPaneContent').css({ height: '100%' });
             });
         }
     },
@@ -33,9 +37,9 @@ g_App.AppPageView.prototype = {
         var delay = Number(200);
         if (slideoutPane.is(':visible')) {
             if (isLeftPane) {
-                slideoutPane.slideRightHide(delay * 0.5);
-            } else {
                 slideoutPane.slideLeftHide(delay * 0.5);
+            } else {
+                slideoutPane.slideRightHide(delay * 0.5);
             }
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
@@ -62,7 +66,7 @@ g_App.AppPageView.prototype = {
         }
     },
     toggleSlideoutPane: function (isLeftPane) {
-        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');    
+        var slideoutPane = isLeftPane ? $('#leftPane') : $('#rightPane');
         if (slideoutPane.is(':visible')) {
             this.hideSlideoutPane(isLeftPane);
         } else {

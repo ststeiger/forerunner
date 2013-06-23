@@ -156,7 +156,7 @@
             me.$ReportContainer.css({ opacity: 1 });
             me.$LoadingIndicator.hide();
         },
-        SetPage: function (NewPageNum, OldPage) {
+        SetPage: function (NewPageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
 
@@ -229,15 +229,14 @@
         RefreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
-            Page = me.Pages[me.CurPage];
             me.SessionID = "";
             me.Pages = new Object();
             if (me.ParamLoaded == true) {
                 var $ParamArea = me.options.ParamArea;
-                me.LoadPage(1, Page, false, null, $ParamArea.reportParameter("GetParamsList"));
+                me.LoadPage(1, false, null, $ParamArea.reportParameter("GetParamsList"));
             }
             else {
-                me.LoadPage(1, Page, false);
+                me.LoadPage(1, false);
             }
         },
         NavToPage: function (NewPageNum) {
@@ -257,7 +256,7 @@
             if (NewPageNum != me.CurPage) {
                 if (me.Lock == 0) {
                     me.Lock = 1;
-                    me.LoadPage(NewPageNum, me.Pages[me.CurPage], false);
+                    me.LoadPage(NewPageNum, false);
                 }
             }
         },
@@ -278,7 +277,7 @@
             for (var i = low; i <= high; i++)
                 if (me.Pages[i] == null)
                     if (i != InitPage)
-                        me.LoadPage(i, null, true);
+                        me.LoadPage(i, true);
 
         },      
         Back: function () {
@@ -295,7 +294,7 @@
                     me.options.PageNav.pagenav('reset');
 
                 me.TryRemoveParameters();
-                me.LoadPage(action.CurrentPage, null, false);
+                me.LoadPage(action.CurrentPage, false);
 
             }
             else {
@@ -308,7 +307,10 @@
                 me.options.PageNav.pagenav('showNav');
             }
         },
-
+        FlushCache: function () {
+            var me = this;
+            me.Pages = new Object();
+        },
         _PrepareAction: function () {
             var me = this;
 
@@ -348,7 +350,7 @@
             }).done(function (Data) {
                 me.NumPages = Data.NumPages;
                 me.Pages = new Object();
-                me.LoadPage((Data.NewPage), null, false);
+                me.LoadPage((Data.NewPage), false);
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -370,7 +372,7 @@
                     me.ScrollTop = $(window).scrollTop();
 
                     me.Pages[me.CurPage] = null;
-                    me.LoadPage(me.CurPage, null, false);
+                    me.LoadPage(me.CurPage, false);
                 }
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
@@ -388,7 +390,7 @@
                    me.NavToLink(BookmarkID);
                 } else {
                     me.BackupCurPage();
-                    me.LoadPage(Data.NewPage, null, false, BookmarkID);
+                    me.LoadPage(Data.NewPage, false, BookmarkID);
                 }
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
@@ -416,7 +418,7 @@
                 }
                 else {
                     me.SetScrollLocation(0, 0);                   
-                    me.LoadPage(1, null, false, null);
+                    me.LoadPage(1, false, null);
                 }
 
             })
@@ -431,8 +433,7 @@
                 UniqueID: DocumentMapID
             }).done(function (Data) {
                 me.BackupCurPage();
-                //me.Pages = new Object();
-                me.LoadPage(Data.NewPage, null, false, null);                
+                me.LoadPage(Data.NewPage, false, null);                
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -470,7 +471,7 @@
                         me.Finding = true;
                         me.options.SetPageDone = function () { me.SetFindHighlight(KeyWord) };
                         me.Pages[Data.NewPage] = null;
-                        me.LoadPage(Data.NewPage, null, false);
+                        me.LoadPage(Data.NewPage, false);
                     } else {
                         me.SetFindHighlight(KeyWord);
                     }
@@ -557,7 +558,7 @@
                 me.RemoveLoadingIndicator();
             }
             else {
-                me.LoadPage(PageNum, null, false);
+                me.LoadPage(PageNum, false);
             }
         },
         TryRemoveParameters: function () {
@@ -570,7 +571,7 @@
                 }
             }
         },
-        LoadPage: function (NewPageNum, OldPage, LoadOnly, BookmarkID, ParameterList) {
+        LoadPage: function (NewPageNum, LoadOnly, BookmarkID, ParameterList) {
             var me = this;
            
             if (me.Pages[NewPageNum] != null)
@@ -596,7 +597,7 @@
             })
             .done(function (Data) {
                 me.TogglePageNum = NewPageNum;
-                me.WritePage(Data, NewPageNum, OldPage, LoadOnly);
+                me.WritePage(Data, NewPageNum, LoadOnly);
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);
                 
@@ -604,7 +605,7 @@
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); })
         },
-        WritePage: function (Data, NewPageNum, OldPage, LoadOnly) {
+        WritePage: function (Data, NewPageNum, LoadOnly) {
             var me = this;
             var $Report = $("<Div/>");
             $Report.addClass("Page");
@@ -634,7 +635,7 @@
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
                 me.RemoveLoadingIndicator();
-                me.SetPage(NewPageNum, OldPage);
+                me.SetPage(NewPageNum);
             }
         },
         RenderPage: function (pageNum) {

@@ -56,6 +56,30 @@
                 me.disableTools(toolInfoArray);
             }
         },
+        hideTools: function (){
+            var me = this;
+
+            $.each(me.tools, function (Index, Obj) {
+                if (Obj.selectorClass != null) {                    
+                    var $toolEl = $("." + Obj.selectorClass, me.element);
+                    Obj["Display"] = $toolEl.is(":visible");
+                    $toolEl.fadeOut();
+                }
+            });
+
+        },
+        showTools: function () {
+            var me = this;
+
+            $.each(me.tools, function (Index, Obj) {
+                if (Obj.selectorClass != null) {
+                    var $toolEl = $("." + Obj.selectorClass, me.element);
+                    if (Obj["Display"])
+                        $toolEl.fadeIn();
+                }
+            });
+
+        },
         enableTools: function (toolInfoArray) {
             var me = this;
             toolInfoArray.forEach(function (toolInfo, index, array) {

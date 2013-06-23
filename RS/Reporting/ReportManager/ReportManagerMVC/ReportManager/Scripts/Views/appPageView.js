@@ -44,6 +44,7 @@ g_App.AppPageView.prototype = {
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
             g_App.utils.allowZoom(true);
+            $('#mainSectionHeader').toolbar('showTools');
         }
     },
     showSlideoutPane: function (isLeftPane) {
@@ -54,7 +55,6 @@ g_App.AppPageView.prototype = {
         var delay = Number(200);
         if (!slideoutPane.is(':visible')) {
             slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
-            //slideoutPane.show();
             if (isLeftPane) {
                 slideoutPane.slideLeftShow(delay);
             } else {
@@ -63,6 +63,7 @@ g_App.AppPageView.prototype = {
             mainViewPort.addClass(className, delay);
             topdiv.addClass(className, delay);
             g_App.utils.allowZoom(false);
+            $('#mainSectionHeader').toolbar('hideTools');
         }
     },
     toggleSlideoutPane: function (isLeftPane) {

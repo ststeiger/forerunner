@@ -79,7 +79,8 @@
             me._CloseAllDropdown();
             var paramList = me.GetParamsList();
             if (paramList != null) {
-                me.options.$reportViewer.reportViewer('LoadPage', me.options.PageNum, null, false, null, paramList);
+                me.options.$reportViewer.reportViewer('FlushCache');
+                me.options.$reportViewer.reportViewer('LoadPage', me.options.PageNum, false, null, paramList);
                 me._trigger('submit');
             }
         },

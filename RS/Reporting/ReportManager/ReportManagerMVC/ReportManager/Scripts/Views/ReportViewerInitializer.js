@@ -26,6 +26,8 @@ Forerunner.ReportViewerInitializer.prototype = {
     render: function () {
         var me = this;
         var $viewer = me.options.$viewer;
+       
+
         $viewer.reportViewer({
             ReportServerURL: me.options.ReportServerURL,
             ReportViewerAPI: me.options.ReportViewerAPI,
@@ -85,12 +87,12 @@ Forerunner.ReportViewerInitializer.prototype = {
 
         $lefttoolbar = me.options.$lefttoolbar;
         if ($lefttoolbar != null) {
-            $lefttoolbar.toolbar({ $reportViewer: $viewer });
+            $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });           
         }
 
         $righttoolbar = me.options.$righttoolbar;
         if ($righttoolbar != null) {
-            $righttoolbar.toolbar({ $reportViewer: $viewer });
+            $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });            
         }
 
         // Create / render the menu pane

@@ -146,7 +146,7 @@
                 me.$LoadingIndicator.css("top", me.$ReportContainer.scrollTop() + 100 + 'px')
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
 
-                me.$ReportContainer.css({ opacity: 0.75 });
+                me.$ReportContainer.css({ opacity: 0.5 });
                 me.$LoadingIndicator.show();
             }
         },
@@ -181,10 +181,8 @@
                 }
 
             }
-            
-            //me.Pages[NewPageNum] = null;
+                       
             me.CurPage = NewPageNum;
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger('changepage', null, { newPageNum: NewPageNum, paramLoaded: me.ParamLoaded });
 
@@ -200,7 +198,6 @@
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
-                    //alert("hi");
                     if (dir == 'left' || dir == 'up')
                         me.NavToPage((me.CurPage + 1));
                     else
@@ -213,17 +210,7 @@
                 tap: function (event, target) {
                     $(target).trigger('click');
                 },
-                //longTap: function (event, target) {
-                //    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
-                //        me.ShowNav();
-                //    }
-                //},
-                //doubleTap: function (event, target) {
-                //    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
-                //        me.ShowNav();
-                //    }
-                //},
-                longTapThreshold: 1000,
+               longTapThreshold: 1000,
             });
         },
         RefreshReport: function () {
@@ -584,6 +571,7 @@
                 me.AddLoadingIndicator();
             }
             me.TogglePageNum = NewPageNum;
+            me.Lock = 1;
             $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
                 ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath,
@@ -593,6 +581,7 @@
             })
             .done(function (Data) {               
                 me.WritePage(Data, NewPageNum, LoadOnly);
+                me.Lock = 0;
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);
                 
@@ -625,8 +614,7 @@
                 me.NumPages = 0
             else
                 me.NumPages = Data.NumPages;
-
-            //Sections           
+       
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
                 me.RemoveLoadingIndicator();

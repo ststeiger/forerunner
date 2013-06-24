@@ -146,7 +146,7 @@
                 me.$LoadingIndicator.css("top", me.$ReportContainer.scrollTop() + 100 + 'px')
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
 
-                me.$ReportContainer.css({ opacity: 0.75 });
+                me.$ReportContainer.css({ opacity: 0.5 });
                 me.$LoadingIndicator.show();
             }
         },
@@ -181,10 +181,8 @@
                 }
 
             }
-            
-            //me.Pages[NewPageNum] = null;
+                       
             me.CurPage = NewPageNum;
-
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             me._trigger('changepage', null, { newPageNum: NewPageNum, paramLoaded: me.ParamLoaded });
 
@@ -200,7 +198,6 @@
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
-                    //alert("hi");
                     if (dir == 'left' || dir == 'up')
                         me.NavToPage((me.CurPage + 1));
                     else
@@ -213,30 +210,19 @@
                 tap: function (event, target) {
                     $(target).trigger('click');
                 },
-                //longTap: function (event, target) {
-                //    if (me.$Slider === undefined || !me.$Slider.is(":visible")) {
-                //        me.ShowNav();
-                //    }
-                //},
-                //doubleTap: function (event, target) {
-                //    if (me.$Slider !== undefined && me.$Slider.is(":visible") && $(target).is(me.$Slider)) {
-                //        me.ShowNav();
-                //    }
-                //},
-                longTapThreshold: 1000,
+               longTapThreshold: 1000,
             });
         },
         RefreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
-            me.SessionID = "";
-            me.Pages = new Object();
+            me.SessionID = "";            
             if (me.ParamLoaded == true) {
                 var $ParamArea = me.options.ParamArea;
-                me.LoadPage(1, false, null, $ParamArea.reportParameter("GetParamsList"));
+                me.LoadPage(1, false, null, $ParamArea.reportParameter("GetParamsList"),true);
             }
             else {
-                me.LoadPage(1, false);
+                me.LoadPage(1, false,null,null,true);
             }
         },
         NavToPage: function (NewPageNum) {
@@ -284,17 +270,14 @@
             var me = this;
             var action = me.ActionHistory.pop();
             if (action != undefined) {
-                me.Pages = new Object();
+                
                 me.options.ReportPath = action.ReportPath;
                 me.SessionID = action.SessionID;
                 me.ScrollLeft = action.ScrollLeft;
                 me.ScrollTop = action.ScrollTop;
 
-                if (me.options.PageNav != null)
-                    me.options.PageNav.pagenav('reset');
-
-                me.TryRemoveParameters();
-                me.LoadPage(action.CurrentPage, false);
+                me.RemoveParameters();
+                me.LoadPage(action.CurrentPage, false,null,null,true);
 
             }
             else {
@@ -310,6 +293,8 @@
         FlushCache: function () {
             var me = this;
             me.Pages = new Object();
+            if (me.options.PageNav != null)
+                me.options.PageNav.pagenav('reset');
         },
         _PrepareAction: function () {
             var me = this;
@@ -329,7 +314,7 @@
                     success: function (data) {
                         me.TogglePageNum = me.CurPage;
                     },
-                    fail: function () { }
+                    fail: function () { alert("Fail"); }
                 });
             }
         },
@@ -349,8 +334,7 @@
                 Direction: newDir
             }).done(function (Data) {
                 me.NumPages = Data.NumPages;
-                me.Pages = new Object();
-                me.LoadPage((Data.NewPage), false);
+                me.LoadPage((Data.NewPage), false,null,null,true );
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
@@ -407,10 +391,6 @@
                 me.BackupCurPage();
                 me.SessionID = Data.SessionID;
                 me.options.ReportPath = Data.ReportPath;
-                me.Pages = new Object();
-
-                if (me.options.PageNav != null)
-                    me.options.PageNav.pagenav('reset');
                 if (Data.ParametersRequired) {
                     me.$ReportAreaContainer.find(".Page").detach();
                     me.SetScrollLocation(0, 0);
@@ -418,7 +398,7 @@
                 }
                 else {
                     me.SetScrollLocation(0, 0);                   
-                    me.LoadPage(1, false, null);
+                    me.LoadPage(1, false, null,null,true);
                 }
 
             })
@@ -544,7 +524,7 @@
         ShowParameters: function (PageNum, Data) {
             var me = this;
             if (Data.Type == "Parameters") {
-                me.TryRemoveParameters();
+                me.RemoveParameters();
                 $ParamArea = me.options.ParamArea;
                 if ($ParamArea != null) {
                     me._trigger('showparamarea');
@@ -561,7 +541,7 @@
                 me.LoadPage(PageNum, false);
             }
         },
-        TryRemoveParameters: function () {
+        RemoveParameters: function () {
             var me = this;
             if (me.ParamLoaded == true) {
                 $ParamArea = me.options.ParamArea;
@@ -571,9 +551,12 @@
                 }
             }
         },
-        LoadPage: function (NewPageNum, LoadOnly, BookmarkID, ParameterList) {
+        LoadPage: function (NewPageNum, LoadOnly, BookmarkID, ParameterList,FlushCache) {
             var me = this;
            
+            if (FlushCache != null && FlushCache)
+                me.FlushCache();
+
             if (me.Pages[NewPageNum] != null)
                 if (me.Pages[NewPageNum].$Container != null) {
                     if (!LoadOnly) {
@@ -587,7 +570,8 @@
             if (!LoadOnly) {
                 me.AddLoadingIndicator();
             }
-
+            me.TogglePageNum = NewPageNum;
+            me.Lock = 1;
             $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
                 ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath,
@@ -595,9 +579,9 @@
                 PageNumber: NewPageNum,
                 ParameterList: ParameterList
             })
-            .done(function (Data) {
-                me.TogglePageNum = NewPageNum;
+            .done(function (Data) {               
                 me.WritePage(Data, NewPageNum, LoadOnly);
+                me.Lock = 0;
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);
                 
@@ -630,8 +614,7 @@
                 me.NumPages = 0
             else
                 me.NumPages = Data.NumPages;
-
-            //Sections           
+       
             if (!LoadOnly) {
                 me.RenderPage(NewPageNum);
                 me.RemoveLoadingIndicator();

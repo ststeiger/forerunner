@@ -165,16 +165,13 @@
                 var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-
                 if (data.paramLoaded == false)
                     me.disableTools([me.btnParamarea]);
-                else
-                    me._enableParamButtons();
+               
             });
 
             me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
                 me.enableTools([me.btnParamarea]);
-                me._disableParamButtons();
             });
 
             // Hook up the toolbar element events
@@ -227,16 +224,7 @@
             else
                 me.enableTools([me.btnNav]);
         },
-        _disableParamButtons: function () {
-            var me = this;
-            me.disableTools([me.btnNav, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                             me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnFindNext, me.btnExport]);
-        },
-        _enableParamButtons: function () {
-            var me = this;
-            me.enableTools([me.btnNav, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                             me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnFindNext, me.btnExport]);
-        },
+       
         _destroy: function () {
         },
 

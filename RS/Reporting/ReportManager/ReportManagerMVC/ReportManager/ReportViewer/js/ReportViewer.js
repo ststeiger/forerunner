@@ -389,16 +389,20 @@
                 UniqueID: DrillthroughID
             }).done(function (Data) {
                 me.BackupCurPage();
-                me.SessionID = Data.SessionID;
-                me.options.ReportPath = Data.ReportPath;
-                if (Data.ParametersRequired) {
-                    me.$ReportAreaContainer.find(".Page").detach();
-                    me.SetScrollLocation(0, 0);
-                    me.ShowParameters(1, Data.Parameters);
-                }
+                if (Data.Exception != null)
+                    me.$ReportAreaContainer.find(".Page").reportRender("WriteError", Data);
                 else {
-                    me.SetScrollLocation(0, 0);                   
-                    me.LoadPage(1, false, null,null,true);
+                    me.SessionID = Data.SessionID;
+                    me.options.ReportPath = Data.ReportPath;
+                    if (Data.ParametersRequired) {
+                        me.$ReportAreaContainer.find(".Page").detach();
+                        me.SetScrollLocation(0, 0);
+                        me.ShowParameters(1, Data.Parameters);
+                    }
+                    else {
+                        me.SetScrollLocation(0, 0);
+                        me.LoadPage(1, false, null, null, true);
+                    }
                 }
 
             })

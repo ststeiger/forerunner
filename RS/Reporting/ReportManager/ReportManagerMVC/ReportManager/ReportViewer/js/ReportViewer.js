@@ -629,8 +629,8 @@
 
             if (me.Pages[pageNum].ReportObj.Exception == null) {
                 if (me.$ReportContainer.find(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
-                    me.getHasDocMap = true;
-                    me.$ReportContainer.reportDocumentMap({ ReportViewer: this });
+                    me.HasDocMap = true;
+                    me.$ReportContainer.reportDocumentMap({ ReportViewer: me });
                     me.$ReportContainer.reportDocumentMap("WriteDocumentMap", pageNum);
                 }
 

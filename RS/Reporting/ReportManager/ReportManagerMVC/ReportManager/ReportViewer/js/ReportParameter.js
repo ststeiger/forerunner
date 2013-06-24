@@ -5,7 +5,10 @@
             PageNum: null,
         },
         _formInit: false,
-        _paramCount:0,
+        _paramCount: 0,
+        _defaultValueExist: false,
+        _loadedForDefault:true,
+
         _init: function () {
             var me = this;
             me.element.html(null);
@@ -31,6 +34,7 @@
             var me = this;
             me.options.PageNum = PageNum;
             me._paramCount = Data.Count;
+            me._defaultValueExist = Data.DefaultValueExist;
 
             me._trigger('render');
 
@@ -70,6 +74,9 @@
             $(".Parameter-ViewReport").on("click", function () {
                 me._SubmitForm();
             });
+
+            if (me._paramCount == Data.DefaultValueCount && me._loadedForDefault)
+                me._SubmitForm();
             
             me.options.$reportViewer.reportViewer('RemoveLoadingIndicator');
         },
@@ -173,6 +180,9 @@
                     "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
                 me._GetParameterControlProperty(Param, $radioItem);
 
+                if (me._defaultValueExist == true && Param.DefaultValues[0] == radioValues[value])
+                    $radioItem.attr("checked", "true");
+
                 if (me._paramCount == 1)
                     $radioItem.on("click", function () { me._SubmitForm(); });
 
@@ -191,8 +201,9 @@
 
             switch (Param.Type) {
                 case "DateTime":
+                    $Control.attr("readonly", "true");
                     $Control.datepicker({
-                        dateFormat: 'yy-mm-dd',//Format: ISO8601
+                        //dateFormat: 'yy-mm-dd',//Format: ISO8601
                         onClose: function () {
                             $("[name='" + Param.Name + "']").valid();
 
@@ -200,13 +211,17 @@
                                 me._SubmitForm();
                         },
                     });
-                    $Control.attr("dateISO", "true");
+
+                    if (me._defaultValueExist == true)
+                        $Control.datepicker("setDate", Param.DefaultValues[0]);
                     break;
                 case "Integer":
                 case "Float":
                     $Control.attr("number", "true");
-                    break;
+                    //break;
                 case "String":
+                    if (me._defaultValueExist == true)
+                        $Control.val(Param.DefaultValues[0]);
                     break;
             }
 
@@ -214,6 +229,7 @@
         },
         _WriteDropDownControl: function (Param, $Control) {
             var me = this;
+            var canLoad = false;
             var $Control = $("<select class='Parameter Parameter-Select' ismultiple='" + Param.MultiValue + "' name='" + Param.Name + "' datatype='" + Param.Type + "' readonly='true'>");
             me._GetParameterControlProperty(Param, $Control);
 
@@ -221,14 +237,22 @@
             $Control.append($defaultOption);
 
             for (index in Param.ValidValues) {
-                var $option = new $("<option value='" + Param.ValidValues[index].Value + "'>" + Param.ValidValues[index].Key + "</option>");
+                var optionValue = Param.ValidValues[index].Value;
+                var $option = new $("<option value='" + optionValue + "'>" + Param.ValidValues[index].Key + "</option>");
+                
+                if (me._defaultValueExist && Param.DefaultValues[0] == optionValue) {
+                    $option.attr("selected", "true");
+                    canLoad = true;
+                }
+
                 $Control.append($option);
             }
+            if (!canLoad) me._loadedForDefault = false;
 
             if (me._paramCount == 1) {
                 $Control.on('change', function () { me._SubmitForm(); });
             }
-
+            
             return $Control;
         },
         _WriteDropDownWithCheckBox: function(Param, $Control) {
@@ -258,6 +282,8 @@
             var $Table = me._GetDefaultHTMLTable();
             Param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
+            var keys = "";
+            var values = "";
             for (index in Param.ValidValues) {
                 var key;
                 var value;
@@ -277,6 +303,12 @@
                 var $Span = new $("<Span />");
                 var $Checkbox = new $("<input type='checkbox' class='" + Param.Name + "_DropDown_CB' id='" + Param.Name + "_DropDown_" + value + "' value='" + value + "' />");
                 
+                if (me._defaultValueExist && me._Contains(Param.DefaultValues, value)) {
+                    $Checkbox.attr("checked", "true");
+                    keys += key + ",";
+                    values += value + ",";
+                }
+
                 $Checkbox.on("click", function () {
                     if (this.value == "Select All") {
                         if (this.checked == true) {
@@ -303,9 +335,26 @@
             }
             $DropDownContainer.append($Table);
 
+            if (me._defaultValueExist) {
+                $MultipleCheckBox.val(keys.substr(0, keys.length - 1));
+                $HiddenCheckBox.val(values.substr(0, values.length - 1));
+            }
+
             $Control.append($MultipleCheckBox).append($HiddenCheckBox).append($OpenDropDown).append($DropDownContainer);
 
             return $Control;
+        },
+        _SetMultipleInputValues: function (Param) {
+            var ShowValue = "";
+            var HiddenValue = "";
+            $("." + Param.Name + "_DropDown_CB").each(function (i) {
+                if (this.checked & this.value != "Select All") {
+                    ShowValue += $("[name='" + Param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
+                    HiddenValue += this.value + ",";
+                }
+            });
+            $("#" + Param.Name + "_fore").val(ShowValue.substr(0, ShowValue.length - 1));
+            $("#" + Param.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
         },
         _PopupDropDownPanel: function(Param) {
             var me = this;
@@ -321,16 +370,7 @@
             var me = this;
             if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Show")) {
                 $("[name='" + Param.Name + "_DropDownContainer']").fadeIn("fast", function () {
-                    var ShowValue = "";
-                    var HiddenValue = "";
-                    $("." + Param.Name + "_DropDown_CB").each(function (i) {
-                        if (this.checked & this.value != "Select All") {
-                            ShowValue += $("[name='" + Param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
-                            HiddenValue += this.value + ",";
-                        }
-                    });
-                    $("#" + Param.Name + "_fore").val(ShowValue.substr(0, ShowValue.length - 1));
-                    $("#" + Param.Name + "_hidden").val(HiddenValue.substr(0, HiddenValue.length - 1));
+                    me._SetMultipleInputValues(Param);
                 });
                 $("[name='" + Param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
                 $("[name='" + Param.Name + "']").focus().blur().focus();
@@ -461,6 +501,14 @@
         _GetDefaultHTMLTable: function() {
             var $NewObj = $("<Table cellspacing='0' cellpadding='0'/>");
             return $NewObj;
+        },
+        _Contains: function (Array, Keyword) {
+            var i = Array.length;
+            while (i--) {
+                if (Array[i] == Keyword)
+                    return true;
+            }
+            return false;
         }
     });  // $.widget
 });

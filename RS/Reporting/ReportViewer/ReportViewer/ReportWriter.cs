@@ -304,6 +304,8 @@ namespace Forerunner
         public string ConvertParamemterToJSON(ReportParameter[] parametersList, string SessionID, string ReportServerURL, string reportPath, int NumPages)
         {
             JsonWriter w = new JsonTextWriter();
+            bool DefaultExist = false;
+            int DefaultValueCount = 0;
             w.WriteStartObject();
             w.WriteMember("SessionID");
             w.WriteString(SessionID);
@@ -340,6 +342,9 @@ namespace Forerunner
                 w.WriteMember("DefaultValues");
                 if (parameter.DefaultValues != null)
                 {
+                    DefaultExist = true;
+                    DefaultValueCount++;
+
                     w.WriteStartArray();
                     foreach (string item in parameter.DefaultValues)
                     {
@@ -383,8 +388,16 @@ namespace Forerunner
                     w.WriteString("");
                 w.WriteEndObject();
             }
-
             w.WriteEndArray();
+
+            w.WriteMember("DefaultValueExist");
+            if (DefaultExist)
+                w.WriteBoolean(true);
+            else
+                w.WriteBoolean(false);
+
+            w.WriteMember("DefaultValueCount");
+            w.WriteNumber(DefaultValueCount);
 
             w.WriteEndObject();
 

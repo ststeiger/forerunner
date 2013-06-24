@@ -81,6 +81,7 @@ Forerunner.ReportViewerInitializer.prototype = {
             }
         };
         $toolbar.toolbar('addTools', 14, true, [btnFav]);
+        $toolbar.toolbar('disableTools', [btnFav]);
 
         // Let the report viewer know the height of the toolbar
         $viewer.reportViewer('option', 'ToolbarHeight', me.options.toolbarHeight());
@@ -143,6 +144,11 @@ Forerunner.ReportViewerInitializer.prototype = {
             }
         };
         $toolPane.toolpane('addTools', 10, true, [itemFav]);
+        $toolPane.toolpane('disableTools', [itemFav]);
+        $viewer.on('reportviewerchangepage', function (e, data) {
+            $toolPane.toolpane('enableTools', [itemFav]);
+            $toolbar.toolbar('enableTools', [btnFav]);
+        });
 
         $nav = me.options.$nav;
         if ($nav != null) {
@@ -167,7 +173,8 @@ Forerunner.ReportViewerInitializer.prototype = {
             dataType: 'json',
             async: true,
             success: function (data) {
-                if ($toolbar != null) {
+                var $tb;
+                if ($toolbar != null) {                    
                     $tb = $toolbar.find('.fr-button-update-fav').find("div");
                     if (data.IsFavorite) {
                         $tb.addClass('fr-image-delFav');

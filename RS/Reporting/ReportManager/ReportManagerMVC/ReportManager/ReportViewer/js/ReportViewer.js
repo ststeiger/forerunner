@@ -275,10 +275,10 @@
                 me.SessionID = action.SessionID;
                 me.ScrollLeft = action.ScrollLeft;
                 me.ScrollTop = action.ScrollTop;
-
+                
+                me._trigger('drillback');
                 me.RemoveParameters();
                 me.LoadPage(action.CurrentPage, false,null,null,true);
-
             }
             else {
                 me._trigger('back', null, {path: me.options.ReportPath});
@@ -427,12 +427,11 @@
             me.ScrollLeft = left;
             me.ScrollTop = top;
         },
-        Find: function (StartPage, EndPage) {
-            var me = this;
-            var KeyWord = $(".fr-textbox-keyword").val().trim();
-            if (KeyWord == '') return;
-            
-            if (me.FindKeyword == null || me.FindKeyword != KeyWord) { me.FindKeyword = KeyWord; me.FindStart = null; }
+        Find: function (Keyword,StartPage, EndPage) {
+            var me = this;            
+            if (Keyword == '') return;
+
+            if (me.FindKeyword == null || me.FindKeyword != Keyword) { me.FindKeyword = Keyword; me.FindStart = null; }
 
             if (StartPage == null) StartPage = me.getCurPage();
             if (EndPage == null) EndPage = me.getNumPages();
@@ -444,55 +443,73 @@
                 SessionID: me.SessionID,
                 StartPage: StartPage,
                 EndPage: EndPage,
-                FindValue: KeyWord
+                FindValue: Keyword
             }).done(function (Data) {
                 if (Data.NewPage != 0) {
+                    me.Finding = true;
                     if (Data.NewPage != me.CurPage) {
-                        me.Finding = true;
-                        me.options.SetPageDone = function () { me.SetFindHighlight(KeyWord) };
+                        me.options.SetPageDone = function () { me.SetFindHighlight(Keyword) };
                         me.Pages[Data.NewPage] = null;
                         me.LoadPage(Data.NewPage, false);
                     } else {
-                        me.SetFindHighlight(KeyWord);
+                        me.SetFindHighlight(Keyword);
                     }
                 }
                 else {
-                    if (me.Finding == true)
-                        alert('End of the report');
+                    if (me.Finding == true) {
+                        alert('The entire report has been searched.');
+                        me.ResetFind();
+                    }
                     else
                         alert('Keyword not found');
                 }
             })
           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        FindNext: function (KeyWord) {
+        FindNext: function (Keyword) {
             var me = this;
-
             $(".Find-Keyword").filter('.Find-Highlight').first().removeClass("Find-Highlight");
 
             var $NextWord = $(".Find-Keyword").filter('.Unread').first();
-            if ($NextWord.length > 0)
+            if ($NextWord.length > 0) {
                 $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+                $(document).scrollTop($NextWord.offset().top - 100);
+            }
             else {
-                if (me.getNumPages() == 1) { alert('The entire report has been searched.'); return; }
+                if (me.getNumPages() == 1) {
+                    alert('The entire report has been searched.');
+                    me.ResetFind();
+                    return;
+                }
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
-                    me.Find(me.getCurPage() + 1);
+                    me.Find(Keyword, me.getCurPage() + 1);
                 else if (me.FindStart > 1)
-                    me.Find(1, me.FindStart - 1);
-                else
+                    me.Find(Keyword, 1, me.FindStart - 1);
+                else {
                     alert('The entire report has been searched.');
+                    me.ResetFind();
+                }
             }
         },
-        SetFindHighlight: function (KeyWord) {
+        SetFindHighlight: function (Keyword) {
             var me = this;
 
             $(me).clearHighLightWord();
-            me.$ReportContainer.highLightWord(KeyWord);
+            me.$ReportContainer.highLightWord(Keyword);
 
             //Highlight the first match.
-            $(".Find-Keyword").filter('.Unread').first().removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+            var $item = $(".Find-Keyword").filter('.Unread').first()            
+            $item.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+
+            $(document).scrollTop($item.offset().top - 100);
             //if (me.Finding == true) me.Finding = false;
+        },
+        ResetFind: function () {
+            var me = this;
+            me.Finding = false;
+            me.FindStart = null;
+            me.FindKeyword = null;
         },
         ShowExport: function () {
             if ($(".Export-Panel").is(":hidden"))
@@ -772,8 +789,8 @@ jQuery.fn.extend({
             $(this).show('slide', { direction: 'left', easing: 'easeInCubic' }, delay);
         });
     },
-    highLightWord: function (KeyWord) {
-        if (KeyWord == undefined || KeyWord == "") {
+    highLightWord: function (Keyword) {
+        if (Keyword == undefined || Keyword == "") {
             return;
         }
         else {
@@ -784,14 +801,14 @@ jQuery.fn.extend({
                     //nodetype=3 : text node
                     if (node.nodeType == 3) {
                         var searchnode = node;
-                        var pos = searchnode.data.toUpperCase().indexOf(KeyWord.toUpperCase());
+                        var pos = searchnode.data.toUpperCase().indexOf(Keyword.toUpperCase());
 
                         while (pos < searchnode.data.length) {
                             if (pos >= 0) {
                                 var spannode = document.createElement('span');
                                 spannode.className = 'Find-Keyword Unread';
                                 var middlebit = searchnode.splitText(pos);
-                                var searchnode = middlebit.splitText(KeyWord.length);
+                                var searchnode = middlebit.splitText(Keyword.length);
                                 var middleclone = middlebit.cloneNode(true);
                                 spannode.appendChild(middleclone);
                                 searchnode.parentNode.replaceChild(spannode, middlebit);
@@ -800,11 +817,11 @@ jQuery.fn.extend({
                                 break;
                             }
 
-                            pos = searchnode.data.toUpperCase().indexOf(KeyWord.toUpperCase());
+                            pos = searchnode.data.toUpperCase().indexOf(Keyword.toUpperCase());
                         }
                     }
                     else {
-                        $(node).highLightWord(KeyWord);
+                        $(node).highLightWord(Keyword);
                     }
                 })
             })

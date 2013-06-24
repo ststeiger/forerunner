@@ -20,6 +20,7 @@ g_App.AppPageView.prototype = {
             $('#rightheader').on('toolbarparamareaclick', function (e, data) { me.hideSlideoutPane(false); });
             $('#leftPaneContent').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
             $('#rightPaneContent').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
+            $('#FRReportViewer1').on('reportviewerdrillback', function (e, data) { me.hideSlideoutPane(false); });
             $(window).resize(function () {
                 $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
                 $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });

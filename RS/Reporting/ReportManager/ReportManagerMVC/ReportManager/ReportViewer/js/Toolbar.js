@@ -124,7 +124,8 @@
             selectorClass: 'fr-button-find',
             text: "Find",
             click: function (e) {
-                e.data.$reportViewer.reportViewer("Find");
+                var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                e.data.$reportViewer.reportViewer("Find", value);
             }
         },
         btnSeparator: {
@@ -137,7 +138,8 @@
             selectorClass: 'fr-button-findnext',
             text: "Next",
             click: function (e) {
-                e.data.$reportViewer.reportViewer("FindNext");
+                var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                e.data.$reportViewer.reportViewer("FindNext", value);
             }
         },
         btnSeparator2: {
@@ -171,6 +173,7 @@
             });
 
             me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
+                me.enableTools([me.btnParamarea]);
                 me._disableParamButtons();
             });
 

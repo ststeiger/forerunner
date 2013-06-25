@@ -35,8 +35,7 @@
             me.options.PageNum = PageNum;
             me._paramCount = Data.Count;
             me._defaultValueExist = Data.DefaultValueExist;
-
-            me._trigger('render');
+            me._loadedForDefault = true;
 
             me._render();
 
@@ -77,7 +76,9 @@
 
             if (me._paramCount == Data.DefaultValueCount && me._loadedForDefault)
                 me._SubmitForm();
-            
+            else
+                me._trigger('render');
+
             me.options.$reportViewer.reportViewer('RemoveLoadingIndicator');
         },
         _SubmitForm: function () {
@@ -141,6 +142,9 @@
 
                 var $Checkbox = new $("<Input type='checkbox' class='Parameter-Checkbox' name='" + Param.Name + "' />");
 
+                if (me._defaultValueExist == true)
+                    $Checkbox.attr('checked', 'true');
+
                 $Checkbox.on("click", function () {
                     if ($Checkbox.attr("checked") == "checked") {
                         $Checkbox.removeAttr("checked");
@@ -180,8 +184,11 @@
                     "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
                 me._GetParameterControlProperty(Param, $radioItem);
 
-                if (me._defaultValueExist == true && Param.DefaultValues[0] == radioValues[value])
-                    $radioItem.attr("checked", "true");
+                if (me._defaultValueExist == true)
+                    if (Param.Nullable=="True")
+                        $radioItem.attr("disabled", "true");
+                    else if (Param.DefaultValues[0] == radioValues[value])
+                        $radioItem.attr("checked", "true");
 
                 if (me._paramCount == 1)
                     $radioItem.on("click", function () { me._SubmitForm(); });
@@ -203,25 +210,28 @@
                 case "DateTime":
                     $Control.attr("readonly", "true");
                     $Control.datepicker({
-                        //dateFormat: 'yy-mm-dd',//Format: ISO8601
+                        dateFormat: 'yy-mm-dd', //Format: ISO8601
                         onClose: function () {
                             $("[name='" + Param.Name + "']").valid();
-
                             if (me._paramCount == 1)
                                 me._SubmitForm();
                         },
                     });
+                    $Control.attr("dateISO","true");
 
                     if (me._defaultValueExist == true)
-                        $Control.datepicker("setDate", Param.DefaultValues[0]);
+                        $Control.datepicker("setDate", me._GetDateTimeFromDefault(Param.DefaultValues[0]));
                     break;
                 case "Integer":
                 case "Float":
                     $Control.attr("number", "true");
                     //break;
                 case "String":
-                    if (me._defaultValueExist == true)
+                    if (me._defaultValueExist == true) {
                         $Control.val(Param.DefaultValues[0]);
+                        if (Param.Nullable=="True")
+                            $Control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
+                    }
                     break;
             }
 
@@ -509,6 +519,14 @@
                     return true;
             }
             return false;
-        }
+        },
+        _GetDateTimeFromDefault: function (DefaultDatetime) {
+            var date = DefaultDatetime.substr(0, DefaultDatetime.indexOf(' '));
+
+            var datetime = date.substring(0, date.indexOf('/')) + "-" +
+                           date.substring(date.indexOf('/') + 1, date.lastIndexOf('/')) + "-" +
+                           date.substring(date.lastIndexOf('/') + 1, DefaultDatetime.indexOf(' '));
+            return datetime;
+        },
     });  // $.widget
 });

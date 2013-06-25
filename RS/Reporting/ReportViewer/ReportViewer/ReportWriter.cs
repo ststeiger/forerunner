@@ -10,14 +10,14 @@ using Jayrock.Json;
 namespace Forerunner
 {
 
-    class ReportJSONWriter
+    class ReportJSONWriter : IDisposable
     {
         byte[] RPL;
         int Index = 0;
         JsonWriter w = new JsonTextWriter();
         byte majorVersion;
         byte minorVersion;
-        Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string,TempProperty>() ;
+        Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
 
         class TempProperty
         {
@@ -76,7 +76,7 @@ namespace Forerunner
                 NumProp++;
             }
 
-            public void Add(string Name, string Type, byte Code, Func<Boolean> f = null,Boolean MakeTemp = false)
+            public void Add(string Name, string Type, byte Code, Func<Boolean> f = null, Boolean MakeTemp = false)
             {
                 if (NumProp == PropArray.GetUpperBound(0))
                     //Need to Grow, throuw for now
@@ -121,9 +121,9 @@ namespace Forerunner
                 {
                     TempProperty tmp = new TempProperty();
                     if (PropArray[i].MakeTemp)
-                    {                        
+                    {
                         tmp.Name = PropArray[i].Name;
-                        tmp.Type = PropArray[i].DataType;                    
+                        tmp.Type = PropArray[i].DataType;
                         r.TempPropertyBag.Add(tmp.Name, tmp);
                     }
                     else
@@ -133,7 +133,7 @@ namespace Forerunner
                     switch (PropArray[i].DataType)
                     {
                         case "Int32":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt32(); else w.WriteNumber(r.ReadInt32());                            
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt32(); else w.WriteNumber(r.ReadInt32());
                             break;
                         case "Int64":
                             if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt64(); else w.WriteNumber(r.ReadInt64());
@@ -145,23 +145,23 @@ namespace Forerunner
                             if (PropArray[i].MakeTemp) tmp.Value = r.ReadString(); else w.WriteString(r.ReadString());
                             break;
                         case "Float":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadFloat(); else w.WriteNumber(r.ReadFloat());                            
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadFloat(); else w.WriteNumber(r.ReadFloat());
                             break;
                         case "Single":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadSingle(); else w.WriteNumber(r.ReadSingle());                            
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadSingle(); else w.WriteNumber(r.ReadSingle());
                             break;
                         case "Char":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadChar().ToString(); else w.WriteString(r.ReadChar().ToString());                            
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadChar().ToString(); else w.WriteString(r.ReadChar().ToString());
                             break;
                         case "DateTime":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDateTime().MiliSec; else w.WriteNumber(r.ReadDateTime().MiliSec);                            
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDateTime().MiliSec; else w.WriteNumber(r.ReadDateTime().MiliSec);
                             //TODO Need to write datetime type
                             break;
                         case "Decimal":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDecimal(); else w.WriteNumber(r.ReadDecimal()); 
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDecimal(); else w.WriteNumber(r.ReadDecimal());
                             break;
                         case "Boolean":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadBoolean(); else w.WriteBoolean(r.ReadBoolean()); 
+                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadBoolean(); else w.WriteBoolean(r.ReadBoolean());
                             break;
                         case "Byte":
                             //This is a Total Hack for OrigionalValue
@@ -172,7 +172,7 @@ namespace Forerunner
                                 w.WriteNumber(TypeCode);
                             }
                             else
-                                if (PropArray[i].MakeTemp) tmp.Value = r.ReadByte(); else w.WriteNumber(r.ReadByte()); 
+                                if (PropArray[i].MakeTemp) tmp.Value = r.ReadByte(); else w.WriteNumber(r.ReadByte());
                             break;
                         case "Object":
 
@@ -195,7 +195,7 @@ namespace Forerunner
                             ThrowParseError();
                             break;
                     }
-                    
+
                 }
                 else
                     ThrowParseError();
@@ -235,7 +235,7 @@ namespace Forerunner
 
         }
 
-        public ReportJSONWriter(){}
+        public ReportJSONWriter() { }
 
         public string RPLToJSON(byte[] RPL, string SessionID, string ReportServerURL, string reportPath, int NumPages, DocumentMapNode DocumentMap = null)
         {
@@ -460,7 +460,7 @@ namespace Forerunner
         }
 
         private void WriteTempProperty(string PropName)
-        {            
+        {
             if (!TempPropertyBag.ContainsKey(PropName))
                 return;
 
@@ -505,7 +505,7 @@ namespace Forerunner
                     break;
 
             }
-            
+
 
         }
         private void WriteJSONReportContent()
@@ -514,7 +514,7 @@ namespace Forerunner
             if (ReadByte() == 0x13)
             {
 
-                if (checkVersion(10,6) || checkVersion(10,4) || checkVersion(10,5))
+                if (checkVersion(10, 6) || checkVersion(10, 4) || checkVersion(10, 5))
                 {
                     w.WriteMember("PageContent");
                     w.WriteStartObject();
@@ -552,10 +552,10 @@ namespace Forerunner
                     //Add fake section
                     w.WriteMember("Sections");
                     w.WriteStartArray();
-                    
+
                     //Only one section
                     w.WriteStartObject();
-                    
+
                     //Write Columns
                     //BodyArea
                     w.WriteMember("Columns");
@@ -567,7 +567,7 @@ namespace Forerunner
                         while (InspectByte() == 0x06)
                         {
                             WriteJSONBodyElement();
-                        }                        
+                        }
                     }
 
                     w.WriteEndArray();
@@ -578,7 +578,7 @@ namespace Forerunner
 
                     //Measurments
                     WriteJSONMeasurements();
-                                       
+
                     //Report ElementEnd
                     WriteJSONReportElementEnd();
 
@@ -649,14 +649,14 @@ namespace Forerunner
 
             prop.Add("ID", "String", 0x01);
             prop.Add("UniqueName", "String", 0x00);
-            prop.Add("PageHeight", "Single", 0x10);            
+            prop.Add("PageHeight", "Single", 0x10);
             prop.Add("PageWidth", "Single", 0x11);
             prop.Add("MarginTop", "Single", 0x12);
             prop.Add("MarginLeft", "Single", 0x13);
             prop.Add("MarginBottom", "Single", 0x14);
             prop.Add("MarginRight", "Single", 0x15);
             prop.Add("PageName", "String", 0x30);
-            prop.Add("Columns", "Int32", 0x17,true);
+            prop.Add("Columns", "Int32", 0x17, true);
             prop.Add("ColumnSpacing", "Single", 0x16, true);
             prop.Add("PageStyle", "Object", 0x06, this.WriteJSONStyle);
 
@@ -706,7 +706,7 @@ namespace Forerunner
                 {
                     WriteJSONBodyElement();
                 }
-               
+
             }
 
             w.WriteEndArray();
@@ -784,7 +784,7 @@ namespace Forerunner
                 w.WriteStartObject();
                 w.WriteMember("Elements");
                 WriteJSONElements();
-                
+
                 //Report Items
                 w.WriteMember("ReportItems");
                 WriteJSONReportItems();
@@ -792,7 +792,7 @@ namespace Forerunner
                 //Measurments
                 WriteJSONMeasurements();
                 WriteJSONReportElementEnd();
-  
+
                 w.WriteEndObject();
             }
             else
@@ -942,11 +942,11 @@ namespace Forerunner
         {
             RPLProperties prop;
 
-            
+
             // If this is a Style Property eat the header byte
             if (InspectByte() == 0x21)
                 ReadByte();
-                       
+
             if (ReadByte() != 0x2A)
                 //This should never happen
                 ThrowParseError();
@@ -2029,7 +2029,7 @@ namespace Forerunner
             prop.Add("WritingMode", "Byte", 0x1E);
             prop.Add("UnicodeBiDi", "Byte", 0x1F);
             prop.Add("Language", "String", 0x20);
-            prop.Add("BackgroundImage", "Object", 0x21,WriteJSONImageDataProperties);
+            prop.Add("BackgroundImage", "Object", 0x21, WriteJSONImageDataProperties);
             prop.Add("BackgroundColor", "String", 0x22);
             prop.Add("BackgroundRepeat", "Byte", 0x23);
             prop.Add("NumeralLanguage", "String", 0x24);
@@ -2170,6 +2170,19 @@ namespace Forerunner
             Index += Advance;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                w.Close();                
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 
     public static class JsonUtility

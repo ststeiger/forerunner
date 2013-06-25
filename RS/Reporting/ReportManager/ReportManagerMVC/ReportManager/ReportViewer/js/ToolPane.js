@@ -142,7 +142,8 @@ $(function () {
             text: "Find",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("Find")
+                    var value = e.data.me.element.find('.fr-item-textbox-keyword').val().trim();
+                    e.data.$reportViewer.reportViewer("Find", value);
                     e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-find']);
                 }
             }
@@ -158,7 +159,8 @@ $(function () {
             text: "Next",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("FindNext")
+                    var value = e.data.me.element.find('.fr-item-textbox-keyword').val().trim();
+                    e.data.$reportViewer.reportViewer("FindNext", value);
                     e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-findnext']);
                 }
             }

@@ -39,7 +39,7 @@ Forerunner.ReportViewerInitializer.prototype = {
         var $toolbar = me.options.$toolbar;
         $toolbar.toolbar({ $reportViewer: $viewer });
         var btnHome = {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-home',
             imageClass: 'fr-image-home',
             click: function (e) {
@@ -49,7 +49,7 @@ Forerunner.ReportViewerInitializer.prototype = {
         $toolbar.toolbar('addTools', 2, true, [btnHome]);
 
         var btnFav = {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-update-fav',
             imageClass: 'fr-image-delFav',
             click: function (e) {
@@ -99,7 +99,7 @@ Forerunner.ReportViewerInitializer.prototype = {
         // Create / render the menu pane
         var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
         var itemHome = {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-id-home',
             imageClass: 'fr-image-home',
             text: 'Home',
@@ -110,7 +110,7 @@ Forerunner.ReportViewerInitializer.prototype = {
         $toolPane.toolpane('addTools', 8, true, [itemHome]);
 
         var itemFav = {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-item-update-fav',
             imageClass: 'fr-image-delFav',
             text: 'Favorites',

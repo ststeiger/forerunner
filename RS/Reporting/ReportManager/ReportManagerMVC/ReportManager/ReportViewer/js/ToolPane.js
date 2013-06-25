@@ -7,7 +7,7 @@
         },
         // Button Info
         itemNav: {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-id-nav',
             imageClass: 'fr-image-nav',
             text: 'Navigation',
@@ -17,7 +17,7 @@
             }
         },
         itemReportBack: {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
             text: 'Back',
@@ -27,7 +27,7 @@
             }
         },
         itemRefresh: {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-id-refresh',
             imageClass: 'fr-image-refresh',
             text: 'Refresh',
@@ -37,7 +37,7 @@
             }
         },
         itemFirstPage: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-firstpage',
             imageClass: 'fr-image-firstpage',
             click: function (e) {
@@ -46,7 +46,7 @@
             }
         },
         itemPrev: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-prev',
             imageClass: 'fr-image-prev',
             click: function (e) {
@@ -55,7 +55,7 @@
             }
         },
         itemReportPage: {
-            toolType: 1,
+            toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-item-textbox-reportpage',
             inputType: 'number',
             keypress: function (e) {
@@ -65,17 +65,17 @@
             }
         },
         itemPageOf: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-pageOf',
             text: 'of'
         },
         itemNumPages: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-num-pages',
             text: ""
         },
         itemNext: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-next',
             imageClass: 'fr-image-next',
             click: function (e) {
@@ -84,7 +84,7 @@
             }
         },
         itemLastPage: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-lastpage',
             imageClass: 'fr-image-lastpage',
             click: function (e) {
@@ -93,7 +93,7 @@
             }
         },
         itemDocumentMap: {
-            toolType: 4,
+            toolType: function () { return this.toolTypes.paneItem; },
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
             text: 'Document map',
@@ -103,7 +103,7 @@
             }
         },
         itemKeyword: {
-            toolType: 1,
+            toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-item-textbox-keyword',
             keypress: function (e) {
                 if (e.keyCode == 13) {
@@ -112,7 +112,7 @@
             }
         },
         itemFind: {
-            toolType: 2,
+            toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-item-find',
             text: "Find",
             click: function (e) {
@@ -121,12 +121,12 @@
             }
         },
         itemSeparator: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-item-span-sparator',
             text: '|&nbsp'
         },
         itemFindNext: {
-            toolType: 2,
+            toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-item-findnext',
             text: "Next",
             click: function (e) {

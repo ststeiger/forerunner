@@ -1,26 +1,33 @@
 ﻿$(function () {
+
     // Toolbar widget
     $.widget("Forerunner.toolbase", {
         options: {
             toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
         },
+        toolTypes: {
+            button:     0,
+            input:      1,
+            textButton: 2,
+            plainText:  3,
+            paneItem:   4
+        },
         //addTool
         //  index - 1 based index of where to insert the button array
         //  enabled - true = enabled, false = dasbled
         //  toolInfoArray: [{
-        //      toolType: 0,             // 0 = button, 1 = <input>, 2 = text button, 3 = plain text
+        //      toolType: function() {return this.toolTypes.button;},
         //      selectorClass: '',
         //      imageClass: '',
         //      text: '',
         //      inputType: 'number',    // Used with button type 1
         //      click: function (e) {
+        //  }]
         //
         //  Notes:
         //      Any toolInfoArray property that is of type function, e.g., "click" above will be interpreted
         //      as a event handler. The event, i.e., the name of the property will be bound to the button
         //      when the button is enabled and removed when the button is disabled.
-        //  }]
-      
         addTools: function (index, enabled, toolInfoArray) {
             var me = this;
             var $toolbar = me.element.find('.' + me.options.toolClass);
@@ -118,25 +125,25 @@
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
-            if (toolInfo.toolType == 0) {
+            if (toolInfo.toolType.call(this) == me.toolTypes.button) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
-            else if (toolInfo.toolType == 1) {
+            else if (toolInfo.toolType.call(this) == me.toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
                     type = ", type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
-            else if (toolInfo.toolType == 2) {
+            else if (toolInfo.toolType.call(this) == me.toolTypes.textButton) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
-            else if (toolInfo.toolType == 3) {
+            else if (toolInfo.toolType.call(this) == me.toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
                 }
-            else if (toolInfo.toolType == 4) {
+            else if (toolInfo.toolType.call(this) == me.toolTypes.paneItem) {
                 var text = '';
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);

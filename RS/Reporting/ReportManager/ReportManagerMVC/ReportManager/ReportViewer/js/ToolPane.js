@@ -11,9 +11,11 @@
             selectorClass: 'fr-id-nav',
             imageClass: 'fr-image-nav',
             text: 'Navigation',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowNav')
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-nav']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('ShowNav')
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-nav']);
+                }
             }
         },
         itemReportBack: {
@@ -21,9 +23,11 @@
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
             text: 'Back',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('Back')
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-reportback']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('Back')
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-reportback']);
+                }
             }
         },
         itemRefresh: {
@@ -31,36 +35,44 @@
             selectorClass: 'fr-id-refresh',
             imageClass: 'fr-image-refresh',
             text: 'Refresh',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('RefreshReport')
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-refresh']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('RefreshReport')
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-refresh']);
+                }
             }
         },
         itemFirstPage: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-firstpage',
             imageClass: 'fr-image-firstpage',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-firstpage']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', 1)
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-firstpage']);
+                }
             }
         },
         itemPrev: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-prev',
             imageClass: 'fr-image-prev',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-prev']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-prev']);
+                }
             }
         },
         itemReportPage: {
             toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-item-textbox-reportpage',
             inputType: 'number',
-            keypress: function (e) {
-                if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('NavToPage', this.value)
+            events: {
+                keypress: function (e) {
+                    if (e.keyCode == 13) {
+                        e.data.$reportViewer.reportViewer('NavToPage', this.value)
+                    }
                 }
             }
         },
@@ -78,18 +90,22 @@
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-next',
             imageClass: 'fr-image-next',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-next']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-next']);
+                }
             }
         },
         itemLastPage: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-id-lastpage',
             imageClass: 'fr-image-lastpage',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-lastpage']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-lastpage']);
+                }
             }
         },
         itemDocumentMap: {
@@ -97,17 +113,21 @@
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
             text: 'Document map',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("ShowDocMap")
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-documentmap']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("ShowDocMap")
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-id-documentmap']);
+                }
             }
         },
         itemKeyword: {
             toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-item-textbox-keyword',
-            keypress: function (e) {
-                if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('Find', this.value);
+            events: {
+                keypress: function (e) {
+                    if (e.keyCode == 13) {
+                        e.data.$reportViewer.reportViewer('Find', this.value);
+                    }
                 }
             }
         },
@@ -115,9 +135,11 @@
             toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-item-find',
             text: "Find",
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("Find")
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-find']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("Find")
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-find']);
+                }
             }
         },
         itemSeparator: {
@@ -129,9 +151,11 @@
             toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-item-findnext',
             text: "Next",
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("FindNext")
-                e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-findnext']);
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("FindNext")
+                    e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-findnext']);
+                }
             }
         },
         _initCallbacks: function () {

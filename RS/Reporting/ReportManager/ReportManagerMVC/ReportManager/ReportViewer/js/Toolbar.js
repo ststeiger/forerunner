@@ -10,70 +10,86 @@
             toolType: function () {return this.toolTypes.button;},
             selectorClass: 'fr-button-menu',
             imageClass: 'fr-image-menu',
-            click: function (e) {
-                e.data.me._trigger('menuclick', null, {});
+            events: {
+                click: function (e) {
+                    e.data.me._trigger('menuclick', null, {});
+                }
             }
         },
         btnNav: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-nav',
             imageClass: 'fr-image-nav',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowNav')
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('ShowNav')
+                }
             }
         },
         btnParamarea: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-paramarea',
             imageClass: 'fr-image-paramarea',
-            click: function (e) {
-                e.data.me._trigger('paramareaclick', null, {});
-                //e.data.$reportViewer.reportViewer('ShowParms')
+            events: {
+                click: function (e) {
+                    e.data.me._trigger('paramareaclick', null, {});
+                    //e.data.$reportViewer.reportViewer('ShowParms')
+                }
             }
         },
         btnReportBack: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-reportback',
             imageClass: 'fr-image-reportback',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('Back')
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('Back')
+                }
             }
         },
         btnRefresh: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-refresh',
             imageClass: 'fr-image-refresh',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('RefreshReport')
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('RefreshReport')
+                }
             }
         },
         btnFirstPage: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-firstpage',
             imageClass: 'fr-image-firstpage',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', 1)
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', 1)
+                }
             }
         },
         btnPrev: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-prev',
             imageClass: 'fr-image-prev',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+                }
             }
         },
         btnReportPage: {
             toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-textbox-reportpage',
             inputType: 'number',
-            keypress: function (e) {
-                if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('NavToPage', this.value)
+            events: {
+                keypress: function (e) {
+                    if (e.keyCode == 13) {
+                        e.data.$reportViewer.reportViewer('NavToPage', this.value)
+                    }
+                },
+                click: function (e) {                
+                    e.target.select();
                 }
-            },
-            click: function (e) {                
-                e.target.select();
             }
         },
         btnPageOf: {
@@ -90,32 +106,40 @@
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-next',
             imageClass: 'fr-image-next',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+                }
             }
         },
         btnLastPage: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-lastpage',
             imageClass: 'fr-image-lastpage',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+                }
             }
         },
         btnDocumentMap: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-documentmap',
             imageClass: 'fr-image-documentmap',
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("ShowDocMap")
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("ShowDocMap")
+                }
             }
         },
         btnKeyword: {
             toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-textbox-keyword',
-            keypress: function (e) {
-                if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('Find');
+            events: {
+                keypress: function (e) {
+                    if (e.keyCode == 13) {
+                        e.data.$reportViewer.reportViewer('Find');
+                    }
                 }
             }
         },
@@ -123,9 +147,11 @@
             toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-button-find',
             text: "Find",
-            click: function (e) {
-                var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
-                e.data.$reportViewer.reportViewer("Find", value);
+            events: {
+                click: function (e) {
+                    var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                    e.data.$reportViewer.reportViewer("Find", value);
+                }
             }
         },
         btnSeparator: {
@@ -137,9 +163,11 @@
             toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-button-findnext',
             text: "Next",
-            click: function (e) {
-                var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
-                e.data.$reportViewer.reportViewer("FindNext", value);
+            events: {
+                click: function (e) {
+                    var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                    e.data.$reportViewer.reportViewer("FindNext", value);
+                }
             }
         },
         btnSeparator2: {
@@ -152,8 +180,10 @@
             selectorClass: 'fr-button-export',
             //imageClass: 'fr-image-export',
             text: "Export",
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("ShowExport");
+            events: {
+                click: function (e) {
+                    e.data.$reportViewer.reportViewer("ShowExport");
+                }
             }
         },
         _initCallbacks: function () {

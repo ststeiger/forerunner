@@ -10,32 +10,40 @@
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
-            click: function (e) {
-                e.data.me.options.navigateTo('home', null);
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo('home', null);
+                }
             }
         },
         btnBack: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-back',
             imageClass: 'fr-image-back',
-            click: function (e) {
-                e.data.me.options.navigateTo('back', null);
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo('back', null);
+                }
             }
         },
         btnFav: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
-            click: function (e) {
-                e.data.me.options.navigateTo('favorites', null);
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo('favorites', null);
+                }
             }
         },
         btnRecent: {
             toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
-            click: function (e) {
-                e.data.me.options.navigateTo('recent', null);
+            events: {
+                click: function (e) {
+                    e.data.me.options.navigateTo('recent', null);
+                }
             }
         },
         

@@ -21,11 +21,13 @@
         //      imageClass: '',
         //      text: '',
         //      inputType: 'number',    // Used with button type 1
-        //      click: function (e) {
+        //      events: {
+        //          click: function (e) {
+        //      }
         //  }]
         //
         //  Notes:
-        //      Any toolInfoArray property that is of type function, e.g., "click" above will be interpreted
+        //      Any toolInfo.events property that is of type function, e.g., "click" above will be interpreted
         //      as a event handler. The event, i.e., the name of the property will be bound to the button
         //      when the button is enabled and removed when the button is disabled.
         addTools: function (index, enabled, toolInfoArray) {
@@ -109,17 +111,17 @@
         },
         _removeEvent: function ($toolEl, toolInfo) {
             var me = this;
-            for (var key in toolInfo) {
-                if (typeof toolInfo[key] == 'function') {
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] == 'function') {
                     $toolEl.off(key);
                 }
             }
         },
         _addEvents: function ($toolEl, toolInfo) {
             var me = this;
-            for (var key in toolInfo) {
-                if (typeof toolInfo[key] == 'function') {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo[key]);
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] == 'function') {
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
                 }
             }
         },

@@ -7,7 +7,7 @@
         },
         // Button Info
         btnMenu: {
-            toolType: 0,
+            toolType: function () {return this.toolTypes.button;},
             selectorClass: 'fr-button-menu',
             imageClass: 'fr-image-menu',
             click: function (e) {
@@ -15,7 +15,7 @@
             }
         },
         btnNav: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-nav',
             imageClass: 'fr-image-nav',
             click: function (e) {
@@ -23,7 +23,7 @@
             }
         },
         btnParamarea: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-paramarea',
             imageClass: 'fr-image-paramarea',
             click: function (e) {
@@ -32,7 +32,7 @@
             }
         },
         btnReportBack: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-reportback',
             imageClass: 'fr-image-reportback',
             click: function (e) {
@@ -40,7 +40,7 @@
             }
         },
         btnRefresh: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-refresh',
             imageClass: 'fr-image-refresh',
             click: function (e) {
@@ -48,7 +48,7 @@
             }
         },
         btnFirstPage: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-firstpage',
             imageClass: 'fr-image-firstpage',
             click: function (e) {
@@ -56,7 +56,7 @@
             }
         },
         btnPrev: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-prev',
             imageClass: 'fr-image-prev',
             click: function (e) {
@@ -64,7 +64,7 @@
             }
         },
         btnReportPage: {
-            toolType: 1,
+            toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-textbox-reportpage',
             inputType: 'number',
             keypress: function (e) {
@@ -77,17 +77,17 @@
             }
         },
         btnPageOf: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-pageOf',
             text: 'of'
         },
         btnNumPages: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-num-pages',
             text: ""             
         },
         btnNext: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-next',
             imageClass: 'fr-image-next',
             click: function (e) {
@@ -95,7 +95,7 @@
             }
         },
         btnLastPage: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-lastpage',
             imageClass: 'fr-image-lastpage',
             click: function (e) {
@@ -103,7 +103,7 @@
             }
         },
         btnDocumentMap: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-documentmap',
             imageClass: 'fr-image-documentmap',
             click: function (e) {
@@ -111,7 +111,7 @@
             }
         },
         btnKeyword: {
-            toolType: 1,
+            toolType: function () { return this.toolTypes.input; },
             selectorClass: 'fr-textbox-keyword',
             keypress: function (e) {
                 if (e.keyCode == 13) {
@@ -120,7 +120,7 @@
             }
         },
         btnFind: {
-            toolType: 2,
+            toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-button-find',
             text: "Find",
             click: function (e) {
@@ -129,12 +129,12 @@
             }
         },
         btnSeparator: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-span-sparator',
             text: '|&nbsp'
         },
         btnFindNext: {
-            toolType: 2,
+            toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-button-findnext',
             text: "Next",
             click: function (e) {
@@ -143,12 +143,12 @@
             }
         },
         btnSeparator2: {
-            toolType: 3,
+            toolType: function () { return this.toolTypes.plainText; },
             selectorClass: 'fr-span-sparator',
             text: '|&nbsp'
         },
         btnExport: {
-            toolType: 2 ,
+            toolType: function () { return this.toolTypes.textButton; },
             selectorClass: 'fr-button-export',
             //imageClass: 'fr-image-export',
             text: "Export",

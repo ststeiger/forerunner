@@ -7,7 +7,7 @@
         },
         // Button Info
         btnHome: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
             click: function (e) {
@@ -15,7 +15,7 @@
             }
         },
         btnBack: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-button-back',
             imageClass: 'fr-image-back',
             click: function (e) {
@@ -23,7 +23,7 @@
             }
         },
         btnFav: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
             click: function (e) {
@@ -31,7 +31,7 @@
             }
         },
         btnRecent: {
-            toolType: 0,
+            toolType: function () { return this.toolTypes.button; },
             selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
             click: function (e) {

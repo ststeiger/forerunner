@@ -296,13 +296,18 @@ namespace Forerunner.Manager
 
             string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )                                                        
                             IF (@UserSpecific = 1)
-                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                BEGIN
+                                    SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                    DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
+                                END
                             ELSE
-                                SELECT @UID = NULL
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                            DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
-                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()
+                                BEGIN
+                                    SELECT @UID = NULL
+                                    DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
+                                END
+                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
                             ";
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

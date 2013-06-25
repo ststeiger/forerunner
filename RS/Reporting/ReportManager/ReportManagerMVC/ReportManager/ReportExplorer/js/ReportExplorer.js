@@ -54,6 +54,50 @@
             $ListItem.append($anchor);
             return $ListItem;
         },
+        _generatePCListItem: function (catalogItem) {
+            var me = this;
+
+            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
+            var reportThumbnailPath = me.options.url
+              + 'GetThumbnail/?ReportPath=' + catalogItem.Path + '&DefDate=' + catalogItem.ModifiedDate;
+            $item = new $('<div />');
+            $item.addClass('fr-explorer-item');
+            $caption = new $('<div />');
+            $caption.addClass('center');
+            $item.append($caption);
+            $captiontext = new $('<h3 />');
+            $captiontext.addClass('centertext');
+            $captiontext.html(catalogItem.Name);
+            $caption.append($captiontext);
+            var imageSrc;
+            var targetUrl;
+            $anchor = new $('<a />');
+            $img = new $('<img />');
+            $img.addClass('catalogitem');
+            $img.addClass('center');
+            if (catalogItem.Type == '1') {
+                imageSrc = './ReportExplorer/images/folder-icon.png'
+            } else {
+                $img.addClass('reportitem');
+                if (hasParameters) {
+                    imageSrc = './ReportExplorer/images/Report-icon.png'
+                } else {
+                    imageSrc = reportThumbnailPath;
+                }
+            }
+
+            var action = catalogItem.Type == '1' ? 'explore' : 'browse';
+
+            $img.attr('src', imageSrc);
+            $anchor.on('click', function (event) {
+                if (me.options.navigateTo != null) {
+                    me.options.navigateTo(action, catalogItem.Path);
+                }
+            });
+            $anchor.append($img);
+            $item.append($anchor);
+            return $item;
+        },
         _renderList: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
@@ -73,22 +117,53 @@
             }
             me.$UL = $rmListContainer;
         },
+        _renderPCView: function () {
+            var me = this;
+            var catalogItems = me.options.catalogItems;
+            var decodedPath = me.options.selectedItemPath != null ? decodeURIComponent(me.options.selectedItemPath) : null;
+            me.rmListItems = new Array(catalogItems.length);
+            for (var i = 0; i < catalogItems.length; i++) {
+                var catalogItem = catalogItems[i];
+                if (decodedPath != null && decodedPath == decodeURIComponent(catalogItem.Path)) {
+                    me.selectedItem = i;
+                }
+                me.rmListItems[i] = me._generatePCListItem(catalogItem);
+                me.element.find(".fr-report-explorer").append(me.rmListItems[i]);
+            }
+        },
         _render: function () {
             var me = this;
-            me.element.html('<div class="sky-carousel">' +
-                            '<div class="sky-carousel-wrapper">' +
-                            '<ul class="sky-carousel-container" />' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="rm-list">' +
-                            '<ul class="rm-list-container" />' +
-                            '</div>');
-            me.$Carousel = $('.sky-carousel', me.element);
-            me.$RMList = $('.rm-list', me.element);
-            me._renderList();
+
+            if (me._mobileUI()) {
+                me.element.html('<div class="sky-carousel">' +
+                                '<div class="sky-carousel-wrapper">' +
+                                '<ul class="sky-carousel-container" />' +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="rm-list">' +
+                                '<ul class="rm-list-container" />' +
+                                '</div>');
+                me.$Carousel = $('.sky-carousel', me.element);
+                me.$RMList = $('.rm-list', me.element);
+                me._renderList();
+            }
+            else {
+                me.element.html('<div class="fr-report-explorer">' +                                
+                                '</div>');
+                me._renderPCView();
+            }
+                
+        },
+        _mobileUI: function () {
+            if (screen.availWidth < 1224)
+                return true;
+            else
+                return false;
         },
         initCarousel: function () {
             var me = this;
+            if (!me._mobileUI())
+                return;
             var carousel = me.$Carousel.carousel({
                 itemWidth: 250,
                 itemHeight: 350,

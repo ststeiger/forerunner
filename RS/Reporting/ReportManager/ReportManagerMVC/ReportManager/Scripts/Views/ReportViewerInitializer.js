@@ -1,10 +1,13 @@
 ﻿// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
+// Forerrunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
 $(function () {
     var fr = forerunner;
 
-    fr.ReportViewerInitializer = function (options) {
+    fr.ssr.ReportViewerInitializer = function (options) {
         this.options = {
             $toolbar: null,
             $toolPane: null,
@@ -26,7 +29,7 @@ $(function () {
         }
     };
 
-    fr.ReportViewerInitializer.prototype = {
+    fr.ssr.ReportViewerInitializer.prototype = {
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;

@@ -1,6 +1,10 @@
-﻿var forerunner = forerunner || {};
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
 
-forerunner.CatalogItemsView = function (options) {
+// Forerrunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+forerunner.ssr.CatalogItemsView = function (options) {
     this.options = {
         $toolbar: null,
         $explorerview: null,
@@ -17,7 +21,7 @@ forerunner.CatalogItemsView = function (options) {
     }
 };
 
-forerunner.CatalogItemsView.prototype = {
+forerunner.ssr.CatalogItemsView.prototype = {
     _renderToolbar: function () {
         var me = this;
         $toolbar = me.options.$toolbar;
@@ -45,11 +49,11 @@ forerunner.CatalogItemsView.prototype = {
     }
 };
 
-forerunner.CatalogItemsView.fetchModelAndRenderView = function (options) {
-    var model = new forerunner.CatalogItemsModel({ url: options.catalogItemUrl });
+forerunner.ssr.CatalogItemsView.fetchModelAndRenderView = function (options) {
+    var model = new forerunner.ssr.CatalogItemsModel({ url: options.catalogItemUrl });
     model.fetch({
         success: function (data) {
-            var view = new forerunner.CatalogItemsView({
+            var view = new forerunner.ssr.CatalogItemsView({
                 $toolbar: options.$toolbar,
                 $explorerview: options.$explorerview,
                 url: options.reportManagerAPIUrl,

@@ -1,6 +1,9 @@
 ﻿// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
+// Forerrunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
 $(function () {
     var fr = forerunner;
 

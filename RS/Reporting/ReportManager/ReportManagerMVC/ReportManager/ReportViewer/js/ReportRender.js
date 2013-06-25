@@ -824,12 +824,12 @@
             });
 
             $(document).on("click", function (e) {
-                if (!$(e.target).hasClass("Export-Panel") && !$(e.target).hasClass("fr-button-export") && !$ExportPanel.is(":hidden")) {
-                    $ExportPanel.fadeOut("fast");
+                if (!$(e.target).hasClass("Export-Panel") && !$(e.target).hasClass("fr-button-export") && $ExportPanel.is(":visible")) {
+                    $ExportPanel.toggle();
                 }
             });
 
-            $(".fr-button-export").append($ExportPanel);
+            $(".fr-button-export").filter(':visible').append($ExportPanel);
         },
         _GetExportItem: function (ExportObj) {
             var me = this;

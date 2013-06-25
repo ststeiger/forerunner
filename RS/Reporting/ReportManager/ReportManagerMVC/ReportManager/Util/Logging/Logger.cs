@@ -44,33 +44,33 @@ namespace ReportManager.Util.Logging
         public static void WriteLog(string Filename, string msg)
         {
             return;
-            try
-            {
-                if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
+            //try
+            //{
+            //    if (!Directory.Exists(LogPath)) Directory.CreateDirectory(LogPath);
                 
-                StringBuilder sb = new StringBuilder();
-                sb.Append(LogPath);
-                sb.Append(LogFilePrefix);
-                sb.Append(Filename);
-                sb.Append("_");
-                sb.Append(DateTime.Now.ToString("yyyy-MM-dd"));
-                sb.Append(".txt");
+            //    StringBuilder sb = new StringBuilder();
+            //    sb.Append(LogPath);
+            //    sb.Append(LogFilePrefix);
+            //    sb.Append(Filename);
+            //    sb.Append("_");
+            //    sb.Append(DateTime.Now.ToString("yyyy-MM-dd"));
+            //    sb.Append(".txt");
 
-                string filePath = sb.ToString();
+            //    string filePath = sb.ToString();
 
-                if (!File.Exists(filePath)) File.Create(filePath);
+            //    if (!File.Exists(filePath)) File.Create(filePath);
 
-                using (FileStream stream = new FileStream(filePath, FileMode.Append))
-                {
-                    using (StreamWriter writer = new StreamWriter(stream))
-                    {
-                        writer.WriteLine(msg);
-                        writer.WriteLine();
-                    }
-                }
-            }
-            catch
-            { }
+            //    using (FileStream stream = new FileStream(filePath, FileMode.Append))
+            //    {
+            //        using (StreamWriter writer = new StreamWriter(stream))
+            //        {
+            //            writer.WriteLine(msg);
+            //            writer.WriteLine();
+            //        }
+            //    }
+            //}
+            //catch
+            //{ }
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Forerunner.Viewer
         WORDOPENXML
     }
 
-    public class ReportViewer
+    public class ReportViewer:IDisposable
     {
         String ReportServerURL;
         Credentials Credentials = new Credentials();
@@ -555,6 +555,20 @@ namespace Forerunner.Viewer
                 Console.WriteLine(e.Message);               
                 return null;
             }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                rs.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -217,9 +217,10 @@
                                 me._SubmitForm();
                         },
                     });
+                    $Control.attr("dateISO","true");
 
                     if (me._defaultValueExist == true)
-                        $Control.datepicker("setDate", Param.DefaultValues[0]);
+                        $Control.datepicker("setDate", me._GetDateTimeFromDefault(Param.DefaultValues[0]));
                     break;
                 case "Integer":
                 case "Float":
@@ -518,6 +519,14 @@
                     return true;
             }
             return false;
-        }
+        },
+        _GetDateTimeFromDefault: function (DefaultDatetime) {
+            var date = DefaultDatetime.substr(0, DefaultDatetime.indexOf(' '));
+
+            var datetime = date.substring(0, date.indexOf('/')) + "-" +
+                           date.substring(date.indexOf('/') + 1, date.lastIndexOf('/')) + "-" +
+                           date.substring(date.lastIndexOf('/') + 1, DefaultDatetime.indexOf(' '));
+            return datetime;
+        },
     });  // $.widget
 });

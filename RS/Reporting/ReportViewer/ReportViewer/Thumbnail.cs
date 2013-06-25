@@ -34,7 +34,7 @@ namespace Forerunner
 
 
     }
-    public class WebSiteThumbnail
+    public class WebSiteThumbnail:IDisposable
     {
         private string HTML = null;      
         private Bitmap bmp = null;
@@ -150,6 +150,22 @@ namespace Forerunner
             webBrowser.DrawToBitmap(bmp, webBrowser.Bounds);
             webBrowser.Dispose();
        
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                mre.Dispose();
+                webBrowser.Dispose();
+                bmp.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
     }

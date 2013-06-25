@@ -5,7 +5,7 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var fr = forerunner;
+    var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Toolbar widget
     $.widget("Forerunner.reportexplorertoolbar", $.Forerunner.toolbase, {
@@ -15,7 +15,7 @@ $(function () {
         },
         // Button Info
         btnHome: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
             events: {
@@ -25,7 +25,7 @@ $(function () {
             }
         },
         btnBack: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-button-back',
             imageClass: 'fr-image-back',
             events: {
@@ -35,7 +35,7 @@ $(function () {
             }
         },
         btnFav: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
             events: {
@@ -45,7 +45,7 @@ $(function () {
             }
         },
         btnRecent: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
             events: {

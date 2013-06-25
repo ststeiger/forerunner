@@ -5,7 +5,7 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var fr = forerunner;
+    var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Toolbar widget
     $.widget("Forerunner.toolpane", $.Forerunner.toolbase, {
@@ -15,7 +15,7 @@ $(function () {
         },
         // Button Info
         itemNav: {
-            toolType: fr.ssr.constants.toolTypes.containerItem,
+            toolType: toolTypes.containerItem,
             selectorClass: 'fr-id-nav',
             imageClass: 'fr-image-nav',
             text: 'Navigation',
@@ -27,7 +27,7 @@ $(function () {
             }
         },
         itemReportBack: {
-            toolType: fr.ssr.constants.toolTypes.containerItem,
+            toolType: toolTypes.containerItem,
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
             text: 'Back',
@@ -39,7 +39,7 @@ $(function () {
             }
         },
         itemRefresh: {
-            toolType: fr.ssr.constants.toolTypes.containerItem,
+            toolType: toolTypes.containerItem,
             selectorClass: 'fr-id-refresh',
             imageClass: 'fr-image-refresh',
             text: 'Refresh',
@@ -51,7 +51,7 @@ $(function () {
             }
         },
         itemFirstPage: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-id-firstpage',
             imageClass: 'fr-image-firstpage',
             events: {
@@ -62,7 +62,7 @@ $(function () {
             }
         },
         itemPrev: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-id-prev',
             imageClass: 'fr-image-prev',
             events: {
@@ -73,7 +73,7 @@ $(function () {
             }
         },
         itemReportPage: {
-            toolType: fr.ssr.constants.toolTypes.input,
+            toolType: toolTypes.input,
             selectorClass: 'fr-item-textbox-reportpage',
             inputType: 'number',
             events: {
@@ -85,17 +85,17 @@ $(function () {
             }
         },
         itemPageOf: {
-            toolType: fr.ssr.constants.toolTypes.plainText,
+            toolType: toolTypes.plainText,
             selectorClass: 'fr-pageOf',
             text: 'of'
         },
         itemNumPages: {
-            toolType: fr.ssr.constants.toolTypes.plainText,
+            toolType: toolTypes.plainText,
             selectorClass: 'fr-num-pages',
             text: ""
         },
         itemNext: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-id-next',
             imageClass: 'fr-image-next',
             events: {
@@ -106,7 +106,7 @@ $(function () {
             }
         },
         itemLastPage: {
-            toolType: fr.ssr.constants.toolTypes.button,
+            toolType: toolTypes.button,
             selectorClass: 'fr-id-lastpage',
             imageClass: 'fr-image-lastpage',
             events: {
@@ -117,7 +117,7 @@ $(function () {
             }
         },
         itemDocumentMap: {
-            toolType: fr.ssr.constants.toolTypes.containerItem,
+            toolType: toolTypes.containerItem,
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
             text: 'Document map',
@@ -129,7 +129,7 @@ $(function () {
             }
         },
         itemKeyword: {
-            toolType: fr.ssr.constants.toolTypes.input,
+            toolType: toolTypes.input,
             selectorClass: 'fr-item-textbox-keyword',
             events: {
                 keypress: function (e) {
@@ -140,7 +140,7 @@ $(function () {
             }
         },
         itemFind: {
-            toolType: fr.ssr.constants.toolTypes.textButton,
+            toolType: toolTypes.textButton,
             selectorClass: 'fr-item-find',
             text: "Find",
             events: {
@@ -152,12 +152,12 @@ $(function () {
             }
         },
         itemSeparator: {
-            toolType: fr.ssr.constants.toolTypes.plainText,
+            toolType: toolTypes.plainText,
             selectorClass: 'fr-item-span-sparator',
             text: '|&nbsp'
         },
         itemFindNext: {
-            toolType: fr.ssr.constants.toolTypes.textButton,
+            toolType: toolTypes.textButton,
             selectorClass: 'fr-item-findnext',
             text: "Next",
             events: {

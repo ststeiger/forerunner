@@ -5,9 +5,10 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var fr = forerunner;
+    var ssr = forerunner.ssr;
+    var toolTypes = ssr.constants.toolTypes;
 
-    fr.ssr.ReportViewerInitializer = function (options) {
+    ssr.ReportViewerInitializer = function (options) {
         this.options = {
             $toolbar: null,
             $toolPane: null,
@@ -29,7 +30,7 @@ $(function () {
         }
     };
 
-    fr.ssr.ReportViewerInitializer.prototype = {
+    ssr.ReportViewerInitializer.prototype = {
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;
@@ -46,7 +47,7 @@ $(function () {
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer });
             var btnHome = {
-                toolType: fr.ssr.constants.toolTypes.button,
+                toolType: toolTypes.button,
                 selectorClass: 'fr-button-home',
                 imageClass: 'fr-image-home',
                 events: {
@@ -58,7 +59,7 @@ $(function () {
             $toolbar.toolbar('addTools', 2, true, [btnHome]);
 
             var btnFav = {
-                toolType: fr.ssr.constants.toolTypes.button,
+                toolType: toolTypes.button,
                 selectorClass: 'fr-button-update-fav',
                 imageClass: 'fr-image-delFav',
                 events: {
@@ -110,7 +111,7 @@ $(function () {
             // Create / render the menu pane
             var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
             var itemHome = {
-                toolType: fr.ssr.constants.toolTypes.containerItem,
+                toolType: toolTypes.containerItem,
                 selectorClass: 'fr-id-home',
                 imageClass: 'fr-image-home',
                 text: 'Home',
@@ -123,7 +124,7 @@ $(function () {
             $toolPane.toolpane('addTools', 8, true, [itemHome]);
 
             var itemFav = {
-                toolType: fr.ssr.constants.toolTypes.containerItem,
+                toolType: toolTypes.containerItem,
                 selectorClass: 'fr-item-update-fav',
                 imageClass: 'fr-image-delFav',
                 text: 'Favorites',

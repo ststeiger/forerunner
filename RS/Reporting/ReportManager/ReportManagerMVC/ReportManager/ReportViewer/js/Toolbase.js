@@ -5,25 +5,18 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var fr = forerunner;
+    var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Toolbar widget
     $.widget("Forerunner.toolbase", {
         options: {
             toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
         },
-        toolTypes: {
-            button:     0,
-            input:      1,
-            textButton: 2,
-            plainText:  3,
-            paneItem:   4
-        },
         //addTool
         //  index - 1 based index of where to insert the button array
         //  enabled - true = enabled, false = dasbled
         //  toolInfoArray: [{
-        //      toolType: fr.ssr.constants.toolTypes.button,
+        //      toolType: forerunner.ssr.constants.toolTypes.button,
         //      selectorClass: '',
         //      imageClass: '',
         //      text: '',
@@ -134,25 +127,25 @@ $(function () {
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
-            if (toolInfo.toolType == fr.ssr.constants.toolTypes.button) {
+            if (toolInfo.toolType == toolTypes.button) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
-            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.input) {
+            else if (toolInfo.toolType == toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
                     type = ", type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
-            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.textButton) {
+            else if (toolInfo.toolType == toolTypes.textButton) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
-            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.plainText) {
+            else if (toolInfo.toolType == toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
                 }
-            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.containerItem) {
+            else if (toolInfo.toolType == toolTypes.containerItem) {
                 var text = '';
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);

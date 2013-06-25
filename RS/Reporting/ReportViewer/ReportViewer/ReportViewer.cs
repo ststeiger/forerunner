@@ -358,7 +358,7 @@ namespace Forerunner.Viewer
                 w.WriteMember("SessionID");
                 w.WriteString(execInfo.ExecutionID);
                 w.WriteMember("ParametersRequired");
-                w.WriteBoolean(execInfo.ParametersRequired);
+                w.WriteBoolean(execInfo.Parameters.Length != 0 ? true : false);
                 w.WriteMember("ReportPath");
                 w.WriteString(execInfo.ReportPath);
                 
@@ -535,7 +535,7 @@ namespace Forerunner.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (rs.GetExecutionInfo().ParametersRequired)
+                if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
                     if (ParametersList != null)
                     {

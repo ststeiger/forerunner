@@ -1,4 +1,9 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+$(function () {
+    var fr = forerunner;
+
     // Toolbar widget
     $.widget("Forerunner.reportexplorertoolbar", $.Forerunner.toolbase, {
         options: {
@@ -7,7 +12,7 @@
         },
         // Button Info
         btnHome: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-rm-button-home',
             imageClass: 'fr-image-home',
             events: {
@@ -17,7 +22,7 @@
             }
         },
         btnBack: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-back',
             imageClass: 'fr-image-back',
             events: {
@@ -27,7 +32,7 @@
             }
         },
         btnFav: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-rm-button-fav',
             imageClass: 'fr-image-fav',
             events: {
@@ -37,7 +42,7 @@
             }
         },
         btnRecent: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-rm-button-recent',
             imageClass: 'fr-image-recent',
             events: {

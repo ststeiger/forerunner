@@ -1,4 +1,9 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+$(function () {
+    var fr = forerunner;
+
     // Toolbar widget
     $.widget("Forerunner.toolbar", $.Forerunner.toolbase, {
         options: {
@@ -7,7 +12,7 @@
         },
         // Button Info
         btnMenu: {
-            toolType: function () {return this.toolTypes.button;},
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-menu',
             imageClass: 'fr-image-menu',
             events: {
@@ -17,7 +22,7 @@
             }
         },
         btnNav: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-nav',
             imageClass: 'fr-image-nav',
             events: {
@@ -27,7 +32,7 @@
             }
         },
         btnParamarea: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-paramarea',
             imageClass: 'fr-image-paramarea',
             events: {
@@ -38,7 +43,7 @@
             }
         },
         btnReportBack: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-reportback',
             imageClass: 'fr-image-reportback',
             events: {
@@ -48,7 +53,7 @@
             }
         },
         btnRefresh: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-refresh',
             imageClass: 'fr-image-refresh',
             events: {
@@ -58,7 +63,7 @@
             }
         },
         btnFirstPage: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-firstpage',
             imageClass: 'fr-image-firstpage',
             events: {
@@ -68,7 +73,7 @@
             }
         },
         btnPrev: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-prev',
             imageClass: 'fr-image-prev',
             events: {
@@ -78,7 +83,7 @@
             }
         },
         btnReportPage: {
-            toolType: function () { return this.toolTypes.input; },
+            toolType: fr.ssr.constants.toolTypes.input,
             selectorClass: 'fr-textbox-reportpage',
             inputType: 'number',
             events: {
@@ -93,17 +98,17 @@
             }
         },
         btnPageOf: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-pageOf',
             text: 'of'
         },
         btnNumPages: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-num-pages',
             text: ""             
         },
         btnNext: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-next',
             imageClass: 'fr-image-next',
             events: {
@@ -113,7 +118,7 @@
             }
         },
         btnLastPage: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-lastpage',
             imageClass: 'fr-image-lastpage',
             events: {
@@ -123,7 +128,7 @@
             }
         },
         btnDocumentMap: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-button-documentmap',
             imageClass: 'fr-image-documentmap',
             events: {
@@ -133,7 +138,7 @@
             }
         },
         btnKeyword: {
-            toolType: function () { return this.toolTypes.input; },
+            toolType: fr.ssr.constants.toolTypes.input,
             selectorClass: 'fr-textbox-keyword',
             events: {
                 keypress: function (e) {
@@ -144,7 +149,7 @@
             }
         },
         btnFind: {
-            toolType: function () { return this.toolTypes.textButton; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-button-find',
             text: "Find",
             events: {
@@ -155,12 +160,12 @@
             }
         },
         btnSeparator: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-span-sparator',
             text: '|&nbsp'
         },
         btnFindNext: {
-            toolType: function () { return this.toolTypes.textButton; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-button-findnext',
             text: "Next",
             events: {
@@ -171,12 +176,12 @@
             }
         },
         btnSeparator2: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-span-sparator',
             text: '|&nbsp'
         },
         btnExport: {
-            toolType: function () { return this.toolTypes.textButton; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-button-export',
             //imageClass: 'fr-image-export',
             text: "Export",

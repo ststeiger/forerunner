@@ -1,5 +1,6 @@
-// Assign or create the single globally scoped variable
+// Assign or create the single globally scoped application variable
 var g_App = g_App || {};
+var forerunner = forerunner || {};
 
 // Everything inside this function is local unless assigned to a global variable such
 // as g_App
@@ -51,11 +52,11 @@ var ApplicationRouter = Backbone.Router.extend({
                 path = "/";
             }
 
-            var catalogItemUrl = Forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
+            var catalogItemUrl = forerunner.CatalogItemsModel.getCatalogItemUrl(view, path);
             var me = this;
             var currentSelectedPath = me._selectedItemPath;
 
-            Forerunner.CatalogItemsView.fetchModelAndRenderView({
+            forerunner.CatalogItemsView.fetchModelAndRenderView({
                 catalogItemUrl: g_App.configs.apiBase + catalogItemUrl,
                 $toolbar: $('#mainSectionHeader'),
                 $explorerview: $("#mainSection"),
@@ -109,7 +110,7 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#mainSection').append($viewerContainer);
 
             $viewer = $('#FRReportViewer1');
-            var initializer = new Forerunner.ReportViewerInitializer({
+            var initializer = new forerunner.ReportViewerInitializer({
                 $toolbar: $('#mainSectionHeader'),
                 $toolPane: $('#leftPaneContent'),
                 $viewer: $viewer,

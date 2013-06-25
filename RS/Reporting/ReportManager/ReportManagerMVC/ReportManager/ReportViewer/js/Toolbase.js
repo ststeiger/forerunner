@@ -1,4 +1,8 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+$(function () {
+    var fr = forerunner;
 
     // Toolbar widget
     $.widget("Forerunner.toolbase", {
@@ -16,7 +20,7 @@
         //  index - 1 based index of where to insert the button array
         //  enabled - true = enabled, false = dasbled
         //  toolInfoArray: [{
-        //      toolType: function() {return this.toolTypes.button;},
+        //      toolType: fr.ssr.constants.toolTypes.button,
         //      selectorClass: '',
         //      imageClass: '',
         //      text: '',
@@ -127,25 +131,25 @@
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
-            if (toolInfo.toolType.call(this) == me.toolTypes.button) {
+            if (toolInfo.toolType == fr.ssr.constants.toolTypes.button) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
-            else if (toolInfo.toolType.call(this) == me.toolTypes.input) {
+            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
                     type = ", type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
-            else if (toolInfo.toolType.call(this) == me.toolTypes.textButton) {
+            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.textButton) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
-            else if (toolInfo.toolType.call(this) == me.toolTypes.plainText) {
+            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
                 }
-            else if (toolInfo.toolType.call(this) == me.toolTypes.paneItem) {
+            else if (toolInfo.toolType == fr.ssr.constants.toolTypes.containerItem) {
                 var text = '';
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);

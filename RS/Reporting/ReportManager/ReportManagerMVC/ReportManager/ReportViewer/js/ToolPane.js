@@ -1,4 +1,9 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+$(function () {
+    var fr = forerunner;
+
     // Toolbar widget
     $.widget("Forerunner.toolpane", $.Forerunner.toolbase, {
         options: {
@@ -7,7 +12,7 @@
         },
         // Button Info
         itemNav: {
-            toolType: function () { return this.toolTypes.paneItem; },
+            toolType: fr.ssr.constants.toolTypes.containerItem,
             selectorClass: 'fr-id-nav',
             imageClass: 'fr-image-nav',
             text: 'Navigation',
@@ -19,7 +24,7 @@
             }
         },
         itemReportBack: {
-            toolType: function () { return this.toolTypes.paneItem; },
+            toolType: fr.ssr.constants.toolTypes.containerItem,
             selectorClass: 'fr-id-reportback',
             imageClass: 'fr-image-reportback',
             text: 'Back',
@@ -31,7 +36,7 @@
             }
         },
         itemRefresh: {
-            toolType: function () { return this.toolTypes.paneItem; },
+            toolType: fr.ssr.constants.toolTypes.containerItem,
             selectorClass: 'fr-id-refresh',
             imageClass: 'fr-image-refresh',
             text: 'Refresh',
@@ -43,7 +48,7 @@
             }
         },
         itemFirstPage: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-id-firstpage',
             imageClass: 'fr-image-firstpage',
             events: {
@@ -54,7 +59,7 @@
             }
         },
         itemPrev: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-id-prev',
             imageClass: 'fr-image-prev',
             events: {
@@ -65,7 +70,7 @@
             }
         },
         itemReportPage: {
-            toolType: function () { return this.toolTypes.input; },
+            toolType: fr.ssr.constants.toolTypes.input,
             selectorClass: 'fr-item-textbox-reportpage',
             inputType: 'number',
             events: {
@@ -77,17 +82,17 @@
             }
         },
         itemPageOf: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-pageOf',
             text: 'of'
         },
         itemNumPages: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-num-pages',
             text: ""
         },
         itemNext: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-id-next',
             imageClass: 'fr-image-next',
             events: {
@@ -98,7 +103,7 @@
             }
         },
         itemLastPage: {
-            toolType: function () { return this.toolTypes.button; },
+            toolType: fr.ssr.constants.toolTypes.button,
             selectorClass: 'fr-id-lastpage',
             imageClass: 'fr-image-lastpage',
             events: {
@@ -109,7 +114,7 @@
             }
         },
         itemDocumentMap: {
-            toolType: function () { return this.toolTypes.paneItem; },
+            toolType: fr.ssr.constants.toolTypes.containerItem,
             selectorClass: 'fr-id-documentmap',
             imageClass: 'fr-image-documentmap',
             text: 'Document map',
@@ -121,7 +126,7 @@
             }
         },
         itemKeyword: {
-            toolType: function () { return this.toolTypes.input; },
+            toolType: fr.ssr.constants.toolTypes.input,
             selectorClass: 'fr-item-textbox-keyword',
             events: {
                 keypress: function (e) {
@@ -132,7 +137,7 @@
             }
         },
         itemFind: {
-            toolType: function () { return this.toolTypes.textButton; },
+            toolType: fr.ssr.constants.toolTypes.textButton,
             selectorClass: 'fr-item-find',
             text: "Find",
             events: {
@@ -143,12 +148,12 @@
             }
         },
         itemSeparator: {
-            toolType: function () { return this.toolTypes.plainText; },
+            toolType: fr.ssr.constants.toolTypes.plainText,
             selectorClass: 'fr-item-span-sparator',
             text: '|&nbsp'
         },
         itemFindNext: {
-            toolType: function () { return this.toolTypes.textButton; },
+            toolType: fr.ssr.constants.toolTypes.textButton,
             selectorClass: 'fr-item-findnext',
             text: "Next",
             events: {

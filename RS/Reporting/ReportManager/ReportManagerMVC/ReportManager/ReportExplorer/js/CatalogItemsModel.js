@@ -1,6 +1,6 @@
-﻿var Forerunner = Forerunner || {};
+﻿var forerunner = forerunner || {};
 
-Forerunner.CatalogItemsModel = function (options) {
+forerunner.CatalogItemsModel = function (options) {
     this.options = {
         url : null,
     };
@@ -11,7 +11,7 @@ Forerunner.CatalogItemsModel = function (options) {
     }
 };
 
-Forerunner.CatalogItemsModel.prototype = {
+forerunner.CatalogItemsModel.prototype = {
     fetch: function (options) {
         $.ajax({
             dataType: "json",
@@ -23,7 +23,7 @@ Forerunner.CatalogItemsModel.prototype = {
 };
 
 // View can be null, favorites, or recent
-Forerunner.CatalogItemsModel.getCatalogItemUrl = function(view, path) {
+forerunner.CatalogItemsModel.getCatalogItemUrl = function(view, path) {
     if (view != null) {
         return 'ReportManager/GetItems?view=' + view + '&path='; 
     }

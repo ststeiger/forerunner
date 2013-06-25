@@ -1,6 +1,6 @@
-﻿var Forerunner = Forerunner || {};
+﻿var forerunner = forerunner || {};
 
-Forerunner.CatalogItemsView = function (options) {
+forerunner.CatalogItemsView = function (options) {
     this.options = {
         $toolbar: null,
         $explorerview: null,
@@ -17,7 +17,7 @@ Forerunner.CatalogItemsView = function (options) {
     }
 };
 
-Forerunner.CatalogItemsView.prototype = {
+forerunner.CatalogItemsView.prototype = {
     _renderToolbar: function () {
         var me = this;
         $toolbar = me.options.$toolbar;
@@ -45,11 +45,11 @@ Forerunner.CatalogItemsView.prototype = {
     }
 };
 
-Forerunner.CatalogItemsView.fetchModelAndRenderView = function (options) {
-    var model = new Forerunner.CatalogItemsModel({ url: options.catalogItemUrl });
+forerunner.CatalogItemsView.fetchModelAndRenderView = function (options) {
+    var model = new forerunner.CatalogItemsModel({ url: options.catalogItemUrl });
     model.fetch({
         success: function (data) {
-            var view = new Forerunner.CatalogItemsView({
+            var view = new forerunner.CatalogItemsView({
                 $toolbar: options.$toolbar,
                 $explorerview: options.$explorerview,
                 url: options.reportManagerAPIUrl,

@@ -1,7 +1,7 @@
 ﻿// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
-// Forerrunner SQL Server Reports
+// Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
 forerunner.ssr.CatalogItemsView = function (options) {

@@ -2,7 +2,7 @@
 var g_App = g_App || {};
 var forerunner = forerunner || {};
 
-// Forerrunner SQL Server Reports
+// Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
 // Everything inside this function is local unless assigned to a global variable such

@@ -45,7 +45,7 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
-            if (g_App.utils.isTouchDevice()) {
+            if (forerunner.device.isTouch()) {
                 $('#headerspacer').attr('style', 'height:35px');
             }            
       

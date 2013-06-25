@@ -29,7 +29,7 @@ namespace ReportManager.Controllers
             return rep;
         }
 
-        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
+        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
@@ -39,6 +39,8 @@ namespace ReportManager.Controllers
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=86400");
+                if (fileName != null)
+                    resp.Content.Headers.Add("Content-Disposition", "attachment;filename=" + fileName);                    
             }
             else
                 resp.StatusCode = HttpStatusCode.NotFound;
@@ -196,8 +198,9 @@ namespace ReportManager.Controllers
             {
                 byte[] result = null;
                 string mimeType;
-                result = GetReportViewer(ReportServerURL).GetRenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType);
-                return GetResponseFromBytes(result, mimeType);
+                string fileName;
+                result = GetReportViewer(ReportServerURL).RenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType, out fileName);
+                return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch(Exception e)
             {

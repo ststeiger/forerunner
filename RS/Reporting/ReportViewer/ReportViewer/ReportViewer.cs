@@ -512,19 +512,19 @@ namespace Forerunner.Viewer
             }
         }
 
-        public byte[] GetRenderExtension(string ReportPath, string SessionID, string parametersList, string ExportType, out string MimeType)
+        public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName)
         {
             string historyID = null;
-            string encoding;
-            string extension;
+            string encoding;            
             Warning[] warnings = null;
             string[] streamIDs = null;
-
+            string Extension = null;            
+            byte[] result = null;
             string NewSession = SessionID == null ? "" : SessionID;
 
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
-
+            FileName = "";
             rs.ExecutionHeaderValue = execHeader;
             try
             {
@@ -535,32 +535,24 @@ namespace Forerunner.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-           //       if (ExportType.Equals("WORDOPENXML") || ExportType.Equals("EXCELOPENXML"))
-           //{
-           //     var flag = false;                foreach (Extension ext in rs.ListRenderingExtensions())
-           //     {                    if (ext.Name.Equals(ExportType))
-           //         {
-           //             flag = true;
-           //            break;
-           //        }                }
-           //     if (flag) {ExportType.Replace("OPENXML", "");            }
-
                 if (rs.GetExecutionInfo().ParametersRequired)
                 {
-                    if (parametersList != null)
+                    if (ParametersList != null)
                     {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
                     }
                 }
 
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
-
-                return rs.Render(ExportType, devInfo, out extension, out MimeType, out encoding, out warnings, out streamIDs);
+                FileName = Path.GetFileName(ReportPath);
+                result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
+                FileName = Path.GetFileName(ReportPath) + "." + Extension;
+                return result;
             }
             catch (Exception e)
             {
                 MimeType = string.Empty;
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message);               
                 return null;
             }
         }

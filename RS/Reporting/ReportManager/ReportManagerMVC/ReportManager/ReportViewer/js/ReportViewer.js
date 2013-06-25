@@ -59,7 +59,7 @@
             me.HasDocMap = false;
             me.TogglePageNum = 0;
             me.FindKeyword = null;
-            me.element.append(me.$LoadingIndicator);           
+            me.element.append(me.$LoadingIndicator);
 
             $(window).scroll(function () { me.UpdateTableHeaders(me) });
 
@@ -516,8 +516,10 @@
             me.FindKeyword = null;
         },
         ShowExport: function () {
-            if ($(".Export-Panel").is(":hidden"))
-                $(".Export-Panel").css("left", $(".fr-button-export").offset().left).css("top", $(".fr-button-export").offset().top + $(".fr-button-export").height() + 2);
+            if ($(".Export-Panel").is(":hidden")) {
+                var $Export = $(".fr-button-export").filter(":visible");
+                $(".Export-Panel").css("left", $Export.offset().left).css("top", $Export.offset().top + $Export.height() + 2);
+            }
             $(".Export-Panel").toggle();
         },
         Export: function (ExportType) {

@@ -90,8 +90,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fafcfe', end
     -o-transform: scaleY(-1); 
     transform: scaleY(-1);
     filter: flipv; 
-    opacity:0.20; 
-    filter: alpha(opacity='20');             
+    opacity:0.30; 
+    filter: alpha(opacity='30');             
 
 } 
 .overlay { 

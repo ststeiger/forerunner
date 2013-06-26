@@ -217,6 +217,7 @@ namespace Forerunner.Manager
                 c.Path = SQLReader.GetString(0);
                 c.Name = SQLReader.GetString(1);
                 c.ModifiedDate = SQLReader.GetDateTime(2);
+                c.ModifiedDateSpecified = true;
                 c.Type = ItemTypeEnum.Report;
                 list.Add(c);
             }
@@ -230,7 +231,7 @@ namespace Forerunner.Manager
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem c;
 
-            string SQL = @"SELECT DISTINCT Path,Name FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser and ReportAction = 6 and TimeStart > DATEADD(dd,-60,GETDATE())";
+            string SQL = @"SELECT DISTINCT Path,Name,ModifiedDate  FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser and ReportAction = 6 and TimeStart > DATEADD(dd,-60,GETDATE())";
 
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
@@ -244,6 +245,8 @@ namespace Forerunner.Manager
                 c = new CatalogItem();
                 c.Path = SQLReader.GetString(0);
                 c.Name = SQLReader.GetString(1);
+                c.ModifiedDate = SQLReader.GetDateTime(2);
+                c.ModifiedDateSpecified = true;
                 c.Type = ItemTypeEnum.Report;
                 list.Add(c);
 

@@ -192,7 +192,7 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html($("<div class='fr-toolpane' />"));
+            me.element.html("<div class='" + me.options.toolClass + "'/>");
             me.addTools(1, true, [me.itemFirstPage, me.itemPrev, me.itemReportPage, me.itemPageOf, me.itemNumPages, me.itemNext, me.itemLastPage, me.itemNav,
                                   me.itemReportBack, me.itemRefresh, me.itemDocumentMap, me.itemKeyword, me.itemFind, me.itemSeparator, me.itemFindNext]);
 

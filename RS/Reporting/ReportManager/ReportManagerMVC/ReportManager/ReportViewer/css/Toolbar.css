@@ -52,7 +52,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#19487d', end
   background-color:darkslategrey;
 }
 .fr-tool-disabled {
-  opacity:.3;
+  opacity:0.3;
+  filter: alpha(opacity='30');
 }
 .fr-textbox-reportpage {
   background-color: white;

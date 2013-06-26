@@ -226,7 +226,7 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html($("<div class='" + me.options.toolClass + "'/>"));
+            me.element.html("<div class='" + me.options.toolClass + "'/>");
             me.addTools(1, true, [me.btnMenu, me.btnNav, me.btnParamarea, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
                                    me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator,
                                    me.btnFindNext, me.btnSeparator2, me.btnExport]);

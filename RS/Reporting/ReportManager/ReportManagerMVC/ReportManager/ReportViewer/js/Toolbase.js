@@ -91,23 +91,23 @@ $(function () {
         },
         enableTools: function (toolInfoArray) {
             var me = this;
-            toolInfoArray.forEach(function (toolInfo, index, array) {
+            $.each(toolInfoArray, function (index,toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.removeClass('fr-tool-disabled');
                 $toolEl.addClass('cursor-pointer');
                 me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
                 me._addEvents($toolEl, toolInfo)
-            }, me);
+            });
         },
 
         disableTools: function (toolInfoArray) {
             var me = this;
-            toolInfoArray.forEach(function (toolInfo, index, array) {
+            $.each(toolInfoArray, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.addClass('fr-tool-disabled');
                 $toolEl.removeClass('cursor-pointer');
                 me._removeEvent($toolEl, toolInfo);
-            }, me);
+            });
         },
         _removeEvent: function ($toolEl, toolInfo) {
             var me = this;

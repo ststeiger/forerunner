@@ -71,8 +71,9 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
-
-            me.element.html($("<div class='fr-toolbar' />"));
+            
+            me.element.empty();
+            me.element.append($("<div/>").addClass(me.options.toolClass));
             me.addTools(1, true, [me.btnHome, me.btnBack, me.btnFav, me.btnRecent]);
             me._initCallbacks();
         },

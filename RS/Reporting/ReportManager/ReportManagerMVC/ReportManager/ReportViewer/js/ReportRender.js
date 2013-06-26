@@ -47,8 +47,8 @@
         },
                 
         Render: function (pageNum) {
-            ReportDiv = $(this);
-            ReportViewer = this.ReportViewer
+            var ReportDiv = $(this);
+            var ReportViewer = this.ReportViewer
             var me = this;
 
             me._WriteExportPanel();

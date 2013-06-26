@@ -24,7 +24,7 @@ forerunner.ssr.CatalogItemsView = function (options) {
 forerunner.ssr.CatalogItemsView.prototype = {
     _renderToolbar: function () {
         var me = this;
-        $toolbar = me.options.$toolbar;
+        var $toolbar = me.options.$toolbar;
         if ($toolbar != null) $toolbar.reportexplorertoolbar({ navigateTo: me.options.navigateTo });
     },
     _renderExplorer : function() {

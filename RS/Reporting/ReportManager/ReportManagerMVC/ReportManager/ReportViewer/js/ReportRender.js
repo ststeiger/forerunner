@@ -301,7 +301,7 @@
                 else
                     $Drilldown.addClass("Drilldown-Expand");
 
-                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.ReportViewer.ToggleItem(e.data.ToggleID); });
+                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.ReportViewer.ToggleItem(e.data.ToggleID); });
                 $Drilldown.addClass("cursor-pointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
@@ -320,7 +320,7 @@
                 else
                     $Sort.attr("class", "sort-unsorted");
 
-                $Sort.on("click", { SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { me.ReportViewer.Sort(e.data.Direction, e.data.SortID); });
+                $Sort.on("click", { SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { me.options.ReportViewer.Sort(e.data.Direction, e.data.SortID); });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._WriteActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
@@ -506,7 +506,7 @@
                 Control.addClass("cursor-pointer");                
                 Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._StopDefaultEvent(e);
-                    me.ReportViewer.NavigateBookmark(e.data.BookmarkID);
+                    me.options.ReportViewer.NavigateBookmark(e.data.BookmarkID);
                 });
             }
             else {
@@ -515,7 +515,7 @@
                 Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._StopDefaultEvent(e);
-                    me.ReportViewer.NavigateDrillthrough(e.data.DrillthroughId);
+                    me.options.ReportViewer.NavigateDrillthrough(e.data.DrillthroughId);
                 });
             }
         },

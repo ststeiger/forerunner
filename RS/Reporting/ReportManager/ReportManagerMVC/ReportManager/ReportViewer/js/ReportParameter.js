@@ -142,7 +142,7 @@
 
                 var $Checkbox = new $("<Input type='checkbox' class='Parameter-Checkbox' name='" + Param.Name + "' />");
 
-                if (me._defaultValueExist == true)
+                if (me._hasDefaultValue(Param))
                     $Checkbox.attr('checked', 'true');
 
                 $Checkbox.on("click", function () {
@@ -184,11 +184,12 @@
                     "' id='" + Param.Name + "_radio" + "_" + radioValues[value] + "' datatype='" + Param.Type + "' />");
                 me._GetParameterControlProperty(Param, $radioItem);
 
-                if (me._defaultValueExist == true)
-                    if (Param.Nullable=="True")
+                if (me._hasDefaultValue(Param)) {
+                    if (Param.Nullable == "True")
                         $radioItem.attr("disabled", "true");
                     else if (Param.DefaultValues[0] == radioValues[value])
                         $radioItem.attr("checked", "true");
+                }
 
                 if (me._paramCount == 1)
                     $radioItem.on("click", function () { me._SubmitForm(); });
@@ -219,7 +220,7 @@
                     });
                     $Control.attr("dateISO","true");
 
-                    if (me._defaultValueExist == true)
+                    if(me._hasDefaultValue(Param))
                         $Control.datepicker("setDate", me._GetDateTimeFromDefault(Param.DefaultValues[0]));
                     break;
                 case "Integer":
@@ -227,7 +228,7 @@
                     $Control.attr("number", "true");
                     //break;
                 case "String":
-                    if (me._defaultValueExist == true) {
+                    if (me._hasDefaultValue(Param)) {
                         $Control.val(Param.DefaultValues[0]);
                         if (Param.Nullable=="True")
                             $Control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
@@ -250,7 +251,7 @@
                 var optionValue = Param.ValidValues[index].Value;
                 var $option = new $("<option value='" + optionValue + "'>" + Param.ValidValues[index].Key + "</option>");
                 
-                if (me._defaultValueExist && Param.DefaultValues[0] == optionValue) {
+                if (me._hasDefaultValue(Param) && Param.DefaultValues[0] == optionValue) {
                     $option.attr("selected", "true");
                     canLoad = true;
                 }
@@ -279,6 +280,7 @@
             $OpenDropDown.on("click", function () { me._PopupDropDownPanel(Param); });
 
             var $DropDownContainer = new $("<div class='Parameter-DropDown Parameter-Dropdown-Hidden' name='" + Param.Name + "_DropDownContainer' value='" + Param.Name + "' />");
+
             $(document).on("click", function (e) {
                 if ($(e.target).hasClass("ViewReport")) return;
 
@@ -313,7 +315,7 @@
                 var $Span = new $("<Span />");
                 var $Checkbox = new $("<input type='checkbox' class='" + Param.Name + "_DropDown_CB' id='" + Param.Name + "_DropDown_" + value + "' value='" + value + "' />");
                 
-                if (me._defaultValueExist && me._Contains(Param.DefaultValues, value)) {
+                if (me._hasDefaultValue(Param) && me._Contains(Param.DefaultValues, value)) {
                     $Checkbox.attr("checked", "true");
                     keys += key + ",";
                     values += value + ",";
@@ -345,7 +347,7 @@
             }
             $DropDownContainer.append($Table);
 
-            if (me._defaultValueExist) {
+            if (me._hasDefaultValue(Param)) {
                 $MultipleCheckBox.val(keys.substr(0, keys.length - 1));
                 $HiddenCheckBox.val(values.substr(0, values.length - 1));
             }
@@ -368,9 +370,19 @@
         },
         _PopupDropDownPanel: function(Param) {
             var me = this;
-            if ($("[name='" + Param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Hidden")) {
-                $("[name='" + Param.Name + "_DropDownContainer']").width($("[name='" + Param.Name + "']").width()).fadeOut("fast").
-                    removeClass("Parameter-Dropdown-Hidden").addClass("Parameter-Dropdown-Show");
+            
+            var dropDown = $("[name='" + Param.Name + "_DropDownContainer']");
+            var multipleControl = $("[name='" + Param.Name + "']");
+            
+            if (document.body.clientHeight - multipleControl.offset().top < dropDown.height() + 45) {
+                dropDown.css('top', multipleControl.offset().top - dropDown.height() - 9);
+            }
+            else {
+                dropDown.css('top', multipleControl.offset().top + 36);
+            }
+
+            if (dropDown.hasClass("Parameter-Dropdown-Hidden")) {
+                dropDown.width(multipleControl.width()).fadeOut("fast").removeClass("Parameter-Dropdown-Hidden").addClass("Parameter-Dropdown-Show");
             }
             else {
                 me._CloseDropDownPanel(Param);
@@ -520,7 +532,14 @@
             }
             return false;
         },
+        _hasDefaultValue: function (param) {
+            var me = this;
+            return me._defaultValueExist && $.isArray(param.DefaultValues) && param.DefaultValues[0] != null;
+        },
         _GetDateTimeFromDefault: function (DefaultDatetime) {
+            if (DefaultDatetime == null || DefaultDatetime.length < 9)
+                return null;
+
             var date = DefaultDatetime.substr(0, DefaultDatetime.indexOf(' '));
 
             var datetime = date.substring(0, date.indexOf('/')) + "-" +

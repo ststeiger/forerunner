@@ -67,7 +67,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#19487d', end
     min-width: 10mm;
     max-width: 20mm;
 }
-.fr-button-find, .fr-button-findnext,fr-button-export
+.fr-button-find, .fr-button-findnext, .fr-button-export
 {
     color: white;
 }

@@ -45,6 +45,7 @@
             var action = catalogItem.Type == '1' ? 'explore' : 'browse';
               
             $img.attr('src', imageSrc);
+            $img.removeAttr("height");
             $anchor.on('click', function (event) {
                 if (me.options.navigateTo != null) {
                     me.options.navigateTo(action, catalogItem.Path);
@@ -90,6 +91,7 @@
             var action = catalogItem.Type == '1' ? 'explore' : 'browse';
 
             $img.attr('src', imageSrc);
+            $img.removeAttr("height");
             $anchor.on('click', function (event) {
                 if (me.options.navigateTo != null) {
                     me.options.navigateTo(action, catalogItem.Path);

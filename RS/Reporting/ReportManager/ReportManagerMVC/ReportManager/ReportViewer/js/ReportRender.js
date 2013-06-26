@@ -444,9 +444,11 @@
             });
         },
         _GetImageURL: function (RS, ImageName) {
-            var Url = this.ReportViewer.options.ReportViewerAPI + "/GetImage/?";
-            Url += "ReportServerURL=" + this.ReportViewer.options.ReportServerURL;
-            Url += "&SessionID=" + this.ReportViewer.SessionID;
+            var me = this;
+
+            var Url = me.options.ReportViewer.options.ReportViewerAPI + "/GetImage/?";
+            Url += "ReportServerURL=" + me.options.ReportViewer.options.ReportServerURL;
+            Url += "&SessionID=" + me.options.ReportViewer.SessionID;
             Url += "&ImageID=" + ImageName;
             return Url;
         },

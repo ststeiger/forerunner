@@ -62,6 +62,7 @@
               + 'GetThumbnail/?ReportPath=' + catalogItem.Path + '&DefDate=' + catalogItem.ModifiedDate;
             $item = new $('<div />');
             $item.addClass('fr-explorer-item');
+            $item.addClass('image-block');
             $caption = new $('<div />');
             $caption.addClass('center');
             $item.append($caption);
@@ -94,7 +95,13 @@
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
+            var $reflection = new $('<div />');
+            $reflection.addClass('reflection');
+            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));
+            $reflection.append($("<div/>").addClass("overlay"));
+
             $anchor.append($img);
+            $anchor.append($reflection);
             $item.append($anchor);
             return $item;
         },

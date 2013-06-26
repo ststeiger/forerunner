@@ -176,13 +176,15 @@ footer#bottomdiv {
   display:block;
 }
 
-section#pageSection {
+div#pageSection {
   display:block;
   width:100%;
+  height:100%;
 }
-section#mainSection {
+div#mainSection {
   display:block;
   width:100%;
+  height:100%;
 }
 
 .buttonicon {

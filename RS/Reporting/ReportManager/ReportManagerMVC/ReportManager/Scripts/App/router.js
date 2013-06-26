@@ -45,11 +45,12 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.utils.allowZoom(false);
             $('#footerspacer').attr('style', 'height:0');
             $('#bottomdiv').attr('style', 'height:0');
+            $('#headerspacer').attr('style', 'height:38px');
             if (forerunner.device.isTouch()) {
                 $('#headerspacer').attr('style', 'height:35px');
             }            
       
-            $('#mainViewPort').css({ width: "100%" });
+            $('#mainViewPort').css({ width: "100%", height: "100%" });
 
             if (path == null) {
                 path = "/";

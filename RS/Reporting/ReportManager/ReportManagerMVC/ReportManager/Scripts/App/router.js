@@ -48,8 +48,10 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#headerspacer').attr('style', 'height:38px');
             if (forerunner.device.isTouch()) {
                 $('#headerspacer').attr('style', 'height:35px');
-            }            
-      
+            }
+            $("html").addClass("Explorer-background");
+            $("body").addClass("Explorer-background");
+
             $('#mainViewPort').css({ width: "100%", height: "100%" });
 
             if (path == null) {
@@ -108,6 +110,8 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 path = "/";
             }
+            $("html").removeClass("Explorer-background");
+            $("body").removeClass("Explorer-background");
 
             $('#mainSection').html(null);
             $viewerContainer = new $('<DIV id="FRReportViewer1"/>');

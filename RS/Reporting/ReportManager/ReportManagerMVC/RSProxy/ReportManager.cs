@@ -15,24 +15,24 @@ namespace Forerunner.Manager
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
-    public class ReportManager
+    public class ReportManager : IDisposable
     {
         ReportingService2005 rs = new ReportingService2005();
         SqlConnection SQLConn = new SqlConnection();
         Credentials WSCredentials;
         Credentials DBCredentials;
-        Impersonator impersonator; 
+        Impersonator impersonator;
         string URL;
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
         {
             this.WSCredentials = WSCredentials;
             this.DBCredentials = DBCredentials;
-            rs.Url =  URL + "/ReportService2005.asmx";
-            
-            
+            rs.Url = URL + "/ReportService2005.asmx";
+
+
             this.URL = URL;
-            
+
             rs.Credentials = new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
@@ -49,10 +49,10 @@ namespace Forerunner.Manager
                 builder.Password = DBCredentials.Password;
             }
 
-            
-            SQLConn.ConnectionString = builder.ConnectionString;            
+
+            SQLConn.ConnectionString = builder.ConnectionString;
             CheckSchema();
-        }      
+        }
 
         public void SetCredentials(Credentials Credentials)
         {
@@ -61,7 +61,7 @@ namespace Forerunner.Manager
 
         public byte[] UpdateView(string view, string action, string path)
         {
-         
+
             if (view == "favorites")
             {
                 if (action == "delete")
@@ -75,7 +75,7 @@ namespace Forerunner.Manager
 
         public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
-            
+
             if (view == "favorites")
                 return this.GetFavorites();
             else if (view == "recent")
@@ -90,7 +90,7 @@ namespace Forerunner.Manager
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
         {
             List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem[] items = rs.ListChildren(path, isRecursive);            
+            CatalogItem[] items = rs.ListChildren(path, isRecursive);
 
             foreach (CatalogItem ci in items)
             {
@@ -100,8 +100,8 @@ namespace Forerunner.Manager
                         list.Add(ci);
                 }
                 if (ci.Type == ItemTypeEnum.Folder && !ci.Hidden)
-                {                    
-                    CatalogItem[] folder = rs.ListChildren(ci.Path,false);
+                {
+                    CatalogItem[] folder = rs.ListChildren(ci.Path, false);
                     foreach (CatalogItem fci in folder)
                     {
                         if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport || fci.Type == ItemTypeEnum.Folder)
@@ -117,7 +117,7 @@ namespace Forerunner.Manager
             }
             return list.ToArray();
         }
-    
+
         void CheckSchema()
         {
 
@@ -226,7 +226,7 @@ namespace Forerunner.Manager
         }
 
         public CatalogItem[] GetRecentReports()
-        {            
+        {
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem c;
 
@@ -246,7 +246,7 @@ namespace Forerunner.Manager
                 c.Name = SQLReader.GetString(1);
                 c.Type = ItemTypeEnum.Report;
                 list.Add(c);
-                
+
             }
             SQLReader.Close();
             SQLConn.Close();
@@ -282,7 +282,7 @@ namespace Forerunner.Manager
         {
             Property[] props = new Property[2];
             Property retrieveProp = new Property();
-            retrieveProp.Name = "HasUserProfileQueryDependencies";          
+            retrieveProp.Name = "HasUserProfileQueryDependencies";
             props[0] = retrieveProp;
             retrieveProp = new Property();
             retrieveProp.Name = "HasUserProfileReportDependencies";
@@ -316,7 +316,7 @@ namespace Forerunner.Manager
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
             SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
             SQLComm.Parameters.AddWithValue("@Path", path);
-            SQLComm.Parameters.AddWithValue("@Image", image);            
+            SQLComm.Parameters.AddWithValue("@Image", image);
             SQLComm.ExecuteNonQuery();
             SQLConn.Close();
 
@@ -362,7 +362,24 @@ namespace Forerunner.Manager
             }
             return retval;
 
-            
+
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                rs.Dispose();
+                SQLConn.Close();
+                SQLConn.Dispose();
+                impersonator.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
     }

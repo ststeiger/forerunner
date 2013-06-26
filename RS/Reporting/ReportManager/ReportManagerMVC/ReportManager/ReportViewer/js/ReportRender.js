@@ -43,18 +43,19 @@
        },      
         // Constructor
         _create: function () {
-            this.ReportViewer = this.options.ReportViewer;
+            
         },
                 
-        Render: function (pageNum) {
-            var ReportDiv = $(this);
-            var ReportViewer = this.ReportViewer
+        Render: function (ReportObj) {
             var me = this;
+            var ReportDiv = me.element;
+            var ReportViewer = me.options.ReportViewer;
+            
 
             me._WriteExportPanel();
 
-            ReportDiv.attr("Style", this._GetStyle(ReportViewer, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.PageStyle));
-            $.each(ReportViewer.Pages[pageNum].ReportObj.Report.PageContent.Sections, function (Index, Obj) { me._WriteSection(new ReportItemContext(ReportViewer, Obj, Index, ReportViewer.Pages[pageNum].ReportObj.Report.PageContent, ReportViewer.Pages[pageNum].$Container, "")); });
+            ReportDiv.attr("Style", this._GetStyle(ReportViewer, ReportObj.Report.PageContent.PageStyle));
+            $.each(ReportObj.Report.PageContent.Sections, function (Index, Obj) { me._WriteSection(new ReportItemContext(ReportViewer, Obj, Index, ReportObj.Report.PageContent, ReportDiv, "")); });
         },
         WriteError: function (ErrorData) {
             var me = this;

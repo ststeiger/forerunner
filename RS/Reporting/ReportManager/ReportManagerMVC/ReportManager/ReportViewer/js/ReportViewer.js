@@ -620,7 +620,7 @@
             //Error, need to handle this better
             if (Data == null) return;
 
-            $Report.reportRender({ ReportViewer: this });
+            $Report.reportRender({ ReportViewer: me });
 
             if (me.Pages[NewPageNum] == null)
                 me.Pages[NewPageNum] = new ReportPage($Report, Data);
@@ -657,7 +657,7 @@
                     me.$ReportContainer.reportDocumentMap("WriteDocumentMap", pageNum);
                 }
 
-                me.Pages[pageNum].$Container.reportRender("Render", pageNum);
+                me.Pages[pageNum].$Container.reportRender("Render", me.Pages[pageNum].ReportObj);
             }
             else
                 me.Pages[pageNum].$Container.reportRender("WriteError", me.Pages[pageNum].ReportObj);

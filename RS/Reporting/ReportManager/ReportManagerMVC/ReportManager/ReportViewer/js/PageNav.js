@@ -1,4 +1,7 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+$(function () {
     // Toolbar widget
     $.widget("Forerunner.pagenav", {
         options: {
@@ -20,7 +23,7 @@
         },
         _renderList: function () {
             var me = this;
-            var isTouch = me._isTouchDevice();
+            var isTouch = forerunner.device.isTouch();
             if (!isTouch) {
                 $List = new $('<UL />');
                 $List.addClass('sky-carousel-container');
@@ -72,7 +75,7 @@
             var me = this;
             me.element.html("");
             var $reportViewer = me.options.$reportViewer;
-            var isTouch = me._isTouchDevice();
+            var isTouch = forerunner.device.isTouch();
             $Slider = new $('<DIV />');
             if (!isTouch) {
                 $Slider.attr('class', 'sky-carousel');
@@ -150,12 +153,6 @@
             me.currentPageNum;
             me.isRendered = false;       
             
-        },
-        _isTouchDevice: function () {
-            var ua = navigator.userAgent;
-            return !!('ontouchstart' in window) // works on most browsers 
-                || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
     });  // $.widget
 });  // function()

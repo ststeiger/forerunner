@@ -18,7 +18,7 @@ $(function () {
     };
 
     // device contains all externally available helper methods related to the device
-    forerunner.ssr.device = {
+    forerunner.device = {
         isTouch: function () {
         var ua = navigator.userAgent;
         return !!('ontouchstart' in window) // works on most browsers 

@@ -92,13 +92,6 @@ var g_App = g_App || {};
             $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
         }
     },
-
-    isTouchDevice : function () {
-        var ua = navigator.userAgent;
-        return !!('ontouchstart' in window) // works on most browsers 
-            || !!('onmsgesturechange' in window) || ua.match(/(iPhone|iPod|iPad)/)
-            || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
-    },
   };
 
 }());

@@ -467,17 +467,20 @@
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
             else 
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
-
-            NewImage.src = this._GetImageURL(RIContext.RS, ImageName);
+                        
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas != undefined) {
                 NewImage.useMap = "#Map_" + RIContext.RS.SessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
             }            
             NewImage.onload = function () {
                 me._WriteActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
-                me._ResizeImage(this, sizingType, this.naturalHeight, this.naturalWidth, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
+                var naturalSize = me._getNatural(this);
+                
+                me._ResizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
             NewImage.alt = "Cannot display image";
             $(NewImage).attr("style", "display:block;" );
+
+            NewImage.src = this._GetImageURL(RIContext.RS, ImageName);
 
             this._WriteActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             this._WriteBookMark(RIContext);
@@ -618,10 +621,11 @@
                         }
                         break;
                     case 3://Clip
-                        $(img).css("height", this._ConvertToMM(img.naturalHeight + "px") + "mm");
-                        $(img).css("width", this._ConvertToMM(img.naturalWidth + "px") + "mm");
-                        $(img).css("max-height", this._ConvertToMM(img.naturalHeight + "px") + "mm");
-                        $(img).css("max-width", this._ConvertToMM(img.naturalWidth + "px") + "mm");
+                        var naturalSize = me._getNatural(img);
+                        $(img).css("height", this._ConvertToMM(naturalSize.height + "px") + "mm");
+                        $(img).css("width", this._ConvertToMM(naturalSize.width + "px") + "mm");
+                        $(img).css("max-height", this._ConvertToMM(naturalSize.height + "px") + "mm");
+                        $(img).css("max-width", this._ConvertToMM(naturalSize.width + "px") + "mm");
                         //Also add style overflow:hidden to it's parent container
                         break;
                     default:
@@ -1385,14 +1389,24 @@
             }
             return ListStyle;
         },
-        _StopDefaultEvent: function(e) {
+        _StopDefaultEvent: function (e) {
             //IE
-        if (window.ActiveXObject)
-            window.event.returnValue = false;
-        else {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-    },
+            if (window.ActiveXObject)
+                window.event.returnValue = false;
+            else {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        },
+        _getNatural: function (domElement) {
+            if (domElement.naturalWidth != null && domElement.naturalHeight != null) {
+                return { width: domElement.naturalWidth, height: domElement.naturalHeight };
+            }
+            else {
+                var img = new Image();
+                img.src = domElement.src;
+                return { width: img.width, height: img.height };
+            }
+        },
     });  // $.widget
 });

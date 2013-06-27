@@ -105,7 +105,6 @@ table,td,tr {
 #rightPaneContent {
     height: 100%;
     width: 280px;
-    overflow: auto;
     display:block;
 }
 

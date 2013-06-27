@@ -26,6 +26,7 @@ g_App.AppPageView.prototype = {
                 $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
                 $('#leftPaneContent').css({ height: '100%' });
                 $('#rightPaneContent').css({ height: '100%' });
+                $('.Parameter-Container').css({ height: $('#rightPane').height() - 45 });
             });
         }
     },
@@ -59,6 +60,7 @@ g_App.AppPageView.prototype = {
             if (isLeftPane) {
                 slideoutPane.slideLeftShow(delay);
             } else {
+                $('.Parameter-Container').css({ height:slideoutPane.height() - 36 });
                 slideoutPane.slideRightShow(delay);
             }
             mainViewPort.addClass(className, delay);

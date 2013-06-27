@@ -374,7 +374,9 @@
             var dropDown = $("[name='" + Param.Name + "_DropDownContainer']");
             var multipleControl = $("[name='" + Param.Name + "']");
             
-            if (document.body.clientHeight - multipleControl.offset().top < dropDown.height() + 45) {
+            var clientHeight = document.documentElement.clientHeight == 0 ? document.body.clientHeight : document.documentElement.clientHeight;
+
+            if (clientHeight - multipleControl.offset().top < dropDown.height() + 45) {
                 dropDown.css('top', multipleControl.offset().top - dropDown.height() - 9);
             }
             else {

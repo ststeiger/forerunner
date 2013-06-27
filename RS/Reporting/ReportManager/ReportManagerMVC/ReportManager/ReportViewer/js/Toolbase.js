@@ -12,15 +12,18 @@ $(function () {
         options: {
             toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
         },
+
+        allTools: {},
+
         //addTool
         //  index - 1 based index of where to insert the button array
         //  enabled - true = enabled, false = dasbled
-        //  toolInfoArray: [{
+        //  tools: [{
         //      toolType: forerunner.ssr.constants.toolTypes.button,
         //      selectorClass: '',
         //      imageClass: '',
         //      text: '',
-        //      inputType: 'number',    // Used with button type 1
+        //      inputType: 'number',    // Used with toolTypes.inp
         //      events: {
         //          click: function (e) {
         //      }
@@ -30,45 +33,55 @@ $(function () {
         //      Any toolInfo.events property that is of type function, e.g., "click" above will be interpreted
         //      as a event handler. The event, i.e., the name of the property will be bound to the button
         //      when the button is enabled and removed when the button is disabled.
-        addTools: function (index, enabled, toolInfoArray) {
+        addTools: function (index, enabled, tools) {
             var me = this;
             var $toolbar = me.element.find('.' + me.options.toolClass);
-            var $firstTool = $(me._getToolHtml(toolInfoArray[0]));
+            me._addChildTools($toolbar, index, enabled, tools);
 
-            if (me.tools == null)
-                me.tools = new Object();
+            if (enabled) {
+                me.enableTools(tools);
+            }
+            else {
+                me.disableTools(tools);
+            }
+        },
+        _addChildTools: function ($parent, index, enabled, tools) {
+            var me = this;
+            var $firstTool = $(me._getToolHtml(tools[0]));
 
             if (index <= 1) {
-                $toolbar.prepend($firstTool);
+                $parent.prepend($firstTool);
             }
-            else if (index > $toolbar.children().length) {
-                $toolbar.append($firstTool);
+            else if (index > $parent.children().length) {
+                $parent.append($firstTool);
             }
             else {
                 var selector = ':nth-child(' + index + ')';
-                var $child = $toolbar.find(selector);
+                var $child = $parent.children(selector);
                 $child.before($firstTool);
             }
-            
-            var $tool = $firstTool;
-            me.tools[toolInfoArray[0].selectorClass] =toolInfoArray[0];
-            for (i = 1; i < toolInfoArray.length; i++) {
-                $tool.after(me._getToolHtml(toolInfoArray[i]));
-                $tool = $tool.next();
-                me.tools[toolInfoArray[i].selectorClass] = toolInfoArray[i];
+
+            me.allTools[tools[0].selectorClass] = tools[0];
+            if (tools[0].toolType == toolTypes.toolGroup && tools[0].tools) {
+                me._addChildTools($firstTool, 1, enabled, tools[0].tools);      // Add the children of a tool group
             }
 
-            if (enabled) {
-                me.enableTools(toolInfoArray);
-            }
-            else {
-                me.disableTools(toolInfoArray);
+            var $tool = $firstTool;
+            for (var i = 1; i < tools.length; i++) {
+                var toolInfo = tools[i];
+                $tool.after(me._getToolHtml(toolInfo));
+                $tool = $tool.next();
+                me.allTools[toolInfo.selectorClass] = toolInfo;
+
+                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                    me._addChildTools($tool, 1, enabled, toolInfo.tools);      // Add the children of a tool group
+                }
             }
         },
         hideTools: function (){
             var me = this;
 
-            $.each(me.tools, function (Index, Obj) {
+            $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass != null) {                    
                     var $toolEl = $("." + Obj.selectorClass, me.element);
                     Obj["Display"] = $toolEl.is(":visible");
@@ -80,7 +93,7 @@ $(function () {
         showTools: function () {
             var me = this;
 
-            $.each(me.tools, function (Index, Obj) {
+            $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass != null) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
                     if (Obj["Display"])
@@ -89,24 +102,34 @@ $(function () {
             });
 
         },
-        enableTools: function (toolInfoArray) {
+        enableTools: function (tools) {
             var me = this;
-            $.each(toolInfoArray, function (index,toolInfo) {
+            $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.removeClass('fr-tool-disabled');
-                $toolEl.addClass('cursor-pointer');
-                me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
-                me._addEvents($toolEl, toolInfo)
+                if (toolInfo.events) {
+                    $toolEl.addClass('cursor-pointer');
+                    me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
+                    me._addEvents($toolEl, toolInfo)
+                }
+                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                    me.enableTools(toolInfo.tools);
+                }
             });
         },
 
-        disableTools: function (toolInfoArray) {
+        disableTools: function (tools) {
             var me = this;
-            $.each(toolInfoArray, function (index, toolInfo) {
+            $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.addClass('fr-tool-disabled');
-                $toolEl.removeClass('cursor-pointer');
-                me._removeEvent($toolEl, toolInfo);
+                if (toolInfo.events) {
+                    $toolEl.removeClass('cursor-pointer');
+                    me._removeEvent($toolEl, toolInfo);
+                }
+                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                    me.disableTools(toolInfo.tools);
+                }
             });
         },
         _removeEvent: function ($toolEl, toolInfo) {
@@ -154,6 +177,9 @@ $(function () {
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                             text +
                         "</div>";
+            }
+            else if (toolInfo.toolType == toolTypes.toolGroup) {
+                return "<div class='fr-item-container " + toolInfo.selectorClass + "'></div>";
             }
         },
         _getText: function (toolInfo) {

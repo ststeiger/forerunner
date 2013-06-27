@@ -30,7 +30,7 @@ $(function () {
             imageClass: 'fr-image-nav',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('ShowNav')
+                    e.data.$reportViewer.reportViewer('ShowNav');
                 }
             }
         },
@@ -51,7 +51,7 @@ $(function () {
             imageClass: 'fr-image-reportback',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('Back')
+                    e.data.$reportViewer.reportViewer('Back');
                 }
             }
         },
@@ -61,7 +61,7 @@ $(function () {
             imageClass: 'fr-image-refresh',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('RefreshReport')
+                    e.data.$reportViewer.reportViewer('RefreshReport');
                 }
             }
         },
@@ -71,7 +71,7 @@ $(function () {
             imageClass: 'fr-image-firstpage',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', 1)
+                    e.data.$reportViewer.reportViewer('NavToPage', 1);
                 }
             }
         },
@@ -81,7 +81,7 @@ $(function () {
             imageClass: 'fr-image-prev',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1);
                 }
             }
         },
@@ -92,10 +92,10 @@ $(function () {
             events: {
                 keypress: function (e) {
                     if (e.keyCode == 13) {
-                        e.data.$reportViewer.reportViewer('NavToPage', this.value)
+                        e.data.$reportViewer.reportViewer('NavToPage', this.value);
                     }
                 },
-                click: function (e) {                
+                click: function (e) {
                     e.target.select();
                 }
             }
@@ -108,7 +108,7 @@ $(function () {
         btnNumPages: {
             toolType: toolTypes.plainText,
             selectorClass: 'fr-num-pages',
-            text: ""             
+            text: ""
         },
         btnNext: {
             toolType: toolTypes.button,
@@ -116,7 +116,7 @@ $(function () {
             imageClass: 'fr-image-next',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1);
                 }
             }
         },
@@ -126,7 +126,7 @@ $(function () {
             imageClass: 'fr-image-lastpage',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'));
                 }
             }
         },
@@ -136,7 +136,7 @@ $(function () {
             imageClass: 'fr-image-documentmap',
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("ShowDocMap")
+                    e.data.$reportViewer.reportViewer("ShowDocMap");
                 }
             }
         },
@@ -256,7 +256,7 @@ $(function () {
             }
             else {
                 me.enableTools([me.btnNext, me.btnLastPage]);
-            }       
+            }
             if (maxPage ==1 )
                 me.disableTools([me.btnNav]);
             else

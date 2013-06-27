@@ -9,14 +9,14 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
-            if (me.$Carousel != null) {
-                me.$Carousel.select(currentPageNum - 1, 1);
+            if (me.$carousel != null) {
+                me.$carousel.select(currentPageNum - 1, 1);
                 me.currentPageNum = currentPageNum;
             } else {
                 if (me.currentPageNum != currentPageNum && me.currentPageNum !== undefined) {
                     me.listItems[me.currentPageNum - 1].removeClass('selected');
                 }
-                me.$UL.scrollLeft(me.listItems[currentPageNum - 1].position().left);
+                me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
                 me.currentPageNum = currentPageNum;
                 me.listItems[me.currentPageNum - 1].addClass('selected');
             }
@@ -24,13 +24,14 @@ $(function () {
         _renderList: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
+            var $list;
             if (!isTouch) {
-                $List = new $('<UL />');
-                $List.addClass('sky-carousel-container');
+                $list = new $('<UL />');
+                $list.addClass('sky-carousel-container');
             } else {
-                $List = new $('<UL />');
-                $List.addClass('horizontal');
-                me.$UL = $List;
+                $list = new $('<UL />');
+                $list.addClass('horizontal');
+                me.$ul = $list;
             }
             var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
             var sessionID = me.options.$reportViewer.reportViewer('getSessionID');
@@ -43,27 +44,27 @@ $(function () {
             for (var i = 1; i <= maxNumPages; i++) {
                 var url = reportViewerAPI + '/GetThumbnail/?ReportServerURL=' + reportServerURL + '&ReportPath='
                         + reportPath + '&SessionID=' + sessionID + '&PageNumber=' + i;
-                $ListItem = new $('<LI />');
-                $List.append($ListItem);
-                me.listItems[i - 1] = $ListItem;
-                $Caption = new $('<DIV />');
-                $Caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
-                $Caption.addClass('center');
-                $Thumbnail = new $('<IMG />');
-                $Thumbnail.addClass(isTouch ?  'navlithumb' : 'pagethumb');
-                $Thumbnail.attr('src', url);
-                $Thumbnail.data('pageNumber', i);
-                this._on($Thumbnail, {
+                var $listItem = new $('<LI />');
+                $list.append($listItem);
+                me.listItems[i - 1] = $listItem;
+                var $caption = new $('<DIV />');
+                $caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
+                $caption.addClass('center');
+                var $thumbnail = new $('<IMG />');
+                $thumbnail.addClass(isTouch ?  'navlithumb' : 'pagethumb');
+                $thumbnail.attr('src', url);
+                $thumbnail.data('pageNumber', i);
+                this._on($thumbnail, {
                     click: function (event) {
                         me.options.$reportViewer.reportViewer('NavToPage', $(event.currentTarget).data('pageNumber'));
                     }
                 });
                 // Need to add onclick
-                $ListItem.append($Caption);
-                $ListItem.append($Thumbnail);
+                $listItem.append($caption);
+                $listItem.append($thumbnail);
             }
 
-            return $List;
+            return $list;
         },
 
         reset: function () {
@@ -74,29 +75,28 @@ $(function () {
         _render: function () {
             var me = this;
             me.element.html("");
-            var $reportViewer = me.options.$reportViewer;
             var isTouch = forerunner.device.isTouch();
-            $Slider = new $('<DIV />');
+            var $slider = new $('<DIV />');
             if (!isTouch) {
-                $Slider.attr('class', 'sky-carousel');
-                $Slider.attr('style', 'height: 150px;'); // Need to make this none
+                $slider.attr('class', 'sky-carousel');
+                $slider.attr('style', 'height: 150px;'); // Need to make this none
             } else {
-                $Slider.addClass('navcontainer');
+                $slider.addClass('navcontainer');
             }
-            $SliderWrapper = new $('<DIV />');
+            var $sliderWrapper = new $('<DIV />');
             if (!isTouch) {
-                $SliderWrapper.attr('class', 'sky-carousel-wrapper');
+                $sliderWrapper.attr('class', 'sky-carousel-wrapper');
             }
-            $Slider.append($SliderWrapper);
+            $slider.append($sliderWrapper);
 
 
-            $List = me._renderList();
+            var $list = me._renderList();
 
-            $SliderWrapper.append($List);
-            me.element.css("display", "block");            
-            me.element.html($Slider);
+            $sliderWrapper.append($list);
+            me.element.css("display", "block");
+            me.element.html($slider);
             if (!isTouch) {
-                var carousel = $Slider.carousel({
+                var carousel = $slider.carousel({
                     itemWidth: 120,
                     itemHeight: 120,
                     distance: 8,
@@ -115,11 +115,11 @@ $(function () {
                     reflectionSize: 35,
                     selectByClick: true
                 });
-                me.$Carousel = carousel;
+                me.$carousel = carousel;
             }
             me.element.hide();
             me._initCallbacks();
-            me._setCurrentPage(me.options.$reportViewer.reportViewer('getCurPage'));            
+            me._setCurrentPage(me.options.$reportViewer.reportViewer('getCurPage'));
         },
         _makeVisible: function (flag) {
             var me = this;
@@ -136,7 +136,7 @@ $(function () {
                 me._render();
                 me.isRendered = true;
             }
-            me._makeVisible(!me.element.is(":visible")); 
+            me._makeVisible(!me.element.is(":visible"));
         },
         _initCallbacks: function () {
             var me = this;
@@ -147,12 +147,11 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.$Carousel;
+            me.$carousel;
             me.listItems;
-            me.$UL
+            me.$ul;
             me.currentPageNum;
-            me.isRendered = false;       
-            
+            me.isRendered = false;
         },
     });  // $.widget
 });  // function()

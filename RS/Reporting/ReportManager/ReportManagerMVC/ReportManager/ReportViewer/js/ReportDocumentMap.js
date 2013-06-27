@@ -1,18 +1,17 @@
 ﻿$(function () {
     $.widget("Forerunner.reportDocumentMap", {
         options: {
-            ReportViewer: null,
+            reportViewer: null,
         },
         _create: function () {
                 this.element = $("<div class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0' style='position:relative;height:100%;width:100%;'>" +
                 "<tr><td nowrap width='100%'><div class='DocMapHeader'><div class='DocMapBar'> Document Map </div></div></td></tr>" +
                 "<tr><td class='DocMapContentCell'><div class='DocMapItemContaienr'></div></td></tr></table></div></div>");
             
-                this.options.ReportViewer.$ReportContainer.append(this.element);
+                this.options.reportViewer.$ReportContainer.append(this.element);
                 
                 $(".DocMapPanel").resizable({
                     resize: function (event, ui) {
-                        //alert('test');
                         $(".DocMapBorder").css("width", ui.size.width);
                         $(".DocMapHeader").css("width", ui.size.width);
                         $(".DocMapItemContaienr").css("width", ui.size.width);
@@ -26,53 +25,53 @@
                 $(window).resize();
                 $(".DocMapPanel").toggle("fast");
         },
-        WriteDocumentMap: function (pageNum) {
+        writeDocumentMap: function (pageNum) {
             var me = this;
-            var $Cell;          
-            $Cell = $(".DocMapItemContaienr");
-            $Cell.append(me._WriteDocumentMapItem(this.options.ReportViewer.Pages[pageNum].ReportObj.Report.DocumentMap, 0));
+            var $cell;
+            $cell = $(".DocMapItemContaienr");
+            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.Pages[pageNum].ReportObj.Report.DocumentMap, 0));
         },
-        _WriteDocumentMapItem: function (DocMap, Level) {
+        _writeDocumentMapItem: function (docMap, level) {
             var me = this;
-            var $DocMap = new $("<DIV />");
-            $DocMap.css("margin-left", 18 * Level + "px");
+            var $docMap = new $("<DIV />");
+            $docMap.css("margin-left", 18 * level + "px");
 
-            var $Icon = new $("<DIV />");
+            var $icon = new $("<DIV />");
             
-            if (DocMap.Children == null) {
-                $DocMap.attr("level", Level);
-                $Icon.addClass("DocMap-Indent");
+            if (docMap.Children == null) {
+                $docMap.attr("level", level);
+                $icon.addClass("DocMap-Indent");
             }
             else {
-                $Icon.addClass("DocMap-Collapse");
-                $Icon.on("click", function () {
-                    if ($Icon.hasClass("DocMap-Collapse")) {
-                        $Icon.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
-                        $("[level='" + (Level) + "']").addClass("DocMap-Hidden");
+                $icon.addClass("DocMap-Collapse");
+                $icon.on("click", function () {
+                    if ($icon.hasClass("DocMap-Collapse")) {
+                        $icon.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
+                        $("[level='" + (level) + "']").addClass("DocMap-Hidden");
                     }
                     else {
-                        $Icon.addClass("DocMap-Collapse").removeClass("DocMap-Expand");
-                        $("[level='" + (Level) + "']").removeClass("DocMap-Hidden");
+                        $icon.addClass("DocMap-Collapse").removeClass("DocMap-Expand");
+                        $("[level='" + (level) + "']").removeClass("DocMap-Hidden");
                     }
                 });
             }
-            $DocMap.append($Icon);
+            $docMap.append($icon);
 
-            var $MapNode = new $("<A />");
-            $MapNode.addClass("DocMap-Item").attr("title", "Navigate to " + DocMap.Label).html(DocMap.Label);
-            $MapNode.on("click", { UniqueName: DocMap.UniqueName }, function (e) {
-                me.options.ReportViewer.NavigateDocumentMap(e.data.UniqueName);
+            var $mapNode = new $("<A />");
+            $mapNode.addClass("DocMap-Item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
+            $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
+                me.options.reportViewer.NavigateDocumentMap(e.data.UniqueName);
             });
-            $MapNode.hover(function () { $MapNode.addClass("DocMap-Item-Highlight"); }, function () { $MapNode.removeClass("DocMap-Item-Highlight"); });
-            $DocMap.append($MapNode);
+            $mapNode.hover(function () { $mapNode.addClass("DocMap-Item-Highlight"); }, function () { $mapNode.removeClass("DocMap-Item-Highlight"); });
+            $docMap.append($mapNode);
 
-            if (DocMap.Children != undefined) {
-                Level++;
-                $.each(DocMap.Children, function (Index, Obj) {
-                    $DocMap.append(me._WriteDocumentMapItem(Obj, Level));
+            if (docMap.Children != null) {
+                level++;
+                $.each(docMap.Children, function (Index, Obj) {
+                    $docMap.append(me._writeDocumentMapItem(Obj, level));
                 });
             }
-            return $DocMap;
+            return $docMap;
         },
     });
 });

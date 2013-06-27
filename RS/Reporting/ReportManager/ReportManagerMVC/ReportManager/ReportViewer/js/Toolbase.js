@@ -82,7 +82,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass != null) {                    
+                if (Obj.selectorClass != null) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
                     Obj["Display"] = $toolEl.is(":visible");
                     $toolEl.fadeOut();
@@ -110,7 +110,7 @@ $(function () {
                 if (toolInfo.events) {
                     $toolEl.addClass('cursor-pointer');
                     me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
-                    me._addEvents($toolEl, toolInfo)
+                    me._addEvents($toolEl, toolInfo);
                 }
                 if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
                     me.enableTools(toolInfo.tools);
@@ -189,7 +189,7 @@ $(function () {
             if (typeof toolInfo.text == 'function')
                 text = toolInfo.text({ $reportViewer: me.options.$reportViewer });
             else
-                text = toolInfo.text
+                text = toolInfo.text;
             return text;
         },
         _destroy: function () {

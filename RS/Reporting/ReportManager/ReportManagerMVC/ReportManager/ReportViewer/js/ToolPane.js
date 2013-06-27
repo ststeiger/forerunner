@@ -15,7 +15,7 @@ $(function () {
         text: 'Navigation',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('ShowNav')
+                e.data.$reportViewer.reportViewer('ShowNav');
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-nav']);
             }
         }
@@ -27,7 +27,7 @@ $(function () {
         text: 'Back',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('Back')
+                e.data.$reportViewer.reportViewer('Back');
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-reportback']);
             }
         }
@@ -39,7 +39,7 @@ $(function () {
         text: 'Refresh',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('RefreshReport')
+                e.data.$reportViewer.reportViewer('RefreshReport');
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-refresh']);
             }
         }
@@ -50,7 +50,7 @@ $(function () {
         imageClass: 'fr-image-firstpage',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', 1)
+                e.data.$reportViewer.reportViewer('NavToPage', 1);
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-firstpage']);
             }
         }
@@ -61,7 +61,7 @@ $(function () {
         imageClass: 'fr-image-prev',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1)
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1);
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-prev']);
             }
         }
@@ -73,7 +73,7 @@ $(function () {
         events: {
             keypress: function (e) {
                 if (e.keyCode == 13) {
-                    e.data.$reportViewer.reportViewer('NavToPage', this.value)
+                    e.data.$reportViewer.reportViewer('NavToPage', this.value);
                 }
             }
         }
@@ -94,7 +94,7 @@ $(function () {
         imageClass: 'fr-image-next',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1)
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1);
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-next']);
             }
         }
@@ -105,7 +105,7 @@ $(function () {
         imageClass: 'fr-image-lastpage',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'))
+                e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'));
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-lastpage']);
             }
         }
@@ -122,7 +122,7 @@ $(function () {
         text: 'Document map',
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("ShowDocMap")
+                e.data.$reportViewer.reportViewer("ShowDocMap");
                 e.data.me._trigger('actionstarted', null, e.data.me.allTools['fr-id-documentmap']);
             }
         }
@@ -180,7 +180,6 @@ $(function () {
             toolClass: 'fr-toolpane'
         },
         _initCallbacks: function () {
-            var $cell;
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
@@ -238,7 +237,7 @@ $(function () {
                 me.disableTools([itemNav]);
             else
                 me.enableTools([itemNav]);
-        },       
+        },
 
     });  // $.widget
 });  // function()

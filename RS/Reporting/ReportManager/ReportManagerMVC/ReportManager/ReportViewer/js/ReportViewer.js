@@ -219,7 +219,7 @@
             me.SessionID = "";            
             if (me.ParamLoaded == true) {
                 var $ParamArea = me.options.ParamArea;
-                me.LoadPage(1, false, null, $ParamArea.reportParameter("GetParamsList"),true);
+                me.LoadPage(1, false, null, $ParamArea.reportParameter("getParamsList"),true);
             }
             else {
                 me.LoadPage(1, false,null,null,true);
@@ -518,7 +518,7 @@
         ShowExport: function () {
             if ($(".Export-Panel").is(":hidden")) {
                 var $Export = $(".fr-button-export").filter(":visible");
-                $(".Export-Panel").css("left", $Export.offset().left).css("top", $Export.offset().top + $Export.height() + 2);
+                $(".Export-Panel").css("left", $Export.offset().left).css("top", $Export.offset().top + $Export.height() + 10);
             }
             $(".Export-Panel").toggle();
         },
@@ -551,7 +551,7 @@
                 $ParamArea = me.options.ParamArea;
                 if ($ParamArea != null) {
                     me._trigger('showparamarea');
-                    $ParamArea.reportParameter("WriteParameterPanel", Data, me, PageNum, false);
+                    $ParamArea.reportParameter("writeParameterPanel", Data, me, PageNum, false);
                     me.ParamLoaded = true;
                 }
             }
@@ -569,7 +569,7 @@
             if (me.ParamLoaded == true) {
                 $ParamArea = me.options.ParamArea;
                 if ($ParamArea != null) {
-                    $ParamArea.reportParameter("RemoveParameter");
+                    $ParamArea.reportParameter("removeParameter");
                     me.ParamLoaded = false;
                 }
             }
@@ -602,15 +602,15 @@
                 PageNumber: NewPageNum,
                 ParameterList: ParameterList
             })
-            .done(function (Data) {               
+            .done(function (Data) {
                 me.WritePage(Data, NewPageNum, LoadOnly);
                 me.Lock = 0;
                 if (BookmarkID != null)
                     me.NavToLink(BookmarkID);
-                
+
                 if (!LoadOnly) me.CachePages(NewPageNum);
             })
-            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); })
+            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
         WritePage: function (Data, NewPageNum, LoadOnly) {
             var me = this;
@@ -653,8 +653,8 @@
             if (me.Pages[pageNum].ReportObj.Exception == null) {
                 if (me.$ReportContainer.find(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
                     me.HasDocMap = true;
-                    me.$ReportContainer.reportDocumentMap({ ReportViewer: me });
-                    me.$ReportContainer.reportDocumentMap("WriteDocumentMap", pageNum);
+                    me.$ReportContainer.reportDocumentMap({ reportViewer: me });
+                    me.$ReportContainer.reportDocumentMap("writeDocumentMap", pageNum);
                 }
 
                 me.Pages[pageNum].$Container.reportRender("Render", me.Pages[pageNum].ReportObj);

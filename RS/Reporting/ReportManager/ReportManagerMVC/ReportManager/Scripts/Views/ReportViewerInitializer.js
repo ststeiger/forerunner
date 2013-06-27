@@ -121,7 +121,7 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 8, true, [itemHome]);
+            $toolPane.toolpane('addTools', 2, true, [itemHome]);
 
             var itemFav = {
                 toolType: toolTypes.containerItem,
@@ -159,7 +159,7 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 10, true, [itemFav]);
+            $toolPane.toolpane('addTools', 4, true, [itemFav]);
             $toolPane.toolpane('disableTools', [itemFav]);
             $viewer.on('reportviewerchangepage', function (e, data) {
                 $toolPane.toolpane('enableTools', [itemFav]);

@@ -9,11 +9,12 @@ $(function () {
     forerunner.ssr.constants = {
         // Tool types used by the Toolbase widget
         toolTypes: {
-                button:         "button",
-                input:          "input",
-                textButton:     "textbutton",
-                plainText:      "plaintext",
-                containerItem:  "containeritem"
+            button:         "button",
+            input:          "input",
+            textButton:     "textbutton",
+            plainText:      "plaintext",
+            containerItem:  "containeritem",
+            toolGroup:      "toolgroup"
         }
     };
 

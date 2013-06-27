@@ -58,3 +58,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   min-width: 10mm;
   max-width: 20mm;
 }
+
+.fr-item-findgroup {
+  border-bottom-width:1px;
+  border-bottom-style:groove;
+  border-bottom-color: darkgray;
+}

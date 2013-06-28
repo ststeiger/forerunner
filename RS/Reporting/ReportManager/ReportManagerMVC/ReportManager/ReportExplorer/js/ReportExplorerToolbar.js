@@ -11,46 +11,46 @@ $(function () {
     $.widget("Forerunner.reportexplorertoolbar", $.Forerunner.toolbase, {
         options: {
             navigateTo: null,
-            toolClass: 'fr-toolbar'
+            toolClass: "fr-toolbar"
         },
         // Button Info
         btnHome: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-rm-button-home',
-            imageClass: 'fr-image-home',
+            selectorClass: "fr-rm-button-home",
+            imageClass: "fr-image-home",
             events: {
                 click: function (e) {
-                    e.data.me.options.navigateTo('home', null);
+                    e.data.me.options.navigateTo("home", null);
                 }
             }
         },
         btnBack: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-back',
-            imageClass: 'fr-image-back',
+            selectorClass: "fr-button-back",
+            imageClass: "fr-image-back",
             events: {
                 click: function (e) {
-                    e.data.me.options.navigateTo('back', null);
+                    e.data.me.options.navigateTo("back", null);
                 }
             }
         },
         btnFav: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-rm-button-fav',
-            imageClass: 'fr-image-fav',
+            selectorClass: "fr-rm-button-fav",
+            imageClass: "fr-image-fav",
             events: {
                 click: function (e) {
-                    e.data.me.options.navigateTo('favorites', null);
+                    e.data.me.options.navigateTo("favorites", null);
                 }
             }
         },
         btnRecent: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-rm-button-recent',
-            imageClass: 'fr-image-recent',
+            selectorClass: "fr-rm-button-recent",
+            imageClass: "fr-image-recent",
             events: {
                 click: function (e) {
-                    e.data.me.options.navigateTo('recent', null);
+                    e.data.me.options.navigateTo("recent", null);
                 }
             }
         },

@@ -12,42 +12,42 @@
         _generateListItem: function (catalogItem) {
             var me = this;
             
-            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
+            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
-              + 'GetThumbnail/?ReportPath=' + catalogItem.Path + '&DefDate=' + catalogItem.ModifiedDate;
-            $ListItem = new $('<li />');
-            $ListItem.addClass('center');
-            $ListItem.addClass('rm-list-container-item');
-            $caption = new $('<div />');
-            $caption.addClass('center');
+              + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
+            var $ListItem = new $("<li />");
+            $ListItem.addClass("center");
+            $ListItem.addClass("rm-list-container-item");
+            var $caption = new $("<div />");
+            $caption.addClass("center");
             $ListItem.append($caption);
-            $captiontext = new $('<h3 />');
-            $captiontext.addClass('centertext');
+            var $captiontext = new $("<h3 />");
+            $captiontext.addClass("centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
             var targetUrl;
-            $anchor = new $('<a />');
-            $img = new $('<img />');
-            $img.addClass('catalogitem');
-            $img.addClass('center');
-            if (catalogItem.Type == '1') {
-                imageSrc = './ReportExplorer/images/folder-icon.png'
+            var $anchor = new $("<a />");
+            var $img = new $("<img />");
+            $img.addClass("catalogitem");
+            $img.addClass("center");
+            if (catalogItem.Type === "1") {
+                imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {
-                $img.addClass('reportitem');
+                $img.addClass("reportitem");
                 if (hasParameters) {
-                    imageSrc = './ReportExplorer/images/Report-icon.png'
+                    imageSrc = "./ReportExplorer/images/Report-icon.png";
                 } else {
                     imageSrc = reportThumbnailPath;
                 }
             }
 
-            var action = catalogItem.Type == '1' ? 'explore' : 'browse';
+            var action = catalogItem.Type === "1" ? "explore" : "browse";
               
-            $img.attr('src', imageSrc);
+            $img.attr("src", imageSrc);
             $img.removeAttr("height");
-            $anchor.on('click', function (event) {
-                if (me.options.navigateTo != null) {
+            $anchor.on("click", function (event) {
+                if (me.options.navigateTo !== null) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
@@ -58,47 +58,47 @@
         _generatePCListItem: function (catalogItem) {
             var me = this;
 
-            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") != -1) ? 1 : 0;
+            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
-              + 'GetThumbnail/?ReportPath=' + catalogItem.Path + '&DefDate=' + catalogItem.ModifiedDate;
-            $item = new $('<div />');
-            $item.addClass('fr-explorer-item');
-            $item.addClass('image-block');
-            $caption = new $('<div />');
-            $caption.addClass('center');
+              + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
+            var $item = new $("<div />");
+            $item.addClass("fr-explorer-item");
+            $item.addClass("image-block");
+            var $caption = new $("<div />");
+            $caption.addClass("center");
             $item.append($caption);
-            $captiontext = new $('<h3 />');
-            $captiontext.addClass('centertext');
+            var $captiontext = new $("<h3 />");
+            $captiontext.addClass("centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
             var targetUrl;
-            $anchor = new $('<a />');
-            $img = new $('<img />');
-            $img.addClass('catalogitem');
-            $img.addClass('center');
-            if (catalogItem.Type == '1') {
-                imageSrc = './ReportExplorer/images/folder-icon.png'
+            var $anchor = new $("<a />");
+            var $img = new $("<img />");
+            $img.addClass("catalogitem");
+            $img.addClass("center");
+            if (catalogItem.Type === "1") {
+                imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {
-                $img.addClass('reportitem');
+                $img.addClass("reportitem");
                 if (hasParameters) {
-                    imageSrc = './ReportExplorer/images/Report-icon.png'
+                    imageSrc = "./ReportExplorer/images/Report-icon.png";
                 } else {
                     imageSrc = reportThumbnailPath;
                 }
             }
 
-            var action = catalogItem.Type == '1' ? 'explore' : 'browse';
+            var action = catalogItem.Type === "1" ? "explore" : "browse";
 
-            $img.attr('src', imageSrc);
+            $img.attr("src", imageSrc);
             $img.removeAttr("height");
-            $anchor.on('click', function (event) {
-                if (me.options.navigateTo != null) {
+            $anchor.on("click", function (event) {
+                if (me.options.navigateTo !== null) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
-            var $reflection = new $('<div />');
-            $reflection.addClass('reflection');
+            var $reflection = new $("<div />");
+            $reflection.addClass("reflection");
             $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));
             $reflection.append($("<div/>").addClass("overlay"));
 
@@ -110,14 +110,14 @@
         _renderList: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
-            var decodedPath = me.options.selectedItemPath != null ? decodeURIComponent(me.options.selectedItemPath) : null;
-            me.element.addClass('reportexplorer');
-            $carouselContainer = $('.sky-carousel-container', me.$Carousel);
-            $rmListContainer = $('.rm-list-container', me.$RMList);
+            var decodedPath = me.options.selectedItemPath !== null ? decodeURIComponent(me.options.selectedItemPath) : null;
+            me.element.addClass("reportexplorer");
+            var $carouselContainer = $(".sky-carousel-container", me.$Carousel);
+            var $rmListContainer = $(".rm-list-container", me.$RMList);
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (decodedPath != null && decodedPath == decodeURIComponent(catalogItem.Path)) {
+                if (decodedPath !== null && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 $carouselContainer.append(me._generateListItem(catalogItem));
@@ -129,11 +129,11 @@
         _renderPCView: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
-            var decodedPath = me.options.selectedItemPath != null ? decodeURIComponent(me.options.selectedItemPath) : null;
+            var decodedPath = me.options.selectedItemPath !== null ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (decodedPath != null && decodedPath == decodeURIComponent(catalogItem.Path)) {
+                if (decodedPath !== null && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 me.rmListItems[i] = me._generatePCListItem(catalogItem);
@@ -144,21 +144,21 @@
             var me = this;
 
             if (me._mobileUI()) {
-                me.element.html('<div class="sky-carousel">' +
-                                '<div class="sky-carousel-wrapper">' +
-                                '<ul class="sky-carousel-container" />' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="rm-list">' +
-                                '<ul class="rm-list-container" />' +
-                                '</div>');
-                me.$Carousel = $('.sky-carousel', me.element);
-                me.$RMList = $('.rm-list', me.element);
+                me.element.html("<div class='sky-carousel'>" +
+                                "<div class='sky-carousel-wrapper'>" +
+                                "<ul class='sky-carousel-container' />" +
+                                "</div>" +
+                                "</div>" +
+                                "<div class='rm-list'>" +
+                                "<ul class='rm-list-container' />" +
+                                "</div>");
+                me.$Carousel = $(".sky-carousel", me.element);
+                me.$RMList = $(".rm-list", me.element);
                 me._renderList();
             }
             else {
-                me.element.html('<div class="fr-report-explorer">' +                                
-                                '</div>');
+                me.element.html("<div class='fr-report-explorer'>" +                                
+                                "</div>");
                 me._renderPCView();
             }
                 
@@ -198,20 +198,20 @@
                 me._scrollList();
             }
 
-            me.$explorer.bind('scrollstop', function (e) {
+            me.$explorer.bind("scrollstop", function (e) {
                 if (!me.$Carousel.is(":visible")) {
                     me._setSelectionFromScroll();
                     me._selectCarouselItem();
                 }
             });
 
-            me.$explorer.bind('selectionAnimationEnd.sc', function (e) {
+            me.$explorer.bind("selectionAnimationEnd.sc", function (e) {
                 me.selectedItem = me.$C.selectedItem.index();
             });
 
             me.$explorer.resize(function () {
                 if (!me.$Carousel.is(":visible")) {
-                    if (me.$explorer.scrollTop() == 0 && me.$UL.is(":visible"))
+                    if (me.$explorer.scrollTop() === 0 && me.$UL.is(":visible"))
                         me._scrollList();
                 } 
             });
@@ -227,7 +227,7 @@
                 if (distance < closestDistance) {
                     closest = i;
                     closestDistance = distance;
-                } else if (closest != 0) {
+                } else if (closest !== 0) {
                     // If closetst is no longer 0 and we are no longer approaching the closest break
                     break;
                 }
@@ -243,7 +243,7 @@
             var itemPosition = me.rmListItems[me.selectedItem].position().top;
             var ulPosition = me.$UL.position().top;
             var diff = Number(itemPosition - ulPosition);
-            me.$explorer.scrollTop(diff, 'slow');
+            me.$explorer.scrollTop(diff, "slow");
         },
         _getSelectedItem: function () {
             var me = this;
@@ -255,13 +255,13 @@
         },
         _init: function () {
             var me = this;
-            me.$Carousel;
-            me.$RMList;
-            me.$UL;
-            me.rmListItems;
+            me.$Carousel = null;
+            me.$RMList = null;
+            me.$UL = null;
+            me.rmListItems = null;
             me.selectedItem = 0;
             me.isRendered = false;
-            me.$explorer = me.options.$scrollBarOwner != null ? me.options.$scrollBarOwner : $(window);
+            me.$explorer = me.options.$scrollBarOwner !== null ? me.options.$scrollBarOwner : $(window);
             me._render();
         }
     });  // $.widget

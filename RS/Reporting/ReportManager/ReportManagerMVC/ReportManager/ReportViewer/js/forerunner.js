@@ -15,6 +15,41 @@ $(function () {
             plainText:      "plaintext",
             containerItem:  "containeritem",
             toolGroup:      "toolgroup"
+        },
+        sortDirection: {
+            desc: "Descending",
+            asc: "Ascending"
+        },
+        navigateType: {
+            toggle: "toggle",
+            bookmark: "bookmark",
+            drillThrough: "drillthrough",
+            docMap: "documentMap",
+        },
+        messages: {
+            loading: "Loading...",
+            completeFind: "The entire report has been searched",
+            keyNotFound: "Keywork not found",
+            sessionExpired: "Your session has expired",
+            imageNotDisplay: "Cannot display image"
+        },
+        errorTag: {
+            moreDetail: "Click for more detail",
+            serverError: "Exception thrown from server",
+            type: "Type",
+            targetSite: "targetSite",
+            source: "Source",
+            message: "Message",
+            stackTrace: "StackTrace"
+        },
+        exportType: {
+            xml: "XML file with report data",
+            csv: "CSV (comma delimited)",
+            pdf: "PDF",
+            mhtml: "MHTML (web archive)",
+            excel: "Excel",
+            tiff: "TIFF file",
+            word: "Word"
         }
     };
 

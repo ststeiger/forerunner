@@ -8,7 +8,7 @@
                 "<tr><td nowrap width='100%'><div class='DocMapHeader'><div class='DocMapBar'> Document Map </div></div></td></tr>" +
                 "<tr><td class='DocMapContentCell'><div class='DocMapItemContaienr'></div></td></tr></table></div></div>");
             
-                this.options.reportViewer.$ReportContainer.append(this.element);
+                this.options.reportViewer.$reportContainer.append(this.element);
                 
                 $(".DocMapPanel").resizable({
                     resize: function (event, ui) {
@@ -18,7 +18,8 @@
                     }
                 });
 
-                window.onresize = function () { $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top); };
+                var clientHeight = document.documentElement.clientHeight == 0 ? document.body.clientHeight : document.documentElement.clientHeight;
+                window.onresize = function () { $(".DocMapBorder").css("height", clientHeight - $(".DocMapPanel").offset().top); };
 
                 $(window).scroll(function () { $(".DocMapBorder").css("top", $(window).scrollTop()); });
                 //trigger the onresize event, fix Compatibility issue in IE and FF
@@ -29,7 +30,7 @@
             var me = this;
             var $cell;
             $cell = $(".DocMapItemContaienr");
-            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.Pages[pageNum].ReportObj.Report.DocumentMap, 0));
+            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].ReportObj.Report.DocumentMap, 0));
         },
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;

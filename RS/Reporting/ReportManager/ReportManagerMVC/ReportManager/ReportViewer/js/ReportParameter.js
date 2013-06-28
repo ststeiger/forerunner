@@ -33,7 +33,7 @@
         writeParameterPanel: function(data, rs, pageNum, loadOnly) {
             var me = this;
             me.options.pageNum = pageNum;
-            me._paramCount = data.Count;
+            me._paramCount = parseInt(data.Count,10);
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
 

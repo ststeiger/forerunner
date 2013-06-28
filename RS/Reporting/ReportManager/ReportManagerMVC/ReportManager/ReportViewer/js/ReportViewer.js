@@ -398,7 +398,7 @@ $(function () {
                 UniqueID: drillthroughID
             }).done(function (data) {
                 me.BackupCurPage();
-                if (data.Exception !== null)
+                if (data.Exception !== undefined)
                     me.$reportAreaContainer.find(".Page").reportRender("WriteError", data);
                 else {
                     me.sessionID = data.SessionID;
@@ -564,7 +564,7 @@ $(function () {
                     me.paramLoaded = true;
                 }
             }
-            else if (data.Exception !== null) {
+            else if (data.Exception !== undefined) {
                 me.$reportContainer.reportRender({ ReportViewer: this });
                 me.$reportContainer.reportRender("WriteError", data);
                 me.RemoveLoadingIndicator();
@@ -589,7 +589,7 @@ $(function () {
             if (flushCache !== null && flushCache)
                 me.flushCache();
 
-            if (me.pages[newPageNum] !== null)
+            if (!me.isNull(me.pages[newPageNum]))
                 if (me.pages[newPageNum].$Container !== null) {
                     if (!loadOnly) {
                         me.SetPage(newPageNum);
@@ -597,7 +597,7 @@ $(function () {
                     }
                     return;
                 }
-            if (paramList === null) paramList = "";
+            if (me.isNull(paramList)) paramList = "";
 
             if (!loadOnly) {
                 me.AddLoadingIndicator();
@@ -614,7 +614,7 @@ $(function () {
             .done(function (data) {
                 me.WritePage(data, newPageNum, loadOnly);
                 me.lock = 0;
-                if (bookmarkID !== null)
+                if (!me.isNull(bookmarkID))
                     me.NavToLink(bookmarkID);
 
                 if (!loadOnly) me.CachePages(newPageNum);
@@ -631,18 +631,18 @@ $(function () {
 
             $Report.reportRender({ ReportViewer: me });
 
-            if (me.pages[newPageNum] === null)
+            if (me.isNull(me.pages[newPageNum]))
                 me.pages[newPageNum] = new ReportPage($Report, data);
             else {
                 me.pages[newPageNum].$Container = $Report;
                 me.pages[newPageNum].ReportObj = data;
             }
 
-            if (data.SessionID === null)
+            if (data.SessionID === undefined)
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.NumPages === null)
+            if (data.NumPages === undefined)
                 me.numPages = 0;
             else
                 me.numPages = data.NumPages;
@@ -659,8 +659,8 @@ $(function () {
             if (me.pages[pageNum] !== null && me.pages[pageNum].IsRendered === true)
                 return;
 
-            if (me.pages[pageNum].ReportObj.Exception === null) {
-                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].ReportObj.Report.DocumentMap !== null) {
+            if (me.pages[pageNum].ReportObj.Exception === undefined) {
+                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].ReportObj.Report.DocumentMap !== undefined) {
                     me.hasDocMap = true;
                     me.$reportContainer.reportDocumentMap({ reportViewer: me });
                     me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
@@ -772,6 +772,12 @@ $(function () {
             //This is an error
             return value;
         },
+        isNull: function (val) {
+            if (val === null || val === undefined)
+                return true;
+            else
+                return false;
+        }
     });  // $.widget
 });   // $(function
 

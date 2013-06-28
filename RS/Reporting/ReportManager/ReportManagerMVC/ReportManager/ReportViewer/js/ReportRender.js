@@ -31,9 +31,9 @@ $(function () {
         this.TopDelta = 0;
         this.Height = 0;
         this.Index = Index;
-        this.IndexAbove = null;;
-        this.NewHeight = null;;
-        this.NewTop = null;;
+        this.IndexAbove = null;
+        this.NewHeight = null;
+        this.NewTop = null;
     }
     // The Floating header object holds pointers to the tablix and its row and col header objects
     function FloatingHeader($Tablix, $RowHeader, $ColHeader) {

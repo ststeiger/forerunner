@@ -817,7 +817,7 @@ jQuery.fn.extend({
                                 var spannode = document.createElement("span");
                                 spannode.className = "Find-Keyword Unread";
                                 var middlebit = searchnode.splitText(pos);
-                                var searchnode = middlebit.splitText(keyword.length);
+                                searchnode = middlebit.splitText(keyword.length);
                                 var middleclone = middlebit.cloneNode(true);
                                 spannode.appendChild(middleclone);
                                 searchnode.parentNode.replaceChild(spannode, middlebit);

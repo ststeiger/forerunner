@@ -11,88 +11,88 @@ $(function () {
     $.widget("Forerunner.toolbar", $.Forerunner.toolbase, {
         options: {
             $reportViewer: null,
-            toolClass: 'fr-toolbar'
+            toolClass: "fr-toolbar"
         },
         // Button Info
         btnMenu: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-menu',
-            imageClass: 'fr-image-menu',
+            selectorClass: "fr-button-menu",
+            imageClass: "fr-image-menu",
             events: {
                 click: function (e) {
-                    e.data.me._trigger('menuclick', null, {});
+                    e.data.me._trigger("menuclick", null, {});
                 }
             }
         },
         btnNav: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-nav',
-            imageClass: 'fr-image-nav',
+            selectorClass: "fr-button-nav",
+            imageClass: "fr-image-nav",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('ShowNav');
+                    e.data.$reportViewer.reportViewer("ShowNav");
                 }
             }
         },
         btnParamarea: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-paramarea',
-            imageClass: 'fr-image-paramarea',
+            selectorClass: "fr-button-paramarea",
+            imageClass: "fr-image-paramarea",
             events: {
                 click: function (e) {
-                    e.data.me._trigger('paramareaclick', null, {});
-                    //e.data.$reportViewer.reportViewer('ShowParms')
+                    e.data.me._trigger("paramareaclick", null, {});
+                    //e.data.$reportViewer.reportViewer("ShowParms")
                 }
             }
         },
         btnReportBack: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-reportback',
-            imageClass: 'fr-image-reportback',
+            selectorClass: "fr-button-reportback",
+            imageClass: "fr-image-reportback",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('Back');
+                    e.data.$reportViewer.reportViewer("Back");
                 }
             }
         },
         btnRefresh: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-refresh',
-            imageClass: 'fr-image-refresh',
+            selectorClass: "fr-button-refresh",
+            imageClass: "fr-image-refresh",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('RefreshReport');
+                    e.data.$reportViewer.reportViewer("RefreshReport");
                 }
             }
         },
         btnFirstPage: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-firstpage',
-            imageClass: 'fr-image-firstpage',
+            selectorClass: "fr-button-firstpage",
+            imageClass: "fr-image-firstpage",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', 1);
+                    e.data.$reportViewer.reportViewer("NavToPage", 1);
                 }
             }
         },
         btnPrev: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-prev',
-            imageClass: 'fr-image-prev',
+            selectorClass: "fr-button-prev",
+            imageClass: "fr-image-prev",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') - 1);
+                    e.data.$reportViewer.reportViewer("NavToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
                 }
             }
         },
         btnReportPage: {
             toolType: toolTypes.input,
-            selectorClass: 'fr-textbox-reportpage',
-            inputType: 'number',
+            selectorClass: "fr-textbox-reportpage",
+            inputType: "number",
             events: {
                 keypress: function (e) {
-                    if (e.keyCode == 13) {
-                        e.data.$reportViewer.reportViewer('NavToPage', this.value);
+                    if (e.keyCode === 13) {
+                        e.data.$reportViewer.reportViewer("NavToPage", this.value);
                     }
                 },
                 click: function (e) {
@@ -102,38 +102,38 @@ $(function () {
         },
         btnPageOf: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-pageOf',
-            text: 'of'
+            selectorClass: "fr-pageOf",
+            text: "of"
         },
         btnNumPages: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-num-pages',
+            selectorClass: "fr-num-pages",
             text: ""
         },
         btnNext: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-next',
-            imageClass: 'fr-image-next',
+            selectorClass: "fr-button-next",
+            imageClass: "fr-image-next",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getCurPage') + 1);
+                    e.data.$reportViewer.reportViewer("NavToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
                 }
             }
         },
         btnLastPage: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-lastpage',
-            imageClass: 'fr-image-lastpage',
+            selectorClass: "fr-button-lastpage",
+            imageClass: "fr-image-lastpage",
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer('NavToPage', e.data.$reportViewer.reportViewer('getNumPages'));
+                    e.data.$reportViewer.reportViewer("NavToPage", e.data.$reportViewer.reportViewer("getNumPages"));
                 }
             }
         },
         btnDocumentMap: {
             toolType: toolTypes.button,
-            selectorClass: 'fr-button-documentmap',
-            imageClass: 'fr-image-documentmap',
+            selectorClass: "fr-button-documentmap",
+            imageClass: "fr-image-documentmap",
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("ShowDocMap");
@@ -142,51 +142,51 @@ $(function () {
         },
         btnKeyword: {
             toolType: toolTypes.input,
-            selectorClass: 'fr-textbox-keyword',
+            selectorClass: "fr-textbox-keyword",
             events: {
                 keypress: function (e) {
-                    if (e.keyCode == 13) {
-                        e.data.$reportViewer.reportViewer('Find');
+                    if (e.keyCode === 13) {
+                        e.data.$reportViewer.reportViewer("Find");
                     }
                 }
             }
         },
         btnFind: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-button-find',
+            selectorClass: "fr-button-find",
             text: "Find",
             events: {
                 click: function (e) {
-                    var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
                     e.data.$reportViewer.reportViewer("Find", value);
                 }
             }
         },
         btnSeparator: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-span-sparator',
-            text: '|&nbsp'
+            selectorClass: "fr-span-sparator",
+            text: "|&nbsp"
         },
         btnFindNext: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-button-findnext',
+            selectorClass: "fr-button-findnext",
             text: "Next",
             events: {
                 click: function (e) {
-                    var value = e.data.me.element.find('.fr-textbox-keyword').val().trim();
+                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
                     e.data.$reportViewer.reportViewer("FindNext", value);
                 }
             }
         },
         btnSeparator2: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-span-sparator',
-            text: '|&nbsp'
+            selectorClass: "fr-span-sparator",
+            text: "|&nbsp"
         },
         btnExport: {
             toolType: toolTypes.plainText,
-            selectorClass: 'fr-button-export',
-            //imageClass: 'fr-image-export',
+            selectorClass: "fr-button-export",
+            //imageClass: "fr-image-export",
             text: "Export",
             events: {
                 click: function (e) {
@@ -198,17 +198,17 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on('reportviewerchangepage', function (e, data) {
+            me.options.$reportViewer.on("reportviewerchangepage", function (e, data) {
                 $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
-                var maxNumPages = me.options.$reportViewer.reportViewer('getNumPages');
+                var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded == false)
+                if (data.paramLoaded === false)
                     me.disableTools([me.btnParamarea]);
                
             });
 
-            me.options.$reportViewer.on('reportviewershowparamarea', function (e, data) {
+            me.options.$reportViewer.on("reportviewershowparamarea", function (e, data) {
                 me.enableTools([me.btnParamarea]);
             });
 
@@ -236,10 +236,10 @@ $(function () {
         },
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
-            me.element.find('.fr-num-pages').html(maxPage);
-            me.element.find('.fr-textbox-reportpage').attr({ max: maxPage, min: 1 });
+            me.element.find(".fr-num-pages").html(maxPage);
+            me.element.find(".fr-textbox-reportpage").attr({ max: maxPage, min: 1 });
 
-            if (me.options.$reportViewer.reportViewer('getHasDocMap'))
+            if (me.options.$reportViewer.reportViewer("getHasDocMap"))
                 me.enableTools([me.btnDocumentMap]);
             else
                 me.disableTools([me.btnDocumentMap]);
@@ -257,7 +257,7 @@ $(function () {
             else {
                 me.enableTools([me.btnNext, me.btnLastPage]);
             }
-            if (maxPage ==1 )
+            if (maxPage ===1 )
                 me.disableTools([me.btnNav]);
             else
                 me.enableTools([me.btnNav]);

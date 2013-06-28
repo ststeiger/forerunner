@@ -77,9 +77,9 @@
             if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                 me._submitForm();
             else
-                me._trigger('render');
+                me._trigger("render");
 
-            me.options.$reportViewer.reportViewer('RemoveLoadingIndicator');
+            me.options.$reportViewer.reportViewer("RemoveLoadingIndicator");
         },
         _submitForm: function () {
             var me = this;
@@ -87,8 +87,8 @@
             me._closeAllDropdown();
             var paramList = me.getParamsList();
             if (paramList !== null) {
-                me.options.$reportViewer.reportViewer('LoadPage', me.options.pageNum, false, null, paramList,true);
-                me._trigger('submit');
+                me.options.$reportViewer.reportViewer("LoadPage", me.options.pageNum, false, null, paramList,true);
+                me._trigger("submit");
             }
         },
         _writeParamControl: function (param, $parent) {
@@ -210,7 +210,7 @@
                 case "DateTime":
                     $control.attr("readonly", "true");
                     $control.datepicker({
-                        dateFormat: 'yy-mm-dd', //Format: ISO8601
+                        dateFormat: "yy-mm-dd", //Format: ISO8601
                         onClose: function () {
                             $("[name='" + param.Name + "']").valid();
                             if (me._paramCount === 1)
@@ -260,7 +260,7 @@
             if (!canLoad) me._loadedForDefault = false;
 
             if (me._paramCount === 1) {
-                $control.on('change', function () { me._submitForm(); });
+                $control.on("change", function () { me._submitForm(); });
             }
             
             return $control;
@@ -376,10 +376,10 @@
             var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
 
             if (clientHeight - multipleControl.offset().top < dropDown.height() + 45) {
-                dropDown.css('top', multipleControl.offset().top - dropDown.height() - 9);
+                dropDown.css("top", multipleControl.offset().top - dropDown.height() - 9);
             }
             else {
-                dropDown.css('top', multipleControl.offset().top + 36);
+                dropDown.css("top", multipleControl.offset().top + 36);
             }
 
             if (dropDown.hasClass("Parameter-Dropdown-Hidden")) {
@@ -434,7 +434,7 @@
                     }
                 });
                 for (var radioName in radioList) {
-                    a.push({ name: radioName, ismultiple: "", type: 'Boolean', value: radioList[radioName] });
+                    a.push({ name: radioName, ismultiple: "", type: "Boolean", value: radioList[radioName] });
                 }
                 //combobox - multiple values
                 var tempCb = "";
@@ -540,11 +540,11 @@
             if (defaultDatetime === null || defaultDatetime.length < 9)
                 return null;
 
-            var date = defaultDatetime.substr(0, defaultDatetime.indexOf(' '));
+            var date = defaultDatetime.substr(0, defaultDatetime.indexOf(" "));
 
-            var datetime = date.substring(0, date.indexOf('/')) + "-" +
-                           date.substring(date.indexOf('/') + 1, date.lastIndexOf('/')) + "-" +
-                           date.substring(date.lastIndexOf('/') + 1, defaultDatetime.indexOf(' '));
+            var datetime = date.substring(0, date.indexOf("/")) + "-" +
+                           date.substring(date.indexOf("/") + 1, date.lastIndexOf("/")) + "-" +
+                           date.substring(date.lastIndexOf("/") + 1, defaultDatetime.indexOf(" "));
             return datetime;
         },
     });  // $.widget

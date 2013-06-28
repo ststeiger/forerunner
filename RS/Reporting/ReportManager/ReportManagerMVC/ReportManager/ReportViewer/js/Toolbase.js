@@ -35,7 +35,7 @@ $(function () {
         //      when the button is enabled and removed when the button is disabled.
         addTools: function (index, enabled, tools) {
             var me = this;
-            var $toolbar = me.element.find('.' + me.options.toolClass);
+            var $toolbar = me.element.find("." + me.options.toolClass);
             me._addChildTools($toolbar, index, enabled, tools);
 
             if (enabled) {
@@ -56,13 +56,13 @@ $(function () {
                 $parent.append($firstTool);
             }
             else {
-                var selector = ':nth-child(' + index + ')';
+                var selector = ":nth-child(" + index + ")";
                 var $child = $parent.children(selector);
                 $child.before($firstTool);
             }
 
             me.allTools[tools[0].selectorClass] = tools[0];
-            if (tools[0].toolType == toolTypes.toolGroup && tools[0].tools) {
+            if (tools[0].toolType === toolTypes.toolGroup && tools[0].tools) {
                 me._addChildTools($firstTool, 1, enabled, tools[0].tools);      // Add the children of a tool group
             }
 
@@ -73,7 +73,7 @@ $(function () {
                 $tool = $tool.next();
                 me.allTools[toolInfo.selectorClass] = toolInfo;
 
-                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                     me._addChildTools($tool, 1, enabled, toolInfo.tools);      // Add the children of a tool group
                 }
             }
@@ -82,9 +82,9 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass != null) {
+                if (Obj.selectorClass !== null) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
-                    Obj["Display"] = $toolEl.is(":visible");
+                    Obj.Display = $toolEl.is(":visible");
                     $toolEl.fadeOut();
                 }
             });
@@ -94,9 +94,9 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass != null) {
+                if (Obj.selectorClass !== null) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
-                    if (Obj["Display"])
+                    if (Obj.Display)
                         $toolEl.fadeIn();
                 }
             });
@@ -106,13 +106,13 @@ $(function () {
             var me = this;
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
-                $toolEl.removeClass('fr-tool-disabled');
+                $toolEl.removeClass("fr-tool-disabled");
                 if (toolInfo.events) {
-                    $toolEl.addClass('cursor-pointer');
+                    $toolEl.addClass("cursor-pointer");
                     me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
                     me._addEvents($toolEl, toolInfo);
                 }
-                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                     me.enableTools(toolInfo.tools);
                 }
             });
@@ -122,12 +122,12 @@ $(function () {
             var me = this;
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
-                $toolEl.addClass('fr-tool-disabled');
+                $toolEl.addClass("fr-tool-disabled");
                 if (toolInfo.events) {
-                    $toolEl.removeClass('cursor-pointer');
+                    $toolEl.removeClass("cursor-pointer");
                     me._removeEvent($toolEl, toolInfo);
                 }
-                if (toolInfo.toolType == toolTypes.toolGroup && toolInfo.tools) {
+                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                     me.disableTools(toolInfo.tools);
                 }
             });
@@ -135,7 +135,7 @@ $(function () {
         _removeEvent: function ($toolEl, toolInfo) {
             var me = this;
             for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] == 'function') {
+                if (typeof toolInfo.events[key] === "function") {
                     $toolEl.off(key);
                 }
             }
@@ -143,33 +143,33 @@ $(function () {
         _addEvents: function ($toolEl, toolInfo) {
             var me = this;
             for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] == 'function') {
+                if (typeof toolInfo.events[key] === "function") {
                     $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
                 }
             }
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
-            if (toolInfo.toolType == toolTypes.button) {
+            if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
                             "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
-            else if (toolInfo.toolType == toolTypes.input) {
+            else if (toolInfo.toolType === toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
                     type = ", type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
-            else if (toolInfo.toolType == toolTypes.textButton) {
+            else if (toolInfo.toolType === toolTypes.textButton) {
                 return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
-            else if (toolInfo.toolType == toolTypes.plainText) {
+            else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
                 }
-            else if (toolInfo.toolType == toolTypes.containerItem) {
-                var text = '';
+            else if (toolInfo.toolType === toolTypes.containerItem) {
+                var text = "";
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);
                 }
@@ -178,7 +178,7 @@ $(function () {
                             text +
                         "</div>";
             }
-            else if (toolInfo.toolType == toolTypes.toolGroup) {
+            else if (toolInfo.toolType === toolTypes.toolGroup) {
                 return "<div class='fr-item-container " + toolInfo.selectorClass + "'></div>";
             }
         },
@@ -186,7 +186,7 @@ $(function () {
             var text;
             var me = this;
 
-            if (typeof toolInfo.text == 'function')
+            if (typeof toolInfo.text === "function")
                 text = toolInfo.text({ $reportViewer: me.options.$reportViewer });
             else
                 text = toolInfo.text;

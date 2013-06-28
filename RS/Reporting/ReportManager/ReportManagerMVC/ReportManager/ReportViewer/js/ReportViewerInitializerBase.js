@@ -48,12 +48,12 @@ $(function () {
             // Let the report viewer know the height of the toolbar
             $viewer.reportViewer('option', 'ToolbarHeight', me.options.toolbarHeight());
 
-            $lefttoolbar = me.options.$lefttoolbar;
+            var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar != null) {
                 $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });
             }
 
-            $righttoolbar = me.options.$righttoolbar;
+            var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar != null) {
                 $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });
             }
@@ -61,13 +61,13 @@ $(function () {
             // Create / render the menu pane
             var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
 
-            $nav = me.options.$nav;
+            var $nav = me.options.$nav;
             if ($nav != null) {
                 $nav.pagenav({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'PageNav', $nav);
             }
 
-            $paramarea = me.options.$paramarea;
+            var $paramarea = me.options.$paramarea;
             if ($paramarea != null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'ParamArea', $paramarea);

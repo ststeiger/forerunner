@@ -82,9 +82,8 @@ height:100%;
     -ms-transform: scaleY(-1); 
     -o-transform: scaleY(-1); 
     transform: scaleY(-1);
-    filter: flipv; 
-    opacity:0.30; 
-    filter: alpha(opacity='30');             
+    filter: alpha(opacity='30') flipv ; 
+    opacity:0.30;     
 
 } 
 .overlay { 

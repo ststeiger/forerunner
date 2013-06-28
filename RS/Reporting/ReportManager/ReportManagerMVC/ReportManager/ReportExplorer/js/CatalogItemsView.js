@@ -29,7 +29,7 @@ forerunner.ssr.CatalogItemsView.prototype = {
     },
     _renderExplorer : function() {
         var me = this;
-        $explorerview = me.options.$explorerview;
+        var $explorerview = me.options.$explorerview;
 
         if ($explorerview != null) {
             $explorerview.reportexplorer({
@@ -68,5 +68,5 @@ forerunner.ssr.CatalogItemsView.fetchModelAndRenderView = function (options) {
             console.log(data);
             alert('Failed to load the catalogs from the server.  Please try again.');
         }
-    })
+    });
 };

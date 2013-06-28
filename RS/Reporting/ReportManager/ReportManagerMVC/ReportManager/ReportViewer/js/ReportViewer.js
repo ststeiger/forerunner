@@ -108,8 +108,8 @@ $(function () {
         },
         SetColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
-            var me = this;
-            if ($colHeader == null)
+            //var me = this;
+            if ($colHeader === null)
                 return;
 
             var offset = $tablix.offset();
@@ -117,7 +117,7 @@ $(function () {
             if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $tablix.width())) {
                 //$colHeader.css("top", $tablix.offset.top);
                 $colHeader.css("left", Math.min(scrollLeft - offset.left, $tablix.width() - $colHeader.width()) + "px");
-                $colHeader.fadeIn('fast');
+                $colHeader.fadeIn("fast");
             }
             else {
                 $colHeader.hide();
@@ -127,14 +127,14 @@ $(function () {
         SetRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
             var me = this;
-            if ($rowHeader == null)
+            if ($rowHeader === null)
                 return;
 
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
                 $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.ToolbarHeight) + "px");
-                $rowHeader.fadeIn('fast');
+                $rowHeader.fadeIn("fast");
             }
             else {
                 $rowHeader.hide();
@@ -147,12 +147,12 @@ $(function () {
             setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
         showLoadingIndictator: function (me) {
-            if (me.loadLock == 1) {
+            if (me.loadLock === 1) {
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + 'px')
-                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
+                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
 
                 me.$reportContainer.css({ opacity: 0.5 });
                 me.$loadingIndicator.show();
@@ -170,7 +170,7 @@ $(function () {
 
             if (!me.pages[PageNum].IsRendered)
                 me.RenderPage(PageNum);
-            if (me.$reportAreaContainer == null) {
+            if (me.$reportAreaContainer === null) {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("report-area-container");
                 me.$reportContainer.append(me.$reportAreaContainer);
@@ -182,7 +182,7 @@ $(function () {
                 me.$reportAreaContainer.find(".Page").detach();
                 me.$reportAreaContainer.append(me.pages[PageNum].$Container);
 
-                if (me.curPage != null && me.curPage > PageNum) {
+                if (me.curPage !== null && me.curPage > PageNum) {
                     me.pages[PageNum].$Container.show();
                 } else {
                     me.pages[PageNum].$Container.show();
@@ -193,8 +193,8 @@ $(function () {
             me.curPage = PageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.SetPageDone != null) me._trigger("SetPageDone");
-            me._trigger('changepage', null, { newPageNum: PageNum, paramLoaded: me.paramLoaded });
+            if (me.options.SetPageDone !== null) me._trigger("SetPageDone");
+            me._trigger("changepage", null, { newPageNum: PageNum, paramLoaded: me.paramLoaded });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -207,17 +207,17 @@ $(function () {
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
-                    if (dir == 'left' || dir == 'up')
+                    if (dir === "left" || dir === "up")
                         me.NavToPage((me.curPage + 1));
                     else
                         me.NavToPage((me.curPage - 1));
                 },
                 swipeStatus: function (event, phase, direction, distance) {
-                    if (phase == "start")
+                    if (phase === "start")
                         me.HideTableHeaders();
                 },
                 tap: function (event, target) {
-                    $(target).trigger('click');
+                    $(target).trigger("click");
                 },
                longTapThreshold: 1000,
             });
@@ -226,7 +226,7 @@ $(function () {
             // Remove all cached data on the report and re-run
             var me = this;
             me.sessionID = "";
-            if (me.paramLoaded == true) {
+            if (me.paramLoaded === true) {
                 var $paramArea = me.options.ParamArea;
                 me.LoadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);
             }
@@ -236,7 +236,7 @@ $(function () {
         },
         NavToPage: function (newPageNum) {
             var me = this;
-            if (newPageNum == me.curPage || me.lock == 1)
+            if (newPageNum === me.curPage || me.lock === 1)
                 return;
 
             me.scrollLeft = 0;
@@ -248,8 +248,8 @@ $(function () {
             if (newPageNum < 1) {
                 newPageNum = me.numPages;
             }
-            if (newPageNum != me.curPage) {
-                if (me.lock == 0) {
+            if (newPageNum !== me.curPage) {
+                if (me.lock === 0) {
                     me.lock = 1;
                     me.LoadPage(newPageNum, false);
                 }
@@ -257,7 +257,7 @@ $(function () {
         },
         ShowDocMap: function () {
             if ($(".DocMapPanel").length > 0)
-                $(".DocMapPanel").animate({ height: 'toggle' }, 100, function () {
+                $(".DocMapPanel").animate({ height: "toggle" }, 100, function () {
                     $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
                 });
         },
@@ -270,45 +270,45 @@ $(function () {
             if (high > me.numPages) high = me.numPages;
 
             for (var i = low; i <= high; i++)
-                if (me.pages[i] == null)
-                    if (i != initPage)
+                if (me.pages[i] === null)
+                    if (i !== initPage)
                         me.LoadPage(i, true);
 
         },
         Back: function () {
             var me = this;
             var action = me.actionHistory.pop();
-            if (action != undefined) {
+            if (action !== undefined) {
                 
                 me.options.ReportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 
-                me._trigger('drillback');
+                me._trigger("drillback");
                 me.RemoveParameters();
                 me.LoadPage(action.CurrentPage, false,null,null,true);
             }
             else {
-                me._trigger('back', null, { path: me.options.ReportPath });
+                me._trigger("back", null, { path: me.options.ReportPath });
             }
         },
         ShowNav: function () {
             var me = this;
-            if (me.options.PageNav != null){
-                me.options.PageNav.pagenav('showNav');
+            if (me.options.PageNav !== null){
+                me.options.PageNav.pagenav("showNav");
             }
         },
         flushCache: function () {
             var me = this;
             me.pages = {};
-            if (me.options.PageNav != null)
-                me.options.PageNav.pagenav('reset');
+            if (me.options.PageNav !== null)
+                me.options.PageNav.pagenav("reset");
         },
         _PrepareAction: function () {
             var me = this;
 
-            if (me.togglePageNum != me.curPage || me.togglePageNum  == 0) {
+            if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
                 $.ajax({
                     url: me.options.ReportViewerAPI + "/GetReportJSON/",
                     data: {
@@ -318,7 +318,7 @@ $(function () {
                         PageNumber: me.curPage,
                         ParameterList: ""
                     },
-                    dataType: 'json',
+                    dataType: "json",
                     async: false,
                     success: function (data) {
                         me.togglePageNum = me.curPage;
@@ -333,7 +333,7 @@ $(function () {
             var newDir;
             var sortDirection = forerunner.ssr.constants.sortDirection;
 
-            if (direction == sortDirection.asc)
+            if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
                 newDir = sortDirection.asc;
@@ -360,7 +360,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: toggleID
             }).done(function (data) {
-                if (data.Result == true) {
+                if (data.Result === true) {
                     me.scrollLeft = $(window).scrollLeft();
                     me.scrollTop = $(window).scrollTop();
 
@@ -379,7 +379,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: bookmarkID
             }).done(function (data) {
-                if (data.NewPage == me.curPage) {
+                if (data.NewPage === me.curPage) {
                     me.NavToLink(bookmarkID);
                 } else {
                     me.BackupCurPage();
@@ -398,7 +398,7 @@ $(function () {
                 UniqueID: drillthroughID
             }).done(function (data) {
                 me.BackupCurPage();
-                if (data.Exception != null)
+                if (data.Exception !== null)
                     me.$reportAreaContainer.find(".Page").reportRender("WriteError", data);
                 else {
                     me.sessionID = data.SessionID;
@@ -442,14 +442,14 @@ $(function () {
         },
         Find: function (keyword,startPage, endPage) {
             var me = this;
-            if (keyword == '') return;
+            if (keyword === "") return;
 
-            if (me.findKeyword == null || me.findKeyword != keyword) { me.findKeyword = keyword; me.findStart = null; }
+            if (me.findKeyword === null || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStart = null; }
 
-            if (startPage == null) startPage = me.getCurPage();
-            if (endPage == null) endPage = me.getNumPages();
+            if (startPage === null) startPage = me.getCurPage();
+            if (endPage === null) endPage = me.getNumPages();
 
-            if (me.findStart == null) me.findStart = startPage;
+            if (me.findStart === null) me.findStart = startPage;
 
             $.getJSON(me.options.ReportViewerAPI + "/FindString/", {
                 ReportServerURL: me.options.ReportServerURL,
@@ -458,9 +458,9 @@ $(function () {
                 EndPage: endPage,
                 FindValue: keyword
             }).done(function (data) {
-                if (data.NewPage != 0) {
+                if (data.NewPage !== 0) {
                     me.finding = true;
-                    if (data.NewPage != me.curPage) {
+                    if (data.NewPage !== me.curPage) {
                         me.options.SetPageDone = function () { me.SetFindHighlight(keyword); };
                         me.pages[data.NewPage] = null;
                         me.LoadPage(data.NewPage, false);
@@ -469,7 +469,7 @@ $(function () {
                     }
                 }
                 else {
-                    if (me.finding == true) {
+                    if (me.finding === true) {
                         alert(messages.completeFind);
                         me.ResetFind();
                     }
@@ -481,15 +481,15 @@ $(function () {
         },
         FindNext: function (keyword) {
             var me = this;
-            $(".Find-Keyword").filter('.Find-Highlight').first().removeClass("Find-Highlight");
+            $(".Find-Keyword").filter(".Find-Highlight").first().removeClass("Find-Highlight");
 
-            var $NextWord = $(".Find-Keyword").filter('.Unread').first();
+            var $NextWord = $(".Find-Keyword").filter(".Unread").first();
             if ($NextWord.length > 0) {
                 $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
                 $(document).scrollTop($NextWord.offset().top - 100);
             }
             else {
-                if (me.getNumPages() == 1) {
+                if (me.getNumPages() === 1) {
                     alert(messages.completeFind);
                     me.ResetFind();
                     return;
@@ -511,7 +511,7 @@ $(function () {
             me.$reportContainer.highLightWord(keyword);
 
             //Highlight the first match.
-            var $item = $(".Find-Keyword").filter('.Unread').first();
+            var $item = $(".Find-Keyword").filter(".Unread").first();
             $item.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
 
             $(document).scrollTop($item.offset().top - 100);
@@ -554,17 +554,17 @@ $(function () {
         },
         ShowParameters: function (pageNum, data) {
             var me = this;
-            if (data.Type == "Parameters") {
+            if (data.Type === "Parameters") {
                 me.RemoveParameters();
                
                 var $ParamArea = me.options.ParamArea;
-                if ($ParamArea != null) {
-                    me._trigger('showparamarea');
+                if ($ParamArea !== null) {
+                    me._trigger("showparamarea");
                     $ParamArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }
             }
-            else if (data.Exception != null) {
+            else if (data.Exception !== null) {
                 me.$reportContainer.reportRender({ ReportViewer: this });
                 me.$reportContainer.reportRender("WriteError", data);
                 me.RemoveLoadingIndicator();
@@ -575,9 +575,9 @@ $(function () {
         },
         RemoveParameters: function () {
             var me = this;
-            if (me.paramLoaded == true) {
+            if (me.paramLoaded === true) {
                 var $ParamArea = me.options.ParamArea;
-                if ($ParamArea != null) {
+                if ($ParamArea !== null) {
                     $ParamArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
                 }
@@ -586,18 +586,18 @@ $(function () {
         LoadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
-            if (flushCache != null && flushCache)
+            if (flushCache !== null && flushCache)
                 me.flushCache();
 
-            if (me.pages[newPageNum] != null)
-                if (me.pages[newPageNum].$Container != null) {
+            if (me.pages[newPageNum] !== null)
+                if (me.pages[newPageNum].$Container !== null) {
                     if (!loadOnly) {
                         me.SetPage(newPageNum);
                         me.CachePages(newPageNum);
                     }
                     return;
                 }
-            if (paramList == null) paramList = "";
+            if (paramList === null) paramList = "";
 
             if (!loadOnly) {
                 me.AddLoadingIndicator();
@@ -614,7 +614,7 @@ $(function () {
             .done(function (data) {
                 me.WritePage(data, newPageNum, loadOnly);
                 me.lock = 0;
-                if (bookmarkID != null)
+                if (bookmarkID !== null)
                     me.NavToLink(bookmarkID);
 
                 if (!loadOnly) me.CachePages(newPageNum);
@@ -627,22 +627,22 @@ $(function () {
             $Report.addClass("Page");
 
             //Error, need to handle this better
-            if (data == null) return;
+            if (data === null) return;
 
             $Report.reportRender({ ReportViewer: me });
 
-            if (me.pages[newPageNum] == null)
+            if (me.pages[newPageNum] === null)
                 me.pages[newPageNum] = new ReportPage($Report, data);
             else {
                 me.pages[newPageNum].$Container = $Report;
                 me.pages[newPageNum].ReportObj = data;
             }
 
-            if (data.SessionID == null)
+            if (data.SessionID === null)
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.NumPages == null)
+            if (data.NumPages === null)
                 me.numPages = 0;
             else
                 me.numPages = data.NumPages;
@@ -656,11 +656,11 @@ $(function () {
         RenderPage: function (pageNum) {
             //Write Style
             var me = this;
-            if (me.pages[pageNum] != null && me.pages[pageNum].IsRendered == true)
+            if (me.pages[pageNum] !== null && me.pages[pageNum].IsRendered === true)
                 return;
 
-            if (me.pages[pageNum].ReportObj.Exception == null) {
-                if (me.$reportContainer.find(".DocMapPanel").length == 0 && me.pages[pageNum].ReportObj.Report.DocumentMap != null) {
+            if (me.pages[pageNum].ReportObj.Exception === null) {
+                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].ReportObj.Report.DocumentMap !== null) {
                     me.hasDocMap = true;
                     me.$reportContainer.reportDocumentMap({ reportViewer: me });
                     me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
@@ -676,13 +676,13 @@ $(function () {
         SessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
-            if (me.sessionID != null && me.sessionID != "")
+            if (me.sessionID !== null && me.sessionID !== "")
                 $.getJSON(me.options.ReportViewerAPI + "/PingSession/", {
                     ReportServerURL: me.options.ReportServerURL,
                     SessionID: me.sessionID
                 })
                 .done(function (data) {
-                    if (data.Status == "Fail") {
+                    if (data.Status === "Fail") {
                         me.sessionID = "";
                         alert(messages.sessionExpired);
                     }
@@ -703,10 +703,10 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (Index, Obj) {
-                if (Obj.$RowHeader != null) Obj.$RowHeader.hide();
-                if (Obj.$ColHeader != null) Obj.$ColHeader.hide();
+                if (Obj.$RowHeader !== null) Obj.$RowHeader.hide();
+                if (Obj.$ColHeader !== null) Obj.$ColHeader.hide();
             });
-            if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
+            if (me.$FloatingToolbar !== null) me.$FloatingToolbar.hide();
         },
         NavToLink: function (ElementID) {
             $(document).scrollTop($("#" + ElementID).offset().top - 85);
@@ -729,10 +729,10 @@ $(function () {
                                 });
 
             //Image size cannot change so do not load.
-            //$copiedElem.find('img').removeAttr('src');
-            //$copiedElem.find('img').removeAttr('onload');
-            //$copiedElem.find('img').removeAttr('alt');
-            $copiedElem.find('img').remove();
+            //$copiedElem.find("img").removeAttr("src");
+            //$copiedElem.find("img").removeAttr("onload");
+            //$copiedElem.find("img").removeAttr("alt");
+            $copiedElem.find("img").remove();
 
             $("body").append($copiedElem);
             height = $copiedElem.height() + "px";
@@ -745,14 +745,14 @@ $(function () {
         },
         _convertToMM: function (convertFrom) {
 
-            if (convertFrom == null)
+            if (convertFrom === null)
                 return 0;
 
             var unit = convertFrom.match(/\D+$/);  // get the existing unit
             var value = convertFrom.match(/\d+/);  // get the numeric component
 
-            if (unit.length == 1) unit = unit[0];
-            if (value.length == 1) value = value[0];
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
 
             switch (unit) {
                 case "px":
@@ -780,26 +780,26 @@ $(function () {
 jQuery.fn.extend({
     slideRightShow: function (delay) {
         return this.each(function () {
-            $(this).show('slide', { direction: 'right', easing: 'easeInCubic' }, delay);
+            $(this).show("slide", { direction: "right", easing: "easeInCubic" }, delay);
         });
     },
     slideLeftHide: function (delay) {
         return this.each(function () {
-            $(this).hide('slide', { direction: 'left', easing: 'easeOutCubic' }, delay);
+            $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
         });
     },
     slideRightHide: function (delay) {
         return this.each(function () {
-            $(this).hide('slide', { direction: 'right', easing: 'easeOutCubic' }, delay);
+            $(this).hide("slide", { direction: "right", easing: "easeOutCubic" }, delay);
         });
     },
     slideLeftShow: function (delay) {
         return this.each(function () {
-            $(this).show('slide', { direction: 'left', easing: 'easeInCubic' }, delay);
+            $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
     },
     highLightWord: function (keyword) {
-        if (keyword == undefined || keyword == "") {
+        if (keyword === undefined || keyword === "") {
             return;
         }
         else {
@@ -808,14 +808,14 @@ jQuery.fn.extend({
                 elt.normalize();
                 $.each($.makeArray(elt.childNodes), function (i, node) {
                     //nodetype=3 : text node
-                    if (node.nodeType == 3) {
+                    if (node.nodeType === 3) {
                         var searchnode = node;
                         var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
                         while (pos < searchnode.data.length) {
                             if (pos >= 0) {
-                                var spannode = document.createElement('span');
-                                spannode.className = 'Find-Keyword Unread';
+                                var spannode = document.createElement("span");
+                                spannode.className = "Find-Keyword Unread";
                                 var middlebit = searchnode.splitText(pos);
                                 var searchnode = middlebit.splitText(keyword.length);
                                 var middleclone = middlebit.cloneNode(true);

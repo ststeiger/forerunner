@@ -141,8 +141,8 @@
 
                 var $checkbox = new $("<Input type='checkbox' class='Parameter-Checkbox' name='" + param.Name + "' />");
 
-                if (me._hasDefaultValue(param))
-                    $checkbox.attr('checked', 'true');
+                //if (me._hasDefaultValue(param) && param.DefaultValues[0] == "")
+                //    $checkbox.attr('checked', 'true');
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") == "checked") {
@@ -229,8 +229,8 @@
                 case "String":
                     if (me._hasDefaultValue(param)) {
                         $control.val(param.DefaultValues[0]);
-                        if (param.Nullable=="True")
-                            $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
+                        //if (param.DefaultValues[0] == "")
+                        //    $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
                     }
                     break;
             }

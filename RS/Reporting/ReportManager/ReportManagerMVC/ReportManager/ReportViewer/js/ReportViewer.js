@@ -1,4 +1,12 @@
-﻿$(function () {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var messages = forerunner.ssr.constants.messages;
+    var navigateType = forerunner.ssr.constants.navigateType;
 
     // The Floating header object holds pointers to the tablix and its row and col header objects
     function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
@@ -7,7 +15,7 @@
         this.$ColHeader = $ColHeader;
     }
 
-    // The page object holds the data for each page   
+    // The page object holds the data for each page
     function ReportPage($Container, ReportObj) {
         this.ReportObj = ReportObj;
         this.$Container = $Container;
@@ -23,7 +31,7 @@
             ReportPath: null,
             PageNum: 1,
             PingInterval: 300000,
-            ParameterDiv: null,
+            //ParameterDiv: null,
             ToolbarHeight: 0,
             SetPageDone: null,
             PageNav: null,
@@ -40,43 +48,43 @@
             setInterval(function () { me.SessionPing(); }, this.options.PingInterval);
 
             // ReportState
-            me.ActionHistory = [];
-            me.CurPage = 0;
-            me.Pages = new Object();
-            me.SessionID = "";
-            me.NumPages = 0;
-            me.Lock = false;
-            me.$ReportContainer = new $("<DIV class='report-container'/>");
-            me.$ReportAreaContainer - null;
-            me.$LoadingIndicator = new $("<div class='loading-indicator'></div>").text("Loading...");
-            me.FloatingHeaders = [];
-            me.ParamLoaded = false;
-            me.ScrollTop = 0;
-            me.ScrollLeft = 0;
-            me.LoadLock = 0;
-            me.Finding = false;
-            me.FindStart = null;
-            me.HasDocMap = false;
-            me.TogglePageNum = 0;
-            me.FindKeyword = null;
-            me.element.append(me.$LoadingIndicator);
+            me.actionHistory = [];
+            me.curPage = 0;
+            me.pages = {};
+            me.sessionID = "";
+            me.numPages = 0;
+            me.lock = false;
+            me.$reportContainer = new $("<DIV class='report-container'/>");
+            me.$reportAreaContainer = null;
+            me.$loadingIndicator = new $("<div class='loading-indicator'></div>").text(messages.loading);
+            me.floatingHeaders = [];
+            me.paramLoaded = false;
+            me.scrollTop = 0;
+            me.scrollLeft = 0;
+            me.loadLock = 0;
+            me.finding = false;
+            me.findStart = null;
+            me.hasDocMap = false;
+            me.togglePageNum = 0;
+            me.findKeyword = null;
+            me.element.append(me.$loadingIndicator);
 
-            $(window).scroll(function () { me.UpdateTableHeaders(me) });
+            $(window).scroll(function () { me.UpdateTableHeaders(me); });
 
             //Log in screen if needed
 
-            //load the report Page requested  
-            me.element.append(me.$ReportContainer);
+            //load the report Page requested
+            me.element.append(me.$reportContainer);
             me.AddLoadingIndicator();
             me.LoadParameters(me.options.PageNum);
         },
         getCurPage: function () {
             var me = this;
-            return me.CurPage;
+            return me.curPage;
         },
         getNumPages: function () {
             var me = this;
-            return me.NumPages;
+            return me.numPages;
         },
         getReportViewerAPI: function () {
             var me = this;
@@ -92,104 +100,105 @@
         },
         getSessionID: function () {
             var me = this;
-            return me.SessionID;
+            return me.sessionID;
         },
         getHasDocMap: function () {
             var me = this;
-            return me.HasDocMap;
+            return me.hasDocMap;
         },
-        SetColHeaderOffset: function ($Tablix, $ColHeader) {
+        SetColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             var me = this;
-            if ($ColHeader == null)
+            if ($colHeader == null)
                 return;
 
-            offset = $Tablix.offset();
-            scrollLeft = $(window).scrollLeft();
-            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $Tablix.width())) {
-                //$ColHeader.css("top", $Tablix.offset.top);
-                $ColHeader.css("left", Math.min(scrollLeft - offset.left, $Tablix.width() - $ColHeader.width()) + "px");
-                $ColHeader.fadeIn('fast');
+            var offset = $tablix.offset();
+            var scrollLeft = $(window).scrollLeft();
+            if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $tablix.width())) {
+                //$colHeader.css("top", $tablix.offset.top);
+                $colHeader.css("left", Math.min(scrollLeft - offset.left, $tablix.width() - $colHeader.width()) + "px");
+                $colHeader.fadeIn('fast');
             }
             else {
-                $ColHeader.hide();
+                $colHeader.hide();
 
             }
         },
-        SetRowHeaderOffset: function ($Tablix, $RowHeader) {
+        SetRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
             var me = this;
-            if ($RowHeader == null)
+            if ($rowHeader == null)
                 return;
 
-            offset = $Tablix.offset();
-            scrollTop = $(window).scrollTop();
-            if ((scrollTop > offset.top) && (scrollTop < offset.top + $Tablix.height())) {
-                $RowHeader.css("top", (Math.min((scrollTop - offset.top), ($Tablix.height() - $RowHeader.height())) + me.options.ToolbarHeight) + "px");
-                $RowHeader.fadeIn('fast');
+            var offset = $tablix.offset();
+            var scrollTop = $(window).scrollTop();
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.ToolbarHeight) + "px");
+                $rowHeader.fadeIn('fast');
             }
             else {
-                $RowHeader.hide();
+                $rowHeader.hide();
             }
         },
         AddLoadingIndicator: function () {
             var me = this;
            
-            me.LoadLock = 1;
-            setTimeout(function () { me.ShowLoadingIndictator(me); }, 500);
+            me.loadLock = 1;
+            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
-        ShowLoadingIndictator: function (me) {
-            if (me.LoadLock == 1) {                
+        showLoadingIndictator: function (me) {
+            if (me.loadLock == 1) {
                 //212 is static value for loading indicator width
-                var scrollLeft = me.$ReportContainer.width() - 212;
+                var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$LoadingIndicator.css("top", me.$ReportContainer.scrollTop() + 100 + 'px')
+                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + 'px')
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + 'px');
 
-                me.$ReportContainer.css({ opacity: 0.5 });
-                me.$LoadingIndicator.show();
+                me.$reportContainer.css({ opacity: 0.5 });
+                me.$loadingIndicator.show();
             }
         },
         RemoveLoadingIndicator: function () {
             var me = this;
-            me.LoadLock = 0;
-            me.$ReportContainer.css({ opacity: 1 });
-            me.$LoadingIndicator.hide();
+            me.loadLock = 0;
+            me.$reportContainer.css({ opacity: 1 });
+            me.$loadingIndicator.hide();
         },
-        SetPage: function (NewPageNum) {
+        SetPage: function (PageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
 
-            if (!me.Pages[NewPageNum].IsRendered)
-                me.RenderPage(NewPageNum);
-            if (me.$ReportAreaContainer == null) {
-                me.$ReportAreaContainer = $("<Div/>");
-                me.$ReportAreaContainer.addClass("report-area-container");
-                me.$ReportContainer.append(me.$ReportAreaContainer);
-                me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
+            if (!me.pages[PageNum].IsRendered)
+                me.RenderPage(PageNum);
+            if (me.$reportAreaContainer == null) {
+                me.$reportAreaContainer = $("<Div/>");
+                me.$reportAreaContainer.addClass("report-area-container");
+                me.$reportContainer.append(me.$reportAreaContainer);
+                me.$reportAreaContainer.append(me.pages[PageNum].$Container);
                 me.touchNav();
-                me.Pages[NewPageNum].$Container.fadeIn();
+                me.pages[PageNum].$Container.fadeIn();
             }
             else {
-                me.$ReportAreaContainer.find(".Page").detach();
-                me.$ReportAreaContainer.append(me.Pages[NewPageNum].$Container);
+                me.$reportAreaContainer.find(".Page").detach();
+                me.$reportAreaContainer.append(me.pages[PageNum].$Container);
 
-                if (me.CurPage != null && me.CurPage > NewPageNum) {
-                    me.Pages[NewPageNum].$Container.show();
+                if (me.curPage != null && me.curPage > PageNum) {
+                    me.pages[PageNum].$Container.show();
                 } else {
-                    me.Pages[NewPageNum].$Container.show();
+                    me.pages[PageNum].$Container.show();
                 }
 
             }
                        
-            me.CurPage = NewPageNum;
-            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger('changepage', null, { newPageNum: NewPageNum, paramLoaded: me.ParamLoaded });
+            me.curPage = PageNum;
 
-            $(window).scrollLeft(me.ScrollLeft);
-            $(window).scrollTop(me.ScrollTop);
-            me.Lock = 0;
+            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             if (me.options.SetPageDone != null) me._trigger("SetPageDone");
+            me._trigger('changepage', null, { newPageNum: PageNum, paramLoaded: me.paramLoaded });
+
+            $(window).scrollLeft(me.scrollLeft);
+            $(window).scrollTop(me.scrollTop);
+            me.lock = 0;
         },
         touchNav: function () {
             // Touch Events
@@ -199,9 +208,9 @@
                 allowPageScroll: "auto",
                 swipe: function (e, dir) {
                     if (dir == 'left' || dir == 'up')
-                        me.NavToPage((me.CurPage + 1));
+                        me.NavToPage((me.curPage + 1));
                     else
-                        me.NavToPage((me.CurPage - 1));
+                        me.NavToPage((me.curPage - 1));
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase == "start")
@@ -216,33 +225,33 @@
         RefreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
-            me.SessionID = "";            
-            if (me.ParamLoaded == true) {
-                var $ParamArea = me.options.ParamArea;
-                me.LoadPage(1, false, null, $ParamArea.reportParameter("getParamsList"),true);
+            me.sessionID = "";
+            if (me.paramLoaded == true) {
+                var $paramArea = me.options.ParamArea;
+                me.LoadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);
             }
             else {
                 me.LoadPage(1, false,null,null,true);
             }
         },
-        NavToPage: function (NewPageNum) {
+        NavToPage: function (newPageNum) {
             var me = this;
-            if (NewPageNum == me.CurPage || me.Lock == 1)
+            if (newPageNum == me.curPage || me.lock == 1)
                 return;
 
-            me.ScrollLeft = 0;
-            me.ScrollTop = 0;
+            me.scrollLeft = 0;
+            me.scrollTop = 0;
 
-            if (NewPageNum > me.NumPages) {
-                NewPageNum = 1;
+            if (newPageNum > me.numPages) {
+                newPageNum = 1;
             }
-            if (NewPageNum < 1) {
-                NewPageNum = me.NumPages;
+            if (newPageNum < 1) {
+                newPageNum = me.numPages;
             }
-            if (NewPageNum != me.CurPage) {
-                if (me.Lock == 0) {
-                    me.Lock = 1;
-                    me.LoadPage(NewPageNum, false);
+            if (newPageNum != me.curPage) {
+                if (me.lock == 0) {
+                    me.lock = 1;
+                    me.LoadPage(newPageNum, false);
                 }
             }
         },
@@ -252,36 +261,36 @@
                     $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
                 });
         },
-        CachePages: function (InitPage) {
+        CachePages: function (initPage) {
             var me = this;
              
-            var low = InitPage - 1;
-            var high = InitPage + 1;
+            var low = initPage - 1;
+            var high = initPage + 1;
             if (low < 1) low = 1;
-            if (high > me.NumPages) high = me.NumPages;
+            if (high > me.numPages) high = me.numPages;
 
             for (var i = low; i <= high; i++)
-                if (me.Pages[i] == null)
-                    if (i != InitPage)
+                if (me.pages[i] == null)
+                    if (i != initPage)
                         me.LoadPage(i, true);
 
-        },      
+        },
         Back: function () {
             var me = this;
-            var action = me.ActionHistory.pop();
+            var action = me.actionHistory.pop();
             if (action != undefined) {
                 
                 me.options.ReportPath = action.ReportPath;
-                me.SessionID = action.SessionID;
-                me.ScrollLeft = action.ScrollLeft;
-                me.ScrollTop = action.ScrollTop;
+                me.sessionID = action.SessionID;
+                me.scrollLeft = action.ScrollLeft;
+                me.scrollTop = action.ScrollTop;
                 
                 me._trigger('drillback');
                 me.RemoveParameters();
                 me.LoadPage(action.CurrentPage, false,null,null,true);
             }
             else {
-                me._trigger('back', null, {path: me.options.ReportPath});
+                me._trigger('back', null, { path: me.options.ReportPath });
             }
         },
         ShowNav: function () {
@@ -290,114 +299,115 @@
                 me.options.PageNav.pagenav('showNav');
             }
         },
-        FlushCache: function () {
+        flushCache: function () {
             var me = this;
-            me.Pages = new Object();
+            me.pages = {};
             if (me.options.PageNav != null)
                 me.options.PageNav.pagenav('reset');
         },
         _PrepareAction: function () {
             var me = this;
 
-            if (me.TogglePageNum != me.CurPage || me.TogglePageNum  == 0) {
+            if (me.togglePageNum != me.curPage || me.togglePageNum  == 0) {
                 $.ajax({
                     url: me.options.ReportViewerAPI + "/GetReportJSON/",
                     data: {
                         ReportServerURL: me.options.ReportServerURL,
                         ReportPath: me.options.ReportPath,
-                        SessionID: me.SessionID,
-                        PageNumber: me.CurPage,
+                        SessionID: me.sessionID,
+                        PageNumber: me.curPage,
                         ParameterList: ""
                     },
                     dataType: 'json',
                     async: false,
                     success: function (data) {
-                        me.TogglePageNum = me.CurPage;
+                        me.togglePageNum = me.curPage;
                     },
                     fail: function () { alert("Fail"); }
                 });
             }
         },
-        Sort: function (Direction, ID) {
+        Sort: function (direction, id) {
             //Go the other dirction from current
             var me = this;
             var newDir;
-            if (Direction == "Ascending")
-                newDir = "Descending";
+            var sortDirection = forerunner.ssr.constants.sortDirection;
+
+            if (direction == sortDirection.asc)
+                newDir = sortDirection.desc;
             else
-                newDir = "Ascending";
+                newDir = sortDirection.asc;
 
             $.getJSON(me.options.ReportViewerAPI + "/SortReport/", {
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                SortItem: ID,
+                SessionID: me.sessionID,
+                SortItem: id,
                 Direction: newDir
-            }).done(function (Data) {
-                me.NumPages = Data.NumPages;
-                me.LoadPage((Data.NewPage), false,null,null,true );
+            }).done(function (data) {
+                me.numPages = data.NumPages;
+                me.LoadPage((data.NewPage), false,null,null,true );
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        ToggleItem: function (ToggleID) {
+        ToggleItem: function (toggleID) {
             var me = this;
-            me.ToggleID = ToggleID;
+            me.ToggleID = toggleID;
             me._PrepareAction();
 
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
-                NavType: "toggle",
+                NavType: navigateType.toggle,
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                UniqueID: ToggleID
-            }).done(function (Data) {
-                if (Data.Result == true) {
-                    //var pc = me.Pages[me.CurPage];
-                    //pc.$Container.detach();
-                    me.ScrollLeft = $(window).scrollLeft();
-                    me.ScrollTop = $(window).scrollTop();
+                SessionID: me.sessionID,
+                UniqueID: toggleID
+            }).done(function (data) {
+                if (data.Result == true) {
+                    me.scrollLeft = $(window).scrollLeft();
+                    me.scrollTop = $(window).scrollTop();
 
-                    me.Pages[me.CurPage] = null;
-                    me.LoadPage(me.CurPage, false);
+                    me.pages[me.curPage] = null;
+                    me.LoadPage(me.curPage, false);
                 }
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        NavigateBookmark: function (BookmarkID) {
+        NavigateBookmark: function (bookmarkID) {
             var me = this;
             me._PrepareAction();
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
-                NavType: "bookmark",
+                NavType: navigateType.bookmark,
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                UniqueID: BookmarkID
-            }).done(function (Data) {
-                if (Data.NewPage == me.CurPage) {
-                   me.NavToLink(BookmarkID);
+                SessionID: me.sessionID,
+                UniqueID: bookmarkID
+            }).done(function (data) {
+                if (data.NewPage == me.curPage) {
+                    me.NavToLink(bookmarkID);
                 } else {
                     me.BackupCurPage();
-                    me.LoadPage(Data.NewPage, false, BookmarkID);
+                    me.LoadPage(data.NewPage, false, bookmarkID);
                 }
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        NavigateDrillthrough: function (DrillthroughID) {
+        NavigateDrillthrough: function (drillthroughID) {
             var me = this;
             me._PrepareAction();
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
-                NavType: "drillthrough",
+                NavType: navigateType.drillThrough,
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                UniqueID: DrillthroughID
-            }).done(function (Data) {
+                SessionID: me.sessionID,
+                UniqueID: drillthroughID
+            }).done(function (data) {
                 me.BackupCurPage();
-                if (Data.Exception != null)
-                    me.$ReportAreaContainer.find(".Page").reportRender("WriteError", Data);
+                if (data.Exception != null)
+                    me.$reportAreaContainer.find(".Page").reportRender("WriteError", data);
                 else {
-                    me.SessionID = Data.SessionID;
-                    me.options.ReportPath = Data.ReportPath;
-                    if (Data.ParametersRequired) {
-                        me.$ReportAreaContainer.find(".Page").detach();
+                    me.sessionID = data.SessionID;
+                    me.options.ReportPath = data.ReportPath;
+                    
+                    if (data.ParametersRequired) {
+                        me.$reportAreaContainer.find(".Page").detach();
                         me.SetScrollLocation(0, 0);
-                        me.ShowParameters(1, Data.Parameters);
+                        me.ShowParameters(1, data.Parameters);
                     }
                     else {
                         me.SetScrollLocation(0, 0);
@@ -408,69 +418,68 @@
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        NavigateDocumentMap: function (DocumentMapID) {
+        NavigateDocumentMap: function (docMapID) {
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
-                NavType: "documentMap",
+                NavType: navigateType.docMap,
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                UniqueID: DocumentMapID
-            }).done(function (Data) {
+                SessionID: me.sessionID,
+                UniqueID: docMapID
+            }).done(function (data) {
                 me.BackupCurPage();
-                me.LoadPage(Data.NewPage, false, null);                
+                me.LoadPage(data.NewPage, false, null);
             })
            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
         BackupCurPage: function () {
             var me = this;
-
-            me.ActionHistory.push({ ReportPath: me.options.ReportPath, SessionID: me.SessionID, CurrentPage: me.CurPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
+            me.actionHistory.push({ ReportPath: me.options.ReportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
         },
         SetScrollLocation: function (top, left) {
             var me = this;
-            me.ScrollLeft = left;
-            me.ScrollTop = top;
+            me.scrollLeft = left;
+            me.scrollTop = top;
         },
-        Find: function (Keyword,StartPage, EndPage) {
-            var me = this;            
-            if (Keyword == '') return;
+        Find: function (keyword,startPage, endPage) {
+            var me = this;
+            if (keyword == '') return;
 
-            if (me.FindKeyword == null || me.FindKeyword != Keyword) { me.FindKeyword = Keyword; me.FindStart = null; }
+            if (me.findKeyword == null || me.findKeyword != keyword) { me.findKeyword = keyword; me.findStart = null; }
 
-            if (StartPage == null) StartPage = me.getCurPage();
-            if (EndPage == null) EndPage = me.getNumPages();
+            if (startPage == null) startPage = me.getCurPage();
+            if (endPage == null) endPage = me.getNumPages();
 
-            if (me.FindStart == null) me.FindStart = StartPage;
+            if (me.findStart == null) me.findStart = startPage;
 
             $.getJSON(me.options.ReportViewerAPI + "/FindString/", {
                 ReportServerURL: me.options.ReportServerURL,
-                SessionID: me.SessionID,
-                StartPage: StartPage,
-                EndPage: EndPage,
-                FindValue: Keyword
-            }).done(function (Data) {
-                if (Data.NewPage != 0) {
-                    me.Finding = true;
-                    if (Data.NewPage != me.CurPage) {
-                        me.options.SetPageDone = function () { me.SetFindHighlight(Keyword) };
-                        me.Pages[Data.NewPage] = null;
-                        me.LoadPage(Data.NewPage, false);
+                SessionID: me.sessionID,
+                StartPage: startPage,
+                EndPage: endPage,
+                FindValue: keyword
+            }).done(function (data) {
+                if (data.NewPage != 0) {
+                    me.finding = true;
+                    if (data.NewPage != me.curPage) {
+                        me.options.SetPageDone = function () { me.SetFindHighlight(keyword); };
+                        me.pages[data.NewPage] = null;
+                        me.LoadPage(data.NewPage, false);
                     } else {
-                        me.SetFindHighlight(Keyword);
+                        me.SetFindHighlight(keyword);
                     }
                 }
                 else {
-                    if (me.Finding == true) {
-                        alert('The entire report has been searched.');
+                    if (me.finding == true) {
+                        alert(messages.completeFind);
                         me.ResetFind();
                     }
                     else
-                        alert('Keyword not found');
+                        alert(messages.keyNotFound);
                 }
             })
           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        FindNext: function (Keyword) {
+        FindNext: function (keyword) {
             var me = this;
             $(".Find-Keyword").filter('.Find-Highlight').first().removeClass("Find-Highlight");
 
@@ -481,211 +490,211 @@
             }
             else {
                 if (me.getNumPages() == 1) {
-                    alert('The entire report has been searched.');
+                    alert(messages.completeFind);
                     me.ResetFind();
                     return;
                 }
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
-                    me.Find(Keyword, me.getCurPage() + 1);
-                else if (me.FindStart > 1)
-                    me.Find(Keyword, 1, me.FindStart - 1);
+                    me.Find(keyword, me.getCurPage() + 1);
+                else if (me.findStart > 1)
+                    me.Find(keyword, 1, me.findStart - 1);
                 else {
-                    alert('The entire report has been searched.');
+                    alert(messages.completeFind);
                     me.ResetFind();
                 }
             }
         },
-        SetFindHighlight: function (Keyword) {
+        SetFindHighlight: function (keyword) {
             var me = this;
-
             $(me).clearHighLightWord();
-            me.$ReportContainer.highLightWord(Keyword);
+            me.$reportContainer.highLightWord(keyword);
 
             //Highlight the first match.
-            var $item = $(".Find-Keyword").filter('.Unread').first()            
+            var $item = $(".Find-Keyword").filter('.Unread').first();
             $item.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
 
             $(document).scrollTop($item.offset().top - 100);
-            //if (me.Finding == true) me.Finding = false;
         },
         ResetFind: function () {
             var me = this;
-            me.Finding = false;
-            me.FindStart = null;
-            me.FindKeyword = null;
+            me.finding = false;
+            me.findStart = null;
+            me.findKeyword = null;
         },
         ShowExport: function () {
             if ($(".Export-Panel").is(":hidden")) {
                 var $Export = $(".fr-button-export").filter(":visible");
-                $(".Export-Panel").css("left", $Export.offset().left).css("top", $Export.offset().top + $Export.height() + 10);
+                $(".Export-Panel").css("left", $Export.offset().left);
             }
             $(".Export-Panel").toggle();
         },
-        Export: function (ExportType) {
+        Export: function (exportType) {
             var me = this;
             $(".Export-Panel").toggle();
-            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + ExportType;
+            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
 
         //Page Loading
-        LoadParameters: function (PageNum) {
+        LoadParameters: function (pageNum) {
             var me = this;
             $.getJSON(me.options.ReportViewerAPI + "/GetParameterJSON/", {
                 ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath
             })
-           .done(function (Data) {
-               me.ShowParameters(PageNum, Data);
+           .done(function (data) {
+               me.AddLoadingIndicator();
+               me.ShowParameters(pageNum, data);
            })
            .fail(function () {
                console.log("error");
                me.RemoveLoadingIndicator();
-           })
+           });
         },
-        ShowParameters: function (PageNum, Data) {
+        ShowParameters: function (pageNum, data) {
             var me = this;
-            if (Data.Type == "Parameters") {
+            if (data.Type == "Parameters") {
                 me.RemoveParameters();
-                $ParamArea = me.options.ParamArea;
+               
+                var $ParamArea = me.options.ParamArea;
                 if ($ParamArea != null) {
                     me._trigger('showparamarea');
-                    $ParamArea.reportParameter("writeParameterPanel", Data, me, PageNum, false);
-                    me.ParamLoaded = true;
+                    $ParamArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
+                    me.paramLoaded = true;
                 }
             }
-            else if (Data.Exception != null) {
-                me.$ReportContainer.reportRender({ ReportViewer: this });
-                me.$ReportContainer.reportRender("WriteError", Data);
+            else if (data.Exception != null) {
+                me.$reportContainer.reportRender({ ReportViewer: this });
+                me.$reportContainer.reportRender("WriteError", data);
                 me.RemoveLoadingIndicator();
             }
             else {
-                me.LoadPage(PageNum, false);
+                me.LoadPage(pageNum, false);
             }
         },
         RemoveParameters: function () {
             var me = this;
-            if (me.ParamLoaded == true) {
-                $ParamArea = me.options.ParamArea;
+            if (me.paramLoaded == true) {
+                var $ParamArea = me.options.ParamArea;
                 if ($ParamArea != null) {
                     $ParamArea.reportParameter("removeParameter");
-                    me.ParamLoaded = false;
+                    me.paramLoaded = false;
                 }
             }
         },
-        LoadPage: function (NewPageNum, LoadOnly, BookmarkID, ParameterList,FlushCache) {
+        LoadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
-           
-            if (FlushCache != null && FlushCache)
-                me.FlushCache();
 
-            if (me.Pages[NewPageNum] != null)
-                if (me.Pages[NewPageNum].$Container != null) {
-                    if (!LoadOnly) {
-                        me.SetPage(NewPageNum);
-                        me.CachePages(NewPageNum);
+            if (flushCache != null && flushCache)
+                me.flushCache();
+
+            if (me.pages[newPageNum] != null)
+                if (me.pages[newPageNum].$Container != null) {
+                    if (!loadOnly) {
+                        me.SetPage(newPageNum);
+                        me.CachePages(newPageNum);
                     }
                     return;
                 }
-            if (ParameterList == null) ParameterList = "";
-            
-            if (!LoadOnly) {
+            if (paramList == null) paramList = "";
+
+            if (!loadOnly) {
                 me.AddLoadingIndicator();
             }
-            me.TogglePageNum = NewPageNum;
-            me.Lock = 1;
+            me.togglePageNum = newPageNum;
+            me.lock = 1;
             $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
                 ReportServerURL: me.options.ReportServerURL,
                 ReportPath: me.options.ReportPath,
-                SessionID: me.SessionID,
-                PageNumber: NewPageNum,
-                ParameterList: ParameterList
+                SessionID: me.sessionID,
+                PageNumber: newPageNum,
+                ParameterList: paramList
             })
-            .done(function (Data) {
-                me.WritePage(Data, NewPageNum, LoadOnly);
-                me.Lock = 0;
-                if (BookmarkID != null)
-                    me.NavToLink(BookmarkID);
+            .done(function (data) {
+                me.WritePage(data, newPageNum, loadOnly);
+                me.lock = 0;
+                if (bookmarkID != null)
+                    me.NavToLink(bookmarkID);
 
-                if (!LoadOnly) me.CachePages(NewPageNum);
+                if (!loadOnly) me.CachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
         },
-        WritePage: function (Data, NewPageNum, LoadOnly) {
+        WritePage: function (data, newPageNum, loadOnly) {
             var me = this;
             var $Report = $("<Div/>");
             $Report.addClass("Page");
 
             //Error, need to handle this better
-            if (Data == null) return;
+            if (data == null) return;
 
             $Report.reportRender({ ReportViewer: me });
 
-            if (me.Pages[NewPageNum] == null)
-                me.Pages[NewPageNum] = new ReportPage($Report, Data);
+            if (me.pages[newPageNum] == null)
+                me.pages[newPageNum] = new ReportPage($Report, data);
             else {
-                me.Pages[NewPageNum].$Container = $Report;
-                me.Pages[NewPageNum].ReportObj = Data;
+                me.pages[newPageNum].$Container = $Report;
+                me.pages[newPageNum].ReportObj = data;
             }
 
-            if (Data.SessionID == null)
-                me.SessionID = "";
+            if (data.SessionID == null)
+                me.sessionID = "";
             else
-                me.SessionID = Data.SessionID;
-            if (Data.NumPages == null)
-                me.NumPages = 0
+                me.sessionID = data.SessionID;
+            if (data.NumPages == null)
+                me.numPages = 0;
             else
-                me.NumPages = Data.NumPages;
+                me.numPages = data.NumPages;
        
-            if (!LoadOnly) {
-                me.RenderPage(NewPageNum);
+            if (!loadOnly) {
+                me.RenderPage(newPageNum);
                 me.RemoveLoadingIndicator();
-                me.SetPage(NewPageNum);
+                me.SetPage(newPageNum);
             }
         },
         RenderPage: function (pageNum) {
             //Write Style
             var me = this;
-            if (me.Pages[pageNum] != null && me.Pages[pageNum].IsRendered == true)
+            if (me.pages[pageNum] != null && me.pages[pageNum].IsRendered == true)
                 return;
 
-            if (me.Pages[pageNum].ReportObj.Exception == null) {
-                if (me.$ReportContainer.find(".DocMapPanel").length == 0 && me.Pages[pageNum].ReportObj.Report.DocumentMap != null) {
-                    me.HasDocMap = true;
-                    me.$ReportContainer.reportDocumentMap({ reportViewer: me });
-                    me.$ReportContainer.reportDocumentMap("writeDocumentMap", pageNum);
+            if (me.pages[pageNum].ReportObj.Exception == null) {
+                if (me.$reportContainer.find(".DocMapPanel").length == 0 && me.pages[pageNum].ReportObj.Report.DocumentMap != null) {
+                    me.hasDocMap = true;
+                    me.$reportContainer.reportDocumentMap({ reportViewer: me });
+                    me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
                 }
 
-                me.Pages[pageNum].$Container.reportRender("Render", me.Pages[pageNum].ReportObj);
+                me.pages[pageNum].$Container.reportRender("Render", me.pages[pageNum].ReportObj);
             }
             else
-                me.Pages[pageNum].$Container.reportRender("WriteError", me.Pages[pageNum].ReportObj);
-            me.Pages[pageNum].IsRendered = true;
+                me.pages[pageNum].$Container.reportRender("WriteError", me.pages[pageNum].ReportObj);
+            me.pages[pageNum].IsRendered = true;
         },
                 
         SessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
-            if (me.SessionID != null && me.SessionID != "")
+            if (me.sessionID != null && me.sessionID != "")
                 $.getJSON(me.options.ReportViewerAPI + "/PingSession/", {
                     ReportServerURL: me.options.ReportServerURL,
-                    SessionID: me.SessionID
+                    SessionID: me.sessionID
                 })
-                .done(function (Data) {
-                    if (Data.Status == "Fail") {
-                        me.SessionID = "";
-                        alert("Your session has expired");                        
+                .done(function (data) {
+                    if (data.Status == "Fail") {
+                        me.sessionID = "";
+                        alert(messages.sessionExpired);
                     }
                 })
-                .fail(function () { console.log("error"); })
+                .fail(function () { console.log("error"); });
 
         },
         UpdateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
 
-            $.each(me.FloatingHeaders, function (Index, Obj) {
+            $.each(me.floatingHeaders, function (Index, Obj) {
                 me.SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader);
                 me.SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader);
             });
@@ -693,14 +702,14 @@
         HideTableHeaders: function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
-            $.each(me.FloatingHeaders, function (Index, Obj) {
+            $.each(me.floatingHeaders, function (Index, Obj) {
                 if (Obj.$RowHeader != null) Obj.$RowHeader.hide();
                 if (Obj.$ColHeader != null) Obj.$ColHeader.hide();
             });
             if (me.$FloatingToolbar != null) me.$FloatingToolbar.hide();
         },
         NavToLink: function (ElementID) {
-            $(this).scrollTop($("#" + ElementID).offset().top - 85);
+            $(document).scrollTop($("#" + ElementID).offset().top - 85);
         },
         StopDefaultEvent: function (e) {
             //IE
@@ -711,36 +720,36 @@
                 e.stopPropagation();
             }
         },
-        _GetHeight: function ($Obj) {
+        _getHeight: function ($Obj) {
             var height;
 
-            var $copied_elem = $Obj.clone()
+            var $copiedElem = $Obj.clone()
                                 .css({
                                     visibility: "hidden"
                                 });
 
             //Image size cannot change so do not load.
-            //$copied_elem.find('img').removeAttr('src');
-            //$copied_elem.find('img').removeAttr('onload');
-            //$copied_elem.find('img').removeAttr('alt');
-            $copied_elem.find('img').remove();
+            //$copiedElem.find('img').removeAttr('src');
+            //$copiedElem.find('img').removeAttr('onload');
+            //$copiedElem.find('img').removeAttr('alt');
+            $copiedElem.find('img').remove();
 
-            $("body").append($copied_elem);
-            height = $copied_elem.height() + "px";
+            $("body").append($copiedElem);
+            height = $copiedElem.height() + "px";
 
-            $copied_elem.remove();
+            $copiedElem.remove();
 
             //Return in mm
-            return this._ConvertToMM(height);
+            return this._convertToMM(height);
 
         },
-        _ConvertToMM: function (ConvertFrom) {
+        _convertToMM: function (convertFrom) {
 
-            if (ConvertFrom == null)
+            if (convertFrom == null)
                 return 0;
 
-            var unit = ConvertFrom.match(/\D+$/);  // get the existing unit
-            var value = ConvertFrom.match(/\d+/);  // get the numeric component
+            var unit = convertFrom.match(/\D+$/);  // get the existing unit
+            var value = convertFrom.match(/\d+/);  // get the numeric component
 
             if (unit.length == 1) unit = unit[0];
             if (value.length == 1) value = value[0];
@@ -748,22 +757,16 @@
             switch (unit) {
                 case "px":
                     return value / 3.78;
-                    break;
                 case "pt":
                     return value * 0.352777777778;
-                    break;
                 case "in":
                     return value * 25.4;
-                    break;
                 case "mm":
                     return value;
-                    break;
                 case "cm":
                     return value * 10;
-                    break;
                 case "em":
                     return value * 4.2175176;
-                    break;
             }
 
             //This is an error
@@ -795,26 +798,26 @@ jQuery.fn.extend({
             $(this).show('slide', { direction: 'left', easing: 'easeInCubic' }, delay);
         });
     },
-    highLightWord: function (Keyword) {
-        if (Keyword == undefined || Keyword == "") {
+    highLightWord: function (keyword) {
+        if (keyword == undefined || keyword == "") {
             return;
         }
         else {
             $(this).each(function () {
-                elt = $(this).get(0);
+                var elt = $(this).get(0);
                 elt.normalize();
                 $.each($.makeArray(elt.childNodes), function (i, node) {
                     //nodetype=3 : text node
                     if (node.nodeType == 3) {
                         var searchnode = node;
-                        var pos = searchnode.data.toUpperCase().indexOf(Keyword.toUpperCase());
+                        var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
 
                         while (pos < searchnode.data.length) {
                             if (pos >= 0) {
                                 var spannode = document.createElement('span');
                                 spannode.className = 'Find-Keyword Unread';
                                 var middlebit = searchnode.splitText(pos);
-                                var searchnode = middlebit.splitText(Keyword.length);
+                                var searchnode = middlebit.splitText(keyword.length);
                                 var middleclone = middlebit.cloneNode(true);
                                 spannode.appendChild(middleclone);
                                 searchnode.parentNode.replaceChild(spannode, middlebit);
@@ -823,14 +826,14 @@ jQuery.fn.extend({
                                 break;
                             }
 
-                            pos = searchnode.data.toUpperCase().indexOf(Keyword.toUpperCase());
+                            pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
                         }
                     }
                     else {
-                        $(node).highLightWord(Keyword);
+                        $(node).highLightWord(keyword);
                     }
-                })
-            })
+                });
+            });
         }
         return $(this);
     },

@@ -110,9 +110,7 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 path = "/";
             }
-            $("html").removeClass("Explorer-background");
-            $("body").removeClass("Explorer-background");
-
+            
             $('#mainSection').html(null);
             $viewerContainer = new $('<DIV id="FRReportViewer1"/>');
             $('#mainSection').append($viewerContainer);
@@ -145,6 +143,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#rightheaderspacer').height($('#topdiv').height());
             $('#leftheaderspacer').height($('#topdiv').height());
             me.appPageView.bindEvents();
+            $("html").removeClass("Explorer-background");
+            $("body").removeClass("Explorer-background");
         },
        
         toolbarHeight : function() {

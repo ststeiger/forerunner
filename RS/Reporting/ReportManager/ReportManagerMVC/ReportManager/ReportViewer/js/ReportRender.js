@@ -359,12 +359,14 @@ $(function () {
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
 
-                    if (LowIndex === null) LowIndex = Obj.Paragraph.SharedElements.ListLevel;
-                    if (ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] === undefined) ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
+                    if (LowIndex === null)
+                        LowIndex = Obj.Paragraph.SharedElements.ListLevel;
+                    if (!ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel])
+                        ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
                     ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
 
                     var item;
-                    if (ParentName[Obj.Paragraph.SharedElements.ListLevel - 1] === null)
+                    if (!ParentName[Obj.Paragraph.SharedElements.ListLevel - 1])
                         item = "Root";
                     else
                         item = ParentName[Obj.Paragraph.SharedElements.ListLevel - 1];
@@ -448,7 +450,7 @@ $(function () {
                         $ParagraphItem.append($TextRun);
                     }
             
-                    if (Paragraphs[Index + 1] !== null)
+                    if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
                     $ParagraphList.append($ParagraphItem);

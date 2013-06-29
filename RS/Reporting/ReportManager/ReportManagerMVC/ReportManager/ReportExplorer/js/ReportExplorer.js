@@ -7,7 +7,7 @@
             catalogItems: null,
             url: null,
             $scrollBarOwner: null,
-            navigateTo : null
+            navigateTo: null
         },
         _generateListItem: function (catalogItem) {
             var me = this;
@@ -31,7 +31,7 @@
             var $img = new $("<img />");
             $img.addClass("catalogitem");
             $img.addClass("center");
-            if (catalogItem.Type === "1") {
+            if (catalogItem.Type === 1) {
                 imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
@@ -42,7 +42,7 @@
                 }
             }
 
-            var action = catalogItem.Type === "1" ? "explore" : "browse";
+            var action = catalogItem.Type === 1 ? "explore" : "browse";
               
             $img.attr("src", imageSrc);
             $img.removeAttr("height");
@@ -57,13 +57,18 @@
         },
         _generatePCListItem: function (catalogItem) {
             var me = this;
+            var $selectedItem = null;
 
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
               + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
             var $item = new $("<div />");
+            if (catalogItem.Path === me.options.selectedItemPath) {
+                $item.addClass("fr-explorer-item-selected");
+                me.$selectedItem = $item;
+            }
             $item.addClass("fr-explorer-item");
-            $item.addClass("image-block");
+             $item.addClass("image-block");
             var $caption = new $("<div />");
             $caption.addClass("center");
             $item.append($caption);
@@ -77,7 +82,7 @@
             var $img = new $("<img />");
             $img.addClass("catalogitem");
             $img.addClass("center");
-            if (catalogItem.Type === "1") {
+            if (catalogItem.Type === 1) {
                 imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
@@ -88,7 +93,7 @@
                 }
             }
 
-            var action = catalogItem.Type === "1" ? "explore" : "browse";
+            var action = catalogItem.Type === 1 ? "explore" : "browse";
 
             $img.attr("src", imageSrc);
             $img.removeAttr("height");
@@ -104,7 +109,7 @@
 
             $anchor.append($img);
             $anchor.append($reflection);
-            $item.append($anchor);
+            $item.append($anchor);            
             return $item;
         },
         _renderList: function () {
@@ -161,9 +166,12 @@
                                 "</div>");
                 me._renderPCView();
             }
-                
+            if (me.$selectedItem) {
+                $(window).scrollTop(me.$selectedItem.offset().top-50);  //This is a hack for now
+            }
         },
         _mobileUI: function () {
+            return false;
             if (screen.availWidth < 1224)
                 return true;
             else
@@ -263,6 +271,7 @@
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner !== null ? me.options.$scrollBarOwner : $(window);
             me._render();
+            me.$selectedItem = null;
         }
     });  // $.widget
 });  // function()

@@ -53,7 +53,7 @@ $(function () {
             me.pages = {};
             me.sessionID = "";
             me.numPages = 0;
-            me.lock = false;
+            me.lock = 0;
             me.$reportContainer = new $("<DIV class='report-container'/>");
             me.$reportAreaContainer = null;
             me.$loadingIndicator = new $("<div class='loading-indicator'></div>").text(messages.loading);
@@ -206,11 +206,12 @@ $(function () {
             $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
-                swipe: function (e, dir) {
-                    if (dir === "left" || dir === "up")
-                        me.NavToPage((me.curPage + 1));
+                swipe: function (event, direction, distance, duration, fingerCount) {
+                    alert(direction);
+                    if (direction === "left" || direction === "up")
+                        me.NavToPage(me.curPage + 1);
                     else
-                        me.NavToPage((me.curPage - 1));
+                        me.NavToPage(me.curPage - 1);
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
@@ -219,7 +220,8 @@ $(function () {
                 tap: function (event, target) {
                     $(target).trigger("click");
                 },
-               longTapThreshold: 1000,
+                longTapThreshold: 1000,
+                threshold: 0,
             });
         },
         RefreshReport: function () {
@@ -248,6 +250,7 @@ $(function () {
             if (newPageNum < 1) {
                 newPageNum = me.numPages;
             }
+            
             if (newPageNum !== me.curPage) {
                 if (me.lock === 0) {
                     me.lock = 1;
@@ -269,10 +272,11 @@ $(function () {
             if (low < 1) low = 1;
             if (high > me.numPages) high = me.numPages;
 
-            for (var i = low; i <= high; i++)
-                if (me.pages[i] === null)
+            for (var i = low; i <= high; i++) {
+                if (!me.pages[i])
                     if (i !== initPage)
                         me.LoadPage(i, true);
+            }
 
         },
         Back: function () {
@@ -302,7 +306,7 @@ $(function () {
         flushCache: function () {
             var me = this;
             me.pages = {};
-            if (me.options.PageNav !== null)
+            if (me.options.PageNav)
                 me.options.PageNav.pagenav("reset");
         },
         _PrepareAction: function () {
@@ -597,7 +601,7 @@ $(function () {
                     }
                     return;
                 }
-            if (me.isNull(paramList)) paramList = "";
+            if (!paramList) paramList = "";
 
             if (!loadOnly) {
                 me.AddLoadingIndicator();
@@ -614,7 +618,7 @@ $(function () {
             .done(function (data) {
                 me.WritePage(data, newPageNum, loadOnly);
                 me.lock = 0;
-                if (!me.isNull(bookmarkID))
+                if (bookmarkID)
                     me.NavToLink(bookmarkID);
 
                 if (!loadOnly) me.CachePages(newPageNum);

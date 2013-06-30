@@ -11,6 +11,7 @@ height:100%;
     display:inline-block;
     margin: 20px;
     cursor:pointer;
+
 }
 
 .fr-explorer-item-selected{    
@@ -52,13 +53,11 @@ height:100%;
 
 .catalogitem {
   width: 200px;
-  margin: 0 auto;
 }
 
 .reportitem {
   width:200px; 
   background-color: white;
- 
 }
 
 .fr-button-back {
@@ -91,14 +90,7 @@ height:100%;
     opacity:0.30;     
 
 } 
-.overlay { 
-    position:absolute; 
-    margin-top:5px;
-    top:0px; 
-    left:0px; 
-    width:200px; 
-    height:50px;   
-}
+
 
 /* Smartphones (landscape) ----------- */
 @media only screen 
@@ -120,6 +112,33 @@ and (orientation : landscape) {
 .rm-list {
   display: none;
 }
+
+.fr-explorer-item {
+    display:table-cell;
+    padding: 20px;
+    cursor:pointer;
+}
+.catalogitem {
+  width: 150px;
+}
+
+.reportitem {
+  width:150px; 
+  background-color: white;
+}
+.image-block { 
+    width:150px; 
+}
+
+
+.reflection { 
+    position:relative; 
+    margin-top: 3px;
+    height:35px; 
+    width:150px; 
+} 
+
+
 }
 
 /* Smartphones (portrait) ----------- */
@@ -143,7 +162,7 @@ and (orientation : portrait) {
   display: block;
 }
 .fr-explorer-item {
-    padding-left:30px;
+    margin-left:60px;
 }
 
 /* iPads (landscape) ----------- */
@@ -165,6 +184,7 @@ and (orientation : landscape) {
 .rm-list {
   display: none;
 }
+
 
 }
 

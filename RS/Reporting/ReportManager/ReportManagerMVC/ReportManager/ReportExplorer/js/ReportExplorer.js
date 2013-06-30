@@ -104,8 +104,7 @@
             });
             var $reflection = new $("<div />");
             $reflection.addClass("reflection");
-            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));
-            $reflection.append($("<div/>").addClass("overlay"));
+            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));          
 
             $anchor.append($img);
             $anchor.append($reflection);
@@ -166,8 +165,9 @@
                                 "</div>");
                 me._renderPCView();
             }
-            if (me.$selectedItem) {
-                $(window).scrollTop(me.$selectedItem.offset().top-50);  //This is a hack for now
+            if (me.$selectedItem) {                
+                $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
+                $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
             }
         },
         _mobileUI: function () {

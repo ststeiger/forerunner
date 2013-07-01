@@ -15,18 +15,18 @@
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
               + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
-            var $ListItem = new $("<li />");
-            $ListItem.addClass("center");
-            $ListItem.addClass("rm-list-container-item");
+            var $listItem = new $("<li />");
+            $listItem.addClass("center");
+            $listItem.addClass("rm-list-container-item");
             var $caption = new $("<div />");
             $caption.addClass("center");
-            $ListItem.append($caption);
+            $listItem.append($caption);
             var $captiontext = new $("<h3 />");
             $captiontext.addClass("centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
-            var targetUrl;
+            //var targetUrl;
             var $anchor = new $("<a />");
             var $img = new $("<img />");
             $img.addClass("catalogitem");
@@ -52,12 +52,12 @@
                 }
             });
             $anchor.append($img);
-            $ListItem.append($anchor);
-            return $ListItem;
+            $listItem.append($anchor);
+            return $listItem;
         },
         _generatePCListItem: function (catalogItem) {
             var me = this;
-            var $selectedItem = null;
+            //var $selectedItem = null;
 
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
@@ -77,7 +77,7 @@
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
-            var targetUrl;
+            //var targetUrl;
             var $anchor = new $("<a />");
             var $img = new $("<img />");
             $img.addClass("catalogitem");
@@ -104,11 +104,11 @@
             });
             var $reflection = new $("<div />");
             $reflection.addClass("reflection");
-            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));          
+            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));
 
             $anchor.append($img);
             $anchor.append($reflection);
-            $item.append($anchor);            
+            $item.append($anchor);
             return $item;
         },
         _renderList: function () {
@@ -161,11 +161,11 @@
                 me._renderList();
             }
             else {
-                me.element.html("<div class='fr-report-explorer'>" +                                
+                me.element.html("<div class='fr-report-explorer'>" +
                                 "</div>");
                 me._renderPCView();
             }
-            if (me.$selectedItem) {                
+            if (me.$selectedItem) {
                 $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
                 $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
             }
@@ -221,12 +221,12 @@
                 if (!me.$Carousel.is(":visible")) {
                     if (me.$explorer.scrollTop() === 0 && me.$UL.is(":visible"))
                         me._scrollList();
-                } 
+                }
             });
         },
         _setSelectionFromScroll: function () {
             var me = this;
-            var ulPosition = me.$UL.position().top;
+            //var ulPosition = me.$UL.position().top;
             var position = me.$explorer.scrollTop();
             var closest = 0;
             var closestDistance = Math.abs(position - me.rmListItems[0].position().top);

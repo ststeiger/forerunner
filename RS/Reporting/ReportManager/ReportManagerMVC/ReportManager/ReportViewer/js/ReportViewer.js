@@ -63,7 +63,7 @@ $(function () {
             me.scrollLeft = 0;
             me.loadLock = 0;
             me.finding = false;
-            me.findStart = null;
+            me.findStartPage = null;
             me.hasDocMap = false;
             me.togglePageNum = 0;
             me.findKeyword = null;
@@ -448,12 +448,12 @@ $(function () {
             var me = this;
             if (keyword === "") return;
 
-            if (me.findKeyword === null || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStart = null; }
+            if (me.findKeyword === null || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStartPage = null; }
 
-            if (startPage === null) startPage = me.getCurPage();
-            if (endPage === null) endPage = me.getNumPages();
+            if (startPage === undefined) startPage = me.getCurPage();
+            if (endPage === undefined) endPage = me.getNumPages();
 
-            if (me.findStart === null) me.findStart = startPage;
+            if (me.findStartPage === null) me.findStartPage = startPage;
 
             $.getJSON(me.options.ReportViewerAPI + "/FindString/", {
                 ReportServerURL: me.options.ReportServerURL,
@@ -465,11 +465,11 @@ $(function () {
                 if (data.NewPage !== 0) {
                     me.finding = true;
                     if (data.NewPage !== me.curPage) {
-                        me.options.SetPageDone = function () { me.SetFindHighlight(keyword); };
+                        me.options.SetPageDone = function () { me.setFindHighlight(keyword); };
                         me.pages[data.NewPage] = null;
                         me.LoadPage(data.NewPage, false);
                     } else {
-                        me.SetFindHighlight(keyword);
+                        me.setFindHighlight(keyword);
                     }
                 }
                 else {
@@ -487,7 +487,7 @@ $(function () {
             var me = this;
             $(".Find-Keyword").filter(".Find-Highlight").first().removeClass("Find-Highlight");
 
-            var $NextWord = $(".Find-Keyword").filter(".Unread").first();
+            var $NextWord = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
             if ($NextWord.length > 0) {
                 $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
                 $(document).scrollTop($NextWord.offset().top - 100);
@@ -501,21 +501,21 @@ $(function () {
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
                     me.Find(keyword, me.getCurPage() + 1);
-                else if (me.findStart > 1)
-                    me.Find(keyword, 1, me.findStart - 1);
+                else if (me.findStartPage > 1)
+                    me.Find(keyword, 1, me.findStartPage - 1);
                 else {
                     alert(messages.completeFind);
                     me.ResetFind();
                 }
             }
         },
-        SetFindHighlight: function (keyword) {
+        setFindHighlight: function (keyword) {
             var me = this;
             $(me).clearHighLightWord();
             me.$reportContainer.highLightWord(keyword);
 
             //Highlight the first match.
-            var $item = $(".Find-Keyword").filter(".Unread").first();
+            var $item = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
             $item.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
 
             $(document).scrollTop($item.offset().top - 100);
@@ -523,7 +523,7 @@ $(function () {
         ResetFind: function () {
             var me = this;
             me.finding = false;
-            me.findStart = null;
+            me.findStartPage = null;
             me.findKeyword = null;
         },
         ShowExport: function () {

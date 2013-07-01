@@ -216,7 +216,7 @@ $(function () {
 
             me.options.$reportViewer.reportViewer("getNumPages", curPage);
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
-                me.enableTools([me.itemDocumentMap]);
+                me.enableTools([itemDocumentMap]);
             else
                 me.disableTools([itemDocumentMap]);
 

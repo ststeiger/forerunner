@@ -30,7 +30,7 @@
             var me = this;
             var $cell;
             $cell = $(".DocMapItemContaienr");
-            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].ReportObj.Report.DocumentMap, 0));
+            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].reportObj.Report.DocumentMap, 0));
         },
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
@@ -61,7 +61,7 @@
             var $mapNode = new $("<A />");
             $mapNode.addClass("DocMap-Item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
-                me.options.reportViewer.NavigateDocumentMap(e.data.UniqueName);
+                me.options.reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
             $mapNode.hover(function () { $mapNode.addClass("DocMap-Item-Highlight"); }, function () { $mapNode.removeClass("DocMap-Item-Highlight"); });
             $docMap.append($mapNode);

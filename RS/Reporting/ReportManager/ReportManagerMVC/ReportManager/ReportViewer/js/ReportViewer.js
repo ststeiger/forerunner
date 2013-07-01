@@ -9,33 +9,33 @@ $(function () {
     var navigateType = forerunner.ssr.constants.navigateType;
 
     // The Floating header object holds pointers to the tablix and its row and col header objects
-    function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
-        this.$Tablix = $Tablix;
-        this.$RowHeader = $RowHeader;
-        this.$ColHeader = $ColHeader;
+    function floatingHeader($tablix, $rowHeader, $colHeader) {
+        this.$tablix = $tablix;
+        this.$rowHeader = $rowHeader;
+        this.$colHeader = $colHeader;
     }
 
     // The page object holds the data for each page
-    function ReportPage($Container, ReportObj) {
-        this.ReportObj = ReportObj;
-        this.$Container = $Container;
-        this.IsRendered = false;
+    function reportPage($container, reportObj) {
+        this.reportObj = reportObj;
+        this.$container = $container;
+        this.isRendered = false;
     }
 
     // report viewer widget
     $.widget("Forerunner.reportViewer", {
         // Default options
         options: {
-            ReportServerURL: null,
-            ReportViewerAPI: null,
-            ReportPath: null,
-            PageNum: 1,
-            PingInterval: 300000,
+            reportServerURL: null,
+            reportViewerAPI: null,
+            reportPath: null,
+            pageNum: 1,
+            pingInterval: 300000,
             //ParameterDiv: null,
-            ToolbarHeight: 0,
-            SetPageDone: null,
-            PageNav: null,
-            ParamArea: null
+            toolbarHeight: 0,
+            setPageDone: null,
+            pageNav: null,
+            paramArea: null
         },
 
         _destroy: function () {
@@ -45,7 +45,7 @@ $(function () {
         _create: function () {
             var me = this;
 
-            setInterval(function () { me.SessionPing(); }, this.options.PingInterval);
+            setInterval(function () { me.sessionPing(); }, this.options.pingInterval);
 
             // ReportState
             me.actionHistory = [];
@@ -57,7 +57,7 @@ $(function () {
             me.$reportContainer = new $("<DIV class='report-container'/>");
             me.$reportAreaContainer = null;
             me.$loadingIndicator = new $("<div class='loading-indicator'></div>").text(messages.loading);
-            me.floatingHeaders = [];
+            me.FloatingHeaders = [];
             me.paramLoaded = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -69,14 +69,14 @@ $(function () {
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
 
-            $(window).scroll(function () { me.UpdateTableHeaders(me); });
+            $(window).scroll(function () { me.updateTableHeaders(me); });
 
             //Log in screen if needed
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me.AddLoadingIndicator();
-            me.LoadParameters(me.options.PageNum);
+            me.loadParameters(me.options.pageNum);
         },
         getCurPage: function () {
             var me = this;
@@ -88,15 +88,15 @@ $(function () {
         },
         getReportViewerAPI: function () {
             var me = this;
-            return me.options.ReportViewerAPI;
+            return me.options.reportViewerAPI;
         },
         getReportServerURL: function () {
             var me = this;
-            return me.options.ReportServerURL;
+            return me.options.reportServerURL;
         },
         getReportPath: function () {
             var me = this;
-            return me.options.ReportPath;
+            return me.options.reportPath;
         },
         getSessionID: function () {
             var me = this;
@@ -106,7 +106,7 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
-        SetColHeaderOffset: function ($tablix, $colHeader) {
+        setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
             if ($colHeader === null)
@@ -124,7 +124,7 @@ $(function () {
 
             }
         },
-        SetRowHeaderOffset: function ($tablix, $rowHeader) {
+        setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
             var me = this;
             if ($rowHeader === null)
@@ -133,7 +133,7 @@ $(function () {
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.ToolbarHeight) + "px");
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");
                 $rowHeader.fadeIn("fast");
             }
             else {
@@ -158,43 +158,43 @@ $(function () {
                 me.$loadingIndicator.show();
             }
         },
-        RemoveLoadingIndicator: function () {
+        removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
             me.$reportContainer.css({ opacity: 1 });
             me.$loadingIndicator.hide();
         },
-        SetPage: function (PageNum) {
+        setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
 
-            if (!me.pages[PageNum].IsRendered)
-                me.RenderPage(PageNum);
+            if (!me.pages[pageNum].isRendered)
+                me.renderPage(pageNum);
             if (me.$reportAreaContainer === null) {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("report-area-container");
                 me.$reportContainer.append(me.$reportAreaContainer);
-                me.$reportAreaContainer.append(me.pages[PageNum].$Container);
+                me.$reportAreaContainer.append(me.pages[pageNum].$container);
                 me.touchNav();
-                me.pages[PageNum].$Container.fadeIn();
+                me.pages[pageNum].$container.fadeIn();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
-                me.$reportAreaContainer.append(me.pages[PageNum].$Container);
+                me.$reportAreaContainer.append(me.pages[pageNum].$container);
 
-                if (me.curPage !== null && me.curPage > PageNum) {
-                    me.pages[PageNum].$Container.show();
+                if (me.curPage !== null && me.curPage > pageNum) {
+                    me.pages[pageNum].$container.show();
                 } else {
-                    me.pages[PageNum].$Container.show();
+                    me.pages[pageNum].$container.show();
                 }
 
             }
                        
-            me.curPage = PageNum;
+            me.curPage = pageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.SetPageDone !== null) me._trigger("SetPageDone");
-            me._trigger("changepage", null, { newPageNum: PageNum, paramLoaded: me.paramLoaded });
+            if (me.options.setPageDone !== null) me._trigger("setPageDone");
+            me._trigger("changepage", null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -209,13 +209,13 @@ $(function () {
                 swipe: function (event, direction, distance, duration, fingerCount) {
                     alert(direction);
                     if (direction === "left" || direction === "up")
-                        me.NavToPage(me.curPage + 1);
+                        me.navToPage(me.curPage + 1);
                     else
-                        me.NavToPage(me.curPage - 1);
+                        me.navToPage(me.curPage - 1);
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
-                        me.HideTableHeaders();
+                        me.hideTableHeaders();
                 },
                 tap: function (event, target) {
                     $(target).trigger("click");
@@ -224,19 +224,19 @@ $(function () {
                 threshold: 0,
             });
         },
-        RefreshReport: function () {
+        refreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
             me.sessionID = "";
             if (me.paramLoaded === true) {
-                var $paramArea = me.options.ParamArea;
-                me.LoadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);
+                var $paramArea = me.options.paramArea;
+                me.loadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);
             }
             else {
-                me.LoadPage(1, false,null,null,true);
+                me.loadPage(1, false,null,null,true);
             }
         },
-        NavToPage: function (newPageNum) {
+        navToPage: function (newPageNum) {
             var me = this;
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
@@ -254,17 +254,17 @@ $(function () {
             if (newPageNum !== me.curPage) {
                 if (me.lock === 0) {
                     me.lock = 1;
-                    me.LoadPage(newPageNum, false);
+                    me.loadPage(newPageNum, false);
                 }
             }
         },
-        ShowDocMap: function () {
+        showDocMap: function () {
             if ($(".DocMapPanel").length > 0)
                 $(".DocMapPanel").animate({ height: "toggle" }, 100, function () {
                     $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
                 });
         },
-        CachePages: function (initPage) {
+        cachePages: function (initPage) {
             var me = this;
              
             var low = initPage - 1;
@@ -275,49 +275,49 @@ $(function () {
             for (var i = low; i <= high; i++) {
                 if (!me.pages[i])
                     if (i !== initPage)
-                        me.LoadPage(i, true);
+                        me.loadPage(i, true);
             }
 
         },
-        Back: function () {
+        back: function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action !== undefined) {
                 
-                me.options.ReportPath = action.ReportPath;
+                me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 
                 me._trigger("drillback");
-                me.RemoveParameters();
-                me.LoadPage(action.CurrentPage, false,null,null,true);
+                me.removeParameters();
+                me.loadPage(action.CurrentPage, false,null,null,true);
             }
             else {
-                me._trigger("back", null, { path: me.options.ReportPath });
+                me._trigger("back", null, { path: me.options.reportPath });
             }
         },
-        ShowNav: function () {
+        showNav: function () {
             var me = this;
-            if (me.options.PageNav !== null){
-                me.options.PageNav.pagenav("showNav");
+            if (me.options.pageNav !== null){
+                me.options.pageNav.pagenav("showNav");
             }
         },
         flushCache: function () {
             var me = this;
             me.pages = {};
-            if (me.options.PageNav)
-                me.options.PageNav.pagenav("reset");
+            if (me.options.pageNav)
+                me.options.pageNav.pagenav("reset");
         },
-        _PrepareAction: function () {
+        _prepareAction: function () {
             var me = this;
 
             if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
                 $.ajax({
-                    url: me.options.ReportViewerAPI + "/GetReportJSON/",
+                    url: me.options.reportViewerAPI + "/GetReportJSON/",
                     data: {
-                        ReportServerURL: me.options.ReportServerURL,
-                        ReportPath: me.options.ReportPath,
+                        ReportServerURL: me.options.reportServerURL,
+                        ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: ""
@@ -331,7 +331,7 @@ $(function () {
                 });
             }
         },
-        Sort: function (direction, id) {
+        sort: function (direction, id) {
             //Go the other dirction from current
             var me = this;
             var newDir;
@@ -342,25 +342,24 @@ $(function () {
             else
                 newDir = sortDirection.asc;
 
-            $.getJSON(me.options.ReportViewerAPI + "/SortReport/", {
-                ReportServerURL: me.options.ReportServerURL,
+            $.getJSON(me.options.reportViewerAPI + "/SortReport/", {
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 SortItem: id,
                 Direction: newDir
             }).done(function (data) {
                 me.numPages = data.NumPages;
-                me.LoadPage((data.NewPage), false,null,null,true );
+                me.loadPage((data.NewPage), false,null,null,true );
             })
-            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        ToggleItem: function (toggleID) {
+        toggleItem: function (toggleID) {
             var me = this;
-            me.ToggleID = toggleID;
-            me._PrepareAction();
+            me._prepareAction();
 
-            $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
+            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.toggle,
-                ReportServerURL: me.options.ReportServerURL,
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: toggleID
             }).done(function (data) {
@@ -369,82 +368,82 @@ $(function () {
                     me.scrollTop = $(window).scrollTop();
 
                     me.pages[me.curPage] = null;
-                    me.LoadPage(me.curPage, false);
+                    me.loadPage(me.curPage, false);
                 }
             })
-           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        NavigateBookmark: function (bookmarkID) {
+        navigateBookmark: function (bookmarkID) {
             var me = this;
-            me._PrepareAction();
-            $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
+            me._prepareAction();
+            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.bookmark,
-                ReportServerURL: me.options.ReportServerURL,
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: bookmarkID
             }).done(function (data) {
                 if (data.NewPage === me.curPage) {
-                    me.NavToLink(bookmarkID);
+                    me.navToLink(bookmarkID);
                 } else {
-                    me.BackupCurPage();
-                    me.LoadPage(data.NewPage, false, bookmarkID);
+                    me.backupCurPage();
+                    me.loadPage(data.NewPage, false, bookmarkID);
                 }
             })
-           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        NavigateDrillthrough: function (drillthroughID) {
+        navigateDrillthrough: function (drillthroughID) {
             var me = this;
-            me._PrepareAction();
-            $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
+            me._prepareAction();
+            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.drillThrough,
-                ReportServerURL: me.options.ReportServerURL,
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: drillthroughID
             }).done(function (data) {
-                me.BackupCurPage();
+                me.backupCurPage();
                 if (data.Exception !== undefined)
-                    me.$reportAreaContainer.find(".Page").reportRender("WriteError", data);
+                    me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
                 else {
                     me.sessionID = data.SessionID;
-                    me.options.ReportPath = data.ReportPath;
+                    me.options.reportPath = data.ReportPath;
                     
                     if (data.ParametersRequired) {
                         me.$reportAreaContainer.find(".Page").detach();
-                        me.SetScrollLocation(0, 0);
-                        me.ShowParameters(1, data.Parameters);
+                        me.setScrollLocation(0, 0);
+                        me.showParameters(1, data.Parameters);
                     }
                     else {
-                        me.SetScrollLocation(0, 0);
-                        me.LoadPage(1, false, null, null, true);
+                        me.setScrollLocation(0, 0);
+                        me.loadPage(1, false, null, null, true);
                     }
                 }
 
             })
-           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        NavigateDocumentMap: function (docMapID) {
+        navigateDocumentMap: function (docMapID) {
             var me = this;
-            $.getJSON(me.options.ReportViewerAPI + "/NavigateTo/", {
+            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.docMap,
-                ReportServerURL: me.options.ReportServerURL,
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: docMapID
             }).done(function (data) {
-                me.BackupCurPage();
-                me.LoadPage(data.NewPage, false, null);
+                me.backupCurPage();
+                me.loadPage(data.NewPage, false, null);
             })
-           .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        BackupCurPage: function () {
+        backupCurPage: function () {
             var me = this;
-            me.actionHistory.push({ ReportPath: me.options.ReportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
+            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
         },
-        SetScrollLocation: function (top, left) {
+        setScrollLocation: function (top, left) {
             var me = this;
             me.scrollLeft = left;
             me.scrollTop = top;
         },
-        Find: function (keyword,startPage, endPage) {
+        find: function (keyword,startPage, endPage) {
             var me = this;
             if (keyword === "") return;
 
@@ -455,8 +454,8 @@ $(function () {
 
             if (me.findStartPage === null) me.findStartPage = startPage;
 
-            $.getJSON(me.options.ReportViewerAPI + "/FindString/", {
-                ReportServerURL: me.options.ReportServerURL,
+            $.getJSON(me.options.reportViewerAPI + "/FindString/", {
+                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 StartPage: startPage,
                 EndPage: endPage,
@@ -465,9 +464,9 @@ $(function () {
                 if (data.NewPage !== 0) {
                     me.finding = true;
                     if (data.NewPage !== me.curPage) {
-                        me.options.SetPageDone = function () { me.setFindHighlight(keyword); };
+                        me.options.setPageDone = function () { me.setFindHighlight(keyword); };
                         me.pages[data.NewPage] = null;
-                        me.LoadPage(data.NewPage, false);
+                        me.loadPage(data.NewPage, false);
                     } else {
                         me.setFindHighlight(keyword);
                     }
@@ -475,37 +474,37 @@ $(function () {
                 else {
                     if (me.finding === true) {
                         alert(messages.completeFind);
-                        me.ResetFind();
+                        me.resetFind();
                     }
                     else
                         alert(messages.keyNotFound);
                 }
             })
-          .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+          .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        FindNext: function (keyword) {
+        findNext: function (keyword) {
             var me = this;
             $(".Find-Keyword").filter(".Find-Highlight").first().removeClass("Find-Highlight");
 
-            var $NextWord = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
-            if ($NextWord.length > 0) {
-                $NextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
-                $(document).scrollTop($NextWord.offset().top - 100);
+            var $nextWord = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
+            if ($nextWord.length > 0) {
+                $nextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+                $(document).scrollTop($nextWord.offset().top - 100);
             }
             else {
                 if (me.getNumPages() === 1) {
                     alert(messages.completeFind);
-                    me.ResetFind();
+                    me.resetFind();
                     return;
                 }
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
-                    me.Find(keyword, me.getCurPage() + 1);
+                    me.find(keyword, me.getCurPage() + 1);
                 else if (me.findStartPage > 1)
-                    me.Find(keyword, 1, me.findStartPage - 1);
+                    me.find(keyword, 1, me.findStartPage - 1);
                 else {
                     alert(messages.completeFind);
-                    me.ResetFind();
+                    me.resetFind();
                 }
             }
         },
@@ -520,84 +519,84 @@ $(function () {
 
             $(document).scrollTop($item.offset().top - 100);
         },
-        ResetFind: function () {
+        resetFind: function () {
             var me = this;
             me.finding = false;
             me.findStartPage = null;
             me.findKeyword = null;
         },
-        ShowExport: function () {
+        showExport: function () {
             if ($(".Export-Panel").is(":hidden")) {
-                var $Export = $(".fr-button-export").filter(":visible");
-                $(".Export-Panel").css("left", $Export.offset().left);
+                var $export = $(".fr-button-export").filter(":visible");
+                $(".Export-Panel").css("left", $export.offset().left);
             }
             $(".Export-Panel").toggle();
         },
-        Export: function (exportType) {
+        exportReport: function (exportType) {
             var me = this;
             $(".Export-Panel").toggle();
-            var url = me.options.ReportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
 
         //Page Loading
-        LoadParameters: function (pageNum) {
+        loadParameters: function (pageNum) {
             var me = this;
-            $.getJSON(me.options.ReportViewerAPI + "/GetParameterJSON/", {
-                ReportServerURL: me.options.ReportServerURL,
-                ReportPath: me.options.ReportPath
+            $.getJSON(me.options.reportViewerAPI + "/GetParameterJSON/", {
+                ReportServerURL: me.options.reportServerURL,
+                ReportPath: me.options.reportPath
             })
            .done(function (data) {
                me.AddLoadingIndicator();
-               me.ShowParameters(pageNum, data);
+               me.showParameters(pageNum, data);
            })
            .fail(function () {
                console.log("error");
-               me.RemoveLoadingIndicator();
+               me.removeLoadingIndicator();
            });
         },
-        ShowParameters: function (pageNum, data) {
+        showParameters: function (pageNum, data) {
             var me = this;
             if (data.Type === "Parameters") {
-                me.RemoveParameters();
+                me.removeParameters();
                
-                var $ParamArea = me.options.ParamArea;
-                if ($ParamArea !== null) {
+                var $paramArea = me.options.paramArea;
+                if ($paramArea !== null) {
                     me._trigger("showparamarea");
-                    $ParamArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
+                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }
             }
             else if (data.Exception !== undefined) {
-                me.$reportContainer.reportRender({ ReportViewer: this });
-                me.$reportContainer.reportRender("WriteError", data);
-                me.RemoveLoadingIndicator();
+                me.$reportContainer.reportRender({ reportViewer: this });
+                me.$reportContainer.reportRender("writeError", data);
+                me.removeLoadingIndicator();
             }
             else {
-                me.LoadPage(pageNum, false);
+                me.loadPage(pageNum, false);
             }
         },
-        RemoveParameters: function () {
+        removeParameters: function () {
             var me = this;
             if (me.paramLoaded === true) {
-                var $ParamArea = me.options.ParamArea;
-                if ($ParamArea !== null) {
-                    $ParamArea.reportParameter("removeParameter");
+                var $paramArea = me.options.paramArea;
+                if ($paramArea !== null) {
+                    $paramArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
                 }
             }
         },
-        LoadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
             if (flushCache !== null && flushCache)
                 me.flushCache();
 
             if (!me.isNull(me.pages[newPageNum]))
-                if (me.pages[newPageNum].$Container !== null) {
+                if (me.pages[newPageNum].$container !== null) {
                     if (!loadOnly) {
-                        me.SetPage(newPageNum);
-                        me.CachePages(newPageNum);
+                        me.setPage(newPageNum);
+                        me.cachePages(newPageNum);
                     }
                     return;
                 }
@@ -608,38 +607,38 @@ $(function () {
             }
             me.togglePageNum = newPageNum;
             me.lock = 1;
-            $.getJSON(me.options.ReportViewerAPI + "/GetReportJSON/", {
-                ReportServerURL: me.options.ReportServerURL,
-                ReportPath: me.options.ReportPath,
+            $.getJSON(me.options.reportViewerAPI + "/GetReportJSON/", {
+                ReportServerURL: me.options.reportServerURL,
+                ReportPath: me.options.reportPath,
                 SessionID: me.sessionID,
                 PageNumber: newPageNum,
                 ParameterList: paramList
             })
             .done(function (data) {
-                me.WritePage(data, newPageNum, loadOnly);
+                me.writePage(data, newPageNum, loadOnly);
                 me.lock = 0;
                 if (bookmarkID)
-                    me.NavToLink(bookmarkID);
+                    me.navToLink(bookmarkID);
 
-                if (!loadOnly) me.CachePages(newPageNum);
+                if (!loadOnly) me.cachePages(newPageNum);
             })
-            .fail(function () { console.log("error"); me.RemoveLoadingIndicator(); });
+            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        WritePage: function (data, newPageNum, loadOnly) {
+        writePage: function (data, newPageNum, loadOnly) {
             var me = this;
-            var $Report = $("<Div/>");
-            $Report.addClass("Page");
+            var $report = $("<Div/>");
+            $report.addClass("Page");
 
             //Error, need to handle this better
             if (data === null) return;
 
-            $Report.reportRender({ ReportViewer: me });
+            $report.reportRender({ reportViewer: me });
 
             if (me.isNull(me.pages[newPageNum]))
-                me.pages[newPageNum] = new ReportPage($Report, data);
+                me.pages[newPageNum] = new reportPage($report, data);
             else {
-                me.pages[newPageNum].$Container = $Report;
-                me.pages[newPageNum].ReportObj = data;
+                me.pages[newPageNum].$container = $report;
+                me.pages[newPageNum].reportObj = data;
             }
 
             if (data.SessionID === undefined)
@@ -652,37 +651,37 @@ $(function () {
                 me.numPages = data.NumPages;
        
             if (!loadOnly) {
-                me.RenderPage(newPageNum);
-                me.RemoveLoadingIndicator();
-                me.SetPage(newPageNum);
+                me.renderPage(newPageNum);
+                me.removeLoadingIndicator();
+                me.setPage(newPageNum);
             }
         },
-        RenderPage: function (pageNum) {
+        renderPage: function (pageNum) {
             //Write Style
             var me = this;
-            if (me.pages[pageNum] !== null && me.pages[pageNum].IsRendered === true)
+            if (me.pages[pageNum] !== null && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (me.pages[pageNum].ReportObj.Exception === undefined) {
-                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].ReportObj.Report.DocumentMap !== undefined) {
+            if (me.pages[pageNum].reportObj.Exception === undefined) {
+                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap !== undefined) {
                     me.hasDocMap = true;
                     me.$reportContainer.reportDocumentMap({ reportViewer: me });
                     me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
                 }
 
-                me.pages[pageNum].$Container.reportRender("Render", me.pages[pageNum].ReportObj);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
-                me.pages[pageNum].$Container.reportRender("WriteError", me.pages[pageNum].ReportObj);
-            me.pages[pageNum].IsRendered = true;
+                me.pages[pageNum].$container.reportRender("writeError", me.pages[pageNum].reportObj);
+            me.pages[pageNum].isRendered = true;
         },
                 
-        SessionPing: function () {
+        sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.sessionID !== null && me.sessionID !== "")
-                $.getJSON(me.options.ReportViewerAPI + "/PingSession/", {
-                    ReportServerURL: me.options.ReportServerURL,
+                $.getJSON(me.options.reportViewerAPI + "/PingSession/", {
+                    ReportServerURL: me.options.reportServerURL,
                     SessionID: me.sessionID
                 })
                 .done(function (data) {
@@ -694,28 +693,28 @@ $(function () {
                 .fail(function () { console.log("error"); });
 
         },
-        UpdateTableHeaders: function (me) {
+        updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
 
-            $.each(me.floatingHeaders, function (Index, Obj) {
-                me.SetRowHeaderOffset(Obj.$Tablix, Obj.$RowHeader);
-                me.SetColHeaderOffset(Obj.$Tablix, Obj.$ColHeader);
+            $.each(me.FloatingHeaders, function (Index, Obj) {
+                me.setRowHeaderOffset(Obj.$tablix, Obj.$rowHeader);
+                me.setColHeaderOffset(Obj.$tablix, Obj.$colHeader);
             });
         },
-        HideTableHeaders: function () {
+        hideTableHeaders: function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
-            $.each(me.floatingHeaders, function (Index, Obj) {
-                if (Obj.$RowHeader !== null) Obj.$RowHeader.hide();
-                if (Obj.$ColHeader !== null) Obj.$ColHeader.hide();
+            $.each(me.FloatingHeaders, function (Index, Obj) {
+                if (Obj.$rowHeader !== null) Obj.$rowHeader.hide();
+                if (Obj.$colHeader !== null) Obj.$colHeader.hide();
             });
-            if (me.$FloatingToolbar !== null) me.$FloatingToolbar.hide();
+            if (me.$floatingToolbar !== null) me.$floatingToolbar.hide();
         },
-        NavToLink: function (ElementID) {
-            $(document).scrollTop($("#" + ElementID).offset().top - 85);
+        navToLink: function (elementID) {
+            $(document).scrollTop($("#" + elementID).offset().top - 85);
         },
-        StopDefaultEvent: function (e) {
+        stopDefaultEvent: function (e) {
             //IE
             if (window.ActiveXObject)
                 window.event.returnValue = false;
@@ -724,10 +723,10 @@ $(function () {
                 e.stopPropagation();
             }
         },
-        _getHeight: function ($Obj) {
+        _getHeight: function ($obj) {
             var height;
 
-            var $copiedElem = $Obj.clone()
+            var $copiedElem = $obj.clone()
                                 .css({
                                     visibility: "hidden"
                                 });

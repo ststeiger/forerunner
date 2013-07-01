@@ -37,10 +37,10 @@ $(function () {
 
 
             $viewer.reportViewer({
-                ReportServerURL: me.options.ReportServerURL,
-                ReportViewerAPI: me.options.ReportViewerAPI,
-                ReportPath: me.options.ReportPath,
-                PageNum: 1,
+                reportServerURL: me.options.ReportServerURL,
+                reportViewerAPI: me.options.ReportViewerAPI,
+                reportPath: me.options.ReportPath,
+                pageNum: 1,
             });
 
             // Create / render the toolbar
@@ -96,7 +96,7 @@ $(function () {
             $toolbar.toolbar('disableTools', [btnFav]);
 
             // Let the report viewer know the height of the toolbar
-            $viewer.reportViewer('option', 'ToolbarHeight', me.options.toolbarHeight());
+            $viewer.reportViewer('option', 'toolbarHeight', me.options.toolbarHeight());
 
             $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar != null) {
@@ -169,13 +169,13 @@ $(function () {
             $nav = me.options.$nav;
             if ($nav != null) {
                 $nav.pagenav({ $reportViewer: $viewer });
-                $viewer.reportViewer('option', 'PageNav', $nav);
+                $viewer.reportViewer('option', 'pageNav', $nav);
             }
 
             $paramarea = me.options.$paramarea;
             if ($paramarea != null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
-                $viewer.reportViewer('option', 'ParamArea', $paramarea);
+                $viewer.reportViewer('option', 'paramArea', $paramarea);
             }
             me.setFavoriteState(me.options.ReportPath);
         },

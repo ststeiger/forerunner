@@ -79,7 +79,7 @@
             else
                 me._trigger("render");
 
-            me.options.$reportViewer.reportViewer("RemoveLoadingIndicator");
+            me.options.$reportViewer.reportViewer("removeLoadingIndicator");
         },
         _submitForm: function () {
             var me = this;
@@ -87,7 +87,7 @@
             me._closeAllDropdown();
             var paramList = me.getParamsList();
             if (paramList !== null) {
-                me.options.$reportViewer.reportViewer("LoadPage", me.options.pageNum, false, null, paramList,true);
+                me.options.$reportViewer.reportViewer("loadPage", me.options.pageNum, false, null, paramList,true);
                 me._trigger("submit");
             }
         },

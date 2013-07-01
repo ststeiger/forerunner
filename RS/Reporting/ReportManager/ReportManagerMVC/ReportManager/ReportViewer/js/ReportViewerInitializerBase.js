@@ -36,9 +36,9 @@ $(function () {
             var $viewer = me.options.$viewer;
 
             $viewer.reportViewer({
-                ReportServerURL: me.options.ReportServerURL,
-                ReportViewerAPI: me.options.ReportViewerAPI,
-                ReportPath: me.options.ReportPath,
+                reportServerURL: me.options.ReportServerURL,
+                reportViewerAPI: me.options.ReportViewerAPI,
+                reportPath: me.options.ReportPath,
                 PageNum: 1,
             });
 
@@ -46,7 +46,7 @@ $(function () {
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer });
             // Let the report viewer know the height of the toolbar
-            $viewer.reportViewer('option', 'ToolbarHeight', me.options.toolbarHeight());
+            $viewer.reportViewer('option', 'toolbarHeight', me.options.toolbarHeight());
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar != null) {
@@ -64,13 +64,13 @@ $(function () {
             var $nav = me.options.$nav;
             if ($nav != null) {
                 $nav.pagenav({ $reportViewer: $viewer });
-                $viewer.reportViewer('option', 'PageNav', $nav);
+                $viewer.reportViewer('option', 'pageNav', $nav);
             }
 
             var $paramarea = me.options.$paramarea;
             if ($paramarea != null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
-                $viewer.reportViewer('option', 'ParamArea', $paramarea);
+                $viewer.reportViewer('option', 'paramArea', $paramarea);
             }
         },
     };

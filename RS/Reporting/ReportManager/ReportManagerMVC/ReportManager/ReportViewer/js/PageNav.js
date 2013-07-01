@@ -56,7 +56,7 @@ $(function () {
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
                     click: function (event) {
-                        me.options.$reportViewer.reportViewer("NavToPage", $(event.currentTarget).data("pageNumber"));
+                        me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
                     }
                 });
                 // Need to add onclick

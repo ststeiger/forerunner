@@ -8,7 +8,7 @@ $(function () {
 
    
     //  The ReportIemContext simplifies the signature for all of the functions to pass context around
-    function ReportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
+    function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
         this.RS = RS;
         this.CurrObj = CurrObj;
         this.CurrObjIndex = CurrObjIndex;
@@ -17,54 +17,54 @@ $(function () {
         this.Style = Style;
         this.CurrLocation = CurrLocation;
     }
-    function Layout() {
+    function layout() {
         this.ReportItems = {};
         this.Height = 0;
         this.LowestIndex = null;
     }
     // Temp measurement mimics the server measurement object
-    function TempMeasurement(Height, Width) {
-        this.Height = Height;
-        this.Width = Width;
+    function tempMeasurement(height, width) {
+        this.Height = height;
+        this.Width = width;
     }
     //  Report Item Location is used my the layout to absolute position objects in a rectangle/section/column
-    function ReportItemLocation(Index) {
+    function reportItemLocation(index) {
         this.TopDelta = 0;
         this.Height = 0;
-        this.Index = Index;
+        this.Index = index;
         this.IndexAbove = null;
         this.NewHeight = null;
         this.NewTop = null;
     }
     // The Floating header object holds pointers to the tablix and its row and col header objects
-    function FloatingHeader($Tablix, $RowHeader, $ColHeader) {
-        this.$Tablix = $Tablix;
-        this.$RowHeader = $RowHeader;
-        this.$ColHeader = $ColHeader;
+    function floatingHeader($tablix, $rowHeader, $colHeader) {
+        this.$tablix = $tablix;
+        this.$rowHeader = $rowHeader;
+        this.$colHeader = $colHeader;
     }
     // report render widget
     $.widget("Forerunner.reportRender", {
         // Default options
         options: {
-            ReportViewer: null,
+            reportViewer: null,
         },
         // Constructor
         _create: function () {
             
         },
-                
-        Render: function (reportObj) {
+
+        render: function (reportObj) {
             var me = this;
-            var ReportDiv = me.element;
-            var ReportViewer = me.options.ReportViewer;
+            var reportDiv = me.element;
+            var reportViewer = me.options.reportViewer;
             
 
             me._writeExportPanel();
 
-            ReportDiv.attr("Style", me._getStyle(ReportViewer, reportObj.Report.PageContent.PageStyle));
-            $.each(reportObj.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new ReportItemContext(ReportViewer, Obj, Index, reportObj.Report.PageContent, ReportDiv, "")); });
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.Report.PageContent.PageStyle));
+            $.each(reportObj.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.Report.PageContent, reportDiv, "")); });
         },
-        WriteError: function (errorData) {
+        writeError: function (errorData) {
             var me = this;
             var errorTag = forerunner.ssr.constants.errorTag;
 
@@ -78,7 +78,7 @@ $(function () {
                 "<div class='Error Error-StackTrace'></div>" +
                 "</div>"));
 
-            if (me.options.ReportViewer !== null) {
+            if (me.options.reportViewer !== null) {
                 var $cell;
 
                 $cell = me.element.find(".Error");
@@ -107,54 +107,54 @@ $(function () {
 
         _writeSection: function (RIContext) {
             var me = this;
-            var $NewObj = me._getDefaultHTMLTable();
-            var $Sec = $("<TR/>");
-            var Location = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+            var $newObj = me._getDefaultHTMLTable();
+            var $sec = $("<TR/>");
+            var location = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
 
             //Need to determine Header and footer Index
-            var HeaderIndex;
-            var FooterIndex;
+            var headerIndex;
+            var footerIndex;
             if (RIContext.CurrObj.PageFooter !== undefined) {
-                FooterIndex = RIContext.CurrObj.Columns.length;
-                HeaderIndex = FooterIndex + 1;
+                footerIndex = RIContext.CurrObj.Columns.length;
+                headerIndex = footerIndex + 1;
             }
             else
-                HeaderIndex = RIContext.CurrObj.Columns.length;
+                headerIndex = RIContext.CurrObj.Columns.length;
 
 
             //Page Header
             if (RIContext.CurrObj.PageHeader !== undefined) {
-                var $Header = $("<TR/>");
-                var $HTD = $("<TD/>");
-                $Header.append($HTD);
-                var HeadLoc = me._getMeasurmentsObj(RIContext.CurrObj, HeaderIndex);
-                $Header.attr("Style", "width:" + HeadLoc.Width + "mm;");
-                $HTD.append(me._writeRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, HeaderIndex, RIContext.CurrObj, new $("<DIV/>"), null, HeadLoc)));
-                $NewObj.append($Header);
+                var $header = $("<TR/>");
+                var $headerTD = $("<TD/>");
+                $header.append($headerTD);
+                var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, headerIndex);
+                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
+                $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, headerIndex, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
+                $newObj.append($header);
             }
             
-            $Sec.attr("Style", "width:" + Location.Width + "mm;");
+            $sec.attr("Style", "width:" + location.Width + "mm;");
             //Columns
-            $NewObj.append($Sec);
-            $.each(RIContext.CurrObj.Columns, function (Index, Obj) {
+            $newObj.append($sec);
+            $.each(RIContext.CurrObj.Columns, function (index, obj) {
                 var $col = new $("<TD/>");
-                $col.append(me._writeRectangle(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), null, Location)));
-                $Sec.append($col);
+                $col.append(me._writeRectangle(new reportItemContext(RIContext.RS, obj, index, RIContext.CurrObj, new $("<Div/>"), null, location)));
+                $sec.append($col);
             });
 
             //Page Footer
             if (RIContext.CurrObj.PageFooter !== undefined) {
-                var $Footer = $("<TR/>");
-                var $FTD = $("<TD/>");
-                $Footer.append($FTD);
-                var FootLoc = me._getMeasurmentsObj(RIContext.CurrObj, FooterIndex);
-                $Footer.attr("Style", "width:" + FootLoc.Width + "mm;");
-                $FTD.append(me._writeRectangle(new ReportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, FooterIndex, RIContext.CurrObj, new $("<DIV/>"), "", FootLoc)));
-                $NewObj.append($Footer);
+                var $footer = $("<TR/>");
+                var $footerTD = $("<TD/>");
+                $footer.append($footerTD);
+                var footerLoc = me._getMeasurmentsObj(RIContext.CurrObj, footerIndex);
+                $footer.attr("Style", "width:" + footerLoc.Width + "mm;");
+                $footerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, footerIndex, RIContext.CurrObj, new $("<DIV/>"), "", footerLoc)));
+                $newObj.append($footer);
             }
 
 
-            RIContext.$HTMLParent.append($NewObj);
+            RIContext.$HTMLParent.append($newObj);
         },
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
@@ -175,7 +175,7 @@ $(function () {
                     Style += me._getFullBorderStyle(Obj);
                 }
 
-                $RI = me._writeReportItems(new ReportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
+                $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
                        
                 $LocDiv = new $("<Div/>");
                 $LocDiv.append($RI);
@@ -222,11 +222,11 @@ $(function () {
             return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
-            var l = new Layout();
+            var l = new layout();
             //var me = this;
 
             $.each(Measurements, function (Index, Obj) {
-                l.ReportItems[Index] = new ReportItemLocation(Index);
+                l.ReportItems[Index] = new reportItemLocation(Index);
                 var curRI = l.ReportItems[Index];
 
                 if (l.LowestIndex === null)
@@ -310,7 +310,7 @@ $(function () {
                 else
                     $Drilldown.addClass("Drilldown-Expand");
 
-                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.ReportViewer.ToggleItem(e.data.ToggleID); });
+                $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
                 $Drilldown.addClass("cursor-pointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
@@ -331,7 +331,7 @@ $(function () {
                 else
                     $Sort.attr("class", "sort-unsorted");
 
-                $Sort.on("click", { Viewer:  RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { e.data.Viewer.Sort(e.data.Direction, e.data.SortID); });
+                $Sort.on("click", { Viewer:  RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID); });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
@@ -461,9 +461,9 @@ $(function () {
         _getImageURL: function (RS, ImageName) {
             var me = this;
 
-            var Url = me.options.ReportViewer.options.ReportViewerAPI + "/GetImage/?";
-            Url += "ReportServerURL=" + me.options.ReportViewer.options.ReportServerURL;
-            Url += "&SessionID=" + me.options.ReportViewer.sessionID;
+            var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+            Url += "ReportServerURL=" + me.options.reportViewer.options.reportServerURL;
+            Url += "&SessionID=" + me.options.reportViewer.sessionID;
             Url += "&ImageID=" + ImageName;
             return Url;
         },
@@ -521,7 +521,7 @@ $(function () {
                 Control.addClass("cursor-pointer");
                 Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
-                    me.options.ReportViewer.NavigateBookmark(e.data.BookmarkID);
+                    me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });
             }
             else {
@@ -530,29 +530,29 @@ $(function () {
                 Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._stopDefaultEvent(e);
-                    me.options.ReportViewer.NavigateDrillthrough(e.data.DrillthroughId);
+                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
                 });
             }
         },
         _writeActionImageMapAreas: function (RIContext, width, height) {
-            var ActionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
+            var actionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
             var me = me;
 
-            if (ActionImageMapAreas !== undefined) {
-                var $Map = $("<MAP/>");
-                $Map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-                $Map.attr("id", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+            if (actionImageMapAreas !== undefined) {
+                var $map = $("<MAP/>");
+                $map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                $map.attr("id", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-                for (var i = 0; i < ActionImageMapAreas.Count; i++) {
-                    var element = ActionImageMapAreas.ActionInfoWithMaps[i];
+                for (var i = 0; i < actionImageMapAreas.Count; i++) {
+                    var element = actionImageMapAreas.ActionInfoWithMaps[i];
 
                     for (var j = 0; j < element.ImageMapAreas.Count; j++) {
-                        var $Area = $("<AREA />");
-                        $Area.attr("tabindex", i + 1);
-                        $Area.attr("style", "text-decoration:none");
-                        $Area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
+                        var $area = $("<AREA />");
+                        $area.attr("tabindex", i + 1);
+                        $area.attr("style", "text-decoration:none");
+                        $area.attr("alt", element.ImageMapAreas.ImageMapArea[j].Tooltip);
                         if (element.Actions !== undefined) {
-                            this._writeAction(RIContext, element.Actions[0], $Area);
+                            this._writeAction(RIContext, element.Actions[0], $area);
                         }
 
                         var shape;
@@ -587,12 +587,12 @@ $(function () {
                                     parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);
                                 break;
                         }
-                        $Area.attr("shape", shape);
-                        $Area.attr("coords", coords);
-                        $Map.append($Area);
+                        $area.attr("shape", shape);
+                        $area.attr("coords", coords);
+                        $map.append($area);
                     }
                 }
-                RIContext.$HTMLParent.append($Map);
+                RIContext.$HTMLParent.append($map);
             }
         },
         _resizeImage: function (img, sizingType, height, width, maxHeight, maxWidth) {
@@ -699,7 +699,7 @@ $(function () {
                 Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
             $Cell.attr("Style", Style);
-            $Cell.append(me._writeReportItems(new ReportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;width:100%;height:100%;", new TempMeasurement(height, width))));
+            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;width:100%;height:100%;", new tempMeasurement(height, width))));
             return $Cell;
         },
         _writeTablix: function (RIContext) {
@@ -778,7 +778,7 @@ $(function () {
             ret.append($FixedColHeader);
             ret.append($FixedRowHeader);
             ret.append($Tablix);
-            RIContext.RS.floatingHeaders.push(new FloatingHeader(ret, $FixedColHeader, $FixedRowHeader));
+            RIContext.RS.FloatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
         },
         _writeSubreport: function (RIContext) {
@@ -870,7 +870,7 @@ $(function () {
 
             var $ExportLink = $("<a class='Export-Link' value='" + ExportObj.Type + "' href='javascript:void(0)'>" + ExportObj.Name + "</a>");
             $ExportLink.on("click", function () {
-                me.options.ReportViewer.Export(ExportObj.Type);
+                me.options.reportViewer.exportReport(ExportObj.Type);
             });
 
             $ExportItem.append($ExportLink);
@@ -879,11 +879,11 @@ $(function () {
         
 
         //Helper fucntions
-        _getHeight: function ($Obj) {
+        _getHeight: function ($obj) {
             var me = this;
             var height;
 
-            var $copiedElem = $Obj.clone()
+            var $copiedElem = $obj.clone()
                                 .css({
                                     visibility: "hidden"
                                 });
@@ -1273,11 +1273,11 @@ $(function () {
             return "normal";
         },
         _getDefaultHTMLTable: function () {
-            var $NewObj = $("<Table/>");
+            var $newObj = $("<Table/>");
 
-            $NewObj.attr("CELLSPACING", 0);
-            $NewObj.attr("CELLPADDING", 0);
-            return $NewObj;
+            $newObj.attr("CELLSPACING", 0);
+            $newObj.attr("CELLPADDING", 0);
+            return $newObj;
         },
         _getBorderStyle: function (RPLStyle) {
             switch (RPLStyle) {

@@ -86,7 +86,7 @@
 
             me._closeAllDropdown();
             var paramList = me.getParamsList();
-            if (paramList !== null) {
+            if (paramList) {
                 me.options.$reportViewer.reportViewer("loadPage", me.options.pageNum, false, null, paramList,true);
                 me._trigger("submit");
             }
@@ -225,13 +225,12 @@
                 case "Integer":
                 case "Float":
                     $control.attr("number", "true");
-                    //break;
+                    if (me._hasDefaultValue(param)) { $control.val(param.DefaultValues[0]); }
+                    break;
                 case "String":
-                    if (me._hasDefaultValue(param)) {
-                        $control.val(param.DefaultValues[0]);
-                        //if (param.DefaultValues[0] === "")
-                        //    $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
-                    }
+                    if (me._hasDefaultValue(param)) { $control.val(param.DefaultValues[0]); }
+                    //if (param.DefaultValues[0] === "")                        
+                    //    $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
                     break;
             }
 
@@ -464,14 +463,14 @@
                 var tempJson = "[";
                 for (i = 0; i < a.length; i++) {
                     if (i !== a.length - 1) {
-                        tempJson += '{"Parameter":"' + a[i].name + '","IsMultiple":"' + a[i].ismultiple + '","Type":"' + a[i].type + '","Value":"' + a[i].value + '"},';
+                        tempJson += "{'Parameter':'" + a[i].name + "','IsMultiple':'" + a[i].ismultiple + "','Type':'" + a[i].type + "','Value':'" + a[i].value + "'},";
                     }
                     else {
-                        tempJson += '{"Parameter":"' + a[i].name + '","IsMultiple":"' + a[i].ismultiple + '","Type":"' + a[i].type + '","Value":"' + a[i].value + '"}';
+                        tempJson += "{'Parameter':'" + a[i].name + "','IsMultiple':'" + a[i].ismultiple + "','Type':'" + a[i].type + "','Value':'" + a[i].value + "'}";
                     }
                 }
                 tempJson += "]";
-                return '{"ParamsList":' + tempJson + '}';
+                return "{'ParamsList':" + tempJson + "}";
             } else {
                 return null;
             }
@@ -534,10 +533,10 @@
         },
         _hasDefaultValue: function (param) {
             var me = this;
-            return me._defaultValueExist && $.isArray(param.DefaultValues) && param.DefaultValues[0] !== null;
+            return me._defaultValueExist && $.isArray(param.DefaultValues) && param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
-            if (defaultDatetime === null || defaultDatetime.length < 9)
+            if (!defaultDatetime || defaultDatetime.length < 9)
                 return null;
 
             var date = defaultDatetime.substr(0, defaultDatetime.indexOf(" "));

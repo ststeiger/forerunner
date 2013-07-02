@@ -39,7 +39,7 @@
 
             var $icon = new $("<DIV />");
             
-            if (docMap.Children == null) {
+            if (!docMap.Children) {
                 $docMap.attr("level", level);
                 $icon.addClass("DocMap-Indent");
             }
@@ -66,7 +66,7 @@
             $mapNode.hover(function () { $mapNode.addClass("DocMap-Item-Highlight"); }, function () { $mapNode.removeClass("DocMap-Item-Highlight"); });
             $docMap.append($mapNode);
 
-            if (docMap.Children != null) {
+            if (docMap.Children) {
                 level++;
                 $.each(docMap.Children, function (Index, Obj) {
                     $docMap.append(me._writeDocumentMapItem(Obj, level));

@@ -49,12 +49,12 @@ $(function () {
             $viewer.reportViewer('option', 'toolbarHeight', me.options.toolbarHeight());
 
             var $lefttoolbar = me.options.$lefttoolbar;
-            if ($lefttoolbar != null) {
+            if ($lefttoolbar) {
                 $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });
             }
 
             var $righttoolbar = me.options.$righttoolbar;
-            if ($righttoolbar != null) {
+            if ($righttoolbar) {
                 $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: 'fr-toolbar-slide' });
             }
 
@@ -62,13 +62,13 @@ $(function () {
             var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
 
             var $nav = me.options.$nav;
-            if ($nav != null) {
+            if ($nav) {
                 $nav.pagenav({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'pageNav', $nav);
             }
 
             var $paramarea = me.options.$paramarea;
-            if ($paramarea != null) {
+            if ($paramarea) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'paramArea', $paramarea);
             }

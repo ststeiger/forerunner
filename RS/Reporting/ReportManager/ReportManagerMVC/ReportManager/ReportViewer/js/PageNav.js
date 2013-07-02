@@ -9,11 +9,11 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
-            if (me.$carousel !== null) {
+            if (me.$carousel) {
                 me.$carousel.select(currentPageNum - 1, 1);
                 me.currentPageNum = currentPageNum;
             } else {
-                if (me.currentPageNum !== currentPageNum && me.currentPageNum !== undefined) {
+                if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
                     me.listItems[me.currentPageNum - 1].removeClass("selected");
                 }
                 me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);

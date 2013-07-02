@@ -28,11 +28,11 @@ forerunner.ssr.CatalogItemsModel.prototype = {
 
 // View can be null, favorites, or recent
 forerunner.ssr.CatalogItemsModel.getCatalogItemUrl = function(view, path) {
-    if (view != null) {
+    if (view) {
         return "ReportManager/GetItems?view=" + view + "&path=";
     }
 
-    if (path == null) path = "/";
+    if (!path) path = "/";
     return "ReportManager/GetItems?view=catalog&path=" + path;
 };
 

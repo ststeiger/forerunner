@@ -47,7 +47,7 @@
             $img.attr("src", imageSrc);
             $img.removeAttr("height");
             $anchor.on("click", function (event) {
-                if (me.options.navigateTo !== null) {
+                if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
@@ -98,7 +98,7 @@
             $img.attr("src", imageSrc);
             $img.removeAttr("height");
             $anchor.on("click", function (event) {
-                if (me.options.navigateTo !== null) {
+                if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
@@ -114,14 +114,14 @@
         _renderList: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
-            var decodedPath = me.options.selectedItemPath !== null ? decodeURIComponent(me.options.selectedItemPath) : null;
+            var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.element.addClass("reportexplorer");
             var $carouselContainer = $(".sky-carousel-container", me.$Carousel);
             var $rmListContainer = $(".rm-list-container", me.$RMList);
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (decodedPath !== null && decodedPath === decodeURIComponent(catalogItem.Path)) {
+                if (decodedPath && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 $carouselContainer.append(me._generateListItem(catalogItem));
@@ -133,11 +133,11 @@
         _renderPCView: function () {
             var me = this;
             var catalogItems = me.options.catalogItems;
-            var decodedPath = me.options.selectedItemPath !== null ? decodeURIComponent(me.options.selectedItemPath) : null;
+            var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
                 var catalogItem = catalogItems[i];
-                if (decodedPath !== null && decodedPath === decodeURIComponent(catalogItem.Path)) {
+                if (decodedPath && decodedPath === decodeURIComponent(catalogItem.Path)) {
                     me.selectedItem = i;
                 }
                 me.rmListItems[i] = me._generatePCListItem(catalogItem);
@@ -269,7 +269,7 @@
             me.rmListItems = null;
             me.selectedItem = 0;
             me.isRendered = false;
-            me.$explorer = me.options.$scrollBarOwner !== null ? me.options.$scrollBarOwner : $(window);
+            me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me._render();
             me.$selectedItem = null;
         }

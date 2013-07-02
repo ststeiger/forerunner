@@ -57,13 +57,13 @@ $(function () {
             me.$reportContainer = new $("<DIV class='report-container'/>");
             me.$reportAreaContainer = null;
             me.$loadingIndicator = new $("<div class='loading-indicator'></div>").text(messages.loading);
-            me.FloatingHeaders = [];
+            me.floatingHeaders = [];
             me.paramLoaded = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.loadLock = 0;
             me.finding = false;
-            me.findStartPage = null;
+            me.findStart = null;
             me.hasDocMap = false;
             me.togglePageNum = 0;
             me.findKeyword = null;
@@ -75,7 +75,7 @@ $(function () {
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me.AddLoadingIndicator();
+            me.addLoadingIndicator();
             me.loadParameters(me.options.pageNum);
         },
         getCurPage: function () {
@@ -109,7 +109,7 @@ $(function () {
         setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
-            if ($colHeader === null)
+            if (!$colHeader)
                 return;
 
             var offset = $tablix.offset();
@@ -127,7 +127,7 @@ $(function () {
         setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
             var me = this;
-            if ($rowHeader === null)
+            if (!$rowHeader)
                 return;
 
             var offset = $tablix.offset();
@@ -140,7 +140,7 @@ $(function () {
                 $rowHeader.hide();
             }
         },
-        AddLoadingIndicator: function () {
+        addLoadingIndicator: function () {
             var me = this;
            
             me.loadLock = 1;
@@ -170,7 +170,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me.renderPage(pageNum);
-            if (me.$reportAreaContainer === null) {
+            if (!me.$reportAreaContainer) {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("report-area-container");
                 me.$reportContainer.append(me.$reportAreaContainer);
@@ -193,7 +193,7 @@ $(function () {
             me.curPage = pageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone !== null) me._trigger("setPageDone");
+            if (me.options.setPageDone) me._trigger("setPageDone");
             me._trigger("changepage", null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
 
             $(window).scrollLeft(me.scrollLeft);
@@ -282,7 +282,7 @@ $(function () {
         back: function () {
             var me = this;
             var action = me.actionHistory.pop();
-            if (action !== undefined) {
+            if (action) {
                 
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
@@ -299,7 +299,7 @@ $(function () {
         },
         showNav: function () {
             var me = this;
-            if (me.options.pageNav !== null){
+            if (me.options.pageNav){
                 me.options.pageNav.pagenav("showNav");
             }
         },
@@ -401,7 +401,7 @@ $(function () {
                 UniqueID: drillthroughID
             }).done(function (data) {
                 me.backupCurPage();
-                if (data.Exception !== undefined)
+                if (data.Exception)
                     me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
                 else {
                     me.sessionID = data.SessionID;
@@ -447,12 +447,12 @@ $(function () {
             var me = this;
             if (keyword === "") return;
 
-            if (me.findKeyword === null || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStartPage = null; }
+            if (!me.findKeyword || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStart = null; }
 
             if (startPage === undefined) startPage = me.getCurPage();
             if (endPage === undefined) endPage = me.getNumPages();
 
-            if (me.findStartPage === null) me.findStartPage = startPage;
+            if (me.findStart === null) me.findStart = startPage;
 
             $.getJSON(me.options.reportViewerAPI + "/FindString/", {
                 ReportServerURL: me.options.reportServerURL,
@@ -500,8 +500,8 @@ $(function () {
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
                     me.find(keyword, me.getCurPage() + 1);
-                else if (me.findStartPage > 1)
-                    me.find(keyword, 1, me.findStartPage - 1);
+                else if (me.findStart > 1)
+                    me.find(keyword, 1, me.findStart - 1);
                 else {
                     alert(messages.completeFind);
                     me.resetFind();
@@ -522,7 +522,7 @@ $(function () {
         resetFind: function () {
             var me = this;
             me.finding = false;
-            me.findStartPage = null;
+            me.findStart = null;
             me.findKeyword = null;
         },
         showExport: function () {
@@ -547,7 +547,7 @@ $(function () {
                 ReportPath: me.options.reportPath
             })
            .done(function (data) {
-               me.AddLoadingIndicator();
+               me.addLoadingIndicator();
                me.showParameters(pageNum, data);
            })
            .fail(function () {
@@ -561,13 +561,13 @@ $(function () {
                 me.removeParameters();
                
                 var $paramArea = me.options.paramArea;
-                if ($paramArea !== null) {
+                if ($paramArea) {
                     me._trigger("showparamarea");
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }
             }
-            else if (data.Exception !== undefined) {
+            else if (data.Exception) {
                 me.$reportContainer.reportRender({ reportViewer: this });
                 me.$reportContainer.reportRender("writeError", data);
                 me.removeLoadingIndicator();
@@ -580,7 +580,7 @@ $(function () {
             var me = this;
             if (me.paramLoaded === true) {
                 var $paramArea = me.options.paramArea;
-                if ($paramArea !== null) {
+                if ($paramArea) {
                     $paramArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
                 }
@@ -589,11 +589,11 @@ $(function () {
         loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
-            if (flushCache !== null && flushCache)
+            if (flushCache !== undefined && flushCache)
                 me.flushCache();
 
-            if (!me.isNull(me.pages[newPageNum]))
-                if (me.pages[newPageNum].$container !== null) {
+            if (me.pages[newPageNum])
+                if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
                         me.setPage(newPageNum);
                         me.cachePages(newPageNum);
@@ -603,7 +603,7 @@ $(function () {
             if (!paramList) paramList = "";
 
             if (!loadOnly) {
-                me.AddLoadingIndicator();
+                me.addLoadingIndicator();
             }
             me.togglePageNum = newPageNum;
             me.lock = 1;
@@ -630,18 +630,18 @@ $(function () {
             $report.addClass("Page");
 
             //Error, need to handle this better
-            if (data === null) return;
+            if (!data) return;
 
             $report.reportRender({ reportViewer: me });
 
-            if (me.isNull(me.pages[newPageNum]))
+            if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
             else {
                 me.pages[newPageNum].$container = $report;
                 me.pages[newPageNum].reportObj = data;
             }
 
-            if (data.SessionID === undefined)
+            if (!data.SessionID)
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
@@ -649,7 +649,7 @@ $(function () {
                 me.numPages = 0;
             else
                 me.numPages = data.NumPages;
-       
+
             if (!loadOnly) {
                 me.renderPage(newPageNum);
                 me.removeLoadingIndicator();
@@ -659,11 +659,11 @@ $(function () {
         renderPage: function (pageNum) {
             //Write Style
             var me = this;
-            if (me.pages[pageNum] !== null && me.pages[pageNum].isRendered === true)
+            if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (me.pages[pageNum].reportObj.Exception === undefined) {
-                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap !== undefined) {
+            if (!me.pages[pageNum].reportObj.Exception) {
+                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap) {
                     me.hasDocMap = true;
                     me.$reportContainer.reportDocumentMap({ reportViewer: me });
                     me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
@@ -679,7 +679,7 @@ $(function () {
         sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
-            if (me.sessionID !== null && me.sessionID !== "")
+            if (me.sessionID && me.sessionID !== "")
                 $.getJSON(me.options.reportViewerAPI + "/PingSession/", {
                     ReportServerURL: me.options.reportServerURL,
                     SessionID: me.sessionID
@@ -697,19 +697,19 @@ $(function () {
             // Update the floating headers in this viewer
             // Update the toolbar
 
-            $.each(me.FloatingHeaders, function (Index, Obj) {
-                me.setRowHeaderOffset(Obj.$tablix, Obj.$rowHeader);
-                me.setColHeaderOffset(Obj.$tablix, Obj.$colHeader);
+            $.each(me.floatingHeaders, function (index, obj) {
+                me.setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
+                me.setColHeaderOffset(obj.$tablix, obj.$colHeader);
             });
         },
         hideTableHeaders: function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
-            $.each(me.FloatingHeaders, function (Index, Obj) {
-                if (Obj.$rowHeader !== null) Obj.$rowHeader.hide();
-                if (Obj.$colHeader !== null) Obj.$colHeader.hide();
+            $.each(me.floatingHeaders, function (index, obj) {
+                if (obj.$rowHeader) obj.$rowHeader.hide();
+                if (obj.$colHeader) obj.$colHeader.hide();
             });
-            if (me.$floatingToolbar !== null) me.$floatingToolbar.hide();
+            if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
         navToLink: function (elementID) {
             $(document).scrollTop($("#" + elementID).offset().top - 85);
@@ -748,7 +748,7 @@ $(function () {
         },
         _convertToMM: function (convertFrom) {
 
-            if (convertFrom === null)
+            if (!convertFrom)
                 return 0;
 
             var unit = convertFrom.match(/\D+$/);  // get the existing unit
@@ -774,12 +774,6 @@ $(function () {
 
             //This is an error
             return value;
-        },
-        isNull: function (val) {
-            if (val === null || val === undefined)
-                return true;
-            else
-                return false;
         }
     });  // $.widget
 });   // $(function
@@ -808,7 +802,7 @@ jQuery.fn.extend({
         });
     },
     highLightWord: function (keyword) {
-        if (keyword === undefined || keyword === "") {
+        if (!keyword || keyword === "") {
             return;
         }
         else {

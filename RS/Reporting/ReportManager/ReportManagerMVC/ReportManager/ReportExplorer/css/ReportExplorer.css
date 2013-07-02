@@ -21,7 +21,14 @@ height:100%;
 
 .fr-explorer-item:hover{
     background: steelblue;
+     -webkit-transform: scale(1.2);
+    -moz-transform: scale(1.2) ; 
+    -ms-transform: scale(1.2); 
+    -o-transform: scale(1.2); 
+    transform: scale(1.2);
+    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1.2, M12=0, M21=0, M22=1.2, SizingMethod='auto expand')";
 }
+
 
 .center
 {
@@ -142,29 +149,28 @@ and (orientation : landscape) {
 }
 
 /* Smartphones (portrait) ----------- */
-@media only screen 
-and (max-width : 320px) 
-and (orientation : portrait) {
+@media only screen and (max-width : 320px) and (orientation : portrait) {
 
-.rm-list-container-item {
-  padding-bottom: 50px;
-}
+    .rm-list-container-item {
+        padding-bottom: 50px;
+    }
 
-.sc-content {
-  display:inline;
-}
+    .sc-content {
+        display: inline;
+    }
 
-.reportexplorer .sky-carousel {
-  display: none;
-}
+    .reportexplorer .sky-carousel {
+        display: none;
+    }
 
-.rm-list {
-  display: block;
-}
-.fr-explorer-item {
-    margin-left:60px;
-}
+    .rm-list {
+        display: block;
+    }
 
+    .fr-explorer-item {
+        margin-left: 60px;
+    }
+}
 /* iPads (landscape) ----------- */
 @media only screen 
 and (min-device-width : 768px) 

@@ -456,7 +456,7 @@ $(function () {
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
-            });
+            }); 
         },
         _getImageURL: function (RS, ImageName) {
             var me = this;

@@ -131,6 +131,7 @@ namespace Forerunner.Manager
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END";
             SQLConn.Open();
+            
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.ExecuteNonQuery();
             SQLConn.Close();
@@ -361,7 +362,8 @@ namespace Forerunner.Manager
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetCredentials(this.WSCredentials);
                 retval = rep.GetThumbnail(path, "", "1", 1.2);
-                SaveImage(retval, path);
+                if (retval != null)
+                        SaveImage(retval, path);
             }
             return retval;
 

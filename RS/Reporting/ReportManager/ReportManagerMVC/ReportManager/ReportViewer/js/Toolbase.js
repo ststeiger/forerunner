@@ -82,7 +82,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass !== null) {
+                if (Obj.selectorClass) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
                     Obj.Display = $toolEl.is(":visible");
                     $toolEl.fadeOut();
@@ -94,7 +94,7 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass !== null) {
+                if (Obj.selectorClass) {
                     var $toolEl = $("." + Obj.selectorClass, me.element);
                     if (Obj.Display)
                         $toolEl.fadeIn();

@@ -1,4 +1,4 @@
-﻿.Parameter-Container
+﻿.fr-param-container
 {
     min-width:270px;
     width: 100%;
@@ -16,55 +16,58 @@
     background: linear-gradient(to bottom,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', endColorstr='#21282b',GradientType=0 ); /* IE6-8 */
 }
-.Parameter-Panel
+.fr-param-panel
 {
     margin: 4px 0px 0px 0px;
     width: 100%;
     height: 100%;
 }
-.Parameter, .ParameterClient{
+.fr-param-element-border
+{
+    margin: 10px 6px;
+    display: inline-block;
+}
+.fr-param, .fr-param-client
+{
     margin:4px;
     border-width:1px;
     border-style:solid;
     width:170px;
 }
-.Parameter-Label{
+.fr-param-label
+{
     margin:4px;
     display:inline-block;    
 }
-.Parameter-RadioLabel
+.fr-param-radio
+{
+    width:35px;
+}
+.fr-param-radio-label
 {
     color:black;
 }
-.Parameter-ElementBorder
-{
-    margin: 10px 6px;
-    display: inline-block;
-}
-.Parameter-Checkbox{
+.fr-param-checkbox{
     margin-left:10px;
 }
-.Parameter-Select{
+.fr-param-select{
     width:182px;
 }
-.Parameter-Radio{
-    width:35px;
-}
-.Parameter-ViewReport{
+.fr-param-viewreport{
     margin:4px 4px 4px 10px;    
     text-align:center;
 }
-.Parameter-Enable
+.fr-param-enable
 {
     background-color:rgb(255,255,255);
     color:rgb(0,0,0);
 }
-.Parameter-Disabled
+.fr-param-disable
 {
     background-color:rgb(222,231,242);
     color:rgb(84,84,84);
 }
-.Parameter-DropDown
+.fr-param-dropdown
 {
      padding:4px;
      margin:0px 4px 4px 5px;
@@ -77,24 +80,24 @@
      position: absolute; 
      z-index: 11;
 }
-.Parameter-DropDown Label, checkbox
+.fr-param-dropdown Label, checkbox
 {
     margin:4px;
 }
-.Parameter-DropDown-Input
+.fr-param-dropdown-input
 {
     margin-bottom:0px;
 }
-.Parameter-Dropdown-Hidden
+.fr-param-dropdown-hidden
 {
     display:none;
 }
-.Parameter-Dropdown-Show
+.fr-param-dropdown-show
 {
     display:block;
     margin-top:-4px;
 }
-.Parameter-CheckboxBorder
+.fr-param-checkbox-container
 {
    display:inline-block;
    margin:2px 4px;
@@ -104,12 +107,12 @@
    background-color:white;
    width:180px;
 }
-.Parameter-Error
+.fr-param-error
 {
     border-width: thin;
     border-color: red;
 }
-.ErrorPlaceHolder
+.fr-param-error-placeholder
 {
     margin-left:4px;
 }

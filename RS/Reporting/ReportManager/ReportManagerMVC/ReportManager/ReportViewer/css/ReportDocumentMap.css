@@ -1,0 +1,112 @@
+﻿.fr-docmap-panel
+{
+    vertical-align:top;
+    height:auto;
+    width:auto;
+    display:table-cell;
+    margin-right:4px;
+}
+.fr-docmap-border
+{
+    width:255px;
+    height:100%;
+    white-space:nowrap;
+    vertical-align:top;
+    overflow:auto;
+    background-color:#EBF3FF;
+    position:relative;
+    border-right-style:solid;
+    border-right-width:5px;    
+    border-right-color:#A4B7D8;
+}
+.fr-docmap-header
+{
+    overflow:auto;
+    white-space:nowrap;
+    width:255px;
+}
+.fr-docmap-bar
+{
+    background-color:#DEE7F2;
+    height:28px;        
+    line-height:28px;
+    padding-left:10px;
+    padding-right:10px;
+    border-bottom:1px solid #A4B7D8;
+}
+.fr-docmap-table
+{
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+.fr-docmap-hidden
+{
+    display:none;
+}
+.fr-docmap-content-cell
+{
+    width:255px;
+    height:100%;    
+    background-color:#ebf3ff;
+}
+.fr-docmap-item-container
+{
+    width:255px;
+    height:100%;
+    position:relative;
+    vertical-align:top;
+}
+.fr-docmap-item
+{
+    cursor:pointer;
+    text-decoration:none;
+    color:black;
+    font-family:Verdana;
+    font-size:8pt;
+    vertical-align:middle;
+    margin-left:4px;
+    margin-right:4px;
+}
+.fr-docmap-item-highlight
+{
+    color:HighlightText;
+    background-color:Highlight;
+}
+/*.fr-docmap-spliter
+{
+    font-family:Verdana;
+    font-size:3px;
+    width:4px;
+    text-align:center;
+    background-color:#A4B7D8;
+    cursor:pointer;
+}*/
+.fr-docmap-spliter {    
+    background-image:url('../../reportviewer/Images/Drilldown_Collapse.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:6px;
+    margin:4px 4px 4px 10px;
+    background-position: center;
+    cursor:pointer;
+}
+.fr-docmap-expand {    
+    background-image:url('../../reportviewer/Images/Drilldown_Expand.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    margin:4px 4px 4px 10px;
+    padding:6px;
+    background-position: center;
+    cursor:pointer;
+}
+.fr-docmap-indent
+{
+    background-image:url('../../reportviewer/Images/EmptyIndent.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    margin:4px 4px 4px 10px;
+    padding:6px;
+    background-position: center;
+    cursor:pointer;
+}

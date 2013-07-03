@@ -1,4 +1,4 @@
-﻿.navcontainer {
+﻿.fr-nav-container {
 width:100%;
 color:#CCC;
 background:#333;
@@ -32,13 +32,18 @@ ul.horizontal li{
   border: 0;
 }
 
-.navlithumb {
+.fr-nav-li-thumb {
   max-height: 100px;
   width: 150px;
   display: inline-block;
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+.fr-nav-page-thumb {
+  width: 120px;
+  max-height: 160px;
 }
 
 ul.horizontal li:hover {
@@ -49,6 +54,6 @@ ul.horizontal li:active {
   background-color:darkslategrey;
 }
 
-.selected {
+.fr-nav-selected {
   background-color:midnightblue;
 }

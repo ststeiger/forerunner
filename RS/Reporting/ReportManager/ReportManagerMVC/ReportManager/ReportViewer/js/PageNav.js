@@ -14,11 +14,11 @@ $(function () {
                 me.currentPageNum = currentPageNum;
             } else {
                 if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                    me.listItems[me.currentPageNum - 1].removeClass("selected");
+                    me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
                 }
                 me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
                 me.currentPageNum = currentPageNum;
-                me.listItems[me.currentPageNum - 1].addClass("selected");
+                me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
             }
         },
         _renderList: function () {
@@ -51,7 +51,7 @@ $(function () {
                 $caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
                 $caption.addClass("center");
                 var $thumbnail = new $("<IMG />");
-                $thumbnail.addClass(isTouch ?  "navlithumb" : "pagethumb");
+                $thumbnail.addClass(isTouch ? "fr-nav-li-thumb" : "fr-nav-page-thumb");
                 $thumbnail.attr("src", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -81,7 +81,7 @@ $(function () {
                 $slider.attr("class", "sky-carousel");
                 $slider.attr("style", "height: 150px;"); // Need to make this none
             } else {
-                $slider.addClass("navcontainer");
+                $slider.addClass("fr-nav-container");
             }
             var $sliderWrapper = new $("<DIV />");
             if (!isTouch) {

@@ -259,9 +259,9 @@ $(function () {
             }
         },
         showDocMap: function () {
-            if ($(".DocMapPanel").length > 0)
-                $(".DocMapPanel").animate({ height: "toggle" }, 100, function () {
-                    $(".DocMapBorder").css("height", document.body.clientHeight - $(".DocMapPanel").offset().top);
+            if ($(".fr-docmap-panel").length > 0)
+                $(".fr-docmap-panel").animate({ height: "toggle" }, 100, function () {
+                    $(".fr-docmap-border").css("height", document.body.clientHeight - $(".fr-docmap-panel").offset().top);
                 });
         },
         cachePages: function (initPage) {
@@ -663,7 +663,7 @@ $(function () {
                 return;
 
             if (!me.pages[pageNum].reportObj.Exception) {
-                if (me.$reportContainer.find(".DocMapPanel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap) {
+                if (me.$reportContainer.find(".fr-docmap-panel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap) {
                     me.hasDocMap = true;
                     me.$reportContainer.reportDocumentMap({ reportViewer: me });
                     me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);

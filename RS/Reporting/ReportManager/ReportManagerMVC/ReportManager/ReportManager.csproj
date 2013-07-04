@@ -171,6 +171,7 @@
     <Content Include="ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Images\ReportManager\clock_icon.png" />
+    <Content Include="ReportViewer\css\ReportDocumentMap.css" />
     <Content Include="ReportViewer\css\ReportViewerEZ.css" />
     <Content Include="ReportViewer\images\Toolbar\export.jpg" />
     <Content Include="ReportViewer\images\Toolbar\page_layout_icon.png" />
@@ -178,7 +179,7 @@
     <Content Include="Images\ReportManager\sq_plus_icon.png" />
     <Content Include="Images\ReportManager\star_fav_icon.png" />
     <Content Include="ReportViewer\css\PageNav.css" />
-    <Content Include="ReportViewer\css\Parameter.css" />
+    <Content Include="ReportViewer\css\ReportParameter.css" />
     <Content Include="ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="ReportViewer\js\ReportViewer.js" />
     <Content Include="ReportViewer\js\PageNav.js" />

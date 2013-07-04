@@ -4,32 +4,32 @@
             reportViewer: null,
         },
         _create: function () {
-                this.element = $("<div class='DocMapPanel'><div class='DocMapBorder'><table cellspacing='0' cellpadding='0' style='position:relative;height:100%;width:100%;'>" +
-                "<tr><td nowrap width='100%'><div class='DocMapHeader'><div class='DocMapBar'> Document Map </div></div></td></tr>" +
-                "<tr><td class='DocMapContentCell'><div class='DocMapItemContaienr'></div></td></tr></table></div></div>");
+                this.element = $("<div class='fr-docmap-panel'><div class='fr-docmap-border'><table class='fr-docmap-table'>" +
+                "<tr><td nowrap><div class='fr-docmap-header'><div class='fr-docmap-bar'> Document Map </div></div></td></tr>" +
+                "<tr><td class='fr-docmap-content-cell'><div class='fr-docmap-item-container'></div></td></tr></table></div></div>");
             
                 this.options.reportViewer.$reportContainer.append(this.element);
                 
-                $(".DocMapPanel").resizable({
+                $(".fr-docmap-panel").resizable({
                     resize: function (event, ui) {
-                        $(".DocMapBorder").css("width", ui.size.width);
-                        $(".DocMapHeader").css("width", ui.size.width);
-                        $(".DocMapItemContaienr").css("width", ui.size.width);
+                        $(".fr-docmap-border").css("width", ui.size.width);
+                        $(".fr-docmap-header").css("width", ui.size.width);
+                        $(".fr-docmap-item-container").css("width", ui.size.width);
                     }
                 });
 
                 var clientHeight = document.documentElement.clientHeight == 0 ? document.body.clientHeight : document.documentElement.clientHeight;
-                window.onresize = function () { $(".DocMapBorder").css("height", clientHeight - $(".DocMapPanel").offset().top); };
+                window.onresize = function () { $(".fr-docmap-border").css("height", clientHeight - $(".fr-docmap-panel").offset().top); };
 
-                $(window).scroll(function () { $(".DocMapBorder").css("top", $(window).scrollTop()); });
+                $(window).scroll(function () { $(".fr-docmap-border").css("top", $(window).scrollTop()); });
                 //trigger the onresize event, fix Compatibility issue in IE and FF
                 $(window).resize();
-                $(".DocMapPanel").toggle("fast");
+                $(".fr-docmap-panel").toggle("fast");
         },
         writeDocumentMap: function (pageNum) {
             var me = this;
             var $cell;
-            $cell = $(".DocMapItemContaienr");
+            $cell = $(".fr-docmap-item-container");
             $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].reportObj.Report.DocumentMap, 0));
         },
         _writeDocumentMapItem: function (docMap, level) {
@@ -41,29 +41,29 @@
             
             if (!docMap.Children) {
                 $docMap.attr("level", level);
-                $icon.addClass("DocMap-Indent");
+                $icon.addClass("fr-docmap-indent");
             }
             else {
-                $icon.addClass("DocMap-Collapse");
+                $icon.addClass("fr-docmap-spliter");
                 $icon.on("click", function () {
-                    if ($icon.hasClass("DocMap-Collapse")) {
-                        $icon.removeClass("DocMap-Collapse").addClass("DocMap-Expand");
-                        $("[level='" + (level) + "']").addClass("DocMap-Hidden");
+                    if ($icon.hasClass("fr-docmap-spliter")) {
+                        $icon.removeClass("fr-docmap-spliter").addClass("fr-docmap-expand");
+                        $("[level='" + (level) + "']").addClass("fr-docmap-hidden");
                     }
                     else {
-                        $icon.addClass("DocMap-Collapse").removeClass("DocMap-Expand");
-                        $("[level='" + (level) + "']").removeClass("DocMap-Hidden");
+                        $icon.addClass("fr-docmap-spliter").removeClass("fr-docmap-expand");
+                        $("[level='" + (level) + "']").removeClass("fr-docmap-hidden");
                     }
                 });
             }
             $docMap.append($icon);
 
             var $mapNode = new $("<A />");
-            $mapNode.addClass("DocMap-Item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
+            $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
                 me.options.reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
-            $mapNode.hover(function () { $mapNode.addClass("DocMap-Item-Highlight"); }, function () { $mapNode.removeClass("DocMap-Item-Highlight"); });
+            $mapNode.hover(function () { $mapNode.addClass("fr-docmap-item-highlight"); }, function () { $mapNode.removeClass("fr-docmap-item-highlight"); });
             $docMap.append($mapNode);
 
             if (docMap.Children) {

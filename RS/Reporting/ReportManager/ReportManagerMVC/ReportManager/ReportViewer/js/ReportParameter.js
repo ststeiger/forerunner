@@ -18,11 +18,11 @@
         _render: function () {
             var me = this;
             me.element.html(null);
-            var $params = new $("<div class='Parameter-Container Parameter-Layout'>" +
+            var $params = new $("<div class='fr-param-container'>" +
                 "<form name='ParameterForm' onsubmit='return false'>" +
-                   "<div class='Parameter-ElementBorder'><input type='text' style='display:none'></div>" +
-                   "<div class='Parameter-SubmitBorder'>" +
-                      "<input name='Parameter_ViewReport' type='button' class='Parameter-ViewReport' value='View Report'/>" +
+                   "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
+                   "<div class='fr-param-submit-container'>" +
+                      "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='View Report'/>" +
                    "</div>" +
                 "</form></div>");
             me.element.css("display", "block");
@@ -39,7 +39,7 @@
 
             me._render();
 
-            var $eleBorder = $(".Parameter-ElementBorder");
+            var $eleBorder = $(".fr-param-element-border");
             $.each(data.ParametersList, function (index, param) {
                 $eleBorder.append(me._writeParamControl(param, new $("<div />")));
             });
@@ -59,18 +59,18 @@
                 },
                 highlight: function (element) {
                     if ($(element).is(":radio"))
-                        $(element).parent("div").addClass("Parameter-Error");
+                        $(element).parent("div").addClass("fr-param-error");
                     else
-                        $(element).addClass("Parameter-Error");
+                        $(element).addClass("fr-param-error");
                 },
                 unhighlight: function (element) {
                     if ($(element).is(":radio"))
-                        $(element).parent("div").removeClass("Parameter-Error");
+                        $(element).parent("div").removeClass("fr-param-error");
                     else
-                        $(element).removeClass("Parameter-Error");
+                        $(element).removeClass("fr-param-error");
                 }
             });
-            $(".Parameter-ViewReport").on("click", function () {
+            $(".fr-param-viewreport").on("click", function () {
                 me._submitForm();
             });
 
@@ -93,11 +93,11 @@
         },
         _writeParamControl: function (param, $parent) {
             var me = this;
-            var $lable = new $("<div class='Parameter-Label'>" + param.Name + "</div>");
+            var $lable = new $("<div class='fr-param-label'>" + param.Name + "</div>");
             
             //If the control have valid values, then generate a select control
-            var $container = new $("<div class='Parameter-ItemContainer'></div>");
-            var $errorMsg = new $("<span class='ErrorPlaceHolder'/>");
+            var $container = new $("<div class='fr-param-item-container'></div>");
+            var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
             var $element = null;
 
             if (param.ValidValues !== "") {
@@ -139,7 +139,7 @@
             if (param.Nullable === "True") {
                 var $nullableSpan = new $("<Span />");
 
-                var $checkbox = new $("<Input type='checkbox' class='Parameter-Checkbox' name='" + param.Name + "' />");
+                var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
                 //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
                 //    $checkbox.attr('checked', 'true');
@@ -148,20 +148,20 @@
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
                         if (param.Type === "Boolean")
-                            $(".Parameter-Radio." + param.Name).removeAttr("disabled");
+                            $(".fr-param-radio." + param.Name).removeAttr("disabled");
                         else
-                            $control.removeAttr("disabled").removeClass("Parameter-Disabled").addClass("Parameter-Enabled");
+                            $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
                     }
                     else {
                         $checkbox.attr("checked", "true");
                         if (param.Type === "Boolean")
-                            $(".Parameter-Radio." + param.Name).attr("disabled", "true");
+                            $(".fr-param-radio." + param.Name).attr("disabled", "true");
                         else
-                            $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     }
                 });
 
-                var $nullableLable = new $("<Label class='Parameter-Null-Label' />");
+                var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html("NULL");
 
                 $nullableSpan.append($checkbox).append($nullableLable);
@@ -176,10 +176,10 @@
             radioValues[0] = "True";
             radioValues[1] = "False";
 
-            var $control = new $("<div class='Parameter-CheckboxBorder' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
+            var $control = new $("<div class='fr-param-checkbox-container' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
 
             for (var i = 0; i < radioValues.length; i++) {
-                var $radioItem = new $("<input type='radio' class='Parameter Parameter-Radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i] +
+                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i] +
                     "' id='" + param.Name + "_radio" + "_" + radioValues[i] + "' datatype='" + param.Type + "' />");
                 me._getParameterControlProperty(param, $radioItem);
 
@@ -193,7 +193,7 @@
                 if (me._paramCount === 1)
                     $radioItem.on("click", function () { me._submitForm(); });
 
-                var $label = new $("<label class='Parameter-RadioLabel' for='" + param.Name + "_radio" + "_" + radioValues[i] + "'>" + radioValues[i] + "</label>");
+                var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i] + "'>" + radioValues[i] + "</label>");
 
                 $control.append($radioItem);
                 $control.append($label);
@@ -203,7 +203,7 @@
         },
         _writeTextArea: function (param) {
             var me = this;
-            var $control = new $("<input class='Parameter' type='text' size='30' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
+            var $control = new $("<input class='fr-param' type='text' size='30' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
             me._getParameterControlProperty(param, $control);
 
             switch (param.Type) {
@@ -230,7 +230,7 @@
                 case "String":
                     if (me._hasDefaultValue(param)) { $control.val(param.DefaultValues[0]); }
                     //if (param.DefaultValues[0] === "")                        
-                    //    $control.attr("disabled", "true").removeClass("Parameter-Enable").addClass("Parameter-Disabled");
+                    //    $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     break;
             }
 
@@ -239,7 +239,7 @@
         _writeDropDownControl: function (param) {
             var me = this;
             var canLoad = false;
-            var $control = $("<select class='Parameter Parameter-Select' ismultiple='" + param.MultiValue + "' name='" + param.Name + "' datatype='" + param.Type + "' readonly='true'>");
+            var $control = $("<select class='fr-param fr-param-select' ismultiple='" + param.MultiValue + "' name='" + param.Name + "' datatype='" + param.Type + "' readonly='true'>");
             me._getParameterControlProperty(param, $control);
 
             var $defaultOption = new $("<option value=''>&#60Select a Value&#62</option>");
@@ -268,21 +268,21 @@
             var me = this;
             var $control = new $("<div style='display:inline-block;'/>");
 
-            var $multipleCheckBox = new $("<Input type='text' class='ParameterClient' id='" + param.Name + "_fore' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $multipleCheckBox = new $("<Input type='text' class='fr-param-client' id='" + param.Name + "_fore' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
             me._getParameterControlProperty(param, $multipleCheckBox);
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='Parameter' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
             var $openDropDown = new $("<Img alt='Open DropDown List' src='./reportviewer/Images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='Parameter-DropDown Parameter-Dropdown-Hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
+            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
 
             $(document).on("click", function (e) {
                 if ($(e.target).hasClass("ViewReport")) return;
 
-                if (!($(e.target).hasClass("Parameter-DropDown") || $(e.target).hasClass("ParameterClient") || $(e.target).hasClass(param.Name + "_DropDown_CB") || $(e.target).hasClass(param.Name + "_DropDown_lable"))) {
+                if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param-client") || $(e.target).hasClass(param.Name + "_DropDown_CB") || $(e.target).hasClass(param.Name + "_DropDown_lable"))) {
                     if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
                         me._closeDropDownPanel(param);
                     }
@@ -381,8 +381,8 @@
                 dropDown.css("top", multipleControl.offset().top + 36);
             }
 
-            if (dropDown.hasClass("Parameter-Dropdown-Hidden")) {
-                dropDown.width(multipleControl.width()).fadeOut("fast").removeClass("Parameter-Dropdown-Hidden").addClass("Parameter-Dropdown-Show");
+            if (dropDown.hasClass("fr-param-dropdown-hidden")) {
+                dropDown.width(multipleControl.width()).fadeOut("fast").removeClass("fr-param-dropdown-hidden").addClass("fr-param-dropdown-show");
             }
             else {
                 me._closeDropDownPanel(param);
@@ -390,18 +390,18 @@
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            if ($("[name='" + param.Name + "_DropDownContainer']").hasClass("Parameter-Dropdown-Show")) {
+            if ($("[name='" + param.Name + "_DropDownContainer']").hasClass("fr-param-dropdown-show")) {
                 $("[name='" + param.Name + "_DropDownContainer']").fadeIn("fast", function () {
                     me._setMultipleInputValues(param);
                 });
-                $("[name='" + param.Name + "_DropDownContainer']").addClass("Parameter-Dropdown-Hidden").removeClass("Parameter-Dropdown-Show");
+                $("[name='" + param.Name + "_DropDownContainer']").addClass("fr-param-dropdown-hidden").removeClass("fr-param-dropdown-show");
                 $("[name='" + param.Name + "']").focus().blur().focus();
             }
 
         },
         _closeAllDropdown: function () {
             var me = this;
-            $(".Parameter-DropDown").each(function (index, param) {
+            $(".fr-param-dropdown").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
@@ -411,20 +411,20 @@
             if ($("[name='ParameterForm']").length !== 0 && $("[name='ParameterForm']").valid() === true) {
                 var a = [];
                 //Text
-                $(".Parameter").filter(":text").each(function () {
+                $(".fr-param").filter(":text").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //Hidden
-                $(".Parameter").filter("[type='hidden']").each(function () {
+                $(".fr-param").filter("[type='hidden']").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //dropdown
-                $(".Parameter").filter("select").each(function () {
+                $(".fr-param").filter("select").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
-                $(".Parameter").filter(":radio").each(function () {
+                $(".fr-param").filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
                         radioList[this.name] = null;
                     }
@@ -437,7 +437,7 @@
                 }
                 //combobox - multiple values
                 var tempCb = "";
-                $(".Parameter").filter(":checkbox").filter(":checked").each(function () {
+                $(".fr-param").filter(":checkbox").filter(":checked").each(function () {
                     if (tempCb.indexOf(this.name) === -1) {
                         tempCb += this.name + ",";
                     }
@@ -476,7 +476,7 @@
             }
         },
         _isParamNullable: function(param) {
-            var cb = $(".Parameter-Checkbox").filter("[name='" + param.name + "']").first();
+            var cb = $(".fr-param-checkbox").filter("[name='" + param.name + "']").first();
             if (cb.attr("checked") === "checked" || param.value === "")
                 return null;
             else
@@ -484,10 +484,10 @@
         },
         _resetLabelWidth: function () {
             var max = 0;
-            $(".Parameter-Label").each(function (index, obj) {
+            $(".fr-param-label").each(function (index, obj) {
                 if ($(obj).width() > max) max = $(obj).width();
             });
-            $(".Parameter-Label").each(function (index, obj) {
+            $(".fr-param-label").each(function (index, obj) {
                 $(obj).width(max);
             });
         },
@@ -517,7 +517,7 @@
         removeParameter: function () {
             var me = this;
             me._formInit = false;
-            $(".Parameter-Container", this.element).detach();
+            $(".fr-param-container", this.element).detach();
         },
         _getDefaultHTMLTable: function() {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");

@@ -662,13 +662,8 @@ $(function () {
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {
-                if (me.$reportContainer.find(".fr-docmap-panel").length === 0 && me.pages[pageNum].reportObj.Report.DocumentMap) {
-                    me.hasDocMap = true;
-                    me.$reportContainer.reportDocumentMap({ reportViewer: me });
-                    me.$reportContainer.reportDocumentMap("writeDocumentMap", pageNum);
-                }
-
+            if (!me.pages[pageNum].reportObj.Exception) {                
+                me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else

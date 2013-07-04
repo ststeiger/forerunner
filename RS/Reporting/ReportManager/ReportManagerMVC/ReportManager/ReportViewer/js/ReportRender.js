@@ -61,8 +61,8 @@ $(function () {
 
             me._writeExportPanel();
 
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.Report.PageContent.PageStyle));
-            $.each(reportObj.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.Report.PageContent, reportDiv, "")); });
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));
+            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, "")); });
         },
         writeError: function (errorData) {
             var me = this;
@@ -801,10 +801,9 @@ $(function () {
                 var rotate = Math.atan(measurement.Height / measurement.Width);
                 var newTop = (newWidth / 2) * Math.sin(rotate);
                 var newLeft = (newWidth / 2) - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
-                if (!RIContext.CurrObj.Elements.SharedElements.Slant === undefined || RIContext.CurrObj.Elements.SharedElements.Slant === 0)
-                    rotate = rotate;
-                else
+                if (!(RIContext.CurrObj.Elements.SharedElements.Slant === undefined || RIContext.CurrObj.Elements.SharedElements.Slant === 0))
                     rotate = rotate - (2 * rotate);
+
                 var lineStyle = "position:absolute;top:" + newTop + "mm;left:" + newLeft + "mm;";
                 lineStyle += me._getFullBorderStyle(RIContext.CurrObj);
                 lineStyle += "width:" + newWidth + "mm;height:0;";
@@ -813,12 +812,6 @@ $(function () {
                 lineStyle += "-ms-transform: rotate(" + rotate + "rad);";
                 lineStyle += "transform: rotate(" + rotate + "rad);";
                 $line.attr("Style", lineStyle);
-
-                //Line don't have action
-                //if (RIContext.CurrObj.Elements.NonSharedElements.ActionInfo)
-                //    for (var i = 0; i < Obj.TextRuns[i].Elements.NonSharedElements.ActionInfo.Count; i++) {
-                //        me._writeAction(RIContext, RIContext.CurrObj.Elements.NonSharedElements.ActionInfo.Actions[i], $line);
-                //    }
 
                 RIContext.$HTMLParent.append($line);
             }

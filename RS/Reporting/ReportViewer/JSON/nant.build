@@ -192,7 +192,7 @@
         <if test="${framework::exists('net-4.0')}">
             <echo message="Building ${project.name} for .NET Framework 4.0." />
             <call target="config-platform-net-4.0" />
-            <call target="test" />
+           <!-- <call target="test" /> -->
             <call target="jayrock.sandbox" />
         </if>
         <if test="${not(framework::exists('net-4.0'))}">
@@ -204,7 +204,7 @@
         <if test="${framework::exists('net-2.0')}">
             <echo message="Building ${project.name} for .NET Framework 2.0." />
             <call target="config-platform-net-2.0" />
-            <call target="test" />
+          <!-- <call target="test" /> -->
             <call target="jayrock.sandbox" />
         </if>
         <if test="${not(framework::exists('net-2.0'))}">

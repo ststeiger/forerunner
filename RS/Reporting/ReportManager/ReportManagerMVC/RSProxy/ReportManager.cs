@@ -232,7 +232,7 @@ namespace Forerunner.Manager
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem c;
 
-            string SQL = @"SELECT DISTINCT Path,Name,ModifiedDate  FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser and ReportAction = 6 and TimeStart > DATEADD(dd,-60,GETDATE())";
+            string SQL = @"SELECT DISTINCT Path,Name,ModifiedDate  FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser AND ReportAction = 1 AND format IS NOT NULL AND format <> 'MHTML' AND TimeStart > DATEADD(dd,-60,GETDATE())";
 
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

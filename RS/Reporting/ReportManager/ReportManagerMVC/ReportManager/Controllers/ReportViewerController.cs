@@ -119,6 +119,22 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        public HttpResponseMessage GetDocMapJSON(string ReportServerURL,string SessionID)
+        {
+            try
+            {
+                byte[] result = null;
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetDocMapJson(SessionID));
+                return GetResponseFromBytes(result, "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }
+
+        }
+
+        [HttpGet]
         public HttpResponseMessage SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
         {
 

@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using Forerunner.RSExec;
 using Jayrock.Json;
+using System.Diagnostics;
 
 namespace Forerunner.Viewer
 {
@@ -160,7 +161,7 @@ namespace Forerunner.Viewer
             Warning[] warnings = null;
             string[] streamIDs = null;
             string NewSession;
-            ReportJSONWriter rw = new ReportJSONWriter();
+            ReportJSONWriter rw;
 
 
             if (SessionID == null)
@@ -195,9 +196,33 @@ namespace Forerunner.Viewer
                 }
                 
                 result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
-                execInfo = rs.GetExecutionInfo(); 
+                execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
-                    return rw.RPLToJSON(result, NewSession, ReportServerURL, reportPath, execInfo.NumPages, rs.GetDocumentMap());
+                {
+                    rw = new ReportJSONWriter(new MemoryStream(result));
+                    JsonWriter w = new JsonTextWriter();
+
+                    //Read Report Object
+                    w.WriteStartObject();
+                    w.WriteMember("SessionID");
+                    w.WriteString(NewSession);
+                    w.WriteMember("ReportServerURL");
+                    w.WriteString(ReportServerURL);
+                    w.WriteMember("ReportPath");
+                    w.WriteString(reportPath);
+                    w.WriteMember("NumPages");
+                    w.WriteNumber(execInfo.NumPages);
+                    w.WriteMember("HasDocMap");
+                    w.WriteBoolean(execInfo.HasDocumentMap);
+                    w.WriteMember("ReportContainer");
+                    JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON()));
+                    w.WriteFromReader(r);
+                    w.WriteEndObject();
+
+                    Debug.WriteLine(w.ToString());
+                    return w.ToString();
+
+                }
                 else
                     return "";
 
@@ -208,12 +233,25 @@ namespace Forerunner.Viewer
                 return JsonUtility.WriteExceptionJSON(e);//return e.Message;
             }
         }
+        public string GetDocMapJson(string SessionID)
+        {
+           ExecutionInfo execInfo = new ExecutionInfo();
+            try
+            {
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                return JsonUtility.GetDocMapJSON(rs.GetDocumentMap());
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+            }
+        }
         public string GetParameterJson(string ReportPath)
         {
             string historyID = null;
             string NewSession;
-            ReportJSONWriter rw = new ReportJSONWriter();
             ExecutionInfo execInfo = new ExecutionInfo();
 
             try
@@ -224,7 +262,7 @@ namespace Forerunner.Viewer
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {
                     ReportParameter[] reportParameter = execInfo.Parameters;
-                    return rw.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                    return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
                 }
                 return "{\"Type\":\"\"}";
             }
@@ -365,8 +403,7 @@ namespace Forerunner.Viewer
                 if (execInfo.Parameters.Length != 0)
                 {
                     w.WriteMember("Parameters");
-                    ReportJSONWriter rw = new ReportJSONWriter();
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
+                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
                     w.WriteFromReader(r);
                 }
                 w.WriteEndObject();

@@ -69,38 +69,37 @@ $(function () {
             var errorTag = forerunner.ssr.constants.errorTag;
 
             me.element.html($(
-                "<div class='Error-Message'></div>" +
-                "<div class='Error-Details'>" + errorTag.moreDetail + "</div>" +
-                "<div class='Error'><h3>" + errorTag.serverError + "</h3>" +
-                "<div class='Error Error-Type'></div>" +
-                "<div class='Error Error-TargetSite'></div>" +
-                "<div class='Error Error-Source'></div>" +
-                "<div class='Error Error-StackTrace'></div>" +
+                "<div class='fr-render-error-message'></div>" +
+                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
+                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+                "<div class='fr-render-error fr-render-error-type'></div>" +
+                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
+                "<div class='fr-render-error fr-render-error-source'></div>" +
+                "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
                 "</div>"));
 
             if (me.options.reportViewer) {
                 var $cell;
 
-                $cell = me.element.find(".Error");
+                $cell = me.element.find(".fr-render-error");
                 $cell.hide();
 
-                $cell = me.element.find(".Error-Details");
-                $cell.on("click", { $Detail: me.element.find(".Error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+                $cell = me.element.find(".fr-render-error-details");
+                $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
 
-
-                $cell = me.element.find(".Error-Type");
+                $cell = me.element.find(".fr-render-error-type");
                 $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
 
-                $cell = me.element.find(".Error-TargetSite");
+                $cell = me.element.find(".fr-render-error-targetsite");
                 $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
 
-                $cell = me.element.find(".Error-Source");
+                $cell = me.element.find(".fr-render-error-source");
                 $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
 
-                $cell = me.element.find(".Error-Message");
+                $cell = me.element.find(".fr-render-error-message");
                 $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
 
-                $cell = me.element.find(".Error-StackTrace");
+                $cell = me.element.find(".fr-render-error-stacktrace");
                 $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
             }
         },
@@ -306,12 +305,12 @@ $(function () {
                 $Drilldown.html("&nbsp");
 
                 if (RIContext.CurrObj.Elements.NonSharedElements.ToggleState !== undefined && RIContext.CurrObj.Elements.NonSharedElements.ToggleState === true)
-                    $Drilldown.addClass("Drilldown-Collapse");
+                    $Drilldown.addClass("fr-render-drilldown-collapse");
                 else
-                    $Drilldown.addClass("Drilldown-Expand");
+                    $Drilldown.addClass("fr-render-drilldown-expand");
 
                 $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
-                $Drilldown.addClass("cursor-pointer");
+                $Drilldown.addClass("fr-report-cursor-pointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
             if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
@@ -321,15 +320,15 @@ $(function () {
                 var sortDirection = forerunner.ssr.constants.sortDirection;
 
                 if (RIContext.CurrObj.Elements.NonSharedElements.SortState === 2) {
-                    $Sort.attr("class", "sort-descending");
+                    $Sort.attr("class", "fr-render-sort-descending");
                     Direction = sortDirection.desc;
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.SortState === 1) {
-                    $Sort.attr("class", "sort-ascending");
+                    $Sort.attr("class", "fr-render-sort-ascending");
                     Direction = sortDirection.asc;
                 }
                 else
-                    $Sort.attr("class", "sort-unsorted");
+                    $Sort.attr("class", "fr-render-sort-unsorted");
 
                 $Sort.on("click", { Viewer:  RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID); });
                 RIContext.$HTMLParent.append($Sort);
@@ -518,7 +517,7 @@ $(function () {
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.attr("href", "#");
-                Control.addClass("cursor-pointer");
+                Control.addClass("fr-report-cursor-pointer");
                 Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
@@ -526,7 +525,7 @@ $(function () {
             }
             else {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.addClass("cursor-pointer");
+                Control.addClass("fr-report-cursor-pointer");
                 Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._stopDefaultEvent(e);
@@ -833,7 +832,7 @@ $(function () {
         },
         _writeExportPanel: function () {
             var me = this;
-            var $ExportPanel = $("<div class='Export-Panel'></div>");
+            var $ExportPanel = $("<div class='fr-render-export-panel'></div>");
             var exportType = forerunner.ssr.constants.exportType;
 
             var ExportList = [];
@@ -850,7 +849,7 @@ $(function () {
             });
 
             $(document).on("click", function (e) {
-                if (!$(e.target).hasClass("Export-Panel") && !$(e.target).hasClass("fr-button-export") && $ExportPanel.is(":visible")) {
+                if (!$(e.target).hasClass("fr-render-export-panel") && !$(e.target).hasClass("fr-button-export") && $ExportPanel.is(":visible")) {
                     $ExportPanel.toggle();
                 }
             });
@@ -859,16 +858,16 @@ $(function () {
         },
         _getExportItem: function (ExportObj) {
             var me = this;
-            var $ExportItem = $("<div class='Export-Item'></div>");
+            var $ExportItem = $("<div class='fr-render-export-item'></div>");
 
             $ExportItem.hover(function () {
-                $ExportItem.addClass("Export-Hover");
+                $ExportItem.addClass("fr-render-export-hover");
             },
             function () {
-                $ExportItem.removeClass("Export-Hover");
+                $ExportItem.removeClass("fr-render-export-hover");
             });
 
-            var $ExportLink = $("<a class='Export-Link' value='" + ExportObj.Type + "' href='javascript:void(0)'>" + ExportObj.Name + "</a>");
+            var $ExportLink = $("<a class='fr-render-export-link' value='" + ExportObj.Type + "' href='javascript:void(0)'>" + ExportObj.Name + "</a>");
             $ExportLink.on("click", function () {
                 me.options.reportViewer.exportReport(ExportObj.Type);
             });

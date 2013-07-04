@@ -16,13 +16,13 @@
             var reportThumbnailPath = me.options.url
               + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
             var $listItem = new $("<li />");
-            $listItem.addClass("center");
+            $listItem.addClass("fr-report-center");
             $listItem.addClass("rm-list-container-item");
             var $caption = new $("<div />");
-            $caption.addClass("center");
+            $caption.addClass("fr-report-center");
             $listItem.append($caption);
             var $captiontext = new $("<h3 />");
-            $captiontext.addClass("centertext");
+            $captiontext.addClass("fr-report-centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
@@ -30,7 +30,7 @@
             var $anchor = new $("<a />");
             var $img = new $("<img />");
             $img.addClass("catalogitem");
-            $img.addClass("center");
+            $img.addClass("fr-report-center");
             if (catalogItem.Type === 1) {
                 imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {
@@ -70,10 +70,10 @@
             $item.addClass("fr-explorer-item");
              $item.addClass("image-block");
             var $caption = new $("<div />");
-            $caption.addClass("center");
+            $caption.addClass("fr-report-center");
             $item.append($caption);
             var $captiontext = new $("<h3 />");
-            $captiontext.addClass("centertext");
+            $captiontext.addClass("fr-report-centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var imageSrc;
@@ -81,7 +81,7 @@
             var $anchor = new $("<a />");
             var $img = new $("<img />");
             $img.addClass("catalogitem");
-            $img.addClass("center");
+            $img.addClass("fr-report-center");
             if (catalogItem.Type === 1) {
                 imageSrc = "./ReportExplorer/images/folder-icon.png";
             } else {

@@ -108,7 +108,7 @@ $(function () {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.removeClass("fr-tool-disabled");
                 if (toolInfo.events) {
-                    $toolEl.addClass("cursor-pointer");
+                    $toolEl.addClass("fr-report-cursor-pointer");
                     me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
                     me._addEvents($toolEl, toolInfo);
                 }
@@ -124,7 +124,7 @@ $(function () {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
                 $toolEl.addClass("fr-tool-disabled");
                 if (toolInfo.events) {
-                    $toolEl.removeClass("cursor-pointer");
+                    $toolEl.removeClass("fr-report-cursor-pointer");
                     me._removeEvent($toolEl, toolInfo);
                 }
                 if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {

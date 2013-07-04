@@ -54,9 +54,9 @@ $(function () {
             me.sessionID = "";
             me.numPages = 0;
             me.lock = 0;
-            me.$reportContainer = new $("<DIV class='report-container'/>");
+            me.$reportContainer = new $("<DIV class='fr-report-container'/>");
             me.$reportAreaContainer = null;
-            me.$loadingIndicator = new $("<div class='loading-indicator'></div>").text(messages.loading);
+            me.$loadingIndicator = new $("<div class='fr-report-loading-indicator'></div>").text(messages.loading);
             me.floatingHeaders = [];
             me.paramLoaded = false;
             me.scrollTop = 0;
@@ -172,7 +172,7 @@ $(function () {
                 me.renderPage(pageNum);
             if (!me.$reportAreaContainer) {
                 me.$reportAreaContainer = $("<Div/>");
-                me.$reportAreaContainer.addClass("report-area-container");
+                me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
                 me.touchNav();
@@ -484,11 +484,11 @@ $(function () {
         },
         findNext: function (keyword) {
             var me = this;
-            $(".Find-Keyword").filter(".Find-Highlight").first().removeClass("Find-Highlight");
+            $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
-            var $nextWord = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
+            var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
-                $nextWord.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+                $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 $(document).scrollTop($nextWord.offset().top - 100);
             }
             else {
@@ -514,8 +514,8 @@ $(function () {
             me.$reportContainer.highLightWord(keyword);
 
             //Highlight the first match.
-            var $item = $(".Find-Keyword").filter(":visible").filter(".Unread").first();
-            $item.removeClass("Unread").addClass("Find-Highlight").addClass("Read");
+            var $item = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
 
             $(document).scrollTop($item.offset().top - 100);
         },
@@ -526,15 +526,15 @@ $(function () {
             me.findKeyword = null;
         },
         showExport: function () {
-            if ($(".Export-Panel").is(":hidden")) {
+            if ($(".fr-render-export-panel").is(":hidden")) {
                 var $export = $(".fr-button-export").filter(":visible");
-                $(".Export-Panel").css("left", $export.offset().left);
+                $(".fr-render-export-panel").css("left", $export.offset().left);
             }
-            $(".Export-Panel").toggle();
+            $(".fr-render-export-panel").toggle();
         },
         exportReport: function (exportType) {
             var me = this;
-            $(".Export-Panel").toggle();
+            $(".fr-render-export-panel").toggle();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
@@ -818,7 +818,7 @@ jQuery.fn.extend({
                         while (pos < searchnode.data.length) {
                             if (pos >= 0) {
                                 var spannode = document.createElement("span");
-                                spannode.className = "Find-Keyword Unread";
+                                spannode.className = "fr-render-find-keyword Unread";
                                 var middlebit = searchnode.splitText(pos);
                                 searchnode = middlebit.splitText(keyword.length);
                                 var middleclone = middlebit.cloneNode(true);
@@ -841,7 +841,7 @@ jQuery.fn.extend({
         return $(this);
     },
     clearHighLightWord: function () {
-        $(".Find-Keyword").each(function () {
+        $(".fr-render-find-keyword").each(function () {
             var text = document.createTextNode($(this).text());
             $(this).replaceWith($(text));
         });

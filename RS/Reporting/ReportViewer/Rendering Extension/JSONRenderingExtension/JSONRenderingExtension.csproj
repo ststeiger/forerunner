@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JSONRenderer.cs" />
+    <Compile Include="ReportUtil.cs" />
     <Compile Include="ReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>

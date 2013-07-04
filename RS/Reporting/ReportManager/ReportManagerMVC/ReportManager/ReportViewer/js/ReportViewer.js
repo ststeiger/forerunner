@@ -31,7 +31,6 @@ $(function () {
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
-            //ParameterDiv: null,
             toolbarHeight: 0,
             setPageDone: null,
             pageNav: null,
@@ -227,7 +226,13 @@ $(function () {
         refreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
+
+            if (me.lock === 1)
+                return;
+
             me.sessionID = "";
+            me.lock = 1;
+
             if (me.paramLoaded === true) {
                 var $paramArea = me.options.paramArea;
                 me.loadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);

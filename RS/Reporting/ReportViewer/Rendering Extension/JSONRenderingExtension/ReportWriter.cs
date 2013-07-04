@@ -5,193 +5,25 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Jayrock.Json;
-using Microsoft.ReportingServices.Interfaces;
-using System.Collections.Specialized;
-using System.Collections;
-using Microsoft.ReportingServices.OnDemandReportRendering;
 
-namespace Forerunner.RenderingExtensions
+namespace Forerunner
 {
 
-    public class JSONRenderer : IRenderingExtension
-    {
-        private IRenderingExtension RPL;
-        public string LocalizedName { get { return "ForerunnerJSON"; } }
-        static Type rplRendererType = null;
-        private Stream RegisteredStream;
-        private ReportJSONWriter JSON = new ReportJSONWriter();
-
-        public JSONRenderer()
-        {
-            if (rplRendererType == null)
-            {
-                // Use a disassembler tool like ILSpy to find The AssemblyName, type and constructor methods for other internal renderers in their respective .dlls
-                Assembly IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.RPLRendering, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
-
-                //Read the PdfRenderer type from the Assembly
-                rplRendererType = IR.GetType("Microsoft.ReportingServices.Rendering.RPLRendering.RPLRenderer");
-            }
-
-            //Create an instance of type PdfRenderer. 
-            //Now, PdfRenderer inherits from IRenderingExtension which is a public interface so cast it.
-            RPL = (IRenderingExtension)rplRendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
-
-        }
-
-        //[StrongNameIdentityPermissionAttribute(SecurityAction.LinkDemand, PublicKey = "0024000004800000940000000602000000240000525341310004000001000100272736ad6e5f9586bac2d531eabc3acc666c2f8ec879fa94f8f7b0327d2ff2ed523448f83c3d5c5dd2dfc7bc99c5286b2c125117bf5cbe242b9d41750732b2bdffe649c6efb8e5526d526fdd130095ecdb7bf210809c6cdad8824faa9ac0310ac3cba2aa0523567b2dfa7fe250b30facbd62d4ec99b94ac47c7d3b28f1f6e4c8")]
-        public void GetRenderingResource(CreateAndRegisterStream createAndRegisterStreamCallback, NameValueCollection deviceInfo)
-        {
-            RPL.GetRenderingResource(createAndRegisterStreamCallback, deviceInfo);
-        }
-        
-        //[StrongNameIdentityPermissionAttribute(SecurityAction.LinkDemand, PublicKey = "0024000004800000940000000602000000240000525341310004000001000100272736ad6e5f9586bac2d531eabc3acc666c2f8ec879fa94f8f7b0327d2ff2ed523448f83c3d5c5dd2dfc7bc99c5286b2c125117bf5cbe242b9d41750732b2bdffe649c6efb8e5526d526fdd130095ecdb7bf210809c6cdad8824faa9ac0310ac3cba2aa0523567b2dfa7fe250b30facbd62d4ec99b94ac47c7d3b28f1f6e4c8")]
-        public bool Render(Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
-        {
-            Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
-            RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
-
-
-            JSON.RPLToJSON(RegisteredStream);
-            byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(RegisteredStream));
-            outputStream.Write(UTF8JSON ,0,UTF8JSON.Length);         
-            return false;
-        }
-
-        //[StrongNameIdentityPermissionAttribute(SecurityAction.LinkDemand, PublicKey = "0024000004800000940000000602000000240000525341310004000001000100272736ad6e5f9586bac2d531eabc3acc666c2f8ec879fa94f8f7b0327d2ff2ed523448f83c3d5c5dd2dfc7bc99c5286b2c125117bf5cbe242b9d41750732b2bdffe649c6efb8e5526d526fdd130095ecdb7bf210809c6cdad8824faa9ac0310ac3cba2aa0523567b2dfa7fe250b30facbd62d4ec99b94ac47c7d3b28f1f6e4c8")]
-        public bool RenderStream(string streamName, Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
-        {
-            return RPL.RenderStream(streamName, report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, createAndRegisterStream);
-            //return true;
-        }
-        //[StrongNameIdentityPermissionAttribute(SecurityAction.LinkDemand, PublicKey = "0024000004800000940000000602000000240000525341310004000001000100272736ad6e5f9586bac2d531eabc3acc666c2f8ec879fa94f8f7b0327d2ff2ed523448f83c3d5c5dd2dfc7bc99c5286b2c125117bf5cbe242b9d41750732b2bdffe649c6efb8e5526d526fdd130095ecdb7bf210809c6cdad8824faa9ac0310ac3cba2aa0523567b2dfa7fe250b30facbd62d4ec99b94ac47c7d3b28f1f6e4c8")]
-        public void SetConfiguration(string configuration)
-        {
-            RPL.SetConfiguration(configuration);
-        }
-
-        Stream IntermediateCreateAndRegisterStream(
-            string name,
-            string extension,
-            Encoding encoding,
-            string mimeType,
-            bool willSeek,
-            StreamOper operation)
-        {
-            // Create and return a new MemoryStream,
-            // which will contain the results of the PDF renderer.
-            CreateAndRegisterStreamStream crss = new CreateAndRegisterStreamStream(name, extension, encoding, mimeType, willSeek, operation, new MemoryStream());
-  
-
-            if (operation == StreamOper.CreateAndRegister)
-                //Create the main stream. Contents of this stream are returned later
-                this.RegisteredStream = crss.Stream;
-
-            return crss.Stream;
-        }   
-    }
-
-    internal class CreateAndRegisterStreamStream
-    {
-        #region Attributes and Properties
-
-        string name;
-
-        internal string Name
-        {
-            get { return name; }
-            set { name = value; }
-        }
-        string extension;
-
-        internal string Extension
-        {
-            get { return extension; }
-            set { extension = value; }
-        }
-        Encoding encoding;
-
-        internal Encoding Encoding
-        {
-            get { return encoding; }
-            set { encoding = value; }
-        }
-        string mimeType;
-
-        internal string MimeType
-        {
-            get { return mimeType; }
-            set { mimeType = value; }
-        }
-        bool willSeek;
-
-        internal bool WillSeek
-        {
-            get { return willSeek; }
-            set { willSeek = value; }
-        }
-        StreamOper operation;
-
-        internal StreamOper Operation
-        {
-            get { return operation; }
-            set { operation = value; }
-        }
-
-        protected Stream stream;
-
-        internal Stream Stream
-        {
-            get { return stream; }
-            set { stream = value; }
-        }
-
-        #endregion
-
-        internal CreateAndRegisterStreamStream(string name,
-            string extension,
-            Encoding encoding,
-            string mimeType,
-            bool willSeek,
-            StreamOper operation,
-            Stream stream)
-        {
-            this.name = name;
-            this.encoding = encoding;
-            this.extension = extension;
-            this.mimeType = mimeType;
-            this.operation = operation;
-            this.willSeek = willSeek;
-
-            this.stream = stream;
-        }
-
-        internal virtual void CloseStream()
-        {
-            stream.Close();
-        }
-    }
-    class ReportJSONWriter : IDisposable
-    {
-        Stream RPL;
-        int Index = 0;
+    internal class ReportJSONWriter : IDisposable
+    {       
         JsonWriter w = new JsonTextWriter();
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
+        RPLReader RPL;
 
-        class TempProperty
+        struct TempProperty
         {
             public string Name;
             public string Type;
             public object Value;
         }
 
-        class RPLDateTime
-        {
-            public int Type;
-            public Int64 MiliSec;
-
-        }
         class RPLProperties
         {
             public RPLProperty[] PropArray;
@@ -239,7 +71,7 @@ namespace Forerunner.RenderingExtensions
             public void Add(string Name, string Type, byte Code, Func<Boolean> f = null, Boolean MakeTemp = false)
             {
                 if (NumProp == PropArray.GetUpperBound(0))
-                    //Need to Grow, throuw for now
+                    //Need to Grow, throw for now
                     ThrowParseError();
 
                 PropArray[NumProp] = new RPLProperty();
@@ -254,7 +86,7 @@ namespace Forerunner.RenderingExtensions
             public void Add(string Name, string Type, byte Code, Boolean MakeTemp)
             {
                 if (NumProp == PropArray.GetUpperBound(0))
-                    //Need to Grow, throuw for now
+                    //Need to Grow, throw for now
                     ThrowParseError();
 
                 PropArray[NumProp] = new RPLProperty();
@@ -265,7 +97,7 @@ namespace Forerunner.RenderingExtensions
                 NumProp++;
             }
 
-            public void WriteMemeber(byte Code, ReportJSONWriter r)
+            internal void WriteMemeber(byte Code, ReportJSONWriter r)
             {
                 int i;
                 JsonWriter w = r.w;
@@ -293,46 +125,46 @@ namespace Forerunner.RenderingExtensions
                     switch (PropArray[i].DataType)
                     {
                         case "Int32":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt32(); else w.WriteNumber(r.ReadInt32());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadInt32(); else w.WriteNumber(r.RPL.ReadInt32());
                             break;
                         case "Int64":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt64(); else w.WriteNumber(r.ReadInt64());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadInt64(); else w.WriteNumber(r.RPL.ReadInt64());
                             break;
                         case "Int16":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadInt16(); else w.WriteNumber(r.ReadInt16());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadInt16(); else w.WriteNumber(r.RPL.ReadInt16());
                             break;
                         case "String":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadString(); else w.WriteString(r.ReadString());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadString(); else w.WriteString(r.RPL.ReadString());
                             break;
                         case "Float":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadFloat(); else w.WriteNumber(r.ReadFloat());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadFloat(); else w.WriteNumber(r.RPL.ReadFloat());
                             break;
                         case "Single":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadSingle(); else w.WriteNumber(r.ReadSingle());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadSingle(); else w.WriteNumber(r.RPL.ReadSingle());
                             break;
                         case "Char":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadChar().ToString(); else w.WriteString(r.ReadChar().ToString());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadChar().ToString(); else w.WriteString(r.RPL.ReadChar().ToString());
                             break;
                         case "DateTime":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDateTime().MiliSec; else w.WriteNumber(r.ReadDateTime().MiliSec);
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadDateTime().MiliSec; else w.WriteNumber(r.RPL.ReadDateTime().MiliSec);
                             //TODO Need to write datetime type
                             break;
                         case "Decimal":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadDecimal(); else w.WriteNumber(r.ReadDecimal());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadDecimal(); else w.WriteNumber(r.RPL.ReadDecimal());
                             break;
                         case "Boolean":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.ReadBoolean(); else w.WriteBoolean(r.ReadBoolean());
+                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadBoolean(); else w.WriteBoolean(r.RPL.ReadBoolean());
                             break;
                         case "Byte":
                             //This is a Total Hack for OrigionalValue
                             //TypeCode is guarenteed to come  before OrigionalValue
                             if (PropArray[i].Name == "TypeCode")
                             {
-                                TypeCode = r.ReadByte();
+                                TypeCode = r.RPL.ReadByte();
                                 w.WriteNumber(TypeCode);
                             }
                             else
-                                if (PropArray[i].MakeTemp) tmp.Value = r.ReadByte(); else w.WriteNumber(r.ReadByte());
+                                if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadByte(); else w.WriteNumber(r.RPL.ReadByte());
                             break;
                         case "Object":
 
@@ -346,7 +178,7 @@ namespace Forerunner.RenderingExtensions
                             {
                                 w.WriteStartObject();
                                 //Step back a byte to re-read object type
-                                r.Seek(-1);
+                                r.RPL.position--;
                                 PropArray[i].ObjFunction();
                                 w.WriteEndObject();
                             }
@@ -373,20 +205,20 @@ namespace Forerunner.RenderingExtensions
                 //If RPLPRopertyBagCode is 0xFF then there is no Object code just arbitrary properties
                 if (RPLPropBagCode == 0xFF)
                 {
-                    byte isEnd = r.ReadByte();
+                    byte isEnd = r.RPL.ReadByte();
                     while (isEnd != EndCode)
                     {
                         WriteMemeber(isEnd, r);
-                        isEnd = r.ReadByte();
+                        isEnd = r.RPL.ReadByte();
                     }
                 }
-                else if (r.ReadByte() == RPLPropBagCode)
+                else if (r.RPL.ReadByte() == RPLPropBagCode)
                 {
-                    byte isEnd = r.ReadByte();
+                    byte isEnd = r.RPL.ReadByte();
                     while (isEnd != EndCode)
                     {
                         WriteMemeber(isEnd, r);
-                        isEnd = r.ReadByte();
+                        isEnd = r.RPL.ReadByte();
                     }
                 }
                 else
@@ -395,25 +227,22 @@ namespace Forerunner.RenderingExtensions
 
         }
 
-        public ReportJSONWriter() { }
-
-        public string RPLToJSON(Stream RPL)
+        public ReportJSONWriter(Stream RPL) 
         {
+            this.RPL = new RPLReader(RPL);
+        }
 
-            this.RPL = RPL;
-            RPL.Position = 0;
-
-            //Read Report Object
+        public string RPLToJSON()
+        {
             w.WriteStartObject();
-           
             w.WriteMember("RPLStamp");
-            w.WriteString(ReadString());
+            w.WriteString(RPL.ReadString());
 
             //Version
             WriteJSONVersion();
 
             //Report Start
-            if (ReadByte() == 0x00)
+            if (RPL.ReadByte() == 0x00)
             {
                 w.WriteMember("Report");
                 w.WriteStartObject();
@@ -431,30 +260,25 @@ namespace Forerunner.RenderingExtensions
                 WriteJSONReportElementEnd();
                 //Version
                 WriteJSONVersion();
-                w.SetShouldWrite(true);
-
+                w.SetShouldWrite(true);               
 
                 //End Report
                 w.WriteEndObject();
             }
 
             //End RPL
-            w.WriteEndObject();
-
-            Debug.WriteLine(w.ToString());
+            w.WriteEndObject();            
             return w.ToString();
 
         }
 
-      
-
-        private Boolean DeReference(int StartIndex, Func<Boolean> DeFunction)
+        private Boolean DeReference(long StartIndex, Func<Boolean> DeFunction)
         {
 
-            int CurrIndex = this.Index;
-            this.Index = StartIndex;
+            long CurrIndex = RPL.position;
+            RPL.position = StartIndex;
             DeFunction();
-            this.Index = CurrIndex;
+            RPL.position = CurrIndex;
             return true;
         }
         private void ThrowParseError()
@@ -466,12 +290,12 @@ namespace Forerunner.RenderingExtensions
         {
             w.WriteMember(ArrayName);
             w.WriteStartArray();
-            while (ReadByte() == Code)
+            while (RPL.ReadByte() == Code)
                 f();
             w.WriteEndArray();
 
             //Reset Object since this is the end of the array
-            Seek(-1);
+            RPL.position--;
             return true;
         }
 
@@ -535,7 +359,7 @@ namespace Forerunner.RenderingExtensions
         private void WriteJSONReportContent()
         {
 
-            if (ReadByte() == 0x13)
+            if (RPL.ReadByte() == 0x13)
             {
 
                 if (checkVersion(10, 6) || checkVersion(10, 4) || checkVersion(10, 5))
@@ -556,7 +380,7 @@ namespace Forerunner.RenderingExtensions
                     WriteJSONMeasurements();
 
                     //PageLayout End
-                    if (InspectByte() == 0x03)
+                    if (RPL.InspectByte() == 0x03)
                     {
                         w.WriteMember("PageLayoutEnd");
                         w.WriteStartObject();
@@ -584,11 +408,11 @@ namespace Forerunner.RenderingExtensions
                     //BodyArea
                     w.WriteMember("Columns");
                     w.WriteStartArray();
-                    if (InspectByte() == 0x14)
+                    if (RPL.InspectByte() == 0x14)
                     {
                         //Advance over the the 0x14
-                        Seek(1);
-                        while (InspectByte() == 0x06)
+                        RPL.position++;
+                        while (RPL.InspectByte() == 0x06)
                         {
                             WriteJSONBodyElement();
                         }
@@ -607,9 +431,9 @@ namespace Forerunner.RenderingExtensions
                     WriteJSONReportElementEnd();
 
                     //PageLayout Start
-                    if (InspectByte() == 0x01)
+                    if (RPL.InspectByte() == 0x01)
                     {
-                        Seek(1);
+                        RPL.position++;
                         w.WriteMember("PageLayoutStart");
                         w.WriteStartObject();
                         WriteJSONPageProp();
@@ -632,13 +456,13 @@ namespace Forerunner.RenderingExtensions
             w.WriteMember("Version");
             w.WriteStartObject();
             w.WriteMember("Major");
-            majorVersion = ReadByte();
+            majorVersion = RPL.ReadByte();
             w.WriteNumber(majorVersion);
             w.WriteMember("Minor");
-            minorVersion = ReadByte();
+            minorVersion = RPL.ReadByte();
             w.WriteNumber(minorVersion);
             w.WriteMember("Build");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             w.WriteEndObject();
 
         }
@@ -646,22 +470,22 @@ namespace Forerunner.RenderingExtensions
         {
             int PageCount;
 
-            if (ReadByte() == 0x12)
+            if (RPL.ReadByte() == 0x12)
             {
 
                 w.WriteMember("ArrayOffset");
                 w.WriteStartObject();
 
                 w.WriteMember("Offset");
-                w.WriteNumber(ReadInt64());
+                w.WriteNumber(RPL.ReadInt64());
                 w.WriteMember("Count");
-                PageCount = ReadInt32();
+                PageCount = RPL.ReadInt32();
                 w.WriteNumber(PageCount);
                 w.WriteMember("PageContent");
                 w.WriteStartArray();
                 for (int i = 0; i < PageCount; i++)
                 {
-                    w.WriteNumber(ReadInt64());
+                    w.WriteNumber(RPL.ReadInt64());
                 }
                 w.WriteEndArray();
                 w.WriteEndObject();
@@ -686,7 +510,7 @@ namespace Forerunner.RenderingExtensions
 
             prop.Write(this);
 
-            if (ReadByte() != 0xFF)
+            if (RPL.ReadByte() != 0xFF)
                 ThrowParseError();
 
 
@@ -698,7 +522,7 @@ namespace Forerunner.RenderingExtensions
             w.WriteStartObject();
 
             //Section Properties
-            if (InspectByte() == 0x16)
+            if (RPL.InspectByte() == 0x16)
             {
                 //Mixed Section
                 prop = new RPLProperties(0x16);
@@ -707,7 +531,7 @@ namespace Forerunner.RenderingExtensions
                 prop.Add("ColumnSpacing", "Single", 0x02);
                 prop.Write(this);
             }
-            else if (InspectByte() == 0x15)
+            else if (RPL.InspectByte() == 0x15)
             {
                 //SimpleSection Section
                 prop = new RPLProperties(0x15);
@@ -722,11 +546,11 @@ namespace Forerunner.RenderingExtensions
             //BodyArea
             w.WriteMember("Columns");
             w.WriteStartArray();
-            if (InspectByte() == 0x14)
+            if (RPL.InspectByte() == 0x14)
             {
                 //Advance over the the 0x14
-                Seek(1);
-                while (InspectByte() == 0x06)
+                RPL.position++;
+                while (RPL.InspectByte() == 0x06)
                 {
                     WriteJSONBodyElement();
                 }
@@ -738,9 +562,9 @@ namespace Forerunner.RenderingExtensions
             WriteJSONReportElementEnd();
 
             //Page Footer
-            if (InspectByte() == 0x05)
+            if (RPL.InspectByte() == 0x05)
             {
-                Seek(1);
+                RPL.position++;
                 w.WriteMember("PageFooter");
                 w.WriteStartObject();
 
@@ -756,15 +580,15 @@ namespace Forerunner.RenderingExtensions
                 WriteJSONReportElementEnd();
                 w.WriteEndObject();
                 //Skip the end 0xFF
-                if (InspectByte() == 0xFF)
-                    Seek(1);
+                if (RPL.InspectByte() == 0xFF)
+                    RPL.position++;
             }
 
             //Page Header
-            if (InspectByte() == 0x04)
+            if (RPL.InspectByte() == 0x04)
             {
                 //Skip the 0x04
-                Seek(1);
+                RPL.position++;
                 w.WriteMember("PageHeader");
                 w.WriteStartObject();
 
@@ -781,18 +605,18 @@ namespace Forerunner.RenderingExtensions
                 w.WriteEndObject();
 
                 //Skip the end 0xFF
-                if (InspectByte() == 0xFF)
-                    Seek(1);
+                if (RPL.InspectByte() == 0xFF)
+                    RPL.position++;
             }
             //Skip the end 0xFF
-            if (InspectByte() == 0xFF)
-                Seek(1);
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
             //Measurments
             WriteJSONMeasurements();
             WriteJSONReportElementEnd();
             //Skip the end 0xFF
-            if (InspectByte() == 0xFF)
-                Seek(1);
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
             w.WriteEndObject();
 
             return true;
@@ -800,10 +624,10 @@ namespace Forerunner.RenderingExtensions
         }
         private Boolean WriteJSONBodyElement()
         {
-            if (InspectByte() == 0x06)
+            if (RPL.InspectByte() == 0x06)
             {
                 //Advance over the the 0x06
-                Seek(1);
+                RPL.position++;
 
                 w.WriteStartObject();
                 w.WriteMember("Elements");
@@ -839,12 +663,12 @@ namespace Forerunner.RenderingExtensions
             RPLProperties prop;
 
             if (DeRef != 2)
-                if (ReadByte() != 0x0F)
+                if (RPL.ReadByte() != 0x0F)
                     // THis must be a Element Property
                     ThrowParseError();
 
 
-            if (InspectByte() == 0x00 || (InspectByte() == 0x01 && DeRef == 2))
+            if (RPL.InspectByte() == 0x00 || (RPL.InspectByte() == 0x01 && DeRef == 2))
             {
                 if (DeRef == 1 || DeRef == 0)
                 {
@@ -941,21 +765,21 @@ namespace Forerunner.RenderingExtensions
                     w.WriteEndObject();
 
 
-                    if (ReadByte() != 0xFF)
+                    if (RPL.ReadByte() != 0xFF)
                         //This should never happen
                         ThrowParseError();
                 }
 
 
             }
-            else if (InspectByte() == 0x02)
+            else if (RPL.InspectByte() == 0x02)
             {
-                ReadByte();
-                int NewIndex = (int)ReadInt64();
-                int CurrIndex = this.Index;
-                this.Index = NewIndex;
+                RPL.ReadByte();
+                long NewIndex = (long)RPL.ReadInt64();
+                long CurrIndex = RPL.position;
+                RPL.position = NewIndex;
                 WriteJSONElements(ObjectType, 1);
-                this.Index = CurrIndex;
+                RPL.position = CurrIndex;
                 WriteJSONElements(ObjectType, 2);
             }
 
@@ -968,23 +792,23 @@ namespace Forerunner.RenderingExtensions
 
 
             // If this is a Style Property eat the header byte
-            if (InspectByte() == 0x21)
-                ReadByte();
+            if (RPL.InspectByte() == 0x21)
+                RPL.ReadByte();
 
-            if (ReadByte() != 0x2A)
+            if (RPL.ReadByte() != 0x2A)
                 //This should never happen
                 ThrowParseError();
 
-            switch (ReadByte())
+            switch (RPL.ReadByte())
             {
                 case 0x02:
                     //Shared Image so unshare
-                    int NewIndex = (int)ReadInt64();
+                    int NewIndex = (int)RPL.ReadInt64();
                     DeReference(NewIndex, WriteJSONImageDataProperties);
                     break;
                 case 0x00:
                     //Inline
-                    Seek(-1);
+                    RPL.position--;
                     prop = new RPLProperties(0x00);
                     prop.Add("ImageMimeType", "String", 0x00);
                     prop.Add("ImageName", "String", 0x01);
@@ -998,7 +822,7 @@ namespace Forerunner.RenderingExtensions
                     break;
                 case 0x01:
                     //NonShared
-                    Seek(-1);
+                    RPL.position--;
                     prop = new RPLProperties(0x01);
                     prop.Add("ImageMimeType", "String", 0x00);
                     prop.Add("ImageName", "String", 0x01);
@@ -1020,13 +844,13 @@ namespace Forerunner.RenderingExtensions
         private Boolean WriteJSONImageConsolidationOffsets()
         {
             w.WriteMember("Left");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("Top");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("Width");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("Height");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
 
             return true;
         }
@@ -1034,13 +858,13 @@ namespace Forerunner.RenderingExtensions
         {
             int Count;
             w.WriteMember("Count");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("ImageContent");
             w.WriteStartArray();
             for (int i = 0; i < Count; i++)
-                w.WriteNumber(ReadByte());
+                w.WriteNumber(RPL.ReadByte());
             w.WriteEndArray();
             return true;
         }
@@ -1048,28 +872,28 @@ namespace Forerunner.RenderingExtensions
         {
             int Count;
 
-            if (ReadByte() != 0x26)
+            if (RPL.ReadByte() != 0x26)
                 //This should never happen
                 ThrowParseError();
 
             w.WriteMember("Count");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("ActionInfoWithMaps");
             w.WriteStartArray();
             for (int i = 0; i < Count; i++)
             {
-                if (ReadByte() != 0x07)
+                if (RPL.ReadByte() != 0x07)
                     //This should never happen
                     ThrowParseError();
 
                 w.WriteStartObject();
-                if (InspectByte() == 0x02)
+                if (RPL.InspectByte() == 0x02)
                     WriteJSONActionInfoContent();
-                if (InspectByte() == 0x0A)
+                if (RPL.InspectByte() == 0x0A)
                     WriteJSONImageMapAreas();
-                if (ReadByte() != 0xFF)
+                if (RPL.ReadByte() != 0xFF)
                     //This should never happen
                     ThrowParseError();
                 w.WriteEndObject();
@@ -1084,12 +908,12 @@ namespace Forerunner.RenderingExtensions
             int Count;
             int CorCount;
 
-            if (ReadByte() == 0x0A)
+            if (RPL.ReadByte() == 0x0A)
             {
                 w.WriteMember("ImageMapAreas");
                 w.WriteStartObject();
                 w.WriteMember("Count");
-                Count = ReadInt32();
+                Count = RPL.ReadInt32();
                 w.WriteNumber(Count);
 
                 w.WriteMember("ImageMapArea");
@@ -1098,20 +922,20 @@ namespace Forerunner.RenderingExtensions
                 {
                     w.WriteStartObject();
                     w.WriteMember("ShapeType");
-                    w.WriteNumber(ReadByte());
+                    w.WriteNumber(RPL.ReadByte());
                     w.WriteMember("CoorCount");
-                    CorCount = ReadInt32();
+                    CorCount = RPL.ReadInt32();
                     w.WriteNumber(CorCount);
                     w.WriteMember("Coordinates");
                     w.WriteStartArray();
                     for (int j = 0; j < CorCount; j++)
-                        w.WriteNumber(ReadSingle());
+                        w.WriteNumber(RPL.ReadSingle());
                     w.WriteEndArray();
-                    if (ReadByte() != 0xFF)
+                    if (RPL.ReadByte() != 0xFF)
                     {
                         //This must be a tooltip
                         w.WriteMember("Tooltip");
-                        w.WriteString(ReadString());
+                        w.WriteString(RPL.ReadString());
                     }
                     w.WriteEndObject();
                 }
@@ -1124,7 +948,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONActionInfoContent()
         {
-            if (ReadByte() == 0x02)
+            if (RPL.ReadByte() == 0x02)
                 WriteJSONActions();
             else
                 //This cannot happen
@@ -1133,12 +957,12 @@ namespace Forerunner.RenderingExtensions
         }
         private Boolean WriteJSONActionInfo()
         {
-            if (InspectByte() == 0x0B || InspectByte() == 0x07)
+            if (RPL.InspectByte() == 0x0B || RPL.InspectByte() == 0x07)
             {
-                Seek(1);
+                RPL.position++;
                 WriteJSONActionInfoContent();
 
-                if (ReadByte() != 0xFF)
+                if (RPL.ReadByte() != 0xFF)
                     ThrowParseError();
             }
             else
@@ -1150,7 +974,7 @@ namespace Forerunner.RenderingExtensions
             int Count;
             RPLProperties prop;
             w.WriteMember("Count");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("Actions");
@@ -1174,15 +998,15 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONMeasurements()
         {
-            if (ReadByte() != 0x10)
+            if (RPL.ReadByte() != 0x10)
                 ThrowParseError();  //This should never happen
 
             w.WriteMember("Measurement");
             w.WriteStartObject();
             w.WriteMember("Offset");
-            w.WriteNumber(ReadInt64());
+            w.WriteNumber(RPL.ReadInt64());
             w.WriteMember("Count");
-            int Count = ReadInt32();
+            int Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("Measurements");
@@ -1198,19 +1022,19 @@ namespace Forerunner.RenderingExtensions
 
             w.WriteStartObject();
             w.WriteMember("Left");
-            w.WriteNumber(ReadSingle());
+            w.WriteNumber(RPL.ReadSingle());
             w.WriteMember("Top");
-            w.WriteNumber(ReadSingle());
+            w.WriteNumber(RPL.ReadSingle());
             w.WriteMember("Width");
-            w.WriteNumber(ReadSingle());
+            w.WriteNumber(RPL.ReadSingle());
             w.WriteMember("Height");
-            w.WriteNumber(ReadSingle());
+            w.WriteNumber(RPL.ReadSingle());
             w.WriteMember("zIndex");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("State");
-            w.WriteNumber(ReadByte());
+            w.WriteNumber(RPL.ReadByte());
             w.WriteMember("EndOffset");
-            w.WriteNumber(ReadInt64());
+            w.WriteNumber(RPL.ReadInt64());
             w.WriteEndObject();
 
         }
@@ -1220,39 +1044,39 @@ namespace Forerunner.RenderingExtensions
             switch (TypeCode)
             {
                 case 0x03:
-                    w.WriteBoolean(ReadBoolean());
+                    w.WriteBoolean(RPL.ReadBoolean());
                     break;
                 case 0x04:
-                    w.WriteString(ReadChar().ToString());
+                    w.WriteString(RPL.ReadChar().ToString());
                     break;
                 case 0x06:
-                    w.WriteNumber(ReadByte());
+                    w.WriteNumber(RPL.ReadByte());
                     break;
                 case 0x07:
-                    w.WriteNumber(ReadInt16());
+                    w.WriteNumber(RPL.ReadInt16());
                     break;
                 case 0x09:
-                    w.WriteNumber(ReadInt32());
+                    w.WriteNumber(RPL.ReadInt32());
                     break;
                 case 0x0B:
-                    w.WriteNumber(ReadInt64());
+                    w.WriteNumber(RPL.ReadInt64());
                     break;
                 case 0x0C:
-                    w.WriteNumber(ReadSingle());
+                    w.WriteNumber(RPL.ReadSingle());
                     break;
                 case 0x0D:
-                    w.WriteNumber(ReadFloat());
+                    w.WriteNumber(RPL.ReadFloat());
                     break;
                 case 0x0E:
-                    w.WriteNumber(ReadDecimal());
+                    w.WriteNumber(RPL.ReadDecimal());
                     break;
                 case 0x0F:
-                    w.WriteNumber(ReadDateTime().MiliSec);
+                    w.WriteNumber(RPL.ReadDateTime().MiliSec);
                     //TODO Need to write datetime type                        
                     break;
                 case 0x11:
                 default:
-                    w.WriteString(ReadString());
+                    w.WriteString(RPL.ReadString());
                     break;
             }
 
@@ -1273,7 +1097,7 @@ namespace Forerunner.RenderingExtensions
         private Boolean WriteJSONReportItem(Boolean CheckOnly = false)
         {
 
-            switch (InspectByte())
+            switch (RPL.InspectByte())
             {
                 case 0x08:
                     //Line
@@ -1314,7 +1138,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONRectangle()
         {
-            if (ReadByte() != 0x0A)
+            if (RPL.ReadByte() != 0x0A)
                 // THis must be a Measurment Property
                 ThrowParseError();
 
@@ -1339,7 +1163,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONTablix()
         {
-            if (ReadByte() != 0x0D)
+            if (RPL.ReadByte() != 0x0D)
                 // THis must be a Measurment Property
                 ThrowParseError();
 
@@ -1356,21 +1180,21 @@ namespace Forerunner.RenderingExtensions
             w.SetShouldWrite(false);
             w.WriteMember("Content");
             w.WriteStartArray();
-            while (InspectByte() == 0x12 || WriteJSONReportItem(true))
+            while (RPL.InspectByte() == 0x12 || WriteJSONReportItem(true))
             {
-                if (InspectByte() == 0x12)
+                if (RPL.InspectByte() == 0x12)
                 {
                     //Tablix Row
-                    ReadByte();  //Read the Token
+                    RPL.ReadByte();  //Read the Token
                     w.WriteStartObject();
                     w.WriteMember("Type");
                     w.WriteString("BodyRow");
                     w.WriteMember("RowIndex");
-                    w.WriteNumber(ReadInt32());
+                    w.WriteNumber(RPL.ReadInt32());
                     //WriteCells
                     LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
                     //w.WriteEndObject();
-                    if (ReadByte() != 0xFF)
+                    if (RPL.ReadByte() != 0xFF)
                         //This should never happen
                         ThrowParseError();
                 }
@@ -1383,10 +1207,10 @@ namespace Forerunner.RenderingExtensions
             w.SetShouldWrite(true);
 
             //Tablix Structure
-            if (ReadByte() == 0x11)
+            if (RPL.ReadByte() == 0x11)
             {
                 w.WriteMember("TablixOffset");
-                w.WriteNumber(ReadInt64());
+                w.WriteNumber(RPL.ReadInt64());
 
                 RPLProperties prop = new RPLProperties(0xFF);  //No Object Code, use special 0xFF                 
                 prop.Add("ColumnHeaderRows", "Int32", 0x00);
@@ -1402,9 +1226,9 @@ namespace Forerunner.RenderingExtensions
                 prop.Write(this, 0x08);
 
                 //We are now Tablix Rows 
-                Seek(-1);
+                RPL.position--;
                 LoopObjectArray("TablixRows", 0x08, this.WriteJSONTablixRow);
-                if (ReadByte() != 0xFF)
+                if (RPL.ReadByte() != 0xFF)
                     //THis should never happen
                     ThrowParseError();
             }
@@ -1420,35 +1244,35 @@ namespace Forerunner.RenderingExtensions
 
         private Boolean WriteJSONDeRefCellReportItem()
         {
-            if (ReadByte() != 0x04)
+            if (RPL.ReadByte() != 0x04)
                 // THis must be a Cell reference Property
                 ThrowParseError();
-            int StartIndex = (int)ReadInt64();
-            int CurrIndex = this.Index;
-            this.Index = StartIndex;
+            long StartIndex = RPL.ReadInt64();
+            long CurrIndex = RPL.position;
+            RPL.position = StartIndex;
 
 
-            if (ReadByte() != 0xFE)
+            if (RPL.ReadByte() != 0xFE)
                 // THis must be a ReportElementEnd record
                 ThrowParseError();
             //Jump to start of ReportItemEnd  This is differnt for each report item             
-            this.Index = (int)ReadInt64();
-            switch (InspectByte())
+            RPL.position = RPL.ReadInt64();
+            switch (RPL.InspectByte())
             {
                 case 0x12:
                     //Rich textbox structure
-                    ReadByte();
-                    this.Index = (int)ReadInt64();
+                    RPL.ReadByte();
+                    RPL.position = RPL.ReadInt64();
                     break;
                 case 0x11:
                     //Tablix Structure
-                    ReadByte();
-                    this.Index = (int)ReadInt64();
+                    RPL.ReadByte();
+                    RPL.position = RPL.ReadInt64();
                     break;
                 case 0x10:
                     //Rectangle measurements
-                    ReadByte();
-                    this.Index = (int)ReadInt64();
+                    RPL.ReadByte();
+                    RPL.position = RPL.ReadInt64();
                     break;
                 default:
                     break;
@@ -1458,18 +1282,18 @@ namespace Forerunner.RenderingExtensions
 
 
             //Set back
-            this.Index = CurrIndex;
+            RPL.position= CurrIndex;
             return true;
 
         }
         private void WriteJSONDeRefTablixBodyCells()
         {
-            int StartIndex = (int)ReadInt64();
-            int CurrIndex = this.Index;
-            this.Index = StartIndex;
+            long StartIndex = RPL.ReadInt64();
+            long CurrIndex = RPL.position;
+            RPL.position = StartIndex;
 
 
-            if (ReadByte() != 0x12)
+            if (RPL.ReadByte() != 0x12)
                 // THis must be a Cell reference Property
                 ThrowParseError();
 
@@ -1478,22 +1302,23 @@ namespace Forerunner.RenderingExtensions
             w.WriteMember("Type");
             w.WriteString("BodyRow");
             w.WriteMember("RowIndex");
-            w.WriteNumber(ReadInt32());
+            w.WriteNumber(RPL.ReadInt32());
             //WriteCells
             LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
             w.WriteEndObject();
-            if (ReadByte() != 0xFF)
+            if (RPL.ReadByte() != 0xFF)
                 //This should never happen
                 ThrowParseError();
             //Set back
-            this.Index = CurrIndex;
+            RPL.position = CurrIndex;
         }
         private Boolean WriteJSONTablixRow()
         {
             RPLProperties prop;
-            while (InspectByte() == 0x0A || InspectByte() == 0x0B || InspectByte() == 0x0C || InspectByte() == 0x09)
+
+            while (RPL.InspectByte() == 0x0A || RPL.InspectByte() == 0x0B || RPL.InspectByte() == 0x0C || RPL.InspectByte() == 0x09)
             {
-                switch (InspectByte())
+                switch (RPL.InspectByte())
                 {
                     case 0x0A:
                         //Corner     
@@ -1570,7 +1395,7 @@ namespace Forerunner.RenderingExtensions
                         break;
                     case 0x09:
                         //Tablix Body Cell      
-                        Seek(1);
+                        RPL.position++;
                         WriteJSONDeRefTablixBodyCells();
                         break;
                     default:
@@ -1579,7 +1404,7 @@ namespace Forerunner.RenderingExtensions
                 }
 
             }
-            if (ReadByte() != 0xFF)
+            if (RPL.ReadByte() != 0xFF)
                 //THis should never happen
                 ThrowParseError();
             return true;
@@ -1587,12 +1412,12 @@ namespace Forerunner.RenderingExtensions
         private Boolean WriteJSONTablixColMemeber()
         {
             int Count;
-            if (ReadByte() != 0x0F)
+            if (RPL.ReadByte() != 0x0F)
                 //THis should never happen
                 ThrowParseError();
 
             w.WriteMember("ColMemberDefCount");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("ColMemberDefs");
@@ -1607,7 +1432,7 @@ namespace Forerunner.RenderingExtensions
         {
             RPLProperties prop;
 
-            if (ReadByte() != 0x10)
+            if (RPL.ReadByte() != 0x10)
                 //This should never happen
                 ThrowParseError();
 
@@ -1626,12 +1451,12 @@ namespace Forerunner.RenderingExtensions
         {
             int Count;
 
-            if (ReadByte() != 0x0E)
+            if (RPL.ReadByte() != 0x0E)
                 //THis should never happen
                 ThrowParseError();
 
             w.WriteMember("RowMemberDefCount");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("RowMemeberDefs");
@@ -1646,12 +1471,12 @@ namespace Forerunner.RenderingExtensions
         {
             int Count;
 
-            if (ReadByte() != 0x04)
+            if (RPL.ReadByte() != 0x04)
                 //THis should never happen
                 ThrowParseError();
 
             w.WriteMember("ColumnCount");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("Columns");
@@ -1660,9 +1485,9 @@ namespace Forerunner.RenderingExtensions
             {
                 w.WriteStartObject();
                 w.WriteMember("Width");
-                w.WriteNumber(ReadSingle());
+                w.WriteNumber(RPL.ReadSingle());
                 w.WriteMember("FixColumn");
-                w.WriteNumber(ReadByte());
+                w.WriteNumber(RPL.ReadByte());
                 w.WriteEndObject();
             }
             w.WriteEndArray();
@@ -1673,12 +1498,12 @@ namespace Forerunner.RenderingExtensions
         {
             int Count;
 
-            if (ReadByte() != 0x05)
+            if (RPL.ReadByte() != 0x05)
                 //THis should never happen
                 ThrowParseError();
 
             w.WriteMember("RowCount");
-            Count = ReadInt32();
+            Count = RPL.ReadInt32();
             w.WriteNumber(Count);
 
             w.WriteMember("Rows");
@@ -1687,9 +1512,9 @@ namespace Forerunner.RenderingExtensions
             {
                 w.WriteStartObject();
                 w.WriteMember("Height");
-                w.WriteNumber(ReadSingle());
+                w.WriteNumber(RPL.ReadSingle());
                 w.WriteMember("FixRows");
-                w.WriteNumber(ReadByte());
+                w.WriteNumber(RPL.ReadByte());
                 w.WriteEndObject();
             }
             w.WriteEndArray();
@@ -1719,7 +1544,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONRichText()
         {
-            if (ReadByte() != 0x07)
+            if (RPL.ReadByte() != 0x07)
                 ThrowParseError();  //This should never happen
 
             w.WriteStartObject();
@@ -1733,7 +1558,7 @@ namespace Forerunner.RenderingExtensions
             //Paragraphs
             w.WriteMember("Paragraphs");
             w.WriteStartArray();
-            while (InspectByte() == 0x14)
+            while (RPL.InspectByte() == 0x14)
             {
                 w.WriteStartObject();
                 LoopObjectArray("TextRuns", 0x14, this.WriteJSONTextRun);
@@ -1745,20 +1570,20 @@ namespace Forerunner.RenderingExtensions
             //Paragraph Structure
             w.WriteMember("RichTextBoxStructure");
             w.WriteStartObject();
-            if (ReadByte() == 0x12)
+            if (RPL.ReadByte() == 0x12)
             {
 
                 w.WriteMember("TokenOffset");
-                w.WriteNumber(ReadInt64());
+                w.WriteNumber(RPL.ReadInt64());
                 w.WriteMember("ParagraphCount");
-                int ParCount = ReadInt32();
+                int ParCount = RPL.ReadInt32();
                 w.WriteNumber(ParCount);
                 w.WriteMember("ParagraphOffsets");
                 w.WriteStartArray();
                 for (int i = 0; i < ParCount; i++)
-                    w.WriteNumber(ReadInt64());
+                    w.WriteNumber(RPL.ReadInt64());
                 w.WriteEndArray();
-                if (ReadByte() != 0xFF)
+                if (RPL.ReadByte() != 0xFF)
                     //THis should never happen
                     ThrowParseError();
             }
@@ -1773,20 +1598,20 @@ namespace Forerunner.RenderingExtensions
         }
         private Boolean WriteJSONParagraph()
         {
-            if (ReadByte() == 0x13)
+            if (RPL.ReadByte() == 0x13)
             {
                 w.WriteMember("Paragraph");
                 //WriteJSONElements();
                 RPLProperties prop;
 
-                if (ReadByte() != 0x0F)
+                if (RPL.ReadByte() != 0x0F)
                     ThrowParseError();
 
-                switch (InspectByte())
+                switch (RPL.InspectByte())
                 {
                     case 0x02:
                         //Shared Image so unshare
-                        int NewIndex = (int)ReadInt64();
+                        long NewIndex = RPL.ReadInt64();
                         DeReference(NewIndex, this.WriteJSONParagraph);
                         break;
                     case 0x00:
@@ -1809,7 +1634,7 @@ namespace Forerunner.RenderingExtensions
                         w.WriteEndObject();
 
                         //NonShared                     
-                        if (InspectByte() == 0x01)
+                        if (RPL.InspectByte() == 0x01)
                         {
                             prop = new RPLProperties(0x01);
                             w.WriteMember("NonSharedElements");
@@ -1834,7 +1659,7 @@ namespace Forerunner.RenderingExtensions
                         }
                         w.WriteEndObject();
 
-                        if (ReadByte() != 0xFF)
+                        if (RPL.ReadByte() != 0xFF)
                             //The end of ElementProperties
                             ThrowParseError();
                         break;
@@ -1842,14 +1667,14 @@ namespace Forerunner.RenderingExtensions
 
                 //TextRuns
                 w.WriteMember("TextRunCount");
-                int Count = ReadInt32();
+                int Count = RPL.ReadInt32();
                 w.WriteNumber(Count);
                 w.WriteMember("TextRunOffsets");
                 w.WriteStartArray();
                 for (int i = 0; i < Count; i++)
-                    w.WriteNumber(ReadInt64());
+                    w.WriteNumber(RPL.ReadInt64());
                 w.WriteEndArray();
-                if (ReadByte() != 0xFF)
+                if (RPL.ReadByte() != 0xFF)
                     //THis should never happen
                     ThrowParseError();
             }
@@ -1866,14 +1691,14 @@ namespace Forerunner.RenderingExtensions
             w.WriteMember("Elements");
             RPLProperties prop;
 
-            if (ReadByte() != 0x0F)
+            if (RPL.ReadByte() != 0x0F)
                 ThrowParseError();
 
-            switch (InspectByte())
+            switch (RPL.InspectByte())
             {
                 case 0x02:
                     //Shared Image so unshare
-                    int NewIndex = (int)ReadInt64();
+                    long NewIndex = RPL.ReadInt64();
                     DeReference(NewIndex, WriteJSONTextRun);
                     break;
                 case 0x00:
@@ -1894,7 +1719,7 @@ namespace Forerunner.RenderingExtensions
                     w.WriteEndObject();
 
                     //NonShared                     
-                    if (InspectByte() == 0x01)
+                    if (RPL.InspectByte() == 0x01)
                     {
                         prop = new RPLProperties(0x01);
                         w.WriteMember("NonSharedElements");
@@ -1916,13 +1741,13 @@ namespace Forerunner.RenderingExtensions
                     }
                     w.WriteEndObject();
 
-                    if (ReadByte() != 0xFF)
+                    if (RPL.ReadByte() != 0xFF)
                         //The end of ElementProperties
                         ThrowParseError();
                     break;
             }
 
-            if (ReadByte() != 0xFF)
+            if (RPL.ReadByte() != 0xFF)
                 ThrowParseError();
 
             w.WriteEndObject();
@@ -1946,7 +1771,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONImageTypeElement(byte type, string typeName)
         {
-            if (ReadByte() != type)
+            if (RPL.ReadByte() != type)
                 ThrowParseError();
 
             w.WriteStartObject();
@@ -1960,7 +1785,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONSubreport()
         {
-            if (ReadByte() != 0x0C)
+            if (RPL.ReadByte() != 0x0C)
                 ThrowParseError();
 
             w.WriteStartObject();
@@ -1978,7 +1803,7 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONLine()
         {
-            if (ReadByte() != 0x08)
+            if (RPL.ReadByte() != 0x08)
                 ThrowParseError();  //This should never happen
 
             w.WriteStartObject();
@@ -1992,29 +1817,29 @@ namespace Forerunner.RenderingExtensions
         }
         private void WriteJSONReportElementEnd()
         {
-            if (ReadByte() == 0xFE)
+            if (RPL.ReadByte() == 0xFE)
             {
                 w.WriteMember("OffsetRef");
-                w.WriteNumber(ReadInt64());
+                w.WriteNumber(RPL.ReadInt64());
             }
             else
                 //TODO Throw correct, this should not happen
                 throw new IndexOutOfRangeException();
 
             //Must be the end
-            if (ReadByte() != 0xFF)
+            if (RPL.ReadByte() != 0xFF)
                 //TODO Throw correct, this should not happen
                 throw new IndexOutOfRangeException();
 
         }
         private Boolean WriteJSONStyle()
         {
-            if (ReadByte() != 0x06)
+            if (RPL.ReadByte() != 0x06)
                 //TODO Throw correct, this should not happen
                 throw new IndexOutOfRangeException();
             RPLProperties prop;
 
-            if (InspectByte() == 0x00)
+            if (RPL.InspectByte() == 0x00)
                 prop = new RPLProperties(0x00);
             else
                 prop = new RPLProperties(0x01);
@@ -2080,126 +1905,8 @@ namespace Forerunner.RenderingExtensions
             prop.Write(this);
 
         }
-        private byte[] GetByteArray(int size)
-        {
-            byte[] val = new byte[size];
-            RPL.Read(val,0, size);
-            return val;
-        }
-        private int ReadInt32()
-        {
-            int retval = BitConverter.ToInt32(GetByteArray(4),0);
-            Seek(4);
-            return retval;
-        }
-        private Int64 ReadInt64()
-        {
-            Int64 retval = BitConverter.ToInt64(GetByteArray(8), 0);
-            Seek(8);
-            return retval;
-        }
-        private RPLDateTime ReadDateTime()
-        {
-            RPLDateTime retval = new RPLDateTime();
-            Int64 dt = ReadInt64();
-            byte b = (byte)dt;
 
-            retval.Type = b >> 2;
-            retval.MiliSec = dt << 2;
-            Seek(8);
-            return retval;
-        }
-        private short ReadInt16()
-        {
-            short retval = BitConverter.ToInt16(GetByteArray(2), 0);
-            Seek(2);
-            return retval;
-        }
-        private float ReadSingle()
-        {
-            float retval = BitConverter.ToSingle(GetByteArray(4), 0);
-            Seek(4);
-            return retval;
-        }
-        private double ReadFloat()
-        {
-            double retval = BitConverter.ToDouble(GetByteArray(8), 0);
-            Seek(8);
-            return retval;
-        }
-        private char ReadChar()
-        {
-            char retval = Encoding.Unicode.GetChars(GetByteArray(2), 0, 2)[1];
-            Seek(2);
-            return retval;
-        }
-        private byte ReadByte()
-        {
-            byte retval =GetByteArray(1)[0];
-            Seek(1);
-            return retval;
-        }
-        private byte InspectByte()
-        {
-            byte retval = GetByteArray(1)[0];
-            Seek(-1);
-            return retval;
-        }
-        private decimal ReadDecimal()
-        {
-            int[] bits = new int[4];
-            bits[0] = ReadInt32();
-            bits[2] = ReadInt32();
-            bits[3] = ReadInt32();
-            bits[4] = ReadInt32();
-
-            decimal retval = new decimal(bits);
-            return retval;
-        }
-        private Boolean ReadBoolean()
-        {
-            Boolean retval;
-
-            if (ReadByte() == 1)
-                retval = true;
-            else
-                retval = false;            
-            return retval;
-        }
-        private string ReadString()
-        {
-            int length;
-            string retval;
-
-            length = GetLength(0);
-            retval = Encoding.Unicode.GetString(GetByteArray(length), 0, length);
-            Seek(length);
-            return retval;
-
-        }
-        private int GetLength(int Depth)
-        {
-            int Len;
-            int retval;
-
-            Len = ReadByte();
-            if (Len > 127)
-            {
-                retval = Len - 128;
-                retval += GetLength(Depth + 1) * (Depth + 1) * 128;
-            }
-            else
-                retval = Len;
-
-            return retval;
-
-        }
-        private void Seek(int Advance)
-        {
-            Index += Advance;
-            //RPL.Position += Advance;
-        }
-
+        
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -2215,28 +1922,5 @@ namespace Forerunner.RenderingExtensions
         }
     }
 
-  public static class JsonUtility
-    {
-        public static string WriteExceptionJSON(Exception e)
-        {
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("Exception");
-            w.WriteStartObject();
-            w.WriteMember("Type");
-            w.WriteString(e.GetType().ToString());
-            w.WriteMember("TargetSite");
-            w.WriteString(e.TargetSite.ToString());
-            w.WriteMember("Source");
-            w.WriteString(e.Source);
-            w.WriteMember("Message");
-            w.WriteString(e.Message);
-            w.WriteMember("StackTrace");
-            w.WriteString(e.StackTrace);
-            w.WriteEndObject();
-            w.WriteEndObject();
-
-            return w.ToString();
-        }
-    }
+    
 }

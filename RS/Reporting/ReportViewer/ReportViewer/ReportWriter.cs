@@ -490,6 +490,9 @@ namespace Forerunner
                 w.WriteEndArray();
                 w.WriteEndObject();
             }
+            else
+                //TODO Throw correct, this should not happen
+                throw new IndexOutOfRangeException();
         }
         private void WriteJSONPageProp()
         {

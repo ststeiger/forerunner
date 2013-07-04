@@ -7,7 +7,6 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     // Constants used by SSR
     forerunner.ssr.constants = {
-        // Public widgets
         widgets: {
             // widget names
             reportExplorer: "reportExplorer",
@@ -29,6 +28,41 @@ $(function () {
             getFullname: function (name) {
                 return this.namespace + "." + name;
             }
+        },
+        events: {
+            // toolPane
+            actionStarted: "actionstarted",
+            toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
+
+            // toolbar
+            menuClick: "menuclick",
+            toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
+
+            paramAreaClick: "paramareaclick",
+            toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },
+
+            // reportViewer
+            setPageDone: "setPageDone",
+            reportViewerSetPageDone: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.setPageDone).toLowerCase(); },
+
+            changePage: "changepage",
+            reportViewerChangePage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changePage).toLowerCase(); },
+
+            drillBack: "drillback",
+            reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
+
+            back: "back",
+            reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
+
+            showParamArea: "showparamarea",
+            reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
+
+            // reportParameter
+            render: "render",
+            reportParameterRender: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.render).toLowerCase(); },
+
+            submit: "submit",
+            reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },
         },
         // Tool types used by the Toolbase widget
         toolTypes: {

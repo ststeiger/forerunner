@@ -6,6 +6,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -146,7 +147,7 @@ $(function () {
         _initCallbacks: function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on("reportviewerchangepage", function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
                 me._setCurrentPage(data.newPageNum);
             });
         },

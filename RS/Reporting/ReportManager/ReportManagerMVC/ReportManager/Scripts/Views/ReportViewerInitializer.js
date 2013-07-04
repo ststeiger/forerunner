@@ -6,6 +6,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
 
     ssr.ReportViewerInitializer = function (options) {
@@ -139,7 +140,7 @@ $(function () {
                             action = "delete";
                         else
                             action = "add";
-                        e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-update-fav']);
+                        e.data.me._trigger(events.actionStarted, null, e.data.me.allTools['fr-item-update-fav']);
                         $.getJSON("./api/ReportManager/UpdateView", {
                             view: "favorites",
                             action: action,
@@ -161,7 +162,7 @@ $(function () {
             };
             $toolPane.toolPane('addTools', 4, true, [itemFav]);
             $toolPane.toolPane('disableTools', [itemFav]);
-            $viewer.on('reportviewerchangepage', function (e, data) {
+            $viewer.on(events.reportViewerChangePage(), function (e, data) {
                 $toolPane.toolPane('enableTools', [itemFav]);
                 $toolbar.toolbar('enableTools', [btnFav]);
             });

@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Toolbar widget
@@ -22,7 +23,7 @@ $(function () {
             imageClass: "fr-image-menu",
             events: {
                 click: function (e) {
-                    e.data.me._trigger("menuclick", null, {});
+                    e.data.me._trigger(events.menuClick, null, {});
                 }
             }
         },
@@ -42,8 +43,7 @@ $(function () {
             imageClass: "fr-image-paramarea",
             events: {
                 click: function (e) {
-                    e.data.me._trigger("paramareaclick", null, {});
-                    //e.data.$reportViewer.reportViewer("ShowParms")
+                    e.data.me._trigger(events.paramAreaClick, null, {});
                 }
             }
         },
@@ -201,7 +201,7 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on("reportviewerchangepage", function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
                 $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);

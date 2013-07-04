@@ -6,6 +6,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
 
     $.widget(widgets.getFullname(widgets.reportParameter), {
         options: {
@@ -85,7 +86,7 @@ $(function () {
             if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                 me._submitForm();
             else
-                me._trigger("render");
+                me._trigger(events.render);
 
             me.options.$reportViewer.reportViewer("removeLoadingIndicator");
         },
@@ -96,7 +97,7 @@ $(function () {
             var paramList = me.getParamsList();
             if (paramList) {
                 me.options.$reportViewer.reportViewer("loadPage", me.options.pageNum, false, null, paramList,true);
-                me._trigger("submit");
+                me._trigger(events.submit);
             }
         },
         _writeParamControl: function (param, $parent) {

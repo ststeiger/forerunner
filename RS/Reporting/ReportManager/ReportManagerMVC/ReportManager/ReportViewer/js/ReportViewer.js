@@ -5,9 +5,10 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var messages = forerunner.ssr.constants.messages;
     var navigateType = forerunner.ssr.constants.navigateType;
-    var widgets = forerunner.ssr.constants.widgets;
 
     // The Floating header object holds pointers to the tablix and its row and col header objects
     function floatingHeader($tablix, $rowHeader, $colHeader) {
@@ -193,8 +194,10 @@ $(function () {
             me.curPage = pageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone) me._trigger("setPageDone");
-            me._trigger("changepage", null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            if (me.options.setPageDone) {
+                me._trigger(events.setPageDone);
+            }
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -295,12 +298,12 @@ $(function () {
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 
-                me._trigger("drillback");
+                me._trigger(events.drillBack);
                 me._removeParameters();
                 me.loadPage(action.CurrentPage, false,null,null,true);
             }
             else {
-                me._trigger("back", null, { path: me.options.reportPath });
+                me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
         showNav: function () {
@@ -568,7 +571,7 @@ $(function () {
                
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    me._trigger("showparamarea");
+                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }

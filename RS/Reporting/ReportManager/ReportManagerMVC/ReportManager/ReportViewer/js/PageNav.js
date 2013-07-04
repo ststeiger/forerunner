@@ -48,8 +48,8 @@ $(function () {
                 $list.append($listItem);
                 me.listItems[i - 1] = $listItem;
                 var $caption = new $("<DIV />");
-                $caption.html("<h3 class='centertext'>" + i.toString() + "</h3>");
-                $caption.addClass("center");
+                $caption.html("<h3 class='fr-report-centertext'>" + i.toString() + "</h3>");
+                $caption.addClass("fr-report-center");
                 var $thumbnail = new $("<IMG />");
                 $thumbnail.addClass(isTouch ? "fr-nav-li-thumb" : "fr-nav-page-thumb");
                 $thumbnail.attr("src", url);

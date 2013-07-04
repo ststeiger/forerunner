@@ -172,6 +172,7 @@
     <Content Include="ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Images\ReportManager\clock_icon.png" />
     <Content Include="ReportViewer\css\ReportDocumentMap.css" />
+    <Content Include="ReportViewer\css\ReportRender.css" />
     <Content Include="ReportViewer\css\ReportViewerEZ.css" />
     <Content Include="ReportViewer\images\Toolbar\export.jpg" />
     <Content Include="ReportViewer\images\Toolbar\page_layout_icon.png" />

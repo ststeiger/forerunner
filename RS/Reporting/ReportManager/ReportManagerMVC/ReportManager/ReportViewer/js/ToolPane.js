@@ -5,6 +5,7 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Tool Info data
@@ -174,7 +175,7 @@ $(function () {
     };
 
     // Toolbar widget
-    $.widget("Forerunner.toolpane", $.Forerunner.toolbase, {
+    $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolpane"

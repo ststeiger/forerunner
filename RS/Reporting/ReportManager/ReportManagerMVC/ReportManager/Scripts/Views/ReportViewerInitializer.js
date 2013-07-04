@@ -109,7 +109,7 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
+            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer });
             var itemHome = {
                 toolType: toolTypes.containerItem,
                 selectorClass: 'fr-id-home',
@@ -121,7 +121,7 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 2, true, [itemHome]);
+            $toolPane.toolPane('addTools', 2, true, [itemHome]);
 
             var itemFav = {
                 toolType: toolTypes.containerItem,
@@ -159,16 +159,16 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 4, true, [itemFav]);
-            $toolPane.toolpane('disableTools', [itemFav]);
+            $toolPane.toolPane('addTools', 4, true, [itemFav]);
+            $toolPane.toolPane('disableTools', [itemFav]);
             $viewer.on('reportviewerchangepage', function (e, data) {
-                $toolPane.toolpane('enableTools', [itemFav]);
+                $toolPane.toolPane('enableTools', [itemFav]);
                 $toolbar.toolbar('enableTools', [btnFav]);
             });
 
             $nav = me.options.$nav;
             if ($nav != null) {
-                $nav.pagenav({ $reportViewer: $viewer });
+                $nav.pageNav({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'pageNav', $nav);
             }
 

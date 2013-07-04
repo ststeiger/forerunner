@@ -1,5 +1,13 @@
-﻿$(function () {
-    $.widget("Forerunner.reportParameter", {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    $.widget(widgets.getFullname(widgets.reportParameter), {
         options: {
             $reportViewer: null,
             pageNum: null,

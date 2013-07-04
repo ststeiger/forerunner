@@ -5,10 +5,10 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
-    // Toolbar widget
-    $.widget("Forerunner.toolbase", {
+    $.widget(widgets.getFullname(widgets.toolBase), {
         options: {
             toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
         },

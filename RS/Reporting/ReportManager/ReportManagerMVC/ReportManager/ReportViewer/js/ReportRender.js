@@ -5,7 +5,7 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-
+    var widgets = forerunner.ssr.constants.widgets;
    
     //  The ReportIemContext simplifies the signature for all of the functions to pass context around
     function reportItemContext(RS, CurrObj, CurrObjIndex, CurrObjParent, $HTMLParent, Style, CurrLocation) {
@@ -43,7 +43,7 @@ $(function () {
         this.$colHeader = $colHeader;
     }
     // report render widget
-    $.widget("Forerunner.reportRender", {
+    $.widget(widgets.getFullname(widgets.reportRender), {
         // Default options
         options: {
             reportViewer: null,

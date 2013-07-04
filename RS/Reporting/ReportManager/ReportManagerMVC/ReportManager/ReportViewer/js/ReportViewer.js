@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var messages = forerunner.ssr.constants.messages;
     var navigateType = forerunner.ssr.constants.navigateType;
+    var widgets = forerunner.ssr.constants.widgets;
 
     // The Floating header object holds pointers to the tablix and its row and col header objects
     function floatingHeader($tablix, $rowHeader, $colHeader) {
@@ -23,7 +24,7 @@ $(function () {
     }
 
     // report viewer widget
-    $.widget("Forerunner.reportViewer", {
+    $.widget(widgets.getFullname(widgets.reportViewer), {
         // Default options
         options: {
             reportServerURL: null,
@@ -305,14 +306,14 @@ $(function () {
         showNav: function () {
             var me = this;
             if (me.options.pageNav){
-                me.options.pageNav.pagenav("showNav");
+                me.options.pageNav.pageNav("showNav");
             }
         },
         flushCache: function () {
             var me = this;
             me.pages = {};
             if (me.options.pageNav)
-                me.options.pageNav.pagenav("reset");
+                me.options.pageNav.pageNav("reset");
         },
         _prepareAction: function () {
             var me = this;

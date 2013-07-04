@@ -1,6 +1,13 @@
-﻿$(function () {
-    // Toolbar widget
-    $.widget("Forerunner.reportviewerez", $.Forerunner.toolbase, {
+﻿// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    $.widget(widgets.getFullname(widgets.reportViewerEZ), $.forerunner.toolBase, {
         options: {
             container: null,
         },

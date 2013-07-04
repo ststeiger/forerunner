@@ -25,21 +25,21 @@ forerunner.ssr.CatalogItemsView.prototype = {
     _renderToolbar: function () {
         var me = this;
         var $toolbar = me.options.$toolbar;
-        if ($toolbar != null) $toolbar.reportexplorertoolbar({ navigateTo: me.options.navigateTo });
+        if ($toolbar != null) $toolbar.reportExplorerToolbar({ navigateTo: me.options.navigateTo });
     },
     _renderExplorer : function() {
         var me = this;
         var $explorerview = me.options.$explorerview;
 
         if ($explorerview != null) {
-            $explorerview.reportexplorer({
+            $explorerview.reportExplorer({
                 path: me.options.path,
                 catalogItems: me.options.data,
                 url: me.options.url,
                 selectedItemPath: me.options.selectedItemPath,
                 navigateTo: me.options.navigateTo
             });
-            $explorerview.reportexplorer('initCarousel');
+            $explorerview.reportExplorer('initCarousel');
         }
     },
     render: function (options) {

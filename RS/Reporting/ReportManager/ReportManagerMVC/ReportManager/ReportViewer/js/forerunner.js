@@ -7,14 +7,37 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     // Constants used by SSR
     forerunner.ssr.constants = {
+        // Public widgets
+        widgets: {
+            // widget names
+            reportExplorer: "reportExplorer",
+            reportExplorerToolbar: "reportExplorerToolbar",
+            pageNav: "pageNav",
+            reportDocumentMap: "reportDocumentMap",
+            reportParameter: "reportParameter",
+            reportRender: "reportRender",
+            reportViewer: "reportViewer",
+            reportViewerEZ: "reportViewerEZ",
+            toolbar: "toolbar",
+            toolBase: "toolBase",
+            toolPane: "toolPane",
+
+            // Forerunner widget namespace
+            namespace: "forerunner",
+
+            // Get the <namespace>.<name> for the widget
+            getFullname: function (name) {
+                return this.namespace + "." + name;
+            }
+        },
         // Tool types used by the Toolbase widget
         toolTypes: {
-            button:         "button",
-            input:          "input",
-            textButton:     "textbutton",
-            plainText:      "plaintext",
-            containerItem:  "containeritem",
-            toolGroup:      "toolgroup"
+            button: "button",
+            input: "input",
+            textButton: "textbutton",
+            plainText: "plaintext",
+            containerItem: "containeritem",
+            toolGroup: "toolgroup"
         },
         sortDirection: {
             desc: "Descending",

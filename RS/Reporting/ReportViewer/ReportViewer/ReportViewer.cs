@@ -66,6 +66,8 @@ namespace Forerunner.Viewer
             try
             {
                 result = rs.RenderStream("RPL", ImageID, "", out encoding, out mimeType);
+                if (mimeType == null)
+                    mimeType = JsonUtility.GetMimeTypeFromBytes(result);
                 return result;
             }
             catch (Exception e)

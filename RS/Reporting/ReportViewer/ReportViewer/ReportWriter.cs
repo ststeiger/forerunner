@@ -438,13 +438,21 @@ namespace Forerunner
                         w.WriteStartObject();
                         WriteJSONPageProp();
                         w.WriteEndObject();
-
-                        //Write properties from page that belong on section
+                        
+                        //Write properties from page that belong on section                        
                         WriteTempProperty("ColumnSpacing");
                         WriteTempProperty("ColumnCount");
+                        WriteJSONHeaderFoooter();
+                        //Skip the end 0xFF
+                        if (RPL.InspectByte() == 0xFF)
+                            RPL.position++;                        
 
                     }
+                    //Measurments
+                    WriteJSONMeasurements();
 
+                    //Report ElementEnd
+                    WriteJSONReportElementEnd();
                     w.WriteEndObject();
                 }
 
@@ -563,7 +571,24 @@ namespace Forerunner
             w.WriteEndArray();
             WriteJSONMeasurements();
             WriteJSONReportElementEnd();
+            WriteJSONHeaderFoooter();
+           
+            //Skip the end 0xFF
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
+            //Measurments
+            WriteJSONMeasurements();
+            WriteJSONReportElementEnd();
+            //Skip the end 0xFF
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
+            w.WriteEndObject();
 
+            return true;
+
+        }
+        private void WriteJSONHeaderFoooter()
+        {
             //Page Footer
             if (RPL.InspectByte() == 0x05)
             {
@@ -611,19 +636,6 @@ namespace Forerunner
                 if (RPL.InspectByte() == 0xFF)
                     RPL.position++;
             }
-            //Skip the end 0xFF
-            if (RPL.InspectByte() == 0xFF)
-                RPL.position++;
-            //Measurments
-            WriteJSONMeasurements();
-            WriteJSONReportElementEnd();
-            //Skip the end 0xFF
-            if (RPL.InspectByte() == 0xFF)
-                RPL.position++;
-            w.WriteEndObject();
-
-            return true;
-
         }
         private Boolean WriteJSONBodyElement()
         {

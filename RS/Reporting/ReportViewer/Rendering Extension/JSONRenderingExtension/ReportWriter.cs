@@ -10,14 +10,14 @@ namespace Forerunner
 {
 
     internal class ReportJSONWriter : IDisposable
-    {       
+    {
         JsonWriter w = new JsonTextWriter();
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
         RPLReader RPL;
 
-        struct TempProperty
+        class TempProperty
         {
             public string Name;
             public string Type;
@@ -227,7 +227,7 @@ namespace Forerunner
 
         }
 
-        public ReportJSONWriter(Stream RPL) 
+        public ReportJSONWriter(Stream RPL)
         {
             this.RPL = new RPLReader(RPL);
         }
@@ -260,14 +260,14 @@ namespace Forerunner
                 WriteJSONReportElementEnd();
                 //Version
                 WriteJSONVersion();
-                w.SetShouldWrite(true);               
+                w.SetShouldWrite(true);
 
                 //End Report
                 w.WriteEndObject();
             }
 
             //End RPL
-            w.WriteEndObject();            
+            w.WriteEndObject();
             return w.ToString();
 
         }
@@ -439,12 +439,20 @@ namespace Forerunner
                         WriteJSONPageProp();
                         w.WriteEndObject();
 
-                        //Write properties from page that belong on section
-                        WriteTempProperty("ColumnSpacing");
-                        WriteTempProperty("ColumnCount");
+                        //Write properties from page that belong on section                        
+                        //WriteTempProperty("ColumnSpacing");
+                        //WriteTempProperty("ColumnCount");
+                        WriteJSONHeaderFoooter();
+                        //Skip the end 0xFF
+                        if (RPL.InspectByte() == 0xFF)
+                            RPL.position++;
 
                     }
+                    //Measurments
+                    WriteJSONMeasurements();
 
+                    //Report ElementEnd
+                    WriteJSONReportElementEnd();
                     w.WriteEndObject();
                 }
 
@@ -490,6 +498,9 @@ namespace Forerunner
                 w.WriteEndArray();
                 w.WriteEndObject();
             }
+            else
+                //TODO Throw correct, this should not happen
+                throw new IndexOutOfRangeException();
         }
         private void WriteJSONPageProp()
         {
@@ -560,7 +571,24 @@ namespace Forerunner
             w.WriteEndArray();
             WriteJSONMeasurements();
             WriteJSONReportElementEnd();
+            WriteJSONHeaderFoooter();
 
+            //Skip the end 0xFF
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
+            //Measurments
+            WriteJSONMeasurements();
+            WriteJSONReportElementEnd();
+            //Skip the end 0xFF
+            if (RPL.InspectByte() == 0xFF)
+                RPL.position++;
+            w.WriteEndObject();
+
+            return true;
+
+        }
+        private void WriteJSONHeaderFoooter()
+        {
             //Page Footer
             if (RPL.InspectByte() == 0x05)
             {
@@ -608,19 +636,6 @@ namespace Forerunner
                 if (RPL.InspectByte() == 0xFF)
                     RPL.position++;
             }
-            //Skip the end 0xFF
-            if (RPL.InspectByte() == 0xFF)
-                RPL.position++;
-            //Measurments
-            WriteJSONMeasurements();
-            WriteJSONReportElementEnd();
-            //Skip the end 0xFF
-            if (RPL.InspectByte() == 0xFF)
-                RPL.position++;
-            w.WriteEndObject();
-
-            return true;
-
         }
         private Boolean WriteJSONBodyElement()
         {
@@ -1282,7 +1297,7 @@ namespace Forerunner
 
 
             //Set back
-            RPL.position= CurrIndex;
+            RPL.position = CurrIndex;
             return true;
 
         }
@@ -1906,12 +1921,12 @@ namespace Forerunner
 
         }
 
-        
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
-                w.Close();                
+                w.Close();
             }
         }
 
@@ -1922,5 +1937,5 @@ namespace Forerunner
         }
     }
 
-    
+
 }

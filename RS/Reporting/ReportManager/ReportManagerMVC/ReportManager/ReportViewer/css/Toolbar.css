@@ -34,37 +34,6 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606060', endColorstr='#2f2f2f',GradientType=0 ); /* IE6-8 */
 
 }
-.fr-tool-container {
-  width: 36px;
-  height: 36px;
-  border-width:0px;
-  vertical-align: top;
-  border-radius: 2px;
-  margin:1px;
-  display:inline-block;
-  text-align:center;
-  line-height:36px;
-  color: white;
-}
-
-.fr-tool-icon {
-  width:24px;
-  height:24px;
-  margin: 5px;
-}
-.fr-tool-state {
-    background-color: transparent;
-}
-.fr-tool-state:hover {
-  background-color:darkgrey;
-}
-.fr-tool-state:active {
-  background-color:darkslategrey;
-}
-.fr-tool-disabled {
-  opacity:0.3;
-  filter: alpha(opacity='30');
-}
 .fr-textbox-reportpage {
   background-color: white;
   min-width:10mm;

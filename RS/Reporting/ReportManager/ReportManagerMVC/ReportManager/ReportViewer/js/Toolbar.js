@@ -10,192 +10,203 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
+    // Tool Info data
+    var btnMenu = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-menu",
+        imageClass: "fr-image-menu",
+        events: {
+            click: function (e) {
+                e.data.me._trigger(events.menuClick, null, {});
+            }
+        }
+    };
+    var btnNav = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-nav",
+        imageClass: "fr-image-nav",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showNav");
+            }
+        }
+    };
+    var btnParamarea = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-paramarea",
+        imageClass: "fr-image-paramarea",
+        events: {
+            click: function (e) {
+                e.data.me._trigger(events.paramAreaClick, null, {});
+            }
+        }
+    };
+    var btnReportBack = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-reportback",
+        imageClass: "fr-image-reportback",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("back");
+            }
+        }
+    };
+    var btnRefresh = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-refresh",
+        imageClass: "fr-image-refresh",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("refreshReport");
+            }
+        }
+    };
+    var btnFirstPage = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-firstpage",
+        imageClass: "fr-image-firstpage",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("navToPage", 1);
+            }
+        }
+    };
+    var btnPrev = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-prev",
+        imageClass: "fr-image-prev",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
+            }
+        }
+    };
+    var btnReportPage = {
+        toolType: toolTypes.input,
+        selectorClass: "fr-textbox-reportpage",
+        inputType: "number",
+        events: {
+            keypress: function (e) {
+                if (e.keyCode === 13) {
+                    e.data.$reportViewer.reportViewer("navToPage", this.value);
+                }
+            },
+            click: function (e) {
+                e.target.select();
+            }
+        }
+    };
+    var btnPageOf = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-pageOf",
+        text: "of"
+    };
+    var btnNumPages = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-num-pages",
+        text: ""
+    };
+    var btnNext = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-next",
+        imageClass: "fr-image-next",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
+            }
+        }
+    };
+    var btnLastPage = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-lastpage",
+        imageClass: "fr-image-lastpage",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
+            }
+        }
+    };
+    var btnVCRGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-btn-VCRgroup-id",
+        tools: [btnFirstPage, btnPrev, btnReportPage, btnPageOf, btnNumPages, btnNext, btnLastPage]
+    };
+    var btnDocumentMap = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-documentmap",
+        imageClass: "fr-image-documentmap",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showDocMap");
+            }
+        }
+    };
+    var btnKeyword = {
+        toolType: toolTypes.input,
+        selectorClass: "fr-textbox-keyword",
+        events: {
+            keypress: function (e) {
+                if (e.keyCode === 13) {
+                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
+                    e.data.$reportViewer.reportViewer("find", this.value);
+                }
+            }
+        }
+    };
+    var btnFind = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-button-find",
+        text: "Find",
+        events: {
+            click: function (e) {
+                var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
+                e.data.$reportViewer.reportViewer("find", value);
+            }
+        }
+    };
+    var btnSeparator = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-span-sparator",
+        text: "|&nbsp"
+    };
+    var btnFindNext = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-button-findnext",
+        text: "Next",
+        events: {
+            click: function (e) {
+                var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
+                e.data.$reportViewer.reportViewer("findNext", value);
+            }
+        }
+    };
+    var btnSeparator2 = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-span-sparator",
+        text: "|&nbsp"
+    };
+    var btnExport = {
+        toolType: toolTypes.plainText,
+        selectorClass: "fr-button-export",
+        //imageClass: "fr-image-export",
+        text: "Export",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showExport");
+            }
+        }
+    };
+    var btnFindGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-toolbar-findgroup-id",
+        tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
+    };
+
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolbar"
-        },
-        // Button Info
-        btnMenu: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-menu",
-            imageClass: "fr-image-menu",
-            events: {
-                click: function (e) {
-                    e.data.me._trigger(events.menuClick, null, {});
-                }
-            }
-        },
-        btnNav: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-nav",
-            imageClass: "fr-image-nav",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showNav");
-                }
-            }
-        },
-        btnParamarea: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-paramarea",
-            imageClass: "fr-image-paramarea",
-            events: {
-                click: function (e) {
-                    e.data.me._trigger(events.paramAreaClick, null, {});
-                }
-            }
-        },
-        btnReportBack: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-reportback",
-            imageClass: "fr-image-reportback",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("back");
-                }
-            }
-        },
-        btnRefresh: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-refresh",
-            imageClass: "fr-image-refresh",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("refreshReport");
-                }
-            }
-        },
-        btnFirstPage: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-firstpage",
-            imageClass: "fr-image-firstpage",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", 1);
-                }
-            }
-        },
-        btnPrev: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-prev",
-            imageClass: "fr-image-prev",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
-                }
-            }
-        },
-        btnReportPage: {
-            toolType: toolTypes.input,
-            selectorClass: "fr-textbox-reportpage",
-            inputType: "number",
-            events: {
-                keypress: function (e) {
-                    if (e.keyCode === 13) {
-                        e.data.$reportViewer.reportViewer("navToPage", this.value);
-                    }
-                },
-                click: function (e) {
-                    e.target.select();
-                }
-            }
-        },
-        btnPageOf: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-pageOf",
-            text: "of"
-        },
-        btnNumPages: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-num-pages",
-            text: ""
-        },
-        btnNext: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-next",
-            imageClass: "fr-image-next",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
-                }
-            }
-        },
-        btnLastPage: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-lastpage",
-            imageClass: "fr-image-lastpage",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
-                }
-            }
-        },
-        btnDocumentMap: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-documentmap",
-            imageClass: "fr-image-documentmap",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showDocMap");
-                }
-            }
-        },
-        btnKeyword: {
-            toolType: toolTypes.input,
-            selectorClass: "fr-textbox-keyword",
-            events: {
-                keypress: function (e) {
-                    if (e.keyCode === 13) {
-                        var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
-                        e.data.$reportViewer.reportViewer("find", this.value);
-                    }
-                }
-            }
-        },
-        btnFind: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-button-find",
-            text: "Find",
-            events: {
-                click: function (e) {
-                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
-                    e.data.$reportViewer.reportViewer("find", value);
-                }
-            }
-        },
-        btnSeparator: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-span-sparator",
-            text: "|&nbsp"
-        },
-        btnFindNext: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-button-findnext",
-            text: "Next",
-            events: {
-                click: function (e) {
-                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
-                    e.data.$reportViewer.reportViewer("findNext", value);
-                }
-            }
-        },
-        btnSeparator2: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-span-sparator",
-            text: "|&nbsp"
-        },
-        btnExport: {
-            toolType: toolTypes.plainText,
-            selectorClass: "fr-button-export",
-            //imageClass: "fr-image-export",
-            text: "Export",
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showExport");
-                }
-            }
         },
         _initCallbacks: function () {
             var me = this;
@@ -207,18 +218,18 @@ $(function () {
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
                 if (data.paramLoaded === false)
-                    me.disableTools([me.btnParamarea]);
+                    me.disableTools([btnParamarea]);
                
             });
 
-            me.options.$reportViewer.on("reportviewershowparamarea", function (e, data) {
-                me.enableTools([me.btnParamarea]);
+            me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                me.enableTools([btnParamarea]);
             });
 
             // Hook up the toolbar element events
-            me.enableTools([me.btnMenu, me.btnParamarea, me.btnNav, me.btnReportBack,
-                               me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnNext,
-                               me.btnLastPage, me.btnDocumentMap, me.btnFind, me.btnFindNext]);
+            me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
+                               btnRefresh, btnFirstPage, btnPrev, btnNext,
+                               btnLastPage, btnDocumentMap, btnFind, btnFindNext]);
         },
         _init: function () {
             var me = this;
@@ -230,9 +241,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [me.btnMenu, me.btnNav, me.btnParamarea, me.btnReportBack, me.btnRefresh, me.btnFirstPage, me.btnPrev, me.btnReportPage,
-                                   me.btnPageOf, me.btnNumPages, me.btnNext, me.btnLastPage, me.btnDocumentMap, me.btnKeyword, me.btnFind, me.btnSeparator,
-                                   me.btnFindNext, me.btnSeparator2, me.btnExport]);
+            me.addTools(1, true, [btnMenu, btnNav, btnParamarea, btnReportBack, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnExport]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -243,27 +252,27 @@ $(function () {
             me.element.find(".fr-textbox-reportpage").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
-                me.enableTools([me.btnDocumentMap]);
+                me.enableTools([btnDocumentMap]);
             else
-                me.disableTools([me.btnDocumentMap]);
+                me.disableTools([btnDocumentMap]);
 
             if (curPage <= 1) {
-                me.disableTools([me.btnPrev, me.btnFirstPage]);
+                me.disableTools([btnPrev, btnFirstPage]);
             }
             else {
-                me.enableTools([me.btnPrev, me.btnFirstPage]);
+                me.enableTools([btnPrev, btnFirstPage]);
             }
 
             if (curPage >= maxPage) {
-                me.disableTools([me.btnNext, me.btnLastPage]);
+                me.disableTools([btnNext, btnLastPage]);
             }
             else {
-                me.enableTools([me.btnNext, me.btnLastPage]);
+                me.enableTools([btnNext, btnLastPage]);
             }
             if (maxPage ===1 )
-                me.disableTools([me.btnNav]);
+                me.disableTools([btnNav]);
             else
-                me.enableTools([me.btnNav]);
+                me.enableTools([btnNav]);
         },
        
         _destroy: function () {

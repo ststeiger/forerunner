@@ -18,7 +18,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
 
 }
 
-.fr-toolpane .fr-tool-container {
+.fr-toolpane .fr-toolbase-toolcontainer {
   border-width:0px;
   vertical-align: top;
   border-radius: 2px;
@@ -27,13 +27,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   color: white;
   display:inline-block;
 }
-.fr-toolpane .fr-tool-icon {
-  width:24px;
-  height:24px;
-  margin: 5px;
-  display:inline-block;
-}
-.fr-item-container {
+.fr-toolpane .fr-toolbase-groupcontainer {
   border-top-width:1px;
   border-top-style:groove;
   border-top-color: darkgray;
@@ -41,6 +35,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   line-height:36px;
   color: white;
   display:block;
+}
+.fr-toolpane .fr-toolbase-icon {
+  width:24px;
+  height:24px;
+  margin: 5px;
+  display:inline-block;
 }
 .fr-item-spacer {
     height: 18px;

@@ -106,9 +106,9 @@ $(function () {
             var me = this;
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
-                $toolEl.removeClass("fr-tool-disabled");
+                $toolEl.removeClass("fr-toolbase-disabled");
                 if (toolInfo.events) {
-                    $toolEl.addClass("fr-report-cursor-pointer");
+                    $toolEl.addClass("fr-core-cursorpointer");
                     me._removeEvent($toolEl, toolInfo);   // Always remove any existing event, this will avoid getting two accidentally
                     me._addEvents($toolEl, toolInfo);
                 }
@@ -122,9 +122,9 @@ $(function () {
             var me = this;
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = $("." + toolInfo.selectorClass, me.element);
-                $toolEl.addClass("fr-tool-disabled");
+                $toolEl.addClass("fr-toolbase-disabled");
                 if (toolInfo.events) {
-                    $toolEl.removeClass("fr-report-cursor-pointer");
+                    $toolEl.removeClass("fr-core-cursorpointer");
                     me._removeEvent($toolEl, toolInfo);
                 }
                 if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
@@ -151,8 +151,8 @@ $(function () {
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
-                return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
+                return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                            "<div class='fr-toolbase-icon " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.input) {
@@ -163,7 +163,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='fr-tool-container fr-tool-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -173,13 +173,13 @@ $(function () {
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);
                 }
-                return "<div class='fr-item-container fr-tool-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-tool-icon " + toolInfo.imageClass + "' />" +
+                return "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                            "<div class='fr-toolbase-icon " + toolInfo.imageClass + "' />" +
                             text +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.toolGroup) {
-                return "<div class='fr-item-container " + toolInfo.selectorClass + "'></div>";
+                return "<div class='fr-toolbase-groupcontainer " + toolInfo.selectorClass + "'></div>";
             }
         },
         _getText: function (toolInfo) {

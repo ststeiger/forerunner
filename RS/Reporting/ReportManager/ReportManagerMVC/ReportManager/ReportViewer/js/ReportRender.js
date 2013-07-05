@@ -310,7 +310,7 @@ $(function () {
                     $Drilldown.addClass("fr-render-drilldown-expand");
 
                 $Drilldown.on("click", {ToggleID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName }, function (e) { me.options.reportViewer.toggleItem(e.data.ToggleID); });
-                $Drilldown.addClass("fr-report-cursor-pointer");
+                $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
             if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
@@ -517,7 +517,7 @@ $(function () {
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.attr("href", "#");
-                Control.addClass("fr-report-cursor-pointer");
+                Control.addClass("fr-core-cursorpointer");
                 Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
@@ -525,7 +525,7 @@ $(function () {
             }
             else {
                 //HRef needed for ImageMap, Class needed for non image map
-                Control.addClass("fr-report-cursor-pointer");
+                Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
                 Control.on("click", { DrillthroughId: Action.DrillthroughId }, function (e) {
                     me._stopDefaultEvent(e);

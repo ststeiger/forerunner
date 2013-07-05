@@ -5,6 +5,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
     // Tool Info data
@@ -16,7 +18,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-nav"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-nav"]);
             }
         }
     };
@@ -28,7 +30,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-reportback"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-reportback"]);
             }
         }
     };
@@ -40,7 +42,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-refresh"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-refresh"]);
             }
         }
     };
@@ -51,7 +53,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-firstpage"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-firstpage"]);
             }
         }
     };
@@ -62,7 +64,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-prev"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-prev"]);
             }
         }
     };
@@ -95,7 +97,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-next"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-next"]);
             }
         }
     };
@@ -106,7 +108,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-lastpage"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-lastpage"]);
             }
         }
     };
@@ -123,7 +125,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-id-documentmap"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-documentmap"]);
             }
         }
     };
@@ -146,7 +148,7 @@ $(function () {
             click: function (e) {
                 var value = e.data.me.element.find(".fr-item-textbox-keyword").val().trim();
                 e.data.$reportViewer.reportViewer("find", value);
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-item-find"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
             }
         }
     };
@@ -163,7 +165,7 @@ $(function () {
             click: function (e) {
                 var value = e.data.me.element.find(".fr-item-textbox-keyword").val().trim();
                 e.data.$reportViewer.reportViewer("findNext", value);
-                e.data.me._trigger("actionstarted", null, e.data.me.allTools["fr-item-findnext"]);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-findnext"]);
             }
         }
     };
@@ -174,7 +176,7 @@ $(function () {
     };
 
     // Toolbar widget
-    $.widget("Forerunner.toolpane", $.Forerunner.toolbase, {
+    $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolpane"
@@ -183,7 +185,7 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on("reportviewerchangepage", function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
                 $("input.fr-item-textbox-reportpage", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateItemStates(data.newPageNum, maxNumPages);

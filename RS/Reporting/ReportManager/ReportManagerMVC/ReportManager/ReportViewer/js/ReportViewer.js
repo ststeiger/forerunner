@@ -5,6 +5,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
     var messages = forerunner.ssr.constants.messages;
     var navigateType = forerunner.ssr.constants.navigateType;
 
@@ -23,7 +25,7 @@ $(function () {
     }
 
     // report viewer widget
-    $.widget("Forerunner.reportViewer", {
+    $.widget(widgets.getFullname(widgets.reportViewer), {
         // Default options
         options: {
             reportServerURL: null,
@@ -44,7 +46,7 @@ $(function () {
         _create: function () {
             var me = this;
 
-            setInterval(function () { me.sessionPing(); }, this.options.pingInterval);
+            setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
             me.actionHistory = [];
@@ -68,14 +70,14 @@ $(function () {
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
 
-            $(window).scroll(function () { me.updateTableHeaders(me); });
+            $(window).scroll(function () { me._updateTableHeaders(me); });
 
             //Log in screen if needed
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me.addLoadingIndicator();
-            me.loadParameters(me.options.pageNum);
+            me._addLoadingIndicator();
+            me._loadParameters(me.options.pageNum);
         },
         getCurPage: function () {
             var me = this;
@@ -105,7 +107,7 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
-        setColHeaderOffset: function ($tablix, $colHeader) {
+        _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
             if (!$colHeader)
@@ -123,7 +125,7 @@ $(function () {
 
             }
         },
-        setRowHeaderOffset: function ($tablix, $rowHeader) {
+        _setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
             var me = this;
             if (!$rowHeader)
@@ -139,7 +141,7 @@ $(function () {
                 $rowHeader.hide();
             }
         },
-        addLoadingIndicator: function () {
+        _addLoadingIndicator: function () {
             var me = this;
            
             me.loadLock = 1;
@@ -163,18 +165,18 @@ $(function () {
             me.$reportContainer.css({ opacity: 1 });
             me.$loadingIndicator.hide();
         },
-        setPage: function (pageNum) {
+        _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
 
             if (!me.pages[pageNum].isRendered)
-                me.renderPage(pageNum);
+                me._renderPage(pageNum);
             if (!me.$reportAreaContainer) {
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
-                me.touchNav();
+                me._touchNav();
                 me.pages[pageNum].$container.fadeIn();
             }
             else {
@@ -192,14 +194,16 @@ $(function () {
             me.curPage = pageNum;
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone) me._trigger("setPageDone");
-            me._trigger("changepage", null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            if (me.options.setPageDone) {
+                me._trigger(events.setPageDone);
+            }
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
             me.lock = 0;
         },
-        touchNav: function () {
+        _touchNav: function () {
             // Touch Events
             var me = this;
             $(me.element).swipe({
@@ -214,7 +218,7 @@ $(function () {
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
-                        me.hideTableHeaders();
+                        me._hideTableHeaders();
                 },
                 tap: function (event, target) {
                     $(target).trigger("click");
@@ -269,7 +273,7 @@ $(function () {
                     $(".fr-docmap-border").css("height", document.body.clientHeight - $(".fr-docmap-panel").offset().top);
                 });
         },
-        cachePages: function (initPage) {
+        _cachePages: function (initPage) {
             var me = this;
              
             var low = initPage - 1;
@@ -294,25 +298,25 @@ $(function () {
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 
-                me._trigger("drillback");
-                me.removeParameters();
+                me._trigger(events.drillBack);
+                me._removeParameters();
                 me.loadPage(action.CurrentPage, false,null,null,true);
             }
             else {
-                me._trigger("back", null, { path: me.options.reportPath });
+                me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
         showNav: function () {
             var me = this;
             if (me.options.pageNav){
-                me.options.pageNav.pagenav("showNav");
+                me.options.pageNav.pageNav("showNav");
             }
         },
         flushCache: function () {
             var me = this;
             me.pages = {};
             if (me.options.pageNav)
-                me.options.pageNav.pagenav("reset");
+                me.options.pageNav.pageNav("reset");
         },
         _prepareAction: function () {
             var me = this;
@@ -388,7 +392,7 @@ $(function () {
                 UniqueID: bookmarkID
             }).done(function (data) {
                 if (data.NewPage === me.curPage) {
-                    me.navToLink(bookmarkID);
+                    me._navToLink(bookmarkID);
                 } else {
                     me.backupCurPage();
                     me.loadPage(data.NewPage, false, bookmarkID);
@@ -414,11 +418,11 @@ $(function () {
                     
                     if (data.ParametersRequired) {
                         me.$reportAreaContainer.find(".Page").detach();
-                        me.setScrollLocation(0, 0);
-                        me.showParameters(1, data.Parameters);
+                        me._setScrollLocation(0, 0);
+                        me._showParameters(1, data.Parameters);
                     }
                     else {
-                        me.setScrollLocation(0, 0);
+                        me._setScrollLocation(0, 0);
                         me.loadPage(1, false, null, null, true);
                     }
                 }
@@ -443,7 +447,7 @@ $(function () {
             var me = this;
             me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
         },
-        setScrollLocation: function (top, left) {
+        _setScrollLocation: function (top, left) {
             var me = this;
             me.scrollLeft = left;
             me.scrollTop = top;
@@ -545,29 +549,29 @@ $(function () {
         },
 
         //Page Loading
-        loadParameters: function (pageNum) {
+        _loadParameters: function (pageNum) {
             var me = this;
             $.getJSON(me.options.reportViewerAPI + "/GetParameterJSON/", {
                 ReportServerURL: me.options.reportServerURL,
                 ReportPath: me.options.reportPath
             })
            .done(function (data) {
-               me.addLoadingIndicator();
-               me.showParameters(pageNum, data);
+               me._addLoadingIndicator();
+               me._showParameters(pageNum, data);
            })
            .fail(function () {
                console.log("error");
                me.removeLoadingIndicator();
            });
         },
-        showParameters: function (pageNum, data) {
+        _showParameters: function (pageNum, data) {
             var me = this;
             if (data.Type === "Parameters") {
-                me.removeParameters();
+                me._removeParameters();
                
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    me._trigger("showparamarea");
+                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }
@@ -581,7 +585,7 @@ $(function () {
                 me.loadPage(pageNum, false);
             }
         },
-        removeParameters: function () {
+        _removeParameters: function () {
             var me = this;
             if (me.paramLoaded === true) {
                 var $paramArea = me.options.paramArea;
@@ -600,15 +604,15 @@ $(function () {
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me.setPage(newPageNum);
-                        me.cachePages(newPageNum);
+                        me._setPage(newPageNum);
+                        me._cachePages(newPageNum);
                     }
                     return;
                 }
             if (!paramList) paramList = "";
 
             if (!loadOnly) {
-                me.addLoadingIndicator();
+                me._addLoadingIndicator();
             }
             me.togglePageNum = newPageNum;
             me.lock = 1;
@@ -620,16 +624,16 @@ $(function () {
                 ParameterList: paramList
             })
             .done(function (data) {
-                me.writePage(data, newPageNum, loadOnly);
+                me._writePage(data, newPageNum, loadOnly);
                 me.lock = 0;
                 if (bookmarkID)
-                    me.navToLink(bookmarkID);
+                    me._navToLink(bookmarkID);
 
-                if (!loadOnly) me.cachePages(newPageNum);
+                if (!loadOnly) me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
-        writePage: function (data, newPageNum, loadOnly) {
+        _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
             var $report = $("<Div/>");
             $report.addClass("Page");
@@ -656,12 +660,12 @@ $(function () {
                 me.numPages = data.NumPages;
 
             if (!loadOnly) {
-                me.renderPage(newPageNum);
+                me._renderPage(newPageNum);
                 me.removeLoadingIndicator();
-                me.setPage(newPageNum);
+                me._setPage(newPageNum);
             }
         },
-        renderPage: function (pageNum) {
+        _renderPage: function (pageNum) {
             //Write Style
             var me = this;
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
@@ -676,7 +680,7 @@ $(function () {
             me.pages[pageNum].isRendered = true;
         },
                 
-        sessionPing: function () {
+        _sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.sessionID && me.sessionID !== "")
@@ -693,16 +697,16 @@ $(function () {
                 .fail(function () { console.log("error"); });
 
         },
-        updateTableHeaders: function (me) {
+        _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
 
             $.each(me.floatingHeaders, function (index, obj) {
-                me.setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
-                me.setColHeaderOffset(obj.$tablix, obj.$colHeader);
+                me._setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
+                me._setColHeaderOffset(obj.$tablix, obj.$colHeader);
             });
         },
-        hideTableHeaders: function () {
+        _hideTableHeaders: function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
@@ -711,10 +715,10 @@ $(function () {
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
-        navToLink: function (elementID) {
+        _navToLink: function (elementID) {
             $(document).scrollTop($("#" + elementID).offset().top - 85);
         },
-        stopDefaultEvent: function (e) {
+        _stopDefaultEvent: function (e) {
             //IE
             if (window.ActiveXObject)
                 window.event.returnValue = false;

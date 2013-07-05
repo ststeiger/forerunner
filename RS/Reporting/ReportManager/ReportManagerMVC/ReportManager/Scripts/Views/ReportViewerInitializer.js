@@ -6,6 +6,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var ssr = forerunner.ssr;
+    var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
 
     ssr.ReportViewerInitializer = function (options) {
@@ -66,8 +67,8 @@ $(function () {
                     click: function (e) {
                         var action;
                         var $img = $(e.target);
-                        if (!$img.hasClass('fr-tool-icon'))
-                            $img = $img.find('.fr-tool-icon');
+                        if (!$img.hasClass('fr-toolbase-icon'))
+                            $img = $img.find('.fr-toolbase-icon');
 
                         if ($img.hasClass('fr-image-delFav'))
                             action = "delete";
@@ -92,7 +93,7 @@ $(function () {
                     }
                 }
             };
-            $toolbar.toolbar('addTools', 14, true, [btnFav]);
+            $toolbar.toolbar('addTools', 8, true, [btnFav]);
             $toolbar.toolbar('disableTools', [btnFav]);
 
             // Let the report viewer know the height of the toolbar
@@ -109,7 +110,7 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
+            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer });
             var itemHome = {
                 toolType: toolTypes.containerItem,
                 selectorClass: 'fr-id-home',
@@ -121,7 +122,7 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 2, true, [itemHome]);
+            $toolPane.toolPane('addTools', 2, true, [itemHome]);
 
             var itemFav = {
                 toolType: toolTypes.containerItem,
@@ -132,14 +133,14 @@ $(function () {
                     click: function (e) {
                         var action;
                         var $img = $(e.target);
-                        if (!$img.hasClass('fr-tool-icon'))
-                            $img = $img.find('.fr-tool-icon');
+                        if (!$img.hasClass('fr-toolbase-icon'))
+                            $img = $img.find('.fr-toolbase-icon');
 
                         if ($img.hasClass('fr-image-delFav'))
                             action = "delete";
                         else
                             action = "add";
-                        e.data.me._trigger('actionstarted', null, e.data.me.tools['fr-item-update-fav']);
+                        e.data.me._trigger(events.actionStarted, null, e.data.me.allTools['fr-item-update-fav']);
                         $.getJSON("./api/ReportManager/UpdateView", {
                             view: "favorites",
                             action: action,
@@ -159,16 +160,16 @@ $(function () {
                     }
                 }
             };
-            $toolPane.toolpane('addTools', 4, true, [itemFav]);
-            $toolPane.toolpane('disableTools', [itemFav]);
-            $viewer.on('reportviewerchangepage', function (e, data) {
-                $toolPane.toolpane('enableTools', [itemFav]);
+            $toolPane.toolPane('addTools', 4, true, [itemFav]);
+            $toolPane.toolPane('disableTools', [itemFav]);
+            $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                $toolPane.toolPane('enableTools', [itemFav]);
                 $toolbar.toolbar('enableTools', [btnFav]);
             });
 
             $nav = me.options.$nav;
             if ($nav != null) {
-                $nav.pagenav({ $reportViewer: $viewer });
+                $nav.pageNav({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'pageNav', $nav);
             }
 

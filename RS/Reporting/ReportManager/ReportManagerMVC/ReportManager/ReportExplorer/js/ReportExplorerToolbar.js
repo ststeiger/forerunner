@@ -6,9 +6,10 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var widgets = forerunner.ssr.constants.widgets;
 
     // Toolbar widget
-    $.widget("Forerunner.reportexplorertoolbar", $.Forerunner.toolbase, {
+    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar"

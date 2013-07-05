@@ -1,7 +1,10 @@
-// Assign or create the single globally scoped variable
 var g_App = g_App || {};
+var forerunner = forerunner || {};
+forerunner.ssr = forerunner.ssr || {};
+
 g_App.AppPageView = function () {
 };
+
 g_App.AppPageView.prototype = {
     render: function () {
         return this;
@@ -11,16 +14,18 @@ g_App.AppPageView.prototype = {
 
     bindEvents: function () {
         var me = this;
+        var events = forerunner.ssr.constants.events;
+
         if (!me.eventsBound) {
             me.eventsBound = true;
-            $('#mainSectionHeader').on('toolbarmenuclick', function (e, data) { me.toggleSlideoutPane(true); });
-            $('#mainSectionHeader').on('toolbarparamareaclick', function (e, data) { me.toggleSlideoutPane(false); });
-            $('#rightPaneContent').on('reportparameterrender', function (e, data) { me.showSlideoutPane(false); });
-            $('#leftheader').on('toolbarmenuclick', function (e, data) { me.hideSlideoutPane(true); });
-            $('#rightheader').on('toolbarparamareaclick', function (e, data) { me.hideSlideoutPane(false); });
-            $('#leftPaneContent').on('toolpaneactionstarted', function (e, data) { me.hideSlideoutPane(true); });
-            $('#rightPaneContent').on('reportparametersubmit', function (e, data) { me.hideSlideoutPane(false); });
-            $('#FRReportViewer1').on('reportviewerdrillback', function (e, data) { me.hideSlideoutPane(false); });
+            $('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.toggleSlideoutPane(true); });
+            $('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.toggleSlideoutPane(false); });
+            $('#rightPaneContent').on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $('#leftheader').on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+            $('#rightheader').on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+            $('#leftPaneContent').on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $('#rightPaneContent').on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $('#FRReportViewer1').on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $(window).resize(function () {
                 $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
                 $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });

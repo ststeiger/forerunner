@@ -59,11 +59,11 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var $toolPane = me.options.$toolPane.toolpane({ $reportViewer: $viewer });
+            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer });
 
             var $nav = me.options.$nav;
             if ($nav) {
-                $nav.pagenav({ $reportViewer: $viewer });
+                $nav.pageNav({ $reportViewer: $viewer });
                 $viewer.reportViewer('option', 'pageNav', $nav);
             }
 

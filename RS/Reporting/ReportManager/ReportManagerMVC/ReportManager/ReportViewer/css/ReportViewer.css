@@ -10,9 +10,6 @@
 .fr-report-areacontainer {
     display:table-cell; 
 }
-.fr-report-cursor-pointer {
-    cursor: pointer;
-}
 
 /*.fr-report-toplevel-table {
   width:100%;

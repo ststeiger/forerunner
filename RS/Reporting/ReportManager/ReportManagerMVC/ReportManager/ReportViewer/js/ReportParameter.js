@@ -95,8 +95,8 @@ $(function () {
 
             me._closeAllDropdown();
             var paramList = me.getParamsList();
-            if (paramList) {
-                me.options.$reportViewer.reportViewer("loadPage", me.options.pageNum, false, null, paramList,true);
+            if (paramList) {                
+                me.options.$reportViewer.reportViewer("loadReportWithNewParameters", paramList);
                 me._trigger(events.submit);
             }
         },

@@ -69,7 +69,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
-
+  
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
             //Log in screen if needed
@@ -230,6 +230,7 @@ $(function () {
         refreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
+            var paramList = null;
 
             if (me.lock === 1)
                 return;
@@ -237,13 +238,11 @@ $(function () {
             me.sessionID = "";
             me.lock = 1;
 
-            if (me.paramLoaded === true) {
-                var $paramArea = me.options.paramArea;
-                me.loadPage(1, false, null, $paramArea.reportParameter("getParamsList"),true);
+            if (me.paramLoaded === true) {                
+                paramList = me.options.paramArea.reportParameter("getParamsList");
             }
-            else {
-                me.loadPage(1, false,null,null,true);
-            }
+            me._resetViewer(true);
+            me._loadPage(1, false, null, paramList,true);            
         },
         navToPage: function (newPageNum) {
             var me = this;
@@ -263,7 +262,7 @@ $(function () {
             if (newPageNum !== me.curPage) {
                 if (me.lock === 0) {
                     me.lock = 1;
-                    me.loadPage(newPageNum, false);
+                    me._loadPage(newPageNum, false);
                 }
             }
         },
@@ -284,7 +283,7 @@ $(function () {
             for (var i = low; i <= high; i++) {
                 if (!me.pages[i])
                     if (i !== initPage)
-                        me.loadPage(i, true);
+                        me._loadPage(i, true);
             }
 
         },
@@ -300,7 +299,7 @@ $(function () {
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
-                me.loadPage(action.CurrentPage, false,null,null,true);
+                me._loadPage(action.CurrentPage, false, null, null, true);
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -358,7 +357,7 @@ $(function () {
                 Direction: newDir
             }).done(function (data) {
                 me.numPages = data.NumPages;
-                me.loadPage((data.NewPage), false,null,null,true );
+                me._loadPage((data.NewPage), false, null, null, true);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -377,7 +376,7 @@ $(function () {
                     me.scrollTop = $(window).scrollTop();
 
                     me.pages[me.curPage] = null;
-                    me.loadPage(me.curPage, false);
+                    me._loadPage(me.curPage, false);
                 }
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
@@ -395,7 +394,7 @@ $(function () {
                     me._navToLink(bookmarkID);
                 } else {
                     me.backupCurPage();
-                    me.loadPage(data.NewPage, false, bookmarkID);
+                    me._loadPage(data.NewPage, false, bookmarkID);
                 }
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
@@ -423,7 +422,7 @@ $(function () {
                     }
                     else {
                         me._setScrollLocation(0, 0);
-                        me.loadPage(1, false, null, null, true);
+                        me._loadPage(1, false, null, null, true);
                     }
                 }
 
@@ -439,7 +438,7 @@ $(function () {
                 UniqueID: docMapID
             }).done(function (data) {
                 me.backupCurPage();
-                me.loadPage(data.NewPage, false, null);
+                me._loadPage(data.NewPage, false, null);
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -475,7 +474,7 @@ $(function () {
                     if (data.NewPage !== me.curPage) {
                         me.options.setPageDone = function () { me.setFindHighlight(keyword); };
                         me.pages[data.NewPage] = null;
-                        me.loadPage(data.NewPage, false);
+                        me._loadPage(data.NewPage, false);
                     } else {
                         me.setFindHighlight(keyword);
                     }
@@ -582,7 +581,7 @@ $(function () {
                 me.removeLoadingIndicator();
             }
             else {
-                me.loadPage(pageNum, false);
+                me._loadPage(pageNum, false);
             }
         },
         _removeParameters: function () {
@@ -595,7 +594,38 @@ $(function () {
                 }
             }
         },
-        loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
+        _resetViewer: function(isSameReport){
+            var me = this;
+
+            //me.sessionID = "";
+            me.numPages = 0;
+            me.floatingHeaders = [];
+            if (!isSameReport)
+                me.paramLoaded = false;
+            me.scrollTop = 0;
+            me.scrollLeft = 0;
+            me.finding = false;
+            me.findStart = null;
+            me.hasDocMap = false;
+            me.togglePageNum = 0;
+            me.findKeyword = null;
+        },
+        loadReport: function (reportPath,pageNum) {
+            var me = this;
+
+            me._resetViewer();            
+            me.options.reportPath = reportPath;
+            me.options.pageNum = pageNum;
+            me._loadParameters(pageNum);            
+            
+        },
+        loadReportWithNewParameters: function(paramList){
+            var me = this;
+           
+            me._resetViewer(true);            
+            me._loadPage(1, false, null, paramList, true);
+        },
+        _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
             if (flushCache !== undefined && flushCache)
@@ -694,7 +724,7 @@ $(function () {
                         alert(messages.sessionExpired);
                     }
                 })
-                .fail(function () { console.log("error"); });
+                .fail(function () { me.sessionID = ""; console.log("error"); alert(messages.sessionExpired); });
 
         },
         _updateTableHeaders: function (me) {
@@ -783,71 +813,3 @@ $(function () {
 });   // $(function
 
 
-
-jQuery.fn.extend({
-    slideRightShow: function (delay) {
-        return this.each(function () {
-            $(this).show("slide", { direction: "right", easing: "easeInCubic" }, delay);
-        });
-    },
-    slideLeftHide: function (delay) {
-        return this.each(function () {
-            $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
-        });
-    },
-    slideRightHide: function (delay) {
-        return this.each(function () {
-            $(this).hide("slide", { direction: "right", easing: "easeOutCubic" }, delay);
-        });
-    },
-    slideLeftShow: function (delay) {
-        return this.each(function () {
-            $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
-        });
-    },
-    highLightWord: function (keyword) {
-        if (!keyword || keyword === "") {
-            return;
-        }
-        else {
-            $(this).each(function () {
-                var elt = $(this).get(0);
-                elt.normalize();
-                $.each($.makeArray(elt.childNodes), function (i, node) {
-                    //nodetype=3 : text node
-                    if (node.nodeType === 3) {
-                        var searchnode = node;
-                        var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
-
-                        while (pos < searchnode.data.length) {
-                            if (pos >= 0) {
-                                var spannode = document.createElement("span");
-                                spannode.className = "fr-render-find-keyword Unread";
-                                var middlebit = searchnode.splitText(pos);
-                                searchnode = middlebit.splitText(keyword.length);
-                                var middleclone = middlebit.cloneNode(true);
-                                spannode.appendChild(middleclone);
-                                searchnode.parentNode.replaceChild(spannode, middlebit);
-                            }
-                            else {
-                                break;
-                            }
-
-                            pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
-                        }
-                    }
-                    else {
-                        $(node).highLightWord(keyword);
-                    }
-                });
-            });
-        }
-        return $(this);
-    },
-    clearHighLightWord: function () {
-        $(".fr-render-find-keyword").each(function () {
-            var text = document.createTextNode($(this).text());
-            $(this).replaceWith($(text));
-        });
-    }
-});

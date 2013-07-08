@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -140,6 +140,8 @@
     <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\Forerunner-all.css" />
+    <Content Include="CSS\Forerunner-core.css" />
     <Content Include="Lib\Nav\css\default_skin.css" />
     <Content Include="Lib\Nav\css\default_skin_variation.css" />
     <Content Include="Lib\Nav\css\tooltip_skin.css" />
@@ -171,6 +173,7 @@
     <Content Include="ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Images\ReportManager\clock_icon.png" />
+    <Content Include="ReportViewer\css\ToolBase.css" />
     <Content Include="ReportViewer\css\ReportDocumentMap.css" />
     <Content Include="ReportViewer\css\ReportRender.css" />
     <Content Include="ReportViewer\css\ReportViewerEZ.css" />

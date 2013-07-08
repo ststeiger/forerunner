@@ -209,8 +209,7 @@ $(function () {
             $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
-                swipe: function (event, direction, distance, duration, fingerCount) {
-                    alert(direction);
+                swipe: function (event, direction, distance, duration, fingerCount) {            
                     if (direction === "left" || direction === "up")
                         me.navToPage(me.curPage + 1);
                     else
@@ -224,7 +223,7 @@ $(function () {
                     $(target).trigger("click");
                 },
                 longTapThreshold: 1000,
-                threshold: 0,
+                //threshold: 0,
             });
         },
         refreshReport: function () {

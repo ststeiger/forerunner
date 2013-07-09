@@ -227,19 +227,19 @@ div#mainSection {
 
 
 .fr-image-addFav {
-  background-image:url('../Images/ReportManager/sq_plus_icon.png');
+  background-image:url('../Images/sq_plus_icon.png');
 }
 
 .fr-image-delFav {
-  background-image:url('../Images/ReportManager/sq_minus_icon.png');
+  background-image:url('../Images/sq_minus_icon.png');
 }
 
 .fr-image-fav {
-  background-image:url('../Images/ReportManager/star_fav_icon.png');
+  background-image:url('../Images/star_fav_icon.png');
 }
 
 .fr-image-recent {
-  background-image:url('../Images/ReportManager/clock_icon.png');
+  background-image:url('../Images/clock_icon.png');
 }
 
 /* Smartphones (landscape) ----------- */

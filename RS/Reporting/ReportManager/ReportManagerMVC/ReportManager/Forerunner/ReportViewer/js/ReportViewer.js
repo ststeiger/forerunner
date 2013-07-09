@@ -29,7 +29,7 @@ $(function () {
         // Default options
         options: {
             reportServerURL: null,
-            reportViewerAPI: null,
+            reportViewerAPI: './api/ReportViewer',
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -521,7 +521,7 @@ $(function () {
             me.$reportContainer.highLightWord(keyword);
 
             //Highlight the first match.
-            var $item = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
+            var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
 
             $(document).scrollTop($item.offset().top - 100);

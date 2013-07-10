@@ -196,6 +196,7 @@ $(function () {
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             if (me.options.setPageDone) {
                 me._trigger(events.setPageDone);
+                me.options.setPageDone = null;
             }
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
 
@@ -522,9 +523,11 @@ $(function () {
 
             //Highlight the first match.
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
-            $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
+            if ($item.length > 0) {
+                $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
 
-            $(document).scrollTop($item.offset().top - 100);
+                $(document).scrollTop($item.offset().top - 100);
+            }
         },
         resetFind: function () {
             var me = this;

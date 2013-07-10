@@ -39,11 +39,11 @@ $(function () {
             $img.addClass("catalogitem");
             $img.addClass("fr-report-center");
             if (catalogItem.Type === 1) {
-                imageSrc = "./ReportExplorer/images/folder-icon.png";
+                imageSrc = "../Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
                 if (hasParameters) {
-                    imageSrc = "./ReportExplorer/images/Report-icon.png";
+                    imageSrc = "../Forerunner/ReportExplorer/images/Report-icon.png";
                 } else {
                     imageSrc = reportThumbnailPath;
                 }
@@ -90,11 +90,11 @@ $(function () {
             $img.addClass("catalogitem");
             $img.addClass("fr-report-center");
             if (catalogItem.Type === 1) {
-                imageSrc = "./ReportExplorer/images/folder-icon.png";
+                imageSrc = "../Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
                 if (hasParameters) {
-                    imageSrc = "./ReportExplorer/images/Report-icon.png";
+                    imageSrc = "../Forerunner/ReportExplorer/images/Report-icon.png";
                 } else {
                     imageSrc = reportThumbnailPath;
                 }

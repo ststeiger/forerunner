@@ -151,13 +151,13 @@ namespace ReportManager.Controllers
 
         }
 
-        [HttpGet]
-        public HttpResponseMessage PingSession(string ReportServerURL, string SessionID)
+       [HttpGet]
+        public HttpResponseMessage PingSession(string ReportServerURL, string PingSessionID)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).pingSession(SessionID));
+                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).pingSession(PingSessionID));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

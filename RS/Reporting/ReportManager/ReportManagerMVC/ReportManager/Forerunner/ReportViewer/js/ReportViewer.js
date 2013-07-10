@@ -718,7 +718,7 @@ $(function () {
             if (me.sessionID && me.sessionID !== "")
                 $.getJSON(me.options.reportViewerAPI + "/PingSession", {
                     ReportServerURL: me.options.reportServerURL,
-                    SessionID: me.sessionID
+                    PingSessionID: me.sessionID
                 })
                 .done(function (data) {
                     if (data.Status === "Fail") {

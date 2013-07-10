@@ -208,17 +208,17 @@
     <WebReferences Include="Web References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
-      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
-      <Name>Jayrock.Json</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
+      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
+      <Name>Jayrock.Json</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

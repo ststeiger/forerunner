@@ -549,7 +549,7 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
-            $.getJSON(me.options.reportViewerAPI + "/GetParameterJSON/", {
+            $.getJSON(me.options.reportViewerAPI + "/ParameterJSON/", {
                 ReportServerURL: me.options.reportServerURL,
                 ReportPath: me.options.reportPath
             })
@@ -645,7 +645,7 @@ $(function () {
             }
             me.togglePageNum = newPageNum;
             me.lock = 1;
-            $.getJSON(me.options.reportViewerAPI + "/GetReportJSON/", {
+            $.getJSON(me.options.reportViewerAPI + "/ReportJSON/", {
                 ReportServerURL: me.options.reportServerURL,
                 ReportPath: me.options.reportPath,
                 SessionID: me.sessionID,
@@ -713,7 +713,7 @@ $(function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
             if (me.sessionID && me.sessionID !== "")
-                $.getJSON(me.options.reportViewerAPI + "/PingSession/", {
+                $.getJSON(me.options.reportViewerAPI + "/PingSession", {
                     ReportServerURL: me.options.reportServerURL,
                     SessionID: me.sessionID
                 })

@@ -222,7 +222,7 @@
     <Content Include="Forerunner\ReportViewer\css\ReportViewer.css" />
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
-    <Content Include="Scripts\App\configs.js" />
+    <Content Include="configs.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportManager.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Util\backbone.js" />

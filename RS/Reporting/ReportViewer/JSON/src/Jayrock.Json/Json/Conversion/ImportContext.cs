@@ -155,19 +155,7 @@ namespace Jayrock.Json.Conversion
 
             #endif
             
-            #if !NET_1_0 && !NET_1_1 && !NET_2_0
-
-            if (Reflector.IsConstructionOfGenericTypeDefinition(type, typeof(ISet<>)))
-            {
-                Type[] typeArguments = type.GetGenericArguments();
-                Type hashSetType = typeof(HashSet<>).MakeGenericType(typeArguments);
-                return (IImporter)Activator.CreateInstance(typeof(CollectionImporter<,,>).MakeGenericType(new Type[] { hashSetType, type, typeArguments[0] }));
-            }
-
-            if (Reflector.IsTupleFamily(type))
-                return new TupleImporter(type);
-
-            #endif
+  
             
             if ((type.IsPublic || type.IsNestedPublic) && 
                 !type.IsPrimitive && 
@@ -226,13 +214,7 @@ namespace Jayrock.Json.Conversion
                     importers.Add(new ListImporter());
                     importers.Add(new NameValueCollectionImporter());
 
-                    #if !NET_1_0 && !NET_1_1 && !NET_2_0
-
-                    importers.Add(new BigIntegerImporter());
-                    importers.Add(new ExpandoObjectImporter());
-                    
-                    #endif // !NET_1_0 && !NET_1_1 && !NET_2_0
-
+                   
                     IList typeList = (IList) ConfigurationSettings.GetConfig("jayrock/json.conversion.importers");
 
                     if (typeList != null && typeList.Count > 0)

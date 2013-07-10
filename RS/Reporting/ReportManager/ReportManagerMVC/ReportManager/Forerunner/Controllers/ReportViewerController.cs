@@ -55,7 +55,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]        
-        public HttpResponseMessage GetImage(string ReportServerURL, string SessionID, string ImageID)
+        public HttpResponseMessage Image(string ReportServerURL, string SessionID, string ImageID)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
+        public HttpResponseMessage Thumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        public HttpResponseMessage ReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetParameterJSON(string ReportServerURL, string ReportPath)
+        public HttpResponseMessage ParameterJSON(string ReportServerURL, string ReportPath)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetDocMapJSON(string ReportServerURL,string SessionID)
+        public HttpResponseMessage DocMapJSON(string ReportServerURL,string SessionID)
         {
             try
             {

@@ -154,27 +154,4 @@ namespace Jayrock.Json.Conversion.Converters
     }
 }
 
-#if NET_4_0
 
-namespace Jayrock.Json.Conversion.Converters
-{
-    #region Imports
-
-    using System.Globalization;
-    using System.Numerics;
-
-    #endregion
-
-    public sealed class BigIntegerImporter : NumberImporterBase
-    {
-        public BigIntegerImporter() :
-            base(typeof(BigInteger)) { }
-
-        protected override object ConvertFromString(string s)
-        {
-            return BigInteger.Parse(s, CultureInfo.InvariantCulture);
-        }
-    }
-}
-
-#endif

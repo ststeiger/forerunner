@@ -29,7 +29,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -137,7 +137,6 @@
     <Compile Include="DictionaryHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Dynamic\DynamicMetaObject.cs" />
     <Compile Include="IAttributeAttachment.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -223,8 +222,6 @@
     <Compile Include="Json\Conversion\Converters\EnumImporter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Json\Conversion\Converters\ExpandoObjectExporter.cs" />
-    <Compile Include="Json\Conversion\Converters\ExpandoObjectImporter.cs" />
     <Compile Include="Json\Conversion\Converters\ExportAwareExporter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -268,8 +265,6 @@
     <Compile Include="Json\Conversion\Converters\StringImporter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Json\Conversion\Converters\TupleExporter.cs" />
-    <Compile Include="Json\Conversion\Converters\TupleImporter.cs" />
     <Compile Include="Json\Conversion\Converters\UriImporter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -434,6 +429,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dynamic\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

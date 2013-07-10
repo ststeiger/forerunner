@@ -30,15 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Forerunner.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\..\Forerunner.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Jayrock.Json">
-      <HintPath>..\..\JSON\bin\net-2.0\release\Jayrock.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ReportingServices.Interfaces">
       <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSRS10.SQL2008\Reporting Services\ReportServer\bin\Microsoft.ReportingServices.Interfaces.dll</HintPath>
     </Reference>
@@ -59,7 +56,15 @@
     <Compile Include="ReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Forerunner.snk" />
+    <ProjectReference Include="..\..\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
+      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
+      <Name>Jayrock.Json</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Forerunner.snk">
+      <Link>Forerunner.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

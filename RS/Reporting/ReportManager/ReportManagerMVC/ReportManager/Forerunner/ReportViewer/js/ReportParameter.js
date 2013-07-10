@@ -220,6 +220,8 @@ $(function () {
                     $control.attr("readonly", "true");
                     $control.datepicker({
                         dateFormat: "yy-mm-dd", //Format: ISO8601
+                        changeMonth: true,
+                        changeYear: true,
                         onClose: function () {
                             $("[name='" + param.Name + "']").valid();
                             if (me._paramCount === 1)
@@ -283,7 +285,7 @@ $(function () {
 
             var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='../Forerunner/ReportViewer/Images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='../../Forerunner/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");

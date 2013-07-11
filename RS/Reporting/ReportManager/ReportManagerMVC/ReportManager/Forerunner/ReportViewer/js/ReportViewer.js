@@ -64,7 +64,7 @@ $(function () {
             me.scrollLeft = 0;
             me.loadLock = 0;
             me.finding = false;
-            me.findStart = null;
+            me.findStartPage = null;
             me.hasDocMap = false;
             me.togglePageNum = 0;
             me.findKeyword = null;
@@ -455,12 +455,25 @@ $(function () {
             var me = this;
             if (keyword === "") return;
 
-            if (!me.findKeyword || me.findKeyword !== keyword) { me.findKeyword = keyword; me.findStart = null; }
+            if (!me.findKeyword || me.findKeyword !== keyword) {
+                me.findKeyword = keyword;
+                me.findStartPage = null;
+            }
 
-            if (startPage === undefined) startPage = me.getCurPage();
-            if (endPage === undefined) endPage = me.getNumPages();
+            if (startPage === undefined)
+                startPage = me.getCurPage();
 
-            if (me.findStart === null) me.findStart = startPage;
+            if (endPage === undefined)
+                endPage = me.getNumPages();
+
+            if (startPage > endPage) {
+                me.resetFind();
+                alert(messages.completeFind);
+                return;
+            }
+
+            if (me.findStartPage === null)
+                me.findStartPage = startPage;
 
             $.getJSON(me.options.reportViewerAPI + "/FindString/", {
                 ReportServerURL: me.options.reportServerURL,
@@ -480,12 +493,17 @@ $(function () {
                     }
                 }
                 else {
-                    if (me.finding === true) {
-                        alert(messages.completeFind);
+                    if (me.findStartPage !== 1) {
+                        me.find(keyword, 1, me.findStartPage - 1);
+                        me.findStartPage = 1;
+                    }
+                    else {
+                        if (me.finding === true)
+                            alert(messages.completeFind);
+                        else
+                            alert(messages.keyNotFound);
                         me.resetFind();
                     }
-                    else
-                        alert(messages.keyNotFound);
                 }
             })
           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
@@ -508,8 +526,8 @@ $(function () {
 
                 if (me.getCurPage() + 1 <= me.getNumPages())
                     me.find(keyword, me.getCurPage() + 1);
-                else if (me.findStart > 1)
-                    me.find(keyword, 1, me.findStart - 1);
+                else if (me.findStartPage > 1)
+                    me.find(keyword, 1, me.findStartPage - 1);
                 else {
                     alert(messages.completeFind);
                     me.resetFind();
@@ -532,7 +550,7 @@ $(function () {
         resetFind: function () {
             var me = this;
             me.finding = false;
-            me.findStart = null;
+            me.findStartPage = null;
             me.findKeyword = null;
         },
         showExport: function () {
@@ -607,7 +625,7 @@ $(function () {
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
-            me.findStart = null;
+            me.findStartPage = null;
             me.hasDocMap = false;
             me.togglePageNum = 0;
             me.findKeyword = null;

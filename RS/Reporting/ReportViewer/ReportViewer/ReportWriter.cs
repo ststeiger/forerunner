@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using Jayrock.Json;
 
-namespace Forerunner
+namespace Forerunner.SSRS.JSONRender
 {
 
     internal class ReportJSONWriter : IDisposable

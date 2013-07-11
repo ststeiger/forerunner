@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace Forerunner.RSExec
+namespace Forerunner.SSRS.Execution
 {
     using System;
     using System.Web.Services;

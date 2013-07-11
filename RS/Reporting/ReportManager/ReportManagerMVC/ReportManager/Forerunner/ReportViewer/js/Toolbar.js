@@ -147,8 +147,7 @@ $(function () {
         events: {
             keypress: function (e) {
                 if (e.keyCode === 13) {
-                    var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
-                    e.data.$reportViewer.reportViewer("find", this.value);
+                    e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                 }
             }
         }
@@ -159,7 +158,7 @@ $(function () {
         text: "Find",
         events: {
             click: function (e) {
-                var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
+                var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
                 e.data.$reportViewer.reportViewer("find", value);
             }
         }
@@ -175,7 +174,7 @@ $(function () {
         text: "Next",
         events: {
             click: function (e) {
-                var value = e.data.me.element.find(".fr-textbox-keyword").val().trim();
+                var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
                 e.data.$reportViewer.reportViewer("findNext", value);
             }
         }

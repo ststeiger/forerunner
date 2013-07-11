@@ -135,7 +135,8 @@ $(function () {
         events: {
             keypress: function (e) {
                 if (e.keyCode === 13) {
-                    e.data.$reportViewer.reportViewer("find", this.value);
+                    e.data.$reportViewer.reportViewer("find", $.trim(this.value));
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                 }
             }
         }
@@ -146,7 +147,7 @@ $(function () {
         text: "Find",
         events: {
             click: function (e) {
-                var value = e.data.me.element.find(".fr-item-textbox-keyword").val().trim();
+                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
                 e.data.$reportViewer.reportViewer("find", value);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
             }
@@ -163,7 +164,7 @@ $(function () {
         text: "Next",
         events: {
             click: function (e) {
-                var value = e.data.me.element.find(".fr-item-textbox-keyword").val().trim();
+                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
                 e.data.$reportViewer.reportViewer("findNext", value);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-findnext"]);
             }

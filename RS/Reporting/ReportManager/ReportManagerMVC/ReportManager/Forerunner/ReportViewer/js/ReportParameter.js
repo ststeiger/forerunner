@@ -217,7 +217,7 @@ $(function () {
 
             switch (param.Type) {
                 case "DateTime":
-                    $control.attr("readonly", "true");
+                    //$control.attr("readonly", "true");
                     $control.datepicker({
                         dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,

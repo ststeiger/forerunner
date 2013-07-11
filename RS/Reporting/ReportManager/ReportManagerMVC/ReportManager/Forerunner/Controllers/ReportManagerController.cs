@@ -7,7 +7,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using Forerunner.Manager;
+using Forerunner.SSRS.Management;
+using Forerunner.SSRS.Manager;
 using Forerunner;
 
 namespace ReportManager.Controllers
@@ -27,12 +28,12 @@ namespace ReportManager.Controllers
         private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
 
-        private Forerunner.Manager.ReportManager GetReportManager()
+        private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
             //Put application security here
             Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-            return new Forerunner.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
+            return new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
         }
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
@@ -52,7 +53,7 @@ namespace ReportManager.Controllers
         }
         // GET api/ReportMananger/GetItems
         [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string view, string path )
+        public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
             return GetReportManager().GetItems(view, path);
         }

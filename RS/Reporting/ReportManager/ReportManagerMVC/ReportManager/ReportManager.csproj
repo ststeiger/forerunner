@@ -263,13 +263,9 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\ReportViewer.csproj">
+    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj">
       <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
-      <Name>ReportViewer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSProxy\RSProxy.csproj">
-      <Project>{9dedc6fb-5eb9-4648-8ac6-df82a81c1f23}</Project>
-      <Name>RSProxy</Name>
+      <Name>Forerunner.SSRS</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -6,10 +6,38 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Jayrock.Json;
-using Forerunner.RSExec;
+using Forerunner.SSRS.Execution;
 
 namespace Forerunner
 {
+    public enum ReportServerProtocalEnum { HTTP, HTTPS };
+    public class Credentials
+    {
+        public enum SecurityTypeEnum { Network = 0, Custom = 1 };
+        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
+        public string UserName;
+        public string Domain;
+        public string Password;
+
+        public Credentials() { }
+        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
+        {
+            this.SecurityType = SecurityType;
+            this.UserName = UserName;
+            this.Password = Password;
+            this.Domain = Domain;
+        }
+
+        public string GetDomainUser()
+        {
+            if (this.Domain.Length > 15)
+                return this.Domain.Substring(0, 15).ToUpper() + "\\" + this.UserName;
+            else
+                return this.Domain.ToUpper() + "\\" + this.UserName;
+        }
+
+
+    }
     class RPLDateTime
     {
         public int Type;

@@ -2,11 +2,13 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using Forerunner.RSExec;
+using Forerunner.SSRS.Execution;
 using Jayrock.Json;
 using System.Diagnostics;
+using Forerunner.SSRS.JSONRender;
+using Forerunner.Thumbnail;
 
-namespace Forerunner.Viewer
+namespace Forerunner.SSRS.Viewer
 {
     public enum RenderFormat
     {
@@ -78,24 +80,7 @@ namespace Forerunner.Viewer
             }
 
         }
-        public string GetReportScript()
-        {
-            string script = "";
-
-            script += "<script src='/Scripts/jquery-1.7.1.min.js'></script>";
-            script += "<script src='/Scripts/Models/FRReport.js'></script>";
-            return script;
-        }
-        public string GetReportInitScript(string reportPath)
-        {
-            string script = "";
-            string UID = Guid.NewGuid().ToString("N");
-
-            script += "<div id='" + UID + "'></div>";
-            script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
-            return script;
-        }
-
+ 
         public byte[] NavigateTo(string NavType, string SessionID, string UniqueID)
         {
             
@@ -232,7 +217,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);//return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);
             }
         }
         public string GetDocMapJson(string SessionID)
@@ -247,7 +232,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
         public string GetParameterJson(string ReportPath)
@@ -317,7 +302,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 

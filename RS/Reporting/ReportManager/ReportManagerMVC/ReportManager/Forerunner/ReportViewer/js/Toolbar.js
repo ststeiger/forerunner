@@ -104,7 +104,7 @@ $(function () {
     var btnNumPages = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-num-pages",
-        text: ""
+        text: "0"
     };
     var btnNext = {
         toolType: toolTypes.button,
@@ -247,6 +247,7 @@ $(function () {
         },
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
+
             me.element.find(".fr-num-pages").html(maxPage);
             me.element.find(".fr-textbox-reportpage").attr({ max: maxPage, min: 1 });
 

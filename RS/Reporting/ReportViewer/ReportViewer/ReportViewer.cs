@@ -23,28 +23,38 @@ namespace Forerunner.SSRS.Viewer
 
     public class ReportViewer:IDisposable
     {
-        String ReportServerURL;
-        Credentials Credentials = new Credentials();
-        ReportExecutionService rs = new ReportExecutionService();
-        string ReportViewerAPIPath = "/api/ReportViewer";
+        private String ReportServerURL;
+        private Credentials Credentials = new Credentials();
+        private ReportExecutionService rs = new ReportExecutionService();
+        private bool ServerRendering = false;
 
         public ReportViewer(String ReportServerURL, Credentials Credentials)
         {
             this.ReportServerURL = ReportServerURL;
             SetRSURL();
             SetCredentials(Credentials);
+            
         }
         private void SetRSURL()
         {
             rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
         }
-        public ReportViewer(String ReportServerURL, string ReportViewerAPIPath = "/api/ReportViewer")
+        public ReportViewer(String ReportServerURL)
         {
             this.ReportServerURL = ReportServerURL;
-            this.ReportViewerAPIPath = ReportViewerAPIPath;
             SetRSURL();
         }
 
+        private void SetServerRendering()
+        {
+            foreach (Extension Ex in rs.ListRenderingExtensions())
+            {
+                if (Ex.Name == "ForerunnerJSON")
+                    this.ServerRendering = true;
+            }
+
+
+        }
         public void SetCredentials(Credentials Credentials)
         {
             this.Credentials = Credentials;
@@ -53,6 +63,7 @@ namespace Forerunner.SSRS.Viewer
                 rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
             else
                 rs.Credentials = new NetworkCredential(this.Credentials.UserName, this.Credentials.Password, this.Credentials.Domain);
+            SetServerRendering();
         }
 
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
@@ -140,7 +151,7 @@ namespace Forerunner.SSRS.Viewer
         public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
             byte[] result = null;
-            string format = "RPL";
+            string format;
             string historyID = null;
             string encoding;
             string mimeType;
@@ -150,6 +161,11 @@ namespace Forerunner.SSRS.Viewer
             string NewSession;
             ReportJSONWriter rw;
 
+
+            if (this.ServerRendering)
+                format = "ForerunnerJSON";
+            else
+                format = "RPL";
 
             if (SessionID == null)
                 NewSession = "";
@@ -188,6 +204,7 @@ namespace Forerunner.SSRS.Viewer
                 {
                     rw = new ReportJSONWriter(new MemoryStream(result));
                     JsonWriter w = new JsonTextWriter();
+                    JsonReader r;
 
                     //Read Report Object
                     w.WriteStartObject();
@@ -197,12 +214,13 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteString(ReportServerURL);
                     w.WriteMember("ReportPath");
                     w.WriteString(reportPath);
-                    w.WriteMember("NumPages");
-                    w.WriteNumber(execInfo.NumPages);
                     w.WriteMember("HasDocMap");
                     w.WriteBoolean(execInfo.HasDocumentMap);
                     w.WriteMember("ReportContainer");
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON()));
+                    if (this.ServerRendering)
+                        r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
+                    else
+                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
                     w.WriteFromReader(r);
                     w.WriteEndObject();
 

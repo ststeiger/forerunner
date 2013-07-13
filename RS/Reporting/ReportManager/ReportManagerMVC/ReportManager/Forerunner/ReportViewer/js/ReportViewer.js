@@ -704,10 +704,10 @@ $(function () {
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.NumPages === undefined)
+            if (data.ReportContainer.NumPages === undefined)
                 me.numPages = 0;
             else
-                me.numPages = data.NumPages;
+                me.numPages = data.ReportContainer.NumPages;
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);

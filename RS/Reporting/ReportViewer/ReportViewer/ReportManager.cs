@@ -9,6 +9,7 @@ using Forerunner.SSRS.Viewer;
 using Forerunner.SSRS.Management;
 using Forerunner.Security;
 using Jayrock.Json;
+using System.Threading;
 
 namespace Forerunner.SSRS.Manager
 {
@@ -360,18 +361,24 @@ namespace Forerunner.SSRS.Manager
             retval = GetDBImage(path);
             if (retval == null)
             {
-                
-                ReportViewer rep = new ReportViewer(this.URL);
-                rep.SetCredentials(this.WSCredentials);
-                retval = rep.GetThumbnail(path, "", "1", 1.2);
-                if (retval != null)
-                        SaveImage(retval, path);
+                Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
+                t.Start(path);
+                //t.Join();                    
             }
             return retval;
 
 
         }
 
+        private void GetThumbnail(object path)
+        {
+            byte[] retval = null;
+            ReportViewer rep = new ReportViewer(this.URL);
+            rep.SetCredentials(this.WSCredentials);
+            retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
+            if (retval != null)
+                SaveImage(retval, path.ToString());
+        }
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

@@ -42,16 +42,20 @@ $(function () {
                 imageSrc = "../Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
-                if (hasParameters) {
-                    imageSrc = "../Forerunner/ReportExplorer/images/Report-icon.png";
-                } else {
+
+                //if (hasParameters) {
+                //    imageSrc = "../Forerunner/ReportExplorer/images/Report-icon.png";
+                //} else {
                     imageSrc = reportThumbnailPath;
-                }
+                //}
             }
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
               
             $img.attr("src", imageSrc);
+            $img.error( function () {
+                $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
+            });
             $img.removeAttr("height");
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
@@ -93,17 +97,15 @@ $(function () {
                 imageSrc = "../Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
-                if (hasParameters) {
-                    imageSrc = "../Forerunner/ReportExplorer/images/Report-icon.png";
-                } else {
-                    imageSrc = reportThumbnailPath;
-                }
+                imageSrc = reportThumbnailPath;
             }
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
-
             $img.attr("src", imageSrc);
-            $img.removeAttr("height");
+            $img.error(function () {
+                $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
+            });
+            $img.removeAttr("height"); //JQuery adds height for IE8, remove.
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
@@ -111,7 +113,9 @@ $(function () {
             });
             var $reflection = new $("<div />");
             $reflection.addClass("reflection");
-            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection"));
+            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection").error(function () {
+                $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
+            }));
 
             $anchor.append($img);
             $anchor.append($reflection);

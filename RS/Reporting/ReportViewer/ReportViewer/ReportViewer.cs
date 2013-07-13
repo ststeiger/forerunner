@@ -527,6 +527,9 @@ namespace Forerunner.SSRS.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
+                if (rs.GetExecutionInfo().ParametersRequired)
+                    return null;
+
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 

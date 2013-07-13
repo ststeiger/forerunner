@@ -29,7 +29,7 @@ $(function () {
         // Default options
         options: {
             reportServerURL: null,
-            reportViewerAPI: './api/ReportViewer',
+            reportViewerAPI: "./api/ReportViewer",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,

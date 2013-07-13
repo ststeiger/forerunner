@@ -350,7 +350,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);
             }
         }
 
@@ -379,7 +379,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -418,7 +418,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);  //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);  
             }
         }
 
@@ -444,7 +444,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -469,7 +469,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -497,10 +497,8 @@ namespace Forerunner.SSRS.Viewer
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;                       
-            //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.          
             MemoryStream ms = new MemoryStream();           
-            //string format = "HTML4.0";
-            string format = "MHTML";
+            string format = "HTML4.0";            
             string historyID = null;
             string encoding;
             string mimeType;
@@ -509,6 +507,7 @@ namespace Forerunner.SSRS.Viewer
             string[] streamIDs = null;
             string NewSession;
            
+
             if (SessionID == null)
                 NewSession = "";
             else
@@ -528,20 +527,27 @@ namespace Forerunner.SSRS.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                //Device Info
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
-                //devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
-                //devInfo += @"<ReplacementRoot></ReplacementRoot>";
-                //devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+
+                if (this.ServerRendering)
+                    format = "ForerunnerThumbnail";
+                else
+                {
+                    devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
+                    devInfo += @"<ReplacementRoot></ReplacementRoot>";
+                    devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+                }
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                //WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                WebSiteThumbnail.GetStreamThumbnail(result, maxHeightToWidthRatio).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                result = ms.ToArray();
+                if (!this.ServerRendering)
+                {
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result),maxHeightToWidthRatio, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    result = ms.ToArray();
+                }
                 
                 return result; 
                           

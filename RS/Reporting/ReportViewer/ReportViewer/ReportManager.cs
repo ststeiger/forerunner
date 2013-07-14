@@ -234,7 +234,16 @@ namespace Forerunner.SSRS.Manager
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem c;
 
-            string SQL = @"SELECT DISTINCT Path,Name,ModifiedDate  FROM ExecutionLogStorage e INNER JOIN Catalog c ON e.ReportID = c.ItemID WHERE UserName = @DomainUser AND ReportAction = 1 AND format IS NOT NULL AND format <> 'MHTML' AND TimeStart > DATEADD(dd,-60,GETDATE())";
+            string SQL = @"SELECT Path,Name,ModifiedDate  
+                            FROM Catalog c INNER JOIN (
+                            SELECT ReportID,max(TimeStart) TimeStart
+                            FROM ExecutionLogStorage 
+                            WHERE UserName = @DomainUser AND ReportAction = 1 AND format IS NOT NULL AND format <> 'MHTML' AND TimeStart > DATEADD(dd,-60,GETDATE()) 
+                            GROUP BY ReportID
+                            ) e
+                            ON e.ReportID = c.ItemID 
+                            ORDER BY TimeStart DESC";
+
 
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

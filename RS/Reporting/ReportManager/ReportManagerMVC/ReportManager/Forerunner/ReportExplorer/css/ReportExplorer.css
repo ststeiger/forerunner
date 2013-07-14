@@ -26,7 +26,7 @@ margin-bottom:10px;
     -ms-transform: scale(1.2); 
     -o-transform: scale(1.2); 
     transform: scale(1.2);
-    -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1.2, M12=0, M21=0, M22=1.2, SizingMethod='auto expand')";
+    /*-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=1.2, M12=0, M21=0, M22=1.2, SizingMethod='auto expand')";*/  /*user-select for IE8 overlaps with IE9*/
 }
 
 

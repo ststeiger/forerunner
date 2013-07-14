@@ -361,8 +361,9 @@ namespace Forerunner.SSRS.Manager
             retval = GetDBImage(path);
             if (retval == null)
             {
-                Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
-                t.Start(path);
+                ThreadPool.QueueUserWorkItem(this.GetThumbnail, path);
+                //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
+                //t.Start(path);
                 //t.Join();                    
             }
             return retval;

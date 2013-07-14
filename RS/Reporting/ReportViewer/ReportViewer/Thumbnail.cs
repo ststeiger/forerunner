@@ -22,7 +22,6 @@ namespace Forerunner.Thumbnail
                 return bmp; 
             } 
         }
-        private ManualResetEvent mre = new ManualResetEvent(false);
         private WebBrowser webBrowser;
         private Func<string, string> callback = null;
 
@@ -131,8 +130,6 @@ namespace Forerunner.Thumbnail
             SetIamge(webBrowser);
             if (fileName != null)
                 File.Delete(fileName);
-            if (mre != null)
-                mre.Set();
         }
 
         private void SetIamge(WebBrowser webBrowser)
@@ -161,7 +158,6 @@ namespace Forerunner.Thumbnail
         {
             if (disposing)
             {
-                mre.Close();
                 webBrowser.Dispose();
                 bmp.Dispose();
             }

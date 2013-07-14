@@ -196,8 +196,7 @@ namespace Forerunner.SSRS.JSONRender
 
             public void ThrowParseError()
             {
-                //TODO Throw correct, this should not happen
-                throw new IndexOutOfRangeException();
+                throw new Exception();
             }
 
             public void Write(ReportJSONWriter r, Byte EndCode = 0xFF)
@@ -285,10 +284,18 @@ namespace Forerunner.SSRS.JSONRender
             RPL.position = CurrIndex;
             return true;
         }
+
         private void ThrowParseError()
         {
-            //TODO Throw correct, this should not happen
-            throw new IndexOutOfRangeException();
+            throw new Exception();
+        }
+        private void ThrowParseError(string Msg)
+        {
+            throw new Exception(Msg);
+        }
+        private void ThrowParseError(string Msg, Exception e)
+        {            
+            throw new Exception(Msg,e);
         }
         private Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)
         {
@@ -353,7 +360,7 @@ namespace Forerunner.SSRS.JSONRender
                     //TODO Need to write datetime type
                     break;
                 default:
-                    ThrowParseError();
+                    ThrowParseError("WriteTempProperty: Type not found");
                     break;
 
             }
@@ -503,8 +510,7 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteEndObject();
             }
             else
-                //TODO Throw correct, this should not happen
-                throw new IndexOutOfRangeException();
+                ThrowParseError("WriteJSONArrayOffset: Array Offset Start Tag not found");
         }
         private void WriteJSONPageProp()
         {
@@ -526,7 +532,7 @@ namespace Forerunner.SSRS.JSONRender
             prop.Write(this);
 
             if (RPL.ReadByte() != 0xFF)
-                ThrowParseError();
+                ThrowParseError("WriteJSONPageProp: End Tag not Found");
 
 
         }
@@ -556,7 +562,7 @@ namespace Forerunner.SSRS.JSONRender
                 prop.Write(this);
             }
             else
-                ThrowParseError();
+                ThrowParseError("WriteJSONSections: Section not found");
 
             //BodyArea
             w.WriteMember("Columns");
@@ -663,7 +669,7 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteEndObject();
             }
             else
-                ThrowParseError();
+                ThrowParseError("WriteJSONBodyElement: Start Tag not found");
 
             return true;
         }
@@ -683,8 +689,7 @@ namespace Forerunner.SSRS.JSONRender
 
             if (DeRef != 2)
                 if (RPL.ReadByte() != 0x0F)
-                    // THis must be a Element Property
-                    ThrowParseError();
+                    ThrowParseError("Not an Element");
 
 
             if (RPL.InspectByte() == 0x00 || (RPL.InspectByte() == 0x01 && DeRef == 2))
@@ -785,8 +790,7 @@ namespace Forerunner.SSRS.JSONRender
 
 
                     if (RPL.ReadByte() != 0xFF)
-                        //This should never happen
-                        ThrowParseError();
+                        ThrowParseError("No End Tag");
                 }
 
 
@@ -815,7 +819,6 @@ namespace Forerunner.SSRS.JSONRender
                 RPL.ReadByte();
 
             if (RPL.ReadByte() != 0x2A)
-                //This should never happen
                 ThrowParseError();
 
             switch (RPL.ReadByte())
@@ -892,8 +895,7 @@ namespace Forerunner.SSRS.JSONRender
             int Count;
 
             if (RPL.ReadByte() != 0x26)
-                //This should never happen
-                ThrowParseError();
+                ThrowParseError("Not an Image Map Area");
 
             w.WriteMember("Count");
             Count = RPL.ReadInt32();
@@ -904,8 +906,7 @@ namespace Forerunner.SSRS.JSONRender
             for (int i = 0; i < Count; i++)
             {
                 if (RPL.ReadByte() != 0x07)
-                    //This should never happen
-                    ThrowParseError();
+                    ThrowParseError("Not a Action Info Item");
 
                 w.WriteStartObject();
                 if (RPL.InspectByte() == 0x02)
@@ -962,16 +963,14 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteEndObject();
             }
             else
-                //This cannot happen
-                ThrowParseError();
+                ThrowParseError("Not an Image Map Areas Item");
         }
         private void WriteJSONActionInfoContent()
         {
             if (RPL.ReadByte() == 0x02)
                 WriteJSONActions();
             else
-                //This cannot happen
-                ThrowParseError();
+                ThrowParseError("Not an Action Info Item");
 
         }
         private Boolean WriteJSONActionInfo()
@@ -1018,7 +1017,7 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONMeasurements()
         {
             if (RPL.ReadByte() != 0x10)
-                ThrowParseError();  //This should never happen
+                ThrowParseError("Not a Measurement Item");
 
             w.WriteMember("Measurement");
             w.WriteStartObject();
@@ -1104,11 +1103,8 @@ namespace Forerunner.SSRS.JSONRender
         private Boolean WriteJSONReportItems()
         {
 
-            //w.WriteMember("ReportItems");
             w.WriteStartArray();
-
             while (WriteJSONReportItem()) ;
-
             w.WriteEndArray();
             return true;
 
@@ -1158,8 +1154,7 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONRectangle()
         {
             if (RPL.ReadByte() != 0x0A)
-                // THis must be a Measurment Property
-                ThrowParseError();
+                ThrowParseError("Not a Rectangle Item");
 
             w.WriteStartObject();
             w.WriteMember("Type");
@@ -1182,9 +1177,8 @@ namespace Forerunner.SSRS.JSONRender
         }
         private void WriteJSONTablix()
         {
-            if (RPL.ReadByte() != 0x0D)
-                // THis must be a Measurment Property
-                ThrowParseError();
+            if (RPL.ReadByte() != 0x0D)                
+                ThrowParseError("Not a Tablix Item");
 
             w.WriteStartObject();
             w.WriteMember("Type");
@@ -1214,8 +1208,7 @@ namespace Forerunner.SSRS.JSONRender
                     LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
                     //w.WriteEndObject();
                     if (RPL.ReadByte() != 0xFF)
-                        //This should never happen
-                        ThrowParseError();
+                        ThrowParseError("No End Tag");
                 }
                 else
                     WriteJSONReportItem();
@@ -1248,12 +1241,10 @@ namespace Forerunner.SSRS.JSONRender
                 RPL.position--;
                 LoopObjectArray("TablixRows", 0x08, this.WriteJSONTablixRow);
                 if (RPL.ReadByte() != 0xFF)
-                    //THis should never happen
-                    ThrowParseError();
+                    ThrowParseError("No End Tag");
             }
             else
-                //This should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Tablix Structure");
 
             WriteJSONReportElementEnd();
             w.WriteEndObject();
@@ -1264,16 +1255,16 @@ namespace Forerunner.SSRS.JSONRender
         private Boolean WriteJSONDeRefCellReportItem()
         {
             if (RPL.ReadByte() != 0x04)
-                // THis must be a Cell reference Property
-                ThrowParseError();
+                ThrowParseError("Not a Cell Reference");
+
             long StartIndex = RPL.ReadInt64();
             long CurrIndex = RPL.position;
             RPL.position = StartIndex;
 
 
             if (RPL.ReadByte() != 0xFE)
-                // THis must be a ReportElementEnd record
-                ThrowParseError();
+                ThrowParseError("Not a Report Elememt End");
+
             //Jump to start of ReportItemEnd  This is differnt for each report item             
             RPL.position = RPL.ReadInt64();
             switch (RPL.InspectByte())
@@ -1313,8 +1304,7 @@ namespace Forerunner.SSRS.JSONRender
 
 
             if (RPL.ReadByte() != 0x12)
-                // THis must be a Cell reference Property
-                ThrowParseError();
+                ThrowParseError("Not a Cell Reference");
 
             //Tablix Row
             w.WriteStartObject();
@@ -1326,8 +1316,8 @@ namespace Forerunner.SSRS.JSONRender
             LoopObjectArray("Cells", 0x0D, this.WriteJSONCells);
             w.WriteEndObject();
             if (RPL.ReadByte() != 0xFF)
-                //This should never happen
-                ThrowParseError();
+                ThrowParseError("No End Tag");
+
             //Set back
             RPL.position = CurrIndex;
         }
@@ -1424,16 +1414,15 @@ namespace Forerunner.SSRS.JSONRender
 
             }
             if (RPL.ReadByte() != 0xFF)
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("No End Tag");
+
             return true;
         }
         private Boolean WriteJSONTablixColMemeber()
         {
             int Count;
             if (RPL.ReadByte() != 0x0F)
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Column Imem");
 
             w.WriteMember("ColMemberDefCount");
             Count = RPL.ReadInt32();
@@ -1452,8 +1441,7 @@ namespace Forerunner.SSRS.JSONRender
             RPLProperties prop;
 
             if (RPL.ReadByte() != 0x10)
-                //This should never happen
-                ThrowParseError();
+                ThrowParseError("Not a MememberDef Item");
 
             w.WriteStartObject();
 
@@ -1471,8 +1459,7 @@ namespace Forerunner.SSRS.JSONRender
             int Count;
 
             if (RPL.ReadByte() != 0x0E)
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Row Memeber");
 
             w.WriteMember("RowMemberDefCount");
             Count = RPL.ReadInt32();
@@ -1491,8 +1478,7 @@ namespace Forerunner.SSRS.JSONRender
             int Count;
 
             if (RPL.ReadByte() != 0x04)
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Column Width Item");
 
             w.WriteMember("ColumnCount");
             Count = RPL.ReadInt32();
@@ -1518,8 +1504,7 @@ namespace Forerunner.SSRS.JSONRender
             int Count;
 
             if (RPL.ReadByte() != 0x05)
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Row Height Item");
 
             w.WriteMember("RowCount");
             Count = RPL.ReadInt32();
@@ -1564,7 +1549,7 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONRichText()
         {
             if (RPL.ReadByte() != 0x07)
-                ThrowParseError();  //This should never happen
+                ThrowParseError("Not a Rich Text Item");  //This should never happen
 
             w.WriteStartObject();
             w.WriteMember("Type");
@@ -1603,12 +1588,10 @@ namespace Forerunner.SSRS.JSONRender
                     w.WriteNumber(RPL.ReadInt64());
                 w.WriteEndArray();
                 if (RPL.ReadByte() != 0xFF)
-                    //THis should never happen
-                    ThrowParseError();
+                    ThrowParseError("No End Tag");
             }
             else
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Paragraph Structure");
             w.WriteEndObject();
 
             WriteJSONReportElementEnd();
@@ -1680,7 +1663,7 @@ namespace Forerunner.SSRS.JSONRender
 
                         if (RPL.ReadByte() != 0xFF)
                             //The end of ElementProperties
-                            ThrowParseError();
+                            ThrowParseError("No End Tag");
                         break;
                 }
 
@@ -1693,13 +1676,11 @@ namespace Forerunner.SSRS.JSONRender
                 for (int i = 0; i < Count; i++)
                     w.WriteNumber(RPL.ReadInt64());
                 w.WriteEndArray();
-                if (RPL.ReadByte() != 0xFF)
-                    //THis should never happen
-                    ThrowParseError();
+                if (RPL.ReadByte() != 0xFF)                    
+                    ThrowParseError("No End Tag");
             }
             else
-                //THis should never happen
-                ThrowParseError();
+                ThrowParseError("Not a Paragraph");
 
             return true;
         }
@@ -1711,7 +1692,7 @@ namespace Forerunner.SSRS.JSONRender
             RPLProperties prop;
 
             if (RPL.ReadByte() != 0x0F)
-                ThrowParseError();
+                ThrowParseError("Not a Text Run");
 
             switch (RPL.InspectByte())
             {
@@ -1762,7 +1743,7 @@ namespace Forerunner.SSRS.JSONRender
 
                     if (RPL.ReadByte() != 0xFF)
                         //The end of ElementProperties
-                        ThrowParseError();
+                        ThrowParseError("No Element End Tag");
                     break;
             }
 
@@ -1842,20 +1823,17 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteNumber(RPL.ReadInt64());
             }
             else
-                //TODO Throw correct, this should not happen
-                throw new IndexOutOfRangeException();
+                ThrowParseError("No Offset Tag");
 
             //Must be the end
             if (RPL.ReadByte() != 0xFF)
-                //TODO Throw correct, this should not happen
-                throw new IndexOutOfRangeException();
+                ThrowParseError("No End Tag");
 
         }
         private Boolean WriteJSONStyle()
         {
-            if (RPL.ReadByte() != 0x06)
-                //TODO Throw correct, this should not happen
-                throw new IndexOutOfRangeException();
+            if (RPL.ReadByte() != 0x06)                
+                ThrowParseError("Not a Style Element");
             RPLProperties prop;
 
             if (RPL.InspectByte() == 0x00)

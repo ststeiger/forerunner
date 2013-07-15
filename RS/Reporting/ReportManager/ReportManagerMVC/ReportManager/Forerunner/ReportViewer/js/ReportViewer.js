@@ -515,7 +515,10 @@ $(function () {
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(document).scrollTop($nextWord.offset().top - 100);
+                $(window).scrollTop($nextWord.offset().top - 150);
+                $(window).scrollLeft($nextWord.offset().left - 250);
+                
+                //window.scrollTo($nextWord.offset().left, $nextWord.offset().top - 100);
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -536,15 +539,17 @@ $(function () {
         },
         setFindHighlight: function (keyword) {
             var me = this;
-            $(me).clearHighLightWord();
-            me.$reportContainer.highLightWord(keyword);
+            me._clearHighLightWord();
+            me._highLightWord(me.$reportContainer, keyword);
 
             //Highlight the first match.
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-
-                $(document).scrollTop($item.offset().top - 100);
+                //alert($item.offset().left);
+                $(window).scrollTop($item.offset().top - 150);
+                $(window).scrollLeft($item.offset().left - 250);
+                //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);
             }
         },
         resetFind: function () {
@@ -828,6 +833,58 @@ $(function () {
 
             //This is an error
             return value;
+        },
+        _highLightWord: function ($element, keyword) {
+            if (!keyword || keyword === "") {
+                return;
+            }
+            else {
+                var me = this;
+                $($element).each(function () {
+                    var elt = $(this).get(0);
+                    elt.normalize();
+                    $.each(elt.childNodes, function (i, node) {
+                        //nodetype=3 : text node
+                        if (node.nodeType === 3) {
+                            var searchnode = node;
+                            try{
+                                var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+
+                                while (pos < searchnode.data.length) {
+                                    if (pos >= 0) {
+                                        //create a new span node with matched keyword text
+                                        var spannode = document.createElement("span");
+                                        spannode.className = "fr-render-find-keyword Unread";
+
+                                        //split the match node
+                                        var middlebit = searchnode.splitText(pos);
+                                        searchnode = middlebit.splitText(keyword.length);
+
+                                        //replace keyword text with span node 
+                                        var middleclone = middlebit.cloneNode(true);
+                                        spannode.appendChild(middleclone);
+                                        node.parentNode.replaceChild(spannode, middlebit);
+                                    }
+                                    else {
+                                        break;
+                                    }
+                                    pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
+                                }
+                            } catch (error) { }
+                        }
+                        else {
+                            me._highLightWord($(node), keyword);
+                        }
+                    });
+                });
+            }
+            return $(this);
+        },
+        _clearHighLightWord: function () {
+            $(".fr-render-find-keyword").each(function () {
+                var text = document.createTextNode($(this).text());
+                $(this).replaceWith($(text));
+            });
         }
     });  // $.widget
 });   // $(function

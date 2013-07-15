@@ -23,52 +23,7 @@ jQuery.fn.extend({
         return this.each(function () {
             $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
-    },
-    highLightWord: function (keyword) {
-        if (!keyword || keyword === "") {
-            return;
-        }
-        else {
-            $(this).each(function () {
-                var elt = $(this).get(0);
-                elt.normalize();
-                $.each($.makeArray(elt.childNodes), function (i, node) {
-                    //nodetype=3 : text node
-                    if (node.nodeType === 3) {
-                        var searchnode = node;
-                        var pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
-
-                        while (pos < searchnode.data.length) {
-                            if (pos >= 0) {
-                                var spannode = document.createElement("span");
-                                spannode.className = "fr-render-find-keyword Unread";
-                                var middlebit = searchnode.splitText(pos);
-                                searchnode = middlebit.splitText(keyword.length);
-                                var middleclone = middlebit.cloneNode(true);
-                                spannode.appendChild(middleclone);
-                                searchnode.parentNode.replaceChild(spannode, middlebit);
-                            }
-                            else {
-                                break;
-                            }
-
-                            pos = searchnode.data.toUpperCase().indexOf(keyword.toUpperCase());
-                        }
-                    }
-                    else {
-                        $(node).highLightWord(keyword);
-                    }
-                });
-            });
-        }
-        return $(this);
-    },
-    clearHighLightWord: function () {
-        $(".fr-render-find-keyword").each(function () {
-            var text = document.createTextNode($(this).text());
-            $(this).replaceWith($(text));
-        });
-    }
+    }    
 });
 $(function () {
     // Constants used by SSR

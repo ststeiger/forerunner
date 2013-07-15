@@ -7,7 +7,6 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var messages = forerunner.ssr.constants.messages;
     var navigateType = forerunner.ssr.constants.navigateType;
 
     // The Floating header object holds pointers to the tablix and its row and col header objects
@@ -30,6 +29,7 @@ $(function () {
         options: {
             reportServerURL: null,
             reportViewerAPI: "./api/ReportViewer",
+            reportViewerLocFolder: "./forerunner/ReportViewer/loc/",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -49,6 +49,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
+            me.locData = forerunner.localize.getLocData(me.options.reportViewerLocFolder, "ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -56,8 +57,8 @@ $(function () {
             me.numPages = 0;
             me.lock = 0;
             me.$reportContainer = new $("<DIV class='fr-report-container'/>");
-            me.$reportAreaContainer = null;
-            me.$loadingIndicator = new $("<div class='fr-report-loading-indicator'></div>").text(messages.loading);
+            me.$reportAreaContainer = null;            
+            me.$loadingIndicator = new $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
             me.floatingHeaders = [];
             me.paramLoaded = false;
             me.scrollTop = 0;
@@ -468,7 +469,7 @@ $(function () {
 
             if (startPage > endPage) {
                 me.resetFind();
-                alert(messages.completeFind);
+                alert(me.locData.messages.completeFind);
                 return;
             }
 
@@ -499,9 +500,9 @@ $(function () {
                     }
                     else {
                         if (me.finding === true)
-                            alert(messages.completeFind);
+                            alert(me.locData.messages.completeFind);
                         else
-                            alert(messages.keyNotFound);
+                            alert(me.locData.messages.keyNotFound);
                         me.resetFind();
                     }
                 }
@@ -522,7 +523,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    alert(messages.completeFind);
+                    alert(me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -532,7 +533,7 @@ $(function () {
                 else if (me.findStartPage > 1)
                     me.find(keyword, 1, me.findStartPage - 1);
                 else {
-                    alert(messages.completeFind);
+                    alert(me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -746,10 +747,10 @@ $(function () {
                 .done(function (data) {
                     if (data.Status === "Fail") {
                         me.sessionID = "";
-                        alert(messages.sessionExpired);
+                        alert(me.locData.messages.sessionExpired);
                     }
                 })
-                .fail(function () { me.sessionID = ""; console.log("error"); alert(messages.sessionExpired); });
+                .fail(function () { me.sessionID = ""; console.log("error"); alert(me.locData.messages.sessionExpired); });
 
         },
         _updateTableHeaders: function (me) {

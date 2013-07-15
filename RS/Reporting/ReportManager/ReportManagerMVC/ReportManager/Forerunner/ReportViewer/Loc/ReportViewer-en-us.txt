@@ -1,0 +1,29 @@
+﻿{
+  "messages": {
+        "loading": "Loading...",
+        "completeFind": "The entire report has been searched",
+        "keyNotFound": "Key not found",
+        "sessionExpired": "Your session has expired",
+        "imageNotDisplay": "Cannot display image"
+    },
+    "errorTag": {
+        "moreDetail": "Click for more detail",
+        "serverError": "Exception thrown from server",
+        "type": "Type",
+        "targetSite": "targetSite",
+        "source": "Source",
+        "message": "Message",
+        "stackTrace": "StackTrace"
+    },
+    "exportType": {
+        "xml": "XML file with report data",
+        "csv": "CSV (comma delimited)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (web archive)",
+        "excel": "Excel",
+        "tiff": "TIFF file",
+        "word": "Word"
+    }
+}
+
+        

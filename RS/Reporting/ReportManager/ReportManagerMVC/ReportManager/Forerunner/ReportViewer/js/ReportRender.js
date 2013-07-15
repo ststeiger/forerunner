@@ -66,7 +66,8 @@ $(function () {
         },
         writeError: function (errorData) {
             var me = this;
-            var errorTag = forerunner.ssr.constants.errorTag;
+            //var errorTag = forerunner.ssr.constants.errorTag;
+            var errorTag = me.options.reportViewer.locData.errorTag;
 
             me.element.html($(
                 "<div class='fr-render-error-message'></div>" +
@@ -826,7 +827,7 @@ $(function () {
         _writeExportPanel: function () {
             var me = this;
             var $ExportPanel = $("<div class='fr-render-export-panel'></div>");
-            var exportType = forerunner.ssr.constants.exportType;
+            var exportType = me.options.reportViewer.locData.exportType;
 
             var ExportList = [];
             ExportList.push({ Name: exportType.xml, Type: "XML" });

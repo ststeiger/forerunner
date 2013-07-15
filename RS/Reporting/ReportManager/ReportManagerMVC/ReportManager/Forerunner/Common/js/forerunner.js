@@ -107,7 +107,7 @@ $(function () {
         messages: {
             loading: "Loading...",
             completeFind: "The entire report has been searched",
-            keyNotFound: "Keywork not found",
+            keyNotFound: "Key not found",
             sessionExpired: "Your session has expired",
             imageNotDisplay: "Cannot display image"
         },
@@ -131,6 +131,42 @@ $(function () {
         }
     };
 
+    forerunner.localize = {
+        _locData: {},
+        getLocData: function(locFolder, app){
+            var lang = navigator.language || navigator.userLanguage;
+            var langData = this._loadFile(locFolder, app, lang);
+
+            if (langData === null)
+                langData = this._loadFile(locFolder, app, "en-us");
+
+            return langData;
+            
+        },
+        _loadFile: function (locFolder, app, lang) {
+            var me = this;
+            if (me._locData[locFolder] === undefined)
+                me._locData[locFolder] = {};
+            if (me._locData[locFolder][app] === undefined)
+                me._locData[locFolder][app] = {};
+            if (me._locData[locFolder][app][lang] === undefined) {
+                $.ajax({
+                    url: locFolder + app + "-" + lang + ".txt",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me._locData[locFolder][app][lang] = data;
+                    },
+                    fail: function () {
+                        me._locData[locFolder][app][lang] = null;
+                    }
+                });
+
+            }
+            return me._locData[locFolder][app][lang];            
+        },
+
+    };
     // device contains all externally available helper methods related to the device
     forerunner.device = {
         isTouch: function () {

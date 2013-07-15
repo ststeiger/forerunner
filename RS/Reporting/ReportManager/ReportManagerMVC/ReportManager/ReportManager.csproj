@@ -142,6 +142,7 @@
   <ItemGroup>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
+    <Content Include="Forerunner\Lib\Misc\js\jquery.localize.js" />
     <Content Include="Forerunner\Lib\Nav\css\default_skin.css" />
     <Content Include="Forerunner\Lib\Nav\css\default_skin_variation.css" />
     <Content Include="Forerunner\Lib\Nav\css\tooltip_skin.css" />
@@ -253,6 +254,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>

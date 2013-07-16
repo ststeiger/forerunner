@@ -15,10 +15,13 @@ g_App.AppPageView.prototype = {
         var me = this;
         var events = forerunner.ssr.constants.events;
 
-        $('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.toggleSlideoutPane(true); });
-        $('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.toggleSlideoutPane(false); });
+        //$('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.toggleSlideoutPane(true); });
+        //$('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.toggleSlideoutPane(false); });
+        $('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
+        $('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
         $('#rightPaneContent').on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
         $('#leftheader').on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+
         $('#rightheader').on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
         $('#leftPaneContent').on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
         $('#rightPaneContent').on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
@@ -28,7 +31,7 @@ g_App.AppPageView.prototype = {
             $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
             $('#leftPaneContent').css({ height: '100%' });
             $('#rightPaneContent').css({ height: '100%' });
-            $('.Parameter-Container').css({ height: $('#rightPane').height() - 45 });
+            $('.fr-param-container').css({ height: $('#rightPane').height() - 45 });
         });
     },
 
@@ -61,7 +64,7 @@ g_App.AppPageView.prototype = {
             if (isLeftPane) {
                 slideoutPane.slideLeftShow(delay);
             } else {
-                $('.Parameter-Container').css({ height:slideoutPane.height() - 36 });
+                $('.fr-param-container').css({ height:slideoutPane.height() - 36 });
                 slideoutPane.slideRightShow(delay);
             }
             mainViewPort.addClass(className, delay);

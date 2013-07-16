@@ -113,9 +113,12 @@ $(function () {
             });
             var $reflection = new $("<div />");
             $reflection.addClass("reflection");
-            $reflection.append($img.clone().removeClass("catalogitem").addClass("reflection").error(function () {
+            var $reflImg = $img.clone().removeClass("catalogitem")
+            $reflImg.addClass("reflection")
+            $reflImg.error(function () {
                 $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
-            }));
+            });
+            $reflection.append($reflImg);
 
             $anchor.append($img);
             $anchor.append($reflection);

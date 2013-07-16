@@ -142,7 +142,6 @@
   <ItemGroup>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
-    <Content Include="Forerunner\Lib\Misc\js\jquery.localize.js" />
     <Content Include="Forerunner\Lib\Nav\css\default_skin.css" />
     <Content Include="Forerunner\Lib\Nav\css\default_skin_variation.css" />
     <Content Include="Forerunner\Lib\Nav\css\tooltip_skin.css" />

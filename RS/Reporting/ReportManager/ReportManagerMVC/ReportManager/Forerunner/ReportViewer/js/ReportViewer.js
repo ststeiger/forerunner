@@ -754,7 +754,7 @@ $(function () {
                         alert(me.locData.messages.sessionExpired);
                     }
                 })
-                .fail(function () { me.sessionID = ""; console.log("error"); alert(me.locData.messages.sessionExpired); });
+                .fail(function () { me.sessionID = ""; console.log("error"); });
 
         },
         _updateTableHeaders: function (me) {

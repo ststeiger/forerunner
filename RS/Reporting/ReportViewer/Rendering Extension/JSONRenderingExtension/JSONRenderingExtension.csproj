@@ -36,11 +36,13 @@
     <AssemblyOriginatorKeyFile>..\..\..\Forerunner.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.ReportingServices.Interfaces">
-      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSRS10.SQL2008\Reporting Services\ReportServer\bin\Microsoft.ReportingServices.Interfaces.dll</HintPath>
+    <Reference Include="Microsoft.ReportingServices.Interfaces, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>External\Microsoft.ReportingServices.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ReportingServices.ProcessingCore">
-      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files\Microsoft SQL Server\MSRS10.SQL2008\Reporting Services\ReportServer\bin\Microsoft.ReportingServices.ProcessingCore.dll</HintPath>
+    <Reference Include="Microsoft.ReportingServices.ProcessingCore, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>External\Microsoft.ReportingServices.ProcessingCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -39,10 +39,10 @@
         "pageOf": "of",
         "find": "Find",
         "next": "Next",
-        "export": "Export"
+        "exportMenu": "Export"
     },
 	"paramPane": {
-        "null": "Null",
+        "nullField": "Null",
         "true": "True",
         "false": "False",
         "required": "Required",

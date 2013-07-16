@@ -173,7 +173,7 @@ $(function () {
                 });
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
-                $nullableLable.html(me.options.$reportViewer.locData.paramPane.null);
+                $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
 
                 $nullableSpan.append($checkbox).append($nullableLable);
                 return $nullableSpan;

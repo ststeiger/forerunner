@@ -189,7 +189,7 @@ $(function () {
         toolType: toolTypes.plainText,
         selectorClass: "fr-button-export",
         //imageClass: "fr-image-export",
-        text: locData.toolbar.export,
+        text: locData.toolbar.exportMenu,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showExport");

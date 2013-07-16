@@ -296,7 +296,7 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
-                
+                me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.scrollLeft = action.ScrollLeft;

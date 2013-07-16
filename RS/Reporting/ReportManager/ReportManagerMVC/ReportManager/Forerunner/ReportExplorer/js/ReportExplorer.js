@@ -94,7 +94,7 @@ $(function () {
             $img.addClass("catalogitem");
             $img.addClass("fr-report-center");
             if (catalogItem.Type === 1) {
-                imageSrc = "../Forerunner/ReportExplorer/images/folder-icon.png";
+                imageSrc = "./Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
                 $img.addClass("reportitem");
                 imageSrc = reportThumbnailPath;
@@ -103,7 +103,7 @@ $(function () {
             var action = catalogItem.Type === 1 ? "explore" : "browse";
             $img.attr("src", imageSrc);
             $img.error(function () {
-                $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
+                $(this).attr("src", "./Forerunner/ReportExplorer/images/Report-icon.png");
             });
             $img.removeAttr("height"); //JQuery adds height for IE8, remove.
             $anchor.on("click", function (event) {

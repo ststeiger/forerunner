@@ -492,7 +492,7 @@ $(function () {
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
-            NewImage.alt = forerunner.ssr.constants.messages.imageNotDisplay;
+            NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
             $(NewImage).attr("style", "display:block;" );
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);

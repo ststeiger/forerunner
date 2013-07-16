@@ -220,6 +220,10 @@ $(function () {
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
                         me._hideTableHeaders();
+                    if (phase === "move")
+                        me._updateTableHeaders(me);
+                    if (phase === "end")
+                        me._updateTableHeaders(me);
                 },
                 tap: function (event, target) {
                     $(target).trigger("click");

@@ -8,6 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
+    var locData = forerunner.localize.getLocData("./forerunner/ReportViewer/loc/", "ReportViewer");
 
     ssr.ReportViewerInitializer = function (options) {
         this.options = {
@@ -115,7 +116,7 @@ $(function () {
                 toolType: toolTypes.containerItem,
                 selectorClass: 'fr-id-home',
                 imageClass: 'fr-image-home',
-                text: 'Home',
+                text: locData.toolPane.home,
                 events: {
                     click: function (e) {
                         me.options.navigateTo('home', null);
@@ -128,7 +129,7 @@ $(function () {
                 toolType: toolTypes.containerItem,
                 selectorClass: 'fr-item-update-fav',
                 imageClass: 'fr-image-delFav',
-                text: 'Favorites',
+                text: locData.toolPane.favorites,
                 events: {
                     click: function (e) {
                         var action;

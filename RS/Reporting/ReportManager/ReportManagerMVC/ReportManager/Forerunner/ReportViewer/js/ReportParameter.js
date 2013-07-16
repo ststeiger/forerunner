@@ -26,12 +26,13 @@ $(function () {
         },
         _render: function () {
             var me = this;
+            
             me.element.html(null);
             var $params = new $("<div class='fr-param-container'>" +
                 "<form name='ParameterForm' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div class='fr-param-submit-container'>" +
-                      "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='View Report'/>" +
+                      "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
                    "</div>" +
                 "</form></div>");
             me.element.css("display", "block");
@@ -88,7 +89,7 @@ $(function () {
             else
                 me._trigger(events.render);
 
-            me.options.$reportViewer.reportViewer("removeLoadingIndicator");
+            me.options.$reportViewer.removeLoadingIndicator();
         },
         _submitForm: function () {
             var me = this;
@@ -96,7 +97,7 @@ $(function () {
             me._closeAllDropdown();
             var paramList = me.getParamsList();
             if (paramList) {                
-                me.options.$reportViewer.reportViewer("loadReportWithNewParameters", paramList);
+                me.options.$reportViewer.loadReportWithNewParameters(paramList);
                 me._trigger(events.submit);
             }
         },
@@ -137,14 +138,15 @@ $(function () {
             return $parent;
         },
         _getParameterControlProperty: function (param, $control) {
+            var me = this;
             $control.attr("AllowBlank", param.AllowBlank);
             if (param.Nullable !== "True") {
-                $control.attr("required", "true").watermark("Required");
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required);
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
         _addNullableCheckBox: function (param, $control) {
-            //var me = this;
+            var me = this;
             if (param.Nullable === "True") {
                 var $nullableSpan = new $("<Span />");
 
@@ -171,7 +173,7 @@ $(function () {
                 });
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
-                $nullableLable.html("NULL");
+                $nullableLable.html(me.options.$reportViewer.locData.paramPane.null);
 
                 $nullableSpan.append($checkbox).append($nullableLable);
                 return $nullableSpan;
@@ -181,9 +183,10 @@ $(function () {
         },
         _writeRadioButton: function (param) {
             var me = this;
+            var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
-            radioValues[0] = "True";
-            radioValues[1] = "False";
+            radioValues[0] = paramPane.true;
+            radioValues[1] = paramPane.false;
 
             var $control = new $("<div class='fr-param-checkbox-container' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
 
@@ -502,27 +505,25 @@ $(function () {
                 $(obj).width(max);
             });
         },
-        resetValidateMessage: function() {
+        resetValidateMessage: function () {
+            var me = this;
+            var error = me.options.$reportViewer.locData.validateError;
+
             jQuery.extend(jQuery.validator.messages, {
-                required: "Required.",
-                remote: "Please fix this field.",
-                email: "Invalid email address.",
-                url: "Invalid URL.",
-                date: "Invalid date.",
-                dateISO: "Invalid date",
-                dateDE: "Bitte geben Sie ein gltiges Datum ein.",
-                number: "Invalid number.",
-                numberDE: "Bitte geben Sie eine Nummer ein.",
-                digits: "Please enter only digits",
-                creditcard: "Please enter a valid credit card number.",
-                equalTo: "Please enter the same value again.",
-                accept: "Please enter a value with a valid extension.",
-                maxlength: $.validator.format("Please enter no more than {0} characters."),
-                minlength: $.validator.format("Please enter at least {0} characters."),
-                rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
-                range: $.validator.format("Please enter a value between {0} and {1}."),
-                max: $.validator.format("Please enter a value less than or equal to {0}."),
-                min: $.validator.format("Please enter a value greater than or equal to {0}.")
+                required: error.required,
+                remote: error.remote,
+                email: error.email,
+                url: error.url,
+                date: error.date,
+                dateISO: error.dateISO,
+                number: error.number,
+                digits: error.digits,
+                maxlength: $.validator.format(error.maxlength),
+                minlength: $.validator.format(error.minlength),
+                rangelength: $.validator.format(error.rangelength),
+                range: $.validator.format(error.range),
+                max: $.validator.format(error.max),
+                min: $.validator.format(error.min)
             });
         },
         removeParameter: function () {

@@ -597,6 +597,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     me._trigger(events.showParamArea);
+                    $paramArea.reportParameter({ $reportViewer: this });
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
                     me.paramLoaded = true;
                 }

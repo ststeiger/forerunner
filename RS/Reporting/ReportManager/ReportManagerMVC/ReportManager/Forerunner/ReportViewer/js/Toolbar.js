@@ -9,6 +9,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var locData = forerunner.localize.getLocData("./forerunner/ReportViewer/loc/", "ReportViewer");
 
     // Tool Info data
     var btnMenu = {
@@ -99,7 +100,7 @@ $(function () {
     var btnPageOf = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-pageOf",
-        text: "of"
+        text: locData.toolbar.pageOf
     };
     var btnNumPages = {
         toolType: toolTypes.plainText,
@@ -155,7 +156,7 @@ $(function () {
     var btnFind = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-button-find",
-        text: "Find",
+        text: locData.toolbar.find,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
@@ -171,7 +172,7 @@ $(function () {
     var btnFindNext = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-button-findnext",
-        text: "Next",
+        text: locData.toolbar.next,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
@@ -188,7 +189,7 @@ $(function () {
         toolType: toolTypes.plainText,
         selectorClass: "fr-button-export",
         //imageClass: "fr-image-export",
-        text: "Export",
+        text: locData.toolbar.export,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showExport");

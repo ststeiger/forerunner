@@ -8,13 +8,14 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var locData = forerunner.localize.getLocData("./forerunner/ReportViewer/loc/", "ReportViewer");
 
     // Tool Info data
     var itemNav = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-nav",
         imageClass: "fr-image-nav",
-        text: "Navigation",
+        text: locData.toolPane.navigation,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -26,7 +27,7 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-reportback",
         imageClass: "fr-image-reportback",
-        text: "Back",
+        text: locData.toolPane.back,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
@@ -38,7 +39,7 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-refresh",
         imageClass: "fr-image-refresh",
-        text: "Refresh",
+        text: locData.toolPane.refresh,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -83,7 +84,7 @@ $(function () {
     var itemPageOf = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-pageOf",
-        text: "of"
+        text: locData.toolPane.pageOf
     };
     var itemNumPages = {
         toolType: toolTypes.plainText,
@@ -121,7 +122,7 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-documentmap",
         imageClass: "fr-image-documentmap",
-        text: "Document map",
+        text: locData.toolPane.docMap,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
@@ -144,7 +145,7 @@ $(function () {
     var itemFind = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-item-find",
-        text: "Find",
+        text: locData.toolPane.find,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
@@ -161,7 +162,7 @@ $(function () {
     var itemFindNext = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-item-findnext",
-        text: "Next",
+        text: locData.toolPane.next,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());

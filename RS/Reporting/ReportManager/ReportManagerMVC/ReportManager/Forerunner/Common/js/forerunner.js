@@ -138,7 +138,7 @@ $(function () {
                 });
 
             }
-            return me._locData[locFolder][app][lang];            
+            return me._locData[locFolder][app][lang];
         },
 
     };

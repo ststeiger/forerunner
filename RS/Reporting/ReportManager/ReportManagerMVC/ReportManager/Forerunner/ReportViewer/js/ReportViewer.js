@@ -193,16 +193,16 @@ $(function () {
             }
                        
             me.curPage = pageNum;
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+
+            $(window).scrollLeft(me.scrollLeft);
+            $(window).scrollTop(me.scrollTop);
 
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             if (me.options.setPageDone) {
                 me._trigger(events.setPageDone);
                 me.options.setPageDone = null;
             }
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
-
-            $(window).scrollLeft(me.scrollLeft);
-            $(window).scrollTop(me.scrollTop);
             me.lock = 0;
         },
         _touchNav: function () {
@@ -551,7 +551,6 @@ $(function () {
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                //alert($item.offset().left);
                 $(window).scrollTop($item.offset().top - 150);
                 $(window).scrollLeft($item.offset().left - 250);
                 //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);

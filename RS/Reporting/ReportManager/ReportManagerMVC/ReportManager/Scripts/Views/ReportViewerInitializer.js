@@ -58,7 +58,7 @@ $(function () {
                     }
                 }
             };
-            $toolbar.toolbar('addTools', 2, true, [btnHome]);
+            $toolbar.toolbar('addTools', 12, true, [btnHome]);
 
             var btnFav = {
                 toolType: toolTypes.button,

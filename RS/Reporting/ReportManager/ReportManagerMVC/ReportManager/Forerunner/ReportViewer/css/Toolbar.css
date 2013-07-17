@@ -73,9 +73,15 @@
   text-align:center;
 }
 
-.fr-button-reportback, .fr-button-paramarea {
+
+.fr-button-home, .fr-button-paramarea {
     float:right;
 }
+
+.fr-image-menu {
+    float:left;
+}
+
 
 .fr-image-export {
   background-image:url('../../reportviewer/Images/Toolbar/export.jpg');

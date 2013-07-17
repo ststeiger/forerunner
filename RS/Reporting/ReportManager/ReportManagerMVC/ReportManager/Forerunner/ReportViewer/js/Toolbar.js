@@ -12,6 +12,16 @@ $(function () {
     var locData = forerunner.localize.getLocData("./forerunner/ReportViewer/loc/", "ReportViewer");
 
     // Tool Info data
+    var btnReportBack = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-reportback",
+        imageClass: "fr-image-reportback",
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("back");
+            }
+        }
+    };
     var btnMenu = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-menu",
@@ -42,16 +52,7 @@ $(function () {
             }
         }
     };
-    var btnReportBack = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-button-reportback",
-        imageClass: "fr-image-reportback",
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("back");
-            }
-        }
-    };
+   
     var btnRefresh = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-refresh",
@@ -245,7 +246,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnNav, btnParamarea, btnReportBack, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnExport]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnExport, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

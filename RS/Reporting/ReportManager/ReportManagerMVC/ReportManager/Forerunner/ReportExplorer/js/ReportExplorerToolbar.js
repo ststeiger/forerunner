@@ -75,7 +75,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [me.btnHome, me.btnBack, me.btnFav, me.btnRecent]);
+            me.addTools(1, true, [me.btnBack, me.btnHome, me.btnFav, me.btnRecent]);
             me._initCallbacks();
         },
 

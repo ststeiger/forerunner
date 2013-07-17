@@ -194,6 +194,10 @@ $(function () {
                 
             });
 
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._clearItemStates();
+            });
+
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
                             itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);
@@ -242,6 +246,9 @@ $(function () {
             else
                 me.enableTools([itemNav]);
         },
-
+        _clearItemStates: function () {
+            var me = this;
+            me.element.find(".fr-item-textbox-keyword").val("");
+        },
     });  // $.widget
 });  // function()

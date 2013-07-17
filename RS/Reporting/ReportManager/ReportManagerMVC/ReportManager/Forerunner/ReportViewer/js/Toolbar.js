@@ -222,6 +222,10 @@ $(function () {
                
             });
 
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._clearBtnStates();
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([btnParamarea]);
             });
@@ -275,7 +279,10 @@ $(function () {
             else
                 me.enableTools([btnNav]);
         },
-       
+        _clearBtnStates: function () {
+            var me = this;
+            me.element.find(".fr-textbox-keyword").val("");
+        },
         _destroy: function () {
         },
 

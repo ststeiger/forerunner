@@ -34,12 +34,13 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606060', endColorstr='#2f2f2f',GradientType=0 ); /* IE6-8 */
 
 }
+
 .fr-textbox-reportpage {
   background-color: white;
   min-width:10mm;
   max-width:15mm;
   text-align:right;
-  vertical-align: top;
+  vertical-align: central;
 }
 .fr-textbox-keyword
 {

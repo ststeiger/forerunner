@@ -49,8 +49,8 @@ var ApplicationRouter = Backbone.Router.extend({
             if (forerunner.device.isTouch()) {
                 $('#headerspacer').attr('style', 'height:35px');
             }
-            $("html").addClass("Explorer-background");
-            $("body").addClass("Explorer-background");
+            $("html").addClass("fr-Explorer-background");
+            $("body").addClass("fr-Explorer-background");
 
             $('#mainViewPort').css({ width: "100%", height: "100%" });
 
@@ -143,8 +143,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#rightheaderspacer').height($('#topdiv').height());
             $('#leftheaderspacer').height($('#topdiv').height());
             me.appPageView.bindEvents();
-            $("html").removeClass("Explorer-background");
-            $("body").removeClass("Explorer-background");
+            $("html").removeClass("fr-Explorer-background");
+            $("body").removeClass("fr-Explorer-background");
         },
        
         toolbarHeight : function() {

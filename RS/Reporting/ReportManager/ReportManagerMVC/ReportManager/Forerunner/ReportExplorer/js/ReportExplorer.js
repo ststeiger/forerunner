@@ -18,8 +18,7 @@ $(function () {
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this;
-            //var $selectedItem = null;
-
+ 
             var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
             var reportThumbnailPath = me.options.url
               + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
@@ -31,21 +30,20 @@ $(function () {
             $item.addClass("fr-explorer-item");
             
             var $caption = new $("<div />");
-            $caption.addClass("fr-report-center");
+            $caption.addClass("fr-explorer-item-center");
             $item.append($caption);
             var $captiontext = new $("<h3 />");
-            $captiontext.addClass("fr-report-centertext");
+            $captiontext.addClass("fr-explorer-item-centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             var $imageblock = new $("<div />");
-            $imageblock.addClass("image-block");
+            $imageblock.addClass("fr-report-item-image-block");
             $item.append($imageblock);
             var imageSrc;
-            //var targetUrl;
             var $anchor = new $("<a />");
             var $img = new $("<img />");
-            $img.addClass("catalogitem");
-            $img.addClass("fr-report-center");
+            $img.addClass("fr-explorer-item-width");
+            $img.addClass("fr-explorer-item-center");
             if (catalogItem.Type === 1) {
                 imageSrc = "./Forerunner/ReportExplorer/images/folder-icon.png";
             } else {
@@ -65,9 +63,9 @@ $(function () {
                 }
             });
             var $reflection = new $("<div />");
-            $reflection.addClass("reflection");
-            var $reflImg = $img.clone().removeClass("catalogitem")
-            $reflImg.addClass("reflection")
+            $reflection.addClass("fr-report-item-reflection");
+            var $reflImg = $img.clone();
+            $reflImg.addClass("fr-report-item-reflection")
             $reflImg.error(function () {
                 $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
             });
@@ -113,9 +111,9 @@ $(function () {
                     me._scrollList();
                 }
 
-                me.$explorer.bind("scrollstop", function (e) {
-                    me._setSelectionFromScroll();
-                });
+                //me.$explorer.bind("scrollstop", function (e) {
+                //    me._setSelectionFromScroll();
+                //});
 
                 me.$explorer.resize(function () {
                     me._scrollList();

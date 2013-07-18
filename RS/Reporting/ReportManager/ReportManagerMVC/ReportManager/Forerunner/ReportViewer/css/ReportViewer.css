@@ -1,8 +1,5 @@
-﻿body {
-    color: #333333;
-    font-family: "Segoe UI",Verdana,Helvetica,Sans-Serif;
-    font-size: 0.85em;
-}
+﻿
+
 .fr-report-container {
   position:relative;
   width:100%;
@@ -11,50 +8,7 @@
     display:table-cell; 
 }
 
-/*.fr-report-toplevel-table {
-  width:100%;
-}
-.buttonicon {
-  width:30px;
-  height:30px;
-  background-color:transparent;
-  border-width:0px;
-}*/
 
-input, textarea, select {
-    border: 1px solid #e2e2e2;
-    background: #fff;
-    color: #333;
-    font-size: 1em;
-    margin: 5px 0 6px 0;
-    padding: 5px;
-    width: 300px;
-}
-
-input[type="checkbox"] {
-    background: none repeat scroll 0 0 transparent;
-    border: inherit;
-    width: auto;
-}
-
-input[type="submit"], input[type="button"], button
-{
-    background-color: #d3dce0;
-    border: 1px solid #787878;
-    cursor: pointer;
-    font-size: 1.2em;
-    font-weight: 600;
-    padding: 7px;
-    margin-right: 8px;
-    width: auto;
-}
-
-td input[type="submit"], td input[type="button"], td button
-{
-    font-size: 1em;
-    padding: 4px;
-    margin-right: 4px;
-}
 
 .fr-report-container ul.circle {
     list-style-type:circle;
@@ -102,24 +56,6 @@ td input[type="submit"], td input[type="button"], td button
   text-align:center;
 }
 
-/*
-label {
-    display: block;
-    font-size: 1.2em;
-    font-weight: 600;
-}
-.toolbar {    
-  background-color: transparent;
-  width:100%;
-  z-index:2001;
-  float: left;
-  clear:none;
-}
-.toolbartextbox {
-  min-width:10mm;
-  max-width:15mm;
-  text-align:right;
-}*/
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {

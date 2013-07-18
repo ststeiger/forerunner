@@ -17,9 +17,7 @@ $(function () {
             navigateTo: null
         },
         _generatePCListItem: function (catalogItem, isSelected) {
-            var me = this;
- 
-            var hasParameters = (String(catalogItem.Path).indexOf("Parameter") !== -1) ? 1 : 0;
+            var me = this; 
             var reportThumbnailPath = me.options.url
               + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
             var $item = new $("<div />");
@@ -27,8 +25,7 @@ $(function () {
                 $item.addClass("fr-explorer-item-selected");
                 me.$selectedItem = $item;
             }
-            $item.addClass("fr-explorer-item");
-            
+            $item.addClass("fr-explorer-item");            
             var $caption = new $("<div />");
             $caption.addClass("fr-explorer-item-center");
             $item.append($caption);
@@ -43,13 +40,11 @@ $(function () {
             var $anchor = new $("<a />");
             var $img = new $("<img />");
             $img.addClass("fr-explorer-item-width");
-            $img.addClass("fr-explorer-item-center");
-            if (catalogItem.Type === 1) {
+            $img.addClass("fr-explorer-item-center");            
+            if (catalogItem.Type === 1) 
                 imageSrc = "./Forerunner/ReportExplorer/images/folder-icon.png";
-            } else {
-                $img.addClass("reportitem");
-                imageSrc = reportThumbnailPath;
-            }
+            else                
+                imageSrc = reportThumbnailPath;            
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
             $img.attr("src", imageSrc);

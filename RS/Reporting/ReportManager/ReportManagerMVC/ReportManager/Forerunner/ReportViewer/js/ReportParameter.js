@@ -185,8 +185,8 @@ $(function () {
             var me = this;
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
-            radioValues[0] = paramPane.true;
-            radioValues[1] = paramPane.false;
+            radioValues[0] = paramPane.isTrue;
+            radioValues[1] = paramPane.isFalse;
 
             var $control = new $("<div class='fr-param-checkbox-container' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
 

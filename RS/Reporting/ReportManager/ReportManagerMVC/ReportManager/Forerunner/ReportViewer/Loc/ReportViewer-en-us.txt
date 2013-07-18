@@ -43,8 +43,8 @@
     },
 	"paramPane": {
         "nullField": "Null",
-        "true": "True",
-        "false": "False",
+        "isTrue": "True",
+        "isFalse": "False",
         "required": "Required",
         "viewReport": "View Report"
     },

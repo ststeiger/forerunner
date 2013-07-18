@@ -94,7 +94,7 @@ $(function () {
                     }
                 }
             };
-            $toolbar.toolbar('addTools', 8, true, [btnFav]);
+            $toolbar.toolbar('addTools', 3, true, [btnFav]);
             $toolbar.toolbar('disableTools', [btnFav]);
 
             // Let the report viewer know the height of the toolbar

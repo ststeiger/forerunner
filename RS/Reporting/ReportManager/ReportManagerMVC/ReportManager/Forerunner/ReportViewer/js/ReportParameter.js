@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var paramContainerClass = "fr-param-container";
 
     $.widget(widgets.getFullname(widgets.reportParameter), {
         options: {
@@ -28,7 +29,7 @@ $(function () {
             var me = this;
             
             me.element.html(null);
-            var $params = new $("<div class='fr-param-container'>" +
+            var $params = new $("<div class=" + paramContainerClass + ">" +
                 "<form name='ParameterForm' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div class='fr-param-submit-container'>" +
@@ -383,20 +384,21 @@ $(function () {
         _popupDropDownPanel: function(param) {
             var me = this;
             
-            var dropDown = $("[name='" + param.Name + "_DropDownContainer']");
-            var multipleControl = $("[name='" + param.Name + "']");
-            
-            var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
+            var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
+            var $multipleControl = $("[name='" + param.Name + "']");
+            var $multipleControlParent = $multipleControl.parent();
+            var $paramContainer = me.element.find("." + paramContainerClass);
+            var positionTop = $multipleControlParent.position().top + $paramContainer.scrollTop();
 
-            if (clientHeight - multipleControl.offset().top < dropDown.height() + 45) {
-                dropDown.css("top", multipleControl.offset().top - dropDown.height() - 9);
+            if ($paramContainer.height() - positionTop < $dropDown.height() + $multipleControlParent.height()) {
+                $dropDown.css("top", positionTop - $dropDown.height());
             }
             else {
-                dropDown.css("top", multipleControl.offset().top + 36);
+                $dropDown.css("top", positionTop + $multipleControlParent.height());
             }
 
-            if (dropDown.hasClass("fr-param-dropdown-hidden")) {
-                dropDown.width(multipleControl.width()).fadeOut("fast").removeClass("fr-param-dropdown-hidden").addClass("fr-param-dropdown-show");
+            if ($dropDown.hasClass("fr-param-dropdown-hidden")) {
+                $dropDown.width($multipleControl.width()).fadeOut("fast").removeClass("fr-param-dropdown-hidden").addClass("fr-param-dropdown-show");
             }
             else {
                 me._closeDropDownPanel(param);

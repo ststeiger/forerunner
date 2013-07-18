@@ -79,7 +79,7 @@ $(function () {
                 me.$selectedItem = $item;
             }
             $item.addClass("fr-explorer-item");
-             $item.addClass("image-block");
+            
             var $caption = new $("<div />");
             $caption.addClass("fr-report-center");
             $item.append($caption);
@@ -87,6 +87,9 @@ $(function () {
             $captiontext.addClass("fr-report-centertext");
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
+            var $imageblock = new $("<div />");
+            $imageblock.addClass("image-block");
+            $item.append($imageblock);
             var imageSrc;
             //var targetUrl;
             var $anchor = new $("<a />");
@@ -122,7 +125,7 @@ $(function () {
 
             $anchor.append($img);
             $anchor.append($reflection);
-            $item.append($anchor);
+            $imageblock.append($anchor);
             return $item;
         },
         _renderList: function () {

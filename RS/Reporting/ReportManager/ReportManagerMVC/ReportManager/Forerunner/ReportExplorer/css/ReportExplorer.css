@@ -88,52 +88,8 @@ margin-bottom:10px;
 
 
 /* Smartphones (landscape) ----------- */
-@media only screen 
-and (max-height : 320px) 
-and (min-width : 400px) 
-and (orientation : landscape) {
-/* Styles */
-
-
-.sc-content {
-  display:inline;
-}
-
-.reportexplorer .sky-carousel {
-  height: 250px;
-  width: 100%;
-}
-
-.rm-list {
-  display: none;
-}
-
-.fr-explorer-item {
-    display:table-cell;
-    padding: 20px;
-    cursor:pointer;
-}
-.catalogitem {
-  width: 150px;
-}
-
-.reportitem {
-  width:150px; 
-  background-color: white;
-}
-.image-block { 
-    width:150px; 
-}
-
-
-.reflection { 
-    position:relative; 
-    margin-top: 3px;
-    height:35px; 
-    width:150px; 
-} 
-
-
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+    /* Styles */
 }
 
 /* Smartphones (portrait) ----------- */
@@ -159,6 +115,7 @@ and (orientation : landscape) {
         margin-left: 60px;
     }
 }
+
 /* iPads (landscape) ----------- */
 @media only screen 
 and (min-device-width : 768px) 

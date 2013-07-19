@@ -49,9 +49,7 @@ var ApplicationRouter = Backbone.Router.extend({
             if (forerunner.device.isTouch()) {
                 $('#headerspacer').attr('style', 'height:35px');
             }
-            $("html").addClass("Explorer-background");
-            $("body").addClass("Explorer-background");
-
+          
             $('#mainViewPort').css({ width: "100%", height: "100%" });
 
             if (path == null) {
@@ -61,7 +59,7 @@ var ApplicationRouter = Backbone.Router.extend({
             var catalogItemUrl = forerunner.ssr.CatalogItemsModel.getCatalogItemUrl(view, path);
             var me = this;
             var currentSelectedPath = me._selectedItemPath;
-
+          
             forerunner.ssr.CatalogItemsView.fetchModelAndRenderView({
                 catalogItemUrl: g_App.configs.apiBase + catalogItemUrl,
                 $toolbar: $('#mainSectionHeader'),
@@ -78,6 +76,9 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#leftheaderspacer').height($('#topdiv').height());
 
             me._selectedItemPath = path0;
+            $("html").addClass("fr-Explorer-background");
+            $("body").addClass("fr-Explorer-background");
+
         },
 
         navigateTo: function (action, path) {
@@ -143,8 +144,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $('#rightheaderspacer').height($('#topdiv').height());
             $('#leftheaderspacer').height($('#topdiv').height());
             me.appPageView.bindEvents();
-            $("html").removeClass("Explorer-background");
-            $("body").removeClass("Explorer-background");
+            $("html").removeClass("fr-Explorer-background");
+            $("body").removeClass("fr-Explorer-background");
         },
        
         toolbarHeight : function() {

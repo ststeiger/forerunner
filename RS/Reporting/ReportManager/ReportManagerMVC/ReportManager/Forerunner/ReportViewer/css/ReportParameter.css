@@ -4,6 +4,7 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    position: relative;
 
     background: rgb(53,85,109); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */

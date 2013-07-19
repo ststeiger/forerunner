@@ -97,8 +97,9 @@ $(function () {
                 $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
                 $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
             }
+            me._initscrollposition();
         },
-        initCarousel: function () {
+        _initscrollposition: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
             if (isTouch) {
@@ -106,9 +107,9 @@ $(function () {
                     me._scrollList();
                 }
 
-                //me.$explorer.bind("scrollstop", function (e) {
-                //    me._setSelectionFromScroll();
-                //});
+                me.$explorer.bind("scrollstop", function (e) {
+                    me._setSelectionFromScroll();
+                });
 
                 me.$explorer.resize(function () {
                     me._scrollList();

@@ -35,7 +35,7 @@
 
 }
 
-.fr-textbox-reportpage {
+.fr-toolbar-reportpage-textbox {
   background-color: white;
   min-width:10mm;
   max-width:15mm;
@@ -145,7 +145,7 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
- .fr-textbox-reportpage {
+.fr-toolbar-reportpage-textbox {
         margin-left:125px;
     }
 }  /* @media */
@@ -159,9 +159,9 @@
   display: none;
 }
 
-    .fr-textbox-reportpage {
-        margin-left:45px;
-    }
+.fr-toolbar-reportpage-textbox {
+    margin-left:45px;
+}
 
 }  /* @media */
 
@@ -173,7 +173,7 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
- .fr-textbox-reportpage {
+ .fr-toolbar-reportpage-textbox {
         margin-left:400px;
     }
 
@@ -187,9 +187,9 @@
 .fr-button-lastpage, .fr-button-documentmap, .fr-textbox-keyword, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-span-sparator {
   display: none;
 }
- .fr-textbox-reportpage {
-        margin-left:250px;
-    }
+.fr-toolbar-reportpage-textbox {
+  margin-left:250px;
+}
 
 }  /* @media */
 

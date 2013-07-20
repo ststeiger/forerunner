@@ -9,10 +9,11 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.reportExplorer), {
         options: {
+            reportServerURL: null,
+            reportManagerAPI: "./api/ReportManager",
+            reportManagerrLocFolder: "./forerunner/ReportManager/loc/",
             path: null,
             selectedItemPath: null,
-            catalogItems: null,
-            url: null,
             $scrollBarOwner: null,
             navigateTo: null
         },
@@ -71,10 +72,11 @@ $(function () {
             $imageblock.append($anchor);
             return $item;
         },
-        _renderPCView: function () {
+        _renderPCView: function (catalogItems) {
             var me = this;
+            if (!catalogItems)
+                catalogItems = me.options.catalogItems;
             me.$UL = me.element.find(".fr-report-explorer");
-            var catalogItems = me.options.catalogItems;
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
             for (var i = 0; i < catalogItems.length; i++) {
@@ -88,31 +90,14 @@ $(function () {
                 me.$UL.append(me.rmListItems[i]);
             }
         },
-        _render: function () {
+        _render: function (catalogItems) {
             var me = this;
             me.element.html("<div class='fr-report-explorer'>" +
                                 "</div>");
-            me._renderPCView();
+            me._renderPCView(catalogItems);
             if (me.$selectedItem) {
                 $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
                 $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
-            }
-        },
-        initCarousel: function () {
-            var me = this;
-            var isTouch = forerunner.device.isTouch();
-            if (isTouch) {
-                if (me.rmListItems.length > 0) {
-                    me._scrollList();
-                }
-
-                //me.$explorer.bind("scrollstop", function (e) {
-                //    me._setSelectionFromScroll();
-                //});
-
-                me.$explorer.resize(function () {
-                    me._scrollList();
-                });
             }
         },
         _setSelectionFromScroll: function () {
@@ -134,16 +119,25 @@ $(function () {
             }
             me.selectedItem = closest;
         },
-        _scrollList: function () {
+
+        _fetch: function (view,path) {
             var me = this;
-            var itemPosition = me.rmListItems[me.selectedItem].position().top;
-            var ulPosition = me.$UL.position().top;
-            var diff = Number(itemPosition - ulPosition);
-            me.$explorer.scrollTop(diff, "slow");
-        },
-        _getSelectedItem: function () {
-            var me = this;
-            return me.selectedItem;
+            $.ajax({
+                dataType: "json",
+                url: me.options.reportManagerAPI + "/GetItems",
+                async: false,
+                data: {
+                    view: view,
+                    path: path                    
+                },
+                success: function (data) {
+                    me._render(data);
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Failed to load the catalogs from the server.  Please try again.');
+                }
+            });
         },
         _initCallbacks: function () {
             var me = this;

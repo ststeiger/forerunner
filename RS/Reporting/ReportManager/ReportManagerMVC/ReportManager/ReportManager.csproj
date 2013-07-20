@@ -168,8 +168,6 @@
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
-    <Content Include="Forerunner\ReportExplorer\js\CatalogItemsModel.js" />
-    <Content Include="Forerunner\ReportExplorer\js\CatalogItemsView.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />

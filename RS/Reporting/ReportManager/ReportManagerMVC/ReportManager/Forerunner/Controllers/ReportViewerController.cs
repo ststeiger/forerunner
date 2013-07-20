@@ -20,11 +20,12 @@ namespace ReportManager.Controllers
         private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
         private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
         private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
+        private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        private ReportViewer GetReportViewer(string ReportServerURL)
+        private ReportViewer GetReportViewer()
         {
             //Put application security here
-            ReportViewer rep = new ReportViewer(HttpUtility.UrlDecode(ReportServerURL));
+            ReportViewer rep = new ReportViewer(url);
             rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
             return rep;
         }
@@ -55,13 +56,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]        
-        public HttpResponseMessage Image(string ReportServerURL, string SessionID, string ImageID)
+        public HttpResponseMessage Image( string SessionID, string ImageID)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
-                result = GetReportViewer(ReportServerURL).GetImage(SessionID, ImageID, out mimeType);
+                result = GetReportViewer().GetImage(SessionID, ImageID, out mimeType);
                 return GetResponseFromBytes(result, mimeType);
             }
             catch(Exception e)
@@ -72,12 +73,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Thumbnail(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
+        public HttpResponseMessage Thumbnail(string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
         {
             try
             {
                 byte[] result = null;
-                result = GetReportViewer(ReportServerURL).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
+                result = GetReportViewer().GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
                 return GetResponseFromBytes(result, "image/JPEG",true);
 
             }
@@ -88,12 +89,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ReportJSON(string ReportServerURL, string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        public HttpResponseMessage ReportJSON( string ReportPath, string SessionID, int PageNumber, string ParameterList)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -103,12 +104,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ParameterJSON(string ReportServerURL, string ReportPath)
+        public HttpResponseMessage ParameterJSON( string ReportPath)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -119,12 +120,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage DocMapJSON(string ReportServerURL,string SessionID)
+        public HttpResponseMessage DocMapJSON(string SessionID)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).GetDocMapJson(SessionID));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetDocMapJson(SessionID));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -135,13 +136,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage SortReport(string ReportServerURL, string SessionID, string SortItem, string Direction)
+        public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction)
         {
 
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).SortReport(SessionID, SortItem, Direction));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().SortReport(SessionID, SortItem, Direction));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -152,12 +153,12 @@ namespace ReportManager.Controllers
         }
 
        [HttpGet]
-        public HttpResponseMessage PingSession(string ReportServerURL, string PingSessionID)
+        public HttpResponseMessage PingSession(string PingSessionID)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).pingSession(PingSessionID));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().pingSession(PingSessionID));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -175,12 +176,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage NavigateTo(string NavType, string ReportServerURL, string SessionID, string UniqueID)
+        public HttpResponseMessage NavigateTo(string NavType, string SessionID, string UniqueID)
         {
             try
             {
                 byte[] result = null;
-                result = GetReportViewer(ReportServerURL).NavigateTo(NavType,SessionID,UniqueID);
+                result = GetReportViewer().NavigateTo(NavType,SessionID,UniqueID);
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -191,13 +192,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage FindString(string ReportServerURL, string SessionID, int StartPage, int EndPage, string FindValue)
+        public HttpResponseMessage FindString(string SessionID, int StartPage, int EndPage, string FindValue)
         {
 
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(ReportServerURL).FindString(SessionID, StartPage, EndPage, FindValue));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().FindString(SessionID, StartPage, EndPage, FindValue));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -208,14 +209,14 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ExportReport(string ReportServerURL,string ReportPath, string SessionID, string ParameterList, string ExportType)
+        public HttpResponseMessage ExportReport(string ReportPath, string SessionID, string ParameterList, string ExportType)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
                 string fileName;
-                result = GetReportViewer(ReportServerURL).RenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType, out fileName);
+                result = GetReportViewer().RenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType, out fileName);
                 return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch(Exception e)

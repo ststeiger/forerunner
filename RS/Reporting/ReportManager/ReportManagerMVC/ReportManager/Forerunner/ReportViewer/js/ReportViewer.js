@@ -27,9 +27,8 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewer), {
         // Default options
         options: {
-            reportServerURL: null,
             reportViewerAPI: "./api/ReportViewer",
-            reportViewerLocFolder: "./forerunner/ReportViewer/loc/",
+            forerunnerPath: "./forerunner",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -49,7 +48,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(me.options.reportViewerLocFolder, "ReportViewer");
+            me.locData = forerunner.localize.getLocData(me.options.forerunnerPath + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -91,10 +90,6 @@ $(function () {
         getReportViewerAPI: function () {
             var me = this;
             return me.options.reportViewerAPI;
-        },
-        getReportServerURL: function () {
-            var me = this;
-            return me.options.reportServerURL;
         },
         getReportPath: function () {
             var me = this;
@@ -329,7 +324,6 @@ $(function () {
                 $.ajax({
                     url: me.options.reportViewerAPI + "/GetReportJSON/",
                     data: {
-                        ReportServerURL: me.options.reportServerURL,
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
@@ -356,7 +350,6 @@ $(function () {
                 newDir = sortDirection.asc;
 
             $.getJSON(me.options.reportViewerAPI + "/SortReport/", {
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 SortItem: id,
                 Direction: newDir
@@ -372,7 +365,6 @@ $(function () {
 
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.toggle,
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: toggleID
             }).done(function (data) {
@@ -391,7 +383,6 @@ $(function () {
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.bookmark,
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: bookmarkID
             }).done(function (data) {
@@ -409,7 +400,6 @@ $(function () {
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.drillThrough,
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: drillthroughID
             }).done(function (data) {
@@ -438,7 +428,6 @@ $(function () {
             var me = this;
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.docMap,
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 UniqueID: docMapID
             }).done(function (data) {
@@ -481,7 +470,6 @@ $(function () {
                 me.findStartPage = startPage;
 
             $.getJSON(me.options.reportViewerAPI + "/FindString/", {
-                ReportServerURL: me.options.reportServerURL,
                 SessionID: me.sessionID,
                 StartPage: startPage,
                 EndPage: endPage,
@@ -572,7 +560,7 @@ $(function () {
         exportReport: function (exportType) {
             var me = this;
             $(".fr-render-export-panel").toggle();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportServerURL=" + me.getReportServerURL() + "&ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
 
@@ -580,7 +568,6 @@ $(function () {
         _loadParameters: function (pageNum) {
             var me = this;
             $.getJSON(me.options.reportViewerAPI + "/ParameterJSON/", {
-                ReportServerURL: me.options.reportServerURL,
                 ReportPath: me.options.reportPath
             })
            .done(function (data) {
@@ -677,7 +664,6 @@ $(function () {
             me.togglePageNum = newPageNum;
             me.lock = 1;
             $.getJSON(me.options.reportViewerAPI + "/ReportJSON/", {
-                ReportServerURL: me.options.reportServerURL,
                 ReportPath: me.options.reportPath,
                 SessionID: me.sessionID,
                 PageNumber: newPageNum,
@@ -745,7 +731,6 @@ $(function () {
             var me = this;
             if (me.sessionID && me.sessionID !== "")
                 $.getJSON(me.options.reportViewerAPI + "/PingSession", {
-                    ReportServerURL: me.options.reportServerURL,
                     PingSessionID: me.sessionID
                 })
                 .done(function (data) {

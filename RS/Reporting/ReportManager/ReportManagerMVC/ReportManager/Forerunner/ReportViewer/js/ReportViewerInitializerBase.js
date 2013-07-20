@@ -17,7 +17,6 @@ $(function () {
             $paramarea: null,
             $lefttoolbar: null,
             $righttoolbar: null,
-            ReportServerURL: null,
             ReportViewerAPI: null,
             ReportPath: null,
             toolbarHeight: null,
@@ -36,7 +35,6 @@ $(function () {
             var $viewer = me.options.$viewer;
 
             $viewer.reportViewer({
-                reportServerURL: me.options.ReportServerURL,
                 reportViewerAPI: me.options.ReportViewerAPI,
                 reportPath: me.options.ReportPath,
                 PageNum: 1,

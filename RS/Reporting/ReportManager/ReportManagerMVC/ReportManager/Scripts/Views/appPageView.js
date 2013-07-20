@@ -49,7 +49,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
-            g_App.utils.allowZoom(true);
+            forerunner.device.allowZoom(true);
             $('#mainSectionHeader').toolbar('showTools');
         }
     },
@@ -69,7 +69,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.addClass(className, delay);
             topdiv.addClass(className, delay);
-            g_App.utils.allowZoom(false);
+            forerunner.device.allowZoom(false);
             $('#mainSectionHeader').toolbar('hideTools');
         }
     },

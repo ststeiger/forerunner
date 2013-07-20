@@ -93,7 +93,7 @@ namespace Forerunner.SSRS.Manager
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
         {
             List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem[] items = rs.ListChildren(path, isRecursive);
+            CatalogItem[] items = rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
 
             foreach (CatalogItem ci in items)
             {
@@ -156,7 +156,7 @@ namespace Forerunner.SSRS.Manager
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
             SQLComm.ExecuteNonQuery();
             SQLConn.Close();
 
@@ -182,7 +182,7 @@ namespace Forerunner.SSRS.Manager
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
             SqlDataReader SQLReader;
             SQLReader = SQLComm.ExecuteReader();
             bool isFav = SQLReader.HasRows;
@@ -281,7 +281,7 @@ namespace Forerunner.SSRS.Manager
 
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
             SQLComm.ExecuteNonQuery();
             SQLConn.Close();
 
@@ -331,7 +331,7 @@ namespace Forerunner.SSRS.Manager
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
             SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
-            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
             SQLComm.Parameters.AddWithValue("@Image", image);
             SQLComm.ExecuteNonQuery();
             SQLConn.Close();
@@ -348,7 +348,7 @@ namespace Forerunner.SSRS.Manager
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             //SQLComm.Prepare();
-            SQLComm.Parameters.AddWithValue("@Path", path);
+            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
             SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
             SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
 
@@ -371,7 +371,7 @@ namespace Forerunner.SSRS.Manager
             retval = GetDBImage(path);
             if (retval == null)
             {
-                ThreadPool.QueueUserWorkItem(this.GetThumbnail, path);
+                ThreadPool.QueueUserWorkItem(this.GetThumbnail, HttpUtility.UrlDecode(path));
                 //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
                 //t.Start(path);
                 //t.Join();                    

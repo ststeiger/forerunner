@@ -43,7 +43,7 @@ var ApplicationRouter = Backbone.Router.extend({
             var path0 = path;
             this.appPageView.hideSlideoutPane(true);
             this.appPageView.hideSlideoutPane(false);
-            g_App.utils.allowZoom(false);
+            forerunner.device.allowZoom(false);
             $("#footerspacer").attr("style", "height:0");
             $("#bottomdiv").attr("style", "height:0");
             $("#headerspacer").attr("style", "height:38px");
@@ -60,7 +60,8 @@ var ApplicationRouter = Backbone.Router.extend({
            
             var currentSelectedPath = me._selectedItemPath;
             $("#mainSection").reportExplorer({
-                reportServerURL: g_App.configs.apiBase + "ReportManager/",
+                reportManagerAPI: g_App.configs.apiBase + "ReportManager",
+                forerunnerPath: "./forerunner",
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,
@@ -102,7 +103,7 @@ var ApplicationRouter = Backbone.Router.extend({
             var me = this;
             me._selectedItemPath = null;
 
-            g_App.utils.allowZoom(true);
+            forerunner.device.allowZoom(true);
             $("#footerspacer").attr("style", "height: 150px");
             $("#bottomdiv").attr("style", "height: 150px;display: none;");
             $("#headerspacer").attr("style", "height: 50px");
@@ -125,7 +126,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 $paramarea: $("#rightPaneContent"),
                 $lefttoolbar: $("#leftheader"),
                 $righttoolbar: $("#rightheader"),
-                ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
                 toolbarHeight: me.toolbarHeight,

@@ -142,19 +142,6 @@
   <ItemGroup>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
-    <Content Include="Forerunner\Lib\Nav\css\default_skin.css" />
-    <Content Include="Forerunner\Lib\Nav\css\default_skin_variation.css" />
-    <Content Include="Forerunner\Lib\Nav\css\tooltip_skin.css" />
-    <Content Include="Forerunner\Lib\Nav\css\tooltip_skin_variation.css" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\closedhand.cur" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\closedhand.png" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\next_arrow.png" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\openhand.cur" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\openhand.png" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\preloader.gif" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\prev_arrow.png" />
-    <Content Include="Forerunner\Lib\Nav\images\sc-graphics\tooltip_skin_navigation.png" />
-    <Content Include="Forerunner\Lib\Nav\js\jquery.sky.carousel-1.0.2.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />
@@ -222,7 +209,7 @@
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="configs.js" />
-    <Content Include="CSS\ReportManager.css" />
+    <Content Include="Forerunner\ReportExplorer\css\ReportManager.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />
@@ -253,6 +240,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
+    <Content Include="JSdoc\buildDocs.cmd" />
+    <Content Include="JSdoc\conf.json" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>
@@ -282,14 +271,16 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>9000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:9000/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://localhost/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>http://ludwig</CustomServerUrl>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

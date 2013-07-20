@@ -39,7 +39,6 @@ forerunner.ssr.CatalogItemsView.prototype = {
                 selectedItemPath: me.options.selectedItemPath,
                 navigateTo: me.options.navigateTo
             });
-            $explorerview.reportExplorer('initCarousel');
         }
     },
     render: function (options) {

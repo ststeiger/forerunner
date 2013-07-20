@@ -15,30 +15,23 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
-            if (me.$carousel) {
-                me.$carousel.select(currentPageNum - 1, 1);
-                me.currentPageNum = currentPageNum;
-            } else {
-                if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                    me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
-                }
-                me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
-                me.currentPageNum = currentPageNum;
-                me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
+
+            if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
+                me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
             }
+            me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
+            me.currentPageNum = currentPageNum;
+            me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
         },
         _renderList: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
             var $list;
-            if (!isTouch) {
-                $list = new $("<UL />");
-                $list.addClass("sky-carousel-container");
-            } else {
-                $list = new $("<UL />");
-                $list.addClass("horizontal");
-                me.$ul = $list;
-            }
+            
+            $list = new $("<UL />");
+            $list.addClass("horizontal");
+            me.$ul = $list;
+ 
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
             var sessionID = me.options.$reportViewer.reportViewer("getSessionID");
             var reportServerURL = me.options.$reportViewer.reportViewer("getReportServerURL");
@@ -57,7 +50,7 @@ $(function () {
                 $caption.html("<h3 class='fr-report-centertext'>" + i.toString() + "</h3>");
                 $caption.addClass("fr-report-center");
                 var $thumbnail = new $("<IMG />");
-                $thumbnail.addClass(isTouch ? "fr-nav-li-thumb" : "fr-nav-page-thumb");
+                $thumbnail.addClass("fr-nav-page-thumb");
                 $thumbnail.attr("src", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -83,16 +76,11 @@ $(function () {
             me.element.html("");
             var isTouch = forerunner.device.isTouch();
             var $slider = new $("<DIV />");
-            if (!isTouch) {
-                $slider.attr("class", "sky-carousel");
-                $slider.attr("style", "height: 150px;"); // Need to make this none
-            } else {
-                $slider.addClass("fr-nav-container");
-            }
+            
+            $slider.addClass("fr-nav-container");
+ 
             var $sliderWrapper = new $("<DIV />");
-            if (!isTouch) {
-                $sliderWrapper.attr("class", "sky-carousel-wrapper");
-            }
+            
             $slider.append($sliderWrapper);
 
 
@@ -101,28 +89,7 @@ $(function () {
             $sliderWrapper.append($list);
             me.element.css("display", "block");
             me.element.html($slider);
-            if (!isTouch) {
-                var carousel = $slider.carousel({
-                    itemWidth: 120,
-                    itemHeight: 120,
-                    distance: 8,
-                    selectedItemDistance: 25,
-                    selectedItemZoomFactor: 1,
-                    unselectedItemZoomFactor: 0.67,
-                    unselectedItemAlpha: 0.6,
-                    motionStartDistance: 85,
-                    topMargin: 30,
-                    gradientStartPoint: 0.35,
-                    gradientOverlayColor: "#f5f5f5",
-                    gradientOverlaySize: 95,
-                    reflectionDistance: 1,
-                    reflectionAlpha: 0.35,
-                    reflectionVisible: true,
-                    reflectionSize: 35,
-                    selectByClick: true
-                });
-                me.$carousel = carousel;
-            }
+            
             me.element.hide();
             me._initCallbacks();
             me._setCurrentPage(me.options.$reportViewer.reportViewer("getCurPage"));
@@ -153,7 +120,6 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.$carousel = null;
             me.listItems = null;
             me.$ul = null;
             me.currentPageNum = null;

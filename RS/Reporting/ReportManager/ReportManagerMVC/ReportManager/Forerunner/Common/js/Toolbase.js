@@ -11,38 +11,53 @@ $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
     /**
-     * The toolBase widget is used as a base class for toolbars and toolPane
+     * The toolBase widget is used as a base namespace for toolbars and the toolPane
      *
-     * @namespace $.toolBase
+     * @namespace $.forerunner.toolBase
+     * @prop {object} options - The options for toolBase
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @example
+     * var widgets = {@link forerunner.ssr.constants.widgets};
+     * $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, {
+     *  options: {
+     *      $reportViewer: null,
+     *      toolClass: "fr-toolbar"
+     *  },
+     * });
      */
-    $.widget(widgets.getFullname(widgets.toolBase), /** @lends $.toolBase */ {
+    $.widget(widgets.getFullname(widgets.toolBase), /** @lends $.forerunner.toolBase */ {
         options: {
-            toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
+            toolClass: null
         },
 
         allTools: {},
 
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
-         * @function $.toolBase#addTools
+         * @function $.forerunner.toolBase#addTools
          *
          * @param {int} index - 1 based index of where to insert the button array.
-         * @param {bool} enabled - true = enabled, false = dasbled
+         * @param {bool} enabled - true = enabled, false = disabled
          * @param {array} tools - array containing the collection of tool information objects.
          * @example
-         *  tools: [{
-         *      toolType: forerunner.ssr.constants.toolTypes.button,
-         *      selectorClass: '',
-         *      imageClass: '',
-         *      text: '',
-         *      inputType: 'number',     * Used with toolTypes.inp
-         *      events: {
-         *          click: function (e) {
+         * var toolTypes = {@link forerunner.ssr.constants.toolTypes};
+         * 
+         * var btnMenu = {
+         *  toolType: toolTypes.button,
+         *  selectorClass: "fr-button-menu",
+         *  imageClass: "fr-image-menu",
+         *  events: {
+         *      click: function (e) {
+         *          e.data.me._trigger(events.menuClick, null, {});
          *      }
-         *  }]
+         *  }
+         * };
+         * 
+         * this.element.html("<div class='" + me.options.toolClass + "'/>");
+         * this.addTools(1, true, [btnMenu]);
          *
          *  Notes:
-         *      Any toolInfo.events property that is of type function, e.g., "click" above will be interpreted
+         *      Any events property that is of type function, e.g., "click" above will be interpreted
          *      as a event handler. The event, i.e., the name of the property will be bound to the button
          *      when the button is enabled and removed when the button is disabled.
          */
@@ -91,6 +106,10 @@ $(function () {
                 }
             }
         },
+        /**
+         * Make all tools hidden
+         * @function $.forerunner.toolBase#hideTools
+         */
         hideTools: function (){
             var me = this;
 
@@ -103,6 +122,10 @@ $(function () {
             });
 
         },
+        /**
+         * Make all tools visible
+         * @function $.forerunner.toolBase#showTools
+         */
         showTools: function () {
             var me = this;
 
@@ -115,6 +138,11 @@ $(function () {
             });
 
         },
+        /**
+         * Enable the given tools
+         * @function $.forerunner.toolBase#enableTools
+         * @param {Array} tools - Array of tools to enable
+         */
         enableTools: function (tools) {
             var me = this;
             $.each(tools, function (index, toolInfo) {
@@ -130,7 +158,11 @@ $(function () {
                 }
             });
         },
-
+        /**
+         * disable the given tools
+         * @function $.forerunner.toolBase#disableTools
+         * @param {Array} tools - Array of tools to enable
+         */
         disableTools: function (tools) {
             var me = this;
             $.each(tools, function (index, toolInfo) {

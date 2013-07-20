@@ -5,9 +5,13 @@
  */
 
 /** 
- * This is a pseudo namespace used to indicate the jquery namespace. All widgets will be listed as a
- * child namespace of $. See the {@link $.toolBase} widget for specific details.
+ * Alias used for the jquery namespace
  * @namespace $
+ */
+
+/**
+ * Defines all jquery based, forerunner widgets
+ * @namespace $.forerunner
  */
 
 /**
@@ -85,7 +89,7 @@ $(function () {
             /** @constant */
             namespace: "forerunner",
 
-            /** Get the full name (i.e. namespace.name) for the widget
+            /**
              * @param {String} name of the widget.
              * @return {String} The fully qualified widget name (I.e., namespace.widgetname)
              */
@@ -94,7 +98,7 @@ $(function () {
             }
         },
         /** 
-         * Declares the event name constant used to trigger the event as well as the fully qualified event name
+         * Defines the event name constant used to trigger the event as well as the fully qualified event name
          * function (widget + event, lowercase). The fully qualified name is used to bind to the event.
          *
          * @namespace
@@ -151,7 +155,7 @@ $(function () {
             reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },
         },
         /**
-         * Tool types used by the Toolbase widget {@link $.toolBase}
+         * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
          *
          * @readonly
          * @enum {String}

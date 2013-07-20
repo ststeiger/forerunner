@@ -85,7 +85,7 @@ $(function () {
     };
     var btnReportPage = {
         toolType: toolTypes.input,
-        selectorClass: "fr-textbox-reportpage",
+        selectorClass: "fr-toolbar-reportpage-textbox",
         inputType: "number",
         events: {
             keypress: function (e) {
@@ -214,7 +214,7 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
-                $("input.fr-textbox-reportpage", me.$el).val(data.newPageNum);
+                $("input.fr-toolbar-reportpage-textbox", me.$el).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
@@ -255,7 +255,7 @@ $(function () {
             var me = this;
 
             me.element.find(".fr-num-pages").html(maxPage);
-            me.element.find(".fr-textbox-reportpage").attr({ max: maxPage, min: 1 });
+            me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
                 me.enableTools([btnDocumentMap]);

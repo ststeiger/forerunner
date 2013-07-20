@@ -20,6 +20,7 @@ forerunner.ssr.CatalogItemsModel.prototype = {
         $.ajax({
             dataType: "json",
             url: this.options.url,
+            async: false,
             success: options.success,
             error: options.error,
         });

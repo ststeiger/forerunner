@@ -26,24 +26,17 @@ ul.horizontal li{
   position: relative;
   vertical-align:top;
   width: 150px;
-  height: 150px;
+  height: 115px;
   padding: 0 20px;  
   margin: 0 auto;
   border: 0;
 }
 
-.fr-nav-li-thumb {
-  max-height: 100px;
-  width: 150px;
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  border: 0;
-}
-
 .fr-nav-page-thumb {
   width: 120px;
-  max-height: 160px;
+  max-height: 100px;
+  margin-left: 15px; 
+  margin-right: 15px;
 }
 
 ul.horizontal li:hover {

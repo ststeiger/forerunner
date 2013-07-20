@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -142,6 +142,12 @@
   <ItemGroup>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
+    <Content Include="Forerunner\Common\js\forerunner.min.js">
+      <DependentUpon>forerunner.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Common\js\Toolbase.min.js">
+      <DependentUpon>Toolbase.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />
@@ -155,8 +161,14 @@
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.min.js">
+      <DependentUpon>ReportExplorer.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.min.js">
+      <DependentUpon>ReportExplorerToolbar.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />
     <Content Include="Forerunner\ReportExplorer\images\clock_icon.png" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
@@ -170,11 +182,47 @@
     <Content Include="Forerunner\ReportExplorer\images\star_fav_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
+    <Content Include="Forerunner\ReportViewer\js\PageNav.min.js">
+      <DependentUpon>PageNav.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportDocumentMap.min.js">
+      <DependentUpon>ReportDocumentMap.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportParameter.min.js">
+      <DependentUpon>ReportParameter.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportRender.min.js">
+      <DependentUpon>ReportRender.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportViewer.min.js">
+      <DependentUpon>ReportViewer.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
     <Content Include="Forerunner\ReportViewer\js\PageNav.js" />
+    <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.min.js">
+      <DependentUpon>ReportViewerEZ.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializerBase.js" />
+    <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializerBase.min.js">
+      <DependentUpon>ReportViewerInitializerBase.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\Toolbar.min.js">
+      <DependentUpon>Toolbar.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ToolPane.min.js">
+      <DependentUpon>ToolPane.js</DependentUpon>
+    </Content>
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
+    <Content Include="Scripts\App\router.min.js">
+      <DependentUpon>router.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\App\utils.min.js">
+      <DependentUpon>utils.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Views\appPageView.min.js">
+      <DependentUpon>appPageView.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Views\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
     <Content Include="Forerunner\ReportViewer\css\ToolPane.css" />
@@ -222,6 +270,9 @@
     <Content Include="Scripts\App\router.js" />
     <Content Include="Scripts\App\utils.js" />
     <Content Include="Scripts\Views\appPageView.js" />
+    <Content Include="Scripts\Views\ReportViewerInitializer.min.js">
+      <DependentUpon>ReportViewerInitializer.js</DependentUpon>
+    </Content>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -242,6 +293,58 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
+    <Content Include="Forerunner\Common\js\forerunner.min.js.map">
+      <DependentUpon>forerunner.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Common\js\Toolbase.min.js.map">
+      <DependentUpon>Toolbase.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.min.js.map">
+      <DependentUpon>ReportExplorer.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.min.js.map">
+      <DependentUpon>ReportExplorerToolbar.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\PageNav.min.js.map">
+      <DependentUpon>PageNav.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportDocumentMap.min.js.map">
+      <DependentUpon>ReportDocumentMap.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportParameter.min.js.map">
+      <DependentUpon>ReportParameter.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportRender.min.js.map">
+      <DependentUpon>ReportRender.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportViewer.min.js.map">
+      <DependentUpon>ReportViewer.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.min.js.map">
+      <DependentUpon>ReportViewerEZ.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializerBase.min.js.map">
+      <DependentUpon>ReportViewerInitializerBase.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\Toolbar.min.js.map">
+      <DependentUpon>Toolbar.js</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\ReportViewer\js\ToolPane.min.js.map">
+      <DependentUpon>ToolPane.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\App\router.min.js.map">
+      <DependentUpon>router.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\App\utils.min.js.map">
+      <DependentUpon>utils.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Views\appPageView.min.js.map">
+      <DependentUpon>appPageView.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Views\ReportViewerInitializer.min.js.map">
+      <DependentUpon>ReportViewerInitializer.js</DependentUpon>
+    </Content>
+    <Content Include="Views\Home\IndexDebug.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>

@@ -129,6 +129,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Forerunner\Controllers\ReportManagerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Forerunner\Controllers\ReportViewerController.cs" />
@@ -142,6 +143,12 @@
   <ItemGroup>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
+    <Content Include="Forerunner\Common\js\Forerunner-all.js">
+      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Common\js\Forerunner-all.min.js">
+      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />
@@ -241,7 +248,11 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
-    <Content Include="Views\Home\IndexDebug.cshtml" />
+    <None Include="Forerunner\Common\js\Forerunner-all.js.bundle" />
+    <Content Include="Forerunner\Common\js\Forerunner-all.min.js.map">
+      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Views\Debug\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>

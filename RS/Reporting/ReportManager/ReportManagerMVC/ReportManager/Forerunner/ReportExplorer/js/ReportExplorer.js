@@ -13,14 +13,15 @@ $(function () {
             reportManagerAPI: "./api/ReportManager",
             reportManagerrLocFolder: "./forerunner/ReportManager/loc/",
             path: null,
+            view: null,
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
-            var reportThumbnailPath = me.options.url
-              + "GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
+            var reportThumbnailPath = me.options.reportManagerAPI
+              + "/GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
             var $item = new $("<div />");
             if (isSelected) {
                 $item.addClass("fr-explorer-item-selected");
@@ -61,9 +62,9 @@ $(function () {
             var $reflection = new $("<div />");
             $reflection.addClass("fr-report-item-reflection");
             var $reflImg = $img.clone();
-            $reflImg.addClass("fr-report-item-reflection")
+            $reflImg.addClass("fr-report-item-reflection");
             $reflImg.error(function () {
-                $(this).attr("src", "../Forerunner/ReportExplorer/images/Report-icon.png");
+                $(this).attr("src", "./Forerunner/ReportExplorer/images/Report-icon.png");
             });
             $reflection.append($reflImg);
 
@@ -74,8 +75,7 @@ $(function () {
         },
         _renderPCView: function (catalogItems) {
             var me = this;
-            if (!catalogItems)
-                catalogItems = me.options.catalogItems;
+
             me.$UL = me.element.find(".fr-report-explorer");
             var decodedPath = me.options.selectedItemPath ? decodeURIComponent(me.options.selectedItemPath) : null;
             me.rmListItems = new Array(catalogItems.length);
@@ -99,7 +99,7 @@ $(function () {
                 $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
                 $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
             }
-            me._initscrollposition();
+            //me._initscrollposition();
         },
         _setSelectionFromScroll: function () {
             var me = this;
@@ -112,7 +112,7 @@ $(function () {
                 if (distance < closestDistance) {
                     closest = i;
                     closestDistance = distance;
-                } else if (lastDistance != 0 && distance > lastDistance) {
+                } else if (lastDistance !== 0 && distance > lastDistance) {
                     // If closetst is no longer 0 and we are no longer approaching the closest break
                     break;
                 }
@@ -136,7 +136,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    alert('Failed to load the catalogs from the server.  Please try again.');
+                    alert("Failed to load the catalogs from the server.  Please try again.");
                 }
             });
         },
@@ -152,8 +152,8 @@ $(function () {
             me.selectedItem = 0;
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
-            me._render();
             me.$selectedItem = null;
+            me._fetch(me.options.view, me.options.path);
         }
     });  // $.widget
 });  // function()

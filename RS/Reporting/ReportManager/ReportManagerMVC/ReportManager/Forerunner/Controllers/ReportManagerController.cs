@@ -55,6 +55,7 @@ namespace ReportManager.Controllers
         [HttpGet]
         public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
+            
             return GetReportManager().GetItems(view, path);
         }
 

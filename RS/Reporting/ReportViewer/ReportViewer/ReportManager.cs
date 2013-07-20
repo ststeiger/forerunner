@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
+using System.Web;
 using System.Data.SqlClient;
 using Forerunner;
 using Forerunner.SSRS.Viewer;
@@ -83,7 +84,7 @@ namespace Forerunner.SSRS.Manager
             else if (view == "recent")
                 return this.GetRecentReports();
             else if (view == "catalog")
-                return this.ListChildren(path, false);
+                return this.ListChildren(HttpUtility.UrlDecode(path), false);
             else
                 return null;
         }

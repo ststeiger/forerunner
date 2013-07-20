@@ -15,14 +15,14 @@ var ApplicationRouter = Backbone.Router.extend({
             "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
-            '*notFound': 'notFound'
+            "*notFound": "notFound"
         },
 
         // Application page view
         appPageView : null,
 
         notFound: function () {
-            alert('Not found');
+            alert("Not found");
         },
 
         transitionToReportManager: function (path) {
@@ -30,10 +30,10 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToFavorites: function () {
-            this._transitionToReportManager(null, 'favorites');
+            this._transitionToReportManager(null, "favorites");
         },
         transitionToRecent: function () {
-            this._transitionToReportManager(null, 'recent');
+            this._transitionToReportManager(null, "recent");
         },
         
         _selectedItemPath : null,
@@ -44,34 +44,36 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.hideSlideoutPane(true);
             this.appPageView.hideSlideoutPane(false);
             g_App.utils.allowZoom(false);
-            $('#footerspacer').attr('style', 'height:0');
-            $('#bottomdiv').attr('style', 'height:0');
-            $('#headerspacer').attr('style', 'height:38px');
+            $("#footerspacer").attr("style", "height:0");
+            $("#bottomdiv").attr("style", "height:0");
+            $("#headerspacer").attr("style", "height:38px");
             if (forerunner.device.isTouch()) {
-                $('#headerspacer').attr('style', 'height:35px');
+                $("#headerspacer").attr("style", "height:35px");
             }
           
-            $('#mainViewPort').css({ width: "100%", height: "100%" });
+            $("#mainViewPort").css({ width: "100%", height: "100%" });
 
             if (!path) 
                 path = "/";
             if (!view)
-                view = "catalog"
+                view = "catalog";
            
             var currentSelectedPath = me._selectedItemPath;
             $("#mainSection").reportExplorer({
-                reportServerURL: g_App.configs.apiBase + 'ReportManager/',
-                path: me.options.path,
+                reportServerURL: g_App.configs.apiBase + "ReportManager/",
+                path: path,
+                view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.navigateTo
             });
-            var $toolbar = $('#mainSectionHeader');
+            //$("#mainSection").reportExplorer(
+            var $toolbar = $("#mainSectionHeader");
             $toolbar.reportExplorerToolbar({ navigateTo: me.navigateTo });
 
-            $('#rightheader').height($('#topdiv').height());
-            $('#leftheader').height($('#topdiv').height());
-            $('#rightheaderspacer').height($('#topdiv').height());
-            $('#leftheaderspacer').height($('#topdiv').height());
+            $("#rightheader").height($("#topdiv").height());
+            $("#leftheader").height($("#topdiv").height());
+            $("#rightheaderspacer").height($("#topdiv").height());
+            $("#leftheaderspacer").height($("#topdiv").height());
 
             me._selectedItemPath = path0;
             $("html").addClass("fr-Explorer-background");
@@ -80,18 +82,18 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         navigateTo: function (action, path) {
-            if (path != null) path = String(path).replace(/%2f/g, "/");
-            if (action == 'home') {
-                g_App.router.navigate('#', { trigger: true, replace: false });
-            } else if (action == 'back') {
+            if (path !== null) path = String(path).replace(/%2f/g, "/");
+            if (action === "home") {
+                g_App.router.navigate("#", { trigger: true, replace: false });
+            } else if (action === "back") {
                 g_App.router.back();
-            } else if (action == 'favorites') {
-                g_App.router.navigate('#favorites', { trigger: true, replace: false });
-            } else if (action == 'recent') {
-                g_App.router.navigate('#recent', { trigger: true, replace: false });
+            } else if (action === "favorites") {
+                g_App.router.navigate("#favorites", { trigger: true, replace: false });
+            } else if (action === "recent") {
+                g_App.router.navigate("#recent", { trigger: true, replace: false });
             } else {
                 var encodedPath = String(path).replace(/\//g, "%2f");
-                var targetUrl = '#' + action + '/' + encodedPath;
+                var targetUrl = "#" + action + "/" + encodedPath;
                 g_App.router.navigate(targetUrl, { trigger: true, replace: false });
             }
         },
@@ -101,28 +103,28 @@ var ApplicationRouter = Backbone.Router.extend({
             me._selectedItemPath = null;
 
             g_App.utils.allowZoom(true);
-            $('#footerspacer').attr('style', 'height: 150px');
-            $('#bottomdiv').attr('style', 'height: 150px;display: none;');
-            $('#headerspacer').attr('style', 'height: 50px');
-            if (path != null) {
+            $("#footerspacer").attr("style", "height: 150px");
+            $("#bottomdiv").attr("style", "height: 150px;display: none;");
+            $("#headerspacer").attr("style", "height: 50px");
+            if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
                 path = "/";
             }
             
-            $('#mainSection').html(null);
-            $viewerContainer = new $('<DIV id="FRReportViewer1"/>');
-            $('#mainSection').append($viewerContainer);
+            $("#mainSection").html(null);
+            var $viewerContainer = new $("<DIV id='FRReportViewer1'/>");
+            $("#mainSection").append($viewerContainer);
 
-            $viewer = $('#FRReportViewer1');
+            var $viewer = $("#FRReportViewer1");
             var initializer = new forerunner.ssr.ReportViewerInitializer({
-                $toolbar: $('#mainSectionHeader'),
-                $toolPane: $('#leftPaneContent'),
+                $toolbar: $("#mainSectionHeader"),
+                $toolPane: $("#leftPaneContent"),
                 $viewer: $viewer,
-                $nav: $('#bottomdiv'),
-                $paramarea: $('#rightPaneContent'),
-                $lefttoolbar: $('#leftheader'),
-                $righttoolbar: $('#rightheader'),
+                $nav: $("#bottomdiv"),
+                $paramarea: $("#rightPaneContent"),
+                $lefttoolbar: $("#leftheader"),
+                $righttoolbar: $("#rightheader"),
                 ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
@@ -132,15 +134,15 @@ var ApplicationRouter = Backbone.Router.extend({
 
             initializer.render();
 
-            $viewer.on('reportviewerback', function (e, data) {
+            $viewer.on("reportviewerback", function (e, data) {
                 me._selectedItemPath = data.path;
                 me.historyBack();
             });
 
-            //$('#rightheader').height( $('#topdiv').height());
-            //$('#leftheader').height($('#topdiv').height());
-            $('#rightheaderspacer').height($('#topdiv').height());
-            $('#leftheaderspacer').height($('#topdiv').height());
+            //$("#rightheader").height( $("#topdiv").height());
+            //$("#leftheader").height($("#topdiv").height());
+            $("#rightheaderspacer").height($("#topdiv").height());
+            $("#leftheaderspacer").height($("#topdiv").height());
             me.appPageView.bindEvents();
             $("html").removeClass("fr-Explorer-background");
             $("body").removeClass("fr-Explorer-background");
@@ -167,7 +169,7 @@ $(document).ready(function () {
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;
-    Backbone.history.on('route', function () { ++this.length; });
+    Backbone.history.on("route", function () { ++this.length; });
     g_App.router.back = function () {
         Backbone.history.length -= 2;
         window.history.back();

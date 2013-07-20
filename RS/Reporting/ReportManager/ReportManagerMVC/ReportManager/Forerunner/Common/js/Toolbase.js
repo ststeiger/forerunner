@@ -1,38 +1,51 @@
-﻿// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+﻿/**
+ * @file Contains the toolBase widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
-    $.widget(widgets.getFullname(widgets.toolBase), {
+    /**
+     * The toolBase widget is used as a base class for toolbars and toolPane
+     *
+     * @namespace $.toolBase
+     */
+    $.widget(widgets.getFullname(widgets.toolBase), /** @lends $.toolBase */ {
         options: {
             toolClass: null     // Define the top level class for this tool (E.g., fr-toolbar)
         },
 
         allTools: {},
 
-        //addTool
-        //  index - 1 based index of where to insert the button array
-        //  enabled - true = enabled, false = dasbled
-        //  tools: [{
-        //      toolType: forerunner.ssr.constants.toolTypes.button,
-        //      selectorClass: '',
-        //      imageClass: '',
-        //      text: '',
-        //      inputType: 'number',    // Used with toolTypes.inp
-        //      events: {
-        //          click: function (e) {
-        //      }
-        //  }]
-        //
-        //  Notes:
-        //      Any toolInfo.events property that is of type function, e.g., "click" above will be interpreted
-        //      as a event handler. The event, i.e., the name of the property will be bound to the button
-        //      when the button is enabled and removed when the button is disabled.
+        /**
+         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * @function $.toolBase#addTools
+         *
+         * @param {int} index - 1 based index of where to insert the button array.
+         * @param {bool} enabled - true = enabled, false = dasbled
+         * @param {array} tools - array containing the collection of tool information objects.
+         * @example
+         *  tools: [{
+         *      toolType: forerunner.ssr.constants.toolTypes.button,
+         *      selectorClass: '',
+         *      imageClass: '',
+         *      text: '',
+         *      inputType: 'number',     * Used with toolTypes.inp
+         *      events: {
+         *          click: function (e) {
+         *      }
+         *  }]
+         *
+         *  Notes:
+         *      Any toolInfo.events property that is of type function, e.g., "click" above will be interpreted
+         *      as a event handler. The event, i.e., the name of the property will be bound to the button
+         *      when the button is enabled and removed when the button is disabled.
+         */
         addTools: function (index, enabled, tools) {
             var me = this;
             var $toolbar = me.element.find("." + me.options.toolClass);

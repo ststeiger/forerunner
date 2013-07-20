@@ -1,8 +1,29 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file
+ *  Defines forerunner SDK specific namespaces
+ *
+ */
+
+/** 
+ * This is a pseudo namespace used to indicate the jquery namespace. All widgets will be listed as a
+ * child namespace of $. See the {@link $.toolBase} widget for specific details.
+ * @namespace $
+ */
+
+/**
+ * Top level object that defines the forerunner SDK
+ *
+ * @namespace
+ */
 var forerunner = forerunner || {};
 
-// Forerunner SQL Server Reports
+/**
+ * Contains the SQL Server Report data
+ *
+ * @namespace
+ */
 forerunner.ssr = forerunner.ssr || {};
+
 jQuery.fn.extend({
     slideRightShow: function (delay) {
         return this.each(function () {
@@ -26,66 +47,115 @@ jQuery.fn.extend({
     }    
 });
 $(function () {
-    // Constants used by SSR
+    /**
+     * Defines all the constants needed to use the ssr SDK.
+     *
+     * @namespace
+     */
     forerunner.ssr.constants = {
+        /**
+         * Defines all the widget names available in the ssr SDK
+         *
+         * @namespace
+         */
         widgets: {
-            // widget names
+            /** @constant */
             reportExplorer: "reportExplorer",
+            /** @constant */
             reportExplorerToolbar: "reportExplorerToolbar",
+            /** @constant */
             pageNav: "pageNav",
+            /** @constant */
             reportDocumentMap: "reportDocumentMap",
+            /** @constant */
             reportParameter: "reportParameter",
+            /** @constant */
             reportRender: "reportRender",
+            /** @constant */
             reportViewer: "reportViewer",
+            /** @constant */
             reportViewerEZ: "reportViewerEZ",
+            /** @constant */
             toolbar: "toolbar",
+            /** @constant */
             toolBase: "toolBase",
+            /** @constant */
             toolPane: "toolPane",
 
-            // Forerunner widget namespace
+            /** @constant */
             namespace: "forerunner",
 
-            // Get the <namespace>.<name> for the widget
+            /** Get the full name (i.e. namespace.name) for the widget
+             * @param {String} name of the widget.
+             * @return {String} The fully qualified widget name (I.e., namespace.widgetname)
+             */
             getFullname: function (name) {
                 return this.namespace + "." + name;
             }
         },
+        /** 
+         * Declares the event name constant used to trigger the event as well as the fully qualified event name
+         * function (widget + event, lowercase). The fully qualified name is used to bind to the event.
+         *
+         * @namespace
+         */
         events: {
-            // toolPane
+            /** @constant */
             actionStarted: "actionstarted",
+            /** widget + event, lowercase */
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
 
-            // toolbar
+            /** @constant */
             menuClick: "menuclick",
+            /** widget + event, lowercase */
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
 
+            /** @constant */
             paramAreaClick: "paramareaclick",
+            /** widget + event, lowercase */
             toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },
 
-            // reportViewer
+            /** @constant */
             setPageDone: "setPageDone",
+            /** widget + event, lowercase */
             reportViewerSetPageDone: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.setPageDone).toLowerCase(); },
 
+            /** @constant */
             changePage: "changepage",
+            /** widget + event, lowercase */
             reportViewerChangePage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changePage).toLowerCase(); },
 
+            /** @constant */
             drillBack: "drillback",
+            /** widget + event, lowercase */
             reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
 
+            /** @constant */
             back: "back",
+            /** widget + event, lowercase */
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
+            /** @constant */
             showParamArea: "showparamarea",
+            /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
-            // reportParameter
+            /** @constant */
             render: "render",
+            /** widget + event, lowercase */
             reportParameterRender: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.render).toLowerCase(); },
 
+            /** @constant */
             submit: "submit",
+            /** widget + event, lowercase */
             reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },
         },
-        // Tool types used by the Toolbase widget
+        /**
+         * Tool types used by the Toolbase widget {@link $.toolBase}
+         *
+         * @readonly
+         * @enum {String}
+         */
         toolTypes: {
             button: "button",
             input: "input",
@@ -94,10 +164,22 @@ $(function () {
             containerItem: "containeritem",
             toolGroup: "toolgroup"
         },
+        /**
+         * sort order used in the Report Viewer sort() method.
+         *
+         * @readonly
+         * @enum {String}
+         */
         sortDirection: {
             desc: "Descending",
             asc: "Ascending"
         },
+        /**
+         * Navigate type used in the REST end point NavigateTo
+         *
+         * @readonly
+         * @enum {String}
+         */
         navigateType: {
             toggle: "toggle",
             bookmark: "bookmark",
@@ -106,8 +188,22 @@ $(function () {
         },
     };
 
+    /**
+     * Defines the methods used to localize string data in the SDK.
+     *
+     * @namespace
+     */
     forerunner.localize = {
         _locData: {},
+
+        /**
+         * Returns the language specific data.
+         *
+         * @param {String} locFolder - The localization folder
+         * @param {String} app - The specific application (e.g., ReportViewer)
+         *
+         * @return {object} Localization data
+         */
         getLocData: function(locFolder, app){
             var lang = navigator.language || navigator.userLanguage;
             var langData = this._loadFile(locFolder, app, lang);
@@ -142,8 +238,13 @@ $(function () {
         },
 
     };
-    // device contains all externally available helper methods related to the device
+    /**
+     * Contains device specific methods.
+     *
+     * @namespace
+     */
     forerunner.device = {
+        /** @return {bool} Returns a boolean that indicates if the device is a touch device */
         isTouch: function () {
             var ua = navigator.userAgent;
             return !!("ontouchstart" in window) // works on most browsers

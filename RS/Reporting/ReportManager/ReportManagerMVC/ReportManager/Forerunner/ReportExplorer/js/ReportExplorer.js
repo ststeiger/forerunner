@@ -10,7 +10,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorer), {
         options: {
             reportManagerAPI: "./api/ReportManager",
-            reportManagerrLocFolder: "./forerunner/ReportManager/loc/",
+            forerunnerPath: "./forerunner",
             path: null,
             view: null,
             selectedItemPath: null,
@@ -43,14 +43,14 @@ $(function () {
             $img.addClass("fr-explorer-item-width");
             $img.addClass("fr-explorer-item-center");            
             if (catalogItem.Type === 1) 
-                imageSrc = "./Forerunner/ReportExplorer/images/folder-icon.png";
+                imageSrc = me.options.forerunnerPath + "/ReportExplorer/images/folder-icon.png";
             else                
                 imageSrc = reportThumbnailPath;            
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
             $img.attr("src", imageSrc);
             $img.error(function () {
-                $(this).attr("src", "./Forerunner/ReportExplorer/images/Report-icon.png");
+                $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
             });
             $img.removeAttr("height"); //JQuery adds height for IE8, remove.
             $anchor.on("click", function (event) {
@@ -63,7 +63,7 @@ $(function () {
             var $reflImg = $img.clone();
             $reflImg.addClass("fr-report-item-reflection");
             $reflImg.error(function () {
-                $(this).attr("src", "./Forerunner/ReportExplorer/images/Report-icon.png");
+                $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
             });
             $reflection.append($reflImg);
 

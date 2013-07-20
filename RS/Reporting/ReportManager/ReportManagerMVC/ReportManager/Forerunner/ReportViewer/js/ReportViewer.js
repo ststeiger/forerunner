@@ -28,7 +28,7 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: "./api/ReportViewer",
-            reportViewerLocFolder: "./forerunner/ReportViewer/loc/",
+            forerunnerPath: "./forerunner",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -48,7 +48,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(me.options.reportViewerLocFolder, "ReportViewer");
+            me.locData = forerunner.localize.getLocData(me.options.forerunnerPath + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};

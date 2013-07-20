@@ -193,6 +193,14 @@ $(function () {
     };
 
     /**
+     * Defines useful global varibles to use the SDK
+     *
+     * @namespace
+     */
+    forerunner.init = {
+        forerunnerFolder: "./forerunner",
+    }
+    /**
      * Defines the methods used to localize string data in the SDK.
      *
      * @namespace
@@ -203,42 +211,39 @@ $(function () {
         /**
          * Returns the language specific data.
          *
-         * @param {String} locFolder - The localization folder
-         * @param {String} app - The specific application (e.g., ReportViewer)
+         * @param {String} locFileLocation - The localization file location without the language qualifier
          *
          * @return {object} Localization data
          */
-        getLocData: function(locFolder, app){
+        getLocData: function(locFileLocation){
             var lang = navigator.language || navigator.userLanguage;
-            var langData = this._loadFile(locFolder, app, lang);
+            var langData = this._loadFile(locFileLocation, lang);
 
             if (langData === null)
-                langData = this._loadFile(locFolder, app, "en-us");
+                langData = this._loadFile(locFileLocation, "en-us");
 
             return langData;
             
         },
-        _loadFile: function (locFolder, app, lang) {
+        _loadFile: function (locFileLocation, lang) {
             var me = this;
-            if (me._locData[locFolder] === undefined)
-                me._locData[locFolder] = {};
-            if (me._locData[locFolder][app] === undefined)
-                me._locData[locFolder][app] = {};
-            if (me._locData[locFolder][app][lang] === undefined) {
+            if (me._locData[locFileLocation] === undefined)
+                me._locData[locFileLocation] = {};
+            if (me._locData[locFileLocation][lang] === undefined) {
                 $.ajax({
-                    url: locFolder + app + "-" + lang + ".txt",
+                    url: locFileLocation + "-" + lang + ".txt",
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        me._locData[locFolder][app][lang] = data;
+                        me._locData[locFileLocation][lang] = data;
                     },
                     fail: function () {
-                        me._locData[locFolder][app][lang] = null;
+                        me._locData[locFileLocation][lang] = null;
                     }
                 });
 
             }
-            return me._locData[locFolder][app][lang];
+            return me._locData[locFileLocation][lang];
         },
 
     };
@@ -254,7 +259,16 @@ $(function () {
             return !!("ontouchstart" in window) // works on most browsers
                 || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
-        }
+        },
+        allowZoom: function (flag) {
+            if (flag == true) {
+                $('head meta[name=viewport]').remove();
+                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
+            } else {
+                $('head meta[name=viewport]').remove();
+                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
+            }
+        },
 
     };
     

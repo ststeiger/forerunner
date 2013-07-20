@@ -50,7 +50,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   min-width:10mm;
   max-width:15mm;
   text-align:right;
-  vertical-align: top;
+  vertical-align: central;
 }
 .fr-item-textbox-keyword
 {

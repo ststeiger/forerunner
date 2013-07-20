@@ -134,7 +134,7 @@ footer#bottomdiv {
 }
 
 #rightheader .fr-button-home, #rightheader .fr-button-nav, #rightheader .fr-button-refresh, #rightheader .fr-button-firstpage, #rightheader .fr-button-prev, 
-#rightheader .fr-button-next, #rightheader .fr-button-update-fav, #rightheader .fr-button-export, #rightheader .fr-textbox-reportpage,
+#rightheader .fr-button-next, #rightheader .fr-button-update-fav, #rightheader .fr-button-export, #rightheader .fr-toolbar-reportpage-textbox,
 #rightheader .fr-pageOf, #rightheader .fr-num-pages {
   display: none;
 }
@@ -157,7 +157,7 @@ footer#bottomdiv {
 }
 
 #leftheader .fr-button-home, #leftheader .fr-button-nav, #leftheader .fr-button-refresh, #leftheader .fr-button-firstpage, #leftheader .fr-button-prev, 
-#leftheader .fr-button-next, #leftheader .fr-button-update-fav, #leftheader .fr-button-export, #leftheader .fr-textbox-reportpage,
+#leftheader .fr-button-next, #leftheader .fr-button-update-fav, #leftheader .fr-button-export, #leftheader .fr-toolbar-reportpage-textbox,
 #leftheader .fr-pageOf, #leftheader .fr-num-pages {
   display: none;
 }

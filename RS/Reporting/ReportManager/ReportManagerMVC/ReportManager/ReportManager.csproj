@@ -141,6 +141,7 @@
     <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CSS\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\js\Forerunner-all.js">
@@ -217,7 +218,6 @@
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
     <Content Include="Scripts\App\configs.js" />
-    <Content Include="Forerunner\ReportExplorer\css\ReportManager.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />

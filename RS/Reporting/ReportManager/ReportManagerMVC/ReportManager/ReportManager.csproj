@@ -242,6 +242,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
+    <Content Include="JSdoc\buildDocs.cmd" />
+    <Content Include="JSdoc\conf.json" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>

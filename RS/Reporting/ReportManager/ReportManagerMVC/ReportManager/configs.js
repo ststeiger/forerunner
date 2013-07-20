@@ -6,11 +6,7 @@ var g_App = g_App || {};
 (function() {
 
   g_App.configs = {
-    apiBase: './api/',
-    reportControllerBase: './api/ReportViewer',
-    //reportServerUrl: 'localhost:2008/reportserver_sql2008/',
-    reportServerUrl: 'http://forerunner-sql2012/reportserver/',
-    //reportServerUrl: 'localhost:8080/reportserver_mssql2012/',
+    apiBase: './api/'
   };
 
 }());

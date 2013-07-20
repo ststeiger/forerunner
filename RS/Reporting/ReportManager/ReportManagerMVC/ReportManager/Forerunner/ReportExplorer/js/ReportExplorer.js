@@ -9,7 +9,6 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.reportExplorer), {
         options: {
-            reportServerURL: null,
             reportManagerAPI: "./api/ReportManager",
             reportManagerrLocFolder: "./forerunner/ReportManager/loc/",
             path: null,

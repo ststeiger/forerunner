@@ -34,14 +34,13 @@ $(function () {
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
             var sessionID = me.options.$reportViewer.reportViewer("getSessionID");
-            var reportServerURL = me.options.$reportViewer.reportViewer("getReportServerURL");
             var reportViewerAPI = me.options.$reportViewer.reportViewer("getReportViewerAPI");
             var reportPath = me.options.$reportViewer.reportViewer("getReportPath");
             
             me.listItems = new Array(maxNumPages);
 
             for (var i = 1; i <= maxNumPages; i++) {
-                var url = reportViewerAPI + "/GetThumbnail/?ReportServerURL=" + reportServerURL + "&ReportPath="
+                var url = reportViewerAPI + "/GetThumbnail/?ReportPath="
                         + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
                 var $listItem = new $("<LI />");
                 $list.append($listItem);

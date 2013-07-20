@@ -26,7 +26,7 @@ $(function () {
                     }
                 });
 
-                var clientHeight = document.documentElement.clientHeight == 0 ? document.body.clientHeight : document.documentElement.clientHeight;
+                var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
                 window.onresize = function () { $(".fr-docmap-border").css("height", clientHeight - $(".fr-docmap-panel").offset().top); };
 
                 $(window).scroll(function () { $(".fr-docmap-border").css("top", $(window).scrollTop()); });

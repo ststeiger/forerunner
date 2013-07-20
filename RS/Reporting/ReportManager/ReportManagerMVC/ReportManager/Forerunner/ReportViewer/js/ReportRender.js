@@ -462,8 +462,7 @@ $(function () {
             var me = this;
 
             var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
-            Url += "ReportServerURL=" + me.options.reportViewer.options.reportServerURL;
-            Url += "&SessionID=" + me.options.reportViewer.sessionID;
+            Url += "SessionID=" + me.options.reportViewer.sessionID;
             Url += "&ImageID=" + ImageName;
             return Url;
         },

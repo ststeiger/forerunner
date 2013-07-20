@@ -60,7 +60,7 @@ var ApplicationRouter = Backbone.Router.extend({
            
             var currentSelectedPath = me._selectedItemPath;
             $("#mainSection").reportExplorer({
-                reportServerURL: g_App.configs.apiBase + "ReportManager/",
+                reportManagerAPI: g_App.configs.apiBase + "ReportManager/",
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,
@@ -125,7 +125,6 @@ var ApplicationRouter = Backbone.Router.extend({
                 $paramarea: $("#rightPaneContent"),
                 $lefttoolbar: $("#leftheader"),
                 $righttoolbar: $("#rightheader"),
-                ReportServerURL: g_App.configs.reportServerUrl,
                 ReportViewerAPI: g_App.configs.reportControllerBase,
                 ReportPath: path,
                 toolbarHeight: me.toolbarHeight,

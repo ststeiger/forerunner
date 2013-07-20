@@ -39,6 +39,7 @@ var ApplicationRouter = Backbone.Router.extend({
         _selectedItemPath : null,
 
         _transitionToReportManager: function (path, view) {
+            var me = this;
             var path0 = path;
             this.appPageView.hideSlideoutPane(true);
             this.appPageView.hideSlideoutPane(false);
@@ -52,23 +53,20 @@ var ApplicationRouter = Backbone.Router.extend({
           
             $('#mainViewPort').css({ width: "100%", height: "100%" });
 
-            if (path == null) {
+            if (!path) 
                 path = "/";
-            }
-
-            var catalogItemUrl = forerunner.ssr.CatalogItemsModel.getCatalogItemUrl(view, path);
-            var me = this;
+            if (!view)
+                view = "catalog"
+           
             var currentSelectedPath = me._selectedItemPath;
-          
-            forerunner.ssr.CatalogItemsView.fetchModelAndRenderView({
-                catalogItemUrl: g_App.configs.apiBase + catalogItemUrl,
-                $toolbar: $('#mainSectionHeader'),
-                $explorerview: $("#mainSection"),
-                reportManagerAPIUrl: g_App.configs.apiBase + 'ReportManager/',
-                path: path,
+            $("#mainSection").reportExplorer({
+                reportServerURL: g_App.configs.apiBase + 'ReportManager/',
+                path: me.options.path,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.navigateTo
             });
+            var $toolbar = $('#mainSectionHeader');
+            $toolbar.reportExplorerToolbar({ navigateTo: me.navigateTo });
 
             $('#rightheader').height($('#topdiv').height());
             $('#leftheader').height($('#topdiv').height());

@@ -750,11 +750,10 @@ $(function () {
                 })
                 .done(function (data) {
                     if (data.Status === "Fail") {
-                        me.sessionID = "";
-                        alert(me.locData.messages.sessionExpired);
+                        me.sessionID = "";                       
                     }
                 })
-                .fail(function () { me.sessionID = ""; console.log("error"); });
+                .fail(function () { console.log("ping error"); });
 
         },
         _updateTableHeaders: function (me) {

@@ -284,7 +284,13 @@ $(function () {
                 rect.bottom <= (window.innerHeight || document. documentElement.clientHeight) && /*or $(window).height() */
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
-            },
+        },
+        isSmall: function () {
+            if ($(window).width() < 400 || $(window).height() < 400)
+                return true;
+            else
+                return false;
+        },
     };
     
 });

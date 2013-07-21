@@ -208,6 +208,7 @@ $(function () {
          *
          * @member
          */
+        forerunnerFolder: "../forerunner",
     }
     /**
      * Defines the methods used to localize string data in the SDK.

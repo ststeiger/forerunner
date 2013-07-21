@@ -199,6 +199,11 @@ $(function () {
      * @namespace
      */
     forerunner.init = {
+        /**
+         * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
+         *
+         * @member
+         */
         forerunnerFolder: "./forerunner",
     }
     /**
@@ -262,7 +267,7 @@ $(function () {
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         allowZoom: function (flag) {
-            if (flag == true) {
+            if (flag === true) {
                 $('head meta[name=viewport]').remove();
                 $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
             } else {
@@ -1214,7 +1219,7 @@ $(function () {
          *  }
          * };
          * 
-         * this.element.html("<div class='" + me.options.toolClass + "'/>");
+         * this.element.html("&lt;div class='" + me.options.toolClass + "'/>");
          * this.addTools(1, true, [btnMenu]);
          *
          *  Notes:

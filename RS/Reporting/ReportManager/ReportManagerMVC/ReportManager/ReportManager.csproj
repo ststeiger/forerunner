@@ -144,10 +144,10 @@
     <Content Include="CSS\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
-    <Content Include="Forerunner\Common\js\Forerunner-all.js">
+    <Content Include="Forerunner\Forerunner-all.js">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>
-    <Content Include="Forerunner\Common\js\Forerunner-all.min.js">
+    <Content Include="Forerunner\Forerunner-all.min.js">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
@@ -248,11 +248,13 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
-    <None Include="Forerunner\Common\js\Forerunner-all.js.bundle" />
-    <Content Include="Forerunner\Common\js\Forerunner-all.min.js.map">
+    <None Include="Forerunner\Forerunner-all.js.bundle">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Debug\Index.cshtml" />
+    <Content Include="Forerunner\Forerunner-all.min.js.map">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>
-    <Content Include="Views\Debug\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
   </ItemGroup>

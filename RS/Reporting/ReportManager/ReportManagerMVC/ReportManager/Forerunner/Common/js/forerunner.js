@@ -270,6 +270,10 @@ $(function () {
                 || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
+        /** 
+         * Sets up the viewport meta tag for scaling or fixed size based unpon the given flag
+         * @param {bool} flag - true = scale enabled (max = 10.0)
+         */
         allowZoom: function (flag) {
             if (flag === true) {
                 $('head meta[name=viewport]').remove();
@@ -279,6 +283,7 @@ $(function () {
                 $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
             }
         },
+        /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
 
@@ -289,6 +294,7 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
+        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 700) */
         isSmall: function () {
             if ($(window).height() < 700)
                 return true;

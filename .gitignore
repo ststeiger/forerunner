@@ -40,3 +40,5 @@ RS/Reporting/SecurityExtensions/SAML/SAMLUtils/TestSAMLUtils/bin/codeanalysis/*
 RS/Reporting/ReportManager/ReportManagerMVC/testPage.html
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/JSDoc/Docs/*
 RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/build.force
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.js
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map

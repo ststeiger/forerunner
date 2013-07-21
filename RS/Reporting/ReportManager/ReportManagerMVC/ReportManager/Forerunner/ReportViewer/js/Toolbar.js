@@ -205,7 +205,7 @@ $(function () {
     };
 
     /**
-     * The main toobar used for the reportViewer
+     * Toobar widget used by the reportViewer
      *
      * @namespace $.forerunner.toolbar
      * @prop {object} options - The options for toolbar

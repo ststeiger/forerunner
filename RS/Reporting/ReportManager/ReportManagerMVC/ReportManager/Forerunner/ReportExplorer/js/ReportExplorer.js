@@ -1,13 +1,36 @@
-﻿// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+﻿/**
+ * @file Contains the reportExplorer widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
 
-    $.widget(widgets.getFullname(widgets.reportExplorer), {
+    /**
+     * Widget used to explore available reports and launch the Report Viewer
+     *
+     * @namespace $.forerunner.reportExplorer
+     * @prop {object} options - The options for toolbar
+     * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
+     * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
+     * @prop {String} options.path - Path passed to the GetItems REST call
+     * @prop {String} options.view - View passed to the GetItems REST call
+     * @prop {String} options.selectedItemPath - Set to select an item in the explorer
+     * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @example
+     * $("#reportExplorerId").reportExplorer({
+     *  reportManagerAPI: "./api/ReportManager",
+     *  forerunnerPath: "./forerunner",
+     *  path: "/",
+     *  view: "catalog",
+     *  navigateTo: navigateTo
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
         options: {
             reportManagerAPI: "../api/ReportManager",
             forerunnerPath: "../forerunner",

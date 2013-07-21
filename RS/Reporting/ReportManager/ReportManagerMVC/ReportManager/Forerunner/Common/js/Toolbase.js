@@ -53,7 +53,7 @@ $(function () {
          *  }
          * };
          * 
-         * this.element.html("<div class='" + me.options.toolClass + "'/>");
+         * this.element.html("&lt;div class='" + me.options.toolClass + "'/>");
          * this.addTools(1, true, [btnMenu]);
          *
          *  Notes:

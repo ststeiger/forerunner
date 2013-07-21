@@ -203,7 +203,11 @@ $(function () {
      * @namespace
      */
     forerunner.init = {
-        forerunnerFolder: "../forerunner",
+        /**
+         * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
+         *
+         * @member
+         */
     }
     /**
      * Defines the methods used to localize string data in the SDK.

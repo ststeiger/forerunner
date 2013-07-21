@@ -204,7 +204,11 @@ $(function () {
      * @namespace
      */
     forerunner.init = {
-        forerunnerFolder: "../forerunner",
+        /**
+         * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
+         *
+         * @member
+         */
     }
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -1241,7 +1245,7 @@ $(function () {
          *  }
          * };
          * 
-         * this.element.html("<div class='" + me.options.toolClass + "'/>");
+         * this.element.html("&lt;div class='" + me.options.toolClass + "'/>");
          * this.addTools(1, true, [btnMenu]);
          *
          *  Notes:

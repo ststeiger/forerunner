@@ -2,13 +2,13 @@
     width: 100%;
 
     background: white;
-    height: 430px;
+    height: 350px;
     position: fixed;
     bottom: 0px;
 }
 
 .fr-nav-spacer {
-    height: 430px;
+    height: 350px;
 }
 
 ul.fr-nav-container {
@@ -26,6 +26,7 @@ ul.fr-nav-container {
 
     white-space: nowrap;
 
+    padding: 30px;
     margin: 0;
 
     vertical-align: top;
@@ -48,15 +49,16 @@ ul.fr-nav-container {
         vertical-align: top;
         width: 200px;
         height: 100%;
-        padding: 10px;
+        padding: 30px;      
+        
     }
 
 .fr-nav-page-thumb {
-    width: 300px;
-    max-height: 400px;
+    width: 200px;
+    max-height: 300px;
     margin-left: 15px;
     margin-right: 15px;
-    -webkit-box-shadow: 10px 10px 5px black ;
+     -webkit-box-shadow: 10px 10px 5px black ;
     box-shadow: 10px 10px 5px black ;
 }
 
@@ -71,12 +73,12 @@ ul.fr-nav-container li:hover {
 }
 
 /* Smartphones  ----------- */
-@media only screen and (max-height : 400px) and (max-width : 400px) {
+@media only screen and (max-height : 700px) and (max-width : 700px) {
     /* Styles */
     ul.fr-nav-container {
-        height: device-height;
+        height:  device-height -38px;
+        margin-top:  50px;
     }
-
 }
 
 

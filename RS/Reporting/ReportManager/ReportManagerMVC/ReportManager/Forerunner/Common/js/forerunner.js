@@ -285,7 +285,7 @@ $(function () {
                 );
         },
         isSmall: function () {
-            if ($(window).width() < 400 || $(window).height() < 400)
+            if ($(window).height() < 700)
                 return true;
             else
                 return false;

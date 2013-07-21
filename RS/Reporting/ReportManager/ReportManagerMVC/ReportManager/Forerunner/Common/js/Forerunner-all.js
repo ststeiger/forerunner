@@ -286,7 +286,7 @@ $(function () {
                 );
         },
         isSmall: function () {
-            if ($(window).width() < 400 || $(window).height() < 400)
+            if ($(window).height() < 700)
                 return true;
             else
                 return false;
@@ -367,6 +367,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
+            me.pageNavOpen = false;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -605,10 +606,15 @@ $(function () {
         },
         showNav: function () {
             var me = this;
+            if (me.pageNavOpen) 
+                me.pageNavOpen = false;
+            else
+                me.pageNavOpen = true;
+
             if (me.options.pageNav){
                 me.options.pageNav.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath });
+            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         flushCache: function () {
             var me = this;

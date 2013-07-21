@@ -175,10 +175,17 @@ $(function () {
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = $("#footerspacer");
 
-                if ($spacer.is(":visible"))
+                if (!data.open) {
                     $spacer.hide();
-                else
-                    $spacer.show();                
+                    if (forerunner.device.isSmall())
+                        $("#pageSection").show();
+                }
+                else {
+                    $spacer.show();
+                    if (forerunner.device.isSmall())
+                        $("#pageSection").hide();
+                }
+
             });
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {

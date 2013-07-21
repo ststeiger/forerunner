@@ -271,7 +271,7 @@ $(function () {
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         /** 
-         * Sets up the viewport meta tag for scaling or fixed size based unpon the given flag
+         * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
          * @param {bool} flag - true = scale enabled (max = 10.0)
          */
         allowZoom: function (flag) {

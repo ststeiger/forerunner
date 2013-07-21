@@ -180,7 +180,7 @@ $(function () {
     };
 
     /**
-     * The toolPane used with the reportViewer
+     * ToolPane widget used with the reportViewer
      *
      * @namespace $.forerunner.toolPane
      * @prop {object} options - The options for toolPane

@@ -1,4 +1,8 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the reportExplorerToolbar widget.
+ *
+ */
+
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -8,8 +12,19 @@ $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
     var widgets = forerunner.ssr.constants.widgets;
 
-    // Toolbar widget
-    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, {
+    /**
+     * Toolbar widget used by the Report Explorer
+     *
+     * @namespace $.forerunner.reportExplorerToolbar
+     * @prop {object} options - The options for toolbar
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @example
+     * $("#reportExplorerToolbarId").reportExplorerToolbar({
+     *  navigateTo: navigateTo
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar"

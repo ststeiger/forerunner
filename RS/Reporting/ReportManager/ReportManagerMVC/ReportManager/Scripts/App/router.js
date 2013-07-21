@@ -44,8 +44,9 @@ var ApplicationRouter = Backbone.Router.extend({
             this.appPageView.hideSlideoutPane(true);
             this.appPageView.hideSlideoutPane(false);
             forerunner.device.allowZoom(false);
-            $("#footerspacer").attr("style", "height:0");
-            $("#bottomdiv").attr("style", "height:0");
+            $("#footerspacer").hide();
+            //$("#bottomdiv").attr("style", "height:0");
+            $("#bottomdiv").hide();
             $("#headerspacer").attr("style", "height:38px");
             if (forerunner.device.isTouch()) {
                 $("#headerspacer").attr("style", "height:35px");
@@ -66,8 +67,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.navigateTo
-            });
-            //$("#mainSection").reportExplorer(
+            });            
             var $toolbar = $("#mainSectionHeader");
             $toolbar.reportExplorerToolbar({ navigateTo: me.navigateTo });
 
@@ -104,8 +104,8 @@ var ApplicationRouter = Backbone.Router.extend({
             me._selectedItemPath = null;
 
             forerunner.device.allowZoom(true);
-            $("#footerspacer").attr("style", "height: 150px");
-            $("#bottomdiv").attr("style", "height: 150px;display: none;");
+            $("#footerspacer").addClass("fr-nav-spacer").hide();
+            $("#bottomdiv").addClass("fr-nav-container").hide();
             $("#headerspacer").attr("style", "height: 50px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");

@@ -172,7 +172,21 @@ $(function () {
                 $nav.pageNav({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "pageNav", $nav);
             }
+            $viewer.on(events.reportViewerShowNav(), function (e, data) {
+                var $spacer = $("#footerspacer");
 
+                if (!data.open) {
+                    $spacer.hide();
+                    if (forerunner.device.isSmall())
+                        $("#pageSection").show();
+                }
+                else {
+                    $spacer.show();
+                    if (forerunner.device.isSmall())
+                        $("#pageSection").hide();
+                }
+
+            });
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });

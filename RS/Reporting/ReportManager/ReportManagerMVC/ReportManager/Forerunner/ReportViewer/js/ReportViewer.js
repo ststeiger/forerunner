@@ -89,6 +89,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
+            me.pageNavOpen = false;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -391,9 +392,15 @@ $(function () {
          */
         showNav: function () {
             var me = this;
+            if (me.pageNavOpen) 
+                me.pageNavOpen = false;
+            else
+                me.pageNavOpen = true;
+
             if (me.options.pageNav){
                 me.options.pageNav.pageNav("showNav");
             }
+            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache
@@ -568,8 +575,8 @@ $(function () {
         },
         _setScrollLocation: function (top, left) {
             var me = this;
-            me.scrollLeft = left;
-            me.scrollTop = top;
+            me.scrollLeft(left);
+            me.scrollTop(top);
         },
         /**
          * Find the given keyword. Find will always find the first occurance

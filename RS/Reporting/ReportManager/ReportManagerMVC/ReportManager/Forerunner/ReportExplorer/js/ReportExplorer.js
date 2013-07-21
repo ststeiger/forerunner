@@ -9,8 +9,8 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.reportExplorer), {
         options: {
-            reportManagerAPI: "./api/ReportManager",
-            forerunnerPath: "./forerunner",
+            reportManagerAPI: "../api/ReportManager",
+            forerunnerPath: "../forerunner",
             path: null,
             view: null,
             selectedItemPath: null,

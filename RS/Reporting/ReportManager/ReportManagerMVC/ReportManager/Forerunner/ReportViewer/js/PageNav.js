@@ -68,6 +68,8 @@ $(function () {
                 this._on($thumbnail, {
                     click: function (event) {
                         me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
+                        if (forerunner.device.isSmall())
+                            me.options.$reportViewer.reportViewer("showNav");
                     }
                 });
                 // Need to add onclick

@@ -2276,11 +2276,12 @@ $(function () {
                     }
                 });
                 // Need to add onclick
+                $listItem.addClass("fr-nav-item");
                 $listItem.append($caption);
                 $listItem.append($thumbnail);
             }
-
-            return $list;
+            
+            return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
         reset: function () {
@@ -2483,10 +2484,12 @@ $(function () {
             var $img = new $("<img />");
             $img.addClass("fr-explorer-item-width");
             $img.addClass("fr-explorer-item-center");            
-            if (catalogItem.Type === 1) 
+            if (catalogItem.Type === 1)
                 imageSrc = me.options.forerunnerPath + "/ReportExplorer/images/folder-icon.png";
-            else                
-                imageSrc = reportThumbnailPath;            
+            else {
+                imageSrc = reportThumbnailPath;
+                $imageblock.addClass("fr-report-item-image-block-shadow");
+            }
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
             $img.attr("src", imageSrc);

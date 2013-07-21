@@ -73,11 +73,12 @@ $(function () {
                     }
                 });
                 // Need to add onclick
+                $listItem.addClass("fr-nav-item");
                 $listItem.append($caption);
                 $listItem.append($thumbnail);
             }
-
-            return $list;
+            
+            return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
         reset: function () {

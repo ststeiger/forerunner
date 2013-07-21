@@ -42,10 +42,12 @@ $(function () {
             var $img = new $("<img />");
             $img.addClass("fr-explorer-item-width");
             $img.addClass("fr-explorer-item-center");            
-            if (catalogItem.Type === 1) 
+            if (catalogItem.Type === 1)
                 imageSrc = me.options.forerunnerPath + "/ReportExplorer/images/folder-icon.png";
-            else                
-                imageSrc = reportThumbnailPath;            
+            else {
+                imageSrc = reportThumbnailPath;
+                $imageblock.addClass("fr-report-item-image-block-shadow");
+            }
 
             var action = catalogItem.Type === 1 ? "explore" : "browse";
             $img.attr("src", imageSrc);

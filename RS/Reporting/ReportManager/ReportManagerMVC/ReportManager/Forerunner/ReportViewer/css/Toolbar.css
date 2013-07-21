@@ -51,6 +51,8 @@
 .fr-button-find, .fr-button-findnext, .fr-button-export
 {
     color: white;
+      line-height:36px;
+    text-align:center;  
 }
 
 .fr-pageOf {

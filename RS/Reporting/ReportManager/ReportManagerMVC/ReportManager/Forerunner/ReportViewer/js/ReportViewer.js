@@ -310,6 +310,7 @@ $(function () {
             if (me.options.pageNav){
                 me.options.pageNav.pageNav("showNav");
             }
+            me._trigger(events.showNav, null, { path: me.options.reportPath });
         },
         flushCache: function () {
             var me = this;
@@ -442,8 +443,8 @@ $(function () {
         },
         _setScrollLocation: function (top, left) {
             var me = this;
-            me.scrollLeft = left;
-            me.scrollTop = top;
+            me.scrollLeft(left);
+            me.scrollTop(top);
         },
         find: function (keyword,startPage, endPage) {
             var me = this;

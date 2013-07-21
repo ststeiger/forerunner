@@ -141,6 +141,11 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            showNav: "showNav",
+            /** widget + event, lowercase */
+            reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -199,7 +204,7 @@ $(function () {
      * @namespace
      */
     forerunner.init = {
-        forerunnerFolder: "./forerunner",
+        forerunnerFolder: "../forerunner",
     }
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -262,7 +267,7 @@ $(function () {
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
         allowZoom: function (flag) {
-            if (flag == true) {
+            if (flag === true) {
                 $('head meta[name=viewport]').remove();
                 $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
             } else {
@@ -270,7 +275,16 @@ $(function () {
                 $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
             }
         },
+        isElementInViewport: function (el) {
+            var rect = el.getBoundingClientRect();
 
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document. documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
+                );
+            },
     };
     
 });
@@ -588,6 +602,7 @@ $(function () {
             if (me.options.pageNav){
                 me.options.pageNav.pageNav("showNav");
             }
+            me._trigger(events.showNav, null, { path: me.options.reportPath });
         },
         flushCache: function () {
             var me = this;
@@ -720,8 +735,8 @@ $(function () {
         },
         _setScrollLocation: function (top, left) {
             var me = this;
-            me.scrollLeft = left;
-            me.scrollTop = top;
+            me.scrollLeft(left);
+            me.scrollTop(top);
         },
         find: function (keyword,startPage, endPage) {
             var me = this;
@@ -1975,15 +1990,28 @@ $(function () {
         options: {
             $reportViewer: null
         },
+        // Constructor
+        _create: function () {
+
+        },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
                 me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
             }
-            me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
+
             me.currentPageNum = currentPageNum;
+            me._ScrolltoPage();
             me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
+        },
+        _ScrolltoPage: function () {
+            var me = this;
+
+            if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
+                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left
+                me.$ul.scrollLeft(left);
+            }
         },
         _renderList: function () {
             var me = this;
@@ -1991,7 +2019,7 @@ $(function () {
             var $list;
             
             $list = new $("<UL />");
-            $list.addClass("horizontal");
+            $list.addClass("fr-nav-container");
             me.$ul = $list;
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
@@ -2035,7 +2063,7 @@ $(function () {
         _render: function () {
             var me = this;
             me.element.html("");
-            var isTouch = forerunner.device.isTouch();
+            var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
             
             $slider.addClass("fr-nav-container");
@@ -2049,7 +2077,9 @@ $(function () {
 
             $sliderWrapper.append($list);
             me.element.css("display", "block");
-            me.element.html($slider);
+            
+            me.element.append($slider);
+            //me.element.html($slider.html());
             
             me.element.hide();
             me._initCallbacks();
@@ -2062,6 +2092,7 @@ $(function () {
             }
             else {
                 me.element.fadeIn("fast");
+                me._ScrolltoPage();
             }
         },
         showNav: function () {
@@ -2191,8 +2222,8 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.reportExplorer), {
         options: {
-            reportManagerAPI: "./api/ReportManager",
-            forerunnerPath: "./forerunner",
+            reportManagerAPI: "../api/ReportManager",
+            forerunnerPath: "../forerunner",
             path: null,
             view: null,
             selectedItemPath: null,

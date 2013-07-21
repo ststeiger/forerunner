@@ -13,15 +13,28 @@ $(function () {
         options: {
             $reportViewer: null
         },
+        // Constructor
+        _create: function () {
+
+        },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
                 me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
             }
-            me.$ul.scrollLeft(me.listItems[currentPageNum - 1].position().left);
+
             me.currentPageNum = currentPageNum;
+            me._ScrolltoPage();
             me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
+        },
+        _ScrolltoPage: function () {
+            var me = this;
+
+            if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
+                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left
+                me.$ul.scrollLeft(left);
+            }
         },
         _renderList: function () {
             var me = this;
@@ -29,7 +42,7 @@ $(function () {
             var $list;
             
             $list = new $("<UL />");
-            $list.addClass("horizontal");
+            $list.addClass("fr-nav-container");
             me.$ul = $list;
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
@@ -73,7 +86,7 @@ $(function () {
         _render: function () {
             var me = this;
             me.element.html("");
-            var isTouch = forerunner.device.isTouch();
+            var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
             
             $slider.addClass("fr-nav-container");
@@ -87,7 +100,9 @@ $(function () {
 
             $sliderWrapper.append($list);
             me.element.css("display", "block");
-            me.element.html($slider);
+            
+            me.element.append($slider);
+            //me.element.html($slider.html());
             
             me.element.hide();
             me._initCallbacks();
@@ -100,6 +115,7 @@ $(function () {
             }
             else {
                 me.element.fadeIn("fast");
+                me._ScrolltoPage();
             }
         },
         showNav: function () {

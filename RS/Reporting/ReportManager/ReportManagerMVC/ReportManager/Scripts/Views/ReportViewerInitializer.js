@@ -172,7 +172,14 @@ $(function () {
                 $nav.pageNav({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "pageNav", $nav);
             }
+            $viewer.on(events.reportViewerShowNav(), function (e, data) {
+                var $spacer = $("#footerspacer");
 
+                if ($spacer.is(":visible"))
+                    $spacer.hide();
+                else
+                    $spacer.show();                
+            });
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });

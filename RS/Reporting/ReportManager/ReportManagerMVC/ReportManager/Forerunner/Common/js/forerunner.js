@@ -140,6 +140,11 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            showNav: "showNav",
+            /** widget + event, lowercase */
+            reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -198,7 +203,7 @@ $(function () {
      * @namespace
      */
     forerunner.init = {
-        forerunnerFolder: "./forerunner",
+        forerunnerFolder: "../forerunner",
     }
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -269,7 +274,16 @@ $(function () {
                 $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
             }
         },
+        isElementInViewport: function (el) {
+            var rect = el.getBoundingClientRect();
 
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document. documentElement.clientHeight) && /*or $(window).height() */
+                rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
+                );
+            },
     };
     
 });

@@ -1,18 +1,23 @@
 ﻿.fr-nav-container {
-width:100%;
-color:#CCC;
-background:#333;
-height: 150px;
+    width:100%;
+    color:#CCC;
+    background:white;
+    height: 430px;
+    position: fixed;
+    bottom: 0px; 
 }
 
+.fr-nav-spacer {
+    height: 430px;
+}
 
-ul.horizontal {
+ul.fr-nav-container {
   display: block;
+  background:#333;
   white-space: nowrap;
   padding: 0;
   margin: 0;
   border: 0;
-  height: 150px;
   vertical-align: top;
   z-index: -100;
   width: device-width;
@@ -21,29 +26,28 @@ ul.horizontal {
   -webkit-overflow-scrolling: touch;
 }
 
-ul.horizontal li{
+ul.fr-nav-container li{
   display: table-cell;
   position: relative;
   vertical-align:top;
-  width: 150px;
-  height: 115px;
-  padding: 0 20px;  
-  margin: 0 auto;
+  width: 200px;
+  height: 100%; 
+  padding: 10px;
   border: 0;
 }
 
 .fr-nav-page-thumb {
-  width: 120px;
-  max-height: 100px;
+  width: 300px;
+  max-height: 400px;
   margin-left: 15px; 
-  margin-right: 15px;
+  margin-right: 15px;  
 }
 
-ul.horizontal li:hover {
+ul.fr-nav-container li:hover {
   background-color:darkgrey;
 }
 
-ul.horizontal li:active {
+ul.fr-nav-container li:active {
   background-color:darkslategrey;
 }
 

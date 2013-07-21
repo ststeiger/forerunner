@@ -1,7 +1,9 @@
-﻿// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+﻿/**
+ * @file Contains the reportViewer widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
@@ -23,8 +25,26 @@ $(function () {
         this.isRendered = false;
     }
 
-    // report viewer widget
-    $.widget(widgets.getFullname(widgets.reportViewer), {
+    /**
+     * The main toobar used for the reportViewer
+     *
+     * @namespace $.forerunner.reportViewer
+     * @prop {object} options - The options for reportViewer
+     * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
+     * @prop {String} options.forerunnerPath - not used
+     * @prop {String} options.reportPath - Path to the specific report
+     * @prop {String} options.pageNum - Starting page number
+     * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
+     * @prop {String} options.toolbarHeight - Height of the toolbar.
+     * @prop {String} options.setPageDone - Not used
+     * @prop {String} options.pageNav - jQuery selector object that will the page navigation widget
+     * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
+     * @example
+     * $("#reportViewerId").reportViewer({
+     *  reportPath: "/Northwind Test Reports/bar chart",
+	 * });
+     */
+    $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
             reportViewerAPI: "./api/ReportViewer",
@@ -79,26 +99,50 @@ $(function () {
             me._addLoadingIndicator();
             me._loadParameters(me.options.pageNum);
         },
+        /**
+         * @function $.forerunner.reportViewer#getCurPage
+         * @return {int} Current page number
+         */
         getCurPage: function () {
             var me = this;
             return me.curPage;
         },
+        /**
+         * @function $.forerunner.reportViewer#getNumPages
+         * @return {int} Current number of pages
+         */
         getNumPages: function () {
             var me = this;
             return me.numPages;
         },
+        /**
+         * @function $.forerunner.reportViewer#getReportViewerAPI
+         * @return {String} Path to the report viewer API
+         */
         getReportViewerAPI: function () {
             var me = this;
             return me.options.reportViewerAPI;
         },
+        /**
+         * @function $.forerunner.reportViewer#getReportPath
+         * @return {String} Path to current report path
+         */
         getReportPath: function () {
             var me = this;
             return me.options.reportPath;
         },
+        /**
+         * @function $.forerunner.reportViewer#getSessionID
+         * @return {String} Session ID
+         */
         getSessionID: function () {
             var me = this;
             return me.sessionID;
         },
+        /**
+         * @function $.forerunner.reportViewer#getHasDocMap
+         * @return {bool} true if there is a document map
+         */
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
@@ -143,6 +187,11 @@ $(function () {
             me.loadLock = 1;
             setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
+        /**
+         * Shows the loading Indicator
+         *
+         * @function $.forerunner.reportViewer#showLoadingIndictator
+         */
         showLoadingIndictator: function (me) {
             if (me.loadLock === 1) {
                 //212 is static value for loading indicator width
@@ -155,6 +204,11 @@ $(function () {
                 me.$loadingIndicator.show();
             }
         },
+        /**
+         * Removes the loading Indicator
+         *
+         * @function $.forerunner.reportViewer#removeLoadingIndicator
+         */
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
@@ -227,6 +281,11 @@ $(function () {
                 //threshold: 0,
             });
         },
+        /**
+         * Refreshes the current report
+         *
+         * @function $.forerunner.reportViewer#refreshReport
+         */
         refreshReport: function () {
             // Remove all cached data on the report and re-run
             var me = this;
@@ -244,6 +303,12 @@ $(function () {
             me._resetViewer(true);
             me._loadPage(1, false, null, paramList,true);            
         },
+        /**
+         * Navigates to the given page
+         *
+         * @function $.forerunner.reportViewer#navToPage
+         * @param {int} newPageNum - Page number to navigate to
+         */
         navToPage: function (newPageNum) {
             var me = this;
             if (newPageNum === me.curPage || me.lock === 1)
@@ -266,6 +331,11 @@ $(function () {
                 }
             }
         },
+        /**
+         * Shows the Document Map
+         *
+         * @function $.forerunner.reportViewer#showDocMap
+         */
         showDocMap: function () {
             if ($(".fr-docmap-panel").length > 0)
                 $(".fr-docmap-panel").animate({ height: "toggle" }, 100, function () {
@@ -287,6 +357,15 @@ $(function () {
             }
 
         },
+        /**
+         * Either:
+         *  Loads page on the action history stack and triggers a drillBack event or triggers a back event
+         *
+         * @function $.forerunner.reportViewer#back
+         * @fires reportviewerdrillback
+         * @fires reportviewerback
+         * @see forerunner.ssr.constants.events
+         */
         back: function () {
             var me = this;
             var action = me.actionHistory.pop();
@@ -305,12 +384,22 @@ $(function () {
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
+        /**
+         * Shows the Page Navigation pane
+         *
+         * @function $.forerunner.reportViewer#showNav
+         */
         showNav: function () {
             var me = this;
             if (me.options.pageNav){
                 me.options.pageNav.pageNav("showNav");
             }
         },
+        /**
+         * Resets the Page Navigation cache
+         *
+         * @function $.forerunner.reportViewer#flushCache
+         */
         flushCache: function () {
             var me = this;
             me.pages = {};
@@ -338,6 +427,14 @@ $(function () {
                 });
             }
         },
+        /**
+         * Sorts the current report
+         *
+         * @function $.forerunner.reportViewer#sort
+         * @param {String} direction - sort direction
+         * @param {String} id - Session ID
+         * @see forerunner.ssr.constants
+         */
         sort: function (direction, id) {
             //Go the other dirction from current
             var me = this;
@@ -359,6 +456,12 @@ $(function () {
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Sorts the current report
+         *
+         * @function $.forerunner.reportViewer#toggleItem
+         * @param {String} toggleID - Id of the item to toggle
+         */
         toggleItem: function (toggleID) {
             var me = this;
             me._prepareAction();
@@ -378,6 +481,12 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Navigate to the given bookmark
+         *
+         * @function $.forerunner.reportViewer#navigateBookmark
+         * @param {String} bookmarkID - Id of the bookmark
+         */
         navigateBookmark: function (bookmarkID) {
             var me = this;
             me._prepareAction();
@@ -395,6 +504,12 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Navigate to the given drill through item
+         *
+         * @function $.forerunner.reportViewer#navigateDrillthrough
+         * @param {String} drillthroughID - Id of the item
+         */
         navigateDrillthrough: function (drillthroughID) {
             var me = this;
             me._prepareAction();
@@ -424,6 +539,12 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Navigate to the Document Map
+         *
+         * @function $.forerunner.reportViewer#navigateDocumentMap
+         * @param {String} docMapID - Id of the document map
+         */
         navigateDocumentMap: function (docMapID) {
             var me = this;
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
@@ -436,6 +557,11 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Push the current page onto the action history stack
+         *
+         * @function $.forerunner.reportViewer#backupCurPage
+         */
         backupCurPage: function () {
             var me = this;
             me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
@@ -445,7 +571,15 @@ $(function () {
             me.scrollLeft = left;
             me.scrollTop = top;
         },
-        find: function (keyword,startPage, endPage) {
+        /**
+         * Find the given keyword. Find will always find the first occurance
+         *
+         * @function $.forerunner.reportViewer#find
+         * @param {String} keyword - Keyword to find
+         * @param {int} startPage - Starting page of the search range
+         * @param {int} endPage - Ending page of the search range
+         */
+        find: function (keyword, startPage, endPage) {
             var me = this;
             if (keyword === "") return;
 
@@ -501,6 +635,12 @@ $(function () {
             })
           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        /**
+         * Find the next occurance of the given keyword
+         *
+         * @function $.forerunner.reportViewer#findNext
+         * @param {String} keyword - Keyword to find
+         */
         findNext: function (keyword) {
             var me = this;
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
@@ -530,6 +670,12 @@ $(function () {
                 }
             }
         },
+        /**
+         * Highlights the first matched keyword
+         *
+         * @function $.forerunner.reportViewer#setFindHighlight
+         * @param {String} keyword - Keyword to highlight
+         */
         setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
@@ -544,12 +690,22 @@ $(function () {
                 //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);
             }
         },
+        /**
+         * Resets the find state
+         *
+         * @function $.forerunner.reportViewer#resetFind
+         */
         resetFind: function () {
             var me = this;
             me.finding = false;
             me.findStartPage = null;
             me.findKeyword = null;
         },
+        /**
+         * Show the Export popup
+         *
+         * @function $.forerunner.reportViewer#showExport
+         */
         showExport: function () {
             if ($(".fr-render-export-panel").is(":hidden")) {
                 var $export = $(".fr-button-export").filter(":visible");
@@ -557,6 +713,13 @@ $(function () {
             }
             $(".fr-render-export-panel").toggle();
         },
+        /**
+         * Export the report in the given format
+         *
+         * @function $.forerunner.reportViewer#exportReport
+         * @param {String} exportType - Export format
+         * @see forerunner.ssr.constants
+         */
         exportReport: function (exportType) {
             var me = this;
             $(".fr-render-export-panel").toggle();

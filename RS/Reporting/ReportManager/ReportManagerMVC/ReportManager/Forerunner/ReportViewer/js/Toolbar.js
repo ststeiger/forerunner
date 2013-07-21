@@ -1,8 +1,9 @@
-﻿// Assign or create the single globally scoped variable
-// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+﻿/**
+ * @file Contains the toolbar widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
@@ -203,8 +204,23 @@ $(function () {
         tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
     };
 
-    // Toolbar widget
-    $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, {
+    /**
+     * The main toobar used for the reportViewer
+     *
+     * @namespace $.forerunner.toolbar
+     * @prop {object} options - The options for toolbar
+     * @prop {Object} options.$reportViewer - The report viewer widget
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @example
+     * $("#toolbarId").toolbar({
+     *  $reportViewer: $viewer,
+     *  toolClass: "fr-toolbar"
+	 * });
+     *
+     * Note:
+     *  Toolbar can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
+     */
+    $.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, /** @lends $.forerunner.toolbar */ {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolbar"

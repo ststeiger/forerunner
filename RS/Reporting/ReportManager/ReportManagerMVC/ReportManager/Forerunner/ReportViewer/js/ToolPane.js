@@ -1,7 +1,9 @@
-﻿// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+﻿/**
+ * @file Contains the toolPane widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
@@ -177,7 +179,22 @@ $(function () {
         tools: [itemKeyword, itemFind, itemSeparator, itemFindNext]
     };
 
-    // Toolbar widget
+    /**
+     * The toolPane used with the reportViewer
+     *
+     * @namespace $.forerunner.toolPane
+     * @prop {object} options - The options for toolPane
+     * @prop {Object} options.$reportViewer - The report viewer widget
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolpane)
+     * @example
+     * $("#toolPaneId").toolPane({
+     *  $reportViewer: $viewer,
+     *  toolClass: "fr-toolpane"
+	 * });
+     *
+     * Note:
+     *  ToolPane can be extended by calling the addTools method defined by {@link $.forerunner.toolBase}
+     */
     $.widget(widgets.getFullname(widgets.toolPane), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,

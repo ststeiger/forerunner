@@ -41,7 +41,7 @@ $(function () {
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @example
      * $("#reportViewerId").reportViewer({
-     *  reportPath: "/Northwind Test Reports/bar chart",
+     *  reportPath: "/Northwind Test Reports/bar chart"
 	 * });
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
@@ -360,7 +360,7 @@ $(function () {
         },
         /**
          * Either:
-         *  Loads page on the action history stack and triggers a drillBack event or triggers a back event
+         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
          *
          * @function $.forerunner.reportViewer#back
          * @fires reportviewerdrillback
@@ -797,7 +797,14 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
         },
-        loadReport: function (reportPath,pageNum) {
+        /**
+         * Load the given report
+         *
+         * @function $.forerunner.reportViewer#loadReport
+         * @param {String} reportPath - Path to the specific report
+         * @param {int} pageNum - starting page number
+         */
+        loadReport: function (reportPath, pageNum) {
             var me = this;
 
             me._resetViewer();            
@@ -806,7 +813,13 @@ $(function () {
             me._loadParameters(pageNum);            
             
         },
-        loadReportWithNewParameters: function(paramList){
+        /**
+         * Load current report with the given parameter list
+         *
+         * @function $.forerunner.reportViewer#loadReportWithNewParameters
+         * @param {Object} paramList - Paramter list object
+         */
+        loadReportWithNewParameters: function (paramList) {
             var me = this;
            
             me._resetViewer(true);            

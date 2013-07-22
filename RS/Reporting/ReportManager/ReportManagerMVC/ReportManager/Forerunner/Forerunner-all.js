@@ -136,6 +136,11 @@ $(function () {
             reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
 
             /** @constant */
+            drillThrough: "drillThrough",
+            /** widget + event, lowercase */
+            reportViewerDrillThrough: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillThrough).toLowerCase(); },
+
+            /** @constant */
             back: "back",
             /** widget + event, lowercase */
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
@@ -837,7 +842,7 @@ $(function () {
                 else {
                     me.sessionID = data.SessionID;
                     me.options.reportPath = data.ReportPath;
-                    
+                    me._trigger(events.drillThrough, null, { path: data.ReportPath });
                     if (data.ParametersRequired) {
                         me.$reportAreaContainer.find(".Page").detach();
                         me._setScrollLocation(0, 0);

@@ -527,7 +527,7 @@ $(function () {
                 else {
                     me.sessionID = data.SessionID;
                     me.options.reportPath = data.ReportPath;
-                    
+                    me._trigger(events.drillThrough, null, { path: data.ReportPath });
                     if (data.ParametersRequired) {
                         me.$reportAreaContainer.find(".Page").detach();
                         me._setScrollLocation(0, 0);

@@ -135,6 +135,11 @@ $(function () {
             reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
 
             /** @constant */
+            drillThrough: "drillThrough",
+            /** widget + event, lowercase */
+            reportViewerDrillThrough: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillThrough).toLowerCase(); },
+
+            /** @constant */
             back: "back",
             /** widget + event, lowercase */
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },

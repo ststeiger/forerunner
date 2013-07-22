@@ -31,12 +31,10 @@ $(function () {
      * @namespace $.forerunner.reportViewer
      * @prop {object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
-     * @prop {String} options.forerunnerPath - not used
      * @prop {String} options.reportPath - Path to the specific report
      * @prop {String} options.pageNum - Starting page number
      * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.setPageDone - Not used
      * @prop {String} options.pageNav - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @example
@@ -47,13 +45,11 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
-            reportViewerAPI: "./api/ReportViewer",
-            forerunnerPath: "./forerunner",
+            reportViewerAPI: "../api/ReportViewer",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
-            setPageDone: null,
             pageNav: null,
             paramArea: null
         },
@@ -68,7 +64,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(me.options.forerunnerPath + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -575,8 +571,8 @@ $(function () {
         },
         _setScrollLocation: function (top, left) {
             var me = this;
-            me.scrollLeft(left);
-            me.scrollTop(top);
+            me.scrollLeft = left;
+            me.scrollTop = top;
         },
         /**
          * Find the given keyword. Find will always find the first occurance

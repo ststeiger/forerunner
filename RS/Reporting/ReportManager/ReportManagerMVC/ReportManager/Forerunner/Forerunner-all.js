@@ -203,14 +203,15 @@ $(function () {
      *
      * @namespace
      */
-    forerunner.init = {
+    forerunner.config = {
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
          *
          * @member
          */
         forerunnerFolder: "../forerunner",
-    }
+        forerunnerAPIBase: "../api/",
+    };
     /**
      * Defines the methods used to localize string data in the SDK.
      *
@@ -271,15 +272,20 @@ $(function () {
                 || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
+        /** 
+         * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
+         * @param {bool} flag - true = scale enabled (max = 10.0)
+         */
         allowZoom: function (flag) {
             if (flag === true) {
-                $('head meta[name=viewport]').remove();
-                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
             } else {
-                $('head meta[name=viewport]').remove();
-                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1' />");
             }
         },
+        /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
 
@@ -290,6 +296,7 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
+        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 700) */
         isSmall: function () {
             if ($(window).height() < 700)
                 return true;
@@ -334,12 +341,10 @@ $(function () {
      * @namespace $.forerunner.reportViewer
      * @prop {object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
-     * @prop {String} options.forerunnerPath - not used
      * @prop {String} options.reportPath - Path to the specific report
      * @prop {String} options.pageNum - Starting page number
      * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.setPageDone - Not used
      * @prop {String} options.pageNav - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @example
@@ -350,13 +355,11 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
-            reportViewerAPI: "./api/ReportViewer",
-            forerunnerPath: "./forerunner",
+            reportViewerAPI: "../api/ReportViewer",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
-            setPageDone: null,
             pageNav: null,
             paramArea: null
         },
@@ -371,7 +374,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(me.options.forerunnerPath + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -878,8 +881,8 @@ $(function () {
         },
         _setScrollLocation: function (top, left) {
             var me = this;
-            me.scrollLeft(left);
-            me.scrollTop(top);
+            me.scrollLeft = left;
+            me.scrollTop = top;
         },
         /**
          * Find the given keyword. Find will always find the first occurance
@@ -1628,7 +1631,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.init.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
 
     // Tool Info data
     var btnReportBack = {
@@ -1823,7 +1826,7 @@ $(function () {
     };
 
     /**
-     * The main toobar used for the reportViewer
+     * Toobar widget used by the reportViewer
      *
      * @namespace $.forerunner.toolbar
      * @prop {object} options - The options for toolbar
@@ -1940,7 +1943,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData( forerunner.init.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData( forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
 
     // Tool Info data
     var itemNav = {
@@ -2110,7 +2113,7 @@ $(function () {
     };
 
     /**
-     * The toolPane used with the reportViewer
+     * ToolPane widget used with the reportViewer
      *
      * @namespace $.forerunner.toolPane
      * @prop {object} options - The options for toolPane
@@ -2235,7 +2238,7 @@ $(function () {
             var me = this;
 
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
-                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left
+                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left;
                 me.$ul.scrollLeft(left);
             }
         },
@@ -2349,7 +2352,11 @@ $(function () {
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerToolbar.js
-// Assign or create the single globally scoped variable
+/**
+ * @file Contains the reportExplorerToolbar widget.
+ *
+ */
+
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -2359,8 +2366,19 @@ $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
     var widgets = forerunner.ssr.constants.widgets;
 
-    // Toolbar widget
-    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, {
+    /**
+     * Toolbar widget used by the Report Explorer
+     *
+     * @namespace $.forerunner.reportExplorerToolbar
+     * @prop {object} options - The options for toolbar
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
+     * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
+     * @example
+     * $("#reportExplorerToolbarId").reportExplorerToolbar({
+     *  navigateTo: navigateTo
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorerToolbar), $.forerunner.toolBase, /** @lends $.forerunner.reportExplorerToolbar */ {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar"
@@ -2440,16 +2458,39 @@ $(function () {
 });  // function()
 
 ///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorer.js
-// Assign or create the single globally scoped variable
-var forerunner = forerunner || {};
+/**
+ * @file Contains the reportExplorer widget.
+ *
+ */
 
-// Forerunner SQL Server Reports
+var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
 
-    $.widget(widgets.getFullname(widgets.reportExplorer), {
+    /**
+     * Widget used to explore available reports and launch the Report Viewer
+     *
+     * @namespace $.forerunner.reportExplorer
+     * @prop {object} options - The options for toolbar
+     * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
+     * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
+     * @prop {String} options.path - Path passed to the GetItems REST call
+     * @prop {String} options.view - View passed to the GetItems REST call
+     * @prop {String} options.selectedItemPath - Set to select an item in the explorer
+     * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
+     * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @example
+     * $("#reportExplorerId").reportExplorer({
+     *  reportManagerAPI: "./api/ReportManager",
+     *  forerunnerPath: "./forerunner",
+     *  path: "/",
+     *  view: "catalog",
+     *  navigateTo: navigateTo
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
         options: {
             reportManagerAPI: "../api/ReportManager",
             forerunnerPath: "../forerunner",

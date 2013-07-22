@@ -8,7 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.init.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
 
     ssr.ReportViewerInitializer = function (options) {
         this.options = {

@@ -202,14 +202,15 @@ $(function () {
      *
      * @namespace
      */
-    forerunner.init = {
+    forerunner.config = {
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
          *
          * @member
          */
         forerunnerFolder: "../forerunner",
-    }
+        forerunnerAPIBase: "../api/",
+    };
     /**
      * Defines the methods used to localize string data in the SDK.
      *
@@ -276,11 +277,11 @@ $(function () {
          */
         allowZoom: function (flag) {
             if (flag === true) {
-                $('head meta[name=viewport]').remove();
-                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1" />');
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
             } else {
-                $('head meta[name=viewport]').remove();
-                $('head').prepend('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1" />');
+                $("head meta[name=viewport]").remove();
+                $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1' />");
             }
         },
         /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */

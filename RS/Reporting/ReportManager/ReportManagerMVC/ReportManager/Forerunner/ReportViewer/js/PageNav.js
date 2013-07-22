@@ -32,7 +32,7 @@ $(function () {
             var me = this;
 
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
-                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left
+                var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left;
                 me.$ul.scrollLeft(left);
             }
         },
@@ -73,11 +73,12 @@ $(function () {
                     }
                 });
                 // Need to add onclick
+                $listItem.addClass("fr-nav-item");
                 $listItem.append($caption);
                 $listItem.append($thumbnail);
             }
-
-            return $list;
+            
+            return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
         reset: function () {

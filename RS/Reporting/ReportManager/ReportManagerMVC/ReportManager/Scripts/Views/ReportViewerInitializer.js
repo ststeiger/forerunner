@@ -8,7 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.init.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
 
     ssr.ReportViewerInitializer = function (options) {
         this.options = {
@@ -177,8 +177,7 @@ $(function () {
 
                 if (!data.open) {
                     $spacer.hide();
-                    if (forerunner.device.isSmall())
-                        $("#pageSection").show();
+                    $("#pageSection").show();
                 }
                 else {
                     $spacer.show();
@@ -187,6 +186,10 @@ $(function () {
                 }
 
             });
+            $viewer.on(events.reportViewerChangePage(), function (e, data) {
+                $("#pageSection").show();
+            });
+            
             var $paramarea = me.options.$paramarea;
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });

@@ -3234,8 +3234,8 @@ $(function () {
                 NewImage.useMap = "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
             }
             NewImage.onload = function () {
-                me._writeActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
                 var naturalSize = me._getNatural(this);
+                me._writeActionImageMapAreas(RIContext, NewImage.width, NewImage.height);
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
@@ -4108,7 +4108,7 @@ $(function () {
                         break;
                 }
             }
-            return ListStyle;
+            return "fr-render-list-" + ListStyle;
         },
         _stopDefaultEvent: function (e) {
             //IE
@@ -4229,6 +4229,11 @@ $(function () {
                 me._submitForm();
             else
                 me._trigger(events.render);
+
+            //jquery adds height, remove it
+            var pc = me.element.find("." + paramContainerClass);
+            pc.removeAttr("style"); 
+
 
             me.options.$reportViewer.removeLoadingIndicator();
         },

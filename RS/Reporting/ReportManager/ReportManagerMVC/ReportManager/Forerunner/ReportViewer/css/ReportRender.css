@@ -1,0 +1,133 @@
+﻿.fr-render-sort-unsorted {    
+    background-image:url('../../reportviewer/Images/NotSorted.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px 2px 2px 7px;
+    background-position: center;
+    cursor:pointer;
+}
+
+.fr-render-sort-descending {
+    background-image:url(../../reportviewer/Images/SortDecending.gif);
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px 2px 2px 7px;
+    background-position: center;
+    cursor:pointer;
+}
+
+.fr-render-sort-ascending {
+    background-image:url(../../reportviewer/Images/SortAccending.gif);
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px 2px 2px 7px;
+    background-position: center;
+    cursor:pointer;
+}
+
+.fr-render-error-details {
+    cursor:pointer;
+    color:blue;
+}
+
+.fr-render-drilldown-collapse {    
+    background-image:url('../../reportviewer/Images/Drilldown_Collapse.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px 2px 2px 7px;
+    background-position: center;
+    cursor:pointer;
+}
+
+.fr-render-drilldown-expand {    
+    background-image:url('../../reportviewer/Images/Drilldown_Expand.gif');
+    display:inline;
+    background-repeat: no-repeat; 
+    padding:2px 2px 2px 7px;
+    background-position: center;
+    cursor:pointer;
+}
+
+
+
+.fr-render-list-circle {
+    list-style-type:circle;
+}
+.fr-render-list-square {
+    list-style-type:square;
+}
+.fr-render-list-disc{
+    list-style-type:disc;
+}
+.fr-render-list-decimal{
+    list-style-type:decimal;
+}
+.fr-render-list-.lower-roman {
+    list-style-type:lower-roman;
+}
+.fr-render-list-lower-latin {
+    list-style-type:lower-latin;
+}
+
+
+.fr-render-error
+{
+    margin:4px;
+    left:10px;
+}
+
+.fr-render-error h3, h4
+{
+    color:red;
+    font-weight:bold;
+}
+
+/*.fr-render-find-keyword
+{
+    color:red;
+}*/
+
+.fr-render-find-highlight
+{
+    background-color:Highlight;
+    color:HighlightText;
+}
+
+.fr-render-export-panel
+{
+    display:none;
+    padding:1px;
+    position:absolute;
+    z-index:1;
+    background-color:#FAFAFA;
+    border:1px solid #868686;
+}
+
+.fr-render-export-item
+{
+    cursor: default;
+    font-family: Verdana;
+    font-size: 8pt;
+    padding: 1px;
+    line-height:normal;
+    text-align:left;
+}
+
+.fr-render-export-link
+{
+    display:block;
+    padding:3px 8px 3px 32px;
+    text-decoration:none;
+    white-space:nowrap;
+    color:#3366CC;
+    font-family:Verdana;
+    font-size:8pt;
+}
+
+.fr-render-export-hover
+{
+    background-color: #FFFFAA;
+    border: 1px solid #EEB41C;
+    font-family: Verdana;
+    font-size: 8pt;
+}

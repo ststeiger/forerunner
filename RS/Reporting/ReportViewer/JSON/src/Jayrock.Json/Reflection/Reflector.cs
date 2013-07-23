@@ -78,48 +78,7 @@ namespace Jayrock.Reflection
 
         #endif // !NET_1_0 && !NET_1_1 
 
-        #if !NET_1_0 && !NET_1_1 && !NET_2_0 
-
-        private static readonly Type[] _commonTupleTypes = new[]
-        {
-            // Tuple of 1 not expected to be common so excluded from here
-            typeof(Tuple<,>), typeof(Tuple<,,>), typeof(Tuple<,,,>), typeof(Tuple<,,,,>)
-        };
-        
-        /// <summary>
-        /// Determines if a type is one of the generic <see cref="System.Tuple"/> family
-        /// of types.
-        /// </summary>
-        
-        public static bool IsTupleFamily(Type type)
-        {
-            if (type == null) 
-                throw new ArgumentNullException("type");
-
-            if (!type.IsGenericType || type.IsGenericTypeDefinition)
-                return false;
-
-            //
-            // Quick check against common generic type definitions
-            //
-            
-            if (Array.IndexOf(_commonTupleTypes, type.GetGenericTypeDefinition()) >= 0)
-                return true;
-
-            //
-            // Slower check for less common cases like tuple of 1 or 
-            // just way too many items.
-            //
-            
-            var someTupleType = _commonTupleTypes[0];
-            const char tick = '`';
-            var i = type.FullName.IndexOf(tick);
-            return type.Assembly == someTupleType.Assembly
-                && i == someTupleType.FullName.IndexOf(tick)
-                && 0 == string.CompareOrdinal(someTupleType.FullName, 0, type.FullName, 0, i);
-        }
-
-        #endif // !NET_1_0 && !NET_1_1 && !NET_2_0
+     
 
         private Reflector()
         {

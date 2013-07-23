@@ -4,42 +4,17 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Forerunner
+namespace Forerunner.Thumbnail
 {
-    public enum ReportServerProtocalEnum { HTTP, HTTPS };
-    public class Credentials
-    {
-        public enum SecurityTypeEnum { Network = 0, Custom = 1 };
-        public SecurityTypeEnum SecurityType = SecurityTypeEnum.Network;
-        public string UserName;
-        public string Domain;
-        public string Password;
-
-        public Credentials() { }
-        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
-        {
-            this.SecurityType = SecurityType;
-            this.UserName = UserName;
-            this.Password = Password;
-            this.Domain = Domain;
-        }
-
-        public string GetDomainUser()
-        {
-            if (this.Domain.Length > 15)
-                return this.Domain.Substring(0,15).ToUpper() + "\\" + this.UserName;
-            else
-                return this.Domain.ToUpper() + "\\" + this.UserName;
-        }
-
-
-    }
+   
     public class WebSiteThumbnail:IDisposable
     {
         private string HTML = null;      
         private Bitmap bmp = null;
         private byte[] MHTML = null;
+        private Stream sMHTML = null;
         private double maxHeightToWidthRatio = 0;
+        private int ThreadingAttempts = 0;
         public Bitmap Image 
         {
             get 
@@ -47,7 +22,6 @@ namespace Forerunner
                 return bmp; 
             } 
         }
-        private ManualResetEvent mre = new ManualResetEvent(false);
         private WebBrowser webBrowser;
         private Func<string, string> callback = null;
 
@@ -63,7 +37,12 @@ namespace Forerunner
             Bitmap b = thumb.GetScreenShot();            
             return b;
         }
-        
+        public static Bitmap GetStreamThumbnail(Stream MHTML, double maxHeightToWidthRatio)
+        {
+            WebSiteThumbnail thumb = new WebSiteThumbnail(MHTML, maxHeightToWidthRatio);
+            Bitmap b = thumb.GetScreenShot();
+            return b;
+        }
         public WebSiteThumbnail(string HTML, double maxHeightToWidthRatio, Func<string, string> callback)
         {
             this.HTML = HTML;
@@ -74,27 +53,40 @@ namespace Forerunner
         public WebSiteThumbnail(byte[] MHTML, double maxHeightToWidthRatio)
         {
             this.MHTML = MHTML;
-            this.maxHeightToWidthRatio = maxHeightToWidthRatio;
-            
+            this.maxHeightToWidthRatio = maxHeightToWidthRatio;            
         }
+        public WebSiteThumbnail(Stream MHTML, double maxHeightToWidthRatio)
+        {
+            this.sMHTML = MHTML;
+            this.maxHeightToWidthRatio = maxHeightToWidthRatio;
+        }
+
         public Bitmap GetScreenShot()
         {
 
-            Thread t = new Thread(new ThreadStart(_GetScreenShot));
-            t.SetApartmentState(ApartmentState.STA);
+            if (ThreadingAttempts++ > 10)
+                return null;
+
+            Thread t = new Thread(new ThreadStart(this._GetScreenShot));
+            t.SetApartmentState(ApartmentState.STA);            
             t.Start();
-            mre.WaitOne();            
-            //t.Abort();       
+            t.Join();                
             return bmp;
         }
         
         private void _GetScreenShot()
         {
+            if (Thread.CurrentThread.GetApartmentState() != ApartmentState.STA)
+            {
+                GetScreenShot();
+                return;
+            }
+
             webBrowser = new WebBrowser();
             webBrowser.ScrollBarsEnabled = false;
             string fileName = null;
 
-            if (MHTML == null)
+            if (MHTML == null && sMHTML == null)
             {
                 int length = 0;               
                 webBrowser.Navigate("about:blank");
@@ -116,7 +108,19 @@ namespace Forerunner
             else
             {
                 fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
-                System.IO.File.WriteAllBytes(fileName, MHTML);
+                if (MHTML != null)
+                    System.IO.File.WriteAllBytes(fileName, MHTML);
+                if (sMHTML != null)
+                {
+                    FileStream f = System.IO.File.OpenWrite(fileName);
+                    byte[] buffer = new byte[8 * 1024];
+                    int len;
+                    while ((len = sMHTML.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        f.Write(buffer, 0, len);
+                    }
+                    f.Close();
+                }
                 //webBrowser.Navigate(fileName);
                 webBrowser.Url = new System.Uri(fileName);
                 while ( webBrowser.ReadyState != WebBrowserReadyState.Complete )
@@ -126,8 +130,6 @@ namespace Forerunner
             SetIamge(webBrowser);
             if (fileName != null)
                 File.Delete(fileName);
-            if (mre != null)
-                mre.Set();
         }
 
         private void SetIamge(WebBrowser webBrowser)
@@ -156,7 +158,6 @@ namespace Forerunner
         {
             if (disposing)
             {
-                mre.Dispose();
                 webBrowser.Dispose();
                 bmp.Dispose();
             }

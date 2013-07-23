@@ -29,23 +29,11 @@ namespace Jayrock.Json
     using System.Diagnostics;
     using System.IO;
    
-    using Jayrock.Dynamic;
     using Jayrock.Json.Conversion;
-
-    #if !NET_1_0 && !NET_1_1
     
     using System.Collections.Generic;
 
-    #endif
-
-    #if !NET_1_0 && !NET_1_1 && !NET_2_0
-
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-
-    #endif
-
+   
     #endregion
 
     /// <summary>
@@ -69,10 +57,7 @@ namespace Jayrock.Json
         IEnumerable<JsonMember>,
         System.Collections.Generic.IDictionary<string, object>
         #endif
-        #if !NET_1_0 && !NET_1_1 && !NET_2_0
-        /* ... */ , 
-        System.Dynamic.IDynamicMetaObjectProvider
-        #endif
+        
     {
         private ArrayList _nameIndexList;
         [ NonSerialized ] private IList _readOnlyNameIndexList;
@@ -588,55 +573,6 @@ namespace Jayrock.Json
 
         #endif // !NET_1_0 && !NET_1_1
 
-        #if !NET_1_0 && !NET_1_1 && !NET_2_0
 
-        DynamicMetaObject IDynamicMetaObjectProvider.GetMetaObject(Expression parameter)
-        {
-            return new DynamicMetaObject<JsonObject>(parameter, this, _runtime, /* dontFallbackFirst */ true);
-        }
-
-        private readonly DynamicObjectRuntime<JsonObject> _runtime = new DynamicObjectRuntime<JsonObject>
-        {
-            TryGetMember = TryGetMember,
-            TrySetMember = TrySetMember,
-            TryInvokeMember = TryInvokeMember,
-            TryDeleteMember = TryDeleteMember,
-            GetDynamicMemberNames = o => o.Names.Cast<string>()
-        };
-
-        private static Option<object> TryInvokeMember(JsonObject obj, InvokeMemberBinder arg2, object[] arg3)
-        {
-            return Option<object>.None; // TryGetMember(arg1, arg2)
-        }
-
-        private static bool TryDeleteMember(JsonObject obj, DeleteMemberBinder binder)
-        {
-            if (!obj.Contains(binder.Name))
-                return false;
-            obj.Remove(binder.Name);
-            return true;
-        }
-
-        private static bool TrySetMember(JsonObject obj, SetMemberBinder binder, object value)
-        {
-            obj[binder.Name] = value; 
-            return true;
-        }
-
-        private static Option<object> TryGetMember(JsonObject obj, GetMemberBinder binder)
-        {
-            if (!obj.HasMembers)
-                return Option<object>.None;
-            var name = binder.Name;
-            var value = obj[name];
-            if (value == null && !obj.Contains(name))
-            {
-                // TODO support case-insensitive bindings
-                return Option<object>.None;
-            }
-            return Option.Value(value);
-        }
-
-        #endif // !NET_1_0 && !NET_1_1 && !NET_2_0
     }
 }

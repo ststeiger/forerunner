@@ -1,0 +1,29 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": [
+		"../Forerunner/Common/js/",
+        "../Forerunner/ReportExplorer/js/",
+        "../Forerunner/ReportViewer/js/"
+	],
+        "exclude": [],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "plugins": [],
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "encoding": "utf8",
+        "destination": "./Docs/",
+        "recurse": true,
+        "tutorials": "",
+        "query": "",
+        "private": true,
+        "lenient": true,
+    }
+}

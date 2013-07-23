@@ -141,27 +141,3 @@ namespace Jayrock.Json.Conversion.Converters
     }
 }
 
-#if !NET_1_0 && !NET_1_1 && !NET_2_0
-
-namespace Jayrock.Json.Conversion.Converters
-{
-    #region Imports
-
-    using System.Globalization;
-    using System.Numerics;
-
-    #endregion
-
-    public class BigIntegerExporter : NumberExporterBase
-    {
-        public BigIntegerExporter() :
-            base(typeof(BigInteger)) { }
-
-        protected override string ConvertToString(object value)
-        {
-            return ((BigInteger) value).ToString(CultureInfo.InvariantCulture);
-        }
-    }
-}
-
-#endif // !NET_1_0 && !NET_1_1 && !NET_2_0

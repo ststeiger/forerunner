@@ -10,30 +10,30 @@ g_App.AppPageView.prototype = {
         return this;
     },
 
-    eventsBound: false,
 
     bindEvents: function () {
         var me = this;
         var events = forerunner.ssr.constants.events;
 
-        if (!me.eventsBound) {
-            me.eventsBound = true;
-            $('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.toggleSlideoutPane(true); });
-            $('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.toggleSlideoutPane(false); });
-            $('#rightPaneContent').on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
-            $('#leftheader').on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
-            $('#rightheader').on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $('#leftPaneContent').on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $('#rightPaneContent').on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
-            $('#FRReportViewer1').on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
-            $(window).resize(function () {
-                $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
-                $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
-                $('#leftPaneContent').css({ height: '100%' });
-                $('#rightPaneContent').css({ height: '100%' });
-                $('.Parameter-Container').css({ height: $('#rightPane').height() - 45 });
-            });
-        }
+        //$('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.toggleSlideoutPane(true); });
+        //$('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.toggleSlideoutPane(false); });
+        $('#mainSectionHeader').on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
+        $('#mainSectionHeader').on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
+        $('#rightPaneContent').on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+        $('#leftheader').on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+
+        $('#rightheader').on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+        $('#leftPaneContent').on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+        $('#rightPaneContent').on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+        $('#FRReportViewer1').on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
+        $('#FRReportViewer1').on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
+        $(window).resize(function () {
+            $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
+            $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
+            $('#leftPaneContent').css({ height: '100%' });
+            $('#rightPaneContent').css({ height: '100%' });
+            $('.fr-param-container').css({ height: $('#rightPane').height() - 45 });
+        });
     },
 
     hideSlideoutPane: function (isLeftPane) {
@@ -50,7 +50,7 @@ g_App.AppPageView.prototype = {
             }
             mainViewPort.removeClass(className, delay);
             topdiv.removeClass(className, delay);
-            g_App.utils.allowZoom(true);
+            forerunner.device.allowZoom(true);
             $('#mainSectionHeader').toolbar('showTools');
         }
     },
@@ -65,12 +65,12 @@ g_App.AppPageView.prototype = {
             if (isLeftPane) {
                 slideoutPane.slideLeftShow(delay);
             } else {
-                $('.Parameter-Container').css({ height:slideoutPane.height() - 36 });
+                $('.fr-param-container').css({ height:slideoutPane.height() - 36 });
                 slideoutPane.slideRightShow(delay);
             }
             mainViewPort.addClass(className, delay);
             topdiv.addClass(className, delay);
-            g_App.utils.allowZoom(false);
+            forerunner.device.allowZoom(false);
             $('#mainSectionHeader').toolbar('hideTools');
         }
     },

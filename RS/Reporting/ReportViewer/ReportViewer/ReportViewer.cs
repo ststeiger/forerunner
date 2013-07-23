@@ -2,11 +2,13 @@
 using System.IO;
 using System.Net;
 using System.Text;
-using Forerunner.RSExec;
+using Forerunner.SSRS.Execution;
 using Jayrock.Json;
 using System.Diagnostics;
+using Forerunner.SSRS.JSONRender;
+using Forerunner.Thumbnail;
 
-namespace Forerunner.Viewer
+namespace Forerunner.SSRS.Viewer
 {
     public enum RenderFormat
     {
@@ -21,28 +23,38 @@ namespace Forerunner.Viewer
 
     public class ReportViewer:IDisposable
     {
-        String ReportServerURL;
-        Credentials Credentials = new Credentials();
-        ReportExecutionService rs = new ReportExecutionService();
-        string ReportViewerAPIPath = "/api/ReportViewer";
+        private String ReportServerURL;
+        private Credentials Credentials = new Credentials();
+        private ReportExecutionService rs = new ReportExecutionService();
+        private bool ServerRendering = false;
 
         public ReportViewer(String ReportServerURL, Credentials Credentials)
         {
             this.ReportServerURL = ReportServerURL;
             SetRSURL();
             SetCredentials(Credentials);
+            
         }
         private void SetRSURL()
         {
             rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
         }
-        public ReportViewer(String ReportServerURL, string ReportViewerAPIPath = "/api/ReportViewer")
+        public ReportViewer(String ReportServerURL)
         {
             this.ReportServerURL = ReportServerURL;
-            this.ReportViewerAPIPath = ReportViewerAPIPath;
             SetRSURL();
         }
 
+        private void SetServerRendering()
+        {
+            foreach (Extension Ex in rs.ListRenderingExtensions())
+            {
+                if (Ex.Name == "ForerunnerJSON")
+                    this.ServerRendering = true;
+            }
+            this.ServerRendering = false;
+
+        }
         public void SetCredentials(Credentials Credentials)
         {
             this.Credentials = Credentials;
@@ -51,6 +63,7 @@ namespace Forerunner.Viewer
                 rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
             else
                 rs.Credentials = new NetworkCredential(this.Credentials.UserName, this.Credentials.Password, this.Credentials.Domain);
+            SetServerRendering();
         }
 
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
@@ -78,24 +91,7 @@ namespace Forerunner.Viewer
             }
 
         }
-        public string GetReportScript()
-        {
-            string script = "";
-
-            script += "<script src='/Scripts/jquery-1.7.1.min.js'></script>";
-            script += "<script src='/Scripts/Models/FRReport.js'></script>";
-            return script;
-        }
-        public string GetReportInitScript(string reportPath)
-        {
-            string script = "";
-            string UID = Guid.NewGuid().ToString("N");
-
-            script += "<div id='" + UID + "'></div>";
-            script += "<script>InitReport('" + ReportServerURL + "','" + ReportViewerAPIPath + "','" + reportPath + "',true, 1,'" + UID + "')</script>";
-            return script;
-        }
-
+ 
         public byte[] NavigateTo(string NavType, string SessionID, string UniqueID)
         {
             
@@ -155,7 +151,7 @@ namespace Forerunner.Viewer
         public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
             byte[] result = null;
-            string format = "RPL";
+            string format;
             string historyID = null;
             string encoding;
             string mimeType;
@@ -165,6 +161,11 @@ namespace Forerunner.Viewer
             string NewSession;
             ReportJSONWriter rw;
 
+
+            if (this.ServerRendering)
+                format = "ForerunnerJSON";
+            else
+                format = "RPL";
 
             if (SessionID == null)
                 NewSession = "";
@@ -203,6 +204,7 @@ namespace Forerunner.Viewer
                 {
                     rw = new ReportJSONWriter(new MemoryStream(result));
                     JsonWriter w = new JsonTextWriter();
+                    JsonReader r;
 
                     //Read Report Object
                     w.WriteStartObject();
@@ -212,12 +214,13 @@ namespace Forerunner.Viewer
                     w.WriteString(ReportServerURL);
                     w.WriteMember("ReportPath");
                     w.WriteString(reportPath);
-                    w.WriteMember("NumPages");
-                    w.WriteNumber(execInfo.NumPages);
                     w.WriteMember("HasDocMap");
                     w.WriteBoolean(execInfo.HasDocumentMap);
                     w.WriteMember("ReportContainer");
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON()));
+                    if (this.ServerRendering)
+                        r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
+                    else
+                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
                     w.WriteFromReader(r);
                     w.WriteEndObject();
 
@@ -232,14 +235,17 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);//return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);
             }
         }
         public string GetDocMapJson(string SessionID)
         {
-           ExecutionInfo execInfo = new ExecutionInfo();
+           
             try
             {
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 return JsonUtility.GetDocMapJSON(rs.GetDocumentMap());
 
@@ -247,7 +253,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
         public string GetParameterJson(string ReportPath)
@@ -317,7 +323,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -347,7 +353,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);
             }
         }
 
@@ -376,7 +382,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -415,7 +421,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);  //return e.Message;
+                return JsonUtility.WriteExceptionJSON(e);  
             }
         }
 
@@ -441,7 +447,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -466,7 +472,7 @@ namespace Forerunner.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); // return e.Message;
+                return JsonUtility.WriteExceptionJSON(e); 
             }
         }
 
@@ -494,10 +500,8 @@ namespace Forerunner.Viewer
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;                       
-            //TODO: Need to add code to detect if MHTML is supported, not supported in Web and Express.  If not supported use the commented out code.          
             MemoryStream ms = new MemoryStream();           
-            //string format = "HTML4.0";
-            string format = "MHTML";
+            string format = "HTML4.0";            
             string historyID = null;
             string encoding;
             string mimeType;
@@ -506,6 +510,7 @@ namespace Forerunner.Viewer
             string[] streamIDs = null;
             string NewSession;
            
+
             if (SessionID == null)
                 NewSession = "";
             else
@@ -525,20 +530,30 @@ namespace Forerunner.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                //Device Info
+                if (rs.GetExecutionInfo().ParametersRequired)
+                    return null;
+
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
-                //devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
-                //devInfo += @"<ReplacementRoot></ReplacementRoot>";
-                //devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+
+                if (this.ServerRendering)
+                    format = "ForerunnerThumbnail";
+                else
+                {
+                    devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
+                    devInfo += @"<ReplacementRoot></ReplacementRoot>";
+                    devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+                }
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                //WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                WebSiteThumbnail.GetStreamThumbnail(result, maxHeightToWidthRatio).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                result = ms.ToArray();
+                if (!this.ServerRendering)
+                {
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result),maxHeightToWidthRatio, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    result = ms.ToArray();
+                }
                 
                 return result; 
                           

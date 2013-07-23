@@ -118,12 +118,6 @@ namespace Jayrock.Json.Conversion
 
             #endif
 
-            #if !NET_1_0 && !NET_1_1 && !NET_2_0 
-            
-            if (Reflector.IsTupleFamily(type))
-                return new TupleExporter(type);
-            
-            #endif
 
             if (type.IsClass && type != typeof(object))
             {
@@ -223,12 +217,7 @@ namespace Jayrock.Json.Conversion
                     exporters.Add(new DbDataRecordExporter());
                     exporters.Add(new ControlExporter());
 
-                    #if !NET_1_0 && !NET_1_1 && !NET_2_0
-
-                    exporters.Add(new BigIntegerExporter());
-                    exporters.Add(new ExpandoObjectExporter());
-                    
-                    #endif // !NET_1_0 && !NET_1_1 && !NET_2_0
+                   
 
                     IList typeList = (IList)ConfigurationSettings.GetConfig("jayrock/json.conversion.exporters");
 

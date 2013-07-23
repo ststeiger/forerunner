@@ -19,6 +19,7 @@ $(function () {
             $paramarea: null,
             $lefttoolbar: null,
             $righttoolbar: null,
+            $docMap: null,
             ReportViewerAPI: "./api/ReportViewer",
             ReportManagerAPI: "./api/ReportManager",
             ReportPath: null,
@@ -37,11 +38,12 @@ $(function () {
             var me = this;
             var $viewer = me.options.$viewer;
 
-
+            me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
+                docMapArea: me.options.$docMap,
             });
 
             // Create / render the toolbar
@@ -170,7 +172,7 @@ $(function () {
             var $nav = me.options.$nav;
             if ($nav !== null) {
                 $nav.pageNav({ $reportViewer: $viewer });
-                $viewer.reportViewer("option", "pageNav", $nav);
+                $viewer.reportViewer("option", "pageNavArea", $nav);
             }
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = $("#footerspacer");
@@ -186,6 +188,8 @@ $(function () {
                 }
 
             });
+
+            //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
                 $("#pageSection").show();
             });

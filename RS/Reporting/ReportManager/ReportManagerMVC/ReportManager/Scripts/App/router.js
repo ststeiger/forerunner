@@ -106,7 +106,7 @@ var ApplicationRouter = Backbone.Router.extend({
             forerunner.device.allowZoom(true);
             $("#footerspacer").addClass("fr-nav-spacer").hide();
             $("#bottomdiv").addClass("fr-nav-container").hide();
-            $("#headerspacer").attr("style", "height: 50px");
+            $("#headerspacer").attr("style", "height: 36px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
@@ -126,6 +126,7 @@ var ApplicationRouter = Backbone.Router.extend({
                 $paramarea: $("#rightPaneContent"),
                 $lefttoolbar: $("#leftheader"),
                 $righttoolbar: $("#rightheader"),
+                $docMap: $("#docMapSection"),
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase + "/ReportViewer",
                 ReportPath: path,
                 toolbarHeight: me.toolbarHeight,

@@ -35,8 +35,9 @@ $(function () {
      * @prop {String} options.pageNum - Starting page number
      * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.pageNav - jQuery selector object that will the page navigation widget
+     * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
+     * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -50,8 +51,10 @@ $(function () {
             pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
-            pageNav: null,
-            paramArea: null
+            pageNavArea: null,
+            paramArea: null,
+            DocMapArea: null,
+
         },
 
         _destroy: function () {
@@ -82,6 +85,7 @@ $(function () {
             me.finding = false;
             me.findStartPage = null;
             me.hasDocMap = false;
+            me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
@@ -334,10 +338,42 @@ $(function () {
          * @function $.forerunner.reportViewer#showDocMap
          */
         showDocMap: function () {
-            if ($(".fr-docmap-panel").length > 0)
-                $(".fr-docmap-panel").animate({ height: "toggle" }, 100, function () {
-                    $(".fr-docmap-border").css("height", document.body.clientHeight - $(".fr-docmap-panel").offset().top);
-                });
+            var me = this;
+            var docMap = me.options.docMapArea;
+
+            if (!me.hasDocMap || !docMap)
+                return;
+
+            if (docMap.is(":visible")) {
+                docMap.hide();
+                me.element.slideDownShow();
+                return;
+            }
+            
+            docMap.reportDocumentMap({ reportViewer: me });
+
+            //get the doc map
+            if (!me.docMapData){        
+                $.ajax({
+                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    data: {
+                        SessionID: me.sessionID,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me.docMapData = data;
+                        docMap.reportDocumentMap("write",data); 
+                    },
+                    fail: function () { alert("Fail"); }
+                });                
+            }
+            me.element.hide();
+            docMap.slideUpShow();
+            
+            
+            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+
         },
         _cachePages: function (initPage) {
             var me = this;
@@ -393,8 +429,8 @@ $(function () {
             else
                 me.pageNavOpen = true;
 
-            if (me.options.pageNav){
-                me.options.pageNav.pageNav("showNav");
+            if (me.options.pageNavArea){
+                me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
@@ -406,8 +442,8 @@ $(function () {
         flushCache: function () {
             var me = this;
             me.pages = {};
-            if (me.options.pageNav)
-                me.options.pageNav.pageNav("reset");
+            if (me.options.pageNavArea)
+                me.options.pageNavArea.pageNav("reset");
         },
         _prepareAction: function () {
             var me = this;
@@ -557,6 +593,10 @@ $(function () {
             }).done(function (data) {
                 me.backupCurPage();
                 me._loadPage(data.NewPage, false, null);
+                if (me.options.docMapArea)
+                    me.options.docMapArea.fadeOut();
+ 
+                
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -790,6 +830,7 @@ $(function () {
             me.finding = false;
             me.findStartPage = null;
             me.hasDocMap = false;
+            me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
         },
@@ -831,6 +872,10 @@ $(function () {
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
                         me._setPage(newPageNum);
+                        if (bookmarkID)
+                            me._navToLink(bookmarkID);
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.slideDownShow();
                         me._cachePages(newPageNum);
                     }
                     return;
@@ -853,11 +898,13 @@ $(function () {
                 me.lock = 0;
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-
+                if (!me.element.is(":visible") && !loadOnly)
+                    me.element.slideDownShow();
                 if (!loadOnly) me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
             var $report = $("<Div/>");

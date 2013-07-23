@@ -101,7 +101,7 @@ ul.fr-nav-container {
 }
 
 
-@media only screen and (max-device-height : 1024px) and (orientation : landscape) {
+@media only screen and (max-device-height : 768px) and (orientation : landscape) {
      .fr-nav-container {
     width: 100%;
     height:100%;

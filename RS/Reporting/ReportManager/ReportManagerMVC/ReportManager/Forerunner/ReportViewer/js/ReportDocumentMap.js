@@ -12,34 +12,24 @@ $(function () {
             reportViewer: null,
         },
         _create: function () {
-                this.element = $("<div class='fr-docmap-panel'><div class='fr-docmap-border'><table class='fr-docmap-table'>" +
-                "<tr><td nowrap><div class='fr-docmap-header'><div class='fr-docmap-bar'> Document Map </div></div></td></tr>" +
-                "<tr><td class='fr-docmap-content-cell'><div class='fr-docmap-item-container'></div></td></tr></table></div></div>");
-            
-                this.options.reportViewer.$reportContainer.append(this.element);
-                
-                $(".fr-docmap-panel").resizable({
-                    resize: function (event, ui) {
-                        $(".fr-docmap-border").css("width", ui.size.width);
-                        $(".fr-docmap-header").css("width", ui.size.width);
-                        $(".fr-docmap-item-container").css("width", ui.size.width);
-                    }
-                });
-
-                var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
-                window.onresize = function () { $(".fr-docmap-border").css("height", clientHeight - $(".fr-docmap-panel").offset().top); };
-
-                $(window).scroll(function () { $(".fr-docmap-border").css("top", $(window).scrollTop()); });
-                //trigger the onresize event, fix Compatibility issue in IE and FF
-                $(window).resize();
-                $(".fr-docmap-panel").toggle("fast");
         },
-        writeDocumentMap: function (pageNum) {
+        _init: function () {
+               
+        },
+        write: function(docMapData) {
             var me = this;
-            var $cell;
-            $cell = $(".fr-docmap-item-container");
-            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].reportObj.Report.DocumentMap, 0));
+            this.element.html("");
+
+            var $docMapPanel = new $("<DIV />");
+            var $docMapContainer = new $("<DIV />");
+            $docMapPanel.addClass("fr-docmap-panel");
+            $docMapContainer.addClass("fr-docmap-item-container");
+
+            $docMapPanel.append($docMapContainer);
+            $docMapContainer.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
+            me.element.append($docMapPanel);
         },
+
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<DIV />");

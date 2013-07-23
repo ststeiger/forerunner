@@ -35,6 +35,17 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "right", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
+    slideUpShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
+
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -301,9 +312,9 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
-        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 700) */
+        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
-            if ($(window).height() < 700)
+            if ($(window).height() < 768)
                 return true;
             else
                 return false;
@@ -350,8 +361,9 @@ $(function () {
      * @prop {String} options.pageNum - Starting page number
      * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.pageNav - jQuery selector object that will the page navigation widget
+     * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
+     * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -365,8 +377,10 @@ $(function () {
             pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
-            pageNav: null,
-            paramArea: null
+            pageNavArea: null,
+            paramArea: null,
+            DocMapArea: null,
+
         },
 
         _destroy: function () {
@@ -397,6 +411,7 @@ $(function () {
             me.finding = false;
             me.findStartPage = null;
             me.hasDocMap = false;
+            me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
@@ -649,10 +664,42 @@ $(function () {
          * @function $.forerunner.reportViewer#showDocMap
          */
         showDocMap: function () {
-            if ($(".fr-docmap-panel").length > 0)
-                $(".fr-docmap-panel").animate({ height: "toggle" }, 100, function () {
-                    $(".fr-docmap-border").css("height", document.body.clientHeight - $(".fr-docmap-panel").offset().top);
-                });
+            var me = this;
+            var docMap = me.options.docMapArea;
+
+            if (!me.hasDocMap || !docMap)
+                return;
+
+            if (docMap.is(":visible")) {
+                docMap.hide();
+                me.element.slideDownShow();
+                return;
+            }
+            
+            docMap.reportDocumentMap({ reportViewer: me });
+
+            //get the doc map
+            if (!me.docMapData){        
+                $.ajax({
+                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    data: {
+                        SessionID: me.sessionID,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me.docMapData = data;
+                        docMap.reportDocumentMap("write",data); 
+                    },
+                    fail: function () { alert("Fail"); }
+                });                
+            }
+            me.element.hide();
+            docMap.slideUpShow();
+            
+            
+            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+
         },
         _cachePages: function (initPage) {
             var me = this;
@@ -708,8 +755,8 @@ $(function () {
             else
                 me.pageNavOpen = true;
 
-            if (me.options.pageNav){
-                me.options.pageNav.pageNav("showNav");
+            if (me.options.pageNavArea){
+                me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
@@ -721,8 +768,8 @@ $(function () {
         flushCache: function () {
             var me = this;
             me.pages = {};
-            if (me.options.pageNav)
-                me.options.pageNav.pageNav("reset");
+            if (me.options.pageNavArea)
+                me.options.pageNavArea.pageNav("reset");
         },
         _prepareAction: function () {
             var me = this;
@@ -872,6 +919,10 @@ $(function () {
             }).done(function (data) {
                 me.backupCurPage();
                 me._loadPage(data.NewPage, false, null);
+                if (me.options.docMapArea)
+                    me.options.docMapArea.fadeOut();
+ 
+                
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -1105,6 +1156,7 @@ $(function () {
             me.finding = false;
             me.findStartPage = null;
             me.hasDocMap = false;
+            me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
         },
@@ -1146,6 +1198,10 @@ $(function () {
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
                         me._setPage(newPageNum);
+                        if (bookmarkID)
+                            me._navToLink(bookmarkID);
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.slideDownShow();
                         me._cachePages(newPageNum);
                     }
                     return;
@@ -1168,11 +1224,13 @@ $(function () {
                 me.lock = 0;
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-
+                if (!me.element.is(":visible") && !loadOnly)
+                    me.element.slideDownShow();
                 if (!loadOnly) me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+        
         _writePage: function (data, newPageNum, loadOnly) {
             var me = this;
             var $report = $("<Div/>");
@@ -4612,34 +4670,24 @@ $(function () {
             reportViewer: null,
         },
         _create: function () {
-                this.element = $("<div class='fr-docmap-panel'><div class='fr-docmap-border'><table class='fr-docmap-table'>" +
-                "<tr><td nowrap><div class='fr-docmap-header'><div class='fr-docmap-bar'> Document Map </div></div></td></tr>" +
-                "<tr><td class='fr-docmap-content-cell'><div class='fr-docmap-item-container'></div></td></tr></table></div></div>");
-            
-                this.options.reportViewer.$reportContainer.append(this.element);
-                
-                $(".fr-docmap-panel").resizable({
-                    resize: function (event, ui) {
-                        $(".fr-docmap-border").css("width", ui.size.width);
-                        $(".fr-docmap-header").css("width", ui.size.width);
-                        $(".fr-docmap-item-container").css("width", ui.size.width);
-                    }
-                });
-
-                var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
-                window.onresize = function () { $(".fr-docmap-border").css("height", clientHeight - $(".fr-docmap-panel").offset().top); };
-
-                $(window).scroll(function () { $(".fr-docmap-border").css("top", $(window).scrollTop()); });
-                //trigger the onresize event, fix Compatibility issue in IE and FF
-                $(window).resize();
-                $(".fr-docmap-panel").toggle("fast");
         },
-        writeDocumentMap: function (pageNum) {
+        _init: function () {
+               
+        },
+        write: function(docMapData) {
             var me = this;
-            var $cell;
-            $cell = $(".fr-docmap-item-container");
-            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].reportObj.Report.DocumentMap, 0));
+            this.element.html("");
+
+            var $docMapPanel = new $("<DIV />");
+            var $docMapContainer = new $("<DIV />");
+            $docMapPanel.addClass("fr-docmap-panel");
+            $docMapContainer.addClass("fr-docmap-item-container");
+
+            $docMapPanel.append($docMapContainer);
+            $docMapContainer.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
+            me.element.append($docMapPanel);
         },
+
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<DIV />");

@@ -205,9 +205,9 @@ namespace Forerunner
             return w.ToString();
         }
 
-        public static string ConvertDocumentMapToJSON(DocumentMapNode DocumentMap)
+        public static void ConvertDocumentMapToJSON(DocumentMapNode DocumentMap, JsonWriter w)
         {
-            JsonWriter w = new JsonTextWriter();
+            
             w.WriteMember("Label");
             w.WriteString(DocumentMap.Label);
             w.WriteMember("UniqueName");
@@ -219,21 +219,23 @@ namespace Forerunner
                 foreach (DocumentMapNode Child in DocumentMap.Children)
                 {
                     w.WriteStartObject();
-                    ConvertDocumentMapToJSON(Child);
+                    ConvertDocumentMapToJSON(Child,w);
                     w.WriteEndObject();
                 }
                 w.WriteEndArray();
             }
 
-            return w.ToString();
+            
         }
         internal static string GetDocMapJSON(DocumentMapNode DocumentMap)
         {
             JsonWriter w = new JsonTextWriter();
 
+            w.WriteStartObject();
             w.WriteMember("DocumentMap");
             w.WriteStartObject();
-            JsonUtility.ConvertDocumentMapToJSON(DocumentMap);
+            JsonUtility.ConvertDocumentMapToJSON(DocumentMap,w);
+            w.WriteEndObject();
             w.WriteEndObject();
 
             return w.ToString();

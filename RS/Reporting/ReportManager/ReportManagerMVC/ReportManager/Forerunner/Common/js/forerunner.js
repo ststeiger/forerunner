@@ -34,6 +34,17 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "right", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
+    slideUpShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
+
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -300,9 +311,9 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
-        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 700) */
+        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
-            if ($(window).height() < 700)
+            if ($(window).height() < 768)
                 return true;
             else
                 return false;

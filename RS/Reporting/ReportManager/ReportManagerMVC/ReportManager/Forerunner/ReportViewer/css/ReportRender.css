@@ -48,6 +48,28 @@
     cursor:pointer;
 }
 
+
+
+.fr-render-list-circle {
+    list-style-type:circle;
+}
+.fr-render-list-square {
+    list-style-type:square;
+}
+.fr-render-list-disc{
+    list-style-type:disc;
+}
+.fr-render-list-decimal{
+    list-style-type:decimal;
+}
+.fr-render-list-.lower-roman {
+    list-style-type:lower-roman;
+}
+.fr-render-list-lower-latin {
+    list-style-type:lower-latin;
+}
+
+
 .fr-render-error
 {
     margin:4px;

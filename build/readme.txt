@@ -36,7 +36,11 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 11. Setup Daily Task Scheduler Job.
 	a. Import "Daily Build.xml" to Task Scheduler.
 	b. Run the job manually to make sure it is working.
-12. Setup Drop. TBD.
+12. Setup Drop to Sharepoint.
+	a. Create a Credentials.xml in the build dir for connecting to SP:
+<?xml version="1.0" encoding="utf-8" ?>
+<Credential UserName="stellar@forerunnersw.com" Password="*******"/>
+	b. Make sure this is in .gitignore so it does not get checked in.
 
 Adding a new Project
 --------------------

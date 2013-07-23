@@ -918,7 +918,7 @@ $(function () {
                 UniqueID: docMapID
             }).done(function (data) {
                 me.backupCurPage();
-                me._loadPage(data.NewPage, false, null);
+                me._loadPage(data.NewPage, false, docMapID);
                 if (me.options.docMapArea)
                     me.options.docMapArea.fadeOut();
  
@@ -1197,11 +1197,12 @@ $(function () {
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me._setPage(newPageNum);
+                        me._setPage(newPageNum);                        
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
-                        if (!me.element.is(":visible") && !loadOnly)
-                            me.element.slideDownShow();
                         me._cachePages(newPageNum);
                     }
                     return;
@@ -1222,10 +1223,11 @@ $(function () {
             .done(function (data) {
                 me._writePage(data, newPageNum, loadOnly);
                 me.lock = 0;
+                if (!me.element.is(":visible") && !loadOnly)
+                    me.element.show();  //scrollto does not work with the slide in functions:(
+                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-                if (!me.element.is(":visible") && !loadOnly)
-                    me.element.slideDownShow();
                 if (!loadOnly) me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
@@ -1312,7 +1314,10 @@ $(function () {
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
         _navToLink: function (elementID) {
-            $(document).scrollTop($("#" + elementID).offset().top - 85);
+            var me = this;
+            var navTo = me.element.find("." + elementID);
+
+            $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },
         _stopDefaultEvent: function (e) {
             //IE
@@ -2925,6 +2930,8 @@ $(function () {
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($LocDiv, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             return RIContext.$HTMLParent;
         },
@@ -3042,6 +3049,8 @@ $(function () {
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
@@ -3165,6 +3174,18 @@ $(function () {
                 }
             }); 
         },
+        _writeUniqueName: function($item,uniqueName){
+            
+            $item.addClass(uniqueName);
+
+
+            //var $un = new $("<DIV/>");
+            //$un.attr("style", "width:0;height:0;");
+            //$un.css("display", "none");
+            //$un.attr("id", uniqueName);
+            //$item.append($un);
+           
+        },
         _getImageURL: function (RS, ImageName) {
             var me = this;
 
@@ -3203,8 +3224,10 @@ $(function () {
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 
-            this._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
-            this._writeBookMark(RIContext);
+            me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
+            me._writeBookMark(RIContext);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
             RIContext.$HTMLParent.attr("style", Style);
             RIContext.$HTMLParent.append(NewImage);
@@ -3442,6 +3465,9 @@ $(function () {
                     LastRowIndex = Obj.RowIndex;
                 }
 
+                if (Obj.UniqueName)
+                    me._writeUniqueName($Row, Obj.UniqueName);
+
                 //Handle fixed row header
                 if (Obj.Type !== "Corner" && LastObjType === "Corner") {
                     $FixedRowHeader.append($Row.clone(true, true));
@@ -3468,14 +3494,12 @@ $(function () {
 
             if (HasFixedRows) {
                 $FixedColHeader.hide();
-                // $Tablix.append($FixedColHeader);
             }
             else
                 $FixedColHeader = null;
 
             if (HasFixedCols) {
                 $FixedRowHeader.hide();
-                //$Tablix.append($FixedRowHeader);
             }
             else
                 $FixedRowHeader = null;
@@ -3483,6 +3507,9 @@ $(function () {
             var ret = $("<div style='position:relative'></div");
             ret.append($FixedColHeader);
             ret.append($FixedRowHeader);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;

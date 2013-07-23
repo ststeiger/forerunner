@@ -592,7 +592,7 @@ $(function () {
                 UniqueID: docMapID
             }).done(function (data) {
                 me.backupCurPage();
-                me._loadPage(data.NewPage, false, null);
+                me._loadPage(data.NewPage, false, docMapID);
                 if (me.options.docMapArea)
                     me.options.docMapArea.fadeOut();
  
@@ -871,11 +871,12 @@ $(function () {
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me._setPage(newPageNum);
+                        me._setPage(newPageNum);                        
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
-                        if (!me.element.is(":visible") && !loadOnly)
-                            me.element.slideDownShow();
                         me._cachePages(newPageNum);
                     }
                     return;
@@ -896,10 +897,11 @@ $(function () {
             .done(function (data) {
                 me._writePage(data, newPageNum, loadOnly);
                 me.lock = 0;
+                if (!me.element.is(":visible") && !loadOnly)
+                    me.element.show();  //scrollto does not work with the slide in functions:(
+                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-                if (!me.element.is(":visible") && !loadOnly)
-                    me.element.slideDownShow();
                 if (!loadOnly) me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
@@ -986,7 +988,10 @@ $(function () {
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
         _navToLink: function (elementID) {
-            $(document).scrollTop($("#" + elementID).offset().top - 85);
+            var me = this;
+            var navTo = me.element.find("." + elementID);
+
+            $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },
         _stopDefaultEvent: function (e) {
             //IE

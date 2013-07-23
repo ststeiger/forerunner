@@ -188,6 +188,15 @@ $(function () {
                 }
 
             });
+            $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                $("html").addClass("fr-docmap-background");
+                $("body").addClass("fr-docmap-background");
+            });
+
+            $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                $("html").removeClass("fr-docmap-background");
+                $("body").removeClass("fr-docmap-background");
+            });
 
             //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {

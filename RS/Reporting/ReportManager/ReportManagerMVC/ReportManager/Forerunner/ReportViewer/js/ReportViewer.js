@@ -99,6 +99,7 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me._loadParameters(me.options.pageNum);
+            me.hideDocMap();
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -332,8 +333,59 @@ $(function () {
                 }
             }
         },
+        _hideDocMap: function() {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.hide();
+            me.element.parent().show();
+            me.element.slideDownShow();
+            me._trigger(events.hideDocMap);
+        },
+        _showDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.reportDocumentMap({ reportViewer: me });
+
+            //get the doc map
+            if (!me.docMapData) {
+                $.ajax({
+                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    data: {
+                        SessionID: me.sessionID,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me.docMapData = data;
+                        docMap.reportDocumentMap("write", data);
+                    },
+                    fail: function () { alert("Fail"); }
+                });
+            }
+
+            me.element.parent().hide();
+            me.element.hide();
+            docMap.slideUpShow();
+            me._trigger(events.showDocMap);
+        },
         /**
-         * Shows the Document Map
+         * Hides the Document Map if it is visible
+         *
+         * @function $.forerunner.reportViewer#hideDocMap
+         */
+        hideDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+
+            if (!me.hasDocMap || !docMap)
+                return;
+
+            if (docMap.is(":visible")) {
+                me._hideDocMap();
+            }
+        },
+        /**
+         * Shows the visibility of the Document Map
          *
          * @function $.forerunner.reportViewer#showDocMap
          */
@@ -345,32 +397,10 @@ $(function () {
                 return;
 
             if (docMap.is(":visible")) {
-                docMap.hide();
-                me.element.slideDownShow();
+                me._hideDocMap();
                 return;
             }
-            
-            docMap.reportDocumentMap({ reportViewer: me });
-
-            //get the doc map
-            if (!me.docMapData){        
-                $.ajax({
-                    url: me.options.reportViewerAPI + "/DocMapJSON/",
-                    data: {
-                        SessionID: me.sessionID,
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        me.docMapData = data;
-                        docMap.reportDocumentMap("write",data); 
-                    },
-                    fail: function () { alert("Fail"); }
-                });                
-            }
-            me.element.hide();
-            docMap.slideUpShow();
-            
+            me._showDocMap();
             
             //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
 
@@ -593,10 +623,7 @@ $(function () {
             }).done(function (data) {
                 me.backupCurPage();
                 me._loadPage(data.NewPage, false, null);
-                if (me.options.docMapArea)
-                    me.options.docMapArea.fadeOut();
- 
-                
+                me.hideDocMap();
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },

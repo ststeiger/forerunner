@@ -47,12 +47,12 @@ var ApplicationRouter = Backbone.Router.extend({
             $("#footerspacer").hide();
             //$("#bottomdiv").attr("style", "height:0");
             $("#bottomdiv").hide();
-            $("#headerspacer").attr("style", "height:38px");
-            if (forerunner.device.isTouch()) {
+            $("#headerspacer").css({height: "38px"});
+            /*if (forerunner.device.isTouch()) {
                 $("#headerspacer").attr("style", "height:35px");
-            }
+            }*/
           
-            $("#mainViewPort").css({ width: "100%", height: "100%" });
+            $("#mainViewPort").css({ width: "100%", height: "100%"});
 
             if (!path) 
                 path = "/";
@@ -60,6 +60,9 @@ var ApplicationRouter = Backbone.Router.extend({
                 view = "catalog";
            
             var currentSelectedPath = me._selectedItemPath;
+            $("#mainSection").html(null);
+            $("#mainSection").show();
+            $("#docMapSection").hide();
             $("#mainSection").reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase + "/ReportManager",
                 forerunnerPath: "./forerunner",
@@ -77,6 +80,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $("#leftheaderspacer").height($("#topdiv").height());
 
             me._selectedItemPath = path0;
+            $("html").removeClass("fr-docmap-background");
+            $("body").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");
             $("body").addClass("fr-Explorer-background");
 
@@ -106,12 +111,16 @@ var ApplicationRouter = Backbone.Router.extend({
             forerunner.device.allowZoom(true);
             $("#footerspacer").addClass("fr-nav-spacer").hide();
             $("#bottomdiv").addClass("fr-nav-container").hide();
-            $("#headerspacer").attr("style", "height: 36px");
+            $("#headerspacer").attr("style", "height: 38px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
                 path = "/";
             }
+
+            $("#mainViewPort").css({ width: "100%", height: "100%" });
+            //$("#mainViewPort").css({ width: "100%", height: window.innerHeight });
+            //$("#pageSection").css({ width: "100%", height: (window.innerHeight - 38) });
             
             $("#mainSection").html(null);
             var $viewerContainer = new $("<DIV id='FRReportViewer1'/>");
@@ -145,6 +154,8 @@ var ApplicationRouter = Backbone.Router.extend({
             $("#rightheaderspacer").height($("#topdiv").height());
             $("#leftheaderspacer").height($("#topdiv").height());
             me.appPageView.bindEvents();
+            $("html").addClass("fr-Explorer-background");
+            $("body").addClass("fr-Explorer-background");
             $("html").removeClass("fr-Explorer-background");
             $("body").removeClass("fr-Explorer-background");
         },

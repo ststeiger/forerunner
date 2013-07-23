@@ -480,6 +480,10 @@ $(function () {
             var newDir;
             var sortDirection = forerunner.ssr.constants.sortDirection;
 
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
@@ -491,7 +495,7 @@ $(function () {
                 Direction: newDir
             }).done(function (data) {
                 me.numPages = data.NumPages;
-                me._loadPage((data.NewPage), false, null, null, true);
+                me._loadPage(data.NewPage, false, null, null, true);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -503,6 +507,10 @@ $(function () {
          */
         toggleItem: function (toggleID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
 
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
@@ -528,6 +536,10 @@ $(function () {
          */
         navigateBookmark: function (bookmarkID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.bookmark,
@@ -551,6 +563,10 @@ $(function () {
          */
         navigateDrillthrough: function (drillthroughID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.drillThrough,
@@ -586,6 +602,10 @@ $(function () {
          */
         navigateDocumentMap: function (docMapID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.docMap,
                 SessionID: me.sessionID,
@@ -865,7 +885,7 @@ $(function () {
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
-            if (flushCache !== undefined && flushCache)
+            if (flushCache === true)
                 me.flushCache();
 
             if (me.pages[newPageNum])
@@ -877,7 +897,8 @@ $(function () {
                             //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
-                        me._cachePages(newPageNum);
+                        if (flushCache !== true)
+                            me._cachePages(newPageNum);
                     }
                     return;
                 }
@@ -886,8 +907,7 @@ $(function () {
             if (!loadOnly) {
                 me._addLoadingIndicator();
             }
-            me.togglePageNum = newPageNum;
-            me.lock = 1;
+            me.togglePageNum = newPageNum;            
             $.getJSON(me.options.reportViewerAPI + "/ReportJSON/", {
                 ReportPath: me.options.reportPath,
                 SessionID: me.sessionID,
@@ -895,14 +915,14 @@ $(function () {
                 ParameterList: paramList
             })
             .done(function (data) {
-                me._writePage(data, newPageNum, loadOnly);
-                me.lock = 0;
+                me._writePage(data, newPageNum, loadOnly);                
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
                     //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-                if (!loadOnly) me._cachePages(newPageNum);
+                if (!loadOnly && flushCache !== true)
+                    me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },

@@ -414,6 +414,7 @@
                               </TablixMember>
                               <TablixMember>
                                 <Group Name="table1_CategoryName">
+                                  <DocumentMapLabel>=Fields!CategoryName.Value</DocumentMapLabel>
                                   <GroupExpressions>
                                     <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
                                   </GroupExpressions>
@@ -430,6 +431,7 @@
                                   </TablixMember>
                                   <TablixMember>
                                     <Group Name="table1_Details_Group">
+                                      <DocumentMapLabel>=Fields!ProductName.Value</DocumentMapLabel>
                                       <DataElementName>Detail</DataElementName>
                                     </Group>
                                     <TablixMembers>
@@ -477,7 +479,6 @@
                           <Height>0.27in</Height>
                           <Width>2.125in</Width>
                           <ZIndex>1</ZIndex>
-                          <DocumentMapLabel>=Fields!Country.Value</DocumentMapLabel>
                           <Bookmark>=Fields!Country.Value</Bookmark>
                           <Style>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -535,6 +536,7 @@
           <TablixMembers>
             <TablixMember>
               <Group Name="list1_Country">
+                <DocumentMapLabel>=Fields!Country.Value</DocumentMapLabel>
                 <GroupExpressions>
                   <GroupExpression>=Fields!Country.Value</GroupExpression>
                 </GroupExpressions>

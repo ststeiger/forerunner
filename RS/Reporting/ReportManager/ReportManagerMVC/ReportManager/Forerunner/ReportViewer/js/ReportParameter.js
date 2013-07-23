@@ -90,6 +90,11 @@ $(function () {
             else
                 me._trigger(events.render);
 
+            //jquery adds height, remove it
+            var pc = me.element.find("." + paramContainerClass);
+            pc.removeAttr("style"); 
+
+
             me.options.$reportViewer.removeLoadingIndicator();
         },
         _submitForm: function () {

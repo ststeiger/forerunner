@@ -806,6 +806,10 @@ $(function () {
             var newDir;
             var sortDirection = forerunner.ssr.constants.sortDirection;
 
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
@@ -817,7 +821,7 @@ $(function () {
                 Direction: newDir
             }).done(function (data) {
                 me.numPages = data.NumPages;
-                me._loadPage((data.NewPage), false, null, null, true);
+                me._loadPage(data.NewPage, false, null, null, true);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -829,6 +833,10 @@ $(function () {
          */
         toggleItem: function (toggleID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
 
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
@@ -854,6 +862,10 @@ $(function () {
          */
         navigateBookmark: function (bookmarkID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.bookmark,
@@ -877,6 +889,10 @@ $(function () {
          */
         navigateDrillthrough: function (drillthroughID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.drillThrough,
@@ -912,13 +928,17 @@ $(function () {
          */
         navigateDocumentMap: function (docMapID) {
             var me = this;
+            if (me.lock === 1)
+                return;
+            me.lock = 1;
+
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
                 NavType: navigateType.docMap,
                 SessionID: me.sessionID,
                 UniqueID: docMapID
             }).done(function (data) {
                 me.backupCurPage();
-                me._loadPage(data.NewPage, false, null);
+                me._loadPage(data.NewPage, false, docMapID);
                 if (me.options.docMapArea)
                     me.options.docMapArea.fadeOut();
  
@@ -1191,18 +1211,20 @@ $(function () {
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
 
-            if (flushCache !== undefined && flushCache)
+            if (flushCache === true)
                 me.flushCache();
 
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me._setPage(newPageNum);
+                        me._setPage(newPageNum);                        
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.show(); //scrollto does not work with the slide in functions:(
+                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
-                        if (!me.element.is(":visible") && !loadOnly)
-                            me.element.slideDownShow();
-                        me._cachePages(newPageNum);
+                        if (flushCache !== true)
+                            me._cachePages(newPageNum);
                     }
                     return;
                 }
@@ -1211,8 +1233,7 @@ $(function () {
             if (!loadOnly) {
                 me._addLoadingIndicator();
             }
-            me.togglePageNum = newPageNum;
-            me.lock = 1;
+            me.togglePageNum = newPageNum;            
             $.getJSON(me.options.reportViewerAPI + "/ReportJSON/", {
                 ReportPath: me.options.reportPath,
                 SessionID: me.sessionID,
@@ -1220,13 +1241,14 @@ $(function () {
                 ParameterList: paramList
             })
             .done(function (data) {
-                me._writePage(data, newPageNum, loadOnly);
-                me.lock = 0;
+                me._writePage(data, newPageNum, loadOnly);                
+                if (!me.element.is(":visible") && !loadOnly)
+                    me.element.show();  //scrollto does not work with the slide in functions:(
+                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
-                if (!me.element.is(":visible") && !loadOnly)
-                    me.element.slideDownShow();
-                if (!loadOnly) me._cachePages(newPageNum);
+                if (!loadOnly && flushCache !== true)
+                    me._cachePages(newPageNum);
             })
             .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -1312,7 +1334,10 @@ $(function () {
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
         _navToLink: function (elementID) {
-            $(document).scrollTop($("#" + elementID).offset().top - 85);
+            var me = this;
+            var navTo = me.element.find("." + elementID);
+
+            $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },
         _stopDefaultEvent: function (e) {
             //IE
@@ -2925,6 +2950,8 @@ $(function () {
         
             }
             RIContext.$HTMLParent.attr("Style", Style);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($LocDiv, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             return RIContext.$HTMLParent;
         },
@@ -3042,6 +3069,8 @@ $(function () {
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
@@ -3165,6 +3194,18 @@ $(function () {
                 }
             }); 
         },
+        _writeUniqueName: function($item,uniqueName){
+            
+            $item.addClass(uniqueName);
+
+
+            //var $un = new $("<DIV/>");
+            //$un.attr("style", "width:0;height:0;");
+            //$un.css("display", "none");
+            //$un.attr("id", uniqueName);
+            //$item.append($un);
+           
+        },
         _getImageURL: function (RS, ImageName) {
             var me = this;
 
@@ -3193,8 +3234,8 @@ $(function () {
                 NewImage.useMap = "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
             }
             NewImage.onload = function () {
-                me._writeActionImageMapAreas(RIContext, $(NewImage).width(), $(NewImage).height());
                 var naturalSize = me._getNatural(this);
+                me._writeActionImageMapAreas(RIContext, NewImage.width, NewImage.height);
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
@@ -3203,8 +3244,10 @@ $(function () {
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 
-            this._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
-            this._writeBookMark(RIContext);
+            me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
+            me._writeBookMark(RIContext);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
             RIContext.$HTMLParent.attr("style", Style);
             RIContext.$HTMLParent.append(NewImage);
@@ -3442,6 +3485,9 @@ $(function () {
                     LastRowIndex = Obj.RowIndex;
                 }
 
+                if (Obj.UniqueName)
+                    me._writeUniqueName($Row, Obj.UniqueName);
+
                 //Handle fixed row header
                 if (Obj.Type !== "Corner" && LastObjType === "Corner") {
                     $FixedRowHeader.append($Row.clone(true, true));
@@ -3468,14 +3514,12 @@ $(function () {
 
             if (HasFixedRows) {
                 $FixedColHeader.hide();
-                // $Tablix.append($FixedColHeader);
             }
             else
                 $FixedColHeader = null;
 
             if (HasFixedCols) {
                 $FixedRowHeader.hide();
-                //$Tablix.append($FixedRowHeader);
             }
             else
                 $FixedRowHeader = null;
@@ -3483,6 +3527,9 @@ $(function () {
             var ret = $("<div style='position:relative'></div");
             ret.append($FixedColHeader);
             ret.append($FixedRowHeader);
+            if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
+                me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
@@ -4061,7 +4108,7 @@ $(function () {
                         break;
                 }
             }
-            return ListStyle;
+            return "fr-render-list-" + ListStyle;
         },
         _stopDefaultEvent: function (e) {
             //IE
@@ -4182,6 +4229,11 @@ $(function () {
                 me._submitForm();
             else
                 me._trigger(events.render);
+
+            //jquery adds height, remove it
+            var pc = me.element.find("." + paramContainerClass);
+            pc.removeAttr("style"); 
+
 
             me.options.$reportViewer.removeLoadingIndicator();
         },

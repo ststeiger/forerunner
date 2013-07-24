@@ -2988,7 +2988,7 @@ $(function () {
             }
             RIContext.$HTMLParent.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
-                me._writeUniqueName($LocDiv, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
+                me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             return RIContext.$HTMLParent;
         },

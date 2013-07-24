@@ -162,6 +162,16 @@ $(function () {
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
 
             /** @constant */
+            showDocMap: "showDocMap",
+            /** widget + event, lowercase */
+            reportViewerShowDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showDocMap).toLowerCase(); },
+
+            /** @constant */
+            hideDocMap: "hideDocMap",
+            /** widget + event, lowercase */
+            reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -425,6 +435,7 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me._loadParameters(me.options.pageNum);
+            me.hideDocMap();
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -658,8 +669,59 @@ $(function () {
                 }
             }
         },
+        _hideDocMap: function() {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.hide();
+            me.element.parent().show();
+            me.element.slideDownShow();
+            me._trigger(events.hideDocMap);
+        },
+        _showDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.reportDocumentMap({ reportViewer: me });
+
+            //get the doc map
+            if (!me.docMapData) {
+                $.ajax({
+                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    data: {
+                        SessionID: me.sessionID,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me.docMapData = data;
+                        docMap.reportDocumentMap("write", data);
+                    },
+                    fail: function () { alert("Fail"); }
+                });
+            }
+
+            me.element.parent().hide();
+            me.element.hide();
+            docMap.slideUpShow();
+            me._trigger(events.showDocMap);
+        },
         /**
-         * Shows the Document Map
+         * Hides the Document Map if it is visible
+         *
+         * @function $.forerunner.reportViewer#hideDocMap
+         */
+        hideDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+
+            if (!me.hasDocMap || !docMap)
+                return;
+
+            if (docMap.is(":visible")) {
+                me._hideDocMap();
+            }
+        },
+        /**
+         * Shows the visibility of the Document Map
          *
          * @function $.forerunner.reportViewer#showDocMap
          */
@@ -671,32 +733,10 @@ $(function () {
                 return;
 
             if (docMap.is(":visible")) {
-                docMap.hide();
-                me.element.slideDownShow();
+                me._hideDocMap();
                 return;
             }
-            
-            docMap.reportDocumentMap({ reportViewer: me });
-
-            //get the doc map
-            if (!me.docMapData){        
-                $.ajax({
-                    url: me.options.reportViewerAPI + "/DocMapJSON/",
-                    data: {
-                        SessionID: me.sessionID,
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        me.docMapData = data;
-                        docMap.reportDocumentMap("write",data); 
-                    },
-                    fail: function () { alert("Fail"); }
-                });                
-            }
-            me.element.hide();
-            docMap.slideUpShow();
-            
+            me._showDocMap();
             
             //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
 
@@ -939,10 +979,7 @@ $(function () {
             }).done(function (data) {
                 me.backupCurPage();
                 me._loadPage(data.NewPage, false, docMapID);
-                if (me.options.docMapArea)
-                    me.options.docMapArea.fadeOut();
- 
-                
+                me.hideDocMap();
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -4138,6 +4175,11 @@ $(function () {
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js
+/**
+ * @file Contains the parameter widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -4148,7 +4190,18 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-
+    /**
+     * report parameter widget used with the reportViewer
+     *
+     * @namespace $.forerunner.reportParameter
+     * @prop {object} options - The options for report parameter
+     * @prop {Object} options.$reportViewer - The report viewer widget
+     * @example
+     * $paramArea.reportParameter({ $reportViewer: this });
+     * $("#paramArea").reportParameter({
+     *  $reportViewer: $viewer
+	 * });    
+     */
     $.widget(widgets.getFullname(widgets.reportParameter), {
         options: {
             $reportViewer: null,
@@ -4181,10 +4234,15 @@ $(function () {
 
             me._formInit = true;
         },
-        writeParameterPanel: function(data, rs, pageNum, loadOnly) {
+        /**
+         * @function $.forerunner.reportParameter#writeParameterPanel
+         * @Generate parameter html code and append to the dom tree
+         * @param {String} data - original data get from server client
+         */
+        writeParameterPanel: function (data, rs, pageNum, loadOnly) {
             var me = this;
             me.options.pageNum = pageNum;
-            me._paramCount = parseInt(data.Count,10);
+            me._paramCount = parseInt(data.Count, 10);
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
 
@@ -4566,6 +4624,10 @@ $(function () {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
+        /**
+         * @function $.forerunner.reportParameter#getParamList
+         * @generate parameter list base on the user input and return
+         */
         getParamsList: function() {
             var me = this;
             var i;
@@ -4652,6 +4714,10 @@ $(function () {
                 $(obj).width(max);
             });
         },
+        /**
+        * @function $.forerunner.reportParameter#resetValidateMessage
+        * @customize jquery.validate message
+        */
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
@@ -4673,6 +4739,10 @@ $(function () {
                 min: $.validator.format(error.min)
             });
         },
+        /**
+        * @function $.forerunner.reportParameter#removeParameter
+        * @remove parameter element form the dom tree
+        */
         removeParameter: function () {
             var me = this;
             me._formInit = false;
@@ -4708,24 +4778,45 @@ $(function () {
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportDocumentMap.js
+/**
+ * @file Contains the document map widget.
+ *
+ */
+
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
+/**
+     * documenet map widget used with the reportViewer
+     *
+     * @namespace $.forerunner.reportDocumentMap
+     * @prop {object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
 
     $.widget(widgets.getFullname(widgets.reportDocumentMap), {
         options: {
-            reportViewer: null,
+            $reportViewer: null,
         },
         _create: function () {
         },
         _init: function () {
                
         },
+        /**
+        * @function $.forerunner.reportDocumentMap#write
+        * @Generate document map html code and append to the dom tree
+        * @param {String} docMapData - original data get from server client
+        */
         write: function(docMapData) {
             var me = this;
             this.element.html("");
@@ -4769,7 +4860,7 @@ $(function () {
             var $mapNode = new $("<A />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
-                me.options.reportViewer.navigateDocumentMap(e.data.UniqueName);
+                me.options.$reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
             $mapNode.hover(function () { $mapNode.addClass("fr-docmap-item-highlight"); }, function () { $mapNode.removeClass("fr-docmap-item-highlight"); });
             $docMap.append($mapNode);

@@ -1,21 +1,42 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the document map widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
+/**
+     * documenet map widget used with the reportViewer
+     *
+     * @namespace $.forerunner.reportDocumentMap
+     * @prop {object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
 
     $.widget(widgets.getFullname(widgets.reportDocumentMap), {
         options: {
-            reportViewer: null,
+            $reportViewer: null,
         },
         _create: function () {
         },
         _init: function () {
                
         },
+        /**
+        * @function $.forerunner.reportDocumentMap#write
+        * @Generate document map html code and append to the dom tree
+        * @param {String} docMapData - original data get from server client
+        */
         write: function(docMapData) {
             var me = this;
             this.element.html("");
@@ -59,7 +80,7 @@ $(function () {
             var $mapNode = new $("<A />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
-                me.options.reportViewer.navigateDocumentMap(e.data.UniqueName);
+                me.options.$reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
             $mapNode.hover(function () { $mapNode.addClass("fr-docmap-item-highlight"); }, function () { $mapNode.removeClass("fr-docmap-item-highlight"); });
             $docMap.append($mapNode);

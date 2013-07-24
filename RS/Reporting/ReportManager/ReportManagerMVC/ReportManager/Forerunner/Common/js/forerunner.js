@@ -161,6 +161,16 @@ $(function () {
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
 
             /** @constant */
+            showDocMap: "showDocMap",
+            /** widget + event, lowercase */
+            reportViewerShowDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showDocMap).toLowerCase(); },
+
+            /** @constant */
+            hideDocMap: "hideDocMap",
+            /** widget + event, lowercase */
+            reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },

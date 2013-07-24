@@ -4,23 +4,21 @@ This file was created by NSISDialogDesigner 1.1.2.0
 http://coolsoft.altervista.org/nsisdialogdesigner
 Do not edit manually!
 -->
-<Dialog Name="ApplicationConfig" Title="Dialog title..." Subtitle="Dialog subtitle..." Style="none" ExStyle="none">
-  <GroupBox Name="ApplicationConfig" Location="42, 2" Size="355, 236" Text="Application Config" TabIndex="0" Style="none" ExStyle="none">
-    <Label Name="WSUrlLabel" Location="18, 24" Size="100, 17" Text="Web Service Url:" TabIndex="0" Style="none" ExStyle="none" />
-    <TextBox Name="WSUrl" Location="124, 21" Size="213, 20" TabIndex="1" Style="none" ExStyle="none" />
-    <Label Name="DomainLabel" Location="18, 47" Size="86, 17" Text="Domain:" TabIndex="2" Style="none" ExStyle="none" />
-    <TextBox Name="Domain" Location="124, 46" Size="213, 20" TabIndex="3" Style="none" ExStyle="none" />
-    <Label Name="AccountLabel" Location="18, 73" Size="100, 17" Text="Account:" TabIndex="4" Style="none" ExStyle="none" />
-    <TextBox Name="Account" Location="124, 72" Size="213, 20" TabIndex="5" Style="none" ExStyle="none" />
-    <Label Name="PasswordLabel" Location="18, 99" Size="100, 17" Text="Password:" TabIndex="6" Style="none" ExStyle="none" />
-    <TextBox Name="Password" Location="124, 98" Size="213, 20" TabIndex="7" Style="none" ExStyle="none" />
-    <Label Name="DBSourceLabel" Location="18, 128" Size="100, 17" Text="Data Source:" TabIndex="8" Style="none" ExStyle="none" />
-    <Label Name="DatabaseLabel" Location="18, 153" Size="100, 17" Text="Database:" TabIndex="9" Style="none" ExStyle="none" />
-    <Label Name="Label3" Location="18, 178" Size="100, 20" Text="DB Account:" TabIndex="10" Style="none" ExStyle="none" />
-    <Label Name="Label4" Location="18, 204" Size="100, 16" Text="DB Password:" TabIndex="11" Style="none" ExStyle="none" />
-    <TextBox Name="DataSource" Location="124, 125" Size="213, 20" TabIndex="12" Style="none" ExStyle="none" />
-    <TextBox Name="Database" Location="124, 150" Size="213, 20" TabIndex="13" Style="none" ExStyle="none" />
-    <TextBox Name="DBAccount" Location="124, 173" Size="213, 20" TabIndex="14" Style="none" ExStyle="none" />
-    <TextBox Name="DBPassword" Location="124, 199" Size="213, 20" TabIndex="15" Style="none" ExStyle="none" />
-  </GroupBox>
+<Dialog Name="ApplicationConfig" Title="Report Manager Application Configuration" Subtitle="Please fill this form to configure the report manager application" Style="none" ExStyle="none">
+  <Label Name="WSUrlLabel" Location="10, 8" Size="100, 17" Text="Web Service Url:" TabIndex="0" Style="none" ExStyle="none" />
+  <TextBox Name="WSUrl" Location="116, 5" Size="322, 20" TabIndex="1" Style="none" ExStyle="none" />
+  <Label Name="DomainLabel" Location="10, 31" Size="86, 17" Text="Domain:" TabIndex="2" Style="none" ExStyle="none" />
+  <TextBox Name="Domain" Location="116, 30" Size="322, 20" TabIndex="3" Style="none" ExStyle="none" />
+  <Label Name="AccountLabel" Location="10, 57" Size="100, 17" Text="Account:" TabIndex="4" Style="none" ExStyle="none" />
+  <TextBox Name="Account" Location="116, 56" Size="322, 20" TabIndex="5" Style="none" ExStyle="none" />
+  <Label Name="PasswordLabel" Location="10, 83" Size="100, 17" Text="Password:" TabIndex="6" Style="none" ExStyle="none" />
+  <TextBox Name="Password" Location="116, 82" Size="322, 20" TabIndex="7" Style="none" ExStyle="none" />
+  <Label Name="DBSourceLabel" Location="10, 112" Size="100, 17" Text="Data Source:" TabIndex="8" Style="none" ExStyle="none" />
+  <Label Name="DatabaseLabel" Location="10, 137" Size="100, 17" Text="Database:" TabIndex="9" Style="none" ExStyle="none" />
+  <Label Name="DBAccountLabel" Location="10, 162" Size="100, 20" Text="DB Account:" TabIndex="10" Style="none" ExStyle="none" />
+  <Label Name="DBPasswordLabel" Location="10, 188" Size="100, 16" Text="DB Password:" TabIndex="11" Style="none" ExStyle="none" />
+  <TextBox Name="DataSource" Location="116, 109" Size="322, 20" TabIndex="12" Style="none" ExStyle="none" />
+  <TextBox Name="Database" Location="116, 134" Size="322, 20" TabIndex="13" Style="none" ExStyle="none" />
+  <TextBox Name="DBAccount" Location="116, 157" Size="322, 20" TabIndex="14" Style="none" ExStyle="none" />
+  <TextBox Name="DBPassword" Location="116, 183" Size="322, 20" TabIndex="15" Style="none" ExStyle="none" />
 </Dialog>

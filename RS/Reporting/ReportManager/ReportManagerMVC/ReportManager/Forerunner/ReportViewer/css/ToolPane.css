@@ -22,7 +22,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   border-width:0px;
   vertical-align: top;
   border-radius: 2px;
-  margin:1px;
+  padding:1px;
   line-height:36px;
   color: white;
   display:inline-block;

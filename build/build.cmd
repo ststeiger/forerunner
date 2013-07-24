@@ -32,6 +32,11 @@ echo USERPROFILE [%USERPROFILE%] >> %BUILD_LOG%
 echo HOMEDRIVE [%HOMEDRIVE%] >> %BUILD_LOG%
 echo HOMEPATH [%HOMEPATH%] >> %BUILD_LOG%
 echo HOME [%HOME%] >> %BUILD_LOG%
+echo SPSITE [%SPSITE%] >> %BUILD_LOG%
+echo SPRELEASE [%SPRELEASE%] >> %BUILD_LOG%
+set SPBUILD_RELEASE=%SPRELEASE%/%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
+set SPBUILD_URL=%SPSITE%/%SPBUILD_RELEASE%
+set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
@@ -70,11 +75,13 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %BUILD_RELEASE%. See %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
+%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE% "%SPBUILD_RELEASE%"
+call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %SPBUILD_URL%. See build.log for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 0
 
 
 :Error
 echo The Build Failed. >> %BUILD_LOG%
-call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
+%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE% "%SPBUILD_RELEASE%"
+call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %SPBUILD_URL%/build.log or %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 1

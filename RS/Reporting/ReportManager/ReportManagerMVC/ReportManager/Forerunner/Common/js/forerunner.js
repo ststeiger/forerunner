@@ -193,7 +193,22 @@ $(function () {
             toggle: "toggle",
             bookmark: "bookmark",
             drillThrough: "drillthrough",
-            docMap: "documentMap",
+            docMap: "documentMap"
+        },
+        /**
+         * Export type used in the REST end point ExportReport
+         *
+         * @readonly
+         * @enum {String}
+         */
+        exportType: {
+            xml: "XML",
+            csv: "CSV",
+            pdf: "PDF",
+            mhtml: "MHTML",
+            excel: "EXCELOPENXML",
+            tiff: "IMAGE",
+            word: "WORDOPENXML"
         },
     };
 
@@ -209,6 +224,11 @@ $(function () {
          * @member
          */
         forerunnerFolder: "../forerunner",
+        /**
+         * Base path to the REST api controlers
+         *
+         * @member
+         */
         forerunnerAPIBase: "../api/",
     };
     /**

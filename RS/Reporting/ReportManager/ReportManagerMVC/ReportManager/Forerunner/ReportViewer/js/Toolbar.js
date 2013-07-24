@@ -7,10 +7,12 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
+    // Useful namespaces
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var exportType = forerunner.ssr.constants.exportType;
 
     // Tool Info data
     var btnReportBack = {
@@ -101,12 +103,12 @@ $(function () {
     };
     var btnPageOf = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-pageOf",
+        selectorClass: "fr-toolbar-pageOf",
         text: locData.toolbar.pageOf
     };
     var btnNumPages = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-num-pages",
+        selectorClass: "fr-toolbar-numPages",
         text: "0"
     };
     var btnNext = {
@@ -146,7 +148,7 @@ $(function () {
     };
     var btnKeyword = {
         toolType: toolTypes.input,
-        selectorClass: "fr-textbox-keyword",
+        selectorClass: "fr-toolbar-keyword-textbox",
         events: {
             keypress: function (e) {
                 if (e.keyCode === 13) {
@@ -156,47 +158,120 @@ $(function () {
         }
     };
     var btnFind = {
-        toolType: toolTypes.plainText,
+        toolType: toolTypes.textButton,
         selectorClass: "fr-button-find",
         text: locData.toolbar.find,
         events: {
             click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
+                var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
                 e.data.$reportViewer.reportViewer("find", value);
             }
         }
     };
     var btnSeparator = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-span-sparator",
+        selectorClass: "fr-toolbar-span-sparator",
         text: "|&nbsp"
     };
     var btnFindNext = {
-        toolType: toolTypes.plainText,
+        toolType: toolTypes.textButton,
         selectorClass: "fr-button-findnext",
         text: locData.toolbar.next,
         events: {
             click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-textbox-keyword").val());
+                var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
                 e.data.$reportViewer.reportViewer("findNext", value);
             }
         }
     };
     var btnSeparator2 = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-span-sparator",
+        toolType: toolTypes.textButton,
+        selectorClass: "fr-toolbar-span-sparator",
         text: "|&nbsp"
     };
-    var btnExport = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-button-export",
-        //imageClass: "fr-image-export",
-        text: locData.toolbar.exportMenu,
+    var btnExportXML = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.xml,
+        selectorClass: "fr-button-ExportXML",
+        dropdownItem: true,
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("showExport");
+                e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
             }
         }
+    };
+    var btnExportCSV = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.csv,
+        selectorClass: "fr-button-ExportCSV",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
+            }
+        }
+    };
+    var btnExportPDF = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.pdf,
+        selectorClass: "fr-button-ExportPDF",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
+            }
+        }
+    };
+    var btnExportMHTML = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.mhtml,
+        selectorClass: "fr-button-ExportMHTML",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+            }
+        }
+    };
+    var btnExportExcel = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.excel,
+        selectorClass: "fr-button-ExportExcel",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+            }
+        }
+    };
+    var btnExportTiff = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.tiff,
+        selectorClass: "fr-button-ExportTiff",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
+            }
+        }
+    };
+    var btnExportWord = {
+        toolType: toolTypes.textButton,
+        text: locData.exportType.word,
+        selectorClass: "fr-button-ExportWord",
+        dropdownItem: true,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.word);
+            }
+        }
+    };
+    var btnExport = {
+        toolType: toolTypes.textButton,
+        text: locData.toolbar.exportMenu,
+        selectorClass: "fr-button-export",
+        dropdown: true,
+        tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
     var btnFindGroup = {
         toolType: toolTypes.toolGroup,
@@ -270,7 +345,7 @@ $(function () {
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
 
-            me.element.find(".fr-num-pages").html(maxPage);
+            me.element.find(".fr-toolbar-numPages").html(maxPage);
             me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
@@ -298,7 +373,7 @@ $(function () {
         },
         _clearBtnStates: function () {
             var me = this;
-            me.element.find(".fr-textbox-keyword").val("");
+            me.element.find(".fr-toolbar-keyword-textbox").val("");
         },
         _destroy: function () {
         },

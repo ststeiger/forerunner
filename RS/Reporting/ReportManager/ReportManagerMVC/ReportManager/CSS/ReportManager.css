@@ -141,11 +141,11 @@ footer#bottomdiv {
 
 #rightheader .fr-button-home, #rightheader .fr-button-nav, #rightheader .fr-button-refresh, #rightheader .fr-button-firstpage, #rightheader .fr-button-prev, 
 #rightheader .fr-button-next, #rightheader .fr-button-update-fav, #rightheader .fr-button-export, #rightheader .fr-toolbar-reportpage-textbox,
-#rightheader .fr-pageOf, #rightheader .fr-num-pages {
+#rightheader .fr-toolbar-pageOf, #rightheader .fr-toolbar-numPages {
   display: none;
 }
-#rightheader .fr-button-lastpage, #rightheader .fr-button-documentmap, #rightheader .fr-textbox-keyword, #rightheader .fr-button-find, #rightheader .fr-span-find, 
-#rightheader .fr-button-findnext, #rightheader .fr-span-sparator, #rightheader .fr-button-menu {
+#rightheader .fr-button-lastpage, #rightheader .fr-button-documentmap, #rightheader .fr-toolbar-keyword-textbox, #rightheader .fr-button-find, #rightheader .fr-span-find, 
+#rightheader .fr-button-findnext, #rightheader .fr-toolbar-span-sparator, #rightheader .fr-button-menu {
   display: none;
 }
 
@@ -164,11 +164,11 @@ footer#bottomdiv {
 
 #leftheader .fr-button-home, #leftheader .fr-button-nav, #leftheader .fr-button-refresh, #leftheader .fr-button-firstpage, #leftheader .fr-button-prev, 
 #leftheader .fr-button-next, #leftheader .fr-button-update-fav, #leftheader .fr-button-export, #leftheader .fr-toolbar-reportpage-textbox,
-#leftheader .fr-pageOf, #leftheader .fr-num-pages {
+#leftheader .fr-toolbar-pageOf, #leftheader .fr-toolbar-numPages {
   display: none;
 }
-#leftheader .fr-button-lastpage, #leftheader .fr-button-documentmap, #leftheader .fr-textbox-keyword, #leftheader .fr-button-find, #leftheader .fr-span-find, 
-#leftheader .fr-button-findnext, #leftheader .fr-span-sparator, #leftheader .fr-button-reportback, #leftheader .fr-button-paramarea {
+#leftheader .fr-button-lastpage, #leftheader .fr-button-documentmap, #leftheader .fr-toolbar-keyword-textbox, #leftheader .fr-button-find, #leftheader .fr-span-find, 
+#leftheader .fr-button-findnext, #leftheader .fr-toolbar-span-sparator, #leftheader .fr-button-reportback, #leftheader .fr-button-paramarea {
   display: none;
 }
 

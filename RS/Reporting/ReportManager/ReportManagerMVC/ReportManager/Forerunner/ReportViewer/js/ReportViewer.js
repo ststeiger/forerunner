@@ -705,18 +705,6 @@ $(function () {
             me.findKeyword = null;
         },
         /**
-         * Show the Export popup
-         *
-         * @function $.forerunner.reportViewer#showExport
-         */
-        showExport: function () {
-            if ($(".fr-render-export-panel").is(":hidden")) {
-                var $export = $(".fr-button-export").filter(":visible");
-                $(".fr-render-export-panel").css("left", $export.offset().left);
-            }
-            $(".fr-render-export-panel").toggle();
-        },
-        /**
          * Export the report in the given format
          *
          * @function $.forerunner.reportViewer#exportReport
@@ -725,7 +713,6 @@ $(function () {
          */
         exportReport: function (exportType) {
             var me = this;
-            $(".fr-render-export-panel").toggle();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },

@@ -9,10 +9,9 @@
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
 ; LOCAL ADDRESS DEFINE
-!define LOCALROOT "D:\Sql Report\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager"
+!define LOCALROOT "D:\Sql Reporting\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager"
 
-; MUI 1.67 compatible ------
-;!include MUI.nsh
+; MUI2
 !include MUI2.nsh
 
 ; MUI Settings
@@ -22,6 +21,7 @@
 
 !include "ApplicationConfig.nsdinc"
 !include "WebServerConfig.nsdinc"
+!include "RunRegister.nsh"
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -31,8 +31,12 @@
 !insertmacro MUI_PAGE_INSTFILES
 ; Set Application Config page
 Page custom fnc_ApplicationConfig_Show fnc_ApplicationConfig_Leave
+; Update Web.config file
+Page custom fun_ApplicationConfig_RunRegister
 ; Set Web Server Config page
 Page custom fnc_WebServerConfig_Show fnc_WebServerConfig_Leave
+; Run Deploy Script if user choose to config it
+Page custom fun_WebServerConfig_RunRegister
 ; Finish page
 !insertmacro MUI_PAGE_FINISH
 
@@ -73,8 +77,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\EntityFramework.dll"
-  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"
-  File "${LOCALROOT}\CSS\ReportManager.css"
+  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"  
   SetOutPath "$INSTDIR\CSS"
   File "${LOCALROOT}\CSS\ReportManager.css"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
@@ -191,7 +194,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Forerunner-all.js"
   SetOutPath "$INSTDIR\Scripts\App"
   File "${LOCALROOT}\Scripts\App\router.js"
-  ;File "${LOCALROOT}\Scripts\App\configs.js"
   SetOutPath "$INSTDIR\Scripts\Util"
   File "${LOCALROOT}\Scripts\Util\underscore.js"
   File "${LOCALROOT}\Scripts\Util\modernizr-2.5.3.js"
@@ -218,8 +220,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Views\_ViewStart.cshtml"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
-  File "${LOCALROOT}\ReportManagerResigter.exe"
-  CreateShortCut "$DESKTOP\ReportManager.lnk" "$INSTDIR\ReportManagerResigter.exe"
+  File "${LOCALROOT}\ReportManagerRegister.exe"
+  ;CreateShortCut "$DESKTOP\ReportManager.lnk" "$INSTDIR\ReportManagerResigter.exe"
   File "${LOCALROOT}\Readme.txt"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
@@ -241,6 +243,17 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
 SectionEnd
 
+;Detect .Net Framework before install
+Function .onInit
+  Call IsDotNETInstalled
+  Pop $0
+  StrCmp $0 1 found noFound
+  found:
+    Goto +4
+  noFound:
+    MessageBox MB_OK|MB_ICONSTOP ".Net Framework is needed before install report manager"
+    Abort
+FunctionEnd
 
 Function un.onUninstSuccess
   HideWindow
@@ -252,7 +265,60 @@ Function un.onInit
   Abort
 FunctionEnd
 
+Function IsDotNETInstalled
+   Push $0
+   Push $1
+   Push $2
+   Push $3
+   Push $4
+
+   ReadRegStr $4 HKEY_LOCAL_MACHINE \
+     "Software\Microsoft\.NETFramework" "InstallRoot"
+   # 移除退格键
+   Push $4
+   Exch $EXEDIR
+   Exch $EXEDIR
+   Pop $4
+   # 如果根目录不存在则 .NET 未安装
+   IfFileExists $4 0 noDotNET
+
+   StrCpy $0 0
+
+   EnumStart:
+
+     EnumRegKey $2 HKEY_LOCAL_MACHINE \
+       "Software\Microsoft\.NETFramework\Policy"  $0
+     IntOp $0 $0 + 1
+     StrCmp $2 "" noDotNET
+
+     StrCpy $1 0
+
+     EnumPolicy:
+
+       EnumRegValue $3 HKEY_LOCAL_MACHINE \
+         "Software\Microsoft\.NETFramework\Policy\$2" $1
+       IntOp $1 $1 + 1
+        StrCmp $3 "" EnumStart
+         IfFileExists "$4\$2.$3" foundDotNET EnumPolicy
+
+   noDotNET:
+     StrCpy $0 0
+     Goto done
+
+   foundDotNET:
+     StrCpy $0 1
+
+   done:
+     Pop $4
+     Pop $3
+     Pop $2
+     Pop $1
+     Exch $0
+FunctionEnd
+
+
 Section Uninstall
+  Delete "$INSTDIR\config.ini"
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\ForerunnerSetup.ico"
   Delete "$INSTDIR\Global.asax"
@@ -260,6 +326,7 @@ Section Uninstall
   Delete "$INSTDIR\Readme.txt"
   Delete "$INSTDIR\ReportManagerResigter.exe"
   Delete "$INSTDIR\Web.config"
+  Delete "$INSTDIR\CSS\ReportManager.css"
   Delete "$INSTDIR\Views\_ViewStart.cshtml"
   Delete "$INSTDIR\Views\Web.config"
   Delete "$INSTDIR\Views\Shared\_Layout.cshtml"
@@ -278,12 +345,11 @@ Section Uninstall
   Delete "$INSTDIR\Scripts\Util\laconic.js"
   Delete "$INSTDIR\Scripts\Util\modernizr-2.5.3.js"
   Delete "$INSTDIR\Scripts\Util\underscore.js"
-  ;Delete "$INSTDIR\Scripts\App\configs.js"
   Delete "$INSTDIR\Scripts\App\router.js"
   Delete "$INSTDIR\Forerunner\Forerunner-all.js"
   Delete "$INSTDIR\Forerunner\Forerunner-all.min.js"
-  Delete "$INSTDIRForerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
-  Delete "$INSTDIRForerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\js\PageNav.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\js\ReportDocumentMap.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\js\ReportParameter.js"
@@ -293,6 +359,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\js\ReportViewerInitializerBase.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\js\Toolbar.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\js\ToolPane.js"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\ajax-loader1.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Expand.png"
@@ -399,6 +467,7 @@ Section Uninstall
   Delete "$INSTDIR\bin\System.Web.WebPages.dll"
   Delete "$INSTDIR\bin\System.Web.WebPages.Razor.dll"
   Delete "$INSTDIR\bin\WebGrease.dll"
+  Delete "$INSTDIR\ReportManagerRegister.exe"
 
   Delete "$SMPROGRAMS\ReportManager\Uninstall.lnk"
   Delete "$DESKTOP\ReportManager.lnk"
@@ -409,22 +478,33 @@ Section Uninstall
   RMDir "$INSTDIR\Views\Home"
   RMDir "$INSTDIR\Views\Debug"
   RMDir "$INSTDIR\Views"
+  RMDir "$INSTDIR\CSS"
   RMDir "$INSTDIR\Scripts\Views"
   RMDir "$INSTDIR\Scripts\Util"
-  RMDir "$INSTDIR\Script\App"
+  RMDir "$INSTDIR\Scripts\App"
+  RMDir "$INSTDIR\Scripts"
+  RMDir "$INSTDIR\Forerunner\Common"
+  RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Forerunner\ReportViewer\js"
+  RMDir "$INSTDIR\Forerunner\ReportViewer"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Images\Toolbar"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Images"
   RMDir "$INSTDIR\Forerunner\ReportViewer\css"
+  RMDir "$INSTDIR\Forerunner\ReportViewer"
   RMDir "$INSTDIR\Forerunner\ReportExplorer\js"
   RMDir "$INSTDIR\Forerunner\ReportExplorer\images"
   RMDir "$INSTDIR\Forerunner\ReportExplorer\css"
+  RMDir "$INSTDIR\Forerunner\ReportExplorer"
   RMDir "$INSTDIR\Forerunner\Lib\Misc\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\js"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   RMDir "$INSTDIR\Forerunner\Lib\jQuery\css"
+  RMDir "$INSTDIR\Forerunner\Lib\jQuery"
+  RMDir "$INSTDIR\Forerunner\Lib\Misc"
+  RMDir "$INSTDIR\Forerunner\Lib"
   RMDir "$INSTDIR\Forerunner\Common\js"
   RMDir "$INSTDIR\Forerunner\Common\css"
+  RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR"

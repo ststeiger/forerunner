@@ -34,6 +34,17 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "right", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
+    slideUpShow: function (delay) {
+        return this.each(function () {
+            $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
+
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -135,6 +146,11 @@ $(function () {
             reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
 
             /** @constant */
+            drillThrough: "drillThrough",
+            /** widget + event, lowercase */
+            reportViewerDrillThrough: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillThrough).toLowerCase(); },
+
+            /** @constant */
             back: "back",
             /** widget + event, lowercase */
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
@@ -143,6 +159,16 @@ $(function () {
             showNav: "showNav",
             /** widget + event, lowercase */
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
+
+            /** @constant */
+            showDocMap: "showDocMap",
+            /** widget + event, lowercase */
+            reportViewerShowDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showDocMap).toLowerCase(); },
+
+            /** @constant */
+            hideDocMap: "hideDocMap",
+            /** widget + event, lowercase */
+            reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
 
             /** @constant */
             showParamArea: "showparamarea",
@@ -315,9 +341,9 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
-        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 700) */
+        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
-            if ($(window).height() < 700)
+            if ($(window).height() < 768)
                 return true;
             else
                 return false;

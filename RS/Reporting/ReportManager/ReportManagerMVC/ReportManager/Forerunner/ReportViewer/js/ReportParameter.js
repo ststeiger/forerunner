@@ -1,4 +1,9 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the parameter widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -8,7 +13,18 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-
+    /**
+     * report parameter widget used with the reportViewer
+     *
+     * @namespace $.forerunner.reportParameter
+     * @prop {object} options - The options for report parameter
+     * @prop {Object} options.$reportViewer - The report viewer widget
+     * @example
+     * $paramArea.reportParameter({ $reportViewer: this });
+     * $("#paramArea").reportParameter({
+     *  $reportViewer: $viewer
+	 * });    
+     */
     $.widget(widgets.getFullname(widgets.reportParameter), {
         options: {
             $reportViewer: null,
@@ -41,10 +57,15 @@ $(function () {
 
             me._formInit = true;
         },
-        writeParameterPanel: function(data, rs, pageNum, loadOnly) {
+        /**
+         * @function $.forerunner.reportParameter#writeParameterPanel
+         * @Generate parameter html code and append to the dom tree
+         * @param {String} data - original data get from server client
+         */
+        writeParameterPanel: function (data, rs, pageNum, loadOnly) {
             var me = this;
             me.options.pageNum = pageNum;
-            me._paramCount = parseInt(data.Count,10);
+            me._paramCount = parseInt(data.Count, 10);
             me._defaultValueExist = data.DefaultValueExist;
             me._loadedForDefault = true;
 
@@ -89,6 +110,11 @@ $(function () {
                 me._submitForm();
             else
                 me._trigger(events.render);
+
+            //jquery adds height, remove it
+            var pc = me.element.find("." + paramContainerClass);
+            pc.removeAttr("style"); 
+
 
             me.options.$reportViewer.removeLoadingIndicator();
         },
@@ -421,6 +447,10 @@ $(function () {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
+        /**
+         * @function $.forerunner.reportParameter#getParamList
+         * @generate parameter list base on the user input and return
+         */
         getParamsList: function() {
             var me = this;
             var i;
@@ -507,6 +537,10 @@ $(function () {
                 $(obj).width(max);
             });
         },
+        /**
+        * @function $.forerunner.reportParameter#resetValidateMessage
+        * @customize jquery.validate message
+        */
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
@@ -528,6 +562,10 @@ $(function () {
                 min: $.validator.format(error.min)
             });
         },
+        /**
+        * @function $.forerunner.reportParameter#removeParameter
+        * @remove parameter element form the dom tree
+        */
         removeParameter: function () {
             var me = this;
             me._formInit = false;

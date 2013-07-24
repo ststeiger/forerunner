@@ -26,11 +26,14 @@ g_App.AppPageView.prototype = {
         $('#leftPaneContent').on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
         $('#rightPaneContent').on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
         $('#FRReportViewer1').on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
+        $('#FRReportViewer1').on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
         $(window).resize(function () {
+            $('#mainViewPort').css({ height: '100%' });
             $('#leftPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
             $('#rightPane').css({ height: Math.max($(window).height(), $('#mainViewPort').height()) });
             $('#leftPaneContent').css({ height: '100%' });
             $('#rightPaneContent').css({ height: '100%' });
+            //$('.fr-docmap-panel').css({ height: '100%' });
             $('.fr-param-container').css({ height: $('#rightPane').height() - 45 });
         });
     },

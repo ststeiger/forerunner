@@ -2,7 +2,7 @@
 <RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Northwind">
   <ConnectionProperties>
     <Extension>SQL</Extension>
-    <ConnectString>Data Source=localhost;Initial Catalog=NORTHWND</ConnectString>
+    <ConnectString>Data Source=forerunner-sql2012;Initial Catalog=NORTHWND</ConnectString>
   </ConnectionProperties>
   <DataSourceID>963fc5e4-3092-4b67-a92c-1327c646dfc7</DataSourceID>
 </RptDataSource>

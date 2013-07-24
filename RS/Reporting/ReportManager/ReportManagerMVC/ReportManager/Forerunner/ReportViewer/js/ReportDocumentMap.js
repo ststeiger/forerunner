@@ -1,45 +1,56 @@
-﻿// Assign or create the single globally scoped variable
+﻿/**
+ * @file Contains the document map widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
+/**
+     * documenet map widget used with the reportViewer
+     *
+     * @namespace $.forerunner.reportDocumentMap
+     * @prop {object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
 
     $.widget(widgets.getFullname(widgets.reportDocumentMap), {
         options: {
-            reportViewer: null,
+            $reportViewer: null,
         },
         _create: function () {
-                this.element = $("<div class='fr-docmap-panel'><div class='fr-docmap-border'><table class='fr-docmap-table'>" +
-                "<tr><td nowrap><div class='fr-docmap-header'><div class='fr-docmap-bar'> Document Map </div></div></td></tr>" +
-                "<tr><td class='fr-docmap-content-cell'><div class='fr-docmap-item-container'></div></td></tr></table></div></div>");
-            
-                this.options.reportViewer.$reportContainer.append(this.element);
-                
-                $(".fr-docmap-panel").resizable({
-                    resize: function (event, ui) {
-                        $(".fr-docmap-border").css("width", ui.size.width);
-                        $(".fr-docmap-header").css("width", ui.size.width);
-                        $(".fr-docmap-item-container").css("width", ui.size.width);
-                    }
-                });
-
-                var clientHeight = document.documentElement.clientHeight === 0 ? document.body.clientHeight : document.documentElement.clientHeight;
-                window.onresize = function () { $(".fr-docmap-border").css("height", clientHeight - $(".fr-docmap-panel").offset().top); };
-
-                $(window).scroll(function () { $(".fr-docmap-border").css("top", $(window).scrollTop()); });
-                //trigger the onresize event, fix Compatibility issue in IE and FF
-                $(window).resize();
-                $(".fr-docmap-panel").toggle("fast");
         },
-        writeDocumentMap: function (pageNum) {
+        _init: function () {
+               
+        },
+        /**
+        * @function $.forerunner.reportDocumentMap#write
+        * @Generate document map html code and append to the dom tree
+        * @param {String} docMapData - original data get from server client
+        */
+        write: function(docMapData) {
             var me = this;
-            var $cell;
-            $cell = $(".fr-docmap-item-container");
-            $cell.append(me._writeDocumentMapItem(this.options.reportViewer.pages[pageNum].reportObj.Report.DocumentMap, 0));
+            this.element.html("");
+
+            var $docMapPanel = new $("<DIV />");
+            var $docMapContainer = new $("<DIV />");
+            $docMapPanel.addClass("fr-docmap-panel");
+            $docMapContainer.addClass("fr-docmap-item-container");
+
+            $docMapPanel.append($docMapContainer);
+            $docMapContainer.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
+            me.element.append($docMapPanel);
         },
+
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<DIV />");
@@ -69,7 +80,7 @@ $(function () {
             var $mapNode = new $("<A />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
-                me.options.reportViewer.navigateDocumentMap(e.data.UniqueName);
+                me.options.$reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
             $mapNode.hover(function () { $mapNode.addClass("fr-docmap-item-highlight"); }, function () { $mapNode.removeClass("fr-docmap-item-highlight"); });
             $docMap.append($mapNode);

@@ -52,7 +52,7 @@ namespace Forerunner.SSRS.Viewer
                 if (Ex.Name == "ForerunnerJSON")
                     this.ServerRendering = true;
             }
-
+            //this.ServerRendering = false;
 
         }
         public void SetCredentials(Credentials Credentials)
@@ -240,9 +240,12 @@ namespace Forerunner.SSRS.Viewer
         }
         public string GetDocMapJson(string SessionID)
         {
-           ExecutionInfo execInfo = new ExecutionInfo();
+           
             try
             {
+                ExecutionHeader execHeader = new ExecutionHeader();
+                rs.ExecutionHeaderValue = execHeader;
+
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 return JsonUtility.GetDocMapJSON(rs.GetDocumentMap());
 

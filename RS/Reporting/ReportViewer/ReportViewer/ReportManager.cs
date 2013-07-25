@@ -367,18 +367,32 @@ namespace Forerunner.SSRS.Manager
 
         public byte[] GetCatalogImage(string path)
         {
-            byte[] retval = null;
-            retval = GetDBImage(path);
-            if (retval == null)
+            string execute = "Execute";
+            bool havePermission = false;
+            foreach (string permission in rs.GetPermissions(path))
             {
-                ThreadPool.QueueUserWorkItem(this.GetThumbnail, HttpUtility.UrlDecode(path));
-                //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
-                //t.Start(path);
-                //t.Join();                    
+                if (execute.Equals(permission, StringComparison.OrdinalIgnoreCase))
+                {
+                    havePermission = true;
+                    break;
+                }                
             }
-            return retval;
 
+            if (havePermission)
+            {
+                byte[] retval = null;
+                retval = GetDBImage(path);
+                if (retval == null)
+                {
+                    ThreadPool.QueueUserWorkItem(this.GetThumbnail, HttpUtility.UrlDecode(path));
+                    //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
+                    //t.Start(path);
+                    //t.Join();                    
+                }
+                return retval;
+            }
 
+            return null;
         }
 
         private void GetThumbnail(object path)

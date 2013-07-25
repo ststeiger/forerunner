@@ -10,7 +10,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData( forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var exportType = forerunner.ssr.constants.exportType;
 
     // Tool Info data
     var itemNav = {
@@ -132,6 +133,107 @@ $(function () {
             }
         }
     };
+    //
+    // Export group
+    var itemExportXML = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.xml,
+        selectorClass: "fr-item-exportXML",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
+            }
+        }
+    };
+    var itemExportCSV = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.csv,
+        selectorClass: "fr-item-exportCSV",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
+            }
+        }
+    };
+    var itemExportPDF = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.pdf,
+        selectorClass: "fr-item-exportPDF",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
+            }
+        }
+    };
+    var itemExportMHTML = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.mhtml,
+        selectorClass: "fr-item-exportMHTML",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+            }
+        }
+    };
+    var itemExportExcel = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.excel,
+        selectorClass: "fr-item-exportExcel",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+            }
+        }
+    };
+    var itemExportTiff = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.tiff,
+        selectorClass: "fr-item-exportTiff",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
+            }
+        }
+    };
+    var itemExportWord = {
+        toolType: toolTypes.containerItem,
+        text: locData.exportType.word,
+        selectorClass: "fr-item-exportWord",
+        indent: 1,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("exportReport", exportType.word);
+            }
+        }
+    };
+    var itemExportGroup = {
+        toolType: toolTypes.toolGroup,
+        visible: false,
+        selectorClass: "fr-item-export-group",
+        tools: [itemExportXML, itemExportCSV, itemExportPDF, itemExportMHTML, itemExportExcel, itemExportTiff, itemExportWord]
+    };
+    var itemExport = {
+        toolType: toolTypes.containerItem,
+        text: locData.toolbar.exportMenu,
+        selectorClass: "fr-item-export",
+        accordionGroup: itemExportGroup,
+        events: {
+            click: function (e) {
+                var toolInfo = e.data.me.allTools["fr-item-export"];
+                var accordionGroup = toolInfo.accordionGroup;
+                var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                $accordionGroup.toggle();
+            }
+        }
+    };
+    //
+    // Find group
     var itemKeyword = {
         toolType: toolTypes.input,
         selectorClass: "fr-item-textbox-keyword",
@@ -228,7 +330,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap, itemExport, itemExportGroup, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();

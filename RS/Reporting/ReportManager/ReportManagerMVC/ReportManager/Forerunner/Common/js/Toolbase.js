@@ -107,12 +107,16 @@ $(function () {
                 me._addChildTools($tool, 1, enabled, toolInfo.tools);      // Add the children of a tool group
             }
 
-            if (toolInfo.dropdownItem) {
-                $tool.addClass('fr-toolbase-dropdown-item');
+            if (toolInfo.sharedClass) {
+                $tool.addClass(toolInfo.sharedClass);
             }
 
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
+            }
+
+            if (toolInfo.visible === false) {
+                $tool.hide();
             }
         },
         _createDropdown: function($tool, toolInfo) {
@@ -254,10 +258,22 @@ $(function () {
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);
                 }
-                return "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-toolbase-icon " + toolInfo.imageClass + "' />" +
+                var imageClass = "";
+                if (toolInfo.imageClass) {
+                    imageClass = toolInfo.imageClass;
+                }
+                var indentation = "";
+                if (toolInfo.indent) {
+                    for (var i = 0; i < toolInfo.indent; i++) {
+                        indentation = indentation + "<div class='fr-toolbase-icon'></div>";
+                    }
+                }
+                var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                            "<div class='fr-toolbase-icon " + imageClass + "'></div>" +
+                            indentation +
                             text +
-                        "</div>";
+                            "</div>";
+                return html;
             }
             else if (toolInfo.toolType === toolTypes.toolGroup) {
                 return "<div class='fr-toolbase-groupcontainer " + toolInfo.selectorClass + "'></div>";

@@ -184,16 +184,18 @@ $(function () {
             }
         }
     };
-    var btnSeparator2 = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-span-sparator",
-        text: "|&nbsp"
+    var btnFindGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-toolbar-findgroup-id",
+        tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
     };
+    //
+    // Export tools
     var btnExportXML = {
         toolType: toolTypes.textButton,
         text: locData.exportType.xml,
-        selectorClass: "fr-button-ExportXML",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportXML",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -203,8 +205,8 @@ $(function () {
     var btnExportCSV = {
         toolType: toolTypes.textButton,
         text: locData.exportType.csv,
-        selectorClass: "fr-button-ExportCSV",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportCSV",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -214,8 +216,8 @@ $(function () {
     var btnExportPDF = {
         toolType: toolTypes.textButton,
         text: locData.exportType.pdf,
-        selectorClass: "fr-button-ExportPDF",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportPDF",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -225,8 +227,8 @@ $(function () {
     var btnExportMHTML = {
         toolType: toolTypes.textButton,
         text: locData.exportType.mhtml,
-        selectorClass: "fr-button-ExportMHTML",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportMHTML",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -236,8 +238,8 @@ $(function () {
     var btnExportExcel = {
         toolType: toolTypes.textButton,
         text: locData.exportType.excel,
-        selectorClass: "fr-button-ExportExcel",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportExcel",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -247,8 +249,8 @@ $(function () {
     var btnExportTiff = {
         toolType: toolTypes.textButton,
         text: locData.exportType.tiff,
-        selectorClass: "fr-button-ExportTiff",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportTiff",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -258,13 +260,18 @@ $(function () {
     var btnExportWord = {
         toolType: toolTypes.textButton,
         text: locData.exportType.word,
-        selectorClass: "fr-button-ExportWord",
-        dropdownItem: true,
+        selectorClass: "fr-button-exportWord",
+        sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.word);
             }
         }
+    };
+    var btnSeparator2 = {
+        toolType: toolTypes.textButton,
+        selectorClass: "fr-toolbar-span-sparator",
+        text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.textButton,
@@ -272,11 +279,6 @@ $(function () {
         selectorClass: "fr-button-export",
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
-    };
-    var btnFindGroup = {
-        toolType: toolTypes.toolGroup,
-        selectorClass: "fr-toolbar-findgroup-id",
-        tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
     };
 
     /**

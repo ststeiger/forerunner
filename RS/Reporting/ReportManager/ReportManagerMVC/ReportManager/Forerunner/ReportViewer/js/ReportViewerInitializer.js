@@ -110,11 +110,16 @@ $(function () {
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
                 $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                //$lefttoolbar.toolbar("hideTools");
+                //$lefttoolbar.toolbar("showTool", "fr-button-menu");
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
                 $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                //$righttoolbar.toolbar("hideTools");
+                //$righttoolbar.toolbar("showTool", "fr-button-menu");
+                //$righttoolbar.toolbar("showTool", "fr-button-reportback");
             }
 
             // Create / render the menu pane

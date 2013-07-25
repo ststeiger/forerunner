@@ -695,8 +695,8 @@ $(function () {
             var me = this;
             var docMap = me.options.docMapArea;
             docMap.hide();
-            me.element.parent().show();
-            me.element.slideDownShow();
+            //me.element.parent().show();
+            me.element.show();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
@@ -721,7 +721,7 @@ $(function () {
                 });
             }
 
-            me.element.parent().hide();
+           // me.element.parent().hide();
             me.element.hide();
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
@@ -794,19 +794,20 @@ $(function () {
                 me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-                me.scrollLeft = action.ScrollLeft;
-                me.scrollTop = action.ScrollTop;
+
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
-                me._loadPage(action.CurrentPage, false, null, null, true);
+                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
+                me.scrollLeft = action.ScrollLeft;
+                me.scrollTop = action.ScrollTop;
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
         /**
-         * Shows the Page Navigation pane
+         * Shows the Page =igation pane
          *
          * @function $.forerunner.reportViewer#showNav
          */
@@ -820,7 +821,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache
@@ -961,7 +962,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: drillthroughID
             }).done(function (data) {
-                me.backupCurPage();
+                me.backupCurPage(true);
                 if (data.Exception)
                     me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
                 else {
@@ -1010,9 +1011,11 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#backupCurPage
          */
-        backupCurPage: function () {
+        backupCurPage: function (flushCache) {
             var me = this;
-            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
+            if (flushCache !== true)
+                flushCache = false
+            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft(), FlushCache: flushCache });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1266,7 +1269,6 @@ $(function () {
                         me._setPage(newPageNum);                        
                         if (!me.element.is(":visible") && !loadOnly)
                             me.element.show(); //scrollto does not work with the slide in functions:(
-                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (flushCache !== true)
@@ -1290,7 +1292,6 @@ $(function () {
                 me._writePage(data, newPageNum, loadOnly);                
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
-                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
                 if (!loadOnly && flushCache !== true)
@@ -1648,35 +1649,55 @@ $(function () {
                 }
             });
         },
+
         /**
-         * Make all tools hidden
-         * @function $.forerunner.toolBase#hideTools
+        * Make tool visible if it was visible before hidden
+        * @function $.forerunner.toolBase#hideTool
+        */
+        showTool: function(selectorClass){
+            var me = this;
+            if (me.allTools[selectorClass]) {
+                var $toolEl = $("." + selectorClass, me.element);
+                if (me.allTools[selectorClass].Display)
+                    $toolEl.fadeIn();
+            }
+        },
+        /**
+        * Make tool hidden and remember if it was visible
+        * @function $.forerunner.toolBase#hideTool
+        */
+        hideTool: function (selectorClass) {
+            var me = this;
+            if (me.allTools[selectorClass]) {
+                var $toolEl = $("." + selectorClass, me.element);
+                me.allTools[selectorClass].Display = $toolEl.is(":visible");
+                $toolEl.fadeOut();
+            }
+        },
+
+        /**
+         * Make all tools hidden and remember which ones where visible
+         * @function $.forerunner.toolBase#hideAllTools
          */
-        hideTools: function (){
+        hideAllTools: function (){
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) {
-                    var $toolEl = $("." + Obj.selectorClass, me.element);
-                    Obj.Display = $toolEl.is(":visible");
-                    $toolEl.fadeOut();
-                }
+                if(Obj.selectorClass)
+                    me.hideTool(Obj.selectorClass)
             });
 
         },
         /**
-         * Make all tools visible
-         * @function $.forerunner.toolBase#showTools
+         * Make all tools visible that where visible before hidden
+         * @function $.forerunner.toolBase#showAllTools
          */
-        showTools: function () {
+        showAllTools: function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) {
-                    var $toolEl = $("." + Obj.selectorClass, me.element);
-                    if (Obj.Display)
-                        $toolEl.fadeIn();
-                }
+                if (Obj.selectorClass) 
+                    me.showTool(Obj.selectorClass)                
             });
 
         },
@@ -5139,7 +5160,7 @@ $(function () {
                 mainViewPort.removeClass(className, delay);
                 topdiv.removeClass(className, delay);
                 forerunner.device.allowZoom(true);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('showTools');
+                $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
             }
         },
         showSlideoutPane: function (isLeftPane) {
@@ -5160,7 +5181,7 @@ $(function () {
                 mainViewPort.addClass(className, delay);
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('hideTools');
+                $('.fr-layout-mainheadersection', me.$container).toolbar('hideAllTools');
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
@@ -5288,11 +5309,16 @@ $(function () {
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
                 $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                //$lefttoolbar.toolbar("hideTools");
+                //$lefttoolbar.toolbar("showTool", "fr-button-menu");
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
                 $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                //$righttoolbar.toolbar("hideTools");
+                //$righttoolbar.toolbar("showTool", "fr-button-menu");
+                //$righttoolbar.toolbar("showTool", "fr-button-reportback");
             }
 
             // Create / render the menu pane

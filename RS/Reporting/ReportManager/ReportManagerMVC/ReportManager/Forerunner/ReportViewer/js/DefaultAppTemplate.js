@@ -180,7 +180,7 @@ $(function () {
                 mainViewPort.removeClass(className, delay);
                 topdiv.removeClass(className, delay);
                 forerunner.device.allowZoom(true);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('showTools');
+                $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
             }
         },
         showSlideoutPane: function (isLeftPane) {
@@ -201,7 +201,7 @@ $(function () {
                 mainViewPort.addClass(className, delay);
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('hideTools');
+                $('.fr-layout-mainheadersection', me.$container).toolbar('hideAllTools');
             }
         },
         toggleSlideoutPane: function (isLeftPane) {

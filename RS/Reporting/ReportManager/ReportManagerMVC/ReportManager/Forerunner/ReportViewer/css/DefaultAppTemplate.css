@@ -114,11 +114,11 @@
 
 .fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-button-nav, .fr-layout-rightheader .fr-button-refresh, .fr-layout-rightheader .fr-button-firstpage, .fr-layout-rightheader .fr-button-prev, 
 .fr-layout-rightheader .fr-button-next, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-button-export, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
-.fr-layout-rightheader .fr-pageOf, .fr-layout-rightheader .fr-num-pages {
+.fr-layout-rightheader .fr-toolbar-pageOf, .fr-layout-rightheader .fr-toolbar-numPages {
   display: none;
 }
-.fr-layout-rightheader .fr-button-lastpage, .fr-layout-rightheader .fr-button-documentmap, .fr-layout-rightheader .fr-textbox-keyword, .fr-layout-rightheader .fr-button-find, .fr-layout-rightheader .fr-span-find, 
-.fr-layout-rightheader .fr-button-findnext, .fr-layout-rightheader .fr-span-sparator, .fr-layout-rightheader .fr-button-menu {
+.fr-layout-rightheader .fr-button-lastpage, .fr-layout-rightheader .fr-button-documentmap, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-button-find, .fr-layout-rightheader .fr-span-find, 
+.fr-layout-rightheader .fr-button-findnext, .fr-layout-rightheader .fr-toolbar-span-sparator, .fr-layout-rightheader .fr-button-menu {
   display: none;
 }
 
@@ -137,11 +137,11 @@
 
 .fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-button-nav, .fr-layout-leftheader .fr-button-refresh, .fr-layout-leftheader .fr-button-firstpage, .fr-layout-leftheader .fr-button-prev, 
 .fr-layout-leftheader .fr-button-next, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-button-export, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
-.fr-layout-leftheader .fr-pageOf, .fr-layout-leftheader .fr-num-pages {
+.fr-layout-leftheader .fr-toolbar-pageOf, .fr-layout-leftheader .fr-toolbar-numPages {
   display: none;
 }
-.fr-layout-leftheader .fr-button-lastpage, .fr-layout-leftheader .fr-button-documentmap, .fr-layout-leftheader .fr-textbox-keyword, .fr-layout-leftheader .fr-button-find, .fr-layout-leftheader .fr-span-find, 
-.fr-layout-leftheader .fr-button-findnext, .fr-layout-leftheader .fr-span-sparator, .fr-layout-leftheader .fr-button-reportback, .fr-layout-leftheader .fr-button-paramarea {
+.fr-layout-leftheader .fr-button-lastpage, .fr-layout-leftheader .fr-button-documentmap, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-button-find, .fr-layout-leftheader .fr-span-find, 
+.fr-layout-leftheader .fr-button-findnext, .fr-layout-leftheader .fr-toolbar-span-sparator, .fr-layout-leftheader .fr-button-reportback, .fr-layout-leftheader .fr-button-paramarea {
   display: none;
 }
 

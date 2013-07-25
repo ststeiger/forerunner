@@ -4,6 +4,7 @@
 ; ========================================================
 
 ; handle variables
+; handle variables
 Var hCtl_WebServerConfig
 Var hCtl_WebServerConfig_ServerTypeLable
 Var hCtl_WebServerConfig_TypeIIS
@@ -15,10 +16,6 @@ Var hCtl_WebServerConfig_SiteNameLabel
 Var hCtl_WebServerConfig_SiteName
 Var hCtl_WebServerConfig_SiteName_State
 
-Var hCtl_WebServerConfig_AddressLabel
-Var hCtl_WebServerConfig_Address
-Var hCtl_WebServerConfig_Address_State
-
 Var hCtl_WebServerConfig_PortLabel
 Var hCtl_WebServerConfig_Port
 Var hCtl_WebServerConfig_Port_State
@@ -27,7 +24,7 @@ Var hCtl_WebServerConfig_Port_State
 ; dialog create function
 Function fnc_WebServerConfig_Create
   
-  ; === Config_Information (type: Dialog) ===
+  ; === WebServerConfig (type: Dialog) ===
   nsDialogs::Create 1018
   Pop $hCtl_WebServerConfig
   ${If} $hCtl_WebServerConfig == error
@@ -56,20 +53,12 @@ Function fnc_WebServerConfig_Create
   ${NSD_CreateText} 76u 32u 207u 12u $hCtl_WebServerConfig_SiteName_State
   Pop $hCtl_WebServerConfig_SiteName
   
-  ; === AddressLabel (type: Label) ===
-  ${NSD_CreateLabel} 9u 56u 62u 13u "IP Address:"
-  Pop $hCtl_WebServerConfig_AddressLabel
-
-  ; === Address (type: Text) ===
-  ${NSD_CreateText} 76u 53u 207u 12u $hCtl_WebServerConfig_Address_State
-  Pop $hCtl_WebServerConfig_Address
-  
   ; === PortLabel (type: Label) ===
-  ${NSD_CreateLabel} 9u 77u 47u 13u "Port:"
+  ${NSD_CreateLabel} 9u 52u 47u 13u "Port:"
   Pop $hCtl_WebServerConfig_PortLabel
   
   ; === Port (type: Text) ===
-  ${NSD_CreateText} 76u 73u 207u 12u $hCtl_WebServerConfig_Port_State
+  ${NSD_CreateText} 76u 51u 207u 12u $hCtl_WebServerConfig_Port_State
   Pop $hCtl_WebServerConfig_Port
   
 FunctionEnd
@@ -77,8 +66,12 @@ FunctionEnd
 
 ; dialog show function
 Function fnc_WebServerConfig_Show
-  Call fnc_WebServerConfig_Create
-  nsDialogs::Show $hCtl_WebServerConfig
+  MessageBox MB_YESNO|MB_ICONQUESTION "Deploy the site to web server now? IIS or UWS server needed, you can set it manually later !" IDYES deploy IDNO noDeploy
+    deploy:
+      Call fnc_WebServerConfig_Create
+      nsDialogs::Show $hCtl_WebServerConfig
+    noDeploy:
+      Abort
 FunctionEnd
 
 Function fnc_WebServerConfig_Leave
@@ -86,7 +79,6 @@ Function fnc_WebServerConfig_Leave
   ${NSd_GetState} $hCtl_WebServerConfig_TypeIIS $hCtl_WebServerConfig_TypeIIS_State
   ${NSd_GetState} $hCtl_WebServerConfig_TypeUWS $hCtl_WebServerConfig_TypeUWS_State
   ${NSd_GetText} $hCtl_WebServerConfig_SiteName $hCtl_WebServerConfig_SiteName_State
-  ${NSd_GetText} $hCtl_WebServerConfig_Address $hCtl_WebServerConfig_Address_State
   ${NSd_GetText} $hCtl_WebServerConfig_Port $hCtl_WebServerConfig_Port_State
 
 FunctionEnd

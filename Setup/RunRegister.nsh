@@ -8,6 +8,10 @@ Function fun_ApplicationConfig_RunRegister
 FunctionEnd
 
 Function fun_WebServerConfig_RunRegister
-  ExecWait '"$INSTDIR\ReportManagerRegister.exe" "WebServerConfig" "$INSTDIR" "$hCtl_WebServerConfig_TypeIIS_State" "$hCtl_WebServerConfig_TypeUWS_State" "$hCtl_WebServerConfig_SiteName_State" "$hCtl_WebServerConfig_Address_State" "$hCtl_WebServerConfig_Port_State"'
+  StrLen $0 $hCtl_WebServerConfig
+  ${If} $0 == 0
+    Abort
+  ${EndIf}
+  ExecWait '"$INSTDIR\ReportManagerRegister.exe" "WebServerConfig" "$INSTDIR" "$hCtl_WebServerConfig_TypeIIS_State" "$hCtl_WebServerConfig_TypeUWS_State" "$hCtl_WebServerConfig_SiteName_State" "$hCtl_WebServerConfig_Port_State"'
 FunctionEnd
 

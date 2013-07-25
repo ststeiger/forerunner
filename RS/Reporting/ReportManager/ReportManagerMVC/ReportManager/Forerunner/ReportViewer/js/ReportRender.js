@@ -461,14 +461,7 @@ $(function () {
         },
         _writeUniqueName: function($item,uniqueName){
             
-            $item.addClass(uniqueName);
-
-
-            //var $un = new $("<DIV/>");
-            //$un.attr("style", "width:0;height:0;");
-            //$un.css("display", "none");
-            //$un.attr("id", uniqueName);
-            //$item.append($un);
+            $item.attr("name",uniqueName);
            
         },
         _getImageURL: function (RS, ImageName) {

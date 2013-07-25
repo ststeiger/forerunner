@@ -39,52 +39,9 @@ var ApplicationRouter = Backbone.Router.extend({
         _selectedItemPath : null,
 
         _transitionToReportManager: function (path, view) {
-            var me = this;
-            var path0 = path;
-            this.appPageView.hideSlideoutPane(true);
-            this.appPageView.hideSlideoutPane(false);
-            forerunner.device.allowZoom(false);
-            $("#footerspacer").hide();
-            //$("#bottomdiv").attr("style", "height:0");
-            $("#bottomdiv").hide();
-            $("#headerspacer").css({height: "38px"});
-            /*if (forerunner.device.isTouch()) {
-                $("#headerspacer").attr("style", "height:35px");
-            }*/
-          
-            $("#mainViewPort").css({ width: "100%", height: "100%"});
-
-            if (!path) 
-                path = "/";
-            if (!view)
-                view = "catalog";
-           
-            var currentSelectedPath = me._selectedItemPath;
-            $("#mainSection").html(null);
-            $("#mainSection").show();
-            $("#docMapSection").hide();
-            $("#mainSection").reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase + "/ReportManager",
-                forerunnerPath: "./forerunner",
-                path: path,
-                view: view,
-                selectedItemPath: currentSelectedPath,
-                navigateTo: me.navigateTo
-            });            
-            var $toolbar = $("#mainSectionHeader");
-            $toolbar.reportExplorerToolbar({ navigateTo: me.navigateTo });
-
-            $("#rightheader").height($("#topdiv").height());
-            $("#leftheader").height($("#topdiv").height());
-            $("#rightheaderspacer").height($("#topdiv").height());
-            $("#leftheaderspacer").height($("#topdiv").height());
-
-            me._selectedItemPath = path0;
+            $("body").reportExplorerEZ("transitionToReportManager", path, view);
             $("html").removeClass("fr-docmap-background");
-            $("body").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");
-            $("body").addClass("fr-Explorer-background");
-
         },
 
         navigateTo: function (action, path) {
@@ -105,59 +62,16 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
-            var me = this;
-            me._selectedItemPath = null;
-
-            forerunner.device.allowZoom(true);
-            $("#footerspacer").addClass("fr-nav-spacer").hide();
-            $("#bottomdiv").addClass("fr-nav-container").hide();
-            $("#headerspacer").attr("style", "height: 38px");
-            if (path !== null) {
-                path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
-            }
-
-            $("#mainViewPort").css({ width: "100%", height: "100%" });
-            //$("#mainViewPort").css({ width: "100%", height: window.innerHeight });
-            //$("#pageSection").css({ width: "100%", height: (window.innerHeight - 38) });
-            
-            $("#mainSection").html(null);
-            var $viewerContainer = new $("<DIV id='FRReportViewer1'/>");
-            $("#mainSection").append($viewerContainer);
-
-            var $viewer = $("#FRReportViewer1");
-            var initializer = new forerunner.ssr.ReportViewerInitializer({
-                $toolbar: $("#mainSectionHeader"),
-                $toolPane: $("#leftPaneContent"),
-                $viewer: $viewer,
-                $nav: $("#bottomdiv"),
-                $paramarea: $("#rightPaneContent"),
-                $lefttoolbar: $("#leftheader"),
-                $righttoolbar: $("#rightheader"),
-                $docMap: $("#docMapSection"),
-                ReportViewerAPI: forerunner.config.forerunnerAPIBase + "/ReportViewer",
-                ReportPath: path,
-                toolbarHeight: me.toolbarHeight,
-                navigateTo: me.navigateTo
-            });
-
-            initializer.render();
-
-            $viewer.on("reportviewerback", function (e, data) {
-                me._selectedItemPath = data.path;
-                me.historyBack();
-            });
-
-            //$("#rightheader").height( $("#topdiv").height());
-            //$("#leftheader").height($("#topdiv").height());
-            $("#rightheaderspacer").height($("#topdiv").height());
-            $("#leftheaderspacer").height($("#topdiv").height());
-            me.appPageView.bindEvents();
-            $("html").addClass("fr-Explorer-background");
-            $("body").addClass("fr-Explorer-background");
+            $("body").reportExplorerEZ("transitionToReportViewer", path);
             $("html").removeClass("fr-Explorer-background");
-            $("body").removeClass("fr-Explorer-background");
+
+            var events = forerunner.ssr.constants.events;
+            $(".fr-layout-reportviewer").on(events.reportViewerShowDocMap(), function (e, data) {
+                $("html").addClass("fr-docmap-background");
+            });
+            $(".fr-layout-reportviewer").on(events.reportViewerHideDocMap(), function (e, data) {
+                $("html").removeClass("fr-docmap-background");
+            });
         },
        
         toolbarHeight : function() {
@@ -168,10 +82,11 @@ var ApplicationRouter = Backbone.Router.extend({
             g_App.router.back();
         },
     
-        initialize : function() {
-            // Create the application page framework; specifically the header, main section and footer.
-            // Then attach it to the page. The application page sections will be shared by all pages.
-            this.appPageView = new g_App.AppPageView().render();
+        initialize: function () {
+            this.explorer = $("body").reportExplorerEZ({
+                navigateTo: this.navigateTo,
+                historyBack: this.historyBack
+            });
         }
     });
 

@@ -10,6 +10,8 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
 
+    var dropdownContainerClass = "fr-toolbase-dropdown-container";
+
     /**
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
      *
@@ -29,8 +31,6 @@ $(function () {
         options: {
             toolClass: null
         },
-
-        allTools: {},
 
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -75,6 +75,8 @@ $(function () {
         },
         _addChildTools: function ($parent, index, enabled, tools) {
             var me = this;
+            me.allTools = me.allTools || {};
+
             var $firstTool = $(me._getToolHtml(tools[0]));
 
             if (index <= 1) {
@@ -89,22 +91,56 @@ $(function () {
                 $child.before($firstTool);
             }
 
-            me.allTools[tools[0].selectorClass] = tools[0];
-            if (tools[0].toolType === toolTypes.toolGroup && tools[0].tools) {
-                me._addChildTools($firstTool, 1, enabled, tools[0].tools);      // Add the children of a tool group
-            }
-
             var $tool = $firstTool;
+            me._addChildTool($tool, tools[0], enabled);
             for (var i = 1; i < tools.length; i++) {
                 var toolInfo = tools[i];
                 $tool.after(me._getToolHtml(toolInfo));
                 $tool = $tool.next();
-                me.allTools[toolInfo.selectorClass] = toolInfo;
-
-                if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
-                    me._addChildTools($tool, 1, enabled, toolInfo.tools);      // Add the children of a tool group
-                }
+                me._addChildTool($tool, toolInfo, enabled);
             }
+        },
+        _addChildTool: function ($tool, toolInfo, enabled) {
+            var me = this;
+            me.allTools[toolInfo.selectorClass] = toolInfo;
+            if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
+                me._addChildTools($tool, 1, enabled, toolInfo.tools);      // Add the children of a tool group
+            }
+
+            if (toolInfo.dropdownItem) {
+                $tool.addClass('fr-toolbase-dropdown-item');
+            }
+
+            if (toolInfo.dropdown) {
+                me._createDropdown($tool, toolInfo);
+            }
+        },
+        _createDropdown: function($tool, toolInfo) {
+            var me = this;
+
+            // Create the dropdown
+            toolInfo.$dropdown = $("<div class='" + dropdownContainerClass + "'/>");
+            toolInfo.$dropdown.toolDropdown({ $reportViewer: me.options.$reportViewer });
+            toolInfo.$dropdown.toolDropdown("addTools", 1, true, toolInfo.tools);
+
+            $tool.append(toolInfo.$dropdown);
+            var $dropdown = $tool.find("." + dropdownContainerClass);
+            var selectorClass = toolInfo.selectorClass;
+
+            // tool click event handler
+            $tool.on("click", { me: me, toolInfo: toolInfo, $tool: $tool }, function (e) {
+                var me = e.data.me;
+                $dropdown.css("left", e.data.$tool.filter(":visible").offset().left);
+                $dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
+                $dropdown.toggle();
+            });
+
+            // dropdown dismiss handler
+            $(document).on("click", function (e) {
+                if ($dropdown.is(":visible") && !$(e.target).hasClass(selectorClass)) {
+                    $dropdown.toggle();
+                }
+            });
         },
         /**
          * Make all tools hidden
@@ -208,7 +244,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='fr-toolbase-textcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -241,7 +277,18 @@ $(function () {
         },
 
         _create: function () {
-           
         },
     });  // $.widget
+
+    // popup widget used with the showDrowpdown method
+    $.widget("frInternal.toolDropdown", $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            toolClass: "fr-toolbase-dropdown"
+        },
+        _init: function () {
+            var me = this;
+            me.element.html("<div class='" + me.options.toolClass + "'/>");
+        },
+    });  // $widget
 });  // function()

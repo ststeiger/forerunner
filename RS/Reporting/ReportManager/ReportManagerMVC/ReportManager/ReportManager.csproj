@@ -163,8 +163,10 @@
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
+    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
+    <Content Include="Forerunner\ReportViewer\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />
     <Content Include="Forerunner\ReportExplorer\images\clock_icon.png" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
@@ -178,13 +180,13 @@
     <Content Include="Forerunner\ReportExplorer\images\star_fav_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
+    <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
     <Content Include="Forerunner\ReportViewer\js\PageNav.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializerBase.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
     <Content Include="Scripts\App\router.js" />
-    <Content Include="Scripts\Views\ReportViewerInitializer.js" />
+    <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
     <Content Include="Forerunner\ReportViewer\css\ToolPane.css" />
     <Content Include="Forerunner\Common\js\forerunner.js" />
@@ -226,7 +228,6 @@
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
     <Content Include="Scripts\Util\underscore.js" />
-    <Content Include="Scripts\Views\appPageView.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -259,6 +260,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\Views\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

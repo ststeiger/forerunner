@@ -10,13 +10,21 @@
   line-height:36px;
   color: white;
 }
-
+.fr-toolbase-textcontainer {
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  margin:1px;
+  display:inline-block;
+  text-align:center;
+  line-height:36px;
+  color: white;
+}
 .fr-toolbase-groupcontainer {
   display:inline-block;
   vertical-align: top;
   line-height:36px;
 }
-
 .fr-toolbase-itemcontainer {
   border-top-width:1px;
   border-top-style:groove;
@@ -26,26 +34,40 @@
   color: white;
   display:block;
 }
-
 .fr-toolbase-state {
   background-color: transparent;
 }
-
 .fr-toolbase-state:hover {
   background-color:darkgrey;
 }
-
 .fr-toolbase-state:active {
   background-color:darkslategrey;
 }
-
 .fr-toolbase-disabled {
   opacity:0.3;
   filter: alpha(opacity='30');
 }
-
 .fr-toolbase-icon {
   width:24px;
   height:24px;
   margin: 5px;
+}
+.fr-toolbase-dropdown-container {
+  display:none;
+  position:absolute;
+  z-index:1;
+}
+.fr-toolbase-dropdown
+{
+  padding:1px;
+  background-color:#FAFAFA;
+  border:1px solid darkgray;
+}
+.fr-toolbase-dropdown-item {
+  display:block;
+  color:#3366CC;
+  text-align:left;
+  border-top-width:1px;
+  border-top-style:groove;
+  border-top-color: darkgray;
 }

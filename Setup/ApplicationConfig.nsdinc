@@ -50,70 +50,71 @@ Function fnc_ApplicationConfig_Create
   !insertmacro MUI_HEADER_TEXT "Report Manager Application Configuration" "Please fill this form to configure the report manager application"
   
   ; === WSUrlLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 5u 66u 10u "Web Service Url:"
+  ${NSD_CreateLabel} 1u 0u 66u 15u "Report Server WebService Url:"
   Pop $hCtl_ApplicationConfig_WSUrlLabel
   
   ; === WSUrl (type: Text) ===
-  ${NSD_CreateText} 76u 3u 211u 11u $hCtl_ApplicationConfig_WSUrl_State
+  ${NSD_CreateText} 76u 3u 211u 12u $hCtl_ApplicationConfig_WSUrl_State
   Pop $hCtl_ApplicationConfig_WSUrl
   
   ; === DomainLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 17u 56u 10u "Domain:"
+  ${NSD_CreateLabel} 1u 20u 56u 10u "User Domain:"
   Pop $hCtl_ApplicationConfig_DomainLabel
   
   ; === Domain (type: Text) ===
-  ${NSD_CreateText} 76u 17u 211u 11u $hCtl_ApplicationConfig_Domain_State
+  ${NSD_CreateText} 76u 19u 211u 12u $hCtl_ApplicationConfig_Domain_State
   Pop $hCtl_ApplicationConfig_Domain
   
   ; === AccountLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 32u 66u 10u "Account:"
+  ${NSD_CreateLabel} 1u 35u 66u 10u "Account:"
   Pop $hCtl_ApplicationConfig_AccountLabel
   
   ; === Account (type: Text) ===
-  ${NSD_CreateText} 76u 32u 211u 11u $hCtl_ApplicationConfig_Account_State
+  ${NSD_CreateText} 76u 34u 211u 12u $hCtl_ApplicationConfig_Account_State
   Pop $hCtl_ApplicationConfig_Account
   
   ; === PasswordLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 47u 66u 10u "Password:"
+  ${NSD_CreateLabel} 1u 51u 66u 10u "Password:"
   Pop $hCtl_ApplicationConfig_PasswordLabel
   
   ; === Password (type: Text) ===
-  ${NSD_CreateText} 76u 46u 211u 11u $hCtl_ApplicationConfig_Password_State
+  ${NSD_CreateText} 76u 50u 211u 12u $hCtl_ApplicationConfig_Password_State
   Pop $hCtl_ApplicationConfig_Password
   
   ; === DBSourceLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 63u 66u 10u "Data Source:"
+  ${NSD_CreateLabel} 1u 65u 66u 19u "Report Server Data Source:"
   Pop $hCtl_ApplicationConfig_DBSourceLabel
   
   ; === DataSource (type: Text) ===
-  ${NSD_CreateText} 76u 61u 211u 11u $hCtl_ApplicationConfig_DataSource_State
+  ${NSD_CreateText} 76u 68u 211u 12u $hCtl_ApplicationConfig_DataSource_State
   Pop $hCtl_ApplicationConfig_DataSource
   
   ; === DatabaseLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 77u 66u 10u "Database:"
+  ${NSD_CreateLabel} 1u 86u 66u 10u "DatabaseName:"
   Pop $hCtl_ApplicationConfig_DatabaseLabel
   
-    ; === Database (type: Text) ===
-  ${NSD_CreateText} 76u 75u 211u 11u $hCtl_ApplicationConfig_Database_State
+  ; === Database (type: Text) ===
+  ${NSD_CreateText} 76u 84u 211u 12u $hCtl_ApplicationConfig_Database_State
   Pop $hCtl_ApplicationConfig_Database
   
   ; === DBAccountLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 91u 66u 11u "DB Account:"
+  ${NSD_CreateLabel} 1u 100u 66u 11u "DB Account:"
   Pop $hCtl_ApplicationConfig_DBAccountLabel
   
   ; === DBAccount (type: Text) ===
-  ${NSD_CreateText} 76u 88u 211u 11u $hCtl_ApplicationConfig_DBAccount_State
+  ${NSD_CreateText} 76u 97u 211u 12u $hCtl_ApplicationConfig_DBAccount_State
   Pop $hCtl_ApplicationConfig_DBAccount
-  
+
   ; === DBPasswordLabel (type: Label) ===
-  ${NSD_CreateLabel} 7u 106u 66u 9u "DB Password:"
+  ${NSD_CreateLabel} 1u 115u 66u 9u "DB Password:"
   Pop $hCtl_ApplicationConfig_DBPasswordLabel
-  
+
   ; === DBPassword (type: Text) ===
-  ${NSD_CreateText} 76u 103u 211u 11u $hCtl_ApplicationConfig_DBPassword_State
+  ${NSD_CreateText} 76u 112u 211u 12u $hCtl_ApplicationConfig_DBPassword_State
   Pop $hCtl_ApplicationConfig_DBPassword
   
 FunctionEnd
+
 
 ; dialog show function
 Function fnc_ApplicationConfig_Show
@@ -131,6 +132,4 @@ Function fnc_ApplicationConfig_Leave
   ${NSD_GetText} $hCtl_ApplicationConfig_Database $hCtl_ApplicationConfig_Database_State
   ${NSD_GetText} $hCtl_ApplicationConfig_DBAccount $hCtl_ApplicationConfig_DBAccount_State
   ${NSD_GetText} $hCtl_ApplicationConfig_DBPassword $hCtl_ApplicationConfig_DBPassword_State
-
 FunctionEnd
-

@@ -85,12 +85,12 @@ $(function () {
     };
     var itemPageOf = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-pageOf",
+        selectorClass: "fr-toolbar-pageOf",
         text: locData.toolPane.pageOf
     };
     var itemNumPages = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-num-pages",
+        selectorClass: "fr-toolbar-numPages",
         text: ""
     };
     var itemNext = {
@@ -236,7 +236,7 @@ $(function () {
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;
-            me.element.find(".fr-num-pages").html(maxPage);
+            me.element.find(".fr-toolbar-numPages").html(maxPage);
             me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
 
             me.options.$reportViewer.reportViewer("getNumPages", curPage);

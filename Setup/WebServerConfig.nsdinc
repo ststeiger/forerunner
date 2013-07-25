@@ -23,10 +23,11 @@ Var hCtl_WebServerConfig_PortLabel
 Var hCtl_WebServerConfig_Port
 Var hCtl_WebServerConfig_Port_State
 
+
 ; dialog create function
 Function fnc_WebServerConfig_Create
   
-  ; === WebServerConfig (type: Dialog) ===
+  ; === Config_Information (type: Dialog) ===
   nsDialogs::Create 1018
   Pop $hCtl_WebServerConfig
   ${If} $hCtl_WebServerConfig == error
@@ -52,15 +53,15 @@ Function fnc_WebServerConfig_Create
   Pop $hCtl_WebServerConfig_SiteNameLabel
   
   ; === SiteName (type: Text) ===
-  ${NSD_CreateText} 76u 32u 207u 11u $hCtl_WebServerConfig_SiteName_State
+  ${NSD_CreateText} 76u 32u 207u 12u $hCtl_WebServerConfig_SiteName_State
   Pop $hCtl_WebServerConfig_SiteName
   
   ; === AddressLabel (type: Label) ===
-  ${NSD_CreateLabel} 9u 55u 47u 13u "Address:"
+  ${NSD_CreateLabel} 9u 56u 62u 13u "IP Address:"
   Pop $hCtl_WebServerConfig_AddressLabel
-  
-    ; === Address (type: Text) ===
-  ${NSD_CreateText} 76u 53u 207u 11u $hCtl_WebServerConfig_Address_State
+
+  ; === Address (type: Text) ===
+  ${NSD_CreateText} 76u 53u 207u 12u $hCtl_WebServerConfig_Address_State
   Pop $hCtl_WebServerConfig_Address
   
   ; === PortLabel (type: Label) ===
@@ -68,7 +69,7 @@ Function fnc_WebServerConfig_Create
   Pop $hCtl_WebServerConfig_PortLabel
   
   ; === Port (type: Text) ===
-  ${NSD_CreateText} 76u 73u 207u 11u $hCtl_WebServerConfig_Port_State
+  ${NSD_CreateText} 76u 73u 207u 12u $hCtl_WebServerConfig_Port_State
   Pop $hCtl_WebServerConfig_Port
   
 FunctionEnd
@@ -89,4 +90,3 @@ Function fnc_WebServerConfig_Leave
   ${NSd_GetText} $hCtl_WebServerConfig_Port $hCtl_WebServerConfig_Port_State
 
 FunctionEnd
-

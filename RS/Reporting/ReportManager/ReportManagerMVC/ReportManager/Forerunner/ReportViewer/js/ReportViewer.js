@@ -90,6 +90,8 @@ $(function () {
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
             me.pageNavOpen = false;
+            me.savedTop = 0;
+            me.savedLeft = 0;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -337,14 +339,13 @@ $(function () {
             var me = this;
             var docMap = me.options.docMapArea;
             docMap.hide();
-            //me.element.parent().show();
             me.element.show();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
             var me = this;
             var docMap = me.options.docMapArea;
-            docMap.reportDocumentMap({ reportViewer: me });
+            docMap.reportDocumentMap({ $reportViewer: me });
 
             //get the doc map
             if (!me.docMapData) {
@@ -363,7 +364,9 @@ $(function () {
                 });
             }
 
-           // me.element.parent().hide();
+            me.savedTop = $(window).scrollTop();
+            me.savedLeft = $(window).scrollLeft();
+            me.savedTop = $(window).scrollTop();
             me.element.hide();
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
@@ -440,9 +443,10 @@ $(function () {
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
-                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
+
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -643,7 +647,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: docMapID
             }).done(function (data) {
-                me.backupCurPage();
+                me.backupCurPage(false,true);
                 me.hideDocMap();
                 me._loadPage(data.NewPage, false, docMapID);
             })
@@ -654,11 +658,19 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#backupCurPage
          */
-        backupCurPage: function (flushCache) {
+        backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
+            var top = $(window).scrollTop();
+            var left = $(window).scrollLeft();
+
             if (flushCache !== true)
                 flushCache = false
-            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft(), FlushCache: flushCache });
+            if (useSavedLocation === true) {
+                top = me.savedTop;
+                left = me.savedLeft;
+            }
+
+            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top , ScrollLeft: left, FlushCache: flushCache });
         },
         _setScrollLocation: function (top, left) {
             var me = this;

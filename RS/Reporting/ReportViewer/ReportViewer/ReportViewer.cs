@@ -52,7 +52,7 @@ namespace Forerunner.SSRS.Viewer
                 if (Ex.Name == "ForerunnerJSON")
                     this.ServerRendering = true;
             }
-            this.ServerRendering = false;
+            //this.ServerRendering = false;
 
         }
         public void SetCredentials(Credentials Credentials)

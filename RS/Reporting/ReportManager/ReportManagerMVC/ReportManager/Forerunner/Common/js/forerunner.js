@@ -77,6 +77,8 @@ $(function () {
             /** @constant */
             reportExplorer: "reportExplorer",
             /** @constant */
+            reportExplorerEZ: "reportExplorerEZ",
+            /** @constant */
             reportExplorerToolbar: "reportExplorerToolbar",
             /** @constant */
             pageNav: "pageNav",

@@ -3,7 +3,7 @@
 	<Import Project="ReportViewer.setting"/> 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
-		<ProjectFiles Include="ReportViewer\ReportViewer.csproj" />
+		<ProjectFiles Include="ReportViewer\Forerunner.SSRS.csproj" />
 <!--		<ProjectFiles Include="ReportViewerTest\ReportViewerTest\ReportViewerTest.csproj"/> -->
 	</ItemGroup> 
 	<Import Project="ReportViewer.traversal.targets"/> 

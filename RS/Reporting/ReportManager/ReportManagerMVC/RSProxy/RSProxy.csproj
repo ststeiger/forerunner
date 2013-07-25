@@ -48,11 +48,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ReportViewer\JSON\src\Jayrock.Json\Jayrock.Json.csproj">
+    <ProjectReference Include="..\..\..\ReportViewer\JSON\src\Jayrock.Json\Forerunner.Json.csproj">
       <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
       <Name>Jayrock.Json</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\ReportViewer.csproj">
+    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj">
       <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
       <Name>ReportViewer</Name>
     </ProjectReference>

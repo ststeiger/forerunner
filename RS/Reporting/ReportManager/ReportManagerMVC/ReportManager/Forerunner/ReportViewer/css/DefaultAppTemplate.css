@@ -1,0 +1,222 @@
+﻿.fr-layout-container {
+  
+  min-height: 100%;
+  background-color: white;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+
+.fr-layout-container table,td,tr {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  z-index: 0;
+}
+
+.fr-layout-mainviewport {
+    z-index: 1;
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    width:100%;
+}
+
+.fr-layout-mainViewPortShiftedRight
+{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+}
+
+.fr-layout-mainViewPortShiftedLeft {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    overflow: hidden;
+}
+
+.fr-layout-leftpane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    overflow:hidden;
+    background-color: #363B45;
+    color: white;
+    z-index: 2;
+    display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.fr-layout-leftpanecontent {
+    height: 100%;
+    width: 280px;
+    overflow: auto;
+    display:block;
+    position: fixed;
+    left: 0px;
+}
+
+.fr-layout-rightpane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    overflow:hidden;
+    background-color: #363B45;
+    color: white;
+    z-index: 2;
+    display: none;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.fr-layout-rightpanecontent {
+    height: 100%;
+    width: 280px;
+    display:block;
+}
+
+.fr-layout-topdiv {
+  border: 0px;
+  position: fixed;
+  top:0px;
+  width:100%;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  background-color: white;
+  z-index: 1;
+}
+
+.fr-layout-topdivspacer {
+  height:36px;
+  display:block;
+}
+
+.fr-layout-rightheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  right: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-button-nav, .fr-layout-rightheader .fr-button-refresh, .fr-layout-rightheader .fr-button-firstpage, .fr-layout-rightheader .fr-button-prev, 
+.fr-layout-rightheader .fr-button-next, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-button-export, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
+.fr-layout-rightheader .fr-pageOf, .fr-layout-rightheader .fr-num-pages {
+  display: none;
+}
+.fr-layout-rightheader .fr-button-lastpage, .fr-layout-rightheader .fr-button-documentmap, .fr-layout-rightheader .fr-textbox-keyword, .fr-layout-rightheader .fr-button-find, .fr-layout-rightheader .fr-span-find, 
+.fr-layout-rightheader .fr-button-findnext, .fr-layout-rightheader .fr-span-sparator, .fr-layout-rightheader .fr-button-menu {
+  display: none;
+}
+
+.fr-layout-rightheader .fr-button-reportback, .fr-layout-rightheader .fr-button-paramarea {
+    float: left;
+}
+
+.fr-layout-leftheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-button-nav, .fr-layout-leftheader .fr-button-refresh, .fr-layout-leftheader .fr-button-firstpage, .fr-layout-leftheader .fr-button-prev, 
+.fr-layout-leftheader .fr-button-next, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-button-export, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
+.fr-layout-leftheader .fr-pageOf, .fr-layout-leftheader .fr-num-pages {
+  display: none;
+}
+.fr-layout-leftheader .fr-button-lastpage, .fr-layout-leftheader .fr-button-documentmap, .fr-layout-leftheader .fr-textbox-keyword, .fr-layout-leftheader .fr-button-find, .fr-layout-leftheader .fr-span-find, 
+.fr-layout-leftheader .fr-button-findnext, .fr-layout-leftheader .fr-span-sparator, .fr-layout-leftheader .fr-button-reportback, .fr-layout-leftheader .fr-button-paramarea {
+  display: none;
+}
+
+.fr-layout-leftheader .fr-button-menu {
+    float: right;
+}
+
+.fr-layout-leftheaderspacer {
+  display:block;
+}
+
+
+div.fr-layout-pagesection {
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (max-height : 320px) 
+and (min-width : 400px) 
+and (orientation : landscape) {
+/* Styles */
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+
+
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) 
+and (orientation : portrait) {
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+/* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+/* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+}

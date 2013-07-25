@@ -43,3 +43,8 @@ RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/b
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.js
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
+utilities/icongen/obj/Debug/*
+utilities/icongen/obj/Release/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/Images/Toolbar/Thumbs.db
+utilities/icongen/output/*
+utilities/icongen/images/Thumbs.db

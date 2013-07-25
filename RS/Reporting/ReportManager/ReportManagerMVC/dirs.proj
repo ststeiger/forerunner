@@ -5,7 +5,7 @@
 	<ItemGroup>
 		<ProjectFiles Include="icongen\icongen.csproj" />
 		<ProjectFiles Include="ReportManager\ReportManager.csproj" />
-		<ProjectFiles Include="RSProxy\RSProxy.csproj" /> 
+		<!-- <ProjectFiles Include="RSProxy\RSProxy.csproj" /> --> 
 		<!-- <ProjectFiles Include="RSProxyAPI.Tests\RSProxyAPI.Tests.csproj" />  -->
 	</ItemGroup> 
 	<Import Project="ReportManagerMVC.traversal.targets"/> 

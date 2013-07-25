@@ -642,8 +642,8 @@ $(function () {
                 UniqueID: docMapID
             }).done(function (data) {
                 me.backupCurPage();
-                me._loadPage(data.NewPage, false, docMapID);
                 me.hideDocMap();
+                me._loadPage(data.NewPage, false, docMapID);
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },

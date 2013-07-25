@@ -146,35 +146,55 @@ $(function () {
                 }
             });
         },
+
         /**
-         * Make all tools hidden
-         * @function $.forerunner.toolBase#hideTools
+        * Make tool visible if it was visible before hidden
+        * @function $.forerunner.toolBase#hideTool
+        */
+        showTool: function(selectorClass){
+            var me = this;
+            if (me.allTools[selectorClass]) {
+                var $toolEl = $("." + selectorClass, me.element);
+                if (me.allTools[selectorClass].Display)
+                    $toolEl.fadeIn();
+            }
+        },
+        /**
+        * Make tool hidden and remember if it was visible
+        * @function $.forerunner.toolBase#hideTool
+        */
+        hideTool: function (selectorClass) {
+            var me = this;
+            if (me.allTools[selectorClass]) {
+                var $toolEl = $("." + selectorClass, me.element);
+                me.allTools[selectorClass].Display = $toolEl.is(":visible");
+                $toolEl.fadeOut();
+            }
+        },
+
+        /**
+         * Make all tools hidden and remember which ones where visible
+         * @function $.forerunner.toolBase#hideAllTools
          */
-        hideTools: function (){
+        hideAllTools: function (){
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) {
-                    var $toolEl = $("." + Obj.selectorClass, me.element);
-                    Obj.Display = $toolEl.is(":visible");
-                    $toolEl.fadeOut();
-                }
+                if(Obj.selectorClass)
+                    me.hideTool(Obj.selectorClass)
             });
 
         },
         /**
-         * Make all tools visible
-         * @function $.forerunner.toolBase#showTools
+         * Make all tools visible that where visible before hidden
+         * @function $.forerunner.toolBase#showAllTools
          */
-        showTools: function () {
+        showAllTools: function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) {
-                    var $toolEl = $("." + Obj.selectorClass, me.element);
-                    if (Obj.Display)
-                        $toolEl.fadeIn();
-                }
+                if (Obj.selectorClass) 
+                    me.showTool(Obj.selectorClass)                
             });
 
         },

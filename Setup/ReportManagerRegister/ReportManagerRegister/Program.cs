@@ -7,6 +7,7 @@ namespace ReportManagerRegister
         static void Main(string[] args)
         {
             Console.WriteLine("Register will help to do the registe work !");
+                        
             try
             {
                 //0 args[0] RegisteType Update config or web server
@@ -26,23 +27,24 @@ namespace ReportManagerRegister
                 else if (args[0].Equals("WebServerConfig"))
                 {
                     string bindingAddress = string.Empty;
+                    string ip = ReportManagerConfig.GetLocIP();
+
                     if (args[2].Equals("1")) //IIS Server
                     {
                         //ip:port:domain
-                        bindingAddress = string.Format("{0}:{1}:{2}", args[5], args[6], "");
+                        bindingAddress = string.Format("{0}:{1}:{2}", ip, args[5], "");
                         ReportManagerConfig.CreateAnIISSite(args[4], args[1], bindingAddress);
                     }
                     else //UWS Server
                     {
-                        bindingAddress = string.Format("http://{0}:{1}", args[5], args[6]);
+                        bindingAddress = string.Format("http://{0}:{1}", ip, args[5]);
                         ReportManagerConfig.CreateAnUWSSite(args[4], args[1], bindingAddress);
                     }
                     //1 "$INSTDIR"
                     //2 "$hCtl_WebServerConfig_TypeIIS_State"
                     //3 "$hCtl_WebServerConfig_TypeUWS_State"
                     //4 "$hCtl_WebServerConfig_SiteName_State" 
-                    //5 "$hCtl_WebServerConfig_Address_State" 
-                    //6 "$hCtl_WebServerConfig_Port_State"'
+                    //5 "$hCtl_WebServerConfig_Port_State"'
 
                 }
                 Console.WriteLine("Press any key to exist..");

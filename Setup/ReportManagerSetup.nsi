@@ -86,7 +86,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\css\Forerunner-all.css"
   SetOutPath "$INSTDIR\Forerunner\Common\js"
   File "${LOCALROOT}\Forerunner\Common\js\Toolbase.js"
-  File "${LOCALROOT}\Forerunner\Common\js\Forerunner-all.min.js"
+  ;File "${LOCALROOT}\Forerunner\Common\js\Forerunner-all.min.js"
   File "${LOCALROOT}\Forerunner\Common\js\forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-icons_cd0a0a_256x240.png"

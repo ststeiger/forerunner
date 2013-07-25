@@ -90,6 +90,8 @@ $(function () {
             me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
             me.pageNavOpen = false;
+            me.savedTop = 0;
+            me.savedLeft = 0;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -337,14 +339,13 @@ $(function () {
             var me = this;
             var docMap = me.options.docMapArea;
             docMap.hide();
-            me.element.parent().show();
-            me.element.slideDownShow();
+            me.element.show();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
             var me = this;
             var docMap = me.options.docMapArea;
-            docMap.reportDocumentMap({ reportViewer: me });
+            docMap.reportDocumentMap({ $reportViewer: me });
 
             //get the doc map
             if (!me.docMapData) {
@@ -363,7 +364,9 @@ $(function () {
                 });
             }
 
-            me.element.parent().hide();
+            me.savedTop = $(window).scrollTop();
+            me.savedLeft = $(window).scrollLeft();
+            me.savedTop = $(window).scrollTop();
             me.element.hide();
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
@@ -436,19 +439,21 @@ $(function () {
                 me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-                me.scrollLeft = action.ScrollLeft;
-                me.scrollTop = action.ScrollTop;
+
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
-                me._loadPage(action.CurrentPage, false, null, null, true);
+                me.scrollLeft = action.ScrollLeft;
+                me.scrollTop = action.ScrollTop;
+                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
+
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
         /**
-         * Shows the Page Navigation pane
+         * Shows the Page =igation pane
          *
          * @function $.forerunner.reportViewer#showNav
          */
@@ -462,7 +467,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache
@@ -578,6 +583,7 @@ $(function () {
             }).done(function (data) {
                 if (data.NewPage === me.curPage) {
                     me._navToLink(bookmarkID);
+                    me.lock = 0;
                 } else {
                     me.backupCurPage();
                     me._loadPage(data.NewPage, false, bookmarkID);
@@ -603,7 +609,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: drillthroughID
             }).done(function (data) {
-                me.backupCurPage();
+                me.backupCurPage(true);
                 if (data.Exception)
                     me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
                 else {
@@ -641,9 +647,9 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: docMapID
             }).done(function (data) {
-                me.backupCurPage();
-                me._loadPage(data.NewPage, false, docMapID);
+                me.backupCurPage(false,true);
                 me.hideDocMap();
+                me._loadPage(data.NewPage, false, docMapID);
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -652,9 +658,19 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#backupCurPage
          */
-        backupCurPage: function () {
+        backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
-            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
+            var top = $(window).scrollTop();
+            var left = $(window).scrollLeft();
+
+            if (flushCache !== true)
+                flushCache = false
+            if (useSavedLocation === true) {
+                top = me.savedTop;
+                left = me.savedLeft;
+            }
+
+            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top , ScrollLeft: left, FlushCache: flushCache });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -908,7 +924,6 @@ $(function () {
                         me._setPage(newPageNum);                        
                         if (!me.element.is(":visible") && !loadOnly)
                             me.element.show(); //scrollto does not work with the slide in functions:(
-                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (flushCache !== true)
@@ -932,7 +947,6 @@ $(function () {
                 me._writePage(data, newPageNum, loadOnly);                
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
-                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
                 if (!loadOnly && flushCache !== true)
@@ -962,10 +976,16 @@ $(function () {
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.ReportContainer.NumPages === undefined)
+
+            try {
+                if (data.ReportContainer.NumPages === undefined)
+                    me.numPages = 0;
+                else
+                    me.numPages = data.ReportContainer.NumPages;
+            }
+            catch (error) {
                 me.numPages = 0;
-            else
-                me.numPages = data.ReportContainer.NumPages;
+            }
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);
@@ -979,7 +999,7 @@ $(function () {
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {                
+            if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
@@ -1023,7 +1043,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("." + elementID);
+            var navTo = me.element.find("[name='" + elementID + "']");
 
             $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },

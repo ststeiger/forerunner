@@ -212,27 +212,27 @@ $(function () {
             var me = this;
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
-            radioValues[0] = paramPane.isTrue;
-            radioValues[1] = paramPane.isFalse;
+            radioValues[0] = { display: paramPane.isTrue, value: "True"};
+            radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
             var $control = new $("<div class='fr-param-checkbox-container' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
 
             for (var i = 0; i < radioValues.length; i++) {
-                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i] +
-                    "' id='" + param.Name + "_radio" + "_" + radioValues[i] + "' datatype='" + param.Type + "' />");
+                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
+                    "' id='" + param.Name + "_radio" + "_" + radioValues[i].value + "' datatype='" + param.Type + "' />");
                 me._getParameterControlProperty(param, $radioItem);
 
                 if (me._hasDefaultValue(param)) {
                     if (param.Nullable === "True")
                         $radioItem.attr("disabled", "true");
-                    else if (param.DefaultValues[0] === radioValues[i])
+                    else if (param.DefaultValues[0] === radioValues[i].value)
                         $radioItem.attr("checked", "true");
                 }
 
                 if (me._paramCount === 1)
                     $radioItem.on("click", function () { me._submitForm(); });
 
-                var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i] + "'>" + radioValues[i] + "</label>");
+                var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i].value + "'>" + radioValues[i].display + "</label>");
 
                 $control.append($radioItem);
                 $control.append($label);

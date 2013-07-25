@@ -1,6 +1,8 @@
 ﻿using System;
 using System.DirectoryServices;
+using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Xml;
 using UWS.Configuration;
 using UWS.Framework;
@@ -160,6 +162,12 @@ namespace ReportManagerRegister
         private static void UpdateValue(this XmlNode node, string value)
         {
             ((XmlElement)node).SetAttribute("value", value);
+        }
+
+        public static string GetLocIP()
+        {
+            IPHostEntry IpEntry = Dns.GetHostEntry(Dns.GetHostName());
+            return IpEntry.AddressList.First(a => a.AddressFamily == AddressFamily.InterNetwork).ToString();
         }
     }
 }

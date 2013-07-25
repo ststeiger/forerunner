@@ -579,6 +579,7 @@ $(function () {
             }).done(function (data) {
                 if (data.NewPage === me.curPage) {
                     me._navToLink(bookmarkID);
+                    me.lock = 0;
                 } else {
                     me.backupCurPage();
                     me._loadPage(data.NewPage, false, bookmarkID);
@@ -963,10 +964,16 @@ $(function () {
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.ReportContainer.NumPages === undefined)
+
+            try {
+                if (data.ReportContainer.NumPages === undefined)
+                    me.numPages = 0;
+                else
+                    me.numPages = data.ReportContainer.NumPages;
+            }
+            catch (error) {
                 me.numPages = 0;
-            else
-                me.numPages = data.ReportContainer.NumPages;
+            }
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);
@@ -980,7 +987,7 @@ $(function () {
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {                
+            if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
@@ -1024,7 +1031,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("." + elementID);
+            var navTo = me.element.find("[name='" + elementID + "']");
 
             $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },

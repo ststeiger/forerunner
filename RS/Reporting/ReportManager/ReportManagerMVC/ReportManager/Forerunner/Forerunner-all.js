@@ -937,6 +937,7 @@ $(function () {
             }).done(function (data) {
                 if (data.NewPage === me.curPage) {
                     me._navToLink(bookmarkID);
+                    me.lock = 0;
                 } else {
                     me.backupCurPage();
                     me._loadPage(data.NewPage, false, bookmarkID);
@@ -1321,10 +1322,16 @@ $(function () {
                 me.sessionID = "";
             else
                 me.sessionID = data.SessionID;
-            if (data.ReportContainer.NumPages === undefined)
+
+            try {
+                if (data.ReportContainer.NumPages === undefined)
+                    me.numPages = 0;
+                else
+                    me.numPages = data.ReportContainer.NumPages;
+            }
+            catch (error) {
                 me.numPages = 0;
-            else
-                me.numPages = data.ReportContainer.NumPages;
+            }
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);
@@ -1338,7 +1345,7 @@ $(function () {
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {                
+            if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
@@ -1382,7 +1389,7 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("." + elementID);
+            var navTo = me.element.find("[name='" + elementID + "']");
 
             $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },
@@ -4491,27 +4498,27 @@ $(function () {
             var me = this;
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
-            radioValues[0] = paramPane.isTrue;
-            radioValues[1] = paramPane.isFalse;
+            radioValues[0] = { display: paramPane.isTrue, value: "True"};
+            radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
             var $control = new $("<div class='fr-param-checkbox-container' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' ></div>");
 
             for (var i = 0; i < radioValues.length; i++) {
-                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i] +
-                    "' id='" + param.Name + "_radio" + "_" + radioValues[i] + "' datatype='" + param.Type + "' />");
+                var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
+                    "' id='" + param.Name + "_radio" + "_" + radioValues[i].value + "' datatype='" + param.Type + "' />");
                 me._getParameterControlProperty(param, $radioItem);
 
                 if (me._hasDefaultValue(param)) {
                     if (param.Nullable === "True")
                         $radioItem.attr("disabled", "true");
-                    else if (param.DefaultValues[0] === radioValues[i])
+                    else if (param.DefaultValues[0] === radioValues[i].value)
                         $radioItem.attr("checked", "true");
                 }
 
                 if (me._paramCount === 1)
                     $radioItem.on("click", function () { me._submitForm(); });
 
-                var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i] + "'>" + radioValues[i] + "</label>");
+                var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i].value + "'>" + radioValues[i].display + "</label>");
 
                 $control.append($radioItem);
                 $control.append($label);

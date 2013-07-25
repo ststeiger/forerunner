@@ -162,6 +162,16 @@ $(function () {
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
 
             /** @constant */
+            showDocMap: "showDocMap",
+            /** widget + event, lowercase */
+            reportViewerShowDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showDocMap).toLowerCase(); },
+
+            /** @constant */
+            hideDocMap: "hideDocMap",
+            /** widget + event, lowercase */
+            reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -425,6 +435,7 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me._loadParameters(me.options.pageNum);
+            me.hideDocMap();
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -658,8 +669,59 @@ $(function () {
                 }
             }
         },
+        _hideDocMap: function() {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.hide();
+            //me.element.parent().show();
+            me.element.show();
+            me._trigger(events.hideDocMap);
+        },
+        _showDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+            docMap.reportDocumentMap({ reportViewer: me });
+
+            //get the doc map
+            if (!me.docMapData) {
+                $.ajax({
+                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    data: {
+                        SessionID: me.sessionID,
+                    },
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        me.docMapData = data;
+                        docMap.reportDocumentMap("write", data);
+                    },
+                    fail: function () { alert("Fail"); }
+                });
+            }
+
+           // me.element.parent().hide();
+            me.element.hide();
+            docMap.slideUpShow();
+            me._trigger(events.showDocMap);
+        },
         /**
-         * Shows the Document Map
+         * Hides the Document Map if it is visible
+         *
+         * @function $.forerunner.reportViewer#hideDocMap
+         */
+        hideDocMap: function () {
+            var me = this;
+            var docMap = me.options.docMapArea;
+
+            if (!me.hasDocMap || !docMap)
+                return;
+
+            if (docMap.is(":visible")) {
+                me._hideDocMap();
+            }
+        },
+        /**
+         * Shows the visibility of the Document Map
          *
          * @function $.forerunner.reportViewer#showDocMap
          */
@@ -671,32 +733,10 @@ $(function () {
                 return;
 
             if (docMap.is(":visible")) {
-                docMap.hide();
-                me.element.slideDownShow();
+                me._hideDocMap();
                 return;
             }
-            
-            docMap.reportDocumentMap({ reportViewer: me });
-
-            //get the doc map
-            if (!me.docMapData){        
-                $.ajax({
-                    url: me.options.reportViewerAPI + "/DocMapJSON/",
-                    data: {
-                        SessionID: me.sessionID,
-                    },
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        me.docMapData = data;
-                        docMap.reportDocumentMap("write",data); 
-                    },
-                    fail: function () { alert("Fail"); }
-                });                
-            }
-            me.element.hide();
-            docMap.slideUpShow();
-            
+            me._showDocMap();
             
             //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
 
@@ -732,19 +772,20 @@ $(function () {
                 me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-                me.scrollLeft = action.ScrollLeft;
-                me.scrollTop = action.ScrollTop;
+
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
-                me._loadPage(action.CurrentPage, false, null, null, true);
+                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
+                me.scrollLeft = action.ScrollLeft;
+                me.scrollTop = action.ScrollTop;
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
         /**
-         * Shows the Page Navigation pane
+         * Shows the Page =igation pane
          *
          * @function $.forerunner.reportViewer#showNav
          */
@@ -758,7 +799,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache
@@ -899,7 +940,7 @@ $(function () {
                 SessionID: me.sessionID,
                 UniqueID: drillthroughID
             }).done(function (data) {
-                me.backupCurPage();
+                me.backupCurPage(true);
                 if (data.Exception)
                     me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
                 else {
@@ -939,10 +980,7 @@ $(function () {
             }).done(function (data) {
                 me.backupCurPage();
                 me._loadPage(data.NewPage, false, docMapID);
-                if (me.options.docMapArea)
-                    me.options.docMapArea.fadeOut();
- 
-                
+                me.hideDocMap();
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -951,9 +989,11 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#backupCurPage
          */
-        backupCurPage: function () {
+        backupCurPage: function (flushCache) {
             var me = this;
-            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft() });
+            if (flushCache !== true)
+                flushCache = false
+            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: $(window).scrollTop(), ScrollLeft: $(window).scrollLeft(), FlushCache: flushCache });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1220,7 +1260,6 @@ $(function () {
                         me._setPage(newPageNum);                        
                         if (!me.element.is(":visible") && !loadOnly)
                             me.element.show(); //scrollto does not work with the slide in functions:(
-                            //me.element.slideDownShow();
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
                         if (flushCache !== true)
@@ -1244,7 +1283,6 @@ $(function () {
                 me._writePage(data, newPageNum, loadOnly);                
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
-                    //me.element.slideDownShow();
                 if (bookmarkID)
                     me._navToLink(bookmarkID);
                 if (!loadOnly && flushCache !== true)

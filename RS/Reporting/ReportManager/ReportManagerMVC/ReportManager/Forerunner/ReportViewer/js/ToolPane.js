@@ -227,13 +227,18 @@ $(function () {
     };
     var itemExport = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-export",
         imageClass: "fr-icons24x24-export",
         text: locData.toolbar.exportMenu,
-        selectorClass: "fr-item-export",
+        rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
         accordionGroup: itemExportGroup,
         events: {
             click: function (e) {
                 var toolInfo = e.data.me.allTools["fr-item-export"];
+                var $rightIcon = e.data.me.element.find("." + "fr-toolpane-icon16x16");
+                $rightIcon.toggleClass("fr-toolpane-down-icon");
+                $rightIcon.toggleClass("fr-toolpane-up-icon");
+
                 var accordionGroup = toolInfo.accordionGroup;
                 var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
                 $accordionGroup.toggle();

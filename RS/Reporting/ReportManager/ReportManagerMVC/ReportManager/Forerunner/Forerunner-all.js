@@ -1769,22 +1769,6 @@ $(function () {
                 }
             });
         },
-        _removeEvent: function ($toolEl, toolInfo) {
-            var me = this;
-            for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.off(key);
-                }
-            }
-        },
-        _addEvents: function ($toolEl, toolInfo) {
-            var me = this;
-            for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
-                }
-            }
-        },
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
@@ -1804,7 +1788,7 @@ $(function () {
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
-                }
+            }
             else if (toolInfo.toolType === toolTypes.containerItem) {
                 var text = "";
                 if (toolInfo.text) {
@@ -1822,10 +1806,15 @@ $(function () {
                         indentation = indentation + "<div class='fr-indent24x24'></div>";
                     }
                 }
+                var rightImageDiv = "";
+                if (toolInfo.rightImageClass) {
+                    rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
+                }
                 var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
                             indentation +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
                             text +
+                            rightImageDiv +
                             "</div>";
                 return html;
             }
@@ -1842,6 +1831,22 @@ $(function () {
             else
                 text = toolInfo.text;
             return text;
+        },
+        _removeEvent: function ($toolEl, toolInfo) {
+            var me = this;
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] === "function") {
+                    $toolEl.off(key);
+                }
+            }
+        },
+        _addEvents: function ($toolEl, toolInfo) {
+            var me = this;
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] === "function") {
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
+                }
+            }
         },
         _destroy: function () {
         },
@@ -2490,13 +2495,18 @@ $(function () {
     };
     var itemExport = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-export",
         imageClass: "fr-icons24x24-export",
         text: locData.toolbar.exportMenu,
-        selectorClass: "fr-item-export",
+        rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
         accordionGroup: itemExportGroup,
         events: {
             click: function (e) {
                 var toolInfo = e.data.me.allTools["fr-item-export"];
+                var $rightIcon = e.data.me.element.find("." + "fr-toolpane-icon16x16");
+                $rightIcon.toggleClass("fr-toolpane-down-icon");
+                $rightIcon.toggleClass("fr-toolpane-up-icon");
+
                 var accordionGroup = toolInfo.accordionGroup;
                 var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
                 $accordionGroup.toggle();

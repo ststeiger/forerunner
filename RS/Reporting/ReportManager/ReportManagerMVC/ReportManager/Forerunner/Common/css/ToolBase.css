@@ -53,6 +53,9 @@
   margin:5px;
   display:inline-block;
 }
+.fr-toolbase-rightimage {
+  float:right;
+}
 .fr-toolbase-dropdown-container {
   display:none;
   position:absolute;

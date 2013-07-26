@@ -33,7 +33,7 @@ $(function () {
         btnHome: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-home",
-            imageClass: "fr-image-home",
+            imageClass: "fr-icons24x24-home",
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("home", null);
@@ -43,7 +43,7 @@ $(function () {
         btnBack: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-back",
-            imageClass: "fr-image-back",
+            imageClass: "fr-icons24x24-back",
             events: {
                 click: function (e) {
                     e.data.me.options.navigateTo("back", null);

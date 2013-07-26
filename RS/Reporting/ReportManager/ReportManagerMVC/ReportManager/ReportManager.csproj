@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -144,6 +144,8 @@
     <Content Include="CSS\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
+    <Content Include="Forerunner\Common\css\icons24x24.css" />
+    <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Forerunner-all.js">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>
@@ -173,13 +175,13 @@
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportRender.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewerEZ.css" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\export.jpg" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\page_layout_icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\sq_minus_icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\sq_plus_icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\star_fav_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
+    <Content Include="Forerunner\ReportViewer\images\Toolbar\sq_br_down_icon&amp;16.png" />
+    <Content Include="Forerunner\ReportViewer\images\Toolbar\sq_br_up_icon&amp;16.png" />
     <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
@@ -206,16 +208,6 @@
     <Content Include="Forerunner\ReportViewer\images\Parameter_Expand.png" />
     <Content Include="Forerunner\ReportViewer\images\SortAccending.gif" />
     <Content Include="Forerunner\ReportViewer\images\SortDecending.gif" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\align_just_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\arrow_left_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\burst_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\home_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\list_bullets_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\playback_ff_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\playback_next_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\playback_prev_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\playback_reload_icon.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\playback_rew_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer.css" />
     <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />

@@ -54,21 +54,29 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="images\BackButton.png" />
-    <Content Include="images\Backward.png" />
-    <Content Include="images\FastFoward.png" />
-    <Content Include="images\Home-icon.png" />
-    <Content Include="images\Nav.png" />
-    <Content Include="images\Nav2.png" />
-    <Content Include="images\Next.png" />
-    <Content Include="images\Previous.png" />
-    <Content Include="images\Refresh.png" />
-    <Content Include="images\Save.png" />
-    <Content Include="images\Search.png" />
-    <Content Include="images\Settings.png" />
-    <Content Include="config.xml" />
-    <Content Include="output\icons-30x30.css" />
-    <Content Include="output\icons-30x30.png" />
+    <Content Include="config.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="images\align_just_icon.png" />
+    <Content Include="images\arrow_left_icon.png" />
+    <Content Include="images\burst_icon.png" />
+    <Content Include="images\CSV.jpg" />
+    <Content Include="images\doc_export_icon32.png" />
+    <Content Include="images\Excel.png" />
+    <Content Include="images\home_icon.png" />
+    <Content Include="images\list_bullets_icon.png" />
+    <Content Include="images\MHT.jpg" />
+    <Content Include="images\PDF.jpg" />
+    <Content Include="images\playback_ff_icon.png" />
+    <Content Include="images\playback_next_icon.png" />
+    <Content Include="images\playback_prev_icon.png" />
+    <Content Include="images\playback_reload_icon.png" />
+    <Content Include="images\playback_rew_icon.png" />
+    <Content Include="images\tiff.jpg" />
+    <Content Include="images\Word.png" />
+    <Content Include="images\XML.jpg" />
+    <Content Include="output\icons24x24.css" />
+    <Content Include="output\icons24x24.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

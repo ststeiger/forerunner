@@ -123,6 +123,11 @@ namespace icongen
                 String iconFilePath = Path.Combine(iconFolder, iconFiles[i]);
                 Bitmap iconBitmap = new Bitmap(iconFilePath);
 
+                if (iconBitmap.Height != iconHeight || iconBitmap.Width != iconWidth)
+                {
+                    Console.Error.WriteLine(String.Format("\nIconGen - Warning, file: {0} is not the correct size, cosider reauthoring.", Path.GetFileName(iconFilePath)));
+                }
+
                 // Composite the new icon bitmap into imageBitmap
                 graphics.DrawImage(iconBitmap, curX, curY, iconWidth, iconHeight);
                 curX += iconWidth;

@@ -57,7 +57,7 @@ $(function () {
                 var btnHome = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-home",
-                    imageClass: "fr-image-home",
+                    imageClass: "fr-icons24x24-home",
                     events: {
                         click: function (e) {
                             me.options.navigateTo("home", null);
@@ -74,8 +74,8 @@ $(function () {
                         click: function (e) {
                             var action;
                             var $img = $(e.target);
-                            if (!$img.hasClass("fr-toolbase-icon"))
-                                $img = $img.find(".fr-toolbase-icon");
+                            if (!$img.hasClass("fr-icons24x24"))
+                                $img = $img.find(".fr-icons24x24");
 
                             if ($img.hasClass("fr-image-delFav"))
                                 action = "delete";
@@ -123,7 +123,7 @@ $(function () {
                 var itemHome = {
                     toolType: toolTypes.containerItem,
                     selectorClass: "fr-id-home",
-                    imageClass: "fr-image-home",
+                    imageClass: "fr-icons24x24-home",
                     text: locData.toolPane.home,
                     events: {
                         click: function (e) {
@@ -142,8 +142,8 @@ $(function () {
                         click: function (e) {
                             var action;
                             var $img = $(e.target);
-                            if (!$img.hasClass("fr-toolbase-icon"))
-                                $img = $img.find(".fr-toolbase-icon");
+                            if (!$img.hasClass("fr-icons24x24"))
+                                $img = $img.find(".fr-icons24x24");
 
                             if ($img.hasClass("fr-image-delFav"))
                                 action = "delete";

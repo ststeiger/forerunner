@@ -47,10 +47,11 @@
   opacity:0.3;
   filter: alpha(opacity='30');
 }
-.fr-toolbase-icon {
+.fr-indent24x24 {
   width:24px;
   height:24px;
-  margin: 5px;
+  margin:5px;
+  display:inline-block;
 }
 .fr-toolbase-dropdown-container {
   display:none;

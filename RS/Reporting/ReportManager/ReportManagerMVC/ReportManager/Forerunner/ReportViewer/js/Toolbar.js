@@ -18,7 +18,7 @@ $(function () {
     var btnReportBack = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-reportback",
-        imageClass: "fr-image-reportback",
+        imageClass: "fr-icons24x24-reportback",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
@@ -28,7 +28,7 @@ $(function () {
     var btnMenu = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-menu",
-        imageClass: "fr-image-menu",
+        imageClass: "fr-icons24x24-menu",
         events: {
             click: function (e) {
                 e.data.me._trigger(events.menuClick, null, {});
@@ -38,7 +38,7 @@ $(function () {
     var btnNav = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-nav",
-        imageClass: "fr-image-nav",
+        imageClass: "fr-icons24x24-nav",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -48,7 +48,7 @@ $(function () {
     var btnParamarea = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-paramarea",
-        imageClass: "fr-image-paramarea",
+        imageClass: "fr-icons24x24-paramarea",
         events: {
             click: function (e) {
                 e.data.me._trigger(events.paramAreaClick, null, {});
@@ -59,7 +59,7 @@ $(function () {
     var btnRefresh = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-refresh",
-        imageClass: "fr-image-refresh",
+        imageClass: "fr-icons24x24-refresh",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -69,7 +69,7 @@ $(function () {
     var btnFirstPage = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-firstpage",
-        imageClass: "fr-image-firstpage",
+        imageClass: "fr-icons24x24-firstpage",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -79,7 +79,7 @@ $(function () {
     var btnPrev = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-prev",
-        imageClass: "fr-image-prev",
+        imageClass: "fr-icons24x24-prev",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -114,7 +114,7 @@ $(function () {
     var btnNext = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-next",
-        imageClass: "fr-image-next",
+        imageClass: "fr-icons24x24-next",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -124,7 +124,7 @@ $(function () {
     var btnLastPage = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-lastpage",
-        imageClass: "fr-image-lastpage",
+        imageClass: "fr-icons24x24-lastpage",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -139,7 +139,7 @@ $(function () {
     var btnDocumentMap = {
         toolType: toolTypes.button,
         selectorClass: "fr-button-documentmap",
-        imageClass: "fr-image-documentmap",
+        imageClass: "fr-icons24x24-documentmap",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
@@ -192,7 +192,8 @@ $(function () {
     //
     // Export tools
     var btnExportXML = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportXML",
         text: locData.exportType.xml,
         selectorClass: "fr-button-exportXML",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -203,7 +204,8 @@ $(function () {
         }
     };
     var btnExportCSV = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportCSV",
         text: locData.exportType.csv,
         selectorClass: "fr-button-exportCSV",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -214,7 +216,8 @@ $(function () {
         }
     };
     var btnExportPDF = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportPDF",
         text: locData.exportType.pdf,
         selectorClass: "fr-button-exportPDF",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -225,7 +228,8 @@ $(function () {
         }
     };
     var btnExportMHTML = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportMHT",
         text: locData.exportType.mhtml,
         selectorClass: "fr-button-exportMHTML",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -236,7 +240,8 @@ $(function () {
         }
     };
     var btnExportExcel = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportExcel",
         text: locData.exportType.excel,
         selectorClass: "fr-button-exportExcel",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -247,7 +252,8 @@ $(function () {
         }
     };
     var btnExportTiff = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportTIFF",
         text: locData.exportType.tiff,
         selectorClass: "fr-button-exportTiff",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -258,7 +264,8 @@ $(function () {
         }
     };
     var btnExportWord = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportWord",
         text: locData.exportType.word,
         selectorClass: "fr-button-exportWord",
         sharedClass: "fr-toolbase-dropdown-item",
@@ -274,9 +281,10 @@ $(function () {
         text: "|&nbsp"
     };
     var btnExport = {
-        toolType: toolTypes.textButton,
-        text: locData.toolbar.exportMenu,
+        toolType: toolTypes.button,
+        //text: locData.toolbar.exportMenu,
         selectorClass: "fr-button-export",
+        imageClass: "fr-icons24x24-export",
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };

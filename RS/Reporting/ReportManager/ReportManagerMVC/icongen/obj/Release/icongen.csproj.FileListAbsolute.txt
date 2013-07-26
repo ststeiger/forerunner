@@ -1,5 +1,0 @@
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\icongen\bin\Release\icongen.exe
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\icongen\bin\Release\icongen.pdb
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\icongen\obj\Release\icongen.csprojResolveAssemblyReference.cache
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\icongen\obj\Release\icongen.exe
-C:\Users\Jason\Documents\GitHub\Forerunner\Forerunner\RS\Reporting\ReportManager\ReportManagerMVC\icongen\obj\Release\icongen.pdb

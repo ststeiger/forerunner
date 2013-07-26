@@ -36,11 +36,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', end
   color: white;
   display:block;
 }
-.fr-toolpane .fr-toolbase-icon {
+.fr-toolpane .fr-icons24x24 {
   width:24px;
   height:24px;
   margin: 5px;
   display:inline-block;
+  background-image:url('../../common/Images/icons24x24.png');
 }
 .fr-item-spacer {
     height: 18px;

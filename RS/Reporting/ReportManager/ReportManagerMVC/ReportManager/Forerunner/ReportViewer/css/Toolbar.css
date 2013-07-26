@@ -63,68 +63,13 @@
   line-height:36px;
   text-align:center;
 }
-.fr-button-find, .fr-button-findnext, .fr-button-export {
+.fr-button-find, .fr-button-findnext {
   color: white;
   line-height:36px;
   text-align:center;  
 }
 .fr-button-home, .fr-button-paramarea {
     float:right;
-}
-
-.fr-image-export {
-  background-image:url('../../reportviewer/Images/Toolbar/export.jpg');
-}
-
-.fr-image-menu {
-  float:left;
-  background-image:url('../../reportviewer/Images/Toolbar/align_just_icon.png');
-}
-
-.fr-image-home {
-  background-image:url('../../reportviewer/Images/Toolbar/home_icon.png');
-}
-
-.fr-image-back {
-  background-image:url('../../reportviewer/Images/Toolbar/arrow_left_icon.png');
-}
-
-.fr-image-reportback {
-  background-image:url('../../reportviewer/Images/Toolbar/arrow_left_icon.png');
-}
-
-.fr-image-next {
-  background-image:url('../../reportviewer/Images/Toolbar/playback_next_icon.png');
-}
-
-.fr-image-prev {
-  background-image:url('../../reportviewer/Images/Toolbar/playback_prev_icon.png');
-}
-
-.fr-image-firstpage {
-  background-image:url('../../reportviewer/Images/Toolbar/playback_rew_icon.png');
-}
-
-.fr-image-lastpage {
-  background-image:url('../../reportviewer/Images/Toolbar/playback_ff_icon.png');
-}
-
-.fr-image-refresh {
-  background-image:url('../../reportviewer/Images/Toolbar/playback_reload_icon.png');
-}
-
-.fr-image-nav {
-  background-image:url('../../reportviewer/Images/Toolbar/burst_icon.png');
-}
-
-
-.fr-image-paramarea {
-  background-image:url('../../reportviewer/Images/Toolbar/list_bullets_icon.png');
-}
-
-.fr-image-documentmap
-{
-    background-image:url('../../reportviewer/Images/Toolbar/list_bullets_icon.png');
 }
 
 /* Smartphones (landscape) ----------- */

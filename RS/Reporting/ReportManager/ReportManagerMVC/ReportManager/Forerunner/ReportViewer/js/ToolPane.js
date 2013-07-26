@@ -17,7 +17,7 @@ $(function () {
     var itemNav = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-nav",
-        imageClass: "fr-image-nav",
+        imageClass: "fr-icons24x24-nav",
         text: locData.toolPane.navigation,
         events: {
             click: function (e) {
@@ -29,7 +29,7 @@ $(function () {
     var itemReportBack = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-reportback",
-        imageClass: "fr-image-reportback",
+        imageClass: "fr-icons24x24-reportback",
         text: locData.toolPane.back,
         events: {
             click: function (e) {
@@ -41,7 +41,7 @@ $(function () {
     var itemRefresh = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-refresh",
-        imageClass: "fr-image-refresh",
+        imageClass: "fr-icons24x24-refresh",
         text: locData.toolPane.refresh,
         events: {
             click: function (e) {
@@ -53,7 +53,7 @@ $(function () {
     var itemFirstPage = {
         toolType: toolTypes.button,
         selectorClass: "fr-id-firstpage",
-        imageClass: "fr-image-firstpage",
+        imageClass: "fr-icons24x24-firstpage",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -64,7 +64,7 @@ $(function () {
     var itemPrev = {
         toolType: toolTypes.button,
         selectorClass: "fr-id-prev",
-        imageClass: "fr-image-prev",
+        imageClass: "fr-icons24x24-prev",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -97,7 +97,7 @@ $(function () {
     var itemNext = {
         toolType: toolTypes.button,
         selectorClass: "fr-id-next",
-        imageClass: "fr-image-next",
+        imageClass: "fr-icons24x24-next",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -108,7 +108,7 @@ $(function () {
     var itemLastPage = {
         toolType: toolTypes.button,
         selectorClass: "fr-id-lastpage",
-        imageClass: "fr-image-lastpage",
+        imageClass: "fr-icons24x24-lastpage",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -124,7 +124,7 @@ $(function () {
     var itemDocumentMap = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-documentmap",
-        imageClass: "fr-image-documentmap",
+        imageClass: "fr-icons24x24-documentmap",
         text: locData.toolPane.docMap,
         events: {
             click: function (e) {
@@ -137,6 +137,7 @@ $(function () {
     // Export group
     var itemExportXML = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportXML",
         text: locData.exportType.xml,
         selectorClass: "fr-item-exportXML",
         indent: 1,
@@ -148,6 +149,7 @@ $(function () {
     };
     var itemExportCSV = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportCSV",
         text: locData.exportType.csv,
         selectorClass: "fr-item-exportCSV",
         indent: 1,
@@ -159,6 +161,7 @@ $(function () {
     };
     var itemExportPDF = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportPDF",
         text: locData.exportType.pdf,
         selectorClass: "fr-item-exportPDF",
         indent: 1,
@@ -170,6 +173,7 @@ $(function () {
     };
     var itemExportMHTML = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportMHT",
         text: locData.exportType.mhtml,
         selectorClass: "fr-item-exportMHTML",
         indent: 1,
@@ -181,6 +185,7 @@ $(function () {
     };
     var itemExportExcel = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportExcel",
         text: locData.exportType.excel,
         selectorClass: "fr-item-exportExcel",
         indent: 1,
@@ -192,6 +197,7 @@ $(function () {
     };
     var itemExportTiff = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportTIFF",
         text: locData.exportType.tiff,
         selectorClass: "fr-item-exportTiff",
         indent: 1,
@@ -203,6 +209,7 @@ $(function () {
     };
     var itemExportWord = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-exportWord",
         text: locData.exportType.word,
         selectorClass: "fr-item-exportWord",
         indent: 1,
@@ -220,6 +227,7 @@ $(function () {
     };
     var itemExport = {
         toolType: toolTypes.containerItem,
+        imageClass: "fr-icons24x24-export",
         text: locData.toolbar.exportMenu,
         selectorClass: "fr-item-export",
         accordionGroup: itemExportGroup,

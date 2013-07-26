@@ -45,7 +45,7 @@ $(function () {
          * var btnMenu = {
          *  toolType: toolTypes.button,
          *  selectorClass: "fr-button-menu",
-         *  imageClass: "fr-image-menu",
+         *  imageClass: "fr-icons24x24-menu",
          *  events: {
          *      click: function (e) {
          *          e.data.me._trigger(events.menuClick, null, {});
@@ -130,10 +130,10 @@ $(function () {
             $tool.append(toolInfo.$dropdown);
             var $dropdown = $tool.find("." + dropdownContainerClass);
             var selectorClass = toolInfo.selectorClass;
+            var imageClass = toolInfo.imageClass;
 
             // tool click event handler
-            $tool.on("click", { me: me, toolInfo: toolInfo, $tool: $tool }, function (e) {
-                var me = e.data.me;
+            $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left);
                 $dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
                 $dropdown.toggle();
@@ -141,7 +141,7 @@ $(function () {
 
             // dropdown dismiss handler
             $(document).on("click", function (e) {
-                if ($dropdown.is(":visible") && !$(e.target).hasClass(selectorClass)) {
+                if ($dropdown.is(":visible") && !$(e.target).hasClass(selectorClass) && !$(e.target).hasClass(imageClass)) {
                     $dropdown.toggle();
                 }
             });
@@ -257,7 +257,7 @@ $(function () {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-toolbase-icon " + toolInfo.imageClass + "' />" +
+                            "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.input) {
@@ -279,18 +279,20 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
                 var imageClass = "";
+                var iconClass = "fr-indent24x24";
                 if (toolInfo.imageClass) {
                     imageClass = toolInfo.imageClass;
+                    iconClass = "fr-icons24x24";
                 }
                 var indentation = "";
                 if (toolInfo.indent) {
                     for (var i = 0; i < toolInfo.indent; i++) {
-                        indentation = indentation + "<div class='fr-toolbase-icon'></div>";
+                        indentation = indentation + "<div class='fr-indent24x24'></div>";
                     }
                 }
                 var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-toolbase-icon " + imageClass + "'></div>" +
                             indentation +
+                            "<div class='" + iconClass + " " + imageClass + "'></div>" +
                             text +
                             "</div>";
                 return html;

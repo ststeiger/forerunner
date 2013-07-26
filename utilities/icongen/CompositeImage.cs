@@ -125,7 +125,7 @@ namespace icongen
 
                 if (iconBitmap.Height != iconHeight || iconBitmap.Width != iconWidth)
                 {
-                    Console.Error.WriteLine(String.Format("\nIconGen - Warning, file: {0} is not the correct size, cosider reauthoring.", Path.GetFileName(iconFilePath)));
+                    Console.Error.WriteLine(String.Format("\nIconGen - Warning, file: {0} is not the correct size, consider re-authoring.", Path.GetFileName(iconFilePath)));
                 }
 
                 // Composite the new icon bitmap into imageBitmap

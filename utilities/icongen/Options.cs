@@ -13,7 +13,8 @@ namespace icongen
         public static String helpArg = "help";
         public static String configArg = "config";
         public static String imageFolderArg = "imageFolder";
-        public static String outputFolderArg = "outputFolder";
+        public static String outputIconFolderArg = "outputIconFolder";
+        public static String styleSheetOutputFolderArg = "styleSheetOutputFolder";
         #endregion
 
         #region Public Properties
@@ -33,11 +34,19 @@ namespace icongen
             }
         }
 
-        public String OutputFolder
+        public String OutputIconFolder
         {
             get
             {
-                return outputFolder;
+                return outputIconFolder;
+            }
+        }
+
+        public String StyleSheetOutputFolder
+        {
+            get
+            {
+                return styleSheetOutputFolder;
             }
         }
 
@@ -69,9 +78,13 @@ namespace icongen
                 {
                     imageFolder = GerParam(++i, args, arg);
                 }
-                else if (IsOption(arg, Options.outputFolderArg[0] + " " + Options.outputFolderArg))
+                else if (IsOption(arg, Options.styleSheetOutputFolderArg[0] + " " + Options.styleSheetOutputFolderArg))
                 {
-                    outputFolder = GerParam(++i, args, arg);
+                    styleSheetOutputFolder = GerParam(++i, args, arg);
+                }
+                else if (IsOption(arg, Options.outputIconFolderArg[0] + " " + Options.outputIconFolderArg))
+                {
+                    outputIconFolder = GerParam(++i, args, arg);
                 }
                 else
                 {
@@ -90,7 +103,8 @@ namespace icongen
 
             // check the folder params
             ValidateFolderParam(imageFolder, Options.imageFolderArg);
-            ValidateFolderParam(outputFolder, Options.outputFolderArg);
+            ValidateFolderParam(outputIconFolder, Options.outputIconFolderArg);
+            ValidateFolderParam(styleSheetOutputFolder, Options.styleSheetOutputFolderArg);
 
             // Check the file param
             if (configFile == null)
@@ -164,7 +178,8 @@ namespace icongen
         #region Private data
         private bool help = false;
         private String imageFolder;
-        private String outputFolder;
+        private String outputIconFolder;
+        private String styleSheetOutputFolder;
         private String configFile;
         #endregion
     }

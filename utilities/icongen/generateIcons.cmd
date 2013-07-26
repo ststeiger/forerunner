@@ -23,7 +23,16 @@ set cssPath=%basePath%output
 set copyCSSPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\css
 set copyImagesPath=%basePath%..\..\RS\Reporting\ReportManager\ReportManagerMVC\ReportManager\Forerunner\Common\images
 
+:: run icongen and test the result
 %icongenExe% -o %outPath% -s %cssPath% -i %inputPath% -c %configPath%
+if errorlevel 0 goto docopies
+exit /b 2
 
+:docopies
+echo Copying file: %cssFilename%
 copy %outPath%\%cssFilename% %copyCSSPath%\%cssFilename%
+echo.
+
+echo Copying file: %iconFilename%
 copy %outPath%\%iconFilename% %copyImagesPath%\%iconFilename%
+echo.

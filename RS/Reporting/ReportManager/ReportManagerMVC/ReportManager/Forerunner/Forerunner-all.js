@@ -2113,7 +2113,7 @@ $(function () {
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
             }
         }
     };
@@ -2454,7 +2454,7 @@ $(function () {
         indent: 1,
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
             }
         }
     };

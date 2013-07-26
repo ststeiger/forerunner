@@ -86,9 +86,8 @@ $(function () {
             $docMap.append($mapNode);
 
             if (docMap.Children) {
-                level++;
                 $.each(docMap.Children, function (Index, Obj) {
-                    $docMap.append(me._writeDocumentMapItem(Obj, level));
+                    $docMap.append(me._writeDocumentMapItem(Obj, level + 1));
                 });
             }
             return $docMap;

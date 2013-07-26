@@ -598,9 +598,8 @@ namespace Forerunner.SSRS.Viewer
                 }
 
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
-                FileName = Path.GetFileName(ReportPath);
                 result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
-                FileName = Path.GetFileName(ReportPath) + "." + Extension;
+                FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
                 return result;
             }
             catch (Exception e)

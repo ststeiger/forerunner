@@ -590,6 +590,7 @@ $(function () {
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
                 me._touchNav();
                 me.pages[pageNum].$container.fadeIn();
+                me._removeDocMap();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
@@ -729,6 +730,12 @@ $(function () {
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
         },
+        _removeDocMap: function () {
+            //Verify whether document map code exist in previous report
+            if ($(".fr-docmap-panel").length !== 0) {
+                $(".fr-docmap-panel").remove();
+            }
+        },
         /**
          * Hides the Document Map if it is visible
          *
@@ -794,10 +801,9 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
-                me._resetViewer();
+                //me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
@@ -2107,7 +2113,7 @@ $(function () {
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
             }
         }
     };
@@ -2448,7 +2454,7 @@ $(function () {
         indent: 1,
         events: {
             click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
+                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
             }
         }
     };
@@ -5118,9 +5124,8 @@ $(function () {
             $docMap.append($mapNode);
 
             if (docMap.Children) {
-                level++;
                 $.each(docMap.Children, function (Index, Obj) {
-                    $docMap.append(me._writeDocumentMapItem(Obj, level));
+                    $docMap.append(me._writeDocumentMapItem(Obj, level + 1));
                 });
             }
             return $docMap;

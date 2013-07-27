@@ -1910,6 +1910,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -1931,6 +1932,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -1941,6 +1943,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -1951,6 +1954,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -1986,6 +1990,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -1996,6 +2001,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -2010,6 +2016,7 @@ $(function () {
     var btnDocumentMap = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-documentmap-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         imageClass: "fr-icons24x24-documentmap",
         events: {
             click: function (e) {
@@ -2020,6 +2027,7 @@ $(function () {
     var btnKeyword = {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-keyword-textbox",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             keypress: function (e) {
                 if (e.keyCode === 13) {
@@ -2031,6 +2039,7 @@ $(function () {
     var btnFind = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-find-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: locData.toolbar.find,
         events: {
             click: function (e) {
@@ -2042,11 +2051,13 @@ $(function () {
     var btnSeparator = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-toolbar-sparator-text",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: "|&nbsp"
     };
     var btnFindNext = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-findnext-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: locData.toolbar.next,
         events: {
             click: function (e) {
@@ -2066,8 +2077,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportXML-id",
         imageClass: "fr-icons24x24-exportXML",
-        text: locData.exportType.xml,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.xml,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -2078,8 +2089,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportCSV-id",
         imageClass: "fr-icons24x24-exportCSV",
-        text: locData.exportType.csv,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.csv,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -2090,8 +2101,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportPDF-id",
         imageClass: "fr-icons24x24-exportPDF",
-        text: locData.exportType.pdf,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.pdf,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -2102,8 +2113,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportMHTML-id",
         imageClass: "fr-icons24x24-exportMHT",
-        text: locData.exportType.mhtml,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.mhtml,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -2114,8 +2125,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportExcel-id",
         imageClass: "fr-icons24x24-exportExcel",
-        text: locData.exportType.excel,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.excel,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
@@ -2126,8 +2137,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportTiff-id",
         imageClass: "fr-icons24x24-exportTIFF",
-        text: locData.exportType.tiff,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.tiff,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -2138,8 +2149,8 @@ $(function () {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-button-exportWord-id",
         imageClass: "fr-icons24x24-exportWord",
-        text: locData.exportType.word,
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.word,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.word);
@@ -2149,12 +2160,14 @@ $(function () {
     var btnSeparator2 = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-sparator-text",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
+        sharedClass: "fr-toolbar-touch-hidden",
         //text: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],

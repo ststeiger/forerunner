@@ -44,7 +44,7 @@ $(function () {
          * 
          * var btnMenu = {
          *  toolType: toolTypes.button,
-         *  selectorClass: "fr-button-menu",
+         *  selectorClass: "fr-toolbar-menu-button",
          *  imageClass: "fr-icons24x24-menu",
          *  events: {
          *      click: function (e) {

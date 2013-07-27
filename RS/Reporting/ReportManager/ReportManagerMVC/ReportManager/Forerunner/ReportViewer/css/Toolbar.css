@@ -44,40 +44,40 @@
   min-width: 10mm;
   max-width: 20mm;
 }
-.fr-toolbar-pageOf {
+.fr-toolbar-pageOf-button {
   width: 15px;
   color:white;
   line-height:36px;
   text-align:center;    
 }
-.fr-toolbar-numPages {
+.fr-toolbar-numPages-button {
   min-width:10mm;
   max-width:15mm;
   padding-left: 4px;
   color:white;
   line-height:36px;
 }
-.fr-toolbar-span-sparator
+.fr-toolbar-sparator-text
 {
   color:white;
   line-height:36px;
   text-align:center;
 }
-.fr-button-find, .fr-button-findnext {
+.fr-toolbar-find-button, .fr-toolbar-findnext-button {
   color: white;
   line-height:36px;
   text-align:center;  
 }
-.fr-button-home, .fr-button-paramarea {
+.fr-button-home, .fr-toolbar-paramarea-button {
     float:right;
 }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-toolbar-nav-button, .fr-toolbar-refresh-button, .fr-toolbar-firstpage-button, .fr-toolbar-prev-button, .fr-toolbar-next-button,.fr-button-update-fav,.fr-toolbar-export-button {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-toolbar-lastpage-button, .fr-toolbar-documentmap-button, .fr-toolbar-keyword-textbox, .fr-toolbar-find-button, .fr-toolbar-findnext-button, .fr-toolbar-sparator-text {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -87,10 +87,10 @@
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-toolbar-nav-button, .fr-toolbar-refresh-button, .fr-toolbar-firstpage-button, .fr-toolbar-prev-button, .fr-toolbar-next-button,.fr-button-update-fav,.fr-toolbar-export-button {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-toolbar-lastpage-button, .fr-toolbar-documentmap-button, .fr-toolbar-keyword-textbox, .fr-toolbar-find-button, .fr-toolbar-findnext-button, .fr-toolbar-sparator-text {
   display: none;
 }
 
@@ -102,10 +102,10 @@
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-toolbar-nav-button, .fr-toolbar-refresh-button, .fr-toolbar-firstpage-button, .fr-toolbar-prev-button, .fr-toolbar-next-button,.fr-button-update-fav,.fr-toolbar-export-button {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-toolbar-lastpage-button, .fr-toolbar-documentmap-button, .fr-toolbar-keyword-textbox, .fr-toolbar-find-button, .fr-toolbar-findnext-button, .fr-toolbar-sparator-text {
   display: none;
 }
  .fr-toolbar-reportpage-textbox {
@@ -116,10 +116,10 @@
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-toolbar-nav-button, .fr-toolbar-refresh-button, .fr-toolbar-firstpage-button, .fr-toolbar-prev-button, .fr-toolbar-next-button,.fr-button-update-fav,.fr-toolbar-export-button {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-toolbar-lastpage-button, .fr-toolbar-documentmap-button, .fr-toolbar-keyword-textbox, .fr-toolbar-find-button, .fr-toolbar-findnext-button, .fr-toolbar-sparator-text {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -131,7 +131,7 @@
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
 /*
-.fr-button-menu {
+.fr-toolbar-menu-button {
     display: none;
 }
 */
@@ -139,7 +139,7 @@
 
 /* Large screens ----------- */
 @media only screen and (min-width : 1824px) {
-/*/.fr-button-menu {
+/*/.fr-toolbar-menu-button {
     display: none;
 }
 */
@@ -147,10 +147,10 @@
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-toolbar-nav-button, .fr-toolbar-refresh-button, .fr-toolbar-firstpage-button, .fr-toolbar-prev-button, .fr-toolbar-next-button,.fr-button-update-fav,.fr-toolbar-export-button {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-toolbar-lastpage-button, .fr-toolbar-documentmap-button, .fr-toolbar-keyword-textbox, .fr-toolbar-find-button, .fr-toolbar-findnext-button, .fr-toolbar-sparator-text {
   display: none;
 }
 

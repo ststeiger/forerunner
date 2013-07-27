@@ -1576,7 +1576,7 @@ $(function () {
          * 
          * var btnMenu = {
          *  toolType: toolTypes.button,
-         *  selectorClass: "fr-button-menu",
+         *  selectorClass: "fr-toolbar-menu-button",
          *  imageClass: "fr-icons24x24-menu",
          *  events: {
          *      click: function (e) {
@@ -1888,7 +1888,7 @@ $(function () {
     // Tool Info data
     var btnReportBack = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-reportback",
+        selectorClass: "fr-toolbar-reportback-button",
         imageClass: "fr-icons24x24-reportback",
         events: {
             click: function (e) {
@@ -1898,7 +1898,7 @@ $(function () {
     };
     var btnMenu = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-menu",
+        selectorClass: "fr-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
         events: {
             click: function (e) {
@@ -1908,7 +1908,7 @@ $(function () {
     };
     var btnNav = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-nav",
+        selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
         events: {
             click: function (e) {
@@ -1918,7 +1918,7 @@ $(function () {
     };
     var btnParamarea = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-paramarea",
+        selectorClass: "fr-toolbar-paramarea-button",
         imageClass: "fr-icons24x24-paramarea",
         events: {
             click: function (e) {
@@ -1929,7 +1929,7 @@ $(function () {
    
     var btnRefresh = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-refresh",
+        selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
         events: {
             click: function (e) {
@@ -1939,7 +1939,7 @@ $(function () {
     };
     var btnFirstPage = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-firstpage",
+        selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
         events: {
             click: function (e) {
@@ -1949,7 +1949,7 @@ $(function () {
     };
     var btnPrev = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-prev",
+        selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
         events: {
             click: function (e) {
@@ -1974,17 +1974,17 @@ $(function () {
     };
     var btnPageOf = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-pageOf",
+        selectorClass: "fr-toolbar-pageOf-button",
         text: locData.toolbar.pageOf
     };
     var btnNumPages = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-numPages",
+        selectorClass: "fr-toolbar-numPages-button",
         text: "0"
     };
     var btnNext = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-next",
+        selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
         events: {
             click: function (e) {
@@ -1994,7 +1994,7 @@ $(function () {
     };
     var btnLastPage = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-lastpage",
+        selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
         events: {
             click: function (e) {
@@ -2004,12 +2004,12 @@ $(function () {
     };
     var btnVCRGroup = {
         toolType: toolTypes.toolGroup,
-        selectorClass: "fr-btn-VCRgroup-id",
+        selectorClass: "fr-toolbar-VCR-group-id",
         tools: [btnFirstPage, btnPrev, btnReportPage, btnPageOf, btnNumPages, btnNext, btnLastPage]
     };
     var btnDocumentMap = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-documentmap",
+        selectorClass: "fr-toolbar-documentmap-button",
         imageClass: "fr-icons24x24-documentmap",
         events: {
             click: function (e) {
@@ -2030,7 +2030,7 @@ $(function () {
     };
     var btnFind = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-button-find",
+        selectorClass: "fr-toolbar-find-button",
         text: locData.toolbar.find,
         events: {
             click: function (e) {
@@ -2041,12 +2041,12 @@ $(function () {
     };
     var btnSeparator = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-span-sparator",
+        selectorClass: "fr-toolbar-sparator-text",
         text: "|&nbsp"
     };
     var btnFindNext = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-button-findnext",
+        selectorClass: "fr-toolbar-findnext-button",
         text: locData.toolbar.next,
         events: {
             click: function (e) {
@@ -2057,16 +2057,16 @@ $(function () {
     };
     var btnFindGroup = {
         toolType: toolTypes.toolGroup,
-        selectorClass: "fr-toolbar-findgroup-id",
+        selectorClass: "fr-toolbar-find-group-id",
         tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
     };
     //
     // Export tools
     var btnExportXML = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportXML-id",
         imageClass: "fr-icons24x24-exportXML",
         text: locData.exportType.xml,
-        selectorClass: "fr-button-exportXML",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2076,9 +2076,9 @@ $(function () {
     };
     var btnExportCSV = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportCSV-id",
         imageClass: "fr-icons24x24-exportCSV",
         text: locData.exportType.csv,
-        selectorClass: "fr-button-exportCSV",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2088,9 +2088,9 @@ $(function () {
     };
     var btnExportPDF = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportPDF-id",
         imageClass: "fr-icons24x24-exportPDF",
         text: locData.exportType.pdf,
-        selectorClass: "fr-button-exportPDF",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2100,9 +2100,9 @@ $(function () {
     };
     var btnExportMHTML = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportMHTML-id",
         imageClass: "fr-icons24x24-exportMHT",
         text: locData.exportType.mhtml,
-        selectorClass: "fr-button-exportMHTML",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2112,9 +2112,9 @@ $(function () {
     };
     var btnExportExcel = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportExcel-id",
         imageClass: "fr-icons24x24-exportExcel",
         text: locData.exportType.excel,
-        selectorClass: "fr-button-exportExcel",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2124,9 +2124,9 @@ $(function () {
     };
     var btnExportTiff = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportTiff-id",
         imageClass: "fr-icons24x24-exportTIFF",
         text: locData.exportType.tiff,
-        selectorClass: "fr-button-exportTiff",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2136,9 +2136,9 @@ $(function () {
     };
     var btnExportWord = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportWord-id",
         imageClass: "fr-icons24x24-exportWord",
         text: locData.exportType.word,
-        selectorClass: "fr-button-exportWord",
         sharedClass: "fr-toolbase-dropdown-item",
         events: {
             click: function (e) {
@@ -2148,14 +2148,14 @@ $(function () {
     };
     var btnSeparator2 = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-span-sparator",
+        selectorClass: "fr-toolbar-sparator-text",
         text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.button,
-        //text: locData.toolbar.exportMenu,
-        selectorClass: "fr-button-export",
+        selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
+        //text: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
@@ -2226,7 +2226,7 @@ $(function () {
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
 
-            me.element.find(".fr-toolbar-numPages").html(maxPage);
+            me.element.find(".fr-toolbar-numPages-button").html(maxPage);
             me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
@@ -2354,12 +2354,12 @@ $(function () {
     };
     var itemPageOf = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-pageOf",
+        selectorClass: "fr-toolbar-pageOf-button",
         text: locData.toolPane.pageOf
     };
     var itemNumPages = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-numPages",
+        selectorClass: "fr-toolbar-numPages-button",
         text: ""
     };
     var itemNext = {
@@ -2619,7 +2619,7 @@ $(function () {
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;
-            me.element.find(".fr-toolbar-numPages").html(maxPage);
+            me.element.find(".fr-toolbar-numPages-button").html(maxPage);
             me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
 
             me.options.$reportViewer.reportViewer("getNumPages", curPage);

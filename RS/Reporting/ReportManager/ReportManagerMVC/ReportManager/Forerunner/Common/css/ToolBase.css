@@ -72,3 +72,14 @@
   border-top-style:groove;
   border-top-color: darkgray;
 }
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) and (orientation : portrait) {
+
+
+    .fr-toolbase-state:hover {
+    }
+
+    .fr-toolbase-state:active {
+    }
+}

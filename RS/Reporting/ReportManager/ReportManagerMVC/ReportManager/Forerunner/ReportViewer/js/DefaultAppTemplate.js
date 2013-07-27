@@ -177,7 +177,8 @@ $(function () {
                 } else {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
-                mainViewPort.removeClass(className, delay);
+                //mainViewPort.removeClass(className, delay);
+                //forerunner.device.toggleScroll(me.$container, "fr-tool", true);
                 topdiv.removeClass(className, delay);
                 forerunner.device.allowZoom(true);
                 $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
@@ -191,14 +192,15 @@ $(function () {
             var topdiv = $('.fr-layout-topdiv', me.$container);
             var delay = Number(200);
             if (!slideoutPane.is(':visible')) {
-                slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
+                slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height())+100 });
                 if (isLeftPane) {
-                    slideoutPane.slideLeftShow(delay);
+                    slideoutPane.slideLeftShow(delay);                    
                 } else {
-                    $('.fr-param-container', me.$container).css({ height: slideoutPane.height() - 36 });
+                    //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
                     slideoutPane.slideRightShow(delay);
                 }
-                mainViewPort.addClass(className, delay);
+                //mainViewPort.addClass(className, delay);                
+                //forerunner.device.toggleScroll(me.$container, "fr-tool", false);
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
                 $('.fr-layout-mainheadersection', me.$container).toolbar('hideAllTools');

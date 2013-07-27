@@ -27,15 +27,15 @@
 .fr-layout-mainViewPortShiftedRight
 {
     position: fixed;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     overflow: hidden;
 }
 
 .fr-layout-mainViewPortShiftedLeft {
     position: fixed;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
     overflow: hidden;
 }
 
@@ -45,14 +45,14 @@
     padding: 0px;
     margin: 0px;
     border: 0px;
-    overflow:hidden;
+
     background-color: #363B45;
     color: white;
     z-index: 2;
     display: none;
-    position: absolute;
-    left: 0px;
-    top: 0px;
+    position: fixed;
+    left: 0;
+    top: 0;
 }
 
 .fr-layout-leftpanecontent {
@@ -61,7 +61,7 @@
     overflow: auto;
     display:block;
     position: fixed;
-    left: 0px;
+    left: 0;
 }
 
 .fr-layout-rightpane {
@@ -70,20 +70,22 @@
     padding: 0px;
     margin: 0px;
     border: 0px;
-    overflow:hidden;
     background-color: #363B45;
     color: white;
     z-index: 2;
     display: none;
-    position: absolute;
-    right: 0px;
-    top: 0px;
+    position: fixed;
+    right: 0;
+    top: 0;
 }
 
 .fr-layout-rightpanecontent {
     height: 100%;
     width: 280px;
     display:block;
+    overflow: auto;
+    position: fixed;
+    right:0;
 }
 
 .fr-layout-topdiv {

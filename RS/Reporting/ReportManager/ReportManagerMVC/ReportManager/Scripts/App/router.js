@@ -39,6 +39,7 @@ var ApplicationRouter = Backbone.Router.extend({
         _selectedItemPath : null,
 
         _transitionToReportManager: function (path, view) {
+            forerunner.device.allowZoom(false);
             $("body").reportExplorerEZ("transitionToReportManager", path, view);
             $("html").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");

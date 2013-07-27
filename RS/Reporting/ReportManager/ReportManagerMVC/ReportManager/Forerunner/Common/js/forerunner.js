@@ -343,6 +343,28 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
+        toggleScroll: function (element, exceptionClass, canScroll) {
+            if (canScroll) {
+                element.css("overflow", "auto");
+                $(document).off("touchmove");
+                //document.ontouchmove = function (event) {};
+            }
+            else {
+                element.css("overflow", "hidden");
+                $(document).on("touchmove",  function (event) {   
+                    if (event.target.className.indexOf(exceptionClass) === -1) {
+                        event.preventDefault();
+                    }
+                    else {
+                        event.stopPropagation();
+                    }
+                   
+                });
+ 
+            }
+
+        },
+                   
         /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
             if ($(window).height() < 768)

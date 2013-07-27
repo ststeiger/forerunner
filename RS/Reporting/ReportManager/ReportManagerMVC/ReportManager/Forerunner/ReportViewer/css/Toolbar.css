@@ -78,8 +78,9 @@
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
-        margin-left:125px;
-    }
+  margin-left:125px;
+}
+
 }  /* @media */
 
 /* Smartphones (portrait) ----------- */
@@ -88,7 +89,7 @@
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
-    margin-left:45px;
+  margin-left:45px;
 }
 
 }  /* @media */
@@ -99,8 +100,8 @@
   display: none;
 }
  .fr-toolbar-reportpage-textbox {
-        margin-left:400px;
-    }
+  margin-left:400px;
+}
 
 }  /* @media */
 
@@ -122,6 +123,7 @@
     display: none;
 }
 */
+
 }  /* @media */
 
 /* Large screens ----------- */
@@ -130,6 +132,7 @@
     display: none;
 }
 */
+
 }  /* @media */
 
 /* iPhone 4 ----------- */

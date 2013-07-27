@@ -371,7 +371,7 @@ namespace Forerunner.SSRS.Manager
             bool havePermission = false;
             foreach (string permission in rs.GetPermissions(path))
             {
-                if (execute.Equals(permission, StringComparison.OrdinalIgnoreCase))
+                if (permission.IndexOf(execute,StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     havePermission = true;
                     break;

@@ -119,13 +119,18 @@ namespace icongen
             int curY = 0;
             for (int i = 0; i < iconFiles.Count; i++)
             {
-                // Create a resized bitmap from the original image file
                 String iconFilePath = Path.Combine(iconFolder, iconFiles[i]);
+                if (!File.Exists(iconFilePath))
+                {
+                    throw new Exception(String.Format("file: {0}, not found", Path.GetFileName(iconFilePath)));
+                }
+
+                // Create a resized bitmap from the original image file
                 Bitmap iconBitmap = new Bitmap(iconFilePath);
 
                 if (iconBitmap.Height != iconHeight || iconBitmap.Width != iconWidth)
                 {
-                    Console.Error.WriteLine(String.Format("\nIconGen - Warning, file: {0} is not the correct size, cosider reauthoring.", Path.GetFileName(iconFilePath)));
+                    Console.Error.WriteLine(String.Format("\nIconGen - Warning, file: {0} is not the correct size, consider re-authoring.", Path.GetFileName(iconFilePath)));
                 }
 
                 // Composite the new icon bitmap into imageBitmap

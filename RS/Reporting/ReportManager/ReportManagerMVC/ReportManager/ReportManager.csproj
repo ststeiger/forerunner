@@ -180,8 +180,8 @@
     <Content Include="Forerunner\ReportExplorer\images\star_fav_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\sq_br_down_icon&amp;16.png" />
-    <Content Include="Forerunner\ReportViewer\images\Toolbar\sq_br_up_icon&amp;16.png" />
+    <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
+    <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

@@ -40,12 +40,18 @@
   color: white;
   display:block;
 }
-.fr-toolpane .fr-icons24x24 {
-  width:24px;
-  height:24px;
-  margin: 5px;
+.fr-toolpane-icon16x16 {
+  width:16px;
+  height:16px;
   display:inline-block;
-  background-image:url('../../common/Images/icons24x24.png');
+  margin-top: 10px;
+  margin-right: 5px;
+}
+.fr-toolpane-down-icon {
+  background-image:url(../Images/toolpane/sq_br_down_icon16.png);
+}
+.fr-toolpane-up-icon {
+  background-image:url(../Images/toolpane/sq_br_up_icon16.png);
 }
 .fr-item-spacer {
     height: 18px;

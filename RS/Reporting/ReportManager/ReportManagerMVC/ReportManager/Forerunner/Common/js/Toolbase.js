@@ -237,22 +237,6 @@ $(function () {
                 }
             });
         },
-        _removeEvent: function ($toolEl, toolInfo) {
-            var me = this;
-            for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.off(key);
-                }
-            }
-        },
-        _addEvents: function ($toolEl, toolInfo) {
-            var me = this;
-            for (var key in toolInfo.events) {
-                if (typeof toolInfo.events[key] === "function") {
-                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
-                }
-            }
-        },
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
@@ -272,7 +256,7 @@ $(function () {
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
-                }
+            }
             else if (toolInfo.toolType === toolTypes.containerItem) {
                 var text = "";
                 if (toolInfo.text) {
@@ -290,10 +274,15 @@ $(function () {
                         indentation = indentation + "<div class='fr-indent24x24'></div>";
                     }
                 }
+                var rightImageDiv = "";
+                if (toolInfo.rightImageClass) {
+                    rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
+                }
                 var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
                             indentation +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
                             text +
+                            rightImageDiv +
                             "</div>";
                 return html;
             }
@@ -310,6 +299,22 @@ $(function () {
             else
                 text = toolInfo.text;
             return text;
+        },
+        _removeEvent: function ($toolEl, toolInfo) {
+            var me = this;
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] === "function") {
+                    $toolEl.off(key);
+                }
+            }
+        },
+        _addEvents: function ($toolEl, toolInfo) {
+            var me = this;
+            for (var key in toolInfo.events) {
+                if (typeof toolInfo.events[key] === "function") {
+                    $toolEl.on(key, null, { me: me, $reportViewer: me.options.$reportViewer }, toolInfo.events[key]);
+                }
+            }
         },
         _destroy: function () {
         },

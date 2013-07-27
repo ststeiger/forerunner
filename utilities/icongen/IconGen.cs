@@ -21,7 +21,7 @@ namespace icongen
             if (options.Help || args.Length == 0)
             {
                 Console.WriteLine(
-                    "\nIconGen -help -" + Options.configArg + " <config file> -" + Options.imageFolderArg + " <images folder path> -" + Options.outputFolderArg + " <output folder path>\n" +
+                    "\nIconGen -help -" + Options.configArg + " <config file> -" + Options.imageFolderArg + " <images folder path> -" + Options.outputIconFolderArg + " <output images folder path>\n" + Options.styleSheetOutputFolderArg + " <output css folder path>\n" +
                     "\n" +
                     "    IconGen will write composite icon file(s) to the given output folder based upon\n" +
                     "     the given configuration file. The icon file is antialiased using a HighQualityBilinear\n" +
@@ -41,8 +41,11 @@ namespace icongen
                     " -imageFolder <images folder path>\n" +
                     "    Required. Fully qualified path to the source images folder\n" +
                     "\n" +
-                    " -outputFolder <output folder path>\n" +
-                    "    Required. Fully qualified path to the output folder\n" +
+                    " -outputIconFolder <output images folder path>\n" +
+                    "    Required. Fully qualified path to the output images folder\n" +
+                    "\n" +
+                    " -styleSheetOutputFolder <output css folder path>\n" +
+                    "    Required. Fully qualified path to the output css folder\n" +
                     "\n");
                 return;
             }
@@ -79,7 +82,7 @@ namespace icongen
                 CompositeImage compositeImage = new CompositeImage(width, height, options.ImageFolder, sourceFileList);
                 compositeImage.Create();
                 
-                String outFilename = Path.Combine(options.OutputFolder, compositeImageNode.Attributes["name"].InnerText);
+                String outFilename = Path.Combine(options.OutputIconFolder, compositeImageNode.Attributes["name"].InnerText);
                 compositeImage.Save(outFilename);
 
                 Console.WriteLine(String.Format("\nIconGen - file: {0} written, iconWidth: {1}, iconHeight: {2}", Path.GetFileName(outFilename), width, height));
@@ -87,7 +90,7 @@ namespace icongen
                 // Create the StyleSheet class and write out the CSS file
                 String relativeUrlPath = compositeImageNode.Attributes["relativeurlpath"].InnerText + "/" + compositeImageNode.Attributes["name"].InnerText;
                 StyleSheet styleSheet = new StyleSheet(width, height, margin, relativeUrlPath, compositeImageClassName, imageClassNames);
-                String cssFilename = Path.Combine(options.OutputFolder, compositeImageNode.Attributes["cssname"].InnerText);
+                String cssFilename = Path.Combine(options.StyleSheetOutputFolder, compositeImageNode.Attributes["cssname"].InnerText);
                 styleSheet.Save(cssFilename);
 
                 Console.WriteLine(String.Format("\nIconGen - file: {0} written", Path.GetFileName(cssFilename)));

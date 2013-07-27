@@ -8,7 +8,7 @@ namespace icongen
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             bool hadError = false;
             IconGen iconGen = new IconGen();
@@ -27,7 +27,10 @@ namespace icongen
             if (!hadError)
             {
                 Console.WriteLine("\nIconGen - Succeeded\n");
+                return 0;
             }
+
+            return -1;
         }
     }
 }

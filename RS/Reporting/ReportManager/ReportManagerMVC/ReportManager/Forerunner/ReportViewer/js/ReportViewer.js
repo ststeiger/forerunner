@@ -670,7 +670,7 @@ $(function () {
             var left = $(window).scrollLeft();
 
             if (flushCache !== true)
-                flushCache = false
+                flushCache = false;
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;

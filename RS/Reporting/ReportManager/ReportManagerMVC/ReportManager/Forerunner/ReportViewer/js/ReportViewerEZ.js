@@ -84,7 +84,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            if (me.options.DefaultAppTemplate == null) {
+            if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;

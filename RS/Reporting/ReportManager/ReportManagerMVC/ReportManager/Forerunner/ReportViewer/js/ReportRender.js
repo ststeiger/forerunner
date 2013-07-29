@@ -207,9 +207,9 @@ $(function () {
             if (RIContext.CurrLocation) {
                 Style += "width:" + RIContext.CurrLocation.Width + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
-                    Style += "height:" + RIContext.CurrLocation.Height + "mm;";
+                    Style += "height:" + (RIContext.CurrLocation.Height + 1) + "mm;";
                 else {
-                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) + (parseFloat(RIContext.CurrLocation.Height) - (parseFloat(Measurements[RecLayout.LowestIndex].Top) + parseFloat(Measurements[RecLayout.LowestIndex].Height)));
+                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) + (parseFloat(RIContext.CurrLocation.Height) - (parseFloat(Measurements[RecLayout.LowestIndex].Top) + parseFloat(Measurements[RecLayout.LowestIndex].Height))) + 1;
                     Style += "height:" + parentHeight + "mm;";
                 }
         

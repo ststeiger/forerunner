@@ -11,55 +11,111 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0c0d2', endColorstr='#dae3ea',GradientType=1 ); /* IE6-8 */
 }
 
-#docMapSection 
-{
-    height:100%;
-    width: 100%;
-    position: relative;
-}
-
 .fr-docmap-panel
 {
     vertical-align:top;
     height:100%;
-    width:100%;    
-}
-
-.fr-docmap-item-container
-{
+    margin-top:-18px;
+    border-bottom:1px groove darkgray;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .fr-docmap-item
 {
     cursor:pointer;
     text-decoration:none;
-    color:black;
-    //font-family:Verdana;
-    font-size:12pt;
     vertical-align:middle;
-    margin-left:4px;
-    margin-right:4px;
+}
+.fr-docmap-parent-container
+{
+    border-top:1px groove darkgray;
+    vertical-align:top;
+    line-height:26px;    
+    display:block;
+    color:#fff;
+    font-size:11pt;
+    background-color: #616975;
+    background-image: -webkit-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
+    -webkit-box-shadow: inset 0px 1px 0px 0px #878e98;
+    box-shadow: inset 0px 1px 0px 0px #878e98;    
+    -webkit-text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+    text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+}
+.fr-docmap-item-container
+{
+    border-top: 1px solid #efeff0;
+    vertical-align: top;
+    line-height: 24px;
+    text-indent:4px;
+    font-size:10pt;
+    display: block;
+    background:#fff;    
+    font-weight:400;
+    color:#32373D;
 }
 .fr-docmap-item-highlight
 {
-    color:HighlightText;
-    background-color:Highlight;
-}
-.fr-docmap-expand {    
-    background-image:url('../../reportviewer/Images/Drilldown_Expand.gif');
-    display:inline;
-    background-repeat: no-repeat; 
-    margin:4px 4px 4px 10px;
-    padding:6px;
-    background-position: center;
-    cursor:pointer;
+    background-color:darkgray;
+    color:#fff;
 }
 .fr-docmap-indent
 {
-    
     display:inline;
     background-repeat: no-repeat; 
     margin:4px 4px 4px 10px;
     padding:6px;
     background-position: center;
     cursor:pointer;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+   
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) and (orientation : portrait) {
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    .fr-docmap-panel-layout
+    {
+        width: 50%;
+        border-right: 1px groove darkgray;
+    }
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    .fr-docmap-panel-layout
+    {
+        width: 50%;
+        border-right: 1px groove darkgray;
+    }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+    .fr-docmap-panel-layout
+    {
+        width: 25%;
+        border-right: 1px groove darkgray;
+    }
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+    .fr-docmap-panel-layout
+    {
+        width: 20%;
+        border-right: 1px groove darkgray;
+    }
+}
+
+/* iPhone 4 / Ipad----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+    .fr-docmap-panel-layout
+    {
+        width: 100%;
+    }
 }

@@ -44,82 +44,70 @@
   min-width: 10mm;
   max-width: 20mm;
 }
-.fr-toolbar-pageOf {
+.fr-toolbar-pageOf-button {
   width: 15px;
   color:white;
   line-height:36px;
   text-align:center;    
 }
-.fr-toolbar-numPages {
+.fr-toolbar-numPages-button {
   min-width:10mm;
   max-width:15mm;
   padding-left: 4px;
   color:white;
   line-height:36px;
 }
-.fr-toolbar-span-sparator
+.fr-toolbar-sparator-text
 {
   color:white;
   line-height:36px;
   text-align:center;
 }
-.fr-button-find, .fr-button-findnext {
+.fr-toolbar-find-button, .fr-toolbar-findnext-button {
   color: white;
   line-height:36px;
   text-align:center;  
 }
-.fr-button-home, .fr-button-paramarea {
+.fr-button-home, .fr-toolbar-paramarea-button {
     float:right;
 }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
-  display: none;
-}
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
-        margin-left:125px;
-    }
+  margin-left:125px;
+}
+
 }  /* @media */
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
+.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
   display: none;
 }
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
-  display: none;
-}
-
 .fr-toolbar-reportpage-textbox {
-    margin-left:45px;
+  margin-left:45px;
 }
 
 }  /* @media */
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
-  display: none;
-}
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
   display: none;
 }
  .fr-toolbar-reportpage-textbox {
-        margin-left:400px;
-    }
+  margin-left:400px;
+}
 
 }  /* @media */
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
-  display: none;
-}
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -131,26 +119,25 @@
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
 /*
-.fr-button-menu {
+.fr-toolbar-menu-button {
     display: none;
 }
 */
+
 }  /* @media */
 
 /* Large screens ----------- */
 @media only screen and (min-width : 1824px) {
-/*/.fr-button-menu {
+/*/.fr-toolbar-menu-button {
     display: none;
 }
 */
+
 }  /* @media */
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
-.fr-button-home, .fr-button-nav, .fr-button-refresh, .fr-button-firstpage, .fr-button-prev, .fr-button-next,.fr-button-update-fav,.fr-button-export {
-  display: none;
-}
-.fr-button-lastpage, .fr-button-documentmap, .fr-toolbar-keyword-textbox, .fr-button-find, .fr-span-find, .fr-button-findnext, .fr-toolbar-span-sparator {
+.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
   display: none;
 }
 

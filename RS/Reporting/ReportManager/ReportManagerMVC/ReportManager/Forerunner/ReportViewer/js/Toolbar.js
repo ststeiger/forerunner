@@ -17,7 +17,7 @@ $(function () {
     // Tool Info data
     var btnReportBack = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-reportback",
+        selectorClass: "fr-toolbar-reportback-button",
         imageClass: "fr-icons24x24-reportback",
         events: {
             click: function (e) {
@@ -27,7 +27,7 @@ $(function () {
     };
     var btnMenu = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-menu",
+        selectorClass: "fr-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
         events: {
             click: function (e) {
@@ -37,8 +37,9 @@ $(function () {
     };
     var btnNav = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-nav",
+        selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -47,7 +48,7 @@ $(function () {
     };
     var btnParamarea = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-paramarea",
+        selectorClass: "fr-toolbar-paramarea-button",
         imageClass: "fr-icons24x24-paramarea",
         events: {
             click: function (e) {
@@ -58,8 +59,9 @@ $(function () {
    
     var btnRefresh = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-refresh",
+        selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -68,8 +70,9 @@ $(function () {
     };
     var btnFirstPage = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-firstpage",
+        selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -78,8 +81,9 @@ $(function () {
     };
     var btnPrev = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-prev",
+        selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -103,18 +107,19 @@ $(function () {
     };
     var btnPageOf = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-pageOf",
+        selectorClass: "fr-toolbar-pageOf-button",
         text: locData.toolbar.pageOf
     };
     var btnNumPages = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-numPages",
+        selectorClass: "fr-toolbar-numPages-button",
         text: "0"
     };
     var btnNext = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-next",
+        selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -123,8 +128,9 @@ $(function () {
     };
     var btnLastPage = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-lastpage",
+        selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -133,12 +139,13 @@ $(function () {
     };
     var btnVCRGroup = {
         toolType: toolTypes.toolGroup,
-        selectorClass: "fr-btn-VCRgroup-id",
+        selectorClass: "fr-toolbar-VCR-group-id",
         tools: [btnFirstPage, btnPrev, btnReportPage, btnPageOf, btnNumPages, btnNext, btnLastPage]
     };
     var btnDocumentMap = {
         toolType: toolTypes.button,
-        selectorClass: "fr-button-documentmap",
+        selectorClass: "fr-toolbar-documentmap-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         imageClass: "fr-icons24x24-documentmap",
         events: {
             click: function (e) {
@@ -149,6 +156,7 @@ $(function () {
     var btnKeyword = {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-keyword-textbox",
+        sharedClass: "fr-toolbar-touch-hidden",
         events: {
             keypress: function (e) {
                 if (e.keyCode === 13) {
@@ -159,7 +167,8 @@ $(function () {
     };
     var btnFind = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-button-find",
+        selectorClass: "fr-toolbar-find-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: locData.toolbar.find,
         events: {
             click: function (e) {
@@ -170,12 +179,14 @@ $(function () {
     };
     var btnSeparator = {
         toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-span-sparator",
+        selectorClass: "fr-toolbar-sparator-text",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: "|&nbsp"
     };
     var btnFindNext = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-button-findnext",
+        selectorClass: "fr-toolbar-findnext-button",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: locData.toolbar.next,
         events: {
             click: function (e) {
@@ -186,17 +197,17 @@ $(function () {
     };
     var btnFindGroup = {
         toolType: toolTypes.toolGroup,
-        selectorClass: "fr-toolbar-findgroup-id",
+        selectorClass: "fr-toolbar-find-group-id",
         tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
     };
     //
     // Export tools
     var btnExportXML = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportXML-id",
         imageClass: "fr-icons24x24-exportXML",
-        text: locData.exportType.xml,
-        selectorClass: "fr-button-exportXML",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.xml,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -205,10 +216,10 @@ $(function () {
     };
     var btnExportCSV = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportCSV-id",
         imageClass: "fr-icons24x24-exportCSV",
-        text: locData.exportType.csv,
-        selectorClass: "fr-button-exportCSV",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.csv,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -217,10 +228,10 @@ $(function () {
     };
     var btnExportPDF = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportPDF-id",
         imageClass: "fr-icons24x24-exportPDF",
-        text: locData.exportType.pdf,
-        selectorClass: "fr-button-exportPDF",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.pdf,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -229,10 +240,10 @@ $(function () {
     };
     var btnExportMHTML = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportMHTML-id",
         imageClass: "fr-icons24x24-exportMHT",
-        text: locData.exportType.mhtml,
-        selectorClass: "fr-button-exportMHTML",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.mhtml,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -241,10 +252,10 @@ $(function () {
     };
     var btnExportExcel = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportExcel-id",
         imageClass: "fr-icons24x24-exportExcel",
-        text: locData.exportType.excel,
-        selectorClass: "fr-button-exportExcel",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.excel,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
@@ -253,10 +264,10 @@ $(function () {
     };
     var btnExportTiff = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportTiff-id",
         imageClass: "fr-icons24x24-exportTIFF",
-        text: locData.exportType.tiff,
-        selectorClass: "fr-button-exportTiff",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.tiff,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -265,10 +276,10 @@ $(function () {
     };
     var btnExportWord = {
         toolType: toolTypes.containerItem,
+        selectorClass: "fr-button-exportWord-id",
         imageClass: "fr-icons24x24-exportWord",
-        text: locData.exportType.word,
-        selectorClass: "fr-button-exportWord",
         sharedClass: "fr-toolbase-dropdown-item",
+        text: locData.exportType.word,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("exportReport", exportType.word);
@@ -277,14 +288,16 @@ $(function () {
     };
     var btnSeparator2 = {
         toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-span-sparator",
+        selectorClass: "fr-toolbar-sparator-text",
+        sharedClass: "fr-toolbar-touch-hidden",
         text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.button,
-        //text: locData.toolbar.exportMenu,
-        selectorClass: "fr-button-export",
+        selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
+        sharedClass: "fr-toolbar-touch-hidden",
+        //text: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
@@ -355,7 +368,7 @@ $(function () {
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
 
-            me.element.find(".fr-toolbar-numPages").html(maxPage);
+            me.element.find(".fr-toolbar-numPages-button").html(maxPage);
             me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))

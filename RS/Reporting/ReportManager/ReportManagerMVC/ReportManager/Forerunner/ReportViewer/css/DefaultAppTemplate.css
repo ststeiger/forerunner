@@ -114,17 +114,17 @@
   background-color: black;
 }
 
-.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-button-nav, .fr-layout-rightheader .fr-button-refresh, .fr-layout-rightheader .fr-button-firstpage, .fr-layout-rightheader .fr-button-prev, 
-.fr-layout-rightheader .fr-button-next, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-button-export, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
-.fr-layout-rightheader .fr-toolbar-pageOf, .fr-layout-rightheader .fr-toolbar-numPages {
+.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
+.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
+.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button {
   display: none;
 }
-.fr-layout-rightheader .fr-button-lastpage, .fr-layout-rightheader .fr-button-documentmap, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-button-find, .fr-layout-rightheader .fr-span-find, 
-.fr-layout-rightheader .fr-button-findnext, .fr-layout-rightheader .fr-toolbar-span-sparator, .fr-layout-rightheader .fr-button-menu {
+.fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 
+.fr-layout-rightheader .fr-toolbar-findnext-button, .fr-layout-rightheader .fr-toolbar-sparator-text, .fr-layout-rightheader .fr-toolbar-menu-button {
   display: none;
 }
 
-.fr-layout-rightheader .fr-button-reportback, .fr-layout-rightheader .fr-button-paramarea {
+.fr-layout-rightheader .fr-toolbar-reportback-button, .fr-layout-rightheader .fr-toolbar-paramarea-button {
     float: left;
 }
 
@@ -137,17 +137,17 @@
   background-color: black;
 }
 
-.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-button-nav, .fr-layout-leftheader .fr-button-refresh, .fr-layout-leftheader .fr-button-firstpage, .fr-layout-leftheader .fr-button-prev, 
-.fr-layout-leftheader .fr-button-next, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-button-export, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
-.fr-layout-leftheader .fr-toolbar-pageOf, .fr-layout-leftheader .fr-toolbar-numPages {
+.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
+.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
+.fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button {
   display: none;
 }
-.fr-layout-leftheader .fr-button-lastpage, .fr-layout-leftheader .fr-button-documentmap, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-button-find, .fr-layout-leftheader .fr-span-find, 
-.fr-layout-leftheader .fr-button-findnext, .fr-layout-leftheader .fr-toolbar-span-sparator, .fr-layout-leftheader .fr-button-reportback, .fr-layout-leftheader .fr-button-paramarea {
+.fr-layout-leftheader .fr-toolbar-lastpage-button, .fr-layout-leftheader .fr-toolbar-documentmap-button, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-toolbar-find-button, 
+.fr-layout-leftheader .fr-toolbar-findnext-button, .fr-layout-leftheader .fr-toolbar-sparator-text, .fr-layout-leftheader .fr-toolbar-reportback-button, .fr-layout-leftheader .fr-toolbar-paramarea-button {
   display: none;
 }
 
-.fr-layout-leftheader .fr-button-menu {
+.fr-layout-leftheader .fr-toolbar-menu-button {
     float: right;
 }
 

@@ -26,6 +26,18 @@ $(function () {
             }
         }
     };
+    var itemZoom = {
+        toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-zoom",
+        imageClass: "fr-icons24x24-nav",
+        text: locData.toolPane.zoom,
+        events: {
+            click: function (e) {
+                forerunner.device.allowZoom(true);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
+            }
+        }
+    };
     var itemReportBack = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-reportback",
@@ -343,7 +355,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap, itemExport, itemExportGroup, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();

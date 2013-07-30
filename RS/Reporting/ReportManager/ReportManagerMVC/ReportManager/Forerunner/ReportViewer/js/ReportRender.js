@@ -716,7 +716,7 @@ $(function () {
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
-            var $FixedRowHeader = new $("<TABLE/>").css({ position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";

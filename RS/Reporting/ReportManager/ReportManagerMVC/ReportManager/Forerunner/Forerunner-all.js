@@ -344,27 +344,6 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
-        toggleScroll: function (element, exceptionClass, canScroll) {
-            if (canScroll) {
-                element.css("overflow", "auto");
-                $(document).off("touchmove");
-                //document.ontouchmove = function (event) {};
-            }
-            else {
-                element.css("overflow", "hidden");
-                $(document).on("touchmove",  function (event) {   
-                    if (event.target.className.indexOf(exceptionClass) === -1) {
-                        event.preventDefault();
-                    }
-                    else {
-                        event.stopPropagation();
-                    }
-                   
-                });
- 
-            }
-
-        },
                    
         /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
@@ -653,9 +632,7 @@ $(function () {
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
-                        me._hideTableHeaders();
-                    if (phase === "move")
-                        me._updateTableHeaders(me);
+                        me._hideTableHeaders();                   
                     if (phase === "end")
                         me._updateTableHeaders(me);
                 },
@@ -2329,6 +2306,18 @@ $(function () {
             }
         }
     };
+    var itemZoom = {
+        toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-zoom",
+        imageClass: "fr-icons24x24-nav",
+        text: locData.toolPane.zoom,
+        events: {
+            click: function (e) {
+                forerunner.device.allowZoom(true);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
+            }
+        }
+    };
     var itemReportBack = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-id-reportback",
@@ -2646,7 +2635,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap, itemExport, itemExportGroup, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -3845,7 +3834,7 @@ $(function () {
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
-            var $FixedRowHeader = new $("<TABLE/>").css({ position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
@@ -5311,14 +5300,20 @@ $(function () {
             $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             
             $(window).resize(function () {
-                $('.fr-layout-mainviewport', me.$container).css({ height: '100%' });
-                $('.fr-layout-leftpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-                $('.fr-layout-rightpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-                $('.fr-layout-leftpanecontent', me.$container).css({ height: '100%' });
-                $('.fr-layout-rightpanecontent', me.$container).css({ height: '100%' });
-                //$('.fr-docmap-panel').css({ height: '100%' });
-                $('.fr-param-container', me.$container).css({ height: $('.fr-layout-rightpane', me.$container).height() - 45 });
+                me.ResetSize();
             });
+        },
+        ResetSize: function () {
+            var me = this;
+            forerunner.device.allowZoom(false);
+            $('.fr-layout-mainviewport', me.$container).css({ height: '100%' });
+            $('.fr-layout-leftpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
+            $('.fr-layout-rightpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
+            $('.fr-layout-leftpanecontent', me.$container).css({ height: '100%' });
+            $('.fr-layout-rightpanecontent', me.$container).css({ height: '100%' });
+            //$('.fr-docmap-panel').css({ height: '100%' });
+            $('.fr-param-container', me.$container).css({ height: $('.fr-layout-rightpane', me.$container).height() });
+            
         },
 
         bindViewerEvents: function () {
@@ -5372,19 +5367,22 @@ $(function () {
                 //mainViewPort.removeClass(className, delay);
                 //forerunner.device.toggleScroll(me.$container, "fr-tool", true);
                 topdiv.removeClass(className, delay);
-                forerunner.device.allowZoom(true);
+                //forerunner.device.allowZoom(true);
                 $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
+            forerunner.device.allowZoom(false);
+            me.$container.resize();
+
             var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
             var mainViewPort = $('.fr-layout-mainviewport', me.$container);
             var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
             var topdiv = $('.fr-layout-topdiv', me.$container);
             var delay = Number(200);
             if (!slideoutPane.is(':visible')) {
-                slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height())+100 });
+                slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
                     slideoutPane.slideLeftShow(delay);                    
                 } else {

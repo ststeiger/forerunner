@@ -33,7 +33,8 @@
         "refresh": "Refresh",
         "docMap": "Document Map",
         "find": "Find",
-        "next": "Next"
+        "next": "Next",
+		"zoom": "Enable Zoom"
     },
 	"toolbar": {
         "pageOf": "of",

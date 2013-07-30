@@ -135,18 +135,34 @@
         background: linear-gradient(to bottom, rgba(141,158,165,1) 0%,rgba(169,194,215,1) 100%); /* W3C */
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8d9ea5', endColorstr='#a9c2d7',GradientType=0 ); /* IE6-8 */
     }
+    .fr-explorer-item:hover {
+        background:transparent;
+
+     }
 }
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (orientation : portrait) {
+    .fr-explorer-item:hover {
+        background:transparent;
+
+     }
 }
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+        .fr-explorer-item:hover {
+        background:transparent;
+
+     }
 }
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+        .fr-explorer-item:hover {
+        background:transparent;
+
+     }
 }
 
 /* Desktops and laptops ----------- */
@@ -162,4 +178,8 @@
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
     /* Styles */
+        .fr-explorer-item:hover {
+        background:transparent;
+
+     }
 }

@@ -5181,10 +5181,8 @@ $(function () {
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<div />");
-
-            for (var i = 0; i < level; i++) {
-                $docMap.css("margin-left", level * 18 + 'px');
-            }
+            if (level !== 0)
+                $docMap.css("margin-left", '34px');
 
             var $mapNode = new $("<div />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);

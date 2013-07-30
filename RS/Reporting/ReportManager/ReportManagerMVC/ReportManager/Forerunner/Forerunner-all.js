@@ -3176,8 +3176,10 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
 
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));           
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, "")); });
+
+
         },
         writeError: function (errorData) {
             var me = this;
@@ -3229,24 +3231,27 @@ $(function () {
             //Need to determine Header and footer Index
             var headerIndex;
             var footerIndex;
+
+            // Header and Footer could either be on Section or PageContent
             if (RIContext.CurrObj.PageFooter) {
                 footerIndex = RIContext.CurrObj.Columns.length;
                 headerIndex = footerIndex + 1;
             }
             else
                 headerIndex = RIContext.CurrObj.Columns.length;
-
+            if (RIContext.CurrObjParent.PageHeader) {
+                headerIndex = 1;
+                footerIndex = 2;
+            }
+            else if (RIContext.CurrObjParent.PageFooter)
+                footerIndex = 1;
 
             //Page Header
-            if (RIContext.CurrObj.PageHeader) {
-                var $header = $("<TR/>");
-                var $headerTD = $("<TD/>");
-                $header.append($headerTD);
-                var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, headerIndex);
-                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
-                $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, headerIndex, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
-                $newObj.append($header);
-            }
+            if (RIContext.CurrObj.PageHeader)
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex))
+            //Page Header on PageContent
+            if (RIContext.CurrObjParent.PageHeader)
+                $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
             $sec.attr("Style", "width:" + location.Width + "mm;");
             //Columns
@@ -3258,18 +3263,26 @@ $(function () {
             });
 
             //Page Footer
-            if (RIContext.CurrObj.PageFooter) {
-                var $footer = $("<TR/>");
-                var $footerTD = $("<TD/>");
-                $footer.append($footerTD);
-                var footerLoc = me._getMeasurmentsObj(RIContext.CurrObj, footerIndex);
-                $footer.attr("Style", "width:" + footerLoc.Width + "mm;");
-                $footerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, footerIndex, RIContext.CurrObj, new $("<DIV/>"), "", footerLoc)));
-                $newObj.append($footer);
-            }
-
+            if (RIContext.CurrObj.PageFooter)
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageFooter", footerIndex))
+            //Page Footer on PageContent
+            if (RIContext.CurrObjParent.PageFooter)
+                $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageFooter", footerIndex));
 
             RIContext.$HTMLParent.append($newObj);
+        },
+        _writeHeaderFooter: function (RIContext, HeaderOrFooter, Index) {
+            var me = this;
+            //Page Header
+            if (RIContext.CurrObj[HeaderOrFooter]) {
+                var $header = $("<TR/>");
+                var $headerTD = $("<TD/>");
+                $header.append($headerTD);
+                var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, Index);
+                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
+                $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
+                return $header;
+            }
         },
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
@@ -5690,7 +5703,7 @@ $(function () {
             forerunner.device.allowZoom(true);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
-            layout.$topdivspacer.attr("style", "height: 38px");
+            //layout.$topdivspacer.attr("style", "height: 38px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {

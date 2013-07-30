@@ -101,8 +101,8 @@
 }
 
 .fr-layout-topdivspacer {
-  height:36px;
-  display:block;
+  height:33px;
+  display:inline-block;
 }
 
 .fr-layout-rightheader {

@@ -10,33 +10,44 @@
     background: linear-gradient(to right,  rgba(176,192,210,1) 17%,rgba(218,227,234,1) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0c0d2', endColorstr='#dae3ea',GradientType=1 ); /* IE6-8 */
 }
-
 .fr-docmap-panel
 {
     vertical-align:top;
     height:100%;
-    margin-top:-18px;
-    border-bottom:1px groove darkgray;
+    display:inline-block;
+    border-right: 1px groove darkgray;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .fr-docmap-item
 {
+    width:100%;
     cursor:pointer;
-    text-decoration:none;
+    margin-right:6px; 
+    display:inline-block;
     vertical-align:middle;
+}
+.fr-docmap-item-root
+{
+    text-indent:8px;    
+    border-left:1px solid white;
 }
 .fr-docmap-parent-container
 {
-    border-top:1px groove darkgray;
-    vertical-align:top;
-    line-height:26px;    
-    display:block;
-    color:#fff;
-    font-size:11pt;
+    width:100%;
+    border-top: 1px groove darkgray;
+    vertical-align: top;
+    line-height: 24px;
+    padding:6px 0px;
+    display: inline-block;
+    color: #fff;
+    font-size: 11pt;
+    white-space:nowrap;
+    overflow-x:hidden;
+
     background-color: #616975;
     background-image: -webkit-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
     -webkit-box-shadow: inset 0px 1px 0px 0px #878e98;
-    box-shadow: inset 0px 1px 0px 0px #878e98;    
+    box-shadow: inset 0px 1px 0px 0px #878e98;
     -webkit-text-shadow: 0px 1px 0px rgba(0,0,0,.5);
     text-shadow: 0px 1px 0px rgba(0,0,0,.5);
 }
@@ -51,11 +62,15 @@
     background:#fff;    
     font-weight:400;
     color:#32373D;
+
+    /*color:#fff;
+    background-color: #616975;*/
 }
 .fr-docmap-item-highlight
 {
-    background-color:darkgray;
     color:#fff;
+    background-color:#35afe3;
+    background-image:-webkit-linear-gradient(top, rgb(69, 199, 235), rgb(38, 152, 219));
 }
 .fr-docmap-indent
 {
@@ -66,56 +81,20 @@
     background-position: center;
     cursor:pointer;
 }
-
-/* Smartphones (landscape) ----------- */
-@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-   
+.fr-docmap-icon{
+    padding:10px;
+    display:inline;
+    margin:4px 12px;
+    cursor:pointer;
+    vertical-align:central;
+    background-position:center;
+    background-repeat:no-repeat;
 }
-
-/* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) and (orientation : portrait) {
+.fr-docmap-icon-down
+{
+    background-image:url(../Images/toolpane/sq_br_down_icon16.png);
 }
-
-/* iPads (landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-    .fr-docmap-panel-layout
-    {
-        width: 50%;
-        border-right: 1px groove darkgray;
-    }
-}
-
-/* iPads (portrait) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-    .fr-docmap-panel-layout
-    {
-        width: 50%;
-        border-right: 1px groove darkgray;
-    }
-}
-
-/* Desktops and laptops ----------- */
-@media only screen and (min-width : 1224px) {
-    .fr-docmap-panel-layout
-    {
-        width: 25%;
-        border-right: 1px groove darkgray;
-    }
-}
-
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-    .fr-docmap-panel-layout
-    {
-        width: 20%;
-        border-right: 1px groove darkgray;
-    }
-}
-
-/* iPhone 4 / Ipad----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
-    .fr-docmap-panel-layout
-    {
-        width: 100%;
-    }
+.fr-docmap-icon-up
+{
+    background-image:url(../Images/toolpane/sq_br_up_icon16.png);
 }

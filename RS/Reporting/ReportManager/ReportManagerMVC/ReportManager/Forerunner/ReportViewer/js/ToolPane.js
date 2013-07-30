@@ -342,6 +342,15 @@ $(function () {
                 me._clearItemStates();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.disableAllTools();
+                me.enableTools([itemDocumentMap]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.enableAllTools();
+            });
+
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
                             itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);

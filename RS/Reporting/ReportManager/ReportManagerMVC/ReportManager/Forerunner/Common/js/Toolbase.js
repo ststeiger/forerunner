@@ -237,6 +237,34 @@ $(function () {
                 }
             });
         },
+        /**
+        * Make all tools enable that where enabled before disable
+        * @function $.forerunner.toolBase#enableAllTools
+        */
+        enableAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Tools) {
+                if (Tools.selectorClass && me.allTools[Tools.selectorClass].isEnable) {
+                    me.enableTools([Tools]);
+                }
+            });
+        },
+        /**
+        * Make all tools disable and remember which ones where enabled
+        * @function $.forerunner.toolBase#disableAllTools
+        */
+        disableAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Tools) {
+                if (Tools.selectorClass) {
+                    var $toolEl = $("." + Tools.selectorClass, me.element);
+                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass('fr-toolbase-disabled');
+                    me.disableTools([Tools]);
+                }
+            });
+        },
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {

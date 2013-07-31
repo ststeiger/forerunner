@@ -51,7 +51,7 @@ $(function () {
             var me = this;
             var $docMap = new $("<div />");
             if (level !== 0)
-                $docMap.css("margin-left", '34px');
+                $docMap.css("margin-left", "34px");
 
             var $mapNode = new $("<div />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
@@ -74,12 +74,13 @@ $(function () {
                 $rightImage.on("click", function () {
                     var childPanel = $docMap.find("[level='" + level + "']");
                     if (childPanel.is(":visible")) {
-                        $docMap.find("[level='" + level + "']").hide();
+                        //$docMap.find("[level='" + level + "']").hide();
+                        $docMap.find("[level='" + level + "']").slideUpHide();
                         $rightImage.removeClass("fr-docmap-icon-up").addClass("fr-docmap-icon-down");
                     }
                     else {
-                        //$docMap.find("[level='" + level + "']").slideUpShow();
-                        $docMap.find("[level='" + level + "']").show();
+                        $docMap.find("[level='" + level + "']").slideUpShow();
+                        //$docMap.find("[level='" + level + "']").show();
                         $rightImage.removeClass("fr-docmap-icon-down").addClass("fr-docmap-icon-up");
                     }
                 });

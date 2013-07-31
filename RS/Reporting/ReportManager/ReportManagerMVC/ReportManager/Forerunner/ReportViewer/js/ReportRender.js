@@ -130,7 +130,7 @@ $(function () {
 
             //Page Header
             if (RIContext.CurrObj.PageHeader)
-                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex))
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));
             //Page Header on PageContent
             if (RIContext.CurrObjParent.PageHeader)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));

@@ -8,7 +8,6 @@ using Microsoft.ReportingServices.Interfaces;
 using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
-using Forerunner.SSRS.JSONRender;
 using Forerunner.Thumbnail;
 
 namespace Forerunner.RenderingExtensions
@@ -20,7 +19,7 @@ namespace Forerunner.RenderingExtensions
         public string LocalizedName { get { return "ForerunnerThumbnail"; } }
         static Type RendererType = null;
         private Stream RegisteredStream = null;
-        private ReportJSONWriter JSON;
+
 
         public ThumbnailRenderer()
         {

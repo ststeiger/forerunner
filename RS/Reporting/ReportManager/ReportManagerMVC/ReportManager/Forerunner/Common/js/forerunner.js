@@ -39,12 +39,21 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
     slideUpShow: function (delay) {
         return this.each(function () {
             $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
         });
     },
-
+    slideUpHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -251,13 +260,13 @@ $(function () {
          *
          * @member
          */
-        forerunnerFolder: "../forerunner",
+        forerunnerFolder: "./forerunner",
         /**
          * Base path to the REST api controlers
          *
          * @member
          */
-        forerunnerAPIBase: "../api/",
+        forerunnerAPIBase: "./api/",
     };
     /**
      * Defines the methods used to localize string data in the SDK.

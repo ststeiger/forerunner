@@ -40,12 +40,21 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
     slideUpShow: function (delay) {
         return this.each(function () {
             $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
         });
     },
-
+    slideUpHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -252,13 +261,13 @@ $(function () {
          *
          * @member
          */
-        forerunnerFolder: "../forerunner",
+        forerunnerFolder: "./forerunner",
         /**
          * Base path to the REST api controlers
          *
          * @member
          */
-        forerunnerAPIBase: "../api/",
+        forerunnerAPIBase: "./api/",
     };
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -1711,8 +1720,8 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if(Obj.selectorClass)
-                    me.hideTool(Obj.selectorClass)
+                if (Obj.selectorClass)
+                    me.hideTool(Obj.selectorClass);
             });
 
         },
@@ -1724,8 +1733,8 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) 
-                    me.showTool(Obj.selectorClass)                
+                if (Obj.selectorClass)
+                    me.showTool(Obj.selectorClass);
             });
 
         },
@@ -1791,7 +1800,7 @@ $(function () {
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
                     var $toolEl = $("." + Tools.selectorClass, me.element);
-                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass('fr-toolbase-disabled');
+                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
                     me.disableTools([Tools]);
                 }
             });
@@ -2352,6 +2361,7 @@ $(function () {
             click: function (e) {
                 forerunner.device.allowZoom(true);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
             }
         }
     };
@@ -3294,7 +3304,7 @@ $(function () {
 
             //Page Header
             if (RIContext.CurrObj.PageHeader)
-                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex))
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));
             //Page Header on PageContent
             if (RIContext.CurrObjParent.PageHeader)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
@@ -5182,7 +5192,7 @@ $(function () {
             var me = this;
             var $docMap = new $("<div />");
             if (level !== 0)
-                $docMap.css("margin-left", '34px');
+                $docMap.css("margin-left", "34px");
 
             var $mapNode = new $("<div />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
@@ -5205,12 +5215,13 @@ $(function () {
                 $rightImage.on("click", function () {
                     var childPanel = $docMap.find("[level='" + level + "']");
                     if (childPanel.is(":visible")) {
-                        $docMap.find("[level='" + level + "']").hide();
+                        //$docMap.find("[level='" + level + "']").hide();
+                        $docMap.find("[level='" + level + "']").slideUpHide();
                         $rightImage.removeClass("fr-docmap-icon-up").addClass("fr-docmap-icon-down");
                     }
                     else {
-                        //$docMap.find("[level='" + level + "']").slideUpShow();
-                        $docMap.find("[level='" + level + "']").show();
+                        $docMap.find("[level='" + level + "']").slideUpShow();
+                        //$docMap.find("[level='" + level + "']").show();
                         $rightImage.removeClass("fr-docmap-icon-down").addClass("fr-docmap-icon-up");
                     }
                 });
@@ -5357,15 +5368,15 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $mainheadersection = $('.fr-layout-mainheadersection', me.$container);
+            var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-leftheader', me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $(".fr-layout-leftheader", me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
-            $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-rightheader", me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             
             $(window).resize(function () {
                 me.ResetSize();
@@ -5374,13 +5385,13 @@ $(function () {
         ResetSize: function () {
             var me = this;
             forerunner.device.allowZoom(false);
-            $('.fr-layout-mainviewport', me.$container).css({ height: '100%' });
-            $('.fr-layout-leftpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
-            $('.fr-layout-rightpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-            $('.fr-layout-leftpanecontent', me.$container).css({ height: '100%' });
-            $('.fr-layout-rightpanecontent', me.$container).css({ height: '100%' });
-            //$('.fr-docmap-panel').css({ height: '100%' });
-            $('.fr-param-container', me.$container).css({ height: $('.fr-layout-rightpane', me.$container).height() });
+            //alert("hi");
+            $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
+            $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
+            $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
+            $(".fr-layout-leftpanecontent", me.$container).css({ height: "100%" });
+            $(".fr-layout-rightpanecontent", me.$container).css({ height: "100%" });
+            $(".fr-param-container", me.$container).css({ height: $(".fr-layout-rightpane", me.$container).height() });
             
         },
 
@@ -5388,11 +5399,11 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $viewer = $('.fr-layout-reportviewer', me.$container);
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
             $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
-                var $spacer = $('.fr-layout-bottomdivspacer', me.$container);
+                var $spacer = $(".fr-layout-bottomdivspacer", me.$container);
 
                 if (!data.open) {
                     $spacer.hide();
@@ -5421,22 +5432,19 @@ $(function () {
 
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
-            var mainViewPort = $('.fr-layout-mainviewport', me.$container);;
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            var topdiv = $('.fr-layout-topdiv', me.$container);
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
+            var mainViewPort = $(".fr-layout-mainviewport", me.$container);
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            var topdiv = $(".fr-layout-topdiv", me.$container);
             var delay = Number(200);
-            if (slideoutPane.is(':visible')) {
+            if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
                 } else {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
-                //mainViewPort.removeClass(className, delay);
-                //forerunner.device.toggleScroll(me.$container, "fr-tool", true);
                 topdiv.removeClass(className, delay);
-                //forerunner.device.allowZoom(true);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
+                $(".fr-layout-mainheadersection", me.$container).toolbar("showAllTools");
             }
         },
         showSlideoutPane: function (isLeftPane) {
@@ -5444,30 +5452,28 @@ $(function () {
             forerunner.device.allowZoom(false);
             me.$container.resize();
 
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
-            var mainViewPort = $('.fr-layout-mainviewport', me.$container);
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            var topdiv = $('.fr-layout-topdiv', me.$container);
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
+            var mainViewPort = $(".fr-layout-mainviewport", me.$container);
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            var topdiv = $(".fr-layout-topdiv", me.$container);
             var delay = Number(200);
-            if (!slideoutPane.is(':visible')) {
+            if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
                     slideoutPane.slideLeftShow(delay);                    
                 } else {
-                    //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
+                    //$(".fr-param-container", me.$container).css({ height: slideoutPane.height() + 100 });
                     slideoutPane.slideRightShow(delay);
                 }
-                //mainViewPort.addClass(className, delay);                
-                //forerunner.device.toggleScroll(me.$container, "fr-tool", false);
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('hideAllTools');
+                $(".fr-layout-mainheadersection", me.$container).toolbar("hideAllTools");
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            if (slideoutPane.is(':visible')) {
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            if (slideoutPane.is(":visible")) {
                 this.hideSlideoutPane(isLeftPane);
             } else {
                 this.showSlideoutPane(isLeftPane);
@@ -5629,7 +5635,7 @@ $(function () {
                             else
                                 action = "add";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
-                            $.getJSON(me.options.ReportViewerAPI + "/UpdateView", {
+                            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath

@@ -35,6 +35,7 @@ $(function () {
             click: function (e) {
                 forerunner.device.allowZoom(true);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
             }
         }
     };

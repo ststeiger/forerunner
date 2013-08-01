@@ -259,7 +259,7 @@ Function IsDotNETInstalled
    Exch $EXEDIR
    Exch $EXEDIR
    Pop $4
-   # 如果根目录不存在则 .NET 未安装
+
    IfFileExists $4 0 noDotNET
 
    StrCpy $0 0
@@ -295,6 +295,25 @@ Function IsDotNETInstalled
      Pop $1
      Exch $0
 FunctionEnd
+
+Function IsIISInstalled
+  ClearErrors
+  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\InetStp" "MajorVersion"
+
+  IfErrors 0 +2
+    MessageBox MB_OK|MB_ICONSTOP "IIS Server not found, please install IIS first! Installer will abort."
+    Abort
+FunctionEnd
+
+Function IsUWSInstalled
+  ClearErrors
+  ReadRegDWORD $0 HKLM "SYSTEM\CurrentControlSet\services\UltiDev Web Server Pro" "Start"
+
+  IfErrors 0 +2
+    MessageBox MB_OK|MB_ICONSTOP "UWS Server not found, please install UWS first! Installer will abort."
+    Abort
+FunctionEnd
+
 
 
 Section Uninstall

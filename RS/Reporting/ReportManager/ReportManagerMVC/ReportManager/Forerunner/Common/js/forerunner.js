@@ -132,6 +132,12 @@ $(function () {
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
+            allowZoom: "allowZoom",
+            /** widget + event, lowercase */
+            reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
+            
+
+            /** @constant */
             menuClick: "menuclick",
             /** widget + event, lowercase */
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
@@ -340,6 +346,17 @@ $(function () {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1' />");
             }
+        },
+      
+      
+        isZoomed: function(element){
+            var ratio = document.documentElement.clientWidth / window.innerWidth;
+
+            alert(ratio);
+            if (ratio > 1.1 || ratio < .99)
+                return true;
+            else
+                return false;
         },
         /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {

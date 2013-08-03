@@ -154,6 +154,7 @@ $(function () {
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
+           
             if (!$colHeader)
                 return;
 
@@ -176,9 +177,9 @@ $(function () {
                 return;
 
             var offset = $tablix.offset();
-            var scrollTop = $(window).scrollTop();
+            var scrollTop = $(window).scrollTop();            
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
                 $rowHeader.fadeIn("fast");
             }
             else {
@@ -259,9 +260,34 @@ $(function () {
             }
             me.lock = 0;
         },
+        allowZoom: function (isEnabled) {
+            var me = this;
+
+
+            if (isEnabled === true){
+                forerunner.device.allowZoom(true);
+                me.allowSwipe(false);
+            }
+            else{
+                forerunner.device.allowZoom(false);
+                me.allowSwipe(true);
+            }
+            me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
+
+        },
+        allowSwipe: function(isEnabled){
+            var me = this;
+            
+            if (isEnabled === true)
+                $(me.element).swipe("enable");
+            else
+                $(me.element).swipe("disable");
+        },
         _touchNav: function () {
             // Touch Events
             var me = this;
+    
+  
             $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
@@ -280,8 +306,8 @@ $(function () {
                 tap: function (event, target) {
                     $(target).trigger("click");
                 },
-                longTapThreshold: 1000,
-                //threshold: 0,
+
+
             });
         },
         /**

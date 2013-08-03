@@ -32,8 +32,8 @@ $(function () {
         imageClass: "fr-icons24x24-nav",
         text: locData.toolPane.zoom,
         events: {
-            click: function (e) {
-                forerunner.device.allowZoom(true);
+            click: function (e) {                
+                e.data.$reportViewer.reportViewer("allowZoom",true);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
                 //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
             }

@@ -352,7 +352,7 @@ $(function () {
         isZoomed: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
-            alert(ratio);
+            //alert(ratio);
             if (ratio > 1.1 || ratio < .99)
                 return true;
             else

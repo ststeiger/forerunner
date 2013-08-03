@@ -11,6 +11,7 @@ using Forerunner.SSRS.Management;
 using Forerunner.Security;
 using Jayrock.Json;
 using System.Threading;
+using System.Security.Principal;
 
 namespace Forerunner.SSRS.Manager
 {
@@ -25,25 +26,23 @@ namespace Forerunner.SSRS.Manager
         Credentials WSCredentials;
         Credentials DBCredentials;
         Impersonator impersonator;
+        bool useIntegratedSecurity;
         string URL;
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
         {
             this.WSCredentials = WSCredentials;
             this.DBCredentials = DBCredentials;
+            this.useIntegratedSecurity = useIntegratedSecurity;
             rs.Url = URL + "/ReportService2005.asmx";
-
-
             this.URL = URL;
 
-            rs.Credentials = new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
+            rs.Credentials = WSCredentials == null ? null : new NetworkCredential(WSCredentials.UserName, WSCredentials.Password, WSCredentials.Domain);
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = ReportServerDataSource;
             builder.InitialCatalog = ReportServerDB;
             if (useIntegratedSecurity)
             {
-                impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
-                impersonator.Impersonate();
                 builder.IntegratedSecurity = true;
             }
             else
@@ -59,7 +58,10 @@ namespace Forerunner.SSRS.Manager
 
         public void SetCredentials(Credentials Credentials)
         {
-            rs.Credentials = new NetworkCredential(Credentials.UserName, Credentials.Password, Credentials.Domain);
+            if (Credentials != null)
+            {
+                rs.Credentials = new NetworkCredential(Credentials.UserName, Credentials.Password, Credentials.Domain);
+            }
         }
 
         public byte[] UpdateView(string view, string action, string path)
@@ -78,7 +80,6 @@ namespace Forerunner.SSRS.Manager
 
         public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
-
             if (view == "favorites")
                 return this.GetFavorites();
             else if (view == "recent")
@@ -89,12 +90,39 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        private CatalogItem[] callListChildren(string path, Boolean isRecursive)
+        {
+            using(var impersonator = new CurrentUserImpersonator())
+            {
+                impersonator.Impersonate();
+                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                return rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
+            }
+        }
+
+        private Property[] callGetProperties(string path, Property[] props)
+        {
+            // Please review this call stack.
+            // This call is already in the impersonated context
+            // No need to impersonate again.
+            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            return rs.GetProperties(path, props);
+        }
+
+        private string[] callGetPermissions(string path)
+        {
+            using(var impersonator = new CurrentUserImpersonator())
+            {
+                impersonator.Impersonate();
+                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                return rs.GetPermissions(path);
+            }
+        }
 
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
-        {
+        {       
             List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem[] items = rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
-
+            CatalogItem[] items = callListChildren(path, isRecursive);
             foreach (CatalogItem ci in items)
             {
                 if (ci.Type == ItemTypeEnum.Report || ci.Type == ItemTypeEnum.LinkedReport)
@@ -104,7 +132,7 @@ namespace Forerunner.SSRS.Manager
                 }
                 if (ci.Type == ItemTypeEnum.Folder && !ci.Hidden)
                 {
-                    CatalogItem[] folder = rs.ListChildren(ci.Path, false);
+                    CatalogItem[] folder = callListChildren(ci.Path, false);
                     foreach (CatalogItem fci in folder)
                     {
                         if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.LinkedReport || fci.Type == ItemTypeEnum.Folder)
@@ -121,11 +149,25 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
         }
 
+        private Impersonator tryImpersonate() 
+        {
+            if (!useIntegratedSecurity) return null;
+            if (impersonator == null)
+            {
+                impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
+            }
+            impersonator.Impersonate();
+            return impersonator;
+        }
+
         void CheckSchema()
         {
-
-            //This should move to the install program
-            string SQL = @"IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                //This should move to the install program
+                string SQL = @"IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
                             END
@@ -133,17 +175,28 @@ namespace Forerunner.SSRS.Manager
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END";
-            SQLConn.Open();
-            
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.ExecuteNonQuery();
-            SQLConn.Close();
+                SQLConn.Open();
 
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public string SaveFavorite(string path)
         {
-            string SQL = @" DECLARE @UID uniqueidentifier
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
                             DECLARE @IID uniqueidentifier
                             SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                             SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
@@ -151,91 +204,120 @@ namespace Forerunner.SSRS.Manager
                             BEGIN
 	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
                             END";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
 
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-            SQLComm.ExecuteNonQuery();
-            SQLConn.Close();
-
-            //Need to try catch and return error
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("Status");
-            w.WriteString("Success");
-            w.WriteEndObject();
-            return w.ToString();
-
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Status");
+                w.WriteString("Success");
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public string IsFavorite(string path)
         {
-            string SQL = @" DECLARE @UID uniqueidentifier
-                            DECLARE @IID uniqueidentifier
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                            SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                                DECLARE @IID uniqueidentifier
+                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                                SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
+                bool isFav = SQLReader.HasRows;
+                SQLReader.Close();
+                SQLConn.Close();
 
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-            SqlDataReader SQLReader;
-            SQLReader = SQLComm.ExecuteReader();
-            bool isFav = SQLReader.HasRows;
-            SQLReader.Close();
-            SQLConn.Close();
-
-            //Need to try catch and return error
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("IsFavorite");
-            w.WriteBoolean(isFav);
-            w.WriteEndObject();
-            return w.ToString();
-
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("IsFavorite");
+                w.WriteBoolean(isFav);
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public CatalogItem[] GetFavorites()
         {
-            List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem c;
-
-            string SQL = @"DECLARE @UID uniqueidentifier
-                           SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                           SELECT DISTINCT Path,Name,ModifiedDate FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-
-            SqlDataReader SQLReader;
-            SQLReader = SQLComm.ExecuteReader();
-
-            while (SQLReader.Read())
+            Impersonator impersonator = null;
+            try
             {
-                c = new CatalogItem();
-                c.Path = SQLReader.GetString(0);
-                c.Name = SQLReader.GetString(1);
-                c.ModifiedDate = SQLReader.GetDateTime(2);
-                c.ModifiedDateSpecified = true;
-                c.Type = ItemTypeEnum.Report;
-                list.Add(c);
+                impersonator = tryImpersonate();
+                List<CatalogItem> list = new List<CatalogItem>();
+                CatalogItem c;
+
+                string SQL = @"DECLARE @UID uniqueidentifier
+                               SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                               SELECT DISTINCT Path,Name,ModifiedDate FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+
+                SetUserNameParameters(SQLComm);
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
+
+                while (SQLReader.Read())
+                {
+                    c = new CatalogItem();
+                    c.Path = SQLReader.GetString(0);
+                    c.Name = SQLReader.GetString(1);
+                    c.ModifiedDate = SQLReader.GetDateTime(2);
+                    c.ModifiedDateSpecified = true;
+                    c.Type = ItemTypeEnum.Report;
+                    list.Add(c);
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+                return list.ToArray();
             }
-            SQLReader.Close();
-            SQLConn.Close();
-            return list.ToArray();
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public CatalogItem[] GetRecentReports()
         {
-            List<CatalogItem> list = new List<CatalogItem>();
-            CatalogItem c;
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                List<CatalogItem> list = new List<CatalogItem>();
+                CatalogItem c;
 
-            string SQL = @"SELECT Path,Name,ModifiedDate  
+                string SQL = @"SELECT Path,Name,ModifiedDate  
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
@@ -246,145 +328,196 @@ namespace Forerunner.SSRS.Manager
                             ORDER BY TimeStart DESC";
 
 
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                
+                SQLComm.Parameters.AddWithValue("@DomainUser", HttpContext.Current.User.Identity.Name);
 
-            SqlDataReader SQLReader;
-            SQLReader = SQLComm.ExecuteReader();
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
 
-            while (SQLReader.Read())
-            {
-                c = new CatalogItem();
-                c.Path = SQLReader.GetString(0);
-                c.Name = SQLReader.GetString(1);
-                c.ModifiedDate = SQLReader.GetDateTime(2);
-                c.ModifiedDateSpecified = true;
-                c.Type = ItemTypeEnum.Report;
-                list.Add(c);
+                while (SQLReader.Read())
+                {
+                    c = new CatalogItem();
+                    c.Path = SQLReader.GetString(0);
+                    c.Name = SQLReader.GetString(1);
+                    c.ModifiedDate = SQLReader.GetDateTime(2);
+                    c.ModifiedDateSpecified = true;
+                    c.Type = ItemTypeEnum.Report;
+                    list.Add(c);
 
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+                return list.ToArray();
             }
-            SQLReader.Close();
-            SQLConn.Close();
-            return list.ToArray();
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public string DeleteFavorite(string path)
         {
-            string SQL = @" DECLARE @UID uniqueidentifier
-                            DECLARE @IID uniqueidentifier
-                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                            DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                                DECLARE @IID uniqueidentifier
+                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                                DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-            SQLComm.ExecuteNonQuery();
-            SQLConn.Close();
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
 
-            //Need to try catch and return error
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            w.WriteMember("Status");
-            w.WriteString("Success");
-            w.WriteEndObject();
-            return w.ToString();
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Status");
+                w.WriteString("Success");
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
-        public void SaveImage(byte[] image, string path)
+        private static void SetUserNameParameters(SqlCommand SQLComm)
         {
-            Property[] props = new Property[2];
-            Property retrieveProp = new Property();
-            retrieveProp.Name = "HasUserProfileQueryDependencies";
-            props[0] = retrieveProp;
-            retrieveProp = new Property();
-            retrieveProp.Name = "HasUserProfileReportDependencies";
-            props[1] = retrieveProp;
-            int IsUserSpecific = 1;  //Boolean not working in SQL very well so used int
+            string domainUserName = HttpContext.Current.User.Identity.Name;
+            string[] stringTokens = domainUserName.Split('\\');
+            string userName = stringTokens[stringTokens.Length - 1];
+            SQLComm.Parameters.AddWithValue("@UserName", userName);
+            SQLComm.Parameters.AddWithValue("@DomainUser", domainUserName);
+        }
 
-            Property[] properties = rs.GetProperties(path, props);
+        public void SaveImage(byte[] image, string path, string userName)
+        {   
+            Impersonator impersonator = null;
+            try
+            {
+                Property[] props = new Property[2];
+                Property retrieveProp = new Property();
+                retrieveProp.Name = "HasUserProfileQueryDependencies";
+                props[0] = retrieveProp;
+                retrieveProp = new Property();
+                retrieveProp.Name = "HasUserProfileReportDependencies";
+                props[1] = retrieveProp;
+                int IsUserSpecific = 1;  //Boolean not working in SQL very well so used int
 
-            if (properties.Length == 2 && properties[0].Value.ToLower() == "false" && properties[0].Value.ToLower() == "false")
-                IsUserSpecific = 0;
+                Property[] properties = callGetProperties(path, props);
 
-            string SQL = @" DECLARE @UID uniqueidentifier
-                            DECLARE @IID uniqueidentifier
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )                                                        
-                            IF (@UserSpecific = 1)
-                                BEGIN
-                                    SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                                    DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
-                                END
-                            ELSE
-                                BEGIN
-                                    SELECT @UID = NULL
-                                    DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
-                                END
-                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
-                            ";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                if (properties.Length == 2 && properties[0].Value.ToLower() == "false" && properties[0].Value.ToLower() == "false")
+                    IsUserSpecific = 0;
 
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-            SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
-            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-            SQLComm.Parameters.AddWithValue("@Image", image);
-            SQLComm.ExecuteNonQuery();
-            SQLConn.Close();
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                                DECLARE @IID uniqueidentifier
+                                SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )                                                        
+                                IF (@UserSpecific = 1)
+                                    BEGIN
+                                        SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                        DELETE ForerunnerCatalog WHERE UserID = @UID AND ItemID = @IID
+                                    END
+                                ELSE
+                                    BEGIN
+                                        SELECT @UID = NULL
+                                        DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
+                                    END
+                                INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
+                                ";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
+                SetUserNameParameters(SQLComm);
+
+                SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.Parameters.AddWithValue("@Image", image);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
         public byte[] GetDBImage(string path)
         {
-            byte[] retval = null;
-            string SQL = @"DECLARE @IID uniqueidentifier
-                           DECLARE @UID uniqueidentifier
-                           SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
-                           SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
-
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            //SQLComm.Prepare();
-            SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-            SQLComm.Parameters.AddWithValue("@UserName", WSCredentials.UserName);
-            SQLComm.Parameters.AddWithValue("@DomainUser", WSCredentials.GetDomainUser());
-
-            SqlDataReader SQLReader;
-            SQLReader = SQLComm.ExecuteReader();
-
-            if (SQLReader.HasRows)
+            Impersonator impersonator = null;
+            try
             {
-                SQLReader.Read();
-                retval = SQLReader.GetSqlBytes(0).Buffer;
+                impersonator = tryImpersonate();
+                byte[] retval = null;
+                string SQL = @"DECLARE @IID uniqueidentifier
+                               DECLARE @UID uniqueidentifier
+                               SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                               SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.Path = @Path AND c.ModifiedDate <= f.SaveDate";
+
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                //SQLComm.Prepare();
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SetUserNameParameters(SQLComm);
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
+
+                if (SQLReader.HasRows)
+                {
+                    SQLReader.Read();
+                    retval = SQLReader.GetSqlBytes(0).Buffer;
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+                return retval;
             }
-            SQLReader.Close();
-            SQLConn.Close();
-            return retval;
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
         }
 
         public byte[] GetCatalogImage(string path)
         {
             string execute = "Execute";
-            bool havePermission = false;
-            foreach (string permission in rs.GetPermissions(path))
+            bool hasPermission = false;
+            foreach (string permission in callGetPermissions(path))
             {
                 if (permission.IndexOf(execute,StringComparison.OrdinalIgnoreCase) != -1)
                 {
-                    havePermission = true;
+                    hasPermission = true;
                     break;
                 }                
             }
 
-            if (havePermission)
+            if (hasPermission)
             {
                 byte[] retval = null;
                 retval = GetDBImage(path);
                 if (retval == null)
                 {
-                    ThreadPool.QueueUserWorkItem(this.GetThumbnail, HttpUtility.UrlDecode(path));
+                    ThreadContext context = new ThreadContext(HttpUtility.UrlDecode(path));
+                    ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
                     //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
                     //t.Start(path);
                     //t.Join();                    
@@ -395,14 +528,24 @@ namespace Forerunner.SSRS.Manager
             return null;
         }
 
-        private void GetThumbnail(object path)
+        private void GetThumbnail(object context)
         {
-            byte[] retval = null;
-            ReportViewer rep = new ReportViewer(this.URL);
-            rep.SetCredentials(this.WSCredentials);
-            retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
-            if (retval != null)
-                SaveImage(retval, path.ToString());
+            ThreadContext threadContext = (ThreadContext)context;
+            String path = threadContext.Path;
+            try
+            {
+                threadContext.Impersonate();
+                byte[] retval = null;
+                ReportViewer rep = new ReportViewer(this.URL);
+                rep.SetCredentials(this.WSCredentials);
+                retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
+                if (retval != null)
+                    SaveImage(retval, path.ToString(), threadContext.UserName);
+            }
+            finally
+            {
+                threadContext.Dispose();
+            }
         }
         protected virtual void Dispose(bool disposing)
         {
@@ -411,7 +554,10 @@ namespace Forerunner.SSRS.Manager
                 rs.Dispose();
                 SQLConn.Close();
                 SQLConn.Dispose();
-                impersonator.Dispose();
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
             }
         }
 
@@ -420,6 +566,5 @@ namespace Forerunner.SSRS.Manager
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
     }
 }

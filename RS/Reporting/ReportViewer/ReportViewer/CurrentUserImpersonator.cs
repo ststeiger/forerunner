@@ -71,5 +71,10 @@ namespace Forerunner.Security
                 context = null;
             }
         }
+
+        public string UserName
+        {
+            get { return identity.Name; }
+        }
     }
 }

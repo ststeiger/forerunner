@@ -532,27 +532,19 @@ namespace Forerunner.SSRS.Manager
         {
             ThreadContext threadContext = (ThreadContext)context;
             String path = threadContext.Path;
-            if (threadContext.Identity != null)
+            try
             {
-                WindowsImpersonationContext ctx = null;
-                try
-                {
-                    ctx = threadContext.Identity.Impersonate();
-                    byte[] retval = null;
-                    ReportViewer rep = new ReportViewer(this.URL);
-                    rep.SetCredentials(this.WSCredentials);
-                    retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
-                    if (retval != null)
-                        SaveImage(retval, path.ToString(), threadContext.Identity.Name);
-                }
-                finally
-                {
-                    if (ctx != null)
-                    {
-                        ctx.Undo();
-                    }
-                    threadContext.Dispose();
-                }
+                threadContext.Impersonate();
+                byte[] retval = null;
+                ReportViewer rep = new ReportViewer(this.URL);
+                rep.SetCredentials(this.WSCredentials);
+                retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
+                if (retval != null)
+                    SaveImage(retval, path.ToString(), threadContext.UserName);
+            }
+            finally
+            {
+                threadContext.Dispose();
             }
         }
         protected virtual void Dispose(bool disposing)

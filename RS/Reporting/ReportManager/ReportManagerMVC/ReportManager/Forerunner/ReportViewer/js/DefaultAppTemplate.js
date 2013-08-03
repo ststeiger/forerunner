@@ -124,8 +124,11 @@ $(function () {
         },
         ResetSize: function () {
             var me = this;
-            forerunner.device.allowZoom(false);
-            //alert("hi");
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
+
+            if (!forerunner.device.isZoomed())
+                $viewer.reportViewer("allowZoom", false);
+
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
             $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
@@ -163,6 +166,20 @@ $(function () {
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.$container.removeClass("fr-docmap-background");
             });
+
+            $viewer.on(events.reportViewerallowZoom(), function (e, data) {
+                if (data.isEnabled === true) {
+                    $(".fr-layout-topdiv").hide();
+                    $viewer.reportViewer("option", "toolbarHeight", 0);
+                }
+                else {
+                    $(".fr-layout-topdiv").show();
+                    $viewer.reportViewer("option", "toolbarHeight", $(".fr-layout-topdiv").outerHeight());
+                }
+
+                
+            });
+
 
             //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {

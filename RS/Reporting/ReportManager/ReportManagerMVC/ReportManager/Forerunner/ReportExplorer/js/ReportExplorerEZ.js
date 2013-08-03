@@ -58,7 +58,7 @@ $(function () {
             layout.$docmapsection.hide();
             layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase + "/ReportManager",
-                forerunnerPath: "./forerunner",
+                forerunnerPath: forerunner.config.forerunnerFolder ,
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,

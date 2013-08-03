@@ -42,7 +42,7 @@ $(function () {
             forerunner.device.allowZoom(true);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
-            layout.$topdivspacer.attr("style", "height: 38px");
+            //layout.$topdivspacer.attr("style", "height: 38px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
@@ -84,7 +84,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            if (me.options.DefaultAppTemplate == null) {
+            if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;

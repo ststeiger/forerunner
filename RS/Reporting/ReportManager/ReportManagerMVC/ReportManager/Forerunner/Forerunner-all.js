@@ -40,12 +40,21 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "down", easing: "easeInCubic" }, delay);
         });
     },
+    slideDownHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "down", easing: "easeInCubic" }, delay);
+        });
+    },
     slideUpShow: function (delay) {
         return this.each(function () {
             $(this).show("slide", { direction: "up", easing: "easeInCubic" }, delay);
         });
     },
-
+    slideUpHide: function (delay) {
+        return this.each(function () {
+            $(this).hide("slide", { direction: "up", easing: "easeInCubic" }, delay);
+        });
+    },
     slideLeftHide: function (delay) {
         return this.each(function () {
             $(this).hide("slide", { direction: "left", easing: "easeOutCubic" }, delay);
@@ -252,13 +261,13 @@ $(function () {
          *
          * @member
          */
-        forerunnerFolder: "../forerunner",
+        forerunnerFolder: "./forerunner",
         /**
          * Base path to the REST api controlers
          *
          * @member
          */
-        forerunnerAPIBase: "../api/",
+        forerunnerAPIBase: "./api/",
     };
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -344,6 +353,7 @@ $(function () {
                 rect.right <= (window.innerWidth || document. documentElement.clientWidth) /*or $(window).width() */
                 );
         },
+                   
         /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
             if ($(window).height() < 768)
@@ -631,9 +641,7 @@ $(function () {
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
-                        me._hideTableHeaders();
-                    if (phase === "move")
-                        me._updateTableHeaders(me);
+                        me._hideTableHeaders();                   
                     if (phase === "end")
                         me._updateTableHeaders(me);
                 },
@@ -1028,7 +1036,7 @@ $(function () {
             var left = $(window).scrollLeft();
 
             if (flushCache !== true)
-                flushCache = false
+                flushCache = false;
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;
@@ -1712,8 +1720,8 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if(Obj.selectorClass)
-                    me.hideTool(Obj.selectorClass)
+                if (Obj.selectorClass)
+                    me.hideTool(Obj.selectorClass);
             });
 
         },
@@ -1725,8 +1733,8 @@ $(function () {
             var me = this;
 
             $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass) 
-                    me.showTool(Obj.selectorClass)                
+                if (Obj.selectorClass)
+                    me.showTool(Obj.selectorClass);
             });
 
         },
@@ -1766,6 +1774,34 @@ $(function () {
                 }
                 if (toolInfo.toolType === toolTypes.toolGroup && toolInfo.tools) {
                     me.disableTools(toolInfo.tools);
+                }
+            });
+        },
+        /**
+        * Make all tools enable that where enabled before disable
+        * @function $.forerunner.toolBase#enableAllTools
+        */
+        enableAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Tools) {
+                if (Tools.selectorClass && me.allTools[Tools.selectorClass].isEnable) {
+                    me.enableTools([Tools]);
+                }
+            });
+        },
+        /**
+        * Make all tools disable and remember which ones where enabled
+        * @function $.forerunner.toolBase#disableAllTools
+        */
+        disableAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Tools) {
+                if (Tools.selectorClass) {
+                    var $toolEl = $("." + Tools.selectorClass, me.element);
+                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
+                    me.disableTools([Tools]);
                 }
             });
         },
@@ -2216,6 +2252,15 @@ $(function () {
                 me.enableTools([btnParamarea]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.disableAllTools();
+                me.enableTools([btnDocumentMap, btnMenu]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.enableAllTools();
+            });
+
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,
@@ -2304,6 +2349,19 @@ $(function () {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-nav"]);
+            }
+        }
+    };
+    var itemZoom = {
+        toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-zoom",
+        imageClass: "fr-icons24x24-nav",
+        text: locData.toolPane.zoom,
+        events: {
+            click: function (e) {
+                forerunner.device.allowZoom(true);
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
             }
         }
     };
@@ -2611,6 +2669,15 @@ $(function () {
                 me._clearItemStates();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.disableAllTools();
+                me.enableTools([itemDocumentMap]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.enableAllTools();
+            });
+
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
                             itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);
@@ -2624,7 +2691,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap, itemExport, itemExportGroup, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -3165,8 +3232,10 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
 
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));           
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, "")); });
+
+
         },
         writeError: function (errorData) {
             var me = this;
@@ -3218,24 +3287,27 @@ $(function () {
             //Need to determine Header and footer Index
             var headerIndex;
             var footerIndex;
+
+            // Header and Footer could either be on Section or PageContent
             if (RIContext.CurrObj.PageFooter) {
                 footerIndex = RIContext.CurrObj.Columns.length;
                 headerIndex = footerIndex + 1;
             }
             else
                 headerIndex = RIContext.CurrObj.Columns.length;
-
+            if (RIContext.CurrObjParent.PageHeader) {
+                headerIndex = 1;
+                footerIndex = 2;
+            }
+            else if (RIContext.CurrObjParent.PageFooter)
+                footerIndex = 1;
 
             //Page Header
-            if (RIContext.CurrObj.PageHeader) {
-                var $header = $("<TR/>");
-                var $headerTD = $("<TD/>");
-                $header.append($headerTD);
-                var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, headerIndex);
-                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
-                $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageHeader, headerIndex, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
-                $newObj.append($header);
-            }
+            if (RIContext.CurrObj.PageHeader)
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));
+            //Page Header on PageContent
+            if (RIContext.CurrObjParent.PageHeader)
+                $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
             $sec.attr("Style", "width:" + location.Width + "mm;");
             //Columns
@@ -3247,18 +3319,26 @@ $(function () {
             });
 
             //Page Footer
-            if (RIContext.CurrObj.PageFooter) {
-                var $footer = $("<TR/>");
-                var $footerTD = $("<TD/>");
-                $footer.append($footerTD);
-                var footerLoc = me._getMeasurmentsObj(RIContext.CurrObj, footerIndex);
-                $footer.attr("Style", "width:" + footerLoc.Width + "mm;");
-                $footerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj.PageFooter, footerIndex, RIContext.CurrObj, new $("<DIV/>"), "", footerLoc)));
-                $newObj.append($footer);
-            }
-
+            if (RIContext.CurrObj.PageFooter)
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageFooter", footerIndex));
+            //Page Footer on PageContent
+            if (RIContext.CurrObjParent.PageFooter)
+                $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageFooter", footerIndex));
 
             RIContext.$HTMLParent.append($newObj);
+        },
+        _writeHeaderFooter: function (RIContext, HeaderOrFooter, Index) {
+            var me = this;
+            //Page Header
+            if (RIContext.CurrObj[HeaderOrFooter]) {
+                var $header = $("<TR/>");
+                var $headerTD = $("<TD/>");
+                $header.append($headerTD);
+                var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, Index);
+                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
+                $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
+                return $header;
+            }
         },
         _writeRectangle: function (RIContext) {
             var $RI;        //This is the ReportItem Object
@@ -3823,7 +3903,7 @@ $(function () {
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
-            var $FixedRowHeader = new $("<TABLE/>").css({ position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
+            var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
             var LastObjType = "";
@@ -5091,14 +5171,14 @@ $(function () {
         _create: function () {
         },
         _init: function () {
-               
+
         },
         /**
         * @function $.forerunner.reportDocumentMap#write
         * @Generate document map html code and append to the dom tree
         * @param {String} docMapData - original data get from server client
         */
-        write: function(docMapData) {
+        write: function (docMapData) {
             var me = this;
             this.element.html("");
 
@@ -5111,60 +5191,70 @@ $(function () {
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<div />");
-            
-            var $header = null;
-            var $rightImage = null;
-            if (!docMap.Children) {
-                var $icon = new $("<div />");
-                $icon.addClass("fr-docmap-indent");
-                $docMap.append($icon);
+            if (level !== 0)
+                $docMap.css("margin-left", "34px");
 
-                $docMap.addClass("fr-docmap-item-container");
-                me._setFocus($docMap);
-            }
-            else {
-                $header = new $("<DIV />");
-                $header.addClass("fr-docmap-parent-container");
-                me._setFocus($header);
-
-                $header.on("click", function () {
-                    var childPanel = $docMap.find("[level='" + level + "']");
-                    if (childPanel.is(":visible"))
-                        $docMap.find("[level='" + level + "']").hide();
-                    else
-                        $docMap.find("[level='" + level + "']").slideUpShow();
-                });
-            }
-         
-            var $mapNode = new $("<A />");
+            var $mapNode = new $("<div />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
                 me.options.$reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
-            
-            if ($header) {
+
+            if (docMap.Children) {
+                var $header = new $("<DIV />");
+                $header.addClass("fr-docmap-parent-container");
+                me._setFocus($header);
+
+                var $rightImage = new $("<div class='fr-docmap-icon'/>");
+
+                if (level === 0)
+                    $rightImage.addClass("fr-docmap-icon-up");
+                else
+                    $rightImage.addClass("fr-docmap-icon-down");
+
+                $rightImage.on("click", function () {
+                    var childPanel = $docMap.find("[level='" + level + "']");
+                    if (childPanel.is(":visible")) {
+                        //$docMap.find("[level='" + level + "']").hide();
+                        $docMap.find("[level='" + level + "']").slideUpHide();
+                        $rightImage.removeClass("fr-docmap-icon-up").addClass("fr-docmap-icon-down");
+                    }
+                    else {
+                        $docMap.find("[level='" + level + "']").slideUpShow();
+                        //$docMap.find("[level='" + level + "']").show();
+                        $rightImage.removeClass("fr-docmap-icon-down").addClass("fr-docmap-icon-up");
+                    }
+                });
+
+                $mapNode.addClass("fr-docmap-item-root");
+                $header.append($rightImage);
                 $header.append($mapNode);
                 $docMap.append($header);
-            }
-            else{
-                $docMap.append($mapNode);
-            }
 
-            var $children = $("<div level='" + level + "'>");
-            if (docMap.Children) {
+                var $children = new $("<div level='" + level + "'>");
                 $.each(docMap.Children, function (Index, Obj) {
                     $children.append(me._writeDocumentMapItem(Obj, level + 1));
                 });
+
+                $docMap.append($children);
+
+                //expand the first root node
+                if (level !== 0)
+                    $children.hide();
             }
-            $children.hide();
-            $docMap.append($children);
+            else {
+                $docMap.addClass("fr-docmap-item-container");
+                me._setFocus($docMap);
+                $docMap.append($mapNode);
+            }
+
             return $docMap;
         },
         _setFocus: function ($focus) {
             $focus.hover(function () { $(this).addClass("fr-docmap-item-highlight"); }, function () { $(this).removeClass("fr-docmap-item-highlight"); });
         }
     });  // $.widget
-    
+
 });  // $(function ()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/DefaultAppTemplate.js
@@ -5278,36 +5368,42 @@ $(function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $mainheadersection = $('.fr-layout-mainheadersection', me.$container);
+            var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-leftheader', me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $(".fr-layout-leftheader", me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
-            $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-rightheader", me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             
             $(window).resize(function () {
-                $('.fr-layout-mainviewport', me.$container).css({ height: '100%' });
-                $('.fr-layout-leftpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-                $('.fr-layout-rightpane', me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-                $('.fr-layout-leftpanecontent', me.$container).css({ height: '100%' });
-                $('.fr-layout-rightpanecontent', me.$container).css({ height: '100%' });
-                //$('.fr-docmap-panel').css({ height: '100%' });
-                $('.fr-param-container', me.$container).css({ height: $('.fr-layout-rightpane', me.$container).height() - 45 });
+                me.ResetSize();
             });
+        },
+        ResetSize: function () {
+            var me = this;
+            forerunner.device.allowZoom(false);
+            //alert("hi");
+            $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
+            $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
+            $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
+            $(".fr-layout-leftpanecontent", me.$container).css({ height: "100%" });
+            $(".fr-layout-rightpanecontent", me.$container).css({ height: "100%" });
+            $(".fr-param-container", me.$container).css({ height: $(".fr-layout-rightpane", me.$container).height() });
+            
         },
 
         bindViewerEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $viewer = $('.fr-layout-reportviewer', me.$container);
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
             $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
-                var $spacer = $('.fr-layout-bottomdivspacer', me.$container);
+                var $spacer = $(".fr-layout-bottomdivspacer", me.$container);
 
                 if (!data.open) {
                     $spacer.hide();
@@ -5336,48 +5432,48 @@ $(function () {
 
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
-            var mainViewPort = $('.fr-layout-mainviewport', me.$container);;
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            var topdiv = $('.fr-layout-topdiv', me.$container);
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
+            var mainViewPort = $(".fr-layout-mainviewport", me.$container);
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            var topdiv = $(".fr-layout-topdiv", me.$container);
             var delay = Number(200);
-            if (slideoutPane.is(':visible')) {
+            if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
                 } else {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
-                mainViewPort.removeClass(className, delay);
                 topdiv.removeClass(className, delay);
-                forerunner.device.allowZoom(true);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('showAllTools');
+                $(".fr-layout-mainheadersection", me.$container).toolbar("showAllTools");
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
-            var mainViewPort = $('.fr-layout-mainviewport', me.$container);
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            var topdiv = $('.fr-layout-topdiv', me.$container);
+            forerunner.device.allowZoom(false);
+            me.$container.resize();
+
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
+            var mainViewPort = $(".fr-layout-mainviewport", me.$container);
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            var topdiv = $(".fr-layout-topdiv", me.$container);
             var delay = Number(200);
-            if (!slideoutPane.is(':visible')) {
+            if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
-                    slideoutPane.slideLeftShow(delay);
+                    slideoutPane.slideLeftShow(delay);                    
                 } else {
-                    $('.fr-param-container', me.$container).css({ height: slideoutPane.height() - 36 });
+                    //$(".fr-param-container", me.$container).css({ height: slideoutPane.height() + 100 });
                     slideoutPane.slideRightShow(delay);
                 }
-                mainViewPort.addClass(className, delay);
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
-                $('.fr-layout-mainheadersection', me.$container).toolbar('hideAllTools');
+                $(".fr-layout-mainheadersection", me.$container).toolbar("hideAllTools");
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;
-            var slideoutPane = isLeftPane ? $('.fr-layout-leftpane', me.$container) : $('.fr-layout-rightpane', me.$container);
-            if (slideoutPane.is(':visible')) {
+            var slideoutPane = isLeftPane ? $(".fr-layout-leftpane", me.$container) : $(".fr-layout-rightpane", me.$container);
+            if (slideoutPane.is(":visible")) {
                 this.hideSlideoutPane(isLeftPane);
             } else {
                 this.showSlideoutPane(isLeftPane);
@@ -5539,7 +5635,7 @@ $(function () {
                             else
                                 action = "add";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
-                            $.getJSON(me.options.ReportViewerAPI + "/UpdateView", {
+                            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath
@@ -5668,7 +5764,7 @@ $(function () {
             forerunner.device.allowZoom(true);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
-            layout.$topdivspacer.attr("style", "height: 38px");
+            //layout.$topdivspacer.attr("style", "height: 38px");
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
@@ -5710,7 +5806,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            if (me.options.DefaultAppTemplate == null) {
+            if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;

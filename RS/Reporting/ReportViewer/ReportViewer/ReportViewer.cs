@@ -50,7 +50,10 @@ namespace Forerunner.SSRS.Viewer
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
+                {
                     this.ServerRendering = true;
+                    break;
+                }
             }
             //this.ServerRendering = false;
 

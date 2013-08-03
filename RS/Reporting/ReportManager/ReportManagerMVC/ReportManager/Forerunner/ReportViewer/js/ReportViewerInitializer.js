@@ -150,7 +150,7 @@ $(function () {
                             else
                                 action = "add";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
-                            $.getJSON(me.options.ReportViewerAPI + "/UpdateView", {
+                            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath

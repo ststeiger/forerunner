@@ -3,12 +3,14 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using System.Collections;
 
 namespace Forerunner.Thumbnail
 {
-   
+       
     public class WebSiteThumbnail:IDisposable
     {
+        
         private string HTML = null;      
         private Bitmap bmp = null;
         private byte[] MHTML = null;
@@ -22,10 +24,10 @@ namespace Forerunner.Thumbnail
                 return bmp; 
             } 
         }
-        private WebBrowser webBrowser;
-        private Func<string, string> callback = null;
+        
+        private System.Func<string, string> callback = null;
 
-        public static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, Func<string, string> callback)
+        public static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, System.Func<string, string> callback)
         {
             WebSiteThumbnail thumb = new WebSiteThumbnail(HTML, maxHeightToWidthRatio, callback);
             Bitmap b = thumb.GetScreenShot();            
@@ -43,7 +45,7 @@ namespace Forerunner.Thumbnail
             Bitmap b = thumb.GetScreenShot();
             return b;
         }
-        public WebSiteThumbnail(string HTML, double maxHeightToWidthRatio, Func<string, string> callback)
+        public WebSiteThumbnail(string HTML, double maxHeightToWidthRatio, System.Func<string, string> callback)
         {
             this.HTML = HTML;
             this.maxHeightToWidthRatio = maxHeightToWidthRatio;
@@ -68,9 +70,9 @@ namespace Forerunner.Thumbnail
                 return null;
 
             Thread t = new Thread(new ThreadStart(this._GetScreenShot));
-            t.SetApartmentState(ApartmentState.STA);            
+            t.SetApartmentState(ApartmentState.STA);
             t.Start();
-            t.Join();                
+            t.Join();
             return bmp;
         }
         
@@ -82,7 +84,7 @@ namespace Forerunner.Thumbnail
                 return;
             }
 
-            webBrowser = new WebBrowser();
+            WebBrowser webBrowser = new WebBrowser();
             webBrowser.ScrollBarsEnabled = false;
             string fileName = null;
 
@@ -121,7 +123,6 @@ namespace Forerunner.Thumbnail
                     }
                     f.Close();
                 }
-                //webBrowser.Navigate(fileName);
                 webBrowser.Url = new System.Uri(fileName);
                 while ( webBrowser.ReadyState != WebBrowserReadyState.Complete )
                     Application.DoEvents();
@@ -150,7 +151,9 @@ namespace Forerunner.Thumbnail
             
             webBrowser.BringToFront();
             webBrowser.DrawToBitmap(bmp, webBrowser.Bounds);
+            webBrowser.Navigate("about:blank");
             webBrowser.Dispose();
+
        
         }
 
@@ -158,7 +161,6 @@ namespace Forerunner.Thumbnail
         {
             if (disposing)
             {
-                webBrowser.Dispose();
                 bmp.Dispose();
             }
         }

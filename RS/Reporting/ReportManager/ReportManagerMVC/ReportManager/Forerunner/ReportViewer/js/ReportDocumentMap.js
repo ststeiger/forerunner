@@ -30,14 +30,14 @@ $(function () {
         _create: function () {
         },
         _init: function () {
-               
+
         },
         /**
         * @function $.forerunner.reportDocumentMap#write
         * @Generate document map html code and append to the dom tree
         * @param {String} docMapData - original data get from server client
         */
-        write: function(docMapData) {
+        write: function (docMapData) {
             var me = this;
             this.element.html("");
 
@@ -50,58 +50,68 @@ $(function () {
         _writeDocumentMapItem: function (docMap, level) {
             var me = this;
             var $docMap = new $("<div />");
-            
-            var $header = null;
-            var $rightImage = null;
-            if (!docMap.Children) {
-                var $icon = new $("<div />");
-                $icon.addClass("fr-docmap-indent");
-                $docMap.append($icon);
+            if (level !== 0)
+                $docMap.css("margin-left", "34px");
 
-                $docMap.addClass("fr-docmap-item-container");
-                me._setFocus($docMap);
-            }
-            else {
-                $header = new $("<DIV />");
-                $header.addClass("fr-docmap-parent-container");
-                me._setFocus($header);
-
-                $header.on("click", function () {
-                    var childPanel = $docMap.find("[level='" + level + "']");
-                    if (childPanel.is(":visible"))
-                        $docMap.find("[level='" + level + "']").hide();
-                    else
-                        $docMap.find("[level='" + level + "']").slideUpShow();
-                });
-            }
-         
-            var $mapNode = new $("<A />");
+            var $mapNode = new $("<div />");
             $mapNode.addClass("fr-docmap-item").attr("title", "Navigate to " + docMap.Label).html(docMap.Label);
             $mapNode.on("click", { UniqueName: docMap.UniqueName }, function (e) {
                 me.options.$reportViewer.navigateDocumentMap(e.data.UniqueName);
             });
-            
-            if ($header) {
+
+            if (docMap.Children) {
+                var $header = new $("<DIV />");
+                $header.addClass("fr-docmap-parent-container");
+                me._setFocus($header);
+
+                var $rightImage = new $("<div class='fr-docmap-icon'/>");
+
+                if (level === 0)
+                    $rightImage.addClass("fr-docmap-icon-up");
+                else
+                    $rightImage.addClass("fr-docmap-icon-down");
+
+                $rightImage.on("click", function () {
+                    var childPanel = $docMap.find("[level='" + level + "']");
+                    if (childPanel.is(":visible")) {
+                        //$docMap.find("[level='" + level + "']").hide();
+                        $docMap.find("[level='" + level + "']").slideUpHide();
+                        $rightImage.removeClass("fr-docmap-icon-up").addClass("fr-docmap-icon-down");
+                    }
+                    else {
+                        $docMap.find("[level='" + level + "']").slideUpShow();
+                        //$docMap.find("[level='" + level + "']").show();
+                        $rightImage.removeClass("fr-docmap-icon-down").addClass("fr-docmap-icon-up");
+                    }
+                });
+
+                $mapNode.addClass("fr-docmap-item-root");
+                $header.append($rightImage);
                 $header.append($mapNode);
                 $docMap.append($header);
-            }
-            else{
-                $docMap.append($mapNode);
-            }
 
-            var $children = $("<div level='" + level + "'>");
-            if (docMap.Children) {
+                var $children = new $("<div level='" + level + "'>");
                 $.each(docMap.Children, function (Index, Obj) {
                     $children.append(me._writeDocumentMapItem(Obj, level + 1));
                 });
+
+                $docMap.append($children);
+
+                //expand the first root node
+                if (level !== 0)
+                    $children.hide();
             }
-            $children.hide();
-            $docMap.append($children);
+            else {
+                $docMap.addClass("fr-docmap-item-container");
+                me._setFocus($docMap);
+                $docMap.append($mapNode);
+            }
+
             return $docMap;
         },
         _setFocus: function ($focus) {
             $focus.hover(function () { $(this).addClass("fr-docmap-item-highlight"); }, function () { $(this).removeClass("fr-docmap-item-highlight"); });
         }
     });  // $.widget
-    
+
 });  // $(function ()

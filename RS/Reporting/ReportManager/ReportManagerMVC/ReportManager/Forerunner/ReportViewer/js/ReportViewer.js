@@ -273,9 +273,7 @@ $(function () {
                 },
                 swipeStatus: function (event, phase, direction, distance) {
                     if (phase === "start")
-                        me._hideTableHeaders();
-                    if (phase === "move")
-                        me._updateTableHeaders(me);
+                        me._hideTableHeaders();                   
                     if (phase === "end")
                         me._updateTableHeaders(me);
                 },
@@ -670,7 +668,7 @@ $(function () {
             var left = $(window).scrollLeft();
 
             if (flushCache !== true)
-                flushCache = false
+                flushCache = false;
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;

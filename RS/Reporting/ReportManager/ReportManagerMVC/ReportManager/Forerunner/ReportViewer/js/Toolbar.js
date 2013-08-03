@@ -345,6 +345,15 @@ $(function () {
                 me.enableTools([btnParamarea]);
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.disableAllTools();
+                me.enableTools([btnDocumentMap, btnMenu]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.enableAllTools();
+            });
+
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,

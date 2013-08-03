@@ -1,0 +1,114 @@
+﻿.fr-toolbase-toolcontainer {
+  width: 36px;
+  height: 36px;
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  padding:1px;
+  display:inline-block;
+  text-align:center;
+  line-height:36px;
+  color: white;
+}
+.fr-toolbase-textcontainer {
+  border-width:0px;
+  vertical-align: top;
+  border-radius: 2px;
+  margin:1px;
+  display:inline-block;
+  text-align:center;
+  line-height:36px;
+  color: white;
+}
+.fr-toolbase-groupcontainer {
+  display:inline-block;
+  vertical-align: top;
+  line-height:36px;
+}
+.fr-toolbase-itemcontainer {
+  border-top-width:1px;
+  border-top-style:groove;
+  border-top-color: darkgray;
+  vertical-align: top;
+  line-height:36px;
+  color: white;
+  display:block;
+}
+.fr-toolbase-disabled {
+  opacity:0.3;
+  filter: alpha(opacity='30');
+}
+.fr-indent24x24 {
+  width:24px;
+  height:24px;
+  margin:5px;
+  display:inline-block;
+}
+.fr-toolbase-rightimage {
+  float:right;
+}
+.fr-toolbase-dropdown-container {
+  display:none;
+  position:absolute;
+  z-index:1;
+}
+.fr-toolbase-dropdown
+{
+  padding:1px;
+  background-color:#FAFAFA;
+  border:1px solid darkgray;
+}
+.fr-toolbase-dropdown-item {
+  display:block;
+  color:#3366CC;
+  text-align:left;
+  border-top-width:1px;
+  border-top-style:groove;
+  border-top-color: darkgray;
+}
+.fr-toolbase-state {
+  background-color: transparent;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+}  /* @media */
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) and (orientation : portrait) {
+}  /* @media */
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+}  /* @media */
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+}  /* @media */
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+.fr-toolbase-state:hover {
+  background-color:darkgrey;
+}
+.fr-toolbase-state:active {
+  background-color:darkslategrey;
+}
+
+}  /* @media */
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+.fr-toolbase-state:hover {
+  background-color:darkgrey;
+}
+.fr-toolbase-state:active {
+  background-color:darkslategrey;
+}
+
+}  /* @media */
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
+
+}  /* @media */

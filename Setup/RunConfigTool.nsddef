@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file was created by NSISDialogDesigner 1.1.2.0
+http://coolsoft.altervista.org/nsisdialogdesigner
+Do not edit manually!
+-->
+<Dialog Name="RunConfigTool" Title="Configuration" Subtitle="Thank you for installing Forerunner Software Report Manager for SQL Server Reporting Services.  Please run the configuration tool to compete your setup." Style="none" ExStyle="none">
+  <CheckBox Name="chkRunConfig" Location="30, 25" Size="151, 25" Text="Run Configuration Tool" Checked="True" TabIndex="0" Style="none" ExStyle="none" />
+</Dialog>

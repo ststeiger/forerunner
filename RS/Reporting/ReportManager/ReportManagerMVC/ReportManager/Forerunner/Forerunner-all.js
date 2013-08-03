@@ -3320,7 +3320,7 @@ $(function () {
 
             //Page Footer
             if (RIContext.CurrObj.PageFooter)
-                $newObj.append(me._writeHeaderFooter(RIContext, "PageFooter", footerIndex))
+                $newObj.append(me._writeHeaderFooter(RIContext, "PageFooter", footerIndex));
             //Page Footer on PageContent
             if (RIContext.CurrObjParent.PageFooter)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageFooter", footerIndex));

@@ -1,0 +1,224 @@
+﻿.fr-layout-container {
+  
+  min-height: 100%;
+  background-color: white;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+
+.fr-layout-container table,td,tr {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  z-index: 0;
+}
+
+.fr-layout-mainviewport {
+    z-index: 1;
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    width:100%;
+}
+
+.fr-layout-mainViewPortShiftedRight
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.fr-layout-mainViewPortShiftedLeft {
+    position: fixed;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.fr-layout-leftpane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+
+    background-color: #363B45;
+    color: white;
+    z-index: 2;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.fr-layout-leftpanecontent {
+    height: 100%;
+    width: 280px;
+    overflow: auto;
+    display:block;
+    position: fixed;
+    left: 0;
+}
+
+.fr-layout-rightpane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background-color: #363B45;
+    color: white;
+    z-index: 2;
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.fr-layout-rightpanecontent {
+    height: 100%;
+    width: 280px;
+    display:block;
+    overflow: auto;
+    position: fixed;
+    right:0;
+}
+
+.fr-layout-topdiv {
+  border: 0px;
+  position: fixed;
+  top:0px;
+  width:100%;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  background-color: white;
+  z-index: 1;
+}
+
+.fr-layout-topdivspacer {
+  height:33px;
+  display:inline-block;
+}
+
+.fr-layout-rightheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  right: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
+.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
+.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button {
+  display: none;
+}
+.fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 
+.fr-layout-rightheader .fr-toolbar-findnext-button, .fr-layout-rightheader .fr-toolbar-sparator-text, .fr-layout-rightheader .fr-toolbar-menu-button {
+  display: none;
+}
+
+.fr-layout-rightheader .fr-toolbar-reportback-button, .fr-layout-rightheader .fr-toolbar-paramarea-button {
+    float: left;
+}
+
+.fr-layout-leftheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
+.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
+.fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button {
+  display: none;
+}
+.fr-layout-leftheader .fr-toolbar-lastpage-button, .fr-layout-leftheader .fr-toolbar-documentmap-button, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-toolbar-find-button, 
+.fr-layout-leftheader .fr-toolbar-findnext-button, .fr-layout-leftheader .fr-toolbar-sparator-text, .fr-layout-leftheader .fr-toolbar-reportback-button, .fr-layout-leftheader .fr-toolbar-paramarea-button {
+  display: none;
+}
+
+.fr-layout-leftheader .fr-toolbar-menu-button {
+    float: right;
+}
+
+.fr-layout-leftheaderspacer {
+  display:block;
+}
+
+
+div.fr-layout-pagesection {
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (max-height : 320px) 
+and (min-width : 400px) 
+and (orientation : landscape) {
+/* Styles */
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+
+
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) 
+and (orientation : portrait) {
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+/* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+/* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+}

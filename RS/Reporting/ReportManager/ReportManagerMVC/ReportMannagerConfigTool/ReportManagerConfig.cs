@@ -1,13 +1,11 @@
 ﻿using System;
 using System.DirectoryServices;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
 using System.Xml;
 using UWS.Configuration;
 using UWS.Framework;
 
-namespace ReportManagerRegister
+namespace ReportMannagerConfigTool
 {
     public static class ReportManagerConfig
     {
@@ -103,7 +101,6 @@ namespace ReportManagerRegister
         /// <summary>
         /// Update Report Manager web.config file
         /// </summary>
-        /// <param name="physicalPath">Site installed address</param>
         /// <param name="wsurl">Report Service Web Service Url</param>
         /// <param name="testaccount">User Account</param>
         /// <param name="testaccountpwd">User Account Password</param>
@@ -112,12 +109,11 @@ namespace ReportManagerRegister
         /// <param name="reportserverdb">Report Server Database Name</param>
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
-        public static void UpdateForerunnerWebConfig(string physicalPath, string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuser, string reportserverdbpwd)
+        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, string reportserverdbuser, string reportserverdbpwd)
         {
-            Console.WriteLine("Register is update application web.config file, please wait..");
-
             XmlDocument doc = new XmlDocument();
-            string filePath = physicalPath + "/Web.config";
+            //need update in installer
+            string filePath = "Web.config";
             doc.Load(filePath);
 
             GetConfigNode(doc, "Forerunner.ReportServerWSUrl").UpdateValue(wsurl);                       
@@ -126,13 +122,13 @@ namespace ReportManagerRegister
 
             GetConfigNode(doc, "Forerunner.ReportServerDB").UpdateValue(reportserverdb);
 
+            GetConfigNode(doc, "Forerunner.ReportServerDBUserDomain").UpdateValue(reportserverdbuserdomain);
+
             GetConfigNode(doc, "Forerunner.ReportServerDBUser").UpdateValue(reportserverdbuser);
 
             GetConfigNode(doc, "Forerunner.ReportServerDBPWD").UpdateValue(reportserverdbpwd);
 
             doc.Save(filePath);
-
-            Console.WriteLine("web.config file is updated !");
         }
     
         /// <summary>
@@ -155,12 +151,6 @@ namespace ReportManagerRegister
         private static void UpdateValue(this XmlNode node, string value)
         {
             ((XmlElement)node).SetAttribute("value", value);
-        }
-
-        public static string GetLocIP()
-        {
-            IPHostEntry IpEntry = Dns.GetHostEntry(Dns.GetHostName());
-            return IpEntry.AddressList.First(a => a.AddressFamily == AddressFamily.InterNetwork).ToString();
         }
     }
 }

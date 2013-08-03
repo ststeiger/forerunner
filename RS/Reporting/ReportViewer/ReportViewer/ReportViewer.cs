@@ -7,6 +7,9 @@ using Jayrock.Json;
 using System.Diagnostics;
 using Forerunner.SSRS.JSONRender;
 using Forerunner.Thumbnail;
+using System.Security.Principal;
+using System.Web;
+using Forerunner.Security;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -31,9 +34,7 @@ namespace Forerunner.SSRS.Viewer
         public ReportViewer(String ReportServerURL, Credentials Credentials)
         {
             this.ReportServerURL = ReportServerURL;
-            SetRSURL();
-            SetCredentials(Credentials);
-            
+            SetRSURL();            
         }
         private void SetRSURL()
         {
@@ -62,225 +63,250 @@ namespace Forerunner.SSRS.Viewer
         {
             this.Credentials = Credentials;
             //Security
-            if (this.Credentials.SecurityType == Credentials.SecurityTypeEnum.Network)
-                rs.Credentials = System.Net.CredentialCache.DefaultCredentials;
+            if (this.Credentials == null)
+            {
+                rs.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+            }
             else
+            {
                 rs.Credentials = new NetworkCredential(this.Credentials.UserName, this.Credentials.Password, this.Credentials.Domain);
+            }
             SetServerRendering();
         }
 
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-            byte[] result = null;
-            string encoding;
-
-            rs.ExecutionHeaderValue = execHeader;
-            rs.ExecutionHeaderValue.ExecutionID = SessionID;
-
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                result = rs.RenderStream("RPL", ImageID, "", out encoding, out mimeType);
-                if (mimeType == null)
-                    mimeType = JsonUtility.GetMimeTypeFromBytes(result);
-                return result;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                mimeType = "";
-                return null;
-            }
+                impersonator.Impersonate();
+                ExecutionInfo execInfo = new ExecutionInfo();
+                ExecutionHeader execHeader = new ExecutionHeader();
+                byte[] result = null;
+                string encoding;
 
+                rs.ExecutionHeaderValue = execHeader;
+                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+
+                try
+                {
+                    result = rs.RenderStream("RPL", ImageID, "", out encoding, out mimeType);
+                    if (mimeType == null)
+                        mimeType = JsonUtility.GetMimeTypeFromBytes(result);
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    mimeType = "";
+                    return null;
+                }
+            }
         }
  
         public byte[] NavigateTo(string NavType, string SessionID, string UniqueID)
         {
-            
-            switch (NavType)
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                case "toggle":
-                    return Encoding.UTF8.GetBytes(this.ToggleItem(SessionID, UniqueID));
-                case "bookmark":
-                    return Encoding.UTF8.GetBytes(this.NavBookmark(SessionID, UniqueID));
-                case "drillthrough":
-                    return Encoding.UTF8.GetBytes(this.NavigateDrillthrough(SessionID, UniqueID));
-                case "documentMap":
-                    return Encoding.UTF8.GetBytes(this.NavigateDocumentMap(SessionID, UniqueID));
+                impersonator.Impersonate();
+                switch (NavType)
+                {
+                    case "toggle":
+                        return Encoding.UTF8.GetBytes(this.ToggleItem(SessionID, UniqueID));
+                    case "bookmark":
+                        return Encoding.UTF8.GetBytes(this.NavBookmark(SessionID, UniqueID));
+                    case "drillthrough":
+                        return Encoding.UTF8.GetBytes(this.NavigateDrillthrough(SessionID, UniqueID));
+                    case "documentMap":
+                        return Encoding.UTF8.GetBytes(this.NavigateDocumentMap(SessionID, UniqueID));
+                }
+                return null;
             }
-            return null;
-
         }
 
         public string pingSession(string SessionID)
         {
-            JsonWriter w = new JsonTextWriter();
-            w.WriteStartObject();
-            
-            if (SessionID != "" && SessionID != null)
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                try
-                {
-                    ExecutionHeader execHeader = new ExecutionHeader();
-                    rs.ExecutionHeaderValue = execHeader;
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                    rs.GetExecutionInfo();
-                    w.WriteMember("Status");
-                    w.WriteString("Success");
-                   w.WriteEndObject();
-                    return w.ToString();
-           
-                }
-                catch (Exception e) {
-                    // Need to check the error, just retuen fail on all right now
-                    w.WriteMember("Status");
-                    w.WriteString("Fail");
-                    w.WriteMember("Error");
-                    w.WriteString(e.Message);
-                    w.WriteEndObject();
-                    return w.ToString();
+                impersonator.Impersonate();
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
 
+                if (SessionID != "" && SessionID != null)
+                {
+                    try
+                    {
+                        ExecutionHeader execHeader = new ExecutionHeader();
+                        rs.ExecutionHeaderValue = execHeader;
+                        rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                        rs.GetExecutionInfo();
+                        w.WriteMember("Status");
+                        w.WriteString("Success");
+                        w.WriteEndObject();
+                        return w.ToString();
+
+                    }
+                    catch (Exception e)
+                    {
+                        // Need to check the error, just retuen fail on all right now
+                        w.WriteMember("Status");
+                        w.WriteString("Fail");
+                        w.WriteMember("Error");
+                        w.WriteString(e.Message);
+                        w.WriteEndObject();
+                        return w.ToString();
+
+                    }
                 }
+                w.WriteMember("Status");
+                w.WriteString("Fail");
+                w.WriteMember("Error");
+                w.WriteString("No SessionID");
+                w.WriteEndObject();
+                return w.ToString();
             }
-            w.WriteMember("Status");
-            w.WriteString("Fail");
-            w.WriteMember("Error");
-            w.WriteString("No SessionID");
-            w.WriteEndObject();
-            return w.ToString();
         }
 
         public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
-            byte[] result = null;
-            string format;
-            string historyID = null;
-            string encoding;
-            string mimeType;
-            string extension;
-            Warning[] warnings = null;
-            string[] streamIDs = null;
-            string NewSession;
-            ReportJSONWriter rw;
-
-
-            if (this.ServerRendering)
-                format = "ForerunnerJSON";
-            else
-                format = "RPL";
-
-            if (SessionID == null)
-                NewSession = "";
-            else
-                NewSession = SessionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-                        
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-
-            rs.ExecutionHeaderValue = execHeader;
-           
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                if (NewSession != "")
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                impersonator.Impersonate();
+                byte[] result = null;
+                string format;
+                string historyID = null;
+                string encoding;
+                string mimeType;
+                string extension;
+                Warning[] warnings = null;
+                string[] streamIDs = null;
+                string NewSession;
+                ReportJSONWriter rw;
+
+
+                if (this.ServerRendering)
+                    format = "ForerunnerJSON";
                 else
-                    execInfo = rs.LoadReport(reportPath, historyID);
+                    format = "RPL";
 
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+                if (SessionID == null)
+                    NewSession = "";
+                else
+                    NewSession = SessionID;
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0 && parametersList != null)
+                //Device Info
+                string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+                //Page number   
+                devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+                //End Device Info
+                devInfo += @"</DeviceInfo>";
+
+                ExecutionInfo execInfo = new ExecutionInfo();
+                ExecutionHeader execHeader = new ExecutionHeader();
+
+                rs.ExecutionHeaderValue = execHeader;
+
+                try
                 {
-                    rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
-                }
-                
-                result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
-                execInfo = rs.GetExecutionInfo();
-                if (result.Length != 0)
-                {
-                    rw = new ReportJSONWriter(new MemoryStream(result));
-                    JsonWriter w = new JsonTextWriter();
-                    JsonReader r;
-
-                    //Read Report Object
-                    w.WriteStartObject();
-                    w.WriteMember("SessionID");
-                    w.WriteString(NewSession);
-                    w.WriteMember("ReportServerURL");
-                    w.WriteString(ReportServerURL);
-                    w.WriteMember("ReportPath");
-                    w.WriteString(reportPath);
-                    w.WriteMember("HasDocMap");
-                    w.WriteBoolean(execInfo.HasDocumentMap);
-                    w.WriteMember("ReportContainer");
-                    if (this.ServerRendering)
-                        r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
+                    if (NewSession != "")
+                        rs.ExecutionHeaderValue.ExecutionID = SessionID;
                     else
-                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
-                    w.WriteFromReader(r);
-                    w.WriteEndObject();
+                        execInfo = rs.LoadReport(reportPath, historyID);
 
-                    Debug.WriteLine(w.ToString());
-                    return w.ToString();
+                    NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                    if (rs.GetExecutionInfo().Parameters.Length != 0 && parametersList != null)
+                    {
+                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    }
+
+                    result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
+                    execInfo = rs.GetExecutionInfo();
+                    if (result.Length != 0)
+                    {
+                        rw = new ReportJSONWriter(new MemoryStream(result));
+                        JsonWriter w = new JsonTextWriter();
+                        JsonReader r;
+
+                        //Read Report Object
+                        w.WriteStartObject();
+                        w.WriteMember("SessionID");
+                        w.WriteString(NewSession);
+                        w.WriteMember("ReportServerURL");
+                        w.WriteString(ReportServerURL);
+                        w.WriteMember("ReportPath");
+                        w.WriteString(reportPath);
+                        w.WriteMember("HasDocMap");
+                        w.WriteBoolean(execInfo.HasDocumentMap);
+                        w.WriteMember("ReportContainer");
+                        if (this.ServerRendering)
+                            r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
+                        else
+                            r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
+                        w.WriteFromReader(r);
+                        w.WriteEndObject();
+
+                        Debug.WriteLine(w.ToString());
+                        return w.ToString();
+
+                    }
+                    else
+                        return "";
 
                 }
-                else
-                    return "";
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
         public string GetDocMapJson(string SessionID)
         {
-           
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
+                impersonator.Impersonate();
+                try
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                return JsonUtility.GetDocMapJSON(rs.GetDocumentMap());
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    return JsonUtility.GetDocMapJSON(rs.GetDocumentMap());
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
         public string GetParameterJson(string ReportPath)
         {
-            string historyID = null;
-            string NewSession;
-            ExecutionInfo execInfo = new ExecutionInfo();
-
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                execInfo = rs.LoadReport(ReportPath, historyID);
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
-                
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                impersonator.Impersonate();
+                string historyID = null;
+                string NewSession;
+                ExecutionInfo execInfo = new ExecutionInfo();
+
+                try
                 {
-                    ReportParameter[] reportParameter = execInfo.Parameters;
-                    return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                    execInfo = rs.LoadReport(ReportPath, historyID);
+                    NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                    if (rs.GetExecutionInfo().Parameters.Length != 0)
+                    {
+                        ReportParameter[] reportParameter = execInfo.Parameters;
+                        return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
+                    }
+                    return "{\"Type\":\"\"}";
                 }
-                return "{\"Type\":\"\"}";
-            }
-            catch (Exception e)
-            {                
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e); //return e.Message;
+                }
             }
         }
 
@@ -289,103 +315,115 @@ namespace Forerunner.SSRS.Viewer
         /// </summary>
         public string SortReport(string SessionID, string SortItem, string Direction)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                string ReportItem = string.Empty;
-                int NumPages = 0;
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
-
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                SortDirectionEnum SortDirection;
-                switch (Direction)
+                impersonator.Impersonate();
+                try
                 {
-                    case "Ascending":
-                        SortDirection = SortDirectionEnum.Ascending;
-                        break;
-                    case "Descending":
-                        SortDirection = SortDirectionEnum.Descending;
-                        break;
-                    default:
-                        SortDirection = SortDirectionEnum.None;
-                        break;
-                }
-                int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("NewPage");
-                w.WriteNumber(newPage);
-                w.WriteMember("ReportItemID");
-                w.WriteString(ReportItem);
-                w.WriteMember("NumPages");
-                w.WriteNumber(NumPages);
-                w.WriteEndObject();
-                return w.ToString();
+                    string ReportItem = string.Empty;
+                    int NumPages = 0;
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); 
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    SortDirectionEnum SortDirection;
+                    switch (Direction)
+                    {
+                        case "Ascending":
+                            SortDirection = SortDirectionEnum.Ascending;
+                            break;
+                        case "Descending":
+                            SortDirection = SortDirectionEnum.Descending;
+                            break;
+                        default:
+                            SortDirection = SortDirectionEnum.None;
+                            break;
+                    }
+                    int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("NewPage");
+                    w.WriteNumber(newPage);
+                    w.WriteMember("ReportItemID");
+                    w.WriteString(ReportItem);
+                    w.WriteMember("NumPages");
+                    w.WriteNumber(NumPages);
+                    w.WriteEndObject();
+                    return w.ToString();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
         //Toggles the show/hide item in a report.
         public string ToggleItem(string SessionID, string ToggleID)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                bool result;
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
+                impersonator.Impersonate();
+                try
+                {
+                    bool result;
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
 
-                result = rs.ToggleItem(ToggleID);
-     
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Result");
-                w.WriteBoolean(result);
-                w.WriteMember("ToggleID");
-                w.WriteString(ToggleID);
-                w.WriteEndObject();
-                return w.ToString();
+                    result = rs.ToggleItem(ToggleID);
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("Result");
+                    w.WriteBoolean(result);
+                    w.WriteMember("ToggleID");
+                    w.WriteString(ToggleID);
+                    w.WriteEndObject();
+                    return w.ToString();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
         //Navigates to a specific bookmark in the report.
         public string NavBookmark(string SessionID, string BookmarkID)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
+                impersonator.Impersonate();
+                try
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                string UniqueName = string.Empty;
-                int NewPage = rs.NavigateBookmark(BookmarkID, out UniqueName);
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    string UniqueName = string.Empty;
+                    int NewPage = rs.NavigateBookmark(BookmarkID, out UniqueName);
 
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("NewPage");
-                w.WriteNumber(NewPage);
-                w.WriteMember("UniqueName");
-                w.WriteString(UniqueName);
-                w.WriteEndObject();
-                return w.ToString();
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("NewPage");
+                    w.WriteNumber(NewPage);
+                    w.WriteMember("UniqueName");
+                    w.WriteString(UniqueName);
+                    w.WriteEndObject();
+                    return w.ToString();
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
@@ -393,89 +431,101 @@ namespace Forerunner.SSRS.Viewer
         //Navigates to a Drillthough report
         public string NavigateDrillthrough(string SessionID, string DrillthroughID)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
-
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                
-               ExecutionInfo execInfo = rs.LoadDrillthroughTarget(DrillthroughID);
-                
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("SessionID");
-                w.WriteString(execInfo.ExecutionID);
-                w.WriteMember("ParametersRequired");
-                w.WriteBoolean(execInfo.Parameters.Length != 0 ? true : false);
-                w.WriteMember("ReportPath");
-                w.WriteString(execInfo.ReportPath);
-                
-                if (execInfo.Parameters.Length != 0)
+                impersonator.Impersonate();
+                try
                 {
-                    w.WriteMember("Parameters");
-                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
-                    w.WriteFromReader(r);
-                }
-                w.WriteEndObject();
-                return w.ToString();
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e);  
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+
+                    ExecutionInfo execInfo = rs.LoadDrillthroughTarget(DrillthroughID);
+
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("SessionID");
+                    w.WriteString(execInfo.ExecutionID);
+                    w.WriteMember("ParametersRequired");
+                    w.WriteBoolean(execInfo.Parameters.Length != 0 ? true : false);
+                    w.WriteMember("ReportPath");
+                    w.WriteString(execInfo.ReportPath);
+
+                    if (execInfo.Parameters.Length != 0)
+                    {
+                        w.WriteMember("Parameters");
+                        JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
+                        w.WriteFromReader(r);
+                    }
+                    w.WriteEndObject();
+                    return w.ToString();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
         //Navigates to a documant map node
         public string NavigateDocumentMap(string SessionID, string DocMapID)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
+                impersonator.Impersonate();
+                try
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;               
-                int NewPage = rs.NavigateDocumentMap(DocMapID);
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    int NewPage = rs.NavigateDocumentMap(DocMapID);
 
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("NewPage");
-                w.WriteNumber(NewPage);
-                w.WriteEndObject();
-                return w.ToString();
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("NewPage");
+                    w.WriteNumber(NewPage);
+                    w.WriteEndObject();
+                    return w.ToString();
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
         public string FindString(string SessionID, int StartPage, int EndPage, string FindString)
         {
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                ExecutionHeader execHeader = new ExecutionHeader();
-                rs.ExecutionHeaderValue = execHeader;
+                impersonator.Impersonate();
+                try
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
 
-                rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                int NewPage = rs.FindString(StartPage, EndPage, FindString);
+                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    int NewPage = rs.FindString(StartPage, EndPage, FindString);
 
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("NewPage");
-                w.WriteNumber(NewPage);
-                w.WriteEndObject();
-                return w.ToString();
+                    JsonWriter w = new JsonTextWriter();
+                    w.WriteStartObject();
+                    w.WriteMember("NewPage");
+                    w.WriteNumber(NewPage);
+                    w.WriteEndObject();
+                    return w.ToString();
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return JsonUtility.WriteExceptionJSON(e); 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    return JsonUtility.WriteExceptionJSON(e);
+                }
             }
         }
 
@@ -500,11 +550,30 @@ namespace Forerunner.SSRS.Viewer
             return retval;
 
         }
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
-            byte[] result = null;                       
-            MemoryStream ms = new MemoryStream();           
-            string format = "HTML4.0";            
+            if (HttpContext.Current != null)
+            {
+                using (var impersonator = new CurrentUserImpersonator())
+                {
+                    impersonator.Impersonate();
+                    return GetThumbnailInternal(reportPath, SessionID, PageNum, maxHeightToWidthRatio);
+                }
+            }
+            else
+            {
+                // This is the code path called by Report Manager
+                Debug.Assert(rs.Credentials != null, "RS.Credentials cannot be null");
+                return GetThumbnailInternal(reportPath, SessionID, PageNum, maxHeightToWidthRatio);
+            }
+        }
+
+        public byte[] GetThumbnailInternal(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
+        {
+            byte[] result = null;
+            MemoryStream ms = new MemoryStream();
+            string format = "HTML4.0";
             string historyID = null;
             string encoding;
             string mimeType;
@@ -512,7 +581,7 @@ namespace Forerunner.SSRS.Viewer
             Warning[] warnings = null;
             string[] streamIDs = null;
             string NewSession;
-           
+
 
             if (SessionID == null)
                 NewSession = "";
@@ -545,7 +614,7 @@ namespace Forerunner.SSRS.Viewer
                 {
                     devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
                     devInfo += @"<ReplacementRoot></ReplacementRoot>";
-                    devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>"; 
+                    devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>";
                 }
                 devInfo += @"</DeviceInfo>";
 
@@ -554,12 +623,12 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!this.ServerRendering)
                 {
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result),maxHeightToWidthRatio, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
                 }
-                
-                return result; 
-                          
+
+                return result;
+
 
             }
             catch (Exception e)
@@ -571,45 +640,49 @@ namespace Forerunner.SSRS.Viewer
 
         public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName)
         {
-            string historyID = null;
-            string encoding;            
-            Warning[] warnings = null;
-            string[] streamIDs = null;
-            string Extension = null;            
-            byte[] result = null;
-            string NewSession = SessionID == null ? "" : SessionID;
-
-            ExecutionInfo execInfo = new ExecutionInfo();
-            ExecutionHeader execHeader = new ExecutionHeader();
-            FileName = "";
-            rs.ExecutionHeaderValue = execHeader;
-            try
+            using (var impersonator = new CurrentUserImpersonator())
             {
-                if (NewSession != "")
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                else
-                    execInfo = rs.LoadReport(ReportPath, historyID);
+                impersonator.Impersonate();
+                string historyID = null;
+                string encoding;
+                Warning[] warnings = null;
+                string[] streamIDs = null;
+                string Extension = null;
+                byte[] result = null;
+                string NewSession = SessionID == null ? "" : SessionID;
 
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
-
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                ExecutionInfo execInfo = new ExecutionInfo();
+                ExecutionHeader execHeader = new ExecutionHeader();
+                FileName = "";
+                rs.ExecutionHeaderValue = execHeader;
+                try
                 {
-                    if (ParametersList != null)
-                    {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-                    }
-                }
+                    if (NewSession != "")
+                        rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    else
+                        execInfo = rs.LoadReport(ReportPath, historyID);
 
-                string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
-                result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
-                FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
-                return result;
-            }
-            catch (Exception e)
-            {
-                MimeType = string.Empty;
-                Console.WriteLine(e.Message);               
-                return null;
+                    NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                    if (rs.GetExecutionInfo().Parameters.Length != 0)
+                    {
+                        if (ParametersList != null)
+                        {
+                            rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
+                        }
+                    }
+
+                    string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
+                    result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
+                    FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    MimeType = string.Empty;
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
             }
         }
 

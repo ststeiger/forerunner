@@ -15,18 +15,16 @@ using ReportManager.Util.Logging;
 namespace ReportManager.Controllers
 {
     [ExceptionLog]
+    [Authorize]
     public class ReportViewerController :ApiController
     {
-        private string accountName = ConfigurationManager.AppSettings["ForeRunner.TestAccount"];
-        private string accountPWD = ConfigurationManager.AppSettings["ForeRunner.TestAccountPWD"];
-        private string domainName = ConfigurationManager.AppSettings["ForeRunner.TestAccountDomain"];
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
         private ReportViewer GetReportViewer()
         {
             //Put application security here
             ReportViewer rep = new ReportViewer(url);
-            rep.SetCredentials(new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD));
+            rep.SetCredentials(null);
             return rep;
         }
 

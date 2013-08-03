@@ -13,12 +13,10 @@ using Forerunner;
 
 namespace ReportManager.Controllers
 {
+    [Authorize]
     public class ReportManagerController : ApiController
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
-        private string accountName = ConfigurationManager.AppSettings["Forerunner.TestAccount"];
-        private string accountPWD = ConfigurationManager.AppSettings["Forerunner.TestAccountPWD"];
-        private string domainName = ConfigurationManager.AppSettings["Forerunner.TestAccountDomain"];
 
         private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"]);
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
@@ -31,7 +29,7 @@ namespace ReportManager.Controllers
         private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
             //Put application security here
-            Credentials WSCred = new Credentials(Credentials.SecurityTypeEnum.Custom, accountName, domainName, accountPWD);
+            Credentials WSCred = null;
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
             return new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
         }

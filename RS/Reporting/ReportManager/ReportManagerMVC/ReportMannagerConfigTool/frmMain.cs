@@ -363,5 +363,10 @@ namespace ReportMannagerConfigTool
                 return false;
         }
         #endregion
+
+        private void lblServer_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

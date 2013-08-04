@@ -353,7 +353,7 @@ $(function () {
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
             //alert(ratio);
-            if (ratio > 1.1 || ratio < .99)
+            if (ratio > 1.1 || ratio < 0.99)
                 return true;
             else
                 return false;

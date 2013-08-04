@@ -133,6 +133,12 @@ $(function () {
             toolPaneActionStarted: function () { return forerunner.ssr.constants.widgets.toolPane.toLowerCase() + this.actionStarted; },
 
             /** @constant */
+            allowZoom: "allowZoom",
+            /** widget + event, lowercase */
+            reportViewerallowZoom: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.allowZoom).toLowerCase(); },
+            
+
+            /** @constant */
             menuClick: "menuclick",
             /** widget + event, lowercase */
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
@@ -342,6 +348,17 @@ $(function () {
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=1' />");
             }
         },
+      
+      
+        isZoomed: function(element){
+            var ratio = document.documentElement.clientWidth / window.innerWidth;
+
+            //alert(ratio);
+            if (ratio > 1.1 || ratio < .99)
+                return true;
+            else
+                return false;
+        },
         /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
@@ -522,6 +539,7 @@ $(function () {
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
+           
             if (!$colHeader)
                 return;
 
@@ -544,9 +562,9 @@ $(function () {
                 return;
 
             var offset = $tablix.offset();
-            var scrollTop = $(window).scrollTop();
+            var scrollTop = $(window).scrollTop();            
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
                 $rowHeader.fadeIn("fast");
             }
             else {
@@ -627,9 +645,34 @@ $(function () {
             }
             me.lock = 0;
         },
+        allowZoom: function (isEnabled) {
+            var me = this;
+
+
+            if (isEnabled === true){
+                forerunner.device.allowZoom(true);
+                me.allowSwipe(false);
+            }
+            else{
+                forerunner.device.allowZoom(false);
+                me.allowSwipe(true);
+            }
+            me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
+
+        },
+        allowSwipe: function(isEnabled){
+            var me = this;
+            
+            if (isEnabled === true)
+                $(me.element).swipe("enable");
+            else
+                $(me.element).swipe("disable");
+        },
         _touchNav: function () {
             // Touch Events
             var me = this;
+    
+  
             $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
@@ -648,8 +691,8 @@ $(function () {
                 tap: function (event, target) {
                     $(target).trigger("click");
                 },
-                longTapThreshold: 1000,
-                //threshold: 0,
+
+
             });
         },
         /**
@@ -2358,8 +2401,8 @@ $(function () {
         imageClass: "fr-icons24x24-nav",
         text: locData.toolPane.zoom,
         events: {
-            click: function (e) {
-                forerunner.device.allowZoom(true);
+            click: function (e) {                
+                e.data.$reportViewer.reportViewer("allowZoom",true);
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
                 //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
             }
@@ -5384,8 +5427,11 @@ $(function () {
         },
         ResetSize: function () {
             var me = this;
-            forerunner.device.allowZoom(false);
-            //alert("hi");
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
+
+            if (!forerunner.device.isZoomed())
+                $viewer.reportViewer("allowZoom", false);
+
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
             $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
@@ -5423,6 +5469,20 @@ $(function () {
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.$container.removeClass("fr-docmap-background");
             });
+
+            $viewer.on(events.reportViewerallowZoom(), function (e, data) {
+                if (data.isEnabled === true) {
+                    $(".fr-layout-topdiv").hide();
+                    $viewer.reportViewer("option", "toolbarHeight", 0);
+                }
+                else {
+                    $(".fr-layout-topdiv").show();
+                    $viewer.reportViewer("option", "toolbarHeight", $(".fr-layout-topdiv").outerHeight());
+                }
+
+                
+            });
+
 
             //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
@@ -5876,7 +5936,7 @@ $(function () {
             layout.$docmapsection.hide();
             layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase + "/ReportManager",
-                forerunnerPath: "./forerunner",
+                forerunnerPath: forerunner.config.forerunnerFolder ,
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,

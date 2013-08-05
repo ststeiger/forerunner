@@ -85,16 +85,19 @@ namespace ReportMannagerConfigTool
             
             WebAppConfigEntry entry = Metabase.GetWebAppEntry(guid);
             entry.ApplicationName = siteName;
+            entry.VirtualDirectory = siteName;
             entry.AppType = ApplicationType.AspNetOrStaticHtml;
-            entry.AuthenicationMode = AuthenticationSchemes.Anonymous;
-            entry.CompressResponseIfPossible = true;
+            entry.AuthenicationMode = AuthenticationSchemes.IntegratedWindowsAuthentication;
+            entry.CompressResponseIfPossible = true;          
 
-            ListenAddress address = new ListenAddress(bindingAddress);
+            //ListenAddress address = new ListenAddress(bindingAddress);
             entry.ListenAddresses.Clear();
-            entry.ListenAddresses.Add(address);
+            //entry.ListenAddresses.Add(address);
 
             entry.PhysicalDirectory = physicalPath;
-            Metabase.RegisterApplication(RuntimeVersion.AspNet_4, true, true, ProcessIdentity.LocalSystem, entry);
+       
+            Metabase.RegisterApplication(RuntimeVersion.AspNet_4,false,false, ProcessIdentity.NetworkService, entry);
+            Metabase.WaitForAppToStart(guid);
 
             Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }
@@ -179,6 +182,8 @@ namespace ReportMannagerConfigTool
         /// </summary>
         private static string GetValue(this XmlNode node)
         {
+            if (((XmlElement)node) == null)
+                return "";
             return ((XmlElement)node).GetAttribute("value");
         }
     }

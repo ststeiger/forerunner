@@ -40,6 +40,15 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblDomain = new System.Windows.Forms.Label();
+            this.txtDomain = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtPWD = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtUser = new System.Windows.Forms.TextBox();
+            this.rdoSQL = new System.Windows.Forms.RadioButton();
+            this.rdoDomain = new System.Windows.Forms.RadioButton();
             this.lblWSUrl = new System.Windows.Forms.Label();
             this.txtWSUrl = new System.Windows.Forms.TextBox();
             this.lblDBName = new System.Windows.Forms.Label();
@@ -47,15 +56,7 @@
             this.lblServer = new System.Windows.Forms.Label();
             this.txtServerName = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
-            this.lblDomain = new System.Windows.Forms.Label();
-            this.txtDomain = new System.Windows.Forms.TextBox();
             this.btnApply = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtPWD = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtUser = new System.Windows.Forms.TextBox();
-            this.rdoSQL = new System.Windows.Forms.RadioButton();
-            this.rdoDomain = new System.Windows.Forms.RadioButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnRemoveEx = new System.Windows.Forms.Button();
@@ -63,12 +64,11 @@
             this.btnFolderBrowser = new System.Windows.Forms.Button();
             this.lblReportServer = new System.Windows.Forms.Label();
             this.txtReportServer = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabMain.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -149,46 +149,19 @@
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // lblWSUrl
+            // groupBox1
             // 
-            resources.ApplyResources(this.lblWSUrl, "lblWSUrl");
-            this.lblWSUrl.Name = "lblWSUrl";
-            // 
-            // txtWSUrl
-            // 
-            resources.ApplyResources(this.txtWSUrl, "txtWSUrl");
-            this.txtWSUrl.Name = "txtWSUrl";
-            this.txtWSUrl.Tag = "Report Server Web Service Url";
-            // 
-            // lblDBName
-            // 
-            resources.ApplyResources(this.lblDBName, "lblDBName");
-            this.lblDBName.Name = "lblDBName";
-            // 
-            // txtDBName
-            // 
-            resources.ApplyResources(this.txtDBName, "txtDBName");
-            this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Tag = "DB Name";
-            // 
-            // lblServer
-            // 
-            resources.ApplyResources(this.lblServer, "lblServer");
-            this.lblServer.Name = "lblServer";
-            this.lblServer.Click += new System.EventHandler(this.lblServer_Click);
-            // 
-            // txtServerName
-            // 
-            resources.ApplyResources(this.txtServerName, "txtServerName");
-            this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Tag = "Server Name";
-            // 
-            // btnTest
-            // 
-            resources.ApplyResources(this.btnTest, "btnTest");
-            this.btnTest.Name = "btnTest";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.groupBox1.Controls.Add(this.lblDomain);
+            this.groupBox1.Controls.Add(this.txtDomain);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtPWD);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.txtUser);
+            this.groupBox1.Controls.Add(this.rdoSQL);
+            this.groupBox1.Controls.Add(this.rdoDomain);
+            resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.TabStop = false;
             // 
             // lblDomain
             // 
@@ -200,13 +173,6 @@
             resources.ApplyResources(this.txtDomain, "txtDomain");
             this.txtDomain.Name = "txtDomain";
             this.txtDomain.Tag = "Domain";
-            // 
-            // btnApply
-            // 
-            resources.ApplyResources(this.btnApply, "btnApply");
-            this.btnApply.Name = "btnApply";
-            this.btnApply.UseVisualStyleBackColor = true;
-            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // label1
             // 
@@ -245,6 +211,53 @@
             this.rdoDomain.Name = "rdoDomain";
             this.rdoDomain.TabStop = true;
             this.rdoDomain.UseVisualStyleBackColor = true;
+            // 
+            // lblWSUrl
+            // 
+            resources.ApplyResources(this.lblWSUrl, "lblWSUrl");
+            this.lblWSUrl.Name = "lblWSUrl";
+            // 
+            // txtWSUrl
+            // 
+            resources.ApplyResources(this.txtWSUrl, "txtWSUrl");
+            this.txtWSUrl.Name = "txtWSUrl";
+            this.txtWSUrl.Tag = "Report Server Web Service Url";
+            // 
+            // lblDBName
+            // 
+            resources.ApplyResources(this.lblDBName, "lblDBName");
+            this.lblDBName.Name = "lblDBName";
+            // 
+            // txtDBName
+            // 
+            resources.ApplyResources(this.txtDBName, "txtDBName");
+            this.txtDBName.Name = "txtDBName";
+            this.txtDBName.Tag = "DB Name";
+            // 
+            // lblServer
+            // 
+            resources.ApplyResources(this.lblServer, "lblServer");
+            this.lblServer.Name = "lblServer";
+            // 
+            // txtServerName
+            // 
+            resources.ApplyResources(this.txtServerName, "txtServerName");
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Tag = "Server Name";
+            // 
+            // btnTest
+            // 
+            resources.ApplyResources(this.btnTest, "btnTest");
+            this.btnTest.Name = "btnTest";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // btnApply
+            // 
+            resources.ApplyResources(this.btnApply, "btnApply");
+            this.btnApply.Name = "btnApply";
+            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
             // tabPage3
             // 
@@ -297,20 +310,6 @@
             resources.ApplyResources(this.txtReportServer, "txtReportServer");
             this.txtReportServer.Name = "txtReportServer";
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.lblDomain);
-            this.groupBox1.Controls.Add(this.txtDomain);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtPWD);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtUser);
-            this.groupBox1.Controls.Add(this.rdoSQL);
-            this.groupBox1.Controls.Add(this.rdoDomain);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
-            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -324,10 +323,10 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
 
         }

@@ -91,12 +91,18 @@ namespace ReportMannagerConfigTool
         {
             var existConfig = ReportManagerConfig.GetConfig();
 
-            txtWSUrl.Text = existConfig["WSUrl"];
-            txtServerName.Text = existConfig["DataSource"];
-            txtDBName.Text = existConfig["Database"];
-            txtDomain.Text = existConfig["UserDomain"];
-            txtUser.Text = existConfig["User"];
-            txtPWD.Text = existConfig["Password"];
+            if (existConfig["WSUrl"] != "")
+                txtWSUrl.Text = existConfig["WSUrl"];
+            if (existConfig["DataSource"] != "")
+                txtServerName.Text = existConfig["DataSource"];
+            if (existConfig["Database"] != "")
+                txtDBName.Text = existConfig["Database"];
+            if (existConfig["UserDomain"] != "")
+                txtDomain.Text = existConfig["UserDomain"];
+            if (existConfig["User"] != "")
+                txtUser.Text = existConfig["User"];
+            if (existConfig["Password"] != "")
+                txtPWD.Text = existConfig["Password"];
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -377,9 +383,6 @@ namespace ReportMannagerConfigTool
         }
         #endregion
 
-        private void lblServer_Click(object sender, EventArgs e)
-        {
-
-        }
+      
     }
 }

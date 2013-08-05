@@ -23,9 +23,10 @@
 !include "ApplicationConfig.nsdinc"
 !include "WebServerConfig.nsdinc"
 !include "RunRegister.nsh"
-*/
+
 !include "RunConfigTool.nsdinc"
 !include "RunConfigTool.nsh"
+*/
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -42,9 +43,12 @@ Page custom fun_ApplicationConfig_RunRegister
 ; Set Web Server Config page
 Page custom fnc_WebServerConfig_Show fnc_WebServerConfig_Leave
 ; Run Deploy Script if user choose to config it
-*/
-Page custom fnc_RunConfigTool_Show 
+
+Page custom fnc_RunConfigTool_Show */
+
 ; Finish page
+!define MUI_FINISHPAGE_RUN "$INSTDIR\ReportManagerConfigTool.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
 !insertmacro MUI_PAGE_FINISH
 
 ; Language files

@@ -16,12 +16,13 @@ namespace Forerunner.Security
 
         private IntPtr duplicateToken;
         private WindowsIdentity identity;
+        private string userName;
 
         private void duplicateIdentity()
         {
             var token = ((WindowsIdentity)HttpContext.Current.User.Identity).Token;
             duplicateToken = new IntPtr(0);
-
+            userName = HttpContext.Current.User.Identity.Name;
             const int SecurityImpersonation = 2;
             if (Security.NativeMethods.DuplicateToken(token, SecurityImpersonation, ref duplicateToken) == false)
             {
@@ -74,7 +75,7 @@ namespace Forerunner.Security
 
         public string UserName
         {
-            get { return identity.Name; }
+            get { return userName; }
         }
     }
 }

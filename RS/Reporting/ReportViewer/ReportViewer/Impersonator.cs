@@ -37,8 +37,12 @@ namespace Forerunner.Security
             return imp;
         }
         public void Impersonate()
-        { impersonationContext = Logon().Impersonate(); }
-        public void Undo() { impersonationContext.Undo(); }
+        { 
+            impersonationContext = Logon().Impersonate(); 
+        }
+        public void Undo() { 
+            impersonationContext.Undo(); 
+        }
         #endregion Public Methods
 
         #region Private Methods

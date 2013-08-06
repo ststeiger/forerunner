@@ -21,7 +21,7 @@ namespace ReportMannagerConfigTool
         /// <returns>new site indentifier</returns>
         public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress, string appPoolName = "ASP.NET v4.0")
         {
-            Console.WriteLine("Register begin to deploy the site to the IIS Server !");
+            //Console.WriteLine("Register begin to deploy the site to the IIS Server !");
 
             DirectoryEntry root = new DirectoryEntry(iisRoot);
             // Find unused ID value for new web site 
@@ -58,7 +58,7 @@ namespace ReportMannagerConfigTool
             siteVDir.CommitChanges();
             site.CommitChanges();
 
-            siteVDir.Properties["AppIsolated"][0] = 2;//默认2 
+            siteVDir.Properties["AppIsolated"][0] = 2;//default is 2
             siteVDir.Properties["Path"][0] = physicalPath;//physical path in the disk
             siteVDir.Properties["AccessFlags"][0] = 513;
             siteVDir.Properties["FrontPageWeb"][0] = 1;
@@ -68,7 +68,7 @@ namespace ReportMannagerConfigTool
             siteVDir.CommitChanges();
             site.CommitChanges();
 
-            Console.WriteLine("Deploy Done! New web application's id in IIS is:" + siteID);
+            //Console.WriteLine("Deploy Done! New web application's id in IIS is:" + siteID);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace ReportMannagerConfigTool
         /// <returns>new site indentifier</returns>
         public static void CreateAnUWSSite(string siteName, string physicalPath, string bindingAddress)
         {
-            Console.WriteLine("Register begin to deploy the site to the UWS Server !");
+            //Console.WriteLine("Register begin to deploy the site to the UWS Server !");
 
             Guid guid = Guid.NewGuid();
             
@@ -95,11 +95,11 @@ namespace ReportMannagerConfigTool
             //entry.ListenAddresses.Add(address);
 
             entry.PhysicalDirectory = physicalPath;
-       
-            Metabase.RegisterApplication(RuntimeVersion.AspNet_4,false,false, ProcessIdentity.NetworkService, entry);
+
+            Metabase.RegisterApplication(RuntimeVersion.AspNet_4, false, false, ProcessIdentity.NetworkService, entry);
             Metabase.WaitForAppToStart(guid);
 
-            Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
+            //Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }
 
         /// <summary>

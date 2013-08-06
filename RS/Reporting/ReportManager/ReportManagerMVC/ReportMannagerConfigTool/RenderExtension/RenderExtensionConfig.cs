@@ -7,8 +7,8 @@ namespace ReportMannagerConfigTool
     public static class RenderExtensionConfig
     {
         #region Static Strings
-        private static readonly string forerunnerJSONDLL = "RenderExtension/Forerunner.Json.dll";
-        private static readonly string forerunnerRenderExtensionDLL = "RenderExtension/Forerunner.RenderingExtensions.dll";
+        private static readonly string forerunnerJSONDLL = "SSRSExtension/Forerunner.Json.dll";
+        private static readonly string forerunnerRenderExtensionDLL = "SSRSExtension/Forerunner.RenderingExtensions.dll";
 
         private static readonly string rplRendering = "Microsoft.ReportingServices.RPLRendering";
         private static readonly string htmlRendering = "Microsoft.ReportingServices.HTMLRendering";
@@ -35,11 +35,11 @@ namespace ReportMannagerConfigTool
             {
                 if (File.Exists(forerunnerJSONDLL))
                 {
-                    File.Copy(forerunnerJSONDLL, targetPath + "/Forerunner.Json.dll");
+                    File.Copy(forerunnerJSONDLL, targetPath + "/Forerunner.Json.dll",true);
                 }
                 if (File.Exists(forerunnerRenderExtensionDLL))
                 {
-                    File.Copy(forerunnerRenderExtensionDLL, targetPath + "/Forerunner.RenderingExtensions.dll");
+                    File.Copy(forerunnerRenderExtensionDLL, targetPath + "/Forerunner.RenderingExtensions.dll",true);
                 }
             }
             catch

@@ -20,16 +20,92 @@ namespace ReportMannagerConfigTool
         private static readonly string xForerunnerThumbnail = "<Extension Name='ForerunnerThumbnail' Type='Forerunner.RenderingExtensions.ThumbnailRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
         private static readonly string xCodeGroup = "<CodeGroup class='UnionCodeGroup' version='1' PermissionSetName='FullTrust' Name='Forerunner_JSON_Renderer' Description='This code group grants Forerunner JSON Renderer code full trust.'><IMembershipCondition class='StrongNameMembershipCondition' version='1' PublicKeyBlob='0024000004800000940000000602000000240000525341310004000001000100b3ce6944622dd1d04857d494118907f56368d05042eec4ac87160554f250bc7fab32362151aef7e898e48fa0867cde4dca5c40cabc790a39b1cebf76921ba1744834666a1876f6980a969e726d8d7eae37a7089b55d5adccbf772a5d17c6705b75656ee727d2eeac5338f64d57817508d4e61bbffa809e27eee28d2d22da64c5' /></CodeGroup>";
 
-        public static readonly string webConfig = "/web.config";
-        public static readonly string rsConfig = "/rsreportserver.config";
-        public static readonly string srvPolicyConfig = "/rssrvpolicy.config";
+        private static readonly string webConfig = "/web.config";
+        private static readonly string rsConfig = "/rsreportserver.config";
+        private static readonly string srvPolicyConfig = "/rssrvpolicy.config";
         #endregion
+
+        /// <summary>
+        /// Verify the specific path contain web.config. rereportserver.config and rssrvpolicy.config files
+        /// </summary>
+        /// <param name="targetPath">selected path for report server</param>
+        /// <returns>True: path right; False: path wrong</returns>
+        public static bool VerifyReportServerPath(string targetPath)
+        {
+            if (File.Exists(targetPath + RenderExtensionConfig.webConfig) &&
+                   File.Exists(targetPath + RenderExtensionConfig.rsConfig) &&
+                   File.Exists(targetPath + RenderExtensionConfig.srvPolicyConfig) &&
+                   Directory.Exists(targetPath + "/bin"))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public static void addRenderExtension(string targetPath)
+        {
+            WinFormHelper winform = new WinFormHelper();
+
+            //Copy Files to bin Folder
+            RenderExtensionConfig.copyRenderExtensionDLL(targetPath + "/bin");
+
+            //Add settings to Web.config
+            if (!RenderExtensionConfig.updateWebConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.updateWebConfigError);
+                return;
+            }
+
+            //Add settings to rsreportserver.config
+            if (!RenderExtensionConfig.updateRSReportServerConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.updateRSReportServerError);
+                return;
+            }
+
+            //Add setting to rsrvvpolicy.config
+            if (!RenderExtensionConfig.updateRSPolicyConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.updateRSPolicyError);
+                return;
+            }
+
+            winform.showMessage(StaticMessages.updateDone);
+        }
+
+        public static void removeRenderExtension(string targetPath)
+        {
+            WinFormHelper winform = new WinFormHelper();
+
+            removeRenderExtensionDLL(targetPath + "/bin");
+
+            if (!removeWebConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.removeWebConfigError);
+                return;
+            }
+
+            if (!RenderExtensionConfig.removeRSReportServerConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.removeRSReportServerError);
+                return;
+            }
+
+            if (!RenderExtensionConfig.removeRSPolicyConfig(targetPath))
+            {
+                winform.showWarning(StaticMessages.removeRSPolicyError);
+                return;
+            }
+
+            winform.showMessage(StaticMessages.removeDone);
+        }
 
         /// <summary>
         /// Add render extension dll files to ReportServer/bin folder
         /// </summary>
         /// <param name="targetPath">ReportServer/bin</param>
-        public static bool copyRenderExtensionDLL(string targetPath)
+        private static bool copyRenderExtensionDLL(string targetPath)
         {
             try
             {
@@ -54,7 +130,7 @@ namespace ReportMannagerConfigTool
         /// Remove render extension dll files from ReportServer/bin folder
         /// </summary>
         /// <param name="targetPath">ReportServer/bin</param>
-        public static bool removeRenderExtensionDLL(string targetPath)
+        private static bool removeRenderExtensionDLL(string targetPath)
         {
             try
             {
@@ -80,7 +156,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">web.config specific path</param>
         /// <returns>Success or not</returns>
-        public static bool updateWebConfig(string path)
+        private static bool updateWebConfig(string path)
         {
             try
             {
@@ -122,7 +198,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">web.config specific path</param>
         /// <returns>Success or not</returns>
-        public static bool removeWebConfig(string path)
+        private static bool removeWebConfig(string path)
         {
             try
             {
@@ -153,7 +229,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">config file specific path</param>
         /// <returns>Success or not</returns>
-        public static bool updateRSReportServerConfig(string path)
+        private static bool updateRSReportServerConfig(string path)
         {
             try
             {
@@ -200,7 +276,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">config file specific path</param>
         /// <returns>Success or not</returns>
-        public static bool removeRSReportServerConfig(string path)
+        private static bool removeRSReportServerConfig(string path)
         {
             try
             {
@@ -230,7 +306,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">config file specific path</param>
         /// <returns>Success or not</returns>
-        public static bool updateRSPolicyConfig(string path)
+        private static bool updateRSPolicyConfig(string path)
         {
             try
             {
@@ -267,7 +343,7 @@ namespace ReportMannagerConfigTool
         /// </summary>
         /// <param name="path">config file specific path</param>
         /// <returns>Success or not</returns>
-        public static bool removeRSPolicyConfig(string path)
+        private static bool removeRSPolicyConfig(string path)
         {
             try
             {

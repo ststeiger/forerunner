@@ -586,12 +586,18 @@ namespace Forerunner.SSRS.Manager
                 
                 try
                 {
-                    sqlImpersonator.Impersonate();
+                    if (sqlImpersonator != null)
+                    { 
+                        sqlImpersonator.Impersonate(); 
+                    }
                     SaveImage(retval, path.ToString(), userName, isUserSpecific);
                 }
                 finally
                 {
-                    sqlImpersonator.Dispose();
+                    if (sqlImpersonator != null)
+                    {
+                        sqlImpersonator.Dispose();
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
+using System.Net;
 
 namespace Forerunner.Thumbnail
 {
@@ -17,6 +18,7 @@ namespace Forerunner.Thumbnail
         private Stream sMHTML = null;
         private double maxHeightToWidthRatio = 0;
         private int ThreadingAttempts = 0;
+
         public Bitmap Image 
         {
             get 
@@ -24,7 +26,7 @@ namespace Forerunner.Thumbnail
                 return bmp; 
             } 
         }
-        
+
         private System.Func<string, string> callback = null;
 
         public static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, System.Func<string, string> callback)

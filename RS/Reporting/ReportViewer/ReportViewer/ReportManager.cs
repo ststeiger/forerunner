@@ -92,12 +92,8 @@ namespace Forerunner.SSRS.Manager
 
         private CatalogItem[] callListChildren(string path, Boolean isRecursive)
         {
-            using(var impersonator = new CurrentUserImpersonator())
-            {
-                impersonator.Impersonate();
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
-                return rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
-            }
+            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            return rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
         }
 
         private Property[] callGetProperties(string path, Property[] props)
@@ -111,12 +107,8 @@ namespace Forerunner.SSRS.Manager
 
         private string[] callGetPermissions(string path)
         {
-            using(var impersonator = new CurrentUserImpersonator())
-            {
-                impersonator.Impersonate();
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
-                return rs.GetPermissions(path);
-            }
+            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            return rs.GetPermissions(path);
         }
 
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
@@ -561,7 +553,7 @@ namespace Forerunner.SSRS.Manager
             return null;
         }
 
-        private void GetThumbnail(object context)
+        public void GetThumbnail(object context)
         {
             ThreadContext threadContext = (ThreadContext)context;
             String path = threadContext.Path;
@@ -571,14 +563,14 @@ namespace Forerunner.SSRS.Manager
             Impersonator sqlImpersonator = threadContext.SqlImpersonator;
             try
             {
-                ReportViewer rep = new ReportViewer(this.URL);
                 threadContext.Impersonate();
-                rep.SetCredentials(this.WSCredentials);
+                ReportViewer rep = new ReportViewer(this.URL);
                 retval = rep.GetThumbnail(path, "", "1", 1.2);
                 isUserSpecific = IsUserSpecific(path);
             }
             finally
             {
+                threadContext.Undo();
                 threadContext.Dispose();
             }
             if (retval != null)

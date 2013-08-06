@@ -80,7 +80,7 @@ namespace Forerunner
             }
         }
 
-        public static string WriteExceptionJSON(Exception e)
+        public static string WriteExceptionJSON(Exception e, String userName = null)
         {
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
@@ -96,6 +96,10 @@ namespace Forerunner
             w.WriteString(e.Message);
             w.WriteMember("StackTrace");
             w.WriteString(e.StackTrace);
+
+            w.WriteMember("UserName");
+            w.WriteString(userName != null ? userName : "null");
+  
             w.WriteEndObject();
             w.WriteEndObject();
 

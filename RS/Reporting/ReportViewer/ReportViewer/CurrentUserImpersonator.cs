@@ -20,11 +20,12 @@ namespace Forerunner.Security
 
         private void duplicateIdentity()
         {
-            var token = ((WindowsIdentity)HttpContext.Current.User.Identity).Token;
+            var token = WindowsIdentity.GetCurrent().Token;
+                //((WindowsIdentity)HttpContext.Current.User.Identity).Token;
             duplicateToken = new IntPtr(0);
             userName = HttpContext.Current.User.Identity.Name;
-            const int SecurityImpersonation = 2;
-            if (Security.NativeMethods.DuplicateToken(token, SecurityImpersonation, ref duplicateToken) == false)
+            const int SecurityLevel = 2;
+            if (Security.NativeMethods.DuplicateToken(token, SecurityLevel, ref duplicateToken) == false)
             {
                 throw new ApplicationException("Failed to impersonate current user");
             }

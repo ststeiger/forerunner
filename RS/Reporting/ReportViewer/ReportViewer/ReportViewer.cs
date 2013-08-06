@@ -65,7 +65,8 @@ namespace Forerunner.SSRS.Viewer
             //Security
             if (this.Credentials == null)
             {
-                rs.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = new NetworkCredential("TestAccount", "TestPWD!", "PUPPERS");
+                //rs.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             }
             else
             {
@@ -564,7 +565,10 @@ namespace Forerunner.SSRS.Viewer
             else
             {
                 // This is the code path called by Report Manager
-                Debug.Assert(rs.Credentials != null, "RS.Credentials cannot be null");
+                if (rs.Credentials == null)
+                {
+                    Debug.Assert(rs.Credentials != null, "RS.Credentials cannot be null");
+                }
                 return GetThumbnailInternal(reportPath, SessionID, PageNum, maxHeightToWidthRatio);
             }
         }

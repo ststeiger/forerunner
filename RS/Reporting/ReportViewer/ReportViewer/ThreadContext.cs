@@ -9,12 +9,21 @@ namespace Forerunner
 {
     internal class ThreadContext : Security.CurrentUserImpersonator, IDisposable
     {
-        public ThreadContext(String path)
+        public ThreadContext(String path, Security.Impersonator sqlImpersonator )
         {
             Path = path;
+            this.sqlImpersonator = sqlImpersonator;
         }
         
         private bool disposed;
+        private Security.Impersonator sqlImpersonator;
+        public Security.Impersonator SqlImpersonator
+        {
+            get
+            {
+                return sqlImpersonator;
+            }
+        }
 
         //Dispose(bool) should be declared as protected, virtual, and unsealed
         protected override void Dispose(bool isDisposing)
@@ -29,6 +38,10 @@ namespace Forerunner
             GC.SuppressFinalize(this);
         }
         ~ThreadContext() { Dispose(false); }
-        public String Path;
+        public String Path
+        {
+            get;
+            set;
+        }
     }
 }

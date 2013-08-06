@@ -149,14 +149,15 @@ namespace Forerunner.SSRS.Manager
             return list.ToArray();
         }
 
-        private Impersonator tryImpersonate() 
+        private Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
         {
             if (!useIntegratedSecurity) return null;
             if (impersonator == null)
             {
                 impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
             }
-            impersonator.Impersonate();
+            if (!doNotCallImpersonate)
+                impersonator.Impersonate();
             return impersonator;
         }
 
@@ -405,26 +406,30 @@ namespace Forerunner.SSRS.Manager
             SQLComm.Parameters.AddWithValue("@DomainUser", domainUserName);
         }
 
-        public void SaveImage(byte[] image, string path, string userName)
+        private int IsUserSpecific(string path)
+        {
+            Property[] props = new Property[2];
+            Property retrieveProp = new Property();
+            retrieveProp.Name = "HasUserProfileQueryDependencies";
+            props[0] = retrieveProp;
+            retrieveProp = new Property();
+            retrieveProp.Name = "HasUserProfileReportDependencies";
+            props[1] = retrieveProp;
+            int IsUserSpecific = 1;  //Boolean not working in SQL very well so used int
+
+            Property[] properties = callGetProperties(path, props);
+
+            if (properties.Length == 2 && properties[0].Value.ToLower() == "false" && properties[0].Value.ToLower() == "false")
+                IsUserSpecific = 0;
+
+            return IsUserSpecific;
+        }
+        private void SaveImage(byte[] image, string path, string userName, int IsUserSpecific)
         {   
-            Impersonator impersonator = null;
-            try
-            {
-                Property[] props = new Property[2];
-                Property retrieveProp = new Property();
-                retrieveProp.Name = "HasUserProfileQueryDependencies";
-                props[0] = retrieveProp;
-                retrieveProp = new Property();
-                retrieveProp.Name = "HasUserProfileReportDependencies";
-                props[1] = retrieveProp;
-                int IsUserSpecific = 1;  //Boolean not working in SQL very well so used int
-
-                Property[] properties = callGetProperties(path, props);
-
-                if (properties.Length == 2 && properties[0].Value.ToLower() == "false" && properties[0].Value.ToLower() == "false")
-                    IsUserSpecific = 0;
-
-                impersonator = tryImpersonate();
+            //Impersonator impersonator = null;
+            //try
+            //{
+            //    impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 DECLARE @IID uniqueidentifier
                                 SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )                                                        
@@ -450,14 +455,14 @@ namespace Forerunner.SSRS.Manager
                 SQLComm.Parameters.AddWithValue("@Image", image);
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
-            }
-            finally
-            {
-                if (impersonator != null)
-                {
-                    impersonator.Undo();
-                }
-            }
+            //}
+            //finally
+            //{
+            //    if (impersonator != null)
+            //    {
+            //        impersonator.Undo();
+            //    }
+            //}
         }
         public byte[] GetDBImage(string path)
         {
@@ -514,13 +519,39 @@ namespace Forerunner.SSRS.Manager
             {
                 byte[] retval = null;
                 retval = GetDBImage(path);
-                if (retval == null)
+                ThreadContext context = null;
+                Impersonator sqlImpersonator = null;
+                bool isException = false;
+                try
                 {
-                    ThreadContext context = new ThreadContext(HttpUtility.UrlDecode(path));
-                    ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
-                    //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
-                    //t.Start(path);
-                    //t.Join();                    
+                    if (retval == null)
+                    {
+
+                        sqlImpersonator = tryImpersonate(true);
+                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator);
+                        ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
+                        //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
+                        //t.Start(path);
+                        //t.Join();                    
+                    }
+                }
+                catch
+                {
+                    isException = true;
+                }
+                finally
+                {
+                    if (isException)
+                    {
+                        if (context != null)
+                        {
+                            context.Dispose();
+                        }
+                        if (sqlImpersonator != null)
+                        {
+                            sqlImpersonator.Dispose();
+                        }
+                    }
                 }
                 return retval;
             }
@@ -532,19 +563,59 @@ namespace Forerunner.SSRS.Manager
         {
             ThreadContext threadContext = (ThreadContext)context;
             String path = threadContext.Path;
+            String userName = threadContext.UserName;
+            byte[] retval = null;
+            int isUserSpecific;
+            Impersonator sqlImpersonator = threadContext.SqlImpersonator;
             try
             {
-                threadContext.Impersonate();
-                byte[] retval = null;
                 ReportViewer rep = new ReportViewer(this.URL);
+                threadContext.Impersonate();
                 rep.SetCredentials(this.WSCredentials);
-                retval = rep.GetThumbnail(path.ToString(), "", "1", 1.2);
-                if (retval != null)
-                    SaveImage(retval, path.ToString(), threadContext.UserName);
+                retval = rep.GetThumbnail(path, "", "1", 1.2);
+                isUserSpecific = IsUserSpecific(path);
             }
             finally
             {
                 threadContext.Dispose();
+            }
+            if (retval != null)
+            {
+                
+                try
+                {
+                    sqlImpersonator.Impersonate();
+                    SaveImage(retval, path.ToString(), userName, isUserSpecific);
+                }
+                finally
+                {
+                    sqlImpersonator.Dispose();
+                }
+            }
+        }
+
+        private void ImpersonateAndSaveImage(byte[] retval, string path, string userName, int isUserSpecific )
+        {
+            WindowsIdentity identity = null;
+            WindowsImpersonationContext context = null;
+            try
+            {
+                identity = Security.ImpersonationHelper.GetIdentity(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
+                context = identity.Impersonate();
+                SaveImage(retval, path.ToString(), userName, isUserSpecific);
+            }
+            finally
+            {
+                /*
+                if (context != null)
+                {
+                    context.Undo();
+                    context.Dispose();
+                }
+                if (identity != null)
+                {
+                    identity.Dispose();
+                }*/
             }
         }
         protected virtual void Dispose(bool disposing)

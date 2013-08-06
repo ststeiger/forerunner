@@ -65,8 +65,7 @@ namespace Forerunner.SSRS.Viewer
             //Security
             if (this.Credentials == null)
             {
-                rs.Credentials = new NetworkCredential("TestAccount", "TestPWD!", "PUPPERS");
-                //rs.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             }
             else
             {

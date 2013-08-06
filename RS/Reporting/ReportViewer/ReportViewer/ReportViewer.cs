@@ -31,16 +31,22 @@ namespace Forerunner.SSRS.Viewer
         private ReportExecutionService rs = new ReportExecutionService();
         private bool ServerRendering = false;
         private bool checkedServerRendering = false;
+        private CurrentUserImpersonator impersonator = null;
 
         public ReportViewer(String ReportServerURL, Credentials Credentials)
         {
             this.ReportServerURL = ReportServerURL;
             SetRSURL();
-            SetServerRendering();
+            GetServerRendering();
         }
         private void SetRSURL()
         {
             rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
+        }
+
+        internal void SetImpersonator(CurrentUserImpersonator impersonator)
+        {
+            this.impersonator = impersonator;
         }
 
         public ReportViewer(String ReportServerURL)
@@ -49,12 +55,14 @@ namespace Forerunner.SSRS.Viewer
             SetRSURL();
         }
 
-        private void SetServerRendering()
+        internal bool GetServerRendering()
         {
             if (checkedServerRendering)
             {
-                return;
+                return this.ServerRendering;
             }
+            if (rs.Credentials == null)
+                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
@@ -65,6 +73,8 @@ namespace Forerunner.SSRS.Viewer
             }
             //this.ServerRendering = false;
             checkedServerRendering = true;
+
+            return this.ServerRendering;
         }
 
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
@@ -76,10 +86,8 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                if (rs.Credentials == null)
-                {
-                    rs.Credentials = CredentialCache.DefaultNetworkCredentials;
-                }
+                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+
                 ExecutionInfo execInfo = new ExecutionInfo();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 byte[] result = null;
@@ -171,7 +179,7 @@ namespace Forerunner.SSRS.Viewer
             ReportJSONWriter rw;
 
             rs.Credentials = CredentialCache.DefaultNetworkCredentials;
-            SetServerRendering();
+            GetServerRendering();
             if (this.ServerRendering)
                 format = "ForerunnerJSON";
             else
@@ -542,7 +550,7 @@ namespace Forerunner.SSRS.Viewer
             rs.ExecutionHeaderValue = execHeader;
             try
             {
-                SetServerRendering();
+                GetServerRendering();
                 if (NewSession != "")
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
                 else
@@ -571,7 +579,7 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!this.ServerRendering)
                 {
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
                 }
 

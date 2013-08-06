@@ -522,14 +522,14 @@ namespace Forerunner.SSRS.Manager
                     {
 
                         sqlImpersonator = tryImpersonate(true);
-                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator);
+                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, !GetServerRendering());
                         ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
                         //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
                         //t.Start(path);
                         //t.Join();                    
                     }
                 }
-                catch
+                catch(Exception e)
                 {
                     isException = true;
                 }
@@ -553,6 +553,12 @@ namespace Forerunner.SSRS.Manager
             return null;
         }
 
+        private bool GetServerRendering()
+        {
+            ReportViewer rep = new ReportViewer(this.URL);
+            return rep.GetServerRendering();
+        }
+
         public void GetThumbnail(object context)
         {
             ThreadContext threadContext = (ThreadContext)context;
@@ -565,6 +571,7 @@ namespace Forerunner.SSRS.Manager
             {
                 threadContext.Impersonate();
                 ReportViewer rep = new ReportViewer(this.URL);
+                rep.SetImpersonator(threadContext.SecondImpersonator);
                 retval = rep.GetThumbnail(path, "", "1", 1.2);
                 isUserSpecific = IsUserSpecific(path);
             }

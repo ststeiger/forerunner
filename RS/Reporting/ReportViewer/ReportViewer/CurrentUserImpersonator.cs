@@ -23,7 +23,7 @@ namespace Forerunner.Security
             var token = WindowsIdentity.GetCurrent().Token;
                 //((WindowsIdentity)HttpContext.Current.User.Identity).Token;
             duplicateToken = new IntPtr(0);
-            userName = HttpContext.Current.User.Identity.Name;
+            userName = WindowsIdentity.GetCurrent().Name;
             const int SecurityLevel = 2;
             if (Security.NativeMethods.DuplicateToken(token, SecurityLevel, ref duplicateToken) == false)
             {

@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
-using System.Net;
 
 namespace Forerunner.Thumbnail
 {
@@ -18,7 +17,8 @@ namespace Forerunner.Thumbnail
         private Stream sMHTML = null;
         private double maxHeightToWidthRatio = 0;
         private int ThreadingAttempts = 0;
-
+        private Forerunner.Security.CurrentUserImpersonator currentUserImpersonator = null;
+       
         public Bitmap Image 
         {
             get 
@@ -29,12 +29,19 @@ namespace Forerunner.Thumbnail
 
         private System.Func<string, string> callback = null;
 
-        public static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, System.Func<string, string> callback)
+        internal static Bitmap GetStreamThumbnail(string HTML, double maxHeightToWidthRatio, System.Func<string, string> callback, Security.CurrentUserImpersonator impersonator)
         {
             WebSiteThumbnail thumb = new WebSiteThumbnail(HTML, maxHeightToWidthRatio, callback);
-            Bitmap b = thumb.GetScreenShot();            
+            thumb.setImpersonator(impersonator);
+            Bitmap b = thumb.GetScreenShot();
             return b;
         }
+
+        private void setImpersonator(Security.CurrentUserImpersonator impersonator)
+        {
+            this.currentUserImpersonator = impersonator;
+        }
+
         public static Bitmap GetStreamThumbnail(byte[] MHTML, double maxHeightToWidthRatio)
         {
             WebSiteThumbnail thumb = new WebSiteThumbnail(MHTML, maxHeightToWidthRatio);
@@ -92,7 +99,7 @@ namespace Forerunner.Thumbnail
 
             if (MHTML == null && sMHTML == null)
             {
-                int length = 0;               
+                int length = 0;
                 webBrowser.Navigate("about:blank");
                 webBrowser.Document.OpenNew(true);
                 while (webBrowser.Document == null && webBrowser.Document.Body == null)
@@ -101,7 +108,22 @@ namespace Forerunner.Thumbnail
                 foreach (HtmlElement he in webBrowser.Document.Images)
                 {
                     string src = he.GetAttribute("src");
-                    string s = callback(src);
+                    string s = null;
+                    try
+                    {
+                        if (currentUserImpersonator != null)
+                        {
+                            currentUserImpersonator.Impersonate();
+                        }
+                        s = callback(src);
+                    }
+                    finally
+                    {
+                        if (currentUserImpersonator != null)
+                        {
+                            currentUserImpersonator.Undo();
+                        }
+                    }
                     he.SetAttribute("src", s);
                     length += s.Length;
                     if (length > 1024 * 10000) break;  //Limit the size
@@ -126,10 +148,10 @@ namespace Forerunner.Thumbnail
                     f.Close();
                 }
                 webBrowser.Url = new System.Uri(fileName);
-                while ( webBrowser.ReadyState != WebBrowserReadyState.Complete )
+                while (webBrowser.ReadyState != WebBrowserReadyState.Complete)
                     Application.DoEvents();
             }
-            
+
             SetIamge(webBrowser);
             if (fileName != null)
                 File.Delete(fileName);
@@ -155,8 +177,6 @@ namespace Forerunner.Thumbnail
             webBrowser.DrawToBitmap(bmp, webBrowser.Bounds);
             webBrowser.Navigate("about:blank");
             webBrowser.Dispose();
-
-       
         }
 
         protected virtual void Dispose(bool disposing)
@@ -164,6 +184,10 @@ namespace Forerunner.Thumbnail
             if (disposing)
             {
                 bmp.Dispose();
+                if (currentUserImpersonator != null)
+                {
+                    currentUserImpersonator.Dispose();
+                }
             }
         }
 

@@ -9,10 +9,15 @@ namespace Forerunner
 {
     internal class ThreadContext : Security.CurrentUserImpersonator, IDisposable
     {
-        public ThreadContext(String path, Security.Impersonator sqlImpersonator )
+        public ThreadContext(String path, Security.Impersonator sqlImpersonator, bool second = false)
         {
             Path = path;
             this.sqlImpersonator = sqlImpersonator;
+
+            if (second)
+            {
+                this.secondImpersonator = new Security.CurrentUserImpersonator();
+            }
         }
         
         private bool disposed;
@@ -22,6 +27,15 @@ namespace Forerunner
             get
             {
                 return sqlImpersonator;
+            }
+        }
+
+        private Security.CurrentUserImpersonator secondImpersonator;
+        public Security.CurrentUserImpersonator SecondImpersonator
+        {
+            get
+            {
+                return secondImpersonator;
             }
         }
 

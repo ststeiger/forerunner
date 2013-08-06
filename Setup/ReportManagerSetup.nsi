@@ -47,6 +47,8 @@ Page custom fnc_WebServerConfig_Show fnc_WebServerConfig_Leave
 Page custom fnc_RunConfigTool_Show */
 
 ; Finish page
+!define MUI_UNTEXT_FINISH_TITLE "Install Finish!"
+!define MUI_UNTEXT_FINISH_SUBTITLE "Please choose run report manager config tool or not."
 !define MUI_FINISHPAGE_RUN "$INSTDIR\ReportManagerConfigTool.exe"
 !define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
 !insertmacro MUI_PAGE_FINISH
@@ -148,7 +150,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
-    File "${LOCALROOT}\Forerunner\ReportViewer\css\DefaultAppTemplate.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\DefaultAppTemplate.css"
   /*SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\Toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\XML.jpg"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Word.png"
@@ -203,8 +205,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Scripts\Util\backbone_ui.js"
   File "${LOCALROOT}\Scripts\Util\backbone.js"
   File "${LOCALROOT}\Scripts\Util\_references.js"
-  SetOutPath "$INSTDIR\Views\Debug"
-  File "${LOCALROOT}\Views\Debug\Index.cshtml"
+  /*SetOutPath "$INSTDIR\Views\Debug"
+  File "${LOCALROOT}\Views\Debug\Index.cshtml"*/
   SetOutPath "$INSTDIR\Views\Home"
   File "${LOCALROOT}\Views\Home\Index.cshtml"
   SetOutPath "$INSTDIR\Views\Shared"
@@ -214,6 +216,9 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Views"
   File "${LOCALROOT}\Views\Web.config"
   File "${LOCALROOT}\Views\_ViewStart.cshtml"
+  SetOutPath "$INSTDIR\SSRSExtension"
+  File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
+  File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
   File "${LOCALROOT}\ReportManagerConfigTool.exe"
@@ -222,11 +227,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
   File "${LOCALROOT}\ForerunnerSetup.ico"
-
-  SetOutPath "$INSTDIR\SSRSExtension"
-  File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
-  File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
-
 SectionEnd
 
 Section -AdditionalIcons
@@ -334,7 +334,7 @@ Section Uninstall
   Delete "$INSTDIR\Views\Shared\_RMLayout.cshtml"
   Delete "$INSTDIR\Views\Shared\Error.cshtml"
   Delete "$INSTDIR\Views\Home\Index.cshtml"
-  Delete "$INSTDIR\Views\Debug\Index.cshtml"
+  ;Delete "$INSTDIR\Views\Debug\Index.cshtml"
   Delete "$INSTDIR\Scripts\App\router.js"
   Delete "$INSTDIR\Scripts\Util\backbone.js"
   Delete "$INSTDIR\Scripts\Util\_references.js"
@@ -430,8 +430,6 @@ Section Uninstall
   Delete "$INSTDIR\bin\System.Web.WebPages.dll"
   Delete "$INSTDIR\bin\System.Web.WebPages.Razor.dll"
   Delete "$INSTDIR\bin\WebGrease.dll"
-  Delete "$INSTDIR\ReportManagerConfigTool.exe"
-
   Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
 
@@ -463,8 +461,8 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Lib\Misc"
   RMDir "$INSTDIR\Forerunner\Lib"
   RMDir "$INSTDIR\Forerunner\Common\css"
-  RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner\Common\images"
+  RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"

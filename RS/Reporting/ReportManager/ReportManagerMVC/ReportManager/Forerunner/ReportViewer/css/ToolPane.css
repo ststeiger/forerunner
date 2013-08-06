@@ -75,3 +75,29 @@
   border-bottom-style:groove;
   border-bottom-color: darkgray;
 }
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+.fr-item-exportXML, .fr-item-exportMHTML {
+  display: none;
+}
+
+}  /* @media */
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+.fr-item-exportXML, .fr-item-exportMHTML {
+  display: none;
+}
+
+}  /* @media */
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
+.fr-item-exportXML, .fr-item-exportMHTML {
+  display: none;
+}
+
+}
+
+}  /* @media */

@@ -41,7 +41,8 @@ namespace Forerunner.Security
             impersonationContext = Logon().Impersonate(); 
         }
         public void Undo() { 
-            impersonationContext.Undo(); 
+            if (impersonationContext != null)
+                impersonationContext.Undo(); 
         }
         #endregion Public Methods
 

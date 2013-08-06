@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CurrentUserImpersonator.cs" />
+    <Compile Include="ImpersonationHelper.cs" />
     <Compile Include="Impersonator.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

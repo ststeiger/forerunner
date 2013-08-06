@@ -171,6 +171,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\burst_icon.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\arrow_left_icon.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\align_just_icon.png"
+  */
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortDecending.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortAccending.gif"
@@ -184,7 +185,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
-  */
+  
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
@@ -447,7 +448,6 @@ Section Uninstall
   RMDir "$INSTDIR\Scripts\Util"
   RMDir "$INSTDIR\Scripts\App"
   RMDir "$INSTDIR\Scripts"
-  RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Images"
   RMDir "$INSTDIR\Forerunner\ReportViewer\css"
@@ -464,6 +464,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Lib"
   RMDir "$INSTDIR\Forerunner\Common\css"
   RMDir "$INSTDIR\Forerunner\Common"
+  RMDir "$INSTDIR\Forerunner\Common\images"
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"

@@ -23,9 +23,10 @@
 !include "ApplicationConfig.nsdinc"
 !include "WebServerConfig.nsdinc"
 !include "RunRegister.nsh"
-*/
+
 !include "RunConfigTool.nsdinc"
 !include "RunConfigTool.nsh"
+*/
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
@@ -42,9 +43,12 @@ Page custom fun_ApplicationConfig_RunRegister
 ; Set Web Server Config page
 Page custom fnc_WebServerConfig_Show fnc_WebServerConfig_Leave
 ; Run Deploy Script if user choose to config it
-*/
-Page custom fnc_RunConfigTool_Show 
+
+Page custom fnc_RunConfigTool_Show */
+
 ; Finish page
+!define MUI_FINISHPAGE_RUN "$INSTDIR\ReportManagerConfigTool.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
 !insertmacro MUI_PAGE_FINISH
 
 ; Language files
@@ -91,6 +95,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\css\ToolBase.css"
   File "${LOCALROOT}\Forerunner\Common\css\Forerunner-core.css"
   File "${LOCALROOT}\Forerunner\Common\css\Forerunner-all.css"
+  File "${LOCALROOT}\Forerunner\Common\css\icons24x24.css"
+  SetOutPath "$INSTDIR\Forerunner\Common\images"
+  File "${LOCALROOT}\Forerunner\Common\images\icons24x24.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css\images"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-icons_cd0a0a_256x240.png"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\images\ui-icons_888888_256x240.png"
@@ -141,6 +148,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
+    File "${LOCALROOT}\Forerunner\ReportViewer\css\DefaultAppTemplate.css"
   /*SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\Toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\XML.jpg"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Word.png"
@@ -163,6 +171,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\burst_icon.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\arrow_left_icon.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\align_just_icon.png"
+  */
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortDecending.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortAccending.gif"
@@ -176,7 +185,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
-  */
+  
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
@@ -213,6 +222,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
   File "${LOCALROOT}\ForerunnerSetup.ico"
+
+  SetOutPath "$INSTDIR\SSRSExtension"
+  File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
+  File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
+
 SectionEnd
 
 Section -AdditionalIcons
@@ -303,25 +317,6 @@ Function IsDotNETInstalled
      Exch $0
 FunctionEnd
 
-Function IsIISInstalled
-  ClearErrors
-  ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\InetStp" "MajorVersion"
-
-  IfErrors 0 +2
-    MessageBox MB_OK|MB_ICONSTOP "IIS Server not found, please install IIS first! Installer will abort."
-    Abort
-FunctionEnd
-
-Function IsUWSInstalled
-  ClearErrors
-  ReadRegDWORD $0 HKLM "SYSTEM\CurrentControlSet\services\UltiDev Web Server Pro" "Start"
-
-  IfErrors 0 +2
-    MessageBox MB_OK|MB_ICONSTOP "UWS Server not found, please install UWS first! Installer will abort."
-    Abort
-FunctionEnd
-
-
 
 Section Uninstall
   Delete "$INSTDIR\config.ini"
@@ -374,6 +369,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewerEZ.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ToolPane.css"
+  Delete "$INSTDIR\Forerunner\ReportViewer\css\DefaultAppTemplate.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\accent.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\bullet.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\clock_icon.png"
@@ -411,6 +407,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\css\Forerunner-all.css"
   Delete "$INSTDIR\Forerunner\Common\css\Forerunner-core.css"
   Delete "$INSTDIR\Forerunner\Common\css\ToolBase.css"
+  Delete "$INSTDIR\Forerunner\Common\css\icons24x24.css"
+  Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
   Delete "$INSTDIR\bin\Forerunner.Json.dll"
@@ -434,6 +432,9 @@ Section Uninstall
   Delete "$INSTDIR\bin\WebGrease.dll"
   Delete "$INSTDIR\ReportManagerConfigTool.exe"
 
+  Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
+  Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
+
   Delete "$SMPROGRAMS\ReportManager\Uninstall.lnk"
   Delete "$DESKTOP\ReportManager.lnk"
 
@@ -447,7 +448,6 @@ Section Uninstall
   RMDir "$INSTDIR\Scripts\Util"
   RMDir "$INSTDIR\Scripts\App"
   RMDir "$INSTDIR\Scripts"
-  RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Images"
   RMDir "$INSTDIR\Forerunner\ReportViewer\css"
@@ -464,8 +464,10 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Lib"
   RMDir "$INSTDIR\Forerunner\Common\css"
   RMDir "$INSTDIR\Forerunner\Common"
+  RMDir "$INSTDIR\Forerunner\Common\images"
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
+  RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

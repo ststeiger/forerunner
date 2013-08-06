@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Net;
 using System.Xml;
@@ -84,16 +85,19 @@ namespace ReportMannagerConfigTool
             
             WebAppConfigEntry entry = Metabase.GetWebAppEntry(guid);
             entry.ApplicationName = siteName;
+            entry.VirtualDirectory = siteName;
             entry.AppType = ApplicationType.AspNetOrStaticHtml;
-            entry.AuthenicationMode = AuthenticationSchemes.Anonymous;
-            entry.CompressResponseIfPossible = true;
+            entry.AuthenicationMode = AuthenticationSchemes.IntegratedWindowsAuthentication;
+            entry.CompressResponseIfPossible = true;          
 
-            ListenAddress address = new ListenAddress(bindingAddress);
+            //ListenAddress address = new ListenAddress(bindingAddress);
             entry.ListenAddresses.Clear();
-            entry.ListenAddresses.Add(address);
+            //entry.ListenAddresses.Add(address);
 
             entry.PhysicalDirectory = physicalPath;
-            Metabase.RegisterApplication(RuntimeVersion.AspNet_4, true, true, ProcessIdentity.LocalSystem, entry);
+       
+            Metabase.RegisterApplication(RuntimeVersion.AspNet_4,false,false, ProcessIdentity.NetworkService, entry);
+            Metabase.WaitForAppToStart(guid);
 
             Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }
@@ -122,13 +126,34 @@ namespace ReportMannagerConfigTool
 
             GetConfigNode(doc, "Forerunner.ReportServerDB").UpdateValue(reportserverdb);
 
-            GetConfigNode(doc, "Forerunner.ReportServerDBUserDomain").UpdateValue(reportserverdbuserdomain);
+            GetConfigNode(doc, "Forerunner.ReportServerDBDomain").UpdateValue(reportserverdbuserdomain);
 
             GetConfigNode(doc, "Forerunner.ReportServerDBUser").UpdateValue(reportserverdbuser);
 
             GetConfigNode(doc, "Forerunner.ReportServerDBPWD").UpdateValue(reportserverdbpwd);
 
             doc.Save(filePath);
+        }
+
+        /// <summary>
+        /// Get exist value from web.config
+        /// </summary>
+        /// <returns>value collection</returns>
+        public static Dictionary<string, string> GetConfig()
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load("Web.config");
+
+            result.Add("WSUrl", GetConfigNode(doc, "Forerunner.ReportServerWSUrl").GetValue());
+            result.Add("DataSource", GetConfigNode(doc, "Forerunner.ReportServerDataSource").GetValue());
+            result.Add("Database", GetConfigNode(doc, "Forerunner.ReportServerDB").GetValue());
+            result.Add("UserDomain", GetConfigNode(doc, "Forerunner.ReportServerDBDomain").GetValue());
+            result.Add("User", GetConfigNode(doc, "Forerunner.ReportServerDBUser").GetValue());
+            result.Add("Password", GetConfigNode(doc, "Forerunner.ReportServerDBPWD").GetValue());
+
+            return result;
         }
     
         /// <summary>
@@ -147,10 +172,19 @@ namespace ReportMannagerConfigTool
         /// Extend method for XmlNode, update value attribute
         /// </summary>
         /// <param name="node">xml node</param>
-        /// <param name="value">new value</param>
         private static void UpdateValue(this XmlNode node, string value)
         {
             ((XmlElement)node).SetAttribute("value", value);
+        }
+
+        /// <summary>
+        /// Extend method for XmlNode, get value attribute
+        /// </summary>
+        private static string GetValue(this XmlNode node)
+        {
+            if (((XmlElement)node) == null)
+                return "";
+            return ((XmlElement)node).GetAttribute("value");
         }
     }
 }

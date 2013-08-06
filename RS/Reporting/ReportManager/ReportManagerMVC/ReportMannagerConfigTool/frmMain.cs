@@ -15,6 +15,7 @@ namespace ReportMannagerConfigTool
         public frmMain()
         {
             InitializeComponent();
+            LoadWebConfig();
         }
 
         #region Deploy Web Server
@@ -86,6 +87,24 @@ namespace ReportMannagerConfigTool
         #endregion
 
         #region SSRS Connection
+        private void LoadWebConfig()
+        {
+            var existConfig = ReportManagerConfig.GetConfig();
+
+            if (existConfig["WSUrl"] != "")
+                txtWSUrl.Text = existConfig["WSUrl"];
+            if (existConfig["DataSource"] != "")
+                txtServerName.Text = existConfig["DataSource"];
+            if (existConfig["Database"] != "")
+                txtDBName.Text = existConfig["Database"];
+            if (existConfig["UserDomain"] != "")
+                txtDomain.Text = existConfig["UserDomain"];
+            if (existConfig["User"] != "")
+                txtUser.Text = existConfig["User"];
+            if (existConfig["Password"] != "")
+                txtPWD.Text = existConfig["Password"];
+        }
+
         private void btnTest_Click(object sender, EventArgs e)
         {
             if (!verifySSRSConnection())
@@ -363,5 +382,7 @@ namespace ReportMannagerConfigTool
                 return false;
         }
         #endregion
+
+      
     }
 }

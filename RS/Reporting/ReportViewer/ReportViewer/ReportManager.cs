@@ -400,9 +400,11 @@ namespace Forerunner.SSRS.Manager
         private static void SetUserNameParameters(SqlCommand SQLComm, string domainUserNameFromCaller = null)
         {
             string domainUserName = domainUserNameFromCaller == null ? HttpContext.Current.User.Identity.Name : domainUserNameFromCaller;
+
+                       
             string[] stringTokens = domainUserName.Split('\\');
-            string userName = stringTokens[stringTokens.Length - 1];
-            SQLComm.Parameters.AddWithValue("@UserName", userName);
+            string uName = stringTokens[stringTokens.Length - 1];
+            SQLComm.Parameters.AddWithValue("@UserName", uName);
             SQLComm.Parameters.AddWithValue("@DomainUser", domainUserName);
         }
 

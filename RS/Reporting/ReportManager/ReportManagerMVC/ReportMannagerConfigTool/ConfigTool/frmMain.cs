@@ -11,11 +11,18 @@ namespace ReportMannagerConfigTool
 
         public frmMain()
         {
-            InitializeComponent();
-            configTool = new ConfigToolHelper();
-            winform = new WinFormHelper();
+            try
+            {
+                InitializeComponent();
+                configTool = new ConfigToolHelper();
+                winform = new WinFormHelper();
 
-            LoadWebConfig();
+                LoadWebConfig();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         #region Deploy Web Server
@@ -75,13 +82,12 @@ namespace ReportMannagerConfigTool
                     bindingAddress = string.Format("http://{0}:{1}", ip, port);
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress);
                 }
+                winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
             {
                 winform.showWarning("Error:" + ex.Message);
             }
-
-            winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
         }
         #endregion
 
@@ -91,11 +97,11 @@ namespace ReportMannagerConfigTool
             var existConfig = ReportManagerConfig.GetConfig();
 
             winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
-            winform.setTextBoxValue(txtWSUrl, existConfig["DataSource"]);
-            winform.setTextBoxValue(txtWSUrl, existConfig["Database"]);
-            winform.setTextBoxValue(txtWSUrl, existConfig["UserDomain"]);
-            winform.setTextBoxValue(txtWSUrl, existConfig["User"]);
-            winform.setTextBoxValue(txtWSUrl, existConfig["Password"]);
+            winform.setTextBoxValue(txtServerName , existConfig["DataSource"]);
+            winform.setTextBoxValue(txtDBName, existConfig["Database"]);
+            winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
+            winform.setTextBoxValue(txtUser, existConfig["User"]);
+            winform.setTextBoxValue(txtPWD, existConfig["Password"]);
         }
 
         private void btnTest_Click(object sender, EventArgs e)

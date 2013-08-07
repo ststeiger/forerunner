@@ -24,7 +24,6 @@ namespace ReportManager.Controllers
         {
             //Put application security here
             ReportViewer rep = new ReportViewer(url);
-            rep.SetCredentials(null);
             return rep;
         }
 

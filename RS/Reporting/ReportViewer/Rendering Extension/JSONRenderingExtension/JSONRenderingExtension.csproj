@@ -60,6 +60,12 @@
     <Compile Include="..\..\ReportViewer\Thumbnail.cs">
       <Link>Thumbnail.cs</Link>
     </Compile>
+    <Compile Include="..\..\ReportViewer\CurrentUserImpersonator.cs">
+      <Link>CurrentUserImpersonator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ReportViewer\Impersonator.cs">
+      <Link>Impersonator.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JSONRenderer.cs" />
     <Compile Include="RenderingUtil.cs" />

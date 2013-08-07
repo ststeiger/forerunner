@@ -601,30 +601,6 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        private void ImpersonateAndSaveImage(byte[] retval, string path, string userName, int isUserSpecific )
-        {
-            WindowsIdentity identity = null;
-            WindowsImpersonationContext context = null;
-            try
-            {
-                identity = Security.ImpersonationHelper.GetIdentity(DBCredentials.UserName, DBCredentials.Domain, DBCredentials.Password);
-                context = identity.Impersonate();
-                SaveImage(retval, path.ToString(), userName, isUserSpecific);
-            }
-            finally
-            {
-                /*
-                if (context != null)
-                {
-                    context.Undo();
-                    context.Dispose();
-                }
-                if (identity != null)
-                {
-                    identity.Dispose();
-                }*/
-            }
-        }
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

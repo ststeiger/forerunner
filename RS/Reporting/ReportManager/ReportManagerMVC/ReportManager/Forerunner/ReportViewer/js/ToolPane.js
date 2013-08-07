@@ -352,6 +352,16 @@ $(function () {
                 me.enableAllTools();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([itemNav]);
+                }
+                else {
+                    me.enableAllTools();
+                }
+            });
+
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
                             itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);

@@ -294,7 +294,7 @@ $(function () {
             var lang = navigator.language || navigator.userLanguage;
             var langData = this._loadFile(locFileLocation, lang);
 
-            if (langData === null)
+            if (langData === null ||  langData === undefined)
                 langData = this._loadFile(locFileLocation, "en-us");
 
             return langData;
@@ -882,7 +882,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache
@@ -2304,6 +2304,16 @@ $(function () {
                 me.enableAllTools();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([btnNav, btnMenu]);
+                }
+                else {
+                    me.enableAllTools();
+                }
+            });
+
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,
@@ -2719,6 +2729,16 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.enableAllTools();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([itemNav]);
+                }
+                else {
+                    me.enableAllTools();
+                }
             });
 
             // Hook up the toolbar element events

@@ -529,7 +529,7 @@ namespace Forerunner.SSRS.Manager
                         //t.Join();                    
                     }
                 }
-                catch(Exception e)
+                catch
                 {
                     isException = true;
                 }
@@ -537,6 +537,10 @@ namespace Forerunner.SSRS.Manager
                 {
                     if (isException)
                     {
+                        if (context.SecondImpersonator != null)
+                        {
+                            context.SecondImpersonator.Dispose();
+                        }
                         if (context != null)
                         {
                             context.Dispose();
@@ -565,7 +569,8 @@ namespace Forerunner.SSRS.Manager
             String path = threadContext.Path;
             String userName = threadContext.UserName;
             byte[] retval = null;
-            int isUserSpecific;
+            int isUserSpecific = 0;
+            bool isException = false;
             Impersonator sqlImpersonator = threadContext.SqlImpersonator;
             try
             {
@@ -575,8 +580,23 @@ namespace Forerunner.SSRS.Manager
                 retval = rep.GetThumbnail(path, "", "1", 1.2);
                 isUserSpecific = IsUserSpecific(path);
             }
+            catch
+            {
+                isException = true;
+            }
             finally
             {
+                if (isException)
+                {
+                    if (sqlImpersonator != null)
+                    {
+                        sqlImpersonator.Dispose();
+                    }
+                    if (threadContext.SecondImpersonator != null)
+                    {
+                        threadContext.SecondImpersonator.Dispose();
+                    }
+                }
                 threadContext.Undo();
                 threadContext.Dispose();
             }

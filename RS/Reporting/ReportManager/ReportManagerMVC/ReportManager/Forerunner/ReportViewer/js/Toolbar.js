@@ -354,6 +354,16 @@ $(function () {
                 me.enableAllTools();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([btnNav, btnMenu]);
+                }
+                else {
+                    me.enableAllTools();
+                }
+            });
+
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,

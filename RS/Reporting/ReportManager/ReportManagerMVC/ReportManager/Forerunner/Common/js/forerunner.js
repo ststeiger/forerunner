@@ -293,7 +293,7 @@ $(function () {
             var lang = navigator.language || navigator.userLanguage;
             var langData = this._loadFile(locFileLocation, lang);
 
-            if (langData === null)
+            if (langData === null ||  langData === undefined)
                 langData = this._loadFile(locFileLocation, "en-us");
 
             return langData;

@@ -1843,8 +1843,10 @@ $(function () {
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
                     var $toolEl = $("." + Tools.selectorClass, me.element);
-                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
-                    me.disableTools([Tools]);
+                    if (!$toolEl.hasClass("fr-button-home") && !$toolEl.hasClass("fr-id-home")) {
+                        me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
+                        me.disableTools([Tools]);
+                    }
                 }
             });
         },
@@ -2297,7 +2299,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([btnDocumentMap, btnMenu]);
+                me.enableTools([btnDocumentMap, btnMenu, btnReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -2724,7 +2726,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([itemDocumentMap]);
+                me.enableTools([itemDocumentMap, itemReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {

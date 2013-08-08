@@ -345,7 +345,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([itemDocumentMap]);
+                me.enableTools([itemDocumentMap, itemReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {

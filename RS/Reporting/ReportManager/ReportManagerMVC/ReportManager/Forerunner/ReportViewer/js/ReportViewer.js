@@ -497,7 +497,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache

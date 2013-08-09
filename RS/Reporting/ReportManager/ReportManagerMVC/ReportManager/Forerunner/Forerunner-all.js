@@ -5561,6 +5561,8 @@ $(function () {
                 this.showSlideoutPane(isLeftPane);
             }
         },
+
+        _selectedItemPath: null,
     };
 });  // $(function ()
 
@@ -5877,7 +5879,7 @@ $(function () {
             initializer.render();
 
             $viewer.on("reportviewerback", function (e, data) {
-                me._selectedItemPath = data.path;
+                layout._selectedItemPath = data.path;
                 me.options.historyBack();
             });
 
@@ -5952,7 +5954,7 @@ $(function () {
             if (!view)
                 view = "catalog";
            
-            var currentSelectedPath = me._selectedItemPath;
+            var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
             layout.$mainsection.show();
             layout.$docmapsection.hide();
@@ -5972,7 +5974,7 @@ $(function () {
             layout.$rightheaderspacer.height(layout.$topdiv.height());
             layout.$leftheaderspacer.height(layout.$topdiv.height());
 
-            me._selectedItemPath = path0;
+            layout._selectedItemPath=path0; //me._selectedItemPath = path0;
             me.element.removeClass("fr-docmap-background");
             me.element.addClass("fr-Explorer-background");
         },
@@ -5984,7 +5986,7 @@ $(function () {
          */
         transitionToReportViewer: function (path) {
             var me = this;
-            me._selectedItemPath = null;
+            me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
                 DefaultAppTemplate: me.DefaultAppTemplate,
                 path: path,

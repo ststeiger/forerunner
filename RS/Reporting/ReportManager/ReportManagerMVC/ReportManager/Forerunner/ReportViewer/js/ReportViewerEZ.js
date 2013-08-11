@@ -73,7 +73,7 @@ $(function () {
             initializer.render();
 
             $viewer.on("reportviewerback", function (e, data) {
-                me._selectedItemPath = data.path;
+                layout._selectedItemPath = data.path;
                 me.options.historyBack();
             });
 

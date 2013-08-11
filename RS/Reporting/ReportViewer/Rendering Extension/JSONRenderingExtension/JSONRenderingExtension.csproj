@@ -54,6 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\ReportViewer\License.cs">
+      <Link>License.cs</Link>
+    </Compile>
     <Compile Include="..\..\ReportViewer\ReportWriter.cs">
       <Link>ReportWriter.cs</Link>
     </Compile>

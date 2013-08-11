@@ -24,7 +24,7 @@ namespace timebomb
                     "\nTimeBomb -help -" + Options.createArg + Options.removeArg + " -" + Options.dumpArg + " -" + Options.installDateArg +
                     "\n" +
                     "    TimeBomb is used to create, remove, store and / or dump TimeBomb data. It is very usefull\n" +
-                    "    for manually provisioning development and test machines.\n" +
+                    "    for manually provisioning development and test machines. TimeBomb must be run as administrator.\n" +
                     "\n" +
                     "    Command line switches may be abbreviated to their first character and are not case\n" +
                     "    sensitive.\n" +
@@ -95,11 +95,11 @@ namespace timebomb
                 return;
             }
 
-            Console.WriteLine("\nTimeBomb - dump, stored time bomb:\n");
+            Console.WriteLine("\nTimeBomb - dump\n\nStored time bomb:\n");
             Dump(ssrTimebomb);
 
             Forerunner.SSR.TimeBomb newSsrTimeBomb = Forerunner.SSR.TimeBomb.Create();
-            Console.WriteLine("\n                 new time bomb:\n");
+            Console.WriteLine("\nNew time bomb:\n");
             Dump(newSsrTimeBomb);
         }
 

@@ -5,35 +5,42 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using Microsoft.Win32;
+using System.Net;
+using System.Security.Cryptography;
 
 namespace Forerunner.SSR
 {
     [XmlRoot()]
     public class MachineId
     {
+        #region methods
+
         private MachineId()
         {
             cpuId = GetCPUId();
-            biosId = GetBIOSId();
             motherBoardId = GetBaseBoardId();
+            hostName = GetHostName();
+
+            biosId = GetBIOSId();
             diskId = GetDiskId();
             videoId = GetVideoId();
             macId = GetMacId();
         }
-
         public static MachineId CreateCurrentMachineId()
         {
             MachineId machineId = new MachineId();
             return machineId;
         }
-
         public bool IsSame(MachineId machineId)
         {
             // TODO
 
             return true;
         }
-
+        private static String GetHostName()
+        {
+            return Dns.GetHostName();
+        }
         private static string identifier(string wmiClass, string wmiProperty)
         {
             string result = "";
@@ -111,7 +118,6 @@ namespace Forerunner.SSR
             + identifier("Win32_BIOS", "ReleaseDate")
             + identifier("Win32_BIOS", "Version");
         }
-        //Main physical hard drive ID
         private static string GetDiskId()
         {
             return identifier("Win32_DiskDrive", "Model")
@@ -119,7 +125,6 @@ namespace Forerunner.SSR
             + identifier("Win32_DiskDrive", "Signature")
             + identifier("Win32_DiskDrive", "TotalHeads");
         }
-        //Motherboard ID
         private static string GetBaseBoardId()
         {
             return identifier("Win32_BaseBoard", "Model")
@@ -127,17 +132,19 @@ namespace Forerunner.SSR
             + identifier("Win32_BaseBoard", "Name")
             + identifier("Win32_BaseBoard", "SerialNumber");
         }
-        //Primary video controller ID
         private static string GetVideoId()
         {
             return identifier("Win32_VideoController", "DriverVersion")
             + identifier("Win32_VideoController", "Name");
         }
-        //First enabled network card ID
         private static string GetMacId()
         {
             return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
         }
+
+        #endregion  // methods
+
+        #region data
 
         [XmlElement()]
         public String cpuId;
@@ -156,19 +163,19 @@ namespace Forerunner.SSR
 
         [XmlElement()]
         public String macId;
+
+        [XmlElement()]
+        public String hostName;
+
+        #endregion data
     }
 
     [XmlRoot()]
     public class TimeBomb
     {
-        public static String FailKey
-        {
-            get
-            {
-                return "reason";
-            }
-        }
+        #region enums and constants
 
+        public const String failKey = "reason";
         public enum FailReason
         {
             Expired,
@@ -176,15 +183,17 @@ namespace Forerunner.SSR
             TimeBombMissing
         };
 
+
         // Time bomb grace period expressed in days
-        private static int trialPeriod = 60;
-        private static String forerunnerKey = "Forerunnersw";
-        private static String timeBombName = "timebomb";
+        private const int trialPeriod = 60;
+        private const String forerunnerKey = "Forerunnersw";
+        private const String timeBombName = "timebomb";
+
+        #endregion types and static constants
 
         #region methods
 
         private TimeBomb() { }
-
         public static TimeBomb Create(DateTime installDate)
         {
             TimeBomb timeBomb = new TimeBomb();
@@ -193,18 +202,15 @@ namespace Forerunner.SSR
 
             return timeBomb;
         }
-
         public static TimeBomb Create()
         {
             return TimeBomb.Create(DateTime.Now);
         }
-
         public static void Remove()
         {
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
             softwareKey.DeleteSubKey(TimeBomb.forerunnerKey, true);
         }
-
         public static TimeBomb LoadFromRegistry()
         {
             // Load the time bomb from the registry
@@ -213,8 +219,8 @@ namespace Forerunner.SSR
 
             if (forerunnerswKey == null)
             {
-                ApplicationException e = new ApplicationException("Setup error - time bomb data not found");
-                e.Data.Add(TimeBomb.FailKey, FailReason.TimeBombMissing);
+                LicenseException e = new LicenseException("Setup error - time bomb data not found");
+                e.Data.Add(TimeBomb.failKey, FailReason.TimeBombMissing);
                 throw e;
             }
 
@@ -222,8 +228,8 @@ namespace Forerunner.SSR
 
             if (timeBombString == null)
             {
-                ApplicationException e = new ApplicationException("Setup error - time bomb data not found");
-                e.Data.Add(TimeBomb.FailKey, FailReason.TimeBombMissing);
+                LicenseException e = new LicenseException("Setup error - time bomb data not found");
+                e.Data.Add(TimeBomb.failKey, FailReason.TimeBombMissing);
                 throw e;
             }
 
@@ -232,7 +238,6 @@ namespace Forerunner.SSR
             XmlSerializer serializer = new XmlSerializer(typeof(TimeBomb));
             return (TimeBomb)serializer.Deserialize(reader);
         }
-
         public void SaveToRegistry()
         {
             // Serialize the time bomb
@@ -247,27 +252,90 @@ namespace Forerunner.SSR
             forerunnerswKey.SetValue(TimeBomb.timeBombName, sb.ToString(), RegistryValueKind.String);
             writer.Close();
         }
-
         public bool IsValid(MachineId currentMachineId)
         {
             TimeSpan timeSpan = DateTime.Now.Subtract(start);
             if (timeSpan.Days > trialPeriod)
             {
                 // Timebomb has expired, time to buy a license
-                ApplicationException e = new ApplicationException("The trial period has expired");
-                e.Data.Add(TimeBomb.FailKey, FailReason.Expired);
+                LicenseException e = new LicenseException("The trial period has expired");
+                e.Data.Add(TimeBomb.failKey, FailReason.Expired);
                 throw e;
             }
 
             if (!machineId.IsSame(currentMachineId))
             {
                 // The TimeBomb must be created on the same machine
-                ApplicationException e = new ApplicationException("Setup error - machine id mismatch");
-                e.Data.Add(TimeBomb.FailKey, FailReason.MachineMismatch);
+                LicenseException e = new LicenseException("Setup error - machine id mismatch");
+                e.Data.Add(TimeBomb.failKey, FailReason.MachineMismatch);
                 throw e;
             }
 
             return true;
+        }
+        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        {
+            byte[] encrypted;
+
+            // Create an AesManaged object 
+            // with the specified key and IV. 
+            using (AesManaged aesAlg = new AesManaged())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption. 
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
+                    }
+                }
+            }
+
+            // Return the encrypted bytes from the memory stream. 
+            return encrypted;
+        }
+        private static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        {
+            // Declare the string used to hold the decrypted text. 
+            string plaintext = null;
+
+            // Create an AesManaged object with the specified key and IV.
+            using (AesManaged aesAlg = new AesManaged())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption. 
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+                            // Read the decrypted bytes from the decrypting stream and place them in a string.
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+
+            }
+            return plaintext;
         }
 
         #endregion //methods
@@ -283,9 +351,16 @@ namespace Forerunner.SSR
         #endregion  // data
     }
 
+    public class LicenseException : ApplicationException
+    {
+        public LicenseException() : base() {}
+        public LicenseException(String msg) : base(msg) {}
+    }
+
     static internal class License
     {
         #region methods
+
         public static void ThrowIfNotValid()
         {
             if (currentMachineId != null && timeBomb != null)
@@ -297,6 +372,7 @@ namespace Forerunner.SSR
             currentMachineId = MachineId.CreateCurrentMachineId();
             timeBomb.IsValid(currentMachineId);
         }
+        
         #endregion
 
         #region data
@@ -306,5 +382,5 @@ namespace Forerunner.SSR
         
         #endregion
 
-    }  // class License
+    }
 }

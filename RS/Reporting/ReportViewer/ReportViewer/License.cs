@@ -19,8 +19,8 @@ namespace Forerunner.SSR
         {
             cpuId = GetCPUId();
             motherBoardId = GetBaseBoardId();
-            hostName = GetHostName();
 
+            hostName = GetHostName();
             biosId = GetBIOSId();
             diskId = GetDiskId();
             videoId = GetVideoId();
@@ -187,7 +187,7 @@ namespace Forerunner.SSR
         // Time bomb grace period expressed in days
         private const int trialPeriod = 60;
         private const String forerunnerKey = "Forerunnersw";
-        private const String timeBombName = "timebomb";
+        private const String timeBombName = "ssr-setup";
 
         #endregion types and static constants
 
@@ -353,8 +353,10 @@ namespace Forerunner.SSR
 
     public class LicenseException : ApplicationException
     {
+        #region methods
         public LicenseException() : base() {}
         public LicenseException(String msg) : base(msg) {}
+        #endregion  // methods
     }
 
     static internal class License

@@ -21,7 +21,7 @@ namespace timebomb
             if (options.Help || args.Length == 0)
             {
                 Console.WriteLine(
-                    "\nTimeBomb -help -" + Options.createArg + Options.removeArg + " -" + Options.dumpArg + " -" + Options.installDateArg +
+                    "\nTimeBomb -help -" + Options.createArg + " -" + Options.removeArg + " -" + Options.dumpArg + " -" + Options.installDateArg +
                     "\n" +
                     "    TimeBomb is used to create, remove, store and / or dump TimeBomb data. It is very usefull\n" +
                     "    for manually provisioning development and test machines. TimeBomb must be run as administrator.\n" +

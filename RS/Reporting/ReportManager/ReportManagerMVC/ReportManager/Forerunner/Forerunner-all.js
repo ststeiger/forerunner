@@ -874,10 +874,14 @@ $(function () {
          */
         showNav: function () {
             var me = this;
-            if (me.pageNavOpen) 
+            if (me.pageNavOpen) {
                 me.pageNavOpen = false;
-            else
+                document.body.parentNode.style.overflow = "scroll";
+            }
+            else {
                 me.pageNavOpen = true;
+                document.body.parentNode.style.overflow = "hidden";
+            }            
 
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
@@ -1843,8 +1847,10 @@ $(function () {
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
                     var $toolEl = $("." + Tools.selectorClass, me.element);
-                    me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
-                    me.disableTools([Tools]);
+                    if (!$toolEl.hasClass("fr-button-home") && !$toolEl.hasClass("fr-id-home")) {
+                        me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
+                        me.disableTools([Tools]);
+                    }
                 }
             });
         },
@@ -2297,7 +2303,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([btnDocumentMap, btnMenu]);
+                me.enableTools([btnDocumentMap, btnMenu, btnReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -2724,7 +2730,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([itemDocumentMap]);
+                me.enableTools([itemDocumentMap, itemReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -5559,6 +5565,8 @@ $(function () {
                 this.showSlideoutPane(isLeftPane);
             }
         },
+
+        _selectedItemPath: null,
     };
 });  // $(function ()
 
@@ -5875,7 +5883,7 @@ $(function () {
             initializer.render();
 
             $viewer.on("reportviewerback", function (e, data) {
-                me._selectedItemPath = data.path;
+                layout._selectedItemPath = data.path;
                 me.options.historyBack();
             });
 
@@ -5950,7 +5958,7 @@ $(function () {
             if (!view)
                 view = "catalog";
            
-            var currentSelectedPath = me._selectedItemPath;
+            var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
             layout.$mainsection.show();
             layout.$docmapsection.hide();
@@ -5970,7 +5978,7 @@ $(function () {
             layout.$rightheaderspacer.height(layout.$topdiv.height());
             layout.$leftheaderspacer.height(layout.$topdiv.height());
 
-            me._selectedItemPath = path0;
+            layout._selectedItemPath=path0; //me._selectedItemPath = path0;
             me.element.removeClass("fr-docmap-background");
             me.element.addClass("fr-Explorer-background");
         },
@@ -5982,7 +5990,7 @@ $(function () {
          */
         transitionToReportViewer: function (path) {
             var me = this;
-            me._selectedItemPath = null;
+            me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
                 DefaultAppTemplate: me.DefaultAppTemplate,
                 path: path,

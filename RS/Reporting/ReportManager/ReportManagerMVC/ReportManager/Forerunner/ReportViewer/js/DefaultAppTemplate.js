@@ -236,5 +236,7 @@ $(function () {
                 this.showSlideoutPane(isLeftPane);
             }
         },
+
+        _selectedItemPath: null,
     };
 });  // $(function ()

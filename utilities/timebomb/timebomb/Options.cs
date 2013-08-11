@@ -12,6 +12,7 @@ namespace timebomb
         #region Public Static strings
         public static String helpArg = "help";
         public static String createArg = "create";
+        public static String removeArg = "remove";
         public static String dumpArg = "dump";
         public static String installDateArg = "installDate";
         #endregion
@@ -30,6 +31,14 @@ namespace timebomb
             get
             {
                 return create;
+            }
+        }
+
+        public bool Remove
+        {
+            get
+            {
+                return remove;
             }
         }
 
@@ -74,6 +83,10 @@ namespace timebomb
                 {
                     create = true;
                 }
+                else if (IsOption(arg, Options.removeArg[0] + " " + Options.removeArg))
+                {
+                    remove = true;
+                }
                 else if (IsOption(arg, Options.dumpArg[0] + " " + Options.dumpArg))
                 {
                     dump = true;
@@ -90,6 +103,14 @@ namespace timebomb
                 }
             }
         }
+        public void Validate()
+        {
+            if (create && remove)
+            {
+                throw new Exception("Create and Remove cannot be used on the same run");
+            }
+        }
+
         #endregion  // public methods
 
         #region Private methods
@@ -152,6 +173,7 @@ namespace timebomb
         #region Private data
         private bool help = false;
         private bool create = false;
+        private bool remove = false;
         private bool dump = false;
         private DateTime installDate;
         private bool hasInstallDate = false;

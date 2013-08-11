@@ -21,9 +21,9 @@ namespace timebomb
             if (options.Help || args.Length == 0)
             {
                 Console.WriteLine(
-                    "\nTimeBomb -help -" + Options.createArg + " -" + Options.dumpArg + " -" + Options.installDateArg +
+                    "\nTimeBomb -help -" + Options.createArg + Options.removeArg + " -" + Options.dumpArg + " -" + Options.installDateArg +
                     "\n" +
-                    "    TimeBomb is used to create, store and / or dump TimeBomb data. It is very usefull\n" +
+                    "    TimeBomb is used to create, remove, store and / or dump TimeBomb data. It is very usefull\n" +
                     "    for manually provisioning development and test machines.\n" +
                     "\n" +
                     "    Command line switches may be abbreviated to their first character and are not case\n" +
@@ -36,6 +36,9 @@ namespace timebomb
                     "\n" +
                     "-create\n" +
                     "    Will create the timebomb data in the system registry\n" +
+                    "\n" +
+                    "-remove\n" +
+                    "    Will remove the timebomb data from the system registry\n" +
                     "\n" +
                     " -dump\n" +
                     "    Will dump the timebomb data currently defined in the system registry and dump new\n" +
@@ -54,6 +57,9 @@ namespace timebomb
                 return;
             }
 
+            // Validate the options given
+            options.Validate();
+
             if (options.Dump)
             {
                 Dump();
@@ -62,6 +68,12 @@ namespace timebomb
             if (options.Create)
             {
                 Create();
+            }
+
+            if (options.Remove)
+            {
+                Forerunner.SSR.TimeBomb.Remove();
+                Console.WriteLine("\nTimeBomb - Time Bomb data removed\n");
             }
 
             return;

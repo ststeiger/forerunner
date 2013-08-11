@@ -11,13 +11,20 @@ namespace Forerunner.SSR
     [XmlRoot()]
     public class MachineId
     {
-        private MachineId() { }
+        private MachineId()
+        {
+            cpuId = GetCPUId();
+            biosId = GetBIOSId();
+            motherBoardId = GetBaseBoardId();
+            diskId = GetDiskId();
+            videoId = GetVideoId();
+            macId = GetMacId();
+        }
 
         public static MachineId CreateCurrentMachineId()
         {
-            // TODO
-
-            return new MachineId();
+            MachineId machineId = new MachineId();
+            return machineId;
         }
 
         public bool IsSame(MachineId machineId)
@@ -26,6 +33,129 @@ namespace Forerunner.SSR
 
             return true;
         }
+
+        private static string identifier(string wmiClass, string wmiProperty)
+        {
+            string result = "";
+            System.Management.ManagementClass mc = new System.Management.ManagementClass(wmiClass);
+            System.Management.ManagementObjectCollection moc = mc.GetInstances();
+            foreach (System.Management.ManagementObject mo in moc)
+            {
+                // First one only
+                if (result == "")
+                {
+                    try
+                    {
+                        result = mo[wmiProperty].ToString();
+                        break;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            return result;
+        }
+        private static string identifier(string wmiClass, string wmiProperty, string wmiMustBeTrue)
+        {
+            string result = "";
+            System.Management.ManagementClass mc = new System.Management.ManagementClass(wmiClass);
+            System.Management.ManagementObjectCollection moc = mc.GetInstances();
+            foreach (System.Management.ManagementObject mo in moc)
+            {
+                if (mo[wmiMustBeTrue].ToString() == "True")
+                {
+                    //Only get the first one
+                    if (result == "")
+                    {
+                        try
+                        {
+                            result = mo[wmiProperty].ToString();
+                            break;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+        private static string GetCPUId()
+        {
+            //Uses first CPU identifier available in order of preference
+            //Don't get all identifiers, as it is very time consuming
+            string retVal = identifier("Win32_Processor", "UniqueId");
+            if (retVal == "") //If no UniqueID, use ProcessorID
+            {
+                retVal = identifier("Win32_Processor", "ProcessorId");
+                if (retVal == "") //If no ProcessorId, use Name
+                {
+                    retVal = identifier("Win32_Processor", "Name");
+                    if (retVal == "") //If no Name, use Manufacturer
+                    {
+                        retVal = identifier("Win32_Processor", "Manufacturer");
+                    }
+                    //Add clock speed for extra security
+                    retVal += identifier("Win32_Processor", "MaxClockSpeed");
+                }
+            }
+            return retVal;
+        }
+        private static string GetBIOSId()
+        {
+            return identifier("Win32_BIOS", "Manufacturer")
+            + identifier("Win32_BIOS", "SMBIOSBIOSVersion")
+            + identifier("Win32_BIOS", "IdentificationCode")
+            + identifier("Win32_BIOS", "SerialNumber")
+            + identifier("Win32_BIOS", "ReleaseDate")
+            + identifier("Win32_BIOS", "Version");
+        }
+        //Main physical hard drive ID
+        private static string GetDiskId()
+        {
+            return identifier("Win32_DiskDrive", "Model")
+            + identifier("Win32_DiskDrive", "Manufacturer")
+            + identifier("Win32_DiskDrive", "Signature")
+            + identifier("Win32_DiskDrive", "TotalHeads");
+        }
+        //Motherboard ID
+        private static string GetBaseBoardId()
+        {
+            return identifier("Win32_BaseBoard", "Model")
+            + identifier("Win32_BaseBoard", "Manufacturer")
+            + identifier("Win32_BaseBoard", "Name")
+            + identifier("Win32_BaseBoard", "SerialNumber");
+        }
+        //Primary video controller ID
+        private static string GetVideoId()
+        {
+            return identifier("Win32_VideoController", "DriverVersion")
+            + identifier("Win32_VideoController", "Name");
+        }
+        //First enabled network card ID
+        private static string GetMacId()
+        {
+            return identifier("Win32_NetworkAdapterConfiguration", "MACAddress", "IPEnabled");
+        }
+
+        [XmlElement()]
+        public String cpuId;
+
+        [XmlElement()]
+        public String biosId;
+
+        [XmlElement()]
+        public String motherBoardId;
+
+        [XmlElement()]
+        public String diskId;
+
+        [XmlElement()]
+        public String videoId;
+
+        [XmlElement()]
+        public String macId;
     }
 
     [XmlRoot()]
@@ -67,6 +197,12 @@ namespace Forerunner.SSR
         public static TimeBomb Create()
         {
             return TimeBomb.Create(DateTime.Now);
+        }
+
+        public static void Remove()
+        {
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
+            softwareKey.DeleteSubKey(TimeBomb.forerunnerKey, true);
         }
 
         public static TimeBomb LoadFromRegistry()
@@ -138,7 +274,7 @@ namespace Forerunner.SSR
 
         #region data
 
-        [XmlAttribute()]
+        [XmlElement()]
         public DateTime start;         // Time Bomb Start date / time
 
         [XmlElement()]

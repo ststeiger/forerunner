@@ -5,22 +5,38 @@
 	</PropertyGroup> 
 	<Target Name="Build" DependsOnTargets="$(BuildDependsOn)" /> 
 	<Target Name="CoreBuild"> 
-		<!-- Properties BuildInParallel and SkipNonexistentProjects should be defined in the .setting file. --> 
-		<MSBuild Projects="@(ProjectFiles)" BuildInParallel="$(BuildInParallel)" SkipNonexistentProjects="$(SkipNonexistentProjects)" Targets="Build" /> 
+		<!-- Properties BuildInParallel and SkipNonexistentProjects should be defined in the .setting file. -->
+		<Message Text="OutputPath=$(OutputPath)" />	
+		<MSBuild 
+			Projects="@(ProjectFiles)" 
+			BuildInParallel="$(BuildInParallel)" 
+			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
+			Targets="Build"  
+			Properties="OutputPath=$(OutputPath)"/> 
 	</Target> 
 	<PropertyGroup> 
 		<RebuildDependsOn> $(RebuildDependsOn); CoreRebuild </RebuildDependsOn> 
 	</PropertyGroup> 
 	<Target Name="Rebuild" DependsOnTargets="$(RebuildDependsOn)" /> 
 	<Target Name="CoreRebuild"> 
-		<MSBuild Projects="@(ProjectFiles)" BuildInParallel="$(BuildInParallel)" SkipNonexistentProjects="$(SkipNonexistentProjects)" Targets="Rebuild" /> 
+		<MSBuild
+			Projects="@(ProjectFiles)" 
+			BuildInParallel="$(BuildInParallel)" 
+			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
+			Targets="Rebuild" 
+			Properties="OutputPath=$(OutputPath)"/> 
 	</Target> 
 	<PropertyGroup> 
 		<CleanDependsOn> $(CleanDependsOn); CoreClean </CleanDependsOn> 
 	</PropertyGroup> 
 	<Target Name="Clean" DependsOnTargets="$(CleanDependsOn)" /> 
 	<Target Name="CoreClean"> 
-		<MSBuild Projects="@(ProjectFiles)" BuildInParallel="$(BuildInParallel)" SkipNonexistentProjects="$(SkipNonexistentProjects)" Targets="Clean" /> 
+		<MSBuild 
+			Projects="@(ProjectFiles)" 
+			BuildInParallel="$(BuildInParallel)" 
+			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
+			Targets="Clean" 
+			Properties="OutputPath=$(OutputPath)"/> 
 	</Target> 
 	<PropertyGroup> 
 		<CodeAnalysisRebuildDependsOn> $(CodeAnalysisRebuildDependsOn); CoreCodeAnalysisRebuild </CodeAnalysisRebuildDependsOn> 

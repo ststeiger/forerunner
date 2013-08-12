@@ -37,6 +37,7 @@ echo SPRELEASE [%SPRELEASE%] >> %BUILD_LOG%
 set SPBUILD_RELEASE=%SPRELEASE%/%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
 set SPBUILD_URL=%SPSITE%/%SPBUILD_RELEASE%
 set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
+set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
@@ -75,13 +76,17 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
-%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE% "%SPBUILD_RELEASE%"
+mkdir %BUILD_RELEASE%_Upload
+%ZIPPER% %BUILD_RELEASE% %BUILD_RELEASE%_Upload\Release.zip
+%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
 call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %SPBUILD_URL%. See build.log for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 0
 
 
 :Error
 echo The Build Failed. >> %BUILD_LOG%
-%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE% "%SPBUILD_RELEASE%"
+mkdir %BUILD_RELEASE%_Upload
+%ZIPPER% %BUILD_RELEASE% %BUILD_RELEASE%_Upload\Release.zip
+%UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
 call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %SPBUILD_URL%/build.log or %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 1

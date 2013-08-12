@@ -103,9 +103,15 @@ namespace Forerunner.Tools.SharepointUploader
             Folder target,
             CookieContainer cookies)
         {
+            foreach (string subFolderPath in Directory.EnumerateDirectories(sourcePath))
+            {
+                string subFolder = Path.GetFileName(subFolderPath);
+                Folder targetSubFolder = EnsureTarget(context, target.ServerRelativeUrl + '/' + subFolder);
+                UploadFolder(context, subFolderPath, targetSubFolder, cookies);
+            }
+
             foreach (string filePath in Directory.EnumerateFiles(sourcePath))
             {
-                // TODO: Find a way to use streams.
                 FileCreationInformation info = new FileCreationInformation
                 {
                      Overwrite = true, 

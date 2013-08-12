@@ -233,8 +233,9 @@ namespace Forerunner.SSRS.JSONRender
 
         public string RPLToJSON(int NumPages)
         {
-            Forerunner.SSR.License.ThrowIfNotValid();
-
+#if !DEBUG
+            Forerunner.SSR.Core.License.ThrowIfNotValid();
+#endif
             RPL.position = 0;
             w.WriteStartObject();
             w.WriteMember("RPLStamp");

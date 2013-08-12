@@ -62,3 +62,13 @@ Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegiste
 Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegister.vshost.exe.manifest
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/*
+RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Debug/*
+RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Release/*
+RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/*
+RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Release/*
+utilities/timebomb/timebomb/obj/Debug/*
+utilities/timebomb/timebomb/obj/Release/*
+utilities/timebomb/timebomb/bin/Debug/*
+utilities/timebomb/timebomb/bin/Release/*

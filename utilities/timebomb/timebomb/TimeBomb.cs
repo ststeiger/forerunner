@@ -72,7 +72,7 @@ namespace timebomb
 
             if (options.Remove)
             {
-                Forerunner.SSR.TimeBomb.Remove();
+                Forerunner.SSR.Core.TimeBomb.Remove();
                 Console.WriteLine("\nTimeBomb - Time Bomb data removed\n");
             }
 
@@ -83,11 +83,11 @@ namespace timebomb
         // Private methods
         private void Dump()
         {
-            Forerunner.SSR.TimeBomb ssrTimebomb = null;
+            Forerunner.SSR.Core.TimeBomb ssrTimebomb = null;
 
             try
             {
-                ssrTimebomb = Forerunner.SSR.TimeBomb.LoadFromRegistry();
+                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.LoadFromRegistry();
             }
             catch (Exception e)
             {
@@ -98,31 +98,31 @@ namespace timebomb
             Console.WriteLine("\nTimeBomb - dump\n\nStored time bomb:\n");
             Dump(ssrTimebomb);
 
-            Forerunner.SSR.TimeBomb newSsrTimeBomb = Forerunner.SSR.TimeBomb.Create();
+            Forerunner.SSR.Core.TimeBomb newSsrTimeBomb = Forerunner.SSR.Core.TimeBomb.Create();
             Console.WriteLine("\nNew time bomb:\n");
             Dump(newSsrTimeBomb);
         }
 
-        private static void Dump(Forerunner.SSR.TimeBomb ssrTimebomb)
+        private static void Dump(Forerunner.SSR.Core.TimeBomb ssrTimebomb)
         {
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
-            XmlSerializer serializer = new XmlSerializer(typeof(Forerunner.SSR.TimeBomb));
+            XmlSerializer serializer = new XmlSerializer(typeof(Forerunner.SSR.Core.TimeBomb));
             serializer.Serialize(writer, ssrTimebomb);
             Console.WriteLine("\n{0}\n", sb.ToString());
         }
 
         private void Create()
         {
-            Forerunner.SSR.TimeBomb ssrTimebomb;
+            Forerunner.SSR.Core.TimeBomb ssrTimebomb;
 
             if (options.HasInstallDate)
             {
-                ssrTimebomb = Forerunner.SSR.TimeBomb.Create(options.InstallDate);
+                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.Create(options.InstallDate);
             }
             else
             {
-                ssrTimebomb = Forerunner.SSR.TimeBomb.Create();
+                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.Create();
             }
 
             ssrTimebomb.SaveToRegistry();

@@ -94,6 +94,7 @@ namespace ReportMannagerConfigTool
         #region SSRS Connection
         private void LoadWebConfig()
         {
+            
             var existConfig = ReportManagerConfig.GetConfig();
 
             winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
@@ -101,7 +102,7 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDBName, existConfig["Database"]);
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
-            winform.setTextBoxValue(txtPWD, existConfig["Password"]);
+            winform.setTextBoxValue(txtPWD, Encryption.Decrypt(existConfig["Password"], StaticMessages.tripleDESKey));
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -138,7 +139,7 @@ namespace ReportMannagerConfigTool
             {
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
-                    winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtPWD));
+                    winform.getTextBoxValue(txtUser), Encryption.Encrypt(winform.getTextBoxValue(txtPWD), StaticMessages.tripleDESKey));
 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

@@ -73,3 +73,7 @@ utilities/timebomb/timebomb/obj/Release/*
 utilities/timebomb/timebomb/bin/Debug/*
 utilities/timebomb/timebomb/bin/Release/*
 utilities/timebomb/timebomb/timebomb.csproj.user
+utilities/InstallData/InstallData/bin/Debug/*
+utilities/InstallData/InstallData/bin/Release/*
+utilities/InstallData/InstallData/obj/Debug/*
+utilities/InstallData/InstallData/obj/Release/*

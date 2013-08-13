@@ -226,14 +226,18 @@ namespace Forerunner.SSRS.JSONRender
 
         }
 
-        public ReportJSONWriter(Stream RPL) 
+        public ReportJSONWriter(Stream RPL)
         {
             this.RPL = new RPLReader(RPL);
         }
 
         public string RPLToJSON(int NumPages)
         {
-
+#if !DEBUG
+            // TODO
+            // Need a place to initialize License
+            //Forerunner.SSR.Core.License.ThrowIfNotValid();
+#endif
             RPL.position = 0;
             w.WriteStartObject();
             w.WriteMember("RPLStamp");

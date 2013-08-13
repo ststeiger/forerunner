@@ -62,10 +62,14 @@ Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegiste
 Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegister.vshost.exe.manifest
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/ReportMannagerConfigTool.frmMain.resources
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/ReportMannagerConfigTool.Properties.Resources.resources
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
-RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/*
+RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Debug/*
+RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Release/*
+RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/*
+RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Release/*
+utilities/timebomb/timebomb/obj/Debug/*
+utilities/timebomb/timebomb/obj/Release/*
+utilities/timebomb/timebomb/bin/Debug/*
+utilities/timebomb/timebomb/bin/Release/*
+utilities/timebomb/timebomb/timebomb.csproj.user

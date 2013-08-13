@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Web", "..\Common.Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "..\Common\Common.csproj", "{92006AE5-FD23-44C6-92AB-E102284B0FBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zipper", "..\Zipper\Zipper.csproj", "{E450137A-CBB0-4FB7-8F45-915B8502358E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{92006AE5-FD23-44C6-92AB-E102284B0FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92006AE5-FD23-44C6-92AB-E102284B0FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92006AE5-FD23-44C6-92AB-E102284B0FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E450137A-CBB0-4FB7-8F45-915B8502358E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E450137A-CBB0-4FB7-8F45-915B8502358E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E450137A-CBB0-4FB7-8F45-915B8502358E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E450137A-CBB0-4FB7-8F45-915B8502358E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

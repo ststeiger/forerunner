@@ -43,6 +43,16 @@ namespace Forerunner.Tools.SharepointUploader
         public Uri Site { get; private set; }
 
         /// <summary>
+        /// Gets the filter.
+        /// </summary>
+        public string Filter { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether to recurse subdirectories.
+        /// </summary>
+        public bool Recurse { get; private set; }
+
+        /// <summary>
         /// Gets the credential.
         /// </summary>
         public NetworkCredential Credential { get; private set; }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Forerunner</RootNamespace>
     <AssemblyName>Forerunner.SQLReporting</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -232,6 +232,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Forerunner.SSR.Core\Forerunner.SSR.Core.csproj">
+      <Project>{1a1799c1-250c-43b5-bf73-3cd8143526ee}</Project>
+      <Name>Forerunner.SSR.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JSON\src\Jayrock.Json\Forerunner.Json.csproj">
       <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
       <Name>Forerunner.Json</Name>

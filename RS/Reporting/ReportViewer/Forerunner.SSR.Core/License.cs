@@ -14,21 +14,24 @@ namespace Forerunner.SSR.Core
         #endregion  // methods
     }
 
-    static public class License
+    public static class License
     {
         #region methods
+
+        public static void Init()
+        {
+            if (timeBomb == null || currentMachineId == null)
+            {
+                timeBomb = TimeBomb.LoadFromRegistry();
+                currentMachineId = MachineId.CreateCurrentMachineId();
+            }
+        }
 
         public static void ThrowIfNotValid()
         {
             try
             {
-                if (currentMachineId != null && timeBomb != null)
-                {
-                    timeBomb.IsValid(currentMachineId);
-                }
-
-                timeBomb = TimeBomb.LoadFromRegistry();
-                currentMachineId = MachineId.CreateCurrentMachineId();
+                Init();
                 timeBomb.IsValid(currentMachineId);
             }
             catch (Exception e)
@@ -47,6 +50,5 @@ namespace Forerunner.SSR.Core
         private static MachineId currentMachineId = null;
 
         #endregion
-
     }
 }

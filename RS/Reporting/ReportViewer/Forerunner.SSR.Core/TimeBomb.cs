@@ -34,9 +34,10 @@ namespace Forerunner.SSR.Core
         private const String ssrKey = "ssr";
         private const String timeBombName = "setupdata";
         private const String machineHashName = "setupkey";
-        private const String EncryptPurpose = "K34khron56sTg";
+        private const String encryptKey = @"shskjhkjhgdfs56G54HJujkIfjte46KD";
+        private const String encryptIV = @"jhlksdhlkjhglkjh";
 
-        public const String genericRegistyError = "Setup error - time bomb data not found";
+        public const String genericRegistyError = "Setup error - time bomb not found or invalid";
 
         #endregion types and static constants
 
@@ -89,7 +90,8 @@ namespace Forerunner.SSR.Core
             MemoryStream stream = Serialize();
 
             // Encrypt the string into a byte array
-            byte[] timeBombProtected = MachineKey.Protect(stream.GetBuffer(), TimeBomb.EncryptPurpose);
+            ASCIIEncoding ascii = new ASCIIEncoding();
+            byte[] timeBombProtected = EncryptAes(stream.GetBuffer(), ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
 
             // Save the time bomb to the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
@@ -98,6 +100,23 @@ namespace Forerunner.SSR.Core
             ssrKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
             ssrKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
             stream.Close();
+        }
+        public static bool PreviouslyInstalled()
+        {
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
+            RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
+            if (forerunnerswKey == null)
+            {
+                return false;
+            }
+
+            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrKey);
+            if (ssrKey == null)
+            {
+                return false;
+            }
+
+            return true;
         }
         public static TimeBomb LoadFromRegistry()
         {
@@ -129,7 +148,8 @@ namespace Forerunner.SSR.Core
             }
 
             // Decrypt the time bomb data
-            byte[] timeBombData = MachineKey.Unprotect(timeBombProtected, TimeBomb.EncryptPurpose);
+            ASCIIEncoding ascii = new ASCIIEncoding();
+            byte[] timeBombData = DecryptAes(timeBombProtected, ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
 
             // Deserialize the time bomb
             MemoryStream stream = new MemoryStream(timeBombData);
@@ -156,6 +176,62 @@ namespace Forerunner.SSR.Core
             }
 
             return true;
+        }
+        private static byte[] EncryptAes(byte[] buffer, byte[] Key, byte[] IV)
+        {
+            byte[] encrypted;
+
+            // Create an AesManaged object with the specified key and IV. 
+            using (AesManaged aesAlg = new AesManaged())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+                aesAlg.Padding = PaddingMode.None;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption. 
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        csEncrypt.Write(buffer, 0, buffer.Length);
+                        encrypted = msEncrypt.GetBuffer();
+                    }
+                }
+            }
+
+            // Return the encrypted bytes from the memory stream. 
+            return encrypted;
+        }
+        private static byte[] DecryptAes(byte[] cipherText, byte[] Key, byte[] IV)
+        {
+            // Declare the string used to hold the decrypted text. 
+            byte[] buffer = null;
+
+            // Create an AesManaged object with the specified key and IV.
+            using (AesManaged aesAlg = new AesManaged())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+                aesAlg.Padding = PaddingMode.None;
+
+                // Create a decrytor to perform the stream transform.
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for decryption. 
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        MemoryStream msOut = new MemoryStream();
+                        csDecrypt.CopyTo(msOut);
+                        buffer = msOut.GetBuffer();
+                    }
+                }
+            }
+            return buffer;
         }
 
         #endregion //methods

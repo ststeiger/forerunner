@@ -293,8 +293,11 @@ $(function () {
             var lang = navigator.language || navigator.userLanguage;
             var langData = this._loadFile(locFileLocation, lang);
 
+            if (langData === null || langData === undefined)
+                langData = this._loadFile(locFileLocation, lang.substr(0,2));
+
             if (langData === null ||  langData === undefined)
-                langData = this._loadFile(locFileLocation, "en-us");
+                langData = this._loadFile(locFileLocation, "en");
 
             return langData;
             
@@ -313,7 +316,10 @@ $(function () {
                     },
                     fail: function () {
                         me._locData[locFileLocation][lang] = null;
-                    }
+                    },
+                    error: function () {
+                        me._locData[locFileLocation][lang] = null;
+                },
                 });
 
             }

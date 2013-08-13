@@ -226,7 +226,7 @@ namespace Forerunner.SSRS.JSONRender
 
         }
 
-        public ReportJSONWriter(Stream RPL) 
+        public ReportJSONWriter(Stream RPL)
         {
             this.RPL = new RPLReader(RPL);
         }
@@ -234,8 +234,8 @@ namespace Forerunner.SSRS.JSONRender
         public string RPLToJSON(int NumPages)
         {
 #if !DEBUG
-            // TODO [jont]
-            // One more issue to fix before this goes in...
+            // TODO
+            // Need a place to initialize License
             //Forerunner.SSR.Core.License.ThrowIfNotValid();
 #endif
             RPL.position = 0;

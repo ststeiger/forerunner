@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Net;
 using System.Xml;
+using Microsoft.Web.Administration;
 using UWS.Configuration;
 using UWS.Framework;
 
@@ -68,7 +69,33 @@ namespace ReportMannagerConfigTool
             siteVDir.CommitChanges();
             site.CommitChanges();
 
+            UpdateIISAuthentication(siteName);
             //Console.WriteLine("Deploy Done! New web application's id in IIS is:" + siteID);
+        }
+
+        /// <summary>
+        /// Disable anonymous authentication and enable windows authentication
+        /// Need IIS 7 or higher.
+        /// 
+        /// Microsoft.Web.Administration.dll Under: Forerunner\RS\Externals\IIS\Microsoft.Web.Administration.dll
+        /// </summary>
+        /// <param name="siteName">target site name</param>
+        private static void UpdateIISAuthentication(string siteName)
+        {
+            using (ServerManager serverManager = new ServerManager())
+            {
+                Configuration config = serverManager.GetApplicationHostConfiguration();
+
+                //disable anonymous authentication which is the default value of IIS
+                ConfigurationSection anonymousAuthenticationSection = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", siteName);
+                anonymousAuthenticationSection["enabled"] = false;
+
+                //Enable window authentication
+                ConfigurationSection windowsAuthenticationSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", siteName);
+                windowsAuthenticationSection["enabled"] = true;
+
+                serverManager.CommitChanges();
+            }
         }
 
         /// <summary>

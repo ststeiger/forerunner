@@ -34,7 +34,7 @@
 !insertmacro MUI_PAGE_DIRECTORY
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
-
+Page custom fun_ApplicationConfig_RunRegister
 /*
 ; Set Application Config page
 Page custom fnc_ApplicationConfig_Show fnc_ApplicationConfig_Leave
@@ -49,6 +49,7 @@ Page custom fnc_RunConfigTool_Show */
 ; Finish page
 !define MUI_UNTEXT_FINISH_TITLE "Install Finish!"
 !define MUI_UNTEXT_FINISH_SUBTITLE "Please choose run report manager config tool or not."
+; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\ReportManagerConfigTool.exe"
 !define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
 !insertmacro MUI_PAGE_FINISH
@@ -151,6 +152,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\DefaultAppTemplate.css"
+  SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolpane"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   /*SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\Toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\XML.jpg"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Word.png"
@@ -219,6 +223,9 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\SSRSExtension"
   File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
   File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
+  SetOutPath "$INSTDIR\Register"
+  File "${LOCALROOT}\Register\Forerunner.SSR.Core.dll"
+  File "${LOCALROOT}\Register\InstallData.exe"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
   File "${LOCALROOT}\ReportManagerConfigTool.exe"
@@ -317,6 +324,10 @@ Function IsDotNETInstalled
      Exch $0
 FunctionEnd
 
+Function fun_ApplicationConfig_RunRegister
+  ExecWait "$INSTDIR\Register\InstallData.exe"
+FunctionEnd
+
 
 Section Uninstall
   Delete "$INSTDIR\config.ini"
@@ -348,6 +359,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Forerunner-all.min.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\ajax-loader1.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Expand.png"
@@ -432,6 +445,8 @@ Section Uninstall
   Delete "$INSTDIR\bin\WebGrease.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
+  Delete "$INSTDIR\Register\InstallData.exe"
+  Delete "$INSTDIR\Register\Forerunner.SSR.Core.dll"
 
   Delete "$SMPROGRAMS\ReportManager\Uninstall.lnk"
   Delete "$DESKTOP\ReportManager.lnk"
@@ -447,6 +462,7 @@ Section Uninstall
   RMDir "$INSTDIR\Scripts\App"
   RMDir "$INSTDIR\Scripts"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
+  RMDir "$INSTDIR\Forerunner\ReportViewer\Images\toolpane"
   RMDir "$INSTDIR\Forerunner\ReportViewer\Images"
   RMDir "$INSTDIR\Forerunner\ReportViewer\css"
   RMDir "$INSTDIR\Forerunner\ReportViewer"
@@ -466,6 +482,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
+  RMDir "$INSTDIR\Register"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

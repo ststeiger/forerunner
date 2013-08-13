@@ -241,7 +241,6 @@
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
     <Content Include="Forerunner.snk" />
-    <Content Include="ClassDiagram1.cd" />
     <None Include="Forerunner\Forerunner-all.js.bundle">
       <SubType>Designer</SubType>
     </None>

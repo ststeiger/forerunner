@@ -347,11 +347,21 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([btnDocumentMap, btnMenu]);
+                me.enableTools([btnDocumentMap, btnMenu, btnReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.enableAllTools();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([btnNav, btnMenu]);
+                }
+                else {
+                    me.enableAllTools();
+                }
             });
 
             // Hook up the toolbar element events

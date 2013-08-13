@@ -36,7 +36,7 @@ var ApplicationRouter = Backbone.Router.extend({
             this._transitionToReportManager(null, "recent");
         },
         
-        _selectedItemPath : null,
+        //_selectedItemPath : null,
 
         _transitionToReportManager: function (path, view) {
             forerunner.device.allowZoom(false);

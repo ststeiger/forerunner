@@ -97,7 +97,7 @@ namespace ReportMannagerConfigTool
             entry.PhysicalDirectory = physicalPath;
 
             Metabase.RegisterApplication(RuntimeVersion.AspNet_4, false, false, ProcessIdentity.NetworkService, entry);
-            Metabase.WaitForAppToStart(guid);
+            Metabase.WaitForAppToStart(guid,2000);
 
             //Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }

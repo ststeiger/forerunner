@@ -345,11 +345,21 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([itemDocumentMap]);
+                me.enableTools([itemDocumentMap, itemReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.enableAllTools();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
+                if (data.open) {
+                    me.disableAllTools();
+                    me.enableTools([itemNav]);
+                }
+                else {
+                    me.enableAllTools();
+                }
             });
 
             // Hook up the toolbar element events

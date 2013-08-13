@@ -489,15 +489,19 @@ $(function () {
          */
         showNav: function () {
             var me = this;
-            if (me.pageNavOpen) 
+            if (me.pageNavOpen) {
                 me.pageNavOpen = false;
-            else
+                document.body.parentNode.style.overflow = "scroll";
+            }
+            else {
                 me.pageNavOpen = true;
+                document.body.parentNode.style.overflow = "hidden";
+            }            
 
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         /**
          * Resets the Page Navigation cache

@@ -354,7 +354,7 @@ $(function () {
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
             //alert(ratio);
-            if (ratio > 1.1 || ratio < 0.99)
+            if (ratio > 1.25 || ratio < 0.975)
                 return true;
             else
                 return false;

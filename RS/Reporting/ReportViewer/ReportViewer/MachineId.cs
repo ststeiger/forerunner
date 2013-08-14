@@ -1,21 +1,22 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
 using System.Web;
+using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Forerunner.SSR.Core
+namespace Forerunner.SSRS.License
 {
-    [Serializable()]
-    [XmlRoot()]
+    [DataContract()]
     public class MachineId
     {
         #region methods
 
-        private MachineId()
+        public MachineId()
         {
             motherBoardId = GetBaseBoardId();
             hostName = GetHostName();
@@ -48,6 +49,13 @@ namespace Forerunner.SSR.Core
             }
 
             return sameCount >= 2;
+        }
+        private Byte[] Serialize()
+        {
+            MemoryStream stream = new MemoryStream();
+            DataContractSerializer serializer = new DataContractSerializer(typeof(MachineId));
+            serializer.WriteObject(stream, this);
+            return stream.GetBuffer();
         }
         private static String GetHostName()
         {
@@ -125,16 +133,13 @@ namespace Forerunner.SSR.Core
 
         #region data
 
-        [XmlElement()]
+        [DataMember()]
         public String motherBoardId;
-
-        [XmlElement()]
+        [DataMember()]
         public String hostName;
-
-        [XmlElement()]
+        [DataMember()]
         public String biosId;
-
-        [XmlElement()]
+        [DataMember()]
         public String macId;
 
         #endregion data

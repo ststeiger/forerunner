@@ -6,14 +6,13 @@ using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Xml.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using Microsoft.Win32;
 
-namespace Forerunner.SSR.Core
+namespace Forerunner.SSRS.License
 {
-    [Serializable()]
-    [XmlRoot()]
+    [DataContract()]
     public class TimeBomb
     {
         #region enums and constants
@@ -43,13 +42,12 @@ namespace Forerunner.SSR.Core
 
         #region methods
 
-        private TimeBomb() { }
+        public TimeBomb() { }
         public static TimeBomb Create(DateTime installDate)
         {
             TimeBomb timeBomb = new TimeBomb();
             timeBomb.start = installDate;
             timeBomb.machineId = MachineId.CreateCurrentMachineId();
-            timeBomb.CreateCryptoHash();
 
             return timeBomb;
         }
@@ -66,32 +64,25 @@ namespace Forerunner.SSR.Core
                 forerunnerKey.DeleteSubKey(TimeBomb.ssrKey, false);
             }
         }
-        private MemoryStream Serialize()
+        public Byte[] Serialize()
         {
-            // Serialize the time bomb
             MemoryStream stream = new MemoryStream();
-            BinaryFormatter serializer = new BinaryFormatter();
-            serializer.Serialize(stream, this);
-            return stream;
-        }
-        private void CreateCryptoHash()
-        {
-            MemoryStream stream = Serialize();
+            DataContractSerializer serializer = new DataContractSerializer(typeof(TimeBomb));
+            serializer.WriteObject(stream, this);
 
-            // Create an 8 byte, cryptographic hash and convert it to a base 64 string from the unencrypted
-            // serializer stream of this object. This will give us a 12 character string.
-            MD5Cng md5 = new MD5Cng();
-            byte[] machineHash = md5.ComputeHash(stream);
-            cryptoHash = Convert.ToBase64String(machineHash.Take(8).ToArray());
+            return stream.ToArray();
         }
         public void SaveToRegistry()
         {
-            // Serialize the time bomb
-            MemoryStream stream = Serialize();
+            byte[] timeBomb = Serialize();
+
+            MD5Cng md5 = new MD5Cng();
+            byte[] machineHash = md5.ComputeHash(timeBomb);
+            String cryptoHash = Convert.ToBase64String(machineHash.Take(8).ToArray());
 
             // Encrypt the string into a byte array
             ASCIIEncoding ascii = new ASCIIEncoding();
-            byte[] timeBombProtected = EncryptAes(stream.GetBuffer(), ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
+            byte[] timeBombProtected = EncryptAes(timeBomb, ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
 
             // Save the time bomb to the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
@@ -99,24 +90,6 @@ namespace Forerunner.SSR.Core
             RegistryKey ssrKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrKey);
             ssrKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
             ssrKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
-            stream.Close();
-        }
-        public static bool PreviouslyInstalled()
-        {
-            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
-            RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
-            if (forerunnerswKey == null)
-            {
-                return false;
-            }
-
-            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrKey);
-            if (ssrKey == null)
-            {
-                return false;
-            }
-
-            return true;
         }
         public static TimeBomb LoadFromRegistry()
         {
@@ -153,8 +126,25 @@ namespace Forerunner.SSR.Core
 
             // Deserialize the time bomb
             MemoryStream stream = new MemoryStream(timeBombData);
-            BinaryFormatter serializer = new BinaryFormatter();
-            return (TimeBomb)serializer.Deserialize(stream);
+            DataContractSerializer serializer = new DataContractSerializer(typeof(TimeBomb));
+            return (TimeBomb)serializer.ReadObject(stream);
+        }
+        public static bool PreviouslyInstalled()
+        {
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
+            RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
+            if (forerunnerswKey == null)
+            {
+                return false;
+            }
+
+            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrKey);
+            if (ssrKey == null)
+            {
+                return false;
+            }
+
+            return true;
         }
         public bool IsValid(MachineId currentMachineId)
         {
@@ -186,19 +176,15 @@ namespace Forerunner.SSR.Core
             {
                 aesAlg.Key = Key;
                 aesAlg.IV = IV;
-                aesAlg.Padding = PaddingMode.None;
-
-                // Create a decrytor to perform the stream transform.
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
                 // Create the streams used for encryption. 
                 using (MemoryStream msEncrypt = new MemoryStream())
                 {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
                     {
                         csEncrypt.Write(buffer, 0, buffer.Length);
-                        encrypted = msEncrypt.GetBuffer();
                     }
+                    encrypted = msEncrypt.ToArray();
                 }
             }
 
@@ -215,20 +201,15 @@ namespace Forerunner.SSR.Core
             {
                 aesAlg.Key = Key;
                 aesAlg.IV = IV;
-                aesAlg.Padding = PaddingMode.None;
-
-                // Create a decrytor to perform the stream transform.
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
                 // Create the streams used for decryption. 
-                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                using (MemoryStream msDecrypt = new MemoryStream())
                 {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Write))
                     {
-                        MemoryStream msOut = new MemoryStream();
-                        csDecrypt.CopyTo(msOut);
-                        buffer = msOut.GetBuffer();
+                        csDecrypt.Write(cipherText, 0, cipherText.Length);
                     }
+                    buffer = msDecrypt.ToArray();
                 }
             }
             return buffer;
@@ -238,12 +219,10 @@ namespace Forerunner.SSR.Core
 
         #region data
 
-        [XmlElement()]
+        [DataMember()]
         public DateTime start;          // Time Bomb Start date / time
-        [XmlElement()]
+        [DataMember()]
         public MachineId machineId;     // Machine Id where the Time Bomb was created
-        [XmlElement()]
-        public String cryptoHash;       // Cryptographic hash string
 
         #endregion  // data
     }

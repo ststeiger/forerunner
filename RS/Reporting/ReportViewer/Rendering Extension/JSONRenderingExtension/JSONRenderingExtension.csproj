@@ -51,6 +51,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,6 +60,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\ReportViewer\License.cs">
+      <Link>License.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ReportViewer\MachineId.cs">
+      <Link>MachineId.cs</Link>
+    </Compile>
     <Compile Include="..\..\ReportViewer\ReportWriter.cs">
       <Link>ReportWriter.cs</Link>
     </Compile>
@@ -70,6 +78,9 @@
     <Compile Include="..\..\ReportViewer\Impersonator.cs">
       <Link>Impersonator.cs</Link>
     </Compile>
+    <Compile Include="..\..\ReportViewer\TimeBomb.cs">
+      <Link>TimeBomb.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JSONRenderer.cs" />
     <Compile Include="RenderingUtil.cs" />
@@ -81,10 +92,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Forerunner.SSR.Core\Forerunner.SSR.Core.csproj">
-      <Project>{1a1799c1-250c-43b5-bf73-3cd8143526ee}</Project>
-      <Name>Forerunner.SSR.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\JSON\src\Jayrock.Json\Forerunner.Json.csproj">
       <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
       <Name>Forerunner.Json</Name>

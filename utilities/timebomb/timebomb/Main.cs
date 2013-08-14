@@ -7,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Forerunner.SSRS.License;
 
 namespace timebomb
 {
-    class TimeBomb
+    class Main
     {
         #region methods
         public void Run(string[] args)
@@ -72,7 +73,7 @@ namespace timebomb
 
             if (options.Remove)
             {
-                Forerunner.SSR.Core.TimeBomb.Remove();
+                TimeBomb.Remove();
                 Console.WriteLine("\nTimeBomb - Time Bomb data removed\n");
             }
 
@@ -83,11 +84,11 @@ namespace timebomb
         // Private methods
         private void Dump()
         {
-            Forerunner.SSR.Core.TimeBomb ssrTimebomb = null;
+            TimeBomb timeBomb = null;
 
             try
             {
-                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.LoadFromRegistry();
+                timeBomb = TimeBomb.LoadFromRegistry();
             }
             catch (Exception e)
             {
@@ -96,36 +97,39 @@ namespace timebomb
             }
 
             Console.WriteLine("\nTimeBomb - dump\n\nStored time bomb:\n");
-            Dump(ssrTimebomb);
+            Dump(timeBomb);
 
-            Forerunner.SSR.Core.TimeBomb newSsrTimeBomb = Forerunner.SSR.Core.TimeBomb.Create();
+            TimeBomb newSsrTimeBomb = TimeBomb.Create();
             Console.WriteLine("\nNew time bomb:\n");
             Dump(newSsrTimeBomb);
         }
 
-        private static void Dump(Forerunner.SSR.Core.TimeBomb ssrTimebomb)
+        private static void Dump(TimeBomb timeBomb)
         {
+            byte[] buffer = timeBomb.Serialize();
+            string xml = System.Text.Encoding.UTF8.GetString(buffer);
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
             StringBuilder sb = new StringBuilder();
             StringWriter writer = new StringWriter(sb);
-            XmlSerializer serializer = new XmlSerializer(typeof(Forerunner.SSR.Core.TimeBomb));
-            serializer.Serialize(writer, ssrTimebomb);
+            doc.Save(writer);
             Console.WriteLine("\n{0}\n", sb.ToString());
         }
 
         private void Create()
         {
-            Forerunner.SSR.Core.TimeBomb ssrTimebomb;
+            TimeBomb timeBomb;
 
             if (options.HasInstallDate)
             {
-                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.Create(options.InstallDate);
+                timeBomb = TimeBomb.Create(options.InstallDate);
             }
             else
             {
-                ssrTimebomb = Forerunner.SSR.Core.TimeBomb.Create();
+                timeBomb = TimeBomb.Create();
             }
 
-            ssrTimebomb.SaveToRegistry();
+            timeBomb.SaveToRegistry();
             Console.WriteLine("\nTimeBomb - new Time Bomb created\n");
         }
 

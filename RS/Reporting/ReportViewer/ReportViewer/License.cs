@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Forerunner.SSR.Core
+namespace Forerunner.SSRS.License
 {
     public class LicenseException : ApplicationException
     {

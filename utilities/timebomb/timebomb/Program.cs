@@ -11,7 +11,7 @@ namespace timebomb
         static int Main(string[] args)
         {
             bool hadError = false;
-            TimeBomb timeBomb = new TimeBomb();
+            Main timeBomb = new Main();
 
             try
             {

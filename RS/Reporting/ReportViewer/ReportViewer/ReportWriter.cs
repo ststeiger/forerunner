@@ -236,7 +236,7 @@ namespace Forerunner.SSRS.JSONRender
 #if !DEBUG
             // TODO
             // Need a place to initialize License
-            //Forerunner.SSR.Core.License.ThrowIfNotValid();
+            //Forerunner.SSRS.License.License.ThrowIfNotValid();
 #endif
             RPL.position = 0;
             w.WriteStartObject();

@@ -117,6 +117,28 @@ $(function () {
                 $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
             }
 
+            if (me.options.isReportManager) {
+                var btnSavParam = {
+                    toolType: toolTypes.button,
+                    selectorClass: "fr-button-save-param",
+                    imageClass: "fr-image-save-param",
+                    parameterWidget: me.options.$paramarea,
+                    events: {
+                        click: function (e) {
+                            $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
+                                reportPath: me.options.ReportPath,
+                                parameters: e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList"),
+                            }).done(function (Data) {
+                                alert("Saved");
+                            })
+                            .fail(function () { alert("Failed"); });
+                        }
+                    }
+                };
+                $righttoolbar.toolbar("addTools", 2, true, [btnSavParam]);
+            }
+
+
             // Create / render the menu pane
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer });
             if (me.options.isReportManager) {

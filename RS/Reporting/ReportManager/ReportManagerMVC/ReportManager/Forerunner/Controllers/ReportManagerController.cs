@@ -67,13 +67,24 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path)
         {
-            return GetResponseFromBytes(GetReportManager().UpdateView(view,action,path), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().UpdateView(view,action,path)), "text/JSON");
         }
 
         [HttpGet]
-        public HttpResponseMessage isFavorite(string path)
+        public HttpResponseMessage IsFavorite(string path)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().IsFavorite(path)), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserParameters(string reportPath)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserParameters(reportPath)), "text/JSON");
+        }
+        [HttpGet]
+        public HttpResponseMessage SaveUserParameters(string reportPath, string parameters)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath,parameters)), "text/JSON");
         }
 
 

@@ -64,15 +64,15 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public byte[] UpdateView(string view, string action, string path)
+        public string UpdateView(string view, string action, string path)
         {
 
             if (view == "favorites")
             {
                 if (action == "delete")
-                    return Encoding.UTF8.GetBytes(this.DeleteFavorite(path));
+                    return this.DeleteFavorite(path);
                 else if (action == "add")
-                    return Encoding.UTF8.GetBytes(this.SaveFavorite(path));
+                    return this.SaveFavorite(path);
             }
 
             return null;
@@ -167,6 +167,10 @@ namespace Forerunner.SSRS.Manager
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
+                            END
+                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
+                            BEGIN	                            	                            
+                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
                             END";
                 SQLConn.Open();
 
@@ -221,6 +225,83 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public string SaveUserParamaters(string path,string parameters)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                            DECLARE @IID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID = @UID AND ItemID = @IID)
+	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @IID,@UID,@Params 
+                            ELSE
+                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = @UID AND ItemID = @IID
+                            ";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.Parameters.AddWithValue("@Params", parameters);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Status");
+                w.WriteString("Success");
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
+        }
+
+        public string GetUserParameters(string path)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                                DECLARE @IID uniqueidentifier
+                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                                SELECT SavedParameters FROM ForerunnerUserItemProperties WHERE UserID = @UID AND ItemID = @IID";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
+                string savedParams = "";
+
+                while (SQLReader.Read())
+                {
+                    savedParams = SQLReader.GetString(0);                   
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+
+                //Need to try catch and return error
+                return savedParams;
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
+        }
         public string IsFavorite(string path)
         {
             Impersonator impersonator = null;

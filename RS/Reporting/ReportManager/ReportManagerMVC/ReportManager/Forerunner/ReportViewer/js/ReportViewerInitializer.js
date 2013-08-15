@@ -136,6 +136,18 @@ $(function () {
                     }
                 };
                 $righttoolbar.toolbar("addTools", 2, true, [btnSavParam]);
+                $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                    $.ajax({
+                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.ParamsList)
+                                $paramarea.reportParameter("overrideDefaultParams", data)
+                        }
+                    });
+
+                });
             }
 
 

@@ -877,19 +877,10 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                   
-                    $.getJSON("../api/ReportManager/GetUserParameters", {
-                        ReportPath: me.options.reportPath
-                    })
-                    .done(function (savedParam) {
-                        $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, savedParam);
-                        me.paramLoaded = true;
-                        me._trigger(events.showParamArea);
-                    })
-                    .fail(function (ex) {
-                        console.log("error");
-                        me.removeLoadingIndicator();
-                    });
+                    me._trigger(events.showParamArea);
+                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    me.paramLoaded = true;
+                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {

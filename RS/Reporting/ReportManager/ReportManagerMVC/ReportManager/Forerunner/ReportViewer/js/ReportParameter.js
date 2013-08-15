@@ -36,7 +36,8 @@ $(function () {
         _loadedForDefault: true,
 
         _savedParamExist:false,
-        _savedParamList:null,
+        _savedParamList: null,
+        _savedParamCount: 0,
 
         _init: function () {
             var me = this;
@@ -66,17 +67,13 @@ $(function () {
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
          */
-        writeParameterPanel: function (data, rs, pageNum, savedParam) {
+        writeParameterPanel: function (data, rs, pageNum) {
             var me = this;
             me.options.pageNum = pageNum;            
             me._paramCount = parseInt(data.Count, 10);
 
-            if (!$.isEmptyObject(savedParam))
-                me._savedParamExist = true;
-
             me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
             me._loadedForDefault = true && !me._savedParamExist;            
-            me._setSavedParam(savedParam);
             me._render();
 
             var $eleBorder = $(".fr-param-element-border");
@@ -116,6 +113,8 @@ $(function () {
             
             if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                 me._submitForm();
+            else if (me._paramCount === me._savedParamCount)
+                me._submitForm();
             else
                 me._trigger(events.render);
 
@@ -124,6 +123,7 @@ $(function () {
             pc.removeAttr("style"); 
 
             me._savedParamExist = false;
+            me._savedParamCount = 0;
             me.options.$reportViewer.removeLoadingIndicator();
         },
         _submitForm: function () {
@@ -136,14 +136,15 @@ $(function () {
                 me._trigger(events.submit);
             }
         },
-        _setSavedParam: function (savedParam) {
+        overrideDefaultParams: function (overrideParams) {
             var me = this;
-            if (me._savedParamExist) {
-                me._savedParamList = {};
-                $.each(savedParam.ParamsList, function (index, param) {
-                    me._savedParamList[param.Parameter] = param.Value;
+            me._savedParamList = {};
+            me._savedParamCount = 0;
+            me._savedParamExist = true;
+            $.each(overrideParams.ParamsList, function (index, param) {
+                me._savedParamList[param.Parameter] = param.Value;
+                me._savedParamCount++;
                 });
-            }
         },
         _getPredefinedValue: function (param) {
             var me = this;

@@ -166,11 +166,11 @@ namespace Forerunner.SSRS.Manager
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL UNIQUE ,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
                             END";
                 SQLConn.Open();
 

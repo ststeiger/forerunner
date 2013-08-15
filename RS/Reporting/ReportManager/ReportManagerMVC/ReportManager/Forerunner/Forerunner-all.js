@@ -1265,19 +1265,10 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                   
-                    $.getJSON("../api/ReportManager/GetUserParameters", {
-                        ReportPath: me.options.reportPath
-                    })
-                    .done(function (savedParam) {
-                        $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, savedParam);
-                        me.paramLoaded = true;
-                        me._trigger(events.showParamArea);
-                    })
-                    .fail(function (ex) {
-                        console.log("error");
-                        me.removeLoadingIndicator();
-                    });
+                    me._trigger(events.showParamArea);
+                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    me.paramLoaded = true;
+                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {
@@ -4667,7 +4658,8 @@ $(function () {
         _loadedForDefault: true,
 
         _savedParamExist:false,
-        _savedParamList:null,
+        _savedParamList: null,
+        _savedParamCount: 0,
 
         _init: function () {
             var me = this;
@@ -4697,17 +4689,13 @@ $(function () {
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
          */
-        writeParameterPanel: function (data, rs, pageNum, savedParam) {
+        writeParameterPanel: function (data, rs, pageNum) {
             var me = this;
             me.options.pageNum = pageNum;            
             me._paramCount = parseInt(data.Count, 10);
 
-            if (!$.isEmptyObject(savedParam))
-                me._savedParamExist = true;
-
             me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
             me._loadedForDefault = true && !me._savedParamExist;            
-            me._setSavedParam(savedParam);
             me._render();
 
             var $eleBorder = $(".fr-param-element-border");
@@ -4747,6 +4735,8 @@ $(function () {
             
             if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                 me._submitForm();
+            else if (me._paramCount === me._savedParamCount)
+                me._submitForm();
             else
                 me._trigger(events.render);
 
@@ -4755,6 +4745,7 @@ $(function () {
             pc.removeAttr("style"); 
 
             me._savedParamExist = false;
+            me._savedParamCount = 0;
             me.options.$reportViewer.removeLoadingIndicator();
         },
         _submitForm: function () {
@@ -4767,14 +4758,15 @@ $(function () {
                 me._trigger(events.submit);
             }
         },
-        _setSavedParam: function (savedParam) {
+        overrideDefaultParams: function (overrideParams) {
             var me = this;
-            if (me._savedParamExist) {
-                me._savedParamList = {};
-                $.each(savedParam.ParamsList, function (index, param) {
-                    me._savedParamList[param.Parameter] = param.Value;
+            me._savedParamList = {};
+            me._savedParamCount = 0;
+            me._savedParamExist = true;
+            $.each(overrideParams.ParamsList, function (index, param) {
+                me._savedParamList[param.Parameter] = param.Value;
+                me._savedParamCount++;
                 });
-            }
         },
         _getPredefinedValue: function (param) {
             var me = this;
@@ -5805,6 +5797,18 @@ $(function () {
                     }
                 };
                 $righttoolbar.toolbar("addTools", 2, true, [btnSavParam]);
+                $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                    $.ajax({
+                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.ParamsList)
+                                $paramarea.reportParameter("overrideDefaultParams", data)
+                        }
+                    });
+
+                });
             }
 
 

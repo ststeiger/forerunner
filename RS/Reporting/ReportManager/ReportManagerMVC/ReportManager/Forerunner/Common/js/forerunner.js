@@ -355,14 +355,11 @@ $(function () {
         },
       
       
-        isZoomed: function(element){
+        zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
             //alert(ratio);
-            if (ratio > 1.25 || ratio < 0.975)
-                return true;
-            else
-                return false;
+            return ratio;
         },
         /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {

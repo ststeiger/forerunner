@@ -101,9 +101,13 @@ $(function () {
             $container.append($rightpane);
             me.bindEvents();
 
+            //Cannot get zoom event so fake it
+
+            setInterval(function () {
+                me.toggleZoom();
+            }, 100);
             return this;
         },
-
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -122,12 +126,36 @@ $(function () {
                 me.ResetSize();
             });
         },
+        toggleZoom: function () {
+            var me = this;
+            var ratio = forerunner.device.zoomLevel();
+
+            if (me.isZoomed() && !me.wasZoomed){            
+                me.wasZoomed = true;
+                return;
+            }
+
+            if (!me.isZoomed() && me.wasZoomed){
+                var $viewer = $(".fr-layout-reportviewer", me.$container);
+                $viewer.reportViewer("allowZoom", false);
+                me.wasZoomed = false
+             }
+        },
+        wasZoomed: false,
+        isZoomed: function(){
+            var ratio = forerunner.device.zoomLevel();
+
+            if (ratio > 1.15 || ratio < 0.985)
+                return true;
+            else
+                return false;
+        },
         ResetSize: function () {
             var me = this;
             var $viewer = $(".fr-layout-reportviewer", me.$container);
 
-            if (!forerunner.device.isZoomed())
-                $viewer.reportViewer("allowZoom", false);
+            //if (!me.isZoomed())
+            //    $viewer.reportViewer("allowZoom", false);
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });

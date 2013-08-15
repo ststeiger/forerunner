@@ -282,7 +282,7 @@ namespace Forerunner.SSRS.Manager
                 SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
-                string savedParams = "";
+                string savedParams = string.Empty;
 
                 while (SQLReader.Read())
                 {
@@ -292,7 +292,7 @@ namespace Forerunner.SSRS.Manager
                 SQLConn.Close();
 
                 //Need to try catch and return error
-                return savedParams;
+                return savedParams == "" ? "{}" : savedParams;
             }
             finally
             {

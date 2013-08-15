@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Forerunner.SSR.Core;
+using Forerunner.SSRS.License;
 
 namespace InstallData
 {

@@ -873,13 +873,23 @@ $(function () {
             var me = this;
             if (data.Type === "Parameters") {
                 me._removeParameters();
-               
+
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
-                    me.paramLoaded = true;
+                   
+                    $.getJSON("../api/ReportManager/GetUserParameters", {
+                        ReportPath: me.options.reportPath
+                    })
+                    .done(function (savedParam) {
+                        $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, savedParam);
+                        me.paramLoaded = true;
+                        me._trigger(events.showParamArea);
+                    })
+                    .fail(function (ex) {
+                        console.log("error");
+                        me.removeLoadingIndicator();
+                    });
                 }
             }
             else if (data.Exception) {

@@ -1261,13 +1261,23 @@ $(function () {
             var me = this;
             if (data.Type === "Parameters") {
                 me._removeParameters();
-               
+
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
-                    me.paramLoaded = true;
+                   
+                    $.getJSON("../api/ReportManager/GetUserParameters", {
+                        ReportPath: me.options.reportPath
+                    })
+                    .done(function (savedParam) {
+                        $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, savedParam);
+                        me.paramLoaded = true;
+                        me._trigger(events.showParamArea);
+                    })
+                    .fail(function (ex) {
+                        console.log("error");
+                        me.removeLoadingIndicator();
+                    });
                 }
             }
             else if (data.Exception) {
@@ -4654,13 +4664,17 @@ $(function () {
         _formInit: false,
         _paramCount: 0,
         _defaultValueExist: false,
-        _loadedForDefault:true,
+        _loadedForDefault: true,
+
+        _savedParamExist:false,
+        _savedParamList:null,
 
         _init: function () {
             var me = this;
             me.element.html(null);
         },
-        _destroy: function() {
+        _destroy: function () {
+            
         },
         _render: function () {
             var me = this;
@@ -4683,13 +4697,17 @@ $(function () {
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
          */
-        writeParameterPanel: function (data, rs, pageNum, loadOnly) {
+        writeParameterPanel: function (data, rs, pageNum, savedParam) {
             var me = this;
-            me.options.pageNum = pageNum;
+            me.options.pageNum = pageNum;            
             me._paramCount = parseInt(data.Count, 10);
-            me._defaultValueExist = data.DefaultValueExist;
-            me._loadedForDefault = true;
 
+            if (!$.isEmptyObject(savedParam))
+                me._savedParamExist = true;
+
+            me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
+            me._loadedForDefault = true && !me._savedParamExist;            
+            me._setSavedParam(savedParam);
             me._render();
 
             var $eleBorder = $(".fr-param-element-border");
@@ -4726,7 +4744,7 @@ $(function () {
             $(".fr-param-viewreport").on("click", function () {
                 me._submitForm();
             });
-
+            
             if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                 me._submitForm();
             else
@@ -4736,7 +4754,7 @@ $(function () {
             var pc = me.element.find("." + paramContainerClass);
             pc.removeAttr("style"); 
 
-
+            me._savedParamExist = false;
             me.options.$reportViewer.removeLoadingIndicator();
         },
         _submitForm: function () {
@@ -4748,6 +4766,30 @@ $(function () {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList);
                 me._trigger(events.submit);
             }
+        },
+        _setSavedParam: function (savedParam) {
+            var me = this;
+            if (me._savedParamExist) {
+                me._savedParamList = {};
+                $.each(savedParam.ParamsList, function (index, param) {
+                    me._savedParamList[param.Parameter] = param.Value;
+                });
+            }
+        },
+        _getPredefinedValue: function (param) {
+            var me = this;
+            //if saved param exist then used it else user default value
+            if (me._savedParamExist) {
+                return me._savedParamList[param.Name];
+            }
+            else if (me._hasDefaultValue(param)) {
+                if (param.MultiValue==="False")
+                    return param.DefaultValues[0];
+                else
+                    return param.DefaultValues;
+            }
+
+            return null;
         },
         _writeParamControl: function (param, $parent) {
             var me = this;
@@ -4831,6 +4873,7 @@ $(function () {
         },
         _writeRadioButton: function (param) {
             var me = this;
+            var predefinedValue = me._getPredefinedValue(param);
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True"};
@@ -4842,11 +4885,11 @@ $(function () {
                 var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio " + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
                     "' id='" + param.Name + "_radio" + "_" + radioValues[i].value + "' datatype='" + param.Type + "' />");
                 me._getParameterControlProperty(param, $radioItem);
-
-                if (me._hasDefaultValue(param)) {
+                
+                if (predefinedValue) {
                     if (param.Nullable === "True")
                         $radioItem.attr("disabled", "true");
-                    else if (param.DefaultValues[0] === radioValues[i].value)
+                    else if (predefinedValue === radioValues[i].value)
                         $radioItem.attr("checked", "true");
                 }
 
@@ -4863,6 +4906,7 @@ $(function () {
         },
         _writeTextArea: function (param) {
             var me = this;
+            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<input class='fr-param' type='text' size='30' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
             me._getParameterControlProperty(param, $control);
 
@@ -4881,16 +4925,20 @@ $(function () {
                     });
                     $control.attr("dateISO","true");
 
-                    if(me._hasDefaultValue(param))
-                        $control.datepicker("setDate", me._getDateTimeFromDefault(param.DefaultValues[0]));
+                    if (predefinedValue)
+                        $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
                     break;
                 case "Integer":
                 case "Float":
                     $control.attr("number", "true");
-                    if (me._hasDefaultValue(param)) { $control.val(param.DefaultValues[0]); }
+                    if (predefinedValue) {
+                        $control.val(predefinedValue);
+                    }
                     break;
                 case "String":
-                    if (me._hasDefaultValue(param)) { $control.val(param.DefaultValues[0]); }
+                    if (predefinedValue) {
+                        $control.val(predefinedValue);
+                    }
                     //if (param.DefaultValues[0] === "")                        
                     //    $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     break;
@@ -4901,6 +4949,7 @@ $(function () {
         _writeDropDownControl: function (param) {
             var me = this;
             var canLoad = false;
+            var predefinedValue = me._getPredefinedValue(param);
             var $control = $("<select class='fr-param fr-param-select' ismultiple='" + param.MultiValue + "' name='" + param.Name + "' datatype='" + param.Type + "' readonly='true'>");
             me._getParameterControlProperty(param, $control);
 
@@ -4911,7 +4960,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].Value;
                 var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].Key + "</option>");
                 
-                if (me._hasDefaultValue(param) && param.DefaultValues[0] === optionValue) {
+                if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
                     canLoad = true;
                 }
@@ -4928,6 +4977,7 @@ $(function () {
         },
         _writeDropDownWithCheckBox: function(param) {
             var me = this;
+            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<div style='display:inline-block;'/>");
 
             var $multipleCheckBox = new $("<Input type='text' class='fr-param-client' id='" + param.Name + "_fore' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
@@ -4975,7 +5025,7 @@ $(function () {
                 var $span = new $("<Span />");
                 var $checkbox = new $("<input type='checkbox' class='" + param.Name + "_DropDown_CB' id='" + param.Name + "_DropDown_" + value + "' value='" + value + "' />");
 
-                if (me._hasDefaultValue(param) && me._contains(param.DefaultValues, value)) {
+                if (predefinedValue && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
                     keys += key + ",";
                     values += value + ",";
@@ -5007,7 +5057,7 @@ $(function () {
             }
             $dropDownContainer.append($table);
 
-            if (me._hasDefaultValue(param)) {
+            if (predefinedValue) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
                 $hiddenCheckBox.val(values.substr(0, values.length - 1));
             }
@@ -5130,14 +5180,14 @@ $(function () {
                 var tempJson = "[";
                 for (i = 0; i < a.length; i++) {
                     if (i !== a.length - 1) {
-                        tempJson += "{'Parameter':'" + a[i].name + "','IsMultiple':'" + a[i].ismultiple + "','Type':'" + a[i].type + "','Value':'" + a[i].value + "'},";
+                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"},";
                     }
                     else {
-                        tempJson += "{'Parameter':'" + a[i].name + "','IsMultiple':'" + a[i].ismultiple + "','Type':'" + a[i].type + "','Value':'" + a[i].value + "'}";
+                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"}";
                     }
                 }
                 tempJson += "]";
-                return "{'ParamsList':" + tempJson + "}";
+                return "{\"ParamsList\":" + tempJson + "}";
             } else {
                 return null;
             }
@@ -5212,11 +5262,15 @@ $(function () {
             if (!defaultDatetime || defaultDatetime.length < 9)
                 return null;
 
+            //dateISO: yyyy-mm-dd
+            if (/^(\d{4})-(0\d{1}|1[0-2])-(0\d{1}|[12]\d{1}|3[01])$/.test(defaultDatetime))
+                return defaultDatetime;
+
             var date = defaultDatetime.substr(0, defaultDatetime.indexOf(" "));
 
-            var datetime = date.substring(0, date.indexOf("/")) + "-" +
-                           date.substring(date.indexOf("/") + 1, date.lastIndexOf("/")) + "-" +
-                           date.substring(date.lastIndexOf("/") + 1, defaultDatetime.indexOf(" "));
+            var datetime = date.substring(date.lastIndexOf("/") + 1, defaultDatetime.indexOf(" ")) + "-" +
+                           date.substring(0, date.indexOf("/")) + "-" +
+                           date.substring(date.indexOf("/") + 1, date.lastIndexOf("/"));
             return datetime;
         },
     });  // $.widget
@@ -5913,7 +5967,7 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
             var path = me.options.path;
-            forerunner.device.allowZoom(true);
+            forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             //layout.$topdivspacer.attr("style", "height: 38px");

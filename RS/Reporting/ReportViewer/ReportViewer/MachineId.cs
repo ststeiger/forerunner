@@ -12,23 +12,23 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Forerunner.SSRS.License
 {
     [DataContract()]
-    public class MachineId
+    internal class MachineId
     {
         #region methods
 
-        public MachineId()
+        internal MachineId()
         {
             motherBoardId = GetBaseBoardId();
             hostName = GetHostName();
             biosId = GetBIOSId();
             macId = GetMacId();
         }
-        public static MachineId CreateCurrentMachineId()
+        internal static MachineId CreateCurrentMachineId()
         {
             MachineId machineId = new MachineId();
             return machineId;
         }
-        public bool IsSame(MachineId machineId)
+        internal bool IsSame(MachineId machineId)
         {
             int sameCount = 0;
             if (motherBoardId.CompareTo(machineId.motherBoardId) == 0)
@@ -134,13 +134,13 @@ namespace Forerunner.SSRS.License
         #region data
 
         [DataMember()]
-        public String motherBoardId;
+        internal String motherBoardId;
         [DataMember()]
-        public String hostName;
+        internal String hostName;
         [DataMember()]
-        public String biosId;
+        internal String biosId;
         [DataMember()]
-        public String macId;
+        internal String macId;
 
         #endregion data
     }

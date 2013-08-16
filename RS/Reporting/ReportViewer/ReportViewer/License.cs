@@ -5,20 +5,20 @@ using System.Text;
 
 namespace Forerunner.SSRS.License
 {
-    public class LicenseException : ApplicationException
+    internal class LicenseException : ApplicationException
     {
         #region methods
-        public LicenseException() : base() { }
-        public LicenseException(String msg) : base(msg) { }
-        public LicenseException(String msg, Exception inner) : base(msg, inner) { }
+        internal LicenseException() : base() { }
+        internal LicenseException(String msg) : base(msg) { }
+        internal LicenseException(String msg, Exception inner) : base(msg, inner) { }
         #endregion  // methods
     }
 
-    public static class License
+    internal static class License
     {
         #region methods
 
-        public static void Init()
+        internal static void Init()
         {
             if (timeBomb == null || currentMachineId == null)
             {
@@ -27,7 +27,7 @@ namespace Forerunner.SSRS.License
             }
         }
 
-        public static void ThrowIfNotValid()
+        internal static void ThrowIfNotValid()
         {
             try
             {

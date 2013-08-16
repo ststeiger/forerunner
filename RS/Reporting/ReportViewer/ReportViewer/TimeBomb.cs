@@ -13,12 +13,12 @@ using Microsoft.Win32;
 namespace Forerunner.SSRS.License
 {
     [DataContract()]
-    public class TimeBomb
+    internal class TimeBomb
     {
         #region enums and constants
 
-        public const String failKey = "reason";
-        public enum FailReason
+        internal const String failKey = "reason";
+        internal enum FailReason
         {
             Expired,
             MachineMismatch,
@@ -36,14 +36,14 @@ namespace Forerunner.SSRS.License
         private const String encryptKey = @"shskjhkjhgdfs56G54HJujkIfjte46KD";
         private const String encryptIV = @"jhlksdhlkjhglkjh";
 
-        public const String genericRegistyError = "Setup error - time bomb not found or invalid";
+        internal const String genericRegistyError = "Setup error - time bomb not found or invalid";
 
         #endregion types and static constants
 
         #region methods
 
-        public TimeBomb() { }
-        public static TimeBomb Create(DateTime installDate)
+        internal TimeBomb() { }
+        internal static TimeBomb Create(DateTime installDate)
         {
             TimeBomb timeBomb = new TimeBomb();
             timeBomb.start = installDate;
@@ -51,11 +51,11 @@ namespace Forerunner.SSRS.License
 
             return timeBomb;
         }
-        public static TimeBomb Create()
+        internal static TimeBomb Create()
         {
             return TimeBomb.Create(DateTime.Now);
         }
-        public static void Remove()
+        internal static void Remove()
         {
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
             RegistryKey forerunnerKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey, true);
@@ -64,7 +64,7 @@ namespace Forerunner.SSRS.License
                 forerunnerKey.DeleteSubKey(TimeBomb.ssrKey, false);
             }
         }
-        public Byte[] Serialize()
+        internal Byte[] Serialize()
         {
             MemoryStream stream = new MemoryStream();
             DataContractSerializer serializer = new DataContractSerializer(typeof(TimeBomb));
@@ -72,7 +72,7 @@ namespace Forerunner.SSRS.License
 
             return stream.ToArray();
         }
-        public void SaveToRegistry()
+        internal void SaveToRegistry()
         {
             byte[] timeBomb = Serialize();
 
@@ -91,7 +91,7 @@ namespace Forerunner.SSRS.License
             ssrKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
             ssrKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
         }
-        public static TimeBomb LoadFromRegistry()
+        internal static TimeBomb LoadFromRegistry()
         {
             // Load the time bomb from the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
@@ -129,7 +129,7 @@ namespace Forerunner.SSRS.License
             DataContractSerializer serializer = new DataContractSerializer(typeof(TimeBomb));
             return (TimeBomb)serializer.ReadObject(stream);
         }
-        public static bool PreviouslyInstalled()
+        internal static bool PreviouslyInstalled()
         {
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
             RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
@@ -146,7 +146,7 @@ namespace Forerunner.SSRS.License
 
             return true;
         }
-        public bool IsValid(MachineId currentMachineId)
+        internal bool IsValid(MachineId currentMachineId)
         {
             TimeSpan timeSpan = DateTime.Now.Subtract(start);
             if (timeSpan.Days > trialPeriod)
@@ -220,9 +220,9 @@ namespace Forerunner.SSRS.License
         #region data
 
         [DataMember()]
-        public DateTime start;          // Time Bomb Start date / time
+        internal DateTime start;          // Time Bomb Start date / time
         [DataMember()]
-        public MachineId machineId;     // Machine Id where the Time Bomb was created
+        internal MachineId machineId;     // Machine Id where the Time Bomb was created
 
         #endregion  // data
     }

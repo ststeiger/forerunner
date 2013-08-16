@@ -5078,9 +5078,9 @@ $(function () {
             var $multipleControlParent = $multipleControl.parent();
             var $paramContainer = me.element.find("." + paramContainerClass);
             var positionTop = $multipleControlParent.position().top + $paramContainer.scrollTop();
-
-            if ($paramContainer.height() - positionTop < $dropDown.height() + $multipleControlParent.height()) {
-                $dropDown.css("top", positionTop - $dropDown.height());
+            
+            if ($paramContainer.height() - positionTop - 10 < $dropDown.height() + $multipleControlParent.height() * 2) {
+                $dropDown.css("top", positionTop - $paramContainer.position().top - $dropDown.height());
             }
             else {
                 $dropDown.css("top", positionTop + $multipleControlParent.height());
@@ -5786,13 +5786,16 @@ $(function () {
                     parameterWidget: me.options.$paramarea,
                     events: {
                         click: function (e) {
-                            $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
-                                reportPath: me.options.ReportPath,
-                                parameters: e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList"),
-                            }).done(function (Data) {
-                                alert("Saved");
-                            })
-                            .fail(function () { alert("Failed"); });
+                            var parameterList = e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList");
+                            if (parameterList) {
+                                $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
+                                    reportPath: me.options.ReportPath,
+                                    parameters: parameterList,
+                                }).done(function (Data) {
+                                    alert("Saved");
+                                })
+                                .fail(function () { alert("Failed"); });
+                            }
                         }
                     }
                 };

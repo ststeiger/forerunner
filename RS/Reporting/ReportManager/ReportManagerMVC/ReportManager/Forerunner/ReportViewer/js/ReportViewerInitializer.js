@@ -125,13 +125,16 @@ $(function () {
                     parameterWidget: me.options.$paramarea,
                     events: {
                         click: function (e) {
-                            $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
-                                reportPath: me.options.ReportPath,
-                                parameters: e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList"),
-                            }).done(function (Data) {
-                                alert("Saved");
-                            })
-                            .fail(function () { alert("Failed"); });
+                            var parameterList = e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList");
+                            if (parameterList) {
+                                $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
+                                    reportPath: me.options.ReportPath,
+                                    parameters: parameterList,
+                                }).done(function (Data) {
+                                    alert("Saved");
+                                })
+                                .fail(function () { alert("Failed"); });
+                            }
                         }
                     }
                 };

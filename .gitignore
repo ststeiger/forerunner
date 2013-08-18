@@ -93,3 +93,5 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release/ReportManagerConfigTool.vshost.exe.config
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.Properties.Resources.resources
+utilities/SetupUtil/SetupUtil/bin/Debug/*
+utilities/SetupUtil/SetupUtil/bin/Release/*

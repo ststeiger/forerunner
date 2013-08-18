@@ -46,7 +46,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -56,6 +55,9 @@
     </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\MachineId.cs">
       <Link>MachineId.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\Security.cs">
+      <Link>Security.cs</Link>
     </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\TimeBomb.cs">
       <Link>TimeBomb.cs</Link>

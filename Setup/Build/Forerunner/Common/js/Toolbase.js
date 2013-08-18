@@ -147,6 +147,17 @@ $(function () {
             });
         },
 
+
+        /**
+       * Return the tool object
+       * @function $.forerunner.toolBase#getTool
+       */
+        getTool: function (selectorClass) {
+            var me = this;
+            return me.allTools[selectorClass];
+        },
+
+
         /**
         * Make tool visible if it was visible before hidden
         * @function $.forerunner.toolBase#hideTool

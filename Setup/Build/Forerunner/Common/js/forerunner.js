@@ -293,8 +293,11 @@ $(function () {
             var lang = navigator.language || navigator.userLanguage;
             var langData = this._loadFile(locFileLocation, lang);
 
+            if (langData === null || langData === undefined)
+                langData = this._loadFile(locFileLocation, lang.substr(0,2));
+
             if (langData === null ||  langData === undefined)
-                langData = this._loadFile(locFileLocation, "en-us");
+                langData = this._loadFile(locFileLocation, "en");
 
             return langData;
             
@@ -313,7 +316,10 @@ $(function () {
                     },
                     fail: function () {
                         me._locData[locFileLocation][lang] = null;
-                    }
+                    },
+                    error: function () {
+                        me._locData[locFileLocation][lang] = null;
+                },
                 });
 
             }
@@ -349,14 +355,11 @@ $(function () {
         },
       
       
-        isZoomed: function(element){
+        zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
             //alert(ratio);
-            if (ratio > 1.1 || ratio < 0.99)
-                return true;
-            else
-                return false;
+            return ratio;
         },
         /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {

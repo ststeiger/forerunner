@@ -71,6 +71,9 @@
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\MachineId.cs">
       <Link>MachineId.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\Security.cs">
+      <Link>Security.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\TimeBomb.cs">
       <Link>TimeBomb.cs</Link>
     </Compile>

@@ -26,15 +26,12 @@ namespace Forerunner.SSRS.License
             SetupError
         };
 
-
         // Time bomb grace period expressed in days
-        private const int trialPeriod = 60;
+        private const int trialPeriod = 30;
         private const String forerunnerKey = "Forerunnersw";
-        private const String ssrKey = "ssr";
+        private const String ssrKey = "ssrs";
         private const String timeBombName = "setupdata";
         private const String machineHashName = "setupkey";
-        private const String encryptKey = @"shskjhkjhgdfs56G54HJujkIfjte46KD";
-        private const String encryptIV = @"jhlksdhlkjhglkjh";
 
         internal const String genericRegistyError = "Setup error - time bomb not found or invalid";
 
@@ -81,8 +78,7 @@ namespace Forerunner.SSRS.License
             String cryptoHash = Convert.ToBase64String(machineHash.Take(8).ToArray());
 
             // Encrypt the string into a byte array
-            ASCIIEncoding ascii = new ASCIIEncoding();
-            byte[] timeBombProtected = EncryptAes(timeBomb, ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
+            byte[] timeBombProtected = Security.Encrypt(timeBomb);
 
             // Save the time bomb to the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
@@ -121,8 +117,7 @@ namespace Forerunner.SSRS.License
             }
 
             // Decrypt the time bomb data
-            ASCIIEncoding ascii = new ASCIIEncoding();
-            byte[] timeBombData = DecryptAes(timeBombProtected, ascii.GetBytes(TimeBomb.encryptKey), ascii.GetBytes(TimeBomb.encryptIV));
+            byte[] timeBombData = Security.Decrypt(timeBombProtected);
 
             // Deserialize the time bomb
             MemoryStream stream = new MemoryStream(timeBombData);
@@ -166,53 +161,6 @@ namespace Forerunner.SSRS.License
             }
 
             return true;
-        }
-        private static byte[] EncryptAes(byte[] buffer, byte[] Key, byte[] IV)
-        {
-            byte[] encrypted;
-
-            // Create an AesManaged object with the specified key and IV. 
-            using (AesManaged aesAlg = new AesManaged())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-
-                // Create the streams used for encryption. 
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
-                    {
-                        csEncrypt.Write(buffer, 0, buffer.Length);
-                    }
-                    encrypted = msEncrypt.ToArray();
-                }
-            }
-
-            // Return the encrypted bytes from the memory stream. 
-            return encrypted;
-        }
-        private static byte[] DecryptAes(byte[] cipherText, byte[] Key, byte[] IV)
-        {
-            // Declare the string used to hold the decrypted text. 
-            byte[] buffer = null;
-
-            // Create an AesManaged object with the specified key and IV.
-            using (AesManaged aesAlg = new AesManaged())
-            {
-                aesAlg.Key = Key;
-                aesAlg.IV = IV;
-
-                // Create the streams used for decryption. 
-                using (MemoryStream msDecrypt = new MemoryStream())
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Write))
-                    {
-                        csDecrypt.Write(cipherText, 0, cipherText.Length);
-                    }
-                    buffer = msDecrypt.ToArray();
-                }
-            }
-            return buffer;
         }
 
         #endregion //methods

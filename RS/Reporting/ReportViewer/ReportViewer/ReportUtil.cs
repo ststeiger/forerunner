@@ -18,14 +18,19 @@ namespace Forerunner
         public string UserName;
         public string Domain;
         public string Password;
+        public bool encrypted;
 
-        public Credentials() { }
-        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "")
+        public Credentials()
+        {
+            this.encrypted = true;
+        }
+        public Credentials(SecurityTypeEnum SecurityType = SecurityTypeEnum.Network, String UserName = "", string Domain = "", string Password = "", bool encrypted = true)
         {
             this.SecurityType = SecurityType;
             this.UserName = UserName;
             this.Password = Password;
             this.Domain = Domain;
+            this.encrypted = encrypted;
         }
 
         public string GetDomainUser()

@@ -59,8 +59,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\ReportViewer\ReportViewer\Security.cs">
+      <Link>ConfigTool\Security.cs</Link>
+    </Compile>
     <Compile Include="ConfigTool\ConfigToolHelper.cs" />
-    <Compile Include="ConfigTool\Encryption.cs" />
     <Compile Include="ConfigTool\frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -69,6 +69,9 @@
     <Compile Include="..\..\ReportViewer\ReportWriter.cs">
       <Link>ReportWriter.cs</Link>
     </Compile>
+    <Compile Include="..\..\ReportViewer\Security.cs">
+      <Link>Security.cs</Link>
+    </Compile>
     <Compile Include="..\..\ReportViewer\Thumbnail.cs">
       <Link>Thumbnail.cs</Link>
     </Compile>

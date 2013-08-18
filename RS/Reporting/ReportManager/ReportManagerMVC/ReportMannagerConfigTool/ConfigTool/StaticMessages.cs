@@ -26,7 +26,5 @@
         public static readonly string updateRSReportServerError = "Update rsreportserver.config occured unknown error";
         public static readonly string updateRSPolicyError = "Update rsrvvpolicy.config occured unknown error";
         public static readonly string updateDone = "Update completed!";
-
-        public static readonly string tripleDESKey = "ForerunnerRSEncryptionXX";
     }
 }

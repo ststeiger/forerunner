@@ -102,7 +102,7 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDBName, existConfig["Database"]);
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
-            winform.setTextBoxValue(txtPWD, Encryption.Decrypt(existConfig["Password"], StaticMessages.tripleDESKey));
+            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Decrypt(existConfig["Password"]));
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -139,7 +139,7 @@ namespace ReportMannagerConfigTool
             {
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
-                    winform.getTextBoxValue(txtUser), Encryption.Encrypt(winform.getTextBoxValue(txtPWD), StaticMessages.tripleDESKey));
+                    winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encrypt(winform.getTextBoxValue(txtPWD)));
 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

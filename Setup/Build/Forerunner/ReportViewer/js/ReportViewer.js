@@ -873,13 +873,14 @@ $(function () {
             var me = this;
             if (data.Type === "Parameters") {
                 me._removeParameters();
-               
+
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum, false);
+                    me._trigger(events.showParamArea);
+                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
                     me.paramLoaded = true;
+                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {

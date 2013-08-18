@@ -39,7 +39,7 @@ $(function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
             var path = me.options.path;
-            forerunner.device.allowZoom(true);
+            forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             //layout.$topdivspacer.attr("style", "height: 38px");

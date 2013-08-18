@@ -195,6 +195,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en.txt"
   SetOutPath "$INSTDIR\Forerunner"
   File "${LOCALROOT}\Forerunner\Forerunner-all.min.js"
   SetOutPath "$INSTDIR\Scripts\App"
@@ -224,8 +225,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
   File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
   SetOutPath "$INSTDIR\Register"
-  File "${LOCALROOT}\Register\Forerunner.SSR.Core.dll"
-  File "${LOCALROOT}\Register\InstallData.exe"
+;  File "${LOCALROOT}\Register\Forerunner.SSR.Core.dll"
+  File "${LOCALROOT}\Register\SetupUtil.exe"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
   File "${LOCALROOT}\ReportManagerConfigTool.exe"
@@ -325,7 +326,7 @@ Function IsDotNETInstalled
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister
-  ExecWait "$INSTDIR\Register\InstallData.exe"
+  ExecWait "$INSTDIR\Register\SetupUtil.exe"
 FunctionEnd
 
 
@@ -358,6 +359,7 @@ Section Uninstall
   Delete "$INSTDIR\Scripts\Util\underscore.js"
   Delete "$INSTDIR\Forerunner\Forerunner-all.min.js"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
@@ -445,8 +447,8 @@ Section Uninstall
   Delete "$INSTDIR\bin\WebGrease.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
-  Delete "$INSTDIR\Register\InstallData.exe"
-  Delete "$INSTDIR\Register\Forerunner.SSR.Core.dll"
+  Delete "$INSTDIR\Register\SetupUtil.exe"
+  ;Delete "$INSTDIR\Register\Forerunner.SSR.Core.dll"
 
   Delete "$SMPROGRAMS\ReportManager\Uninstall.lnk"
   Delete "$DESKTOP\ReportManager.lnk"

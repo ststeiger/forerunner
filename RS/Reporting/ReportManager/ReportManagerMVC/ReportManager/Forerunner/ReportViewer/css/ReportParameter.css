@@ -3,7 +3,7 @@
     min-width:270px;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    /*overflow: auto;*/
 
 
     background: rgb(53,85,109); /* Old browsers */
@@ -31,9 +31,10 @@
 .fr-param, .fr-param-client
 {
     margin:4px;
-    border-width:1px;
-    border-style:solid;
     width:170px;
+    font-size: 13px;
+    padding:4px;
+    border:solid 1px #1F98C7;
 }
 .fr-param-label
 {
@@ -42,7 +43,7 @@
 }
 .fr-param-radio
 {
-    width:35px;
+    width:36px;
 }
 .fr-param-radio-label
 {
@@ -50,14 +51,21 @@
 }
 .fr-param-checkbox{
     margin-left:5px;
+    margin-right:2px;
     padding:2px;
 }
 .fr-param-select{
-    width:182px;
+    width:180px;
 }
 .fr-param-viewreport{
-    margin:4px 4px 4px 10px;    
+    margin:4px 4px 8px 10px;
+    padding:8px;
     text-align:center;
+    background-color:#d3dce0;
+    border:1px solid #1F98C7;
+    cursor:pointer;
+    font-weight:600;
+    font-size:14px;
 }
 .fr-param-enable
 {
@@ -72,17 +80,21 @@
 .fr-param-dropdown
 {
      padding:4px;
-     margin:0px 4px 4px 5px;
-     border-color: DarkGray; 
+     margin:0px 4px 4px 4px;
+     border:1px solid DarkGray;
      color: black;
-     border-width: 1px; 
-     border-style: solid; 
      overflow: auto; 
      background-color: window; 
      position: absolute; 
      z-index: 11;
 }
-.fr-param-dropdown Label, checkbox
+.fr-param-dropdown input[type="checkbox"]
+{
+    padding:5px;
+    font-size:1em;
+    margin:5px 0px 6px 0px;
+}
+.fr-param-dropdown Label
 {
     margin:4px;
 }
@@ -103,11 +115,11 @@
 {
    display:inline-block;
    margin:2px 4px;
-   padding:2px 0px;
+   padding:1px;
    border:solid 1px;
-   border-color:white;
+   border-color:#1F98C7;
    background-color:white;
-   width:180px;
+   width:176px;
 }
 .fr-param-error
 {

@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Forerunner.SSRS.License
+namespace Forerunner.SSRS.Security
 {
     [DataContract()]
     internal class MachineId
@@ -83,6 +83,9 @@ namespace Forerunner.SSRS.License
         }
         private static string identifier(string wmiClass, string wmiProperty)
         {
+            System.Security.Principal.WindowsIdentity identity = System.Security.Principal.WindowsIdentity.GetCurrent();
+            String name = identity.Name;
+
             string result = "";
             System.Management.ManagementClass mc = new System.Management.ManagementClass(wmiClass);
             System.Management.ManagementObjectCollection moc = mc.GetInstances();

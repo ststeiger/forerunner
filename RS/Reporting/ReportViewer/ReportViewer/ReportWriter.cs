@@ -234,9 +234,7 @@ namespace Forerunner.SSRS.JSONRender
         public string RPLToJSON(int NumPages)
         {
 #if !DEBUG
-            // TODO
-            // Need a place to initialize License
-            //Forerunner.SSRS.License.License.ThrowIfNotValid();
+            Forerunner.SSRS.Security.License.ThrowIfNotValid();
 #endif
             RPL.position = 0;
             w.WriteStartObject();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Forerunner.SSRS.License;
+using Forerunner.SSRS.Security;
 
 namespace InstallData
 {

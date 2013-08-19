@@ -65,14 +65,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\Encryption.cs">
+      <Link>Encryption.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\License.cs">
       <Link>License.cs</Link>
     </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\MachineId.cs">
       <Link>MachineId.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\Security.cs">
-      <Link>Security.cs</Link>
     </Compile>
     <Compile Include="..\..\..\RS\Reporting\ReportViewer\ReportViewer\TimeBomb.cs">
       <Link>TimeBomb.cs</Link>

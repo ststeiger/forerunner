@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
 
-namespace Forerunner.SSRS
+namespace Forerunner.SSRS.Security
 {
-    internal static class Security
+    internal static class Encryption
     {
         #region constants
 

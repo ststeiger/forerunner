@@ -95,3 +95,4 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/R
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.Properties.Resources.resources
 utilities/SetupUtil/SetupUtil/bin/Debug/*
 utilities/SetupUtil/SetupUtil/bin/Release/*
+utilities/SetupUtil/SetupUtil/SetupUtil.csproj.user

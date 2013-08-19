@@ -10,21 +10,12 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using Microsoft.Win32;
 
-namespace Forerunner.SSRS.License
+namespace Forerunner.SSRS.Security
 {
     [DataContract()]
     internal class TimeBomb
     {
-        #region enums and constants
-
-        internal const String failKey = "reason";
-        internal enum FailReason
-        {
-            Expired,
-            MachineMismatch,
-            TimeBombMissing,
-            SetupError
-        };
+        #region constants
 
         // Time bomb grace period expressed in days
         private const int trialPeriod = 30;
@@ -35,7 +26,7 @@ namespace Forerunner.SSRS.License
 
         internal const String genericRegistyError = "Setup error - time bomb not found or invalid";
 
-        #endregion types and static constants
+        #endregion  // constants
 
         #region methods
 
@@ -78,7 +69,7 @@ namespace Forerunner.SSRS.License
             String cryptoHash = Convert.ToBase64String(machineHash.Take(8).ToArray());
 
             // Encrypt the string into a byte array
-            byte[] timeBombProtected = Security.Encrypt(timeBomb);
+            byte[] timeBombProtected = Encryption.Encrypt(timeBomb);
 
             // Save the time bomb to the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
@@ -95,7 +86,7 @@ namespace Forerunner.SSRS.License
             if (forerunnerswKey == null)
             {
                 LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
-                e.Data.Add(TimeBomb.failKey, FailReason.TimeBombMissing);
+                e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
                 throw e;
             }
 
@@ -103,7 +94,7 @@ namespace Forerunner.SSRS.License
             if (ssrKey == null)
             {
                 LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
-                e.Data.Add(TimeBomb.failKey, FailReason.TimeBombMissing);
+                e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
                 throw e;
             }
 
@@ -112,12 +103,12 @@ namespace Forerunner.SSRS.License
             if (timeBombProtected == null)
             {
                 LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
-                e.Data.Add(TimeBomb.failKey, FailReason.TimeBombMissing);
+                e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
                 throw e;
             }
 
             // Decrypt the time bomb data
-            byte[] timeBombData = Security.Decrypt(timeBombProtected);
+            byte[] timeBombData = Security.Encryption.Decrypt(timeBombProtected);
 
             // Deserialize the time bomb
             MemoryStream stream = new MemoryStream(timeBombData);
@@ -141,23 +132,21 @@ namespace Forerunner.SSRS.License
 
             return true;
         }
-        internal bool IsValid(MachineId currentMachineId)
+        internal bool IsValid()
         {
             TimeSpan timeSpan = DateTime.Now.Subtract(start);
             if (timeSpan.Days > trialPeriod)
             {
-                // Timebomb has expired, time to buy a license
-                LicenseException e = new LicenseException("The trial period has expired");
-                e.Data.Add(TimeBomb.failKey, FailReason.Expired);
-                throw e;
+                return false;
             }
 
+            return true;
+        }
+        internal bool IsSameMachine(MachineId currentMachineId)
+        {
             if (!machineId.IsSame(currentMachineId))
             {
-                // The TimeBomb must be created on the same machine
-                LicenseException e = new LicenseException("Setup error - machine id mismatch");
-                e.Data.Add(TimeBomb.failKey, FailReason.MachineMismatch);
-                throw e;
+                return false;
             }
 
             return true;

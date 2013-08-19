@@ -48,7 +48,7 @@ namespace Forerunner.SSRS.Manager
             else
             {
                 builder.UserID = DBCredentials.UserName;
-                String Password = DBCredentials.encrypted ? Security.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+                String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
                 builder.Password = Password;
             }
 
@@ -147,7 +147,7 @@ namespace Forerunner.SSRS.Manager
             if (!useIntegratedSecurity) return null;
             if (impersonator == null)
             {
-                String Password = DBCredentials.encrypted ? Security.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+                String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
                 impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
             }
             if (!doNotCallImpersonate)

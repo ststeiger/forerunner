@@ -4,7 +4,8 @@
 		<BuildInParallel Condition="'$(BuildInParallel)'==''">true</BuildInParallel> 
 		<SkipNonexistentProjects Condition="'$(SkipNonexistentProjects)'==''">false</SkipNonexistentProjects> 
 		<VisualStudioVersion>11.0</VisualStudioVersion>
-		<OutputPath Condition="'$(BUILD_RELEASE)'!=''">$(BUILD_RELEASE)\bin</OutputPath>
-		<OutputPath Condition="'$(BUILD_RELEASE)'==''">bin</OutputPath>
+		<Configuration Condition="'$(CONFIGURATION)'==''">Release</Configuration>
+		<OutputPath Condition="'$(BUILD_RELEASE)'!=''">$(BUILD_RELEASE)\bin\Release</OutputPath>
+		<OutputPath Condition="'$(BUILD_RELEASE)'==''">bin\Release</OutputPath>
 	</PropertyGroup> 
 </Project>

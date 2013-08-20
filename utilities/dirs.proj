@@ -1,11 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 	<!-- Insert any customizations for settings here --> 
-	<Import Project="root.setting"/> 
+	<Import Project="utilities.setting"/> 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
-		<ProjectFiles Include="RS\dirs.proj"/> 
-		<ProjectFiles Include="utilities\dirs.proj" />
+		<ProjectFiles Include="SetupUtil\SetupUtil\SetupUtil.csproj"/> 
+		<ProjectFiles Include="timebomb\timebomb\timebomb.csproj" />
 	</ItemGroup> 
-	<Import Project="root.traversal.targets"/> 
+	<Import Project="utilities.traversal.targets"/> 
 	<!-- Insert any customizations for targets here --> 
 </Project>

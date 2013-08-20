@@ -3,6 +3,8 @@
 	<Import Project="ReportViewer.setting"/> 
 	<!-- Define all ProjectFiles here --> 
 	<ItemGroup>
+		<ProjectFiles Include="Rendering Extension\JSONRenderingExtension\JSONRenderingExtension.csproj" />
+		<ProjectFiles Include="JSON\src\Jayrock.Json\Forerunner.Json.csproj" />
 		<ProjectFiles Include="ReportViewer\Forerunner.SSRS.csproj" />
 <!--		<ProjectFiles Include="ReportViewerTest\ReportViewerTest\ReportViewerTest.csproj"/> -->
 	</ItemGroup> 

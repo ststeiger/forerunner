@@ -19,8 +19,11 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 6. cd to the enlistment and run "git pull git@github.com:forerunnersw/Forerunner.git"
 7. Install .Net 3.5 and 2.0. (http://msdn.microsoft.com/en-us/library/hh506443.aspx)
 8. Install VS 2012.
-9. Test the build: "build\build.cmd"
-10. Setup E-Mail.
+9. Install NSIS from (http://sourceforge.net/projects/nsis/). The current version to install is 2.46.
+	a. Create a <machine>.cmd under build. Use MASON.cmd as a template.
+	b. Make sure NSIS_TOOL references NSIS.exe in the right path.
+10. Test the build: "build\build.cmd"
+11. Setup E-Mail.
 	a. In Powershell, execute "Set-ExecutionPolicy Unrestricted"
     b. Create smtp.config.xml under build.
 	The format of this file is:
@@ -33,10 +36,10 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 	        UserName="motherplucker" 
     	    Password="***********" 
         	/>
-11. Setup Daily Task Scheduler Job.
+12. Setup Daily Task Scheduler Job.
 	a. Import "Daily Build.xml" to Task Scheduler.
 	b. Run the job manually to make sure it is working.
-12. Setup Drop to Sharepoint.
+13. Setup Drop to Sharepoint.
 	a. Create a Credentials.xml in the build dir for connecting to SP:
 <?xml version="1.0" encoding="utf-8" ?>
 <Credential UserName="stellar@forerunnersw.com" Password="*******"/>

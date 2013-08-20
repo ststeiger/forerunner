@@ -76,6 +76,12 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
+echo Running PostBuild >> %BUILD_LOG%
+call %~dp0postbuild.cmd %BUILD_RELEASE% %BUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
 mkdir %BUILD_RELEASE%_Upload
 %ZIPPER% %BUILD_RELEASE% %BUILD_RELEASE%_Upload\Release.zip
 %UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"

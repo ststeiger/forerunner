@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DirectoryServices;
 using System.Net;
 using System.Xml;
 using Microsoft.Web.Administration;
@@ -11,7 +10,7 @@ namespace ReportMannagerConfigTool
 {
     public static class ReportManagerConfig
     {
-        private static readonly string iisRoot = "IIS://Localhost/W3SVC";
+        private static readonly string appPoolName = "ForerunnerPool";
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -20,57 +19,65 @@ namespace ReportMannagerConfigTool
         /// <param name="physicalPath">physical path in disk</param>
         /// <param name="appPoolName">application pool name</param>
         /// <returns>new site indentifier</returns>
-        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress, string appPoolName = "ASP.NET v4.0")
+        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress)
         {
-            //Console.WriteLine("Register begin to deploy the site to the IIS Server !");
-
-            DirectoryEntry root = new DirectoryEntry(iisRoot);
-            // Find unused ID value for new web site 
-            int siteID = 1;
-            foreach (DirectoryEntry e in root.Children)
+            //if forerunnerpool not exist then create on: .net framework version 4.0; mode: classic
+            if (!ForerunnerPoolExist())
             {
-                if (e.SchemaClassName == "IIsWebServer")
-                {
-                    int ID = Convert.ToInt32(e.Name);
-                    if (ID >= siteID)
-                    {
-                        siteID = ID + 1;
-                    }
-                }
+                AddForerunnerPool();
             }
 
-            // Create web site 
-            DirectoryEntry site = (DirectoryEntry)root.Invoke("Create", "IIsWebServer", siteID);
-            site.Invoke("Put", "ServerComment", siteName);//web site name 
-            site.Invoke("Put", "ServerBindings", bindingAddress);//bind to specific address format ip:port:domain
-            site.Invoke("Put", "ServerState", 2);// 2: started, 4 (default): stopped
-            site.Invoke("Put", "ServerAutoStart", 1);//auto start server 
-            site.Invoke("SetInfo");
-
-            DirectoryEntry siteVDir = site.Children.Add("ROOT", "IISWebVirtualDir");
-
-            //create virtual directory and assign the specific application pool to it
-            if (appPoolName != "")
+            using (ServerManager manager = new ServerManager())
             {
-                object[] param = { 0, appPoolName, true };
-                siteVDir.Invoke("AppCreate3", param);
+                Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
+                reportManager.ServerAutoStart = true;
+                reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+
+                manager.CommitChanges();
             }
-
-            siteVDir.CommitChanges();
-            site.CommitChanges();
-
-            siteVDir.Properties["AppIsolated"][0] = 2;//default is 2
-            siteVDir.Properties["Path"][0] = physicalPath;//physical path in the disk
-            siteVDir.Properties["AccessFlags"][0] = 513;
-            siteVDir.Properties["FrontPageWeb"][0] = 1;
-            siteVDir.Properties["AppRoot"][0] = "/LM/W3SVC/" + siteID + "/Root";
-            siteVDir.Properties["AppFriendlyName"][0] = "Forerunner Report Manager";
-            siteVDir.Properties["AspEnableParentPaths"][0] = true;  //open parent path
-            siteVDir.CommitChanges();
-            site.CommitChanges();
 
             UpdateIISAuthentication(siteName);
-            //Console.WriteLine("Deploy Done! New web application's id in IIS is:" + siteID);
+        }
+
+        public static bool VerifySiteNameExist(string siteName)
+        {
+            using (ServerManager manager = new ServerManager())
+            {
+                foreach (Site site in manager.Sites)
+                {
+                    if (siteName.Equals(site.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        private static bool ForerunnerPoolExist()
+        {
+            using (ServerManager serverManager = new ServerManager())
+            {
+                foreach (ApplicationPool pool in serverManager.ApplicationPools)
+                {
+                    if (appPoolName.Equals(pool.Name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        private static void AddForerunnerPool()
+        {
+            using (ServerManager serverManager = new ServerManager())
+            {
+                ApplicationPool newpool = serverManager.ApplicationPools.Add(appPoolName);
+                newpool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
+                newpool.ManagedRuntimeVersion = "v4.0";
+                serverManager.CommitChanges();
+            }
         }
 
         /// <summary>

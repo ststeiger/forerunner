@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Forerunner.SSRS.Security
 {
@@ -31,16 +32,23 @@ namespace Forerunner.SSRS.Security
     {
         #region methods
 
-        internal static void Init()
+        private static void ThreadProc()
+        {
+            timeBomb = TimeBomb.LoadFromRegistry();
+            currentMachineId = MachineId.CreateCurrentMachineId();
+            isSameMachine = timeBomb.IsSameMachine(currentMachineId);
+        }
+
+        internal static void CheckInit()
         {
             try
             {
                 if (timeBomb == null || currentMachineId == null)
                 {
-                    timeBomb = TimeBomb.LoadFromRegistry();
-                    currentMachineId = MachineId.CreateCurrentMachineId();
-
-                    isSameMachine = timeBomb.IsSameMachine(currentMachineId);
+                    // We spin up another thread so as to execute this code using the service account
+                    Thread t = new Thread(new ThreadStart(ThreadProc));
+                    t.Start();
+                    t.Join();                    
                 }
             }
             catch (System.Management.ManagementException /*e*/)
@@ -59,7 +67,7 @@ namespace Forerunner.SSRS.Security
 
         internal static void ThrowIfNotValid()
         {
-            Init();
+            CheckInit();
             if (!timeBomb.IsValid())
             {
                 // Timebomb has expired, time to buy a license

@@ -1,11 +1,41 @@
 :: copy necessary install files to build folder
 @echo off
-set Source=".\Reporting\ReportManager\ReportManagerMVC\ReportManager"
-set Destination="..\..\\Setup\Build"
+set Source="%~dp0ReportManager\ReportManagerMVC\ReportManager"
+if [%1]==[] (
+	set Destination="%~dp0..\..\Setup\Build"
+) else (
+	set Destination="%1\Setup\Build"
+)
 
-robocopy ..\Reporting\ReportManager\ReportManagerMVC\ReportManager %Destination% /S /XD %Source%\App_Data %Source%\App_Start %Source%\aspnet_client %Source%\Controllers %Source%\obj %Source%\Properties %Source%\Util %Source%\Forerunner\Common\js Controllers %Source%\Forerunner\ReportExplorer\js %Source%\Forerunner\ReportViewer\js /XF Forerunner-all.js *.cd *.bundle *.map *.orig *.gitignore *.cs *.csproj *.user *.Debug.config *.Release.config *.pdb *.xml *.exe.config *.cmd
-robocopy "..\..\\RS\Reporting\ReportViewer\Rendering Extension\JSONRenderingExtension\bin\Release" %Destination%\SSRSExtension 
-robocopy "..\..\\RS\Reporting\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\bin\Release" %Destination%
-robocopy "..\..\\utilities\SetupUtil\SetupUtil\bin\Release" %Destination%\Register
-pause
-echo Press any key to exit...
+if [%2]==[] (
+	set LOGFILE="%TEMP%\copy.log"
+) else (
+	set LOGFILE=%2
+)
+
+robocopy %~dp0ReportManager\ReportManagerMVC\ReportManager %Destination% /S /XD /LOG+:%LOGFILE% %Source%\App_Data %Source%\App_Start %Source%\aspnet_client %Source%\Controllers %Source%\obj %Source%\Properties %Source%\Util %Source%\Forerunner\Common\js Controllers %Source%\Forerunner\ReportExplorer\js %Source%\Forerunner\ReportViewer\js /XF Forerunner-all.js *.cd *.bundle *.map *.orig *.gitignore *.cs *.csproj *.user *.Debug.config *.Release.config *.pdb *.xml *.exe.config *.cmd
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportViewer\Rendering Extension\JSONRenderingExtension\bin\Release" %Destination%\SSRSExtension 
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\bin\Release" %Destination%
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\utilities\SetupUtil\SetupUtil\bin\Release" %Destination%\Register
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
+exit /b 0
+:Error
+
+echo CopyFiles FAILED. See %LOGFILE% for more info.
+exit /b 1
+

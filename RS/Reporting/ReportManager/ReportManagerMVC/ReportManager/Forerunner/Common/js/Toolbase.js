@@ -288,7 +288,7 @@ $(function () {
             else if (toolInfo.toolType === toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
-                    type = ", type='" + toolInfo.inputType + "'";
+                    type = " type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }

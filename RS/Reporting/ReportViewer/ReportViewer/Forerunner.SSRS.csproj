@@ -89,6 +89,7 @@
     <Compile Include="ThreadContext.cs" />
     <Compile Include="Thumbnail.cs" />
     <Compile Include="TimeBomb.cs" />
+    <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

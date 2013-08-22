@@ -9,6 +9,7 @@ using Forerunner;
 using Forerunner.SSRS.Viewer;
 using Forerunner.SSRS.Management;
 using Forerunner.Security;
+using ReportManager.Util.Logging;
 using Jayrock.Json;
 using System.Threading;
 using System.Security.Principal;
@@ -113,7 +114,8 @@ namespace Forerunner.SSRS.Manager
         }
 
         public CatalogItem[] ListChildren(string path, Boolean isRecursive)
-        {       
+        {
+            Logger.Trace(LogType.Info, "ListChildren:  Path=" + path);
             List<CatalogItem> list = new List<CatalogItem>();
             CatalogItem[] items = callListChildren(path, isRecursive);
             foreach (CatalogItem ci in items)

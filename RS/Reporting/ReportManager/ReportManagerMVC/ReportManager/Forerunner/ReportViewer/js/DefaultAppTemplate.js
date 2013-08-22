@@ -138,7 +138,7 @@ $(function () {
             if (!me.isZoomed() && me.wasZoomed){
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
-                me.wasZoomed = false
+                me.wasZoomed = false;
              }
         },
         wasZoomed: false,
@@ -157,13 +157,15 @@ $(function () {
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
+            var $leftPaneContent = $(".fr-layout-leftpanecontent", me.$container);
+            var leftPanelContentTop = leftPanelContentTop = $leftPaneContent.offset().top;
+
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
             $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-            $(".fr-layout-leftpanecontent", me.$container).css({ height: "100%" });
+            $leftPaneContent.css({ height: $(window).height() - leftPanelContentTop });
             $(".fr-layout-rightpanecontent", me.$container).css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: $(".fr-layout-rightpane", me.$container).height() });
-            
         },
 
         bindViewerEvents: function () {

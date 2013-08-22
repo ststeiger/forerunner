@@ -1879,7 +1879,7 @@ $(function () {
             else if (toolInfo.toolType === toolTypes.input) {
                 var type = "";
                 if (toolInfo.inputType) {
-                    type = ", type='" + toolInfo.inputType + "'";
+                    type = " type='" + toolInfo.inputType + "'";
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
@@ -5527,7 +5527,7 @@ $(function () {
             if (!me.isZoomed() && me.wasZoomed){
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
-                me.wasZoomed = false
+                me.wasZoomed = false;
              }
         },
         wasZoomed: false,
@@ -5807,7 +5807,7 @@ $(function () {
                         async: false,
                         success: function (data) {
                             if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data)
+                                $paramarea.reportParameter("overrideDefaultParams", data);
                         }
                     });
 

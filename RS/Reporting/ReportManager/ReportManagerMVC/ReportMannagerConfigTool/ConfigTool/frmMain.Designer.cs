@@ -31,14 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.folderSSRS = new System.Windows.Forms.FolderBrowserDialog();
             this.tabMain = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.btnApplyWebServer = new System.Windows.Forms.Button();
-            this.lblPort = new System.Windows.Forms.Label();
-            this.txtPort = new System.Windows.Forms.TextBox();
-            this.lblSiteName = new System.Windows.Forms.Label();
-            this.txtSiteName = new System.Windows.Forms.TextBox();
-            this.rdoUWS = new System.Windows.Forms.RadioButton();
-            this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblDomain = new System.Windows.Forms.Label();
@@ -64,75 +56,30 @@
             this.btnFolderBrowser = new System.Windows.Forms.Button();
             this.lblReportServer = new System.Windows.Forms.Label();
             this.txtReportServer = new System.Windows.Forms.TextBox();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnTestWeb = new System.Windows.Forms.Button();
+            this.btnApplyWebServer = new System.Windows.Forms.Button();
+            this.lblPort = new System.Windows.Forms.Label();
+            this.txtPort = new System.Windows.Forms.TextBox();
+            this.lblSiteName = new System.Windows.Forms.Label();
+            this.txtSiteName = new System.Windows.Forms.TextBox();
+            this.rdoUWS = new System.Windows.Forms.RadioButton();
+            this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabMain.SuspendLayout();
-            this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
             // 
-            this.tabMain.Controls.Add(this.tabPage1);
             this.tabMain.Controls.Add(this.tabPage2);
             this.tabMain.Controls.Add(this.tabPage3);
+            this.tabMain.Controls.Add(this.tabPage1);
             resources.ApplyResources(this.tabMain, "tabMain");
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.btnApplyWebServer);
-            this.tabPage1.Controls.Add(this.lblPort);
-            this.tabPage1.Controls.Add(this.txtPort);
-            this.tabPage1.Controls.Add(this.lblSiteName);
-            this.tabPage1.Controls.Add(this.txtSiteName);
-            this.tabPage1.Controls.Add(this.rdoUWS);
-            this.tabPage1.Controls.Add(this.rdoIIS);
-            resources.ApplyResources(this.tabPage1, "tabPage1");
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // btnApplyWebServer
-            // 
-            resources.ApplyResources(this.btnApplyWebServer, "btnApplyWebServer");
-            this.btnApplyWebServer.Name = "btnApplyWebServer";
-            this.btnApplyWebServer.UseVisualStyleBackColor = true;
-            this.btnApplyWebServer.Click += new System.EventHandler(this.btnApplyWebServer_Click);
-            // 
-            // lblPort
-            // 
-            resources.ApplyResources(this.lblPort, "lblPort");
-            this.lblPort.Name = "lblPort";
-            // 
-            // txtPort
-            // 
-            resources.ApplyResources(this.txtPort, "txtPort");
-            this.txtPort.Name = "txtPort";
-            // 
-            // lblSiteName
-            // 
-            resources.ApplyResources(this.lblSiteName, "lblSiteName");
-            this.lblSiteName.Name = "lblSiteName";
-            // 
-            // txtSiteName
-            // 
-            resources.ApplyResources(this.txtSiteName, "txtSiteName");
-            this.txtSiteName.Name = "txtSiteName";
-            // 
-            // rdoUWS
-            // 
-            resources.ApplyResources(this.rdoUWS, "rdoUWS");
-            this.rdoUWS.Name = "rdoUWS";
-            this.rdoUWS.UseVisualStyleBackColor = true;
-            // 
-            // rdoIIS
-            // 
-            resources.ApplyResources(this.rdoIIS, "rdoIIS");
-            this.rdoIIS.Checked = true;
-            this.rdoIIS.Name = "rdoIIS";
-            this.rdoIIS.TabStop = true;
-            this.rdoIIS.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
@@ -310,6 +257,66 @@
             resources.ApplyResources(this.txtReportServer, "txtReportServer");
             this.txtReportServer.Name = "txtReportServer";
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.btnTestWeb);
+            this.tabPage1.Controls.Add(this.btnApplyWebServer);
+            this.tabPage1.Controls.Add(this.lblPort);
+            this.tabPage1.Controls.Add(this.txtPort);
+            this.tabPage1.Controls.Add(this.lblSiteName);
+            this.tabPage1.Controls.Add(this.txtSiteName);
+            this.tabPage1.Controls.Add(this.rdoUWS);
+            this.tabPage1.Controls.Add(this.rdoIIS);
+            resources.ApplyResources(this.tabPage1, "tabPage1");
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnTestWeb
+            // 
+            resources.ApplyResources(this.btnTestWeb, "btnTestWeb");
+            this.btnTestWeb.Name = "btnTestWeb";
+            this.btnTestWeb.UseVisualStyleBackColor = true;
+            // 
+            // btnApplyWebServer
+            // 
+            resources.ApplyResources(this.btnApplyWebServer, "btnApplyWebServer");
+            this.btnApplyWebServer.Name = "btnApplyWebServer";
+            this.btnApplyWebServer.UseVisualStyleBackColor = true;
+            // 
+            // lblPort
+            // 
+            resources.ApplyResources(this.lblPort, "lblPort");
+            this.lblPort.Name = "lblPort";
+            // 
+            // txtPort
+            // 
+            resources.ApplyResources(this.txtPort, "txtPort");
+            this.txtPort.Name = "txtPort";
+            // 
+            // lblSiteName
+            // 
+            resources.ApplyResources(this.lblSiteName, "lblSiteName");
+            this.lblSiteName.Name = "lblSiteName";
+            // 
+            // txtSiteName
+            // 
+            resources.ApplyResources(this.txtSiteName, "txtSiteName");
+            this.txtSiteName.Name = "txtSiteName";
+            // 
+            // rdoUWS
+            // 
+            resources.ApplyResources(this.rdoUWS, "rdoUWS");
+            this.rdoUWS.Name = "rdoUWS";
+            this.rdoUWS.UseVisualStyleBackColor = true;
+            // 
+            // rdoIIS
+            // 
+            resources.ApplyResources(this.rdoIIS, "rdoIIS");
+            this.rdoIIS.Checked = true;
+            this.rdoIIS.Name = "rdoIIS";
+            this.rdoIIS.TabStop = true;
+            this.rdoIIS.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -319,14 +326,14 @@
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.tabMain.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -335,14 +342,6 @@
 
         private System.Windows.Forms.FolderBrowserDialog folderSSRS;
         private System.Windows.Forms.TabControl tabMain;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Button btnApplyWebServer;
-        private System.Windows.Forms.Label lblPort;
-        private System.Windows.Forms.TextBox txtPort;
-        private System.Windows.Forms.Label lblSiteName;
-        private System.Windows.Forms.TextBox txtSiteName;
-        private System.Windows.Forms.RadioButton rdoUWS;
-        private System.Windows.Forms.RadioButton rdoIIS;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label lblDBName;
         private System.Windows.Forms.TextBox txtDBName;
@@ -368,6 +367,15 @@
         private System.Windows.Forms.TextBox txtWSUrl;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button btnTestWeb;
+        private System.Windows.Forms.Button btnApplyWebServer;
+        private System.Windows.Forms.Label lblPort;
+        private System.Windows.Forms.TextBox txtPort;
+        private System.Windows.Forms.Label lblSiteName;
+        private System.Windows.Forms.TextBox txtSiteName;
+        private System.Windows.Forms.RadioButton rdoUWS;
+        private System.Windows.Forms.RadioButton rdoIIS;
     }
 }
 

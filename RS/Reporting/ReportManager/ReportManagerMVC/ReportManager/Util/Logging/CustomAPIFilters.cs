@@ -22,7 +22,7 @@ namespace ReportManager.Util.Logging
 
         private void WriteErrorLog(object obj)
         {
-            Logger.Trace(LogType.Error, obj.ToString());
+            Logger.Trace(LogType.Error, "Exception", new Object[] {obj.ToString()});
         }
     }
 
@@ -48,7 +48,7 @@ namespace ReportManager.Util.Logging
 
         private void WriteInfoLog(object obj)
         {
-            Logger.Trace(LogType.Info, obj.ToString());
+            Logger.Trace(LogType.Info, "ActionLog", new Object[] {obj.ToString()});
         }
     }
 }

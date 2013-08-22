@@ -74,7 +74,6 @@ namespace ReportManager.Util.Logging
                     }
                     break;
             }
-            System.Diagnostics.Trace.Flush();
         }
     }
 }

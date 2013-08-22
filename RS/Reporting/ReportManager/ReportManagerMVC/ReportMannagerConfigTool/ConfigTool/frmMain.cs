@@ -69,15 +69,15 @@ namespace ReportMannagerConfigTool
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
 
-                if (ReportManagerConfig.VerifySiteNameExist(siteName))
-                {
-                    winform.showWarning(string.Format(StaticMessages.siteExist, siteName));
-                    return;
-                }
-
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
                 {
+                    if (ReportManagerConfig.VerifySiteNameExist(siteName))
+                    {
+                        winform.showWarning(string.Format(StaticMessages.siteExist, siteName));
+                        return;
+                    }
+
                     //ip:port:domain
                     bindingAddress = string.Format("{0}:{1}:{2}", ip, port, "");
                     ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress);

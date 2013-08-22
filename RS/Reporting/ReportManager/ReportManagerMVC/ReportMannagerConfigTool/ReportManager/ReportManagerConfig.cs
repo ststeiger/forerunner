@@ -11,6 +11,7 @@ namespace ReportMannagerConfigTool
     public static class ReportManagerConfig
     {
         private static readonly string appPoolName = "ForerunnerPool";
+        private static readonly string defaultSite = "Default Web Site";
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -29,28 +30,58 @@ namespace ReportMannagerConfigTool
 
             using (ServerManager manager = new ServerManager())
             {
-                Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
-                reportManager.ServerAutoStart = true;
-                reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+                if (manager.Sites[defaultSite] != null)
+                {
+                    //if default site exist then add app as a sub application
+                    Site reportManager = manager.Sites[defaultSite];
+                    reportManager.Applications.Add("/" + siteName, physicalPath);
+
+                    Application app = reportManager.Applications["/" + siteName];
+                    app.ApplicationPoolName = appPoolName;
+                }
+                else
+                {
+                    //if default site not exist then create a new site.
+                    Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
+                    reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+                }
 
                 manager.CommitChanges();
-            }
 
-            UpdateIISAuthentication(siteName);
+                try
+                {
+                    UpdateIISAuthentication(siteName);
+                }
+                catch
+                {
+                    //for the app under the default site
+                    UpdateIISAuthentication(defaultSite + "/" + siteName);
+                }
+            }
         }
 
         public static bool VerifySiteNameExist(string siteName)
         {
             using (ServerManager manager = new ServerManager())
             {
-                foreach (Site site in manager.Sites)
+                if (manager.Sites[defaultSite] != null)
                 {
-                    if (siteName.Equals(site.Name, StringComparison.OrdinalIgnoreCase))
-                    {
+                    if (manager.Sites[defaultSite].Applications["/" + siteName] != null)
                         return true;
-                    }
+                    else
+                        return false;
                 }
-                return false;
+                else
+                {
+                    foreach (Site site in manager.Sites)
+                    {
+                        if (siteName.Equals(site.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             }
         }
 

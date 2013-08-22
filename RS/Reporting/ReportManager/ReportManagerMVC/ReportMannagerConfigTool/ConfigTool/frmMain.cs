@@ -217,6 +217,12 @@ namespace ReportMannagerConfigTool
         }
         #endregion
 
+      
+        private void btnTestWeb_Click(object sender, EventArgs e)
+        {
+
+        }
+
   
     }
 }

@@ -276,12 +276,14 @@
             resources.ApplyResources(this.btnTestWeb, "btnTestWeb");
             this.btnTestWeb.Name = "btnTestWeb";
             this.btnTestWeb.UseVisualStyleBackColor = true;
+            this.btnTestWeb.Click += new System.EventHandler(this.btnTestWeb_Click);
             // 
             // btnApplyWebServer
             // 
             resources.ApplyResources(this.btnApplyWebServer, "btnApplyWebServer");
             this.btnApplyWebServer.Name = "btnApplyWebServer";
             this.btnApplyWebServer.UseVisualStyleBackColor = true;
+            this.btnApplyWebServer.Click += new System.EventHandler(this.btnApplyWebServer_Click);
             // 
             // lblPort
             // 

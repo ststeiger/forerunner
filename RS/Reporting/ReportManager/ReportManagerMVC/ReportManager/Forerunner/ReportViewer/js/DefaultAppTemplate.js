@@ -139,7 +139,7 @@ $(function () {
             if (!me.isZoomed() && me.wasZoomed){
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
-                me.wasZoomed = false
+                me.wasZoomed = false;
              }
         },
         wasZoomed: false,

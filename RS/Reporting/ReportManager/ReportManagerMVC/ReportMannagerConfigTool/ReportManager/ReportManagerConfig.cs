@@ -11,6 +11,7 @@ namespace ReportMannagerConfigTool
     public static class ReportManagerConfig
     {
         private static readonly string appPoolName = "ForerunnerPool";
+        private static readonly string defaultSite = "Default Web Site";
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -19,7 +20,7 @@ namespace ReportMannagerConfigTool
         /// <param name="physicalPath">physical path in disk</param>
         /// <param name="appPoolName">application pool name</param>
         /// <returns>new site indentifier</returns>
-        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress)
+        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl)
         {
             //if forerunnerpool not exist then create on: .net framework version 4.0; mode: classic
             if (!ForerunnerPoolExist())
@@ -29,29 +30,73 @@ namespace ReportMannagerConfigTool
 
             using (ServerManager manager = new ServerManager())
             {
-                Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
-                reportManager.ServerAutoStart = true;
-                reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+                if (manager.Sites[defaultSite] == null)
+                {
+                    //if default site exist then add app as a sub application
+                    Site reportManager = manager.Sites[defaultSite];
+                    reportManager.Applications.Add("/" + siteName, physicalPath);
+                   
+                    Application app = reportManager.Applications["/" + siteName];
+                    app.ApplicationPoolName = appPoolName;
+
+                    siteUrl = GetSiteUrl(reportManager, siteName);
+                }
+                else
+                {
+                    //if default site not exist then create a new site.
+                    Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
+                    reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+
+                    siteUrl = GetSiteUrl(reportManager);
+                }
 
                 manager.CommitChanges();
-            }
 
-            UpdateIISAuthentication(siteName);
+                try
+                {
+                    UpdateIISAuthentication(siteName);
+                }
+                catch
+                {
+                    //for the app under the default site
+                    UpdateIISAuthentication(defaultSite + "/" + siteName);
+                }
+            }
         }
 
-        public static bool VerifySiteNameExist(string siteName)
+        public static bool VerifyIIsSiteNameExist(string siteName)
         {
             using (ServerManager manager = new ServerManager())
             {
-                foreach (Site site in manager.Sites)
+                if (manager.Sites[defaultSite] != null)
                 {
-                    if (siteName.Equals(site.Name, StringComparison.OrdinalIgnoreCase))
-                    {
+                    if (manager.Sites[defaultSite].Applications["/" + siteName] != null)
                         return true;
-                    }
+                    else
+                        return false;
                 }
-                return false;
+                else
+                {
+                    foreach (Site site in manager.Sites)
+                    {
+                        if (siteName.Equals(site.Name, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
             }
+        }
+
+        public static bool VerifyPortFree(ushort port)
+        {
+            return SystemUtilites.IsPortFree(port);
+        }
+
+        public static ushort FindFreePort()
+        {
+            return SystemUtilites.FindFreeTcpPort();
         }
 
         private static bool ForerunnerPoolExist()
@@ -78,6 +123,33 @@ namespace ReportMannagerConfigTool
                 newpool.ManagedRuntimeVersion = "v4.0";
                 serverManager.CommitChanges();
             }
+        }
+
+        private static string GetSiteUrl(Site site, string siteName = "")
+        {
+            string ip = string.Empty;
+            string port = string.Empty;
+
+            foreach (Binding binding in site.Bindings)
+            {
+                if (binding.Protocol.Equals("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (binding.BindingInformation.Contains("*"))
+                    {
+                        ip = "localhost";
+                    }
+                    else
+                    {
+                        ip = binding.BindingInformation.Substring(0, binding.BindingInformation.IndexOf(":"));
+                    }
+                    if (binding.EndPoint.Port != 80)
+                    {
+                        port = ":" + binding.EndPoint.Port.ToString();
+                    }
+                }
+            }
+
+            return string.Format("http://{0}{1}/{2}", ip, port, siteName);
         }
 
         /// <summary>
@@ -111,7 +183,7 @@ namespace ReportMannagerConfigTool
         /// <param name="siteName">site name</param>
         /// <param name="physicalPath">physical path in disk</param>
         /// <returns>new site indentifier</returns>
-        public static void CreateAnUWSSite(string siteName, string physicalPath, string bindingAddress)
+        public static void CreateAnUWSSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl)
         {
             //Console.WriteLine("Register begin to deploy the site to the UWS Server !");
 
@@ -127,12 +199,12 @@ namespace ReportMannagerConfigTool
             //ListenAddress address = new ListenAddress(bindingAddress);
             entry.ListenAddresses.Clear();
             //entry.ListenAddresses.Add(address);
-
             entry.PhysicalDirectory = physicalPath;
-
+            
             Metabase.RegisterApplication(RuntimeVersion.AspNet_4, false, false, ProcessIdentity.NetworkService, entry);
             Metabase.WaitForAppToStart(guid,2000);
 
+            siteUrl = bindingAddress + "/" + siteName;
             //Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }
 

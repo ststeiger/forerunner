@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace ReportMannagerConfigTool
@@ -8,6 +9,7 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
+        private string siteUrl = string.Empty;
 
         public frmMain()
         {
@@ -61,6 +63,12 @@ namespace ReportMannagerConfigTool
                 return;
             }
 
+            //if (!ReportManagerConfig.VerifyPortFree(ushort.Parse(txtPort.Text.Trim())))
+            //{
+            //    winform.showWarning(string.Format(StaticMessages.portNotFree,txtPort.Text.Trim()));
+            //    return;
+            //}
+
             try
             {
                 string bindingAddress = string.Empty;
@@ -69,30 +77,43 @@ namespace ReportMannagerConfigTool
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
 
-                if (ReportManagerConfig.VerifySiteNameExist(siteName))
-                {
-                    winform.showWarning(string.Format(StaticMessages.siteExist, siteName));
-                    return;
-                }
-
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
                 {
+                    if (ReportManagerConfig.VerifyIIsSiteNameExist(siteName))
+                    {
+                        winform.showWarning(string.Format(StaticMessages.siteExist, siteName));
+                        return;
+                    }
+
                     //ip:port:domain
                     bindingAddress = string.Format("{0}:{1}:{2}", ip, port, "");
-                    ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress);
+                    ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 //deploy site to UWS web server
                 else if (rdoUWS.Checked)
                 {
                     bindingAddress = string.Format("http://{0}:{1}", ip, port);
-                    ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress);
+                    ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
             {
                 winform.showWarning("Error:" + ex.Message);
+            }
+        }
+
+        //open the site by default browser
+        private void btnTestWeb_Click(object sender, EventArgs e)
+        {
+            if(string.Empty.Equals(siteUrl))
+            {
+                winform.showMessage("Please deploy the site first");
+            }
+            else
+            {
+                Process.Start(siteUrl);
             }
         }
         #endregion

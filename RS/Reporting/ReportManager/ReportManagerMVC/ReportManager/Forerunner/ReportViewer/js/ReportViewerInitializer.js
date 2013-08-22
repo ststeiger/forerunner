@@ -146,7 +146,7 @@ $(function () {
                         async: false,
                         success: function (data) {
                             if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data)
+                                $paramarea.reportParameter("overrideDefaultParams", data);
                         }
                     });
 

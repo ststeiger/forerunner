@@ -340,6 +340,44 @@ $(function () {
                 || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
+        /** @return {bool} Returns a boolean that indicates if the device is in portrait */
+        isPortrait: function () {
+            if (!window.orientation) {
+                return $(window).height() > $(window).width();
+            }
+            // The 2 bit will be set for 90 and 180
+            if (window.orientation & 2) {
+                return false;
+            }
+            return true;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
+        isiOS: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPhone|iPod|iPad)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iPhone or iPod device */
+        isiPhone: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPhone|iPod)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iPad device */
+        isiPad: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPad)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
+        isFullscreen: function () {
+            if (window.navigator.standalone) {
+                return true;
+            }
+            return false;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an Android device */
+        isAndroid: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/Android/);
+        },
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
          * @param {bool} flag - true = scale enabled (max = 10.0)
@@ -354,7 +392,7 @@ $(function () {
             }
         },
       
-      
+        /** @return {float} Returns the zoom level, (document / window) width */
         zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 

@@ -12,7 +12,8 @@ $(function () {
     // The EZ Viewer widget should use this template
     // This is an internal class right now.
     ssr.DefaultAppTemplate = function (options) {
-        this.options = {
+        var me = this;
+        me.options = {
             $container : null
         };
 
@@ -150,22 +151,49 @@ $(function () {
             else
                 return false;
         },
+        getWindowHeight: function () {
+            var me = this;
+            var height = 0;
+
+            // Start out by adding the height of the location bar to the height
+            if (forerunner.device.isiOS()) {
+                // iOS reliably returns the innerWindow size for documentElement.clientHeight
+                // but window.innerHeight is sometimes the wrong value after rotating the orientation
+                height = document.documentElement.clientHeight;
+
+                // Only add extra padding to the height on iphone / ipod, since the ipad browser
+                // doesn't scroll off the location bar.
+                if (forerunner.device.isiPhone() && !forerunner.device.isFullscreen()) {
+                    height += 60;
+                }
+            } else if (forerunner.device.isAndroid()) {
+                // The stock Android browser has a location bar height of 56 pixels, but
+                // this very likely could be broken in other Android browsers.
+                height = window.innerHeight + 56;
+
+            } else {
+                // PC
+                height = $(window).height();
+            }
+
+            return height;
+        },
         ResetSize: function () {
             var me = this;
+
             var $viewer = $(".fr-layout-reportviewer", me.$container);
 
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
-            var $leftPaneContent = $(".fr-layout-leftpanecontent", me.$container);
-            var leftPanelContentTop = leftPanelContentTop = $leftPaneContent.offset().top;
+            var toolbarHeight = 38 /* $leftPaneContent.offset().top, doen't work on iPhone*/;
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
             $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-            $leftPaneContent.css({ height: $(window).height() - leftPanelContentTop });
-            $(".fr-layout-rightpanecontent", me.$container).css({ height: "100%" });
-            $(".fr-param-container", me.$container).css({ height: $(".fr-layout-rightpane", me.$container).height() });
+            $(".fr-layout-leftpanecontent", me.$container).css({ height: me.getWindowHeight() - toolbarHeight });
+            $(".fr-layout-rightpanecontent", me.$container).css({ height: me.getWindowHeight() - toolbarHeight });
+            $(".fr-param-container", me.$container).css({ height: "100%" });
         },
 
         bindViewerEvents: function () {

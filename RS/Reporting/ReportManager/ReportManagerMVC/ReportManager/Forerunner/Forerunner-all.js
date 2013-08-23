@@ -341,6 +341,44 @@ $(function () {
                 || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
                 || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
         },
+        /** @return {bool} Returns a boolean that indicates if the device is in portrait */
+        isPortrait: function () {
+            if (!window.orientation) {
+                return $(window).height() > $(window).width();
+            }
+            // The 2 bit will be set for 90 and 180
+            if (window.orientation & 2) {
+                return false;
+            }
+            return true;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
+        isiOS: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPhone|iPod|iPad)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iPhone or iPod device */
+        isiPhone: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPhone|iPod)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iPad device */
+        isiPad: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(iPad)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
+        isFullscreen: function () {
+            if (window.navigator.standalone) {
+                return true;
+            }
+            return false;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an Android device */
+        isAndroid: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/Android/);
+        },
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
          * @param {bool} flag - true = scale enabled (max = 10.0)
@@ -355,7 +393,7 @@ $(function () {
             }
         },
       
-      
+        /** @return {float} Returns the zoom level, (document / window) width */
         zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
@@ -2066,7 +2104,7 @@ $(function () {
         selectorClass: "fr-toolbar-reportpage-textbox",
         inputType: "number",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
                 }
@@ -2129,7 +2167,7 @@ $(function () {
         selectorClass: "fr-toolbar-keyword-textbox",
         sharedClass: "fr-toolbar-touch-hidden",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                 }
@@ -2490,9 +2528,10 @@ $(function () {
         selectorClass: "fr-item-textbox-reportpage",
         inputType: "number",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
                 }
             }
         }
@@ -2664,7 +2703,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-item-textbox-keyword",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
@@ -4808,7 +4847,7 @@ $(function () {
                     $element = me._writeTextArea(param);
             }
 
-            $element.on("keypress", function (e) {
+            $element.on("keydown", function (e) {
                 if (e.keyCode === 13) {
                     me._submitForm();
                 } // Enter
@@ -5401,7 +5440,8 @@ $(function () {
     // The EZ Viewer widget should use this template
     // This is an internal class right now.
     ssr.DefaultAppTemplate = function (options) {
-        this.options = {
+        var me = this;
+        me.options = {
             $container : null
         };
 
@@ -5539,22 +5579,55 @@ $(function () {
             else
                 return false;
         },
+        getHeightValues: function () {
+            var me = this;
+            var values = {};
+            values.windowHeight = 0;
+            values.containerHeight = me.$container.height();
+
+            // Start out by adding the height of the location bar to the height
+            if (forerunner.device.isiOS()) {
+                // iOS reliably returns the innerWindow size for documentElement.clientHeight
+                // but window.innerHeight is sometimes the wrong value after rotating the orientation
+                values.windowHeight = document.documentElement.clientHeight;
+
+                // Only add extra padding to the height on iphone / ipod, since the ipad browser
+                // doesn't scroll off the location bar.
+                if (forerunner.device.isiPhone() && !forerunner.device.isFullscreen()) {
+                    values.windowHeight += 60;
+                    values.containerHeight += 60;
+                }
+            } else if (forerunner.device.isAndroid()) {
+                values.windowHeight = window.innerHeight;
+                //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
+                //            ", $(window).height(): " + $(window).height() +
+                //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
+            } else {
+                // PC
+                values.windowHeight = $(window).height();
+            }
+
+            values.max = Math.max(values.windowHeight, values.containerHeight);
+            values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+
+            return values;
+        },
         ResetSize: function () {
             var me = this;
+
             var $viewer = $(".fr-layout-reportviewer", me.$container);
 
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
-            var $leftPaneContent = $(".fr-layout-leftpanecontent", me.$container);
-            var leftPanelContentTop = leftPanelContentTop = $leftPaneContent.offset().top;
+            var heightValues = me.getHeightValues();
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
-            $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
-            $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-            $leftPaneContent.css({ height: $(window).height() - leftPanelContentTop });
-            $(".fr-layout-rightpanecontent", me.$container).css({ height: "100%" });
-            $(".fr-param-container", me.$container).css({ height: $(".fr-layout-rightpane", me.$container).height() });
+            $(".fr-layout-leftpane", me.$container).css({ height: heightValues.max });
+            $(".fr-layout-rightpane", me.$container).css({ height: heightValues.max });
+            $(".fr-layout-leftpanecontent", me.$container).css({ height: heightValues.paneHeight });
+            $(".fr-layout-rightpanecontent", me.$container).css({ height: heightValues.paneHeight });
+            $(".fr-param-container", me.$container).css({ height: "100%" });
         },
 
         bindViewerEvents: function () {

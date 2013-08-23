@@ -90,9 +90,10 @@ $(function () {
         selectorClass: "fr-item-textbox-reportpage",
         inputType: "number",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
+                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
                 }
             }
         }
@@ -264,7 +265,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-item-textbox-keyword",
         events: {
-            keypress: function (e) {
+            keydown: function (e) {
                 if (e.keyCode === 13) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);

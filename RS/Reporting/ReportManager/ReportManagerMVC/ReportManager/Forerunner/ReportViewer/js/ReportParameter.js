@@ -186,7 +186,7 @@ $(function () {
                     $element = me._writeTextArea(param);
             }
 
-            $element.on("keypress", function (e) {
+            $element.on("keydown", function (e) {
                 if (e.keyCode === 13) {
                     me._submitForm();
                 } // Enter

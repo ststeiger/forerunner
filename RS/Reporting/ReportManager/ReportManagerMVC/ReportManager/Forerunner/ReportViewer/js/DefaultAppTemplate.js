@@ -151,32 +151,38 @@ $(function () {
             else
                 return false;
         },
-        getWindowHeight: function () {
+        getHeightValues: function () {
             var me = this;
-            var height = 0;
+            var values = {};
+            values.windowHeight = 0;
+            values.containerHeight = me.$container.height();
 
             // Start out by adding the height of the location bar to the height
             if (forerunner.device.isiOS()) {
                 // iOS reliably returns the innerWindow size for documentElement.clientHeight
                 // but window.innerHeight is sometimes the wrong value after rotating the orientation
-                height = document.documentElement.clientHeight;
+                values.windowHeight = document.documentElement.clientHeight;
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
                 if (forerunner.device.isiPhone() && !forerunner.device.isFullscreen()) {
-                    height += 60;
+                    values.windowHeight += 60;
+                    values.containerHeight += 60;
                 }
             } else if (forerunner.device.isAndroid()) {
-                // The stock Android browser has a location bar height of 56 pixels, but
-                // this very likely could be broken in other Android browsers.
-                height = window.innerHeight + 56;
-
+                values.windowHeight = window.innerHeight;
+                //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
+                //            ", $(window).height(): " + $(window).height() +
+                //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
             } else {
                 // PC
-                height = $(window).height();
+                values.windowHeight = $(window).height();
             }
 
-            return height;
+            values.max = Math.max(values.windowHeight, values.containerHeight);
+            values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+
+            return values;
         },
         ResetSize: function () {
             var me = this;
@@ -186,13 +192,13 @@ $(function () {
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
-            var toolbarHeight = 38 /* $leftPaneContent.offset().top, doen't work on iPhone*/;
+            var heightValues = me.getHeightValues();
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
-            $(".fr-layout-leftpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) + 50 });
-            $(".fr-layout-rightpane", me.$container).css({ height: Math.max($(window).height(), me.$container.height()) });
-            $(".fr-layout-leftpanecontent", me.$container).css({ height: me.getWindowHeight() - toolbarHeight });
-            $(".fr-layout-rightpanecontent", me.$container).css({ height: me.getWindowHeight() - toolbarHeight });
+            $(".fr-layout-leftpane", me.$container).css({ height: heightValues.max });
+            $(".fr-layout-rightpane", me.$container).css({ height: heightValues.max });
+            $(".fr-layout-leftpanecontent", me.$container).css({ height: heightValues.paneHeight });
+            $(".fr-layout-rightpanecontent", me.$container).css({ height: heightValues.paneHeight });
             $(".fr-param-container", me.$container).css({ height: "100%" });
         },
 

@@ -237,5 +237,10 @@ namespace ReportMannagerConfigTool
             }
         }
         #endregion
+
+        private void btnInstallUWS_Click(object sender, EventArgs e)
+        {
+            Process.Start("UltiDev.WebServer.msi");
+        }
     }
 }

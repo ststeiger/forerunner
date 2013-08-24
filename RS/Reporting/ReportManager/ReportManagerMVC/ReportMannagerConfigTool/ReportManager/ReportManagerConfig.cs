@@ -12,6 +12,7 @@ namespace ReportMannagerConfigTool
     {
         private static readonly string appPoolName = "ForerunnerPool";
         private static readonly string defaultSite = "Default Web Site";
+        private static string filePath = "../Web.config";
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -223,7 +224,6 @@ namespace ReportMannagerConfigTool
         {
             XmlDocument doc = new XmlDocument();
             //need update in installer
-            string filePath = "Web.config";
             doc.Load(filePath);
 
             GetConfigNode(doc, "Forerunner.ReportServerWSUrl").UpdateValue(wsurl);                       
@@ -250,7 +250,7 @@ namespace ReportMannagerConfigTool
             Dictionary<string, string> result = new Dictionary<string, string>();
 
             XmlDocument doc = new XmlDocument();
-            doc.Load("Web.config");
+            doc.Load(filePath);
 
             result.Add("WSUrl", GetConfigNode(doc, "Forerunner.ReportServerWSUrl").GetValue());
             result.Add("DataSource", GetConfigNode(doc, "Forerunner.ReportServerDataSource").GetValue());

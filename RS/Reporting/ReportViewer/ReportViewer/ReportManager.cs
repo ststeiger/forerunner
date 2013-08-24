@@ -29,6 +29,7 @@ namespace Forerunner.SSRS.Manager
         Impersonator impersonator;
         bool useIntegratedSecurity;
         string URL;
+        bool isSchemaChecked = false;
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
         {
@@ -159,12 +160,27 @@ namespace Forerunner.SSRS.Manager
 
         void CheckSchema()
         {
+            if (isSchemaChecked)
+                return;
             Impersonator impersonator = null;
             try
             {
                 impersonator = tryImpersonate();
                 //This should move to the install program
-                string SQL = @"IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
+                string SQL = @"
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
+                            BEGIN	                            
+	                            CREATE TABLE ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
+                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.1','0'
+                            END
+                            ELSE
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.1',  FROM ForerunnerDBVersion
+
+                            DECLARE @DBVersion varchar(200) 
+                            DECLARE @DBVersionPrev varchar(200) 
+                            SELECT @DBVersion = Version, @DBVersionPrev =PreviousVersion  FROM ForerunnerDBVersion                        
+
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
                             END
@@ -175,12 +191,34 @@ namespace Forerunner.SSRS.Manager
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
-                            END";
+                            END
+
+                          /*  Version update Code */
+                           /*
+                           IF @DBVersionPrev = 1.1 
+                             BEGIN
+                              ALTER TABLE ForerunnerCatalog ...
+                              ALTER TABLE ForerunnerUserItemProperties ...
+                              SELECT @DBVersionPrev = '1.2'
+                             END
+
+                           IF @DBVersionPrev = 1.2 
+                             BEGIN
+                              ALTER TABLE ForerunnerCatalog ...
+                              ALTER TABLE ForerunnerUserItemProperties ...
+                              SELECT @DBVersionPrev = '1.3'
+                             END
+
+
+                           */ 
+
+                            ";
                 SQLConn.Open();
 
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
+                isSchemaChecked = true;
             }
             finally
             {

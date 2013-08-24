@@ -1900,7 +1900,7 @@ $(function () {
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
                     var $toolEl = $("." + Tools.selectorClass, me.element);
-                    if (!$toolEl.hasClass("fr-button-home") && !$toolEl.hasClass("fr-id-home")) {
+                    if (!$toolEl.hasClass("fr-toolbase-no-disable-id")) {
                         me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
                         me.disableTools([Tools]);
                     }
@@ -5793,6 +5793,7 @@ $(function () {
                 var btnHome = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-home",
+                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-touch-hidden",
                     imageClass: "fr-icons24x24-home",
                     events: {
                         click: function (e) {
@@ -5805,6 +5806,7 @@ $(function () {
                 var btnFav = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-update-fav",
+                    sharedClass: "fr-toolbar-touch-hidden",
                     imageClass: "fr-image-delFav",
                     events: {
                         click: function (e) {
@@ -5896,6 +5898,7 @@ $(function () {
                 var itemHome = {
                     toolType: toolTypes.containerItem,
                     selectorClass: "fr-id-home",
+                    sharedClass: "fr-toolbase-no-disable-id",
                     imageClass: "fr-icons24x24-home",
                     text: locData.toolPane.home,
                     events: {

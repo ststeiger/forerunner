@@ -7,8 +7,8 @@ namespace ReportMannagerConfigTool
     public static class RenderExtensionConfig
     {
         #region Static Strings
-        private static readonly string forerunnerJSONDLL = "SSRSExtension/Forerunner.Json.dll";
-        private static readonly string forerunnerRenderExtensionDLL = "SSRSExtension/Forerunner.RenderingExtensions.dll";
+        private static readonly string forerunnerJSONDLL = "../SSRSExtension/Forerunner.Json.dll";
+        private static readonly string forerunnerRenderExtensionDLL = "../SSRSExtension/Forerunner.RenderingExtensions.dll";
 
         private static readonly string rplRendering = "Microsoft.ReportingServices.RPLRendering";
         private static readonly string htmlRendering = "Microsoft.ReportingServices.HTMLRendering";

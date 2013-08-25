@@ -9,7 +9,6 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
-        private string siteUrl = string.Empty;
 
         public frmMain()
         {
@@ -76,6 +75,7 @@ namespace ReportMannagerConfigTool
                 string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
+                string siteUrl = "";
 
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
@@ -107,14 +107,7 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-            if(string.Empty.Equals(siteUrl))
-            {
-                winform.showMessage("Please deploy the site first");
-            }
-            else
-            {
-                Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
-            }
+             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
         }
         #endregion
 

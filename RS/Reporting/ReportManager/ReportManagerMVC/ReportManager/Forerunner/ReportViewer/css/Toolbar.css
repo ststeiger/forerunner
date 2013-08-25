@@ -101,9 +101,7 @@
 
 /* Full toolbar (I.e., width of greater than or equal to 768 devices) */
 @media only screen and (min-width : 768px) {
-  /*
   .fr-toolbar-menu-button {
     display: none;
   }
-  */
 }

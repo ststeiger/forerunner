@@ -73,74 +73,37 @@
     float:right;
 }
 
-/* Smartphones (landscape) ----------- */
-@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-toolbar-touch-hidden {
-  display: none;
-}
-.fr-toolbar-reportpage-textbox {
-  margin-left:125px;
-}
+/* The following toolbar sizes will be supported and are device agnostic */
 
-}  /* @media */
-
-/* Smartphones (portrait) ----------- */
-@media only screen and (max-width : 320px) and (orientation : portrait) {
-.fr-toolbar-touch-hidden {
-  display: none;
-}
-.fr-toolbar-reportpage-textbox {
-  margin-left:45px;
-}
-
-}  /* @media */
-
-/* iPads (landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-toolbar-touch-hidden {
-  display: none;
-}
- .fr-toolbar-reportpage-textbox {
-  margin-left:400px;
-}
-
-}  /* @media */
-
-/* iPads (portrait) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-toolbar-touch-hidden {
-  display: none;
-}
-.fr-toolbar-reportpage-textbox {
-  margin-left:250px;
-}
-
-}  /* @media */
-
-/* Desktops and laptops ----------- */
-@media only screen and (min-width : 1224px) {
-/*
-.fr-toolbar-menu-button {
+/* Small toolbar (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-toolbar-hidden-on-small {
     display: none;
+  }
+  .fr-toolbar-reportpage-textbox {
+    margin-left:45px;
+  }
 }
-*/
 
-}  /* @media */
-
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-/*/.fr-toolbar-menu-button {
+/* Medium toolbar (E.g., for phones, landscape) */
+@media only screen and (min-width : 480px) and (max-width : 567px) {
+  .fr-toolbar-hidden-on-medium {
     display: none;
-}
-*/
-
-}  /* @media */
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
-.fr-toolbar-touch-hidden {
-  display: none;
+  }
 }
 
+/* Large toolbar (E.g., for larger phones, landscape) */
+@media only screen and (min-width : 568px) and (max-width : 767px) {
+  .fr-toolbar-hidden-on-large {
+    display: none;
+  }
+}
 
-}  /* @media */
+/* Full toolbar (I.e., width of greater than or equal to 768 devices) */
+@media only screen and (min-width : 768px) {
+  /*
+  .fr-toolbar-menu-button {
+    display: none;
+  }
+  */
+}

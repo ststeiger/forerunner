@@ -57,7 +57,7 @@ $(function () {
                 var btnHome = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-home",
-                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-touch-hidden",
+                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
                     imageClass: "fr-icons24x24-home",
                     events: {
                         click: function (e) {
@@ -70,7 +70,7 @@ $(function () {
                 var btnFav = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-update-fav",
-                    sharedClass: "fr-toolbar-touch-hidden",
+                    sharedClass: "fr-toolbar-hidden-on-small",
                     imageClass: "fr-image-delFav",
                     events: {
                         click: function (e) {

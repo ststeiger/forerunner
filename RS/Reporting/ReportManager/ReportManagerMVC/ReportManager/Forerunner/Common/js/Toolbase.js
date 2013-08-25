@@ -271,7 +271,7 @@ $(function () {
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
                     var $toolEl = $("." + Tools.selectorClass, me.element);
-                    if (!$toolEl.hasClass("fr-button-home") && !$toolEl.hasClass("fr-id-home")) {
+                    if (!$toolEl.hasClass("fr-toolbase-no-disable-id")) {
                         me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
                         me.disableTools([Tools]);
                     }

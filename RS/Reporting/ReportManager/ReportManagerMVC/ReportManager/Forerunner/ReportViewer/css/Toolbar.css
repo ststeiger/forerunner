@@ -15,6 +15,7 @@
   padding: 0px;
   width: 100%;
   height:38px;
+  overflow: hidden;
 }
 .fr-toolbar-slide {
   margin: 0px;
@@ -74,7 +75,7 @@
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
+.fr-toolbar-touch-hidden {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -85,7 +86,7 @@
 
 /* Smartphones (portrait) ----------- */
 @media only screen and (max-width : 320px) and (orientation : portrait) {
-.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
+.fr-toolbar-touch-hidden {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -96,7 +97,7 @@
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
+.fr-toolbar-touch-hidden {
   display: none;
 }
  .fr-toolbar-reportpage-textbox {
@@ -107,7 +108,7 @@
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
+.fr-toolbar-touch-hidden {
   display: none;
 }
 .fr-toolbar-reportpage-textbox {
@@ -137,7 +138,7 @@
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5)  {
-.fr-button-home, .fr-button-update-fav, .fr-toolbar-touch-hidden {
+.fr-toolbar-touch-hidden {
   display: none;
 }
 

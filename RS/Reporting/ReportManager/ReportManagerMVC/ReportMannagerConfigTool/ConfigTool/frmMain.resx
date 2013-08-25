@@ -783,11 +783,38 @@
   <data name="&gt;&gt;tabPage3.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="btnInstallUWS.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnInstallUWS.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 189</value>
+  </data>
+  <data name="btnInstallUWS.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 22</value>
+  </data>
+  <data name="btnInstallUWS.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="btnInstallUWS.Text" xml:space="preserve">
+    <value>Install UWS</value>
+  </data>
+  <data name="&gt;&gt;btnInstallUWS.Name" xml:space="preserve">
+    <value>btnInstallUWS</value>
+  </data>
+  <data name="&gt;&gt;btnInstallUWS.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnInstallUWS.Parent" xml:space="preserve">
+    <value>tabPage1</value>
+  </data>
+  <data name="&gt;&gt;btnInstallUWS.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnTestWeb.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnTestWeb.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 189</value>
+    <value>87, 189</value>
   </data>
   <data name="btnTestWeb.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -808,13 +835,13 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnTestWeb.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnApplyWebServer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnApplyWebServer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>286, 189</value>
+    <value>366, 189</value>
   </data>
   <data name="btnApplyWebServer.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -835,7 +862,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;btnApplyWebServer.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="lblPort.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -865,7 +892,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblPort.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="txtPort.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 106</value>
@@ -889,7 +916,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtPort.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="lblSiteName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -919,7 +946,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;lblSiteName.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="txtSiteName.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 60</value>
@@ -943,7 +970,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;txtSiteName.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="rdoUWS.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -973,7 +1000,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;rdoUWS.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="rdoIIS.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1003,7 +1030,7 @@
     <value>tabPage1</value>
   </data>
   <data name="&gt;&gt;rdoIIS.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="tabPage1.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>

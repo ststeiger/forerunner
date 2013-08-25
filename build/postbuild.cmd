@@ -19,7 +19,10 @@ if not exist "%BUILD_RELEASE%\Setup" (
 )
 
 echo Copying setup manifest... >> %POSTBUILD_LOG%
-copy %~dp0..\Setup\ReportManagerSetup.nsi %BUILD_RELEASE%\Setup
+robocopy %~dp0..\Setup %BUILD_RELEASE%\Setup * /E /R:0
+if ERRORLEVEL 8 (
+	goto :Error
+)
 
 echo Copying Files for Setup... >> %POSTBUILD_LOG%
 call %~dp0..\RS\Reporting\CopyFiles.cmd %BUILD_RELEASE% %POSTBUILD_LOG%

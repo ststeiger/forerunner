@@ -50,7 +50,7 @@ Page custom fnc_RunConfigTool_Show */
 !define MUI_UNTEXT_FINISH_TITLE "Install Finish!"
 !define MUI_UNTEXT_FINISH_SUBTITLE "Please choose run report manager config tool or not."
 ; Finish page
-!define MUI_FINISHPAGE_RUN "$INSTDIR\ReportManagerConfigTool.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\Config\ReportManagerConfigTool.exe"
 !define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
 !insertmacro MUI_PAGE_FINISH
 
@@ -224,22 +224,24 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\SSRSExtension"
   File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
   File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
-  SetOutPath "$INSTDIR\Register"
-;  File "${LOCALROOT}\Register\Forerunner.SSR.Core.dll"
+  SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Register\SetupUtil.exe"
+  File "${LOCALROOT}\ReportManagerConfigTool.exe"
+  File "${LOCALROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
-  File "${LOCALROOT}\ReportManagerConfigTool.exe"
-  ;CreateShortCut "$DESKTOP\ReportManager.lnk" "$INSTDIR\ReportManagerResigter.exe"
   File "${LOCALROOT}\Readme.txt"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
   File "${LOCALROOT}\ForerunnerSetup.ico"
+
 SectionEnd
 
 Section -AdditionalIcons
   CreateDirectory "$SMPROGRAMS\ForerunnerReportManager"
   CreateShortCut "$SMPROGRAMS\ForerunnerReportManager\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  SetOutPath "$INSTDIR\Config"
+  CreateShortCut "$SMPROGRAMS\ForerunnerReportManager\ReportManangerConfigTool.lnk" "$INSTDIR\Config\ReportManagerConfigTool.exe"
 SectionEnd
 
 Section -Post
@@ -326,7 +328,7 @@ Function IsDotNETInstalled
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister
-  ExecWait "$INSTDIR\Register\SetupUtil.exe"
+  ExecWait "$INSTDIR\Config\SetupUtil.exe"
 FunctionEnd
 
 
@@ -337,7 +339,6 @@ Section Uninstall
   Delete "$INSTDIR\Global.asax"
   Delete "$INSTDIR\packages.config"
   Delete "$INSTDIR\Readme.txt"
-  Delete "$INSTDIR\ReportManagerConfigTool.exe"
   Delete "$INSTDIR\Web.config"
   Delete "$INSTDIR\CSS\ReportManager.css"
   Delete "$INSTDIR\Views\_ViewStart.cshtml"
@@ -447,13 +448,14 @@ Section Uninstall
   Delete "$INSTDIR\bin\WebGrease.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
-  Delete "$INSTDIR\Register\SetupUtil.exe"
-  ;Delete "$INSTDIR\Register\Forerunner.SSR.Core.dll"
+  Delete "$INSTDIR\Config\SetupUtil.exe"
+  Delete "$INSTDIR\Config\ReportManagerConfigTool.exe"
+  Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
-  Delete "$SMPROGRAMS\ReportManager\Uninstall.lnk"
-  Delete "$DESKTOP\ReportManager.lnk"
-
-  RMDir "$SMPROGRAMS\ReportManager"
+  Delete "$SMPROGRAMS\ForerunnerReportManager\Uninstall.lnk"
+  Delete "$SMPROGRAMS\ForerunnerReportManager\ReportManagerConfigTool.lnk"
+  RMDir "$SMPROGRAMS\ForerunnerReportManager"
+  
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Views\Shared"
   RMDir "$INSTDIR\Views\Home"
@@ -484,7 +486,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
-  RMDir "$INSTDIR\Register"
+  RMDir "$INSTDIR\Config"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"

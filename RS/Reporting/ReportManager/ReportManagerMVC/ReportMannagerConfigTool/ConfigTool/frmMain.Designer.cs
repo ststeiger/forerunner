@@ -57,6 +57,7 @@
             this.lblReportServer = new System.Windows.Forms.Label();
             this.txtReportServer = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnInstallUWS = new System.Windows.Forms.Button();
             this.btnTestWeb = new System.Windows.Forms.Button();
             this.btnApplyWebServer = new System.Windows.Forms.Button();
             this.lblPort = new System.Windows.Forms.Label();
@@ -259,6 +260,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.btnInstallUWS);
             this.tabPage1.Controls.Add(this.btnTestWeb);
             this.tabPage1.Controls.Add(this.btnApplyWebServer);
             this.tabPage1.Controls.Add(this.lblPort);
@@ -270,6 +272,13 @@
             resources.ApplyResources(this.tabPage1, "tabPage1");
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // btnInstallUWS
+            // 
+            resources.ApplyResources(this.btnInstallUWS, "btnInstallUWS");
+            this.btnInstallUWS.Name = "btnInstallUWS";
+            this.btnInstallUWS.UseVisualStyleBackColor = true;
+            this.btnInstallUWS.Click += new System.EventHandler(this.btnInstallUWS_Click);
             // 
             // btnTestWeb
             // 
@@ -378,6 +387,7 @@
         private System.Windows.Forms.TextBox txtSiteName;
         private System.Windows.Forms.RadioButton rdoUWS;
         private System.Windows.Forms.RadioButton rdoIIS;
+        private System.Windows.Forms.Button btnInstallUWS;
     }
 }
 

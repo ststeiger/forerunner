@@ -81,12 +81,13 @@
 }
 
 .fr-layout-rightpanecontent {
-    height: 100%;
     width: 280px;
     display:block;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: fixed;
-    right:0;
+    right: 0;
+    top: 38px;
 }
 
 .fr-layout-topdiv {

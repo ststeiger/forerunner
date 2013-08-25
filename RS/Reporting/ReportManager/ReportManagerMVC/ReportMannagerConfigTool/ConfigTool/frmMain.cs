@@ -9,7 +9,6 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
-        private string siteUrl = string.Empty;
 
         public frmMain()
         {
@@ -73,9 +72,10 @@ namespace ReportMannagerConfigTool
             {
                 string bindingAddress = string.Empty;
                 string ip = configTool.GetLocIP();
-                string localDirectory = Environment.CurrentDirectory;
+                string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
+                string siteUrl = "";
 
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
@@ -87,13 +87,13 @@ namespace ReportMannagerConfigTool
                     }
 
                     //ip:port:domain
-                    bindingAddress = string.Format("{0}:{1}:{2}", ip, port, "");
+                    bindingAddress = string.Format("{0}:{1}:{2}", "*", port, "");
                     ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 //deploy site to UWS web server
                 else if (rdoUWS.Checked)
                 {
-                    bindingAddress = string.Format("http://{0}:{1}", ip, port);
+                    bindingAddress = string.Format("http://{0}:{1}", "*", port);
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
@@ -107,14 +107,7 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-            if(string.Empty.Equals(siteUrl))
-            {
-                winform.showMessage("Please deploy the site first");
-            }
-            else
-            {
-                Process.Start(siteUrl);
-            }
+             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
         }
         #endregion
 
@@ -237,5 +230,10 @@ namespace ReportMannagerConfigTool
             }
         }
         #endregion
+
+        private void btnInstallUWS_Click(object sender, EventArgs e)
+        {
+            Process.Start("UltiDev.WebServer.msi");
+        }
     }
 }

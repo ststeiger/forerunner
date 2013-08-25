@@ -46,7 +46,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
-            reportViewerAPI: "../api/ReportViewer",
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -67,7 +67,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};

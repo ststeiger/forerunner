@@ -261,18 +261,43 @@ $(function () {
      * @namespace
      */
     forerunner.config = {
+        _virtualRootBase : null,
+
+        _endsWith : function(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length);
+        },
+        _getVirtualRootBase: function () {
+            if (this._virtualRootBase == null) {
+                var scripts = document.getElementsByTagName("script");
+                for (var i = 0; i < scripts.length; i++) {
+                    var script = scripts[i];
+                    var endsWith = this._endsWith(script.src, "/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js");
+                    if (endsWith !== -1) {
+                        this._virtualRootBase = script.src.substring(0, endsWith);
+                        break;
+                    }
+                }
+            }
+            return this._virtualRootBase;
+        },
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
          *
          * @member
          */
-        forerunnerFolder: "./forerunner",
+        forerunnerFolder: function ()
+        {
+            
+            return this._getVirtualRootBase() + "/forerunner";
+        },
         /**
          * Base path to the REST api controlers
          *
          * @member
          */
-        forerunnerAPIBase: "./api/",
+        forerunnerAPIBase: function () {
+            return this._getVirtualRootBase() + "/api/";
+        },
     };
     /**
      * Defines the methods used to localize string data in the SDK.

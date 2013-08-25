@@ -31,7 +31,7 @@ namespace ReportMannagerConfigTool
 
             using (ServerManager manager = new ServerManager())
             {
-                if (manager.Sites[defaultSite] == null)
+                if (manager.Sites[defaultSite] != null)
                 {
                     //if default site exist then add app as a sub application
                     Site reportManager = manager.Sites[defaultSite];
@@ -41,6 +41,8 @@ namespace ReportMannagerConfigTool
                     app.ApplicationPoolName = appPoolName;
 
                     siteUrl = GetSiteUrl(reportManager, siteName);
+                    manager.CommitChanges();
+                    UpdateIISAuthentication(defaultSite + "/" + siteName);
                 }
                 else
                 {
@@ -49,19 +51,10 @@ namespace ReportMannagerConfigTool
                     reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
 
                     siteUrl = GetSiteUrl(reportManager);
-                }
-
-                manager.CommitChanges();
-
-                try
-                {
+                    manager.CommitChanges();
                     UpdateIISAuthentication(siteName);
                 }
-                catch
-                {
-                    //for the app under the default site
-                    UpdateIISAuthentication(defaultSite + "/" + siteName);
-                }
+
             }
         }
 
@@ -197,15 +190,16 @@ namespace ReportMannagerConfigTool
             entry.AuthenicationMode = AuthenticationSchemes.IntegratedWindowsAuthentication;
             entry.CompressResponseIfPossible = true;          
 
-            //ListenAddress address = new ListenAddress(bindingAddress);
+            ListenAddress address = new ListenAddress(bindingAddress);            
             entry.ListenAddresses.Clear();
-            //entry.ListenAddresses.Add(address);
+            entry.ListenAddresses.Add(address);
             entry.PhysicalDirectory = physicalPath;
             
             Metabase.RegisterApplication(RuntimeVersion.AspNet_4, false, false, ProcessIdentity.NetworkService, entry);
             Metabase.WaitForAppToStart(guid,2000);
 
-            siteUrl = bindingAddress + "/" + siteName;
+            //siteUrl = bindingAddress + "/" + siteName;
+            siteUrl = "localhost" + "/" + siteName;
             //Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
         }
 

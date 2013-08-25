@@ -73,7 +73,7 @@ namespace ReportMannagerConfigTool
             {
                 string bindingAddress = string.Empty;
                 string ip = configTool.GetLocIP();
-                string localDirectory = Environment.CurrentDirectory;
+                string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
 
@@ -87,13 +87,13 @@ namespace ReportMannagerConfigTool
                     }
 
                     //ip:port:domain
-                    bindingAddress = string.Format("{0}:{1}:{2}", ip, port, "");
+                    bindingAddress = string.Format("{0}:{1}:{2}", "*", port, "");
                     ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 //deploy site to UWS web server
                 else if (rdoUWS.Checked)
                 {
-                    bindingAddress = string.Format("http://{0}:{1}", ip, port);
+                    bindingAddress = string.Format("http://{0}:{1}", "*", port);
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl);
                 }
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
@@ -113,7 +113,7 @@ namespace ReportMannagerConfigTool
             }
             else
             {
-                Process.Start(siteUrl);
+                Process.Start("http://localhost/" + txtSiteName.Text.Trim() + txtPort.Text.Trim());
             }
         }
         #endregion

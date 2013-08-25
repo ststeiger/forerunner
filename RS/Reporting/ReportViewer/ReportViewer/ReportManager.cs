@@ -174,7 +174,7 @@ namespace Forerunner.SSRS.Manager
                                 INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.1','0'
                             END
                             ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.1',  FROM ForerunnerDBVersion
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.1'  FROM ForerunnerDBVersion
 
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 

@@ -113,7 +113,7 @@ namespace ReportMannagerConfigTool
             }
             else
             {
-                Process.Start("http://localhost/" + txtSiteName.Text.Trim() + txtPort.Text.Trim());
+                Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
             }
         }
         #endregion

@@ -8,7 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -22,8 +22,8 @@ $(function () {
             $lefttoolbar: null,
             $righttoolbar: null,
             $docMap: null,
-            ReportViewerAPI: "./api/ReportViewer",
-            ReportManagerAPI: "./api/ReportManager",
+            ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
+            ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,

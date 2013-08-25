@@ -32,8 +32,8 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
         options: {
-            reportManagerAPI: "../api/ReportManager",
-            forerunnerPath: "../forerunner",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+            forerunnerPath: forerunner.config.forerunnerFolder(),
             path: null,
             view: null,
             selectedItemPath: null,

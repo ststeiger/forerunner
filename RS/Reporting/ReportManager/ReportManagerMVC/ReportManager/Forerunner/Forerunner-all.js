@@ -262,18 +262,43 @@ $(function () {
      * @namespace
      */
     forerunner.config = {
+        _virtualRootBase : null,
+
+        _endsWith : function(str, suffix) {
+            return str.indexOf(suffix, str.length - suffix.length);
+        },
+        _getVirtualRootBase: function () {
+            if (this._virtualRootBase == null) {
+                var scripts = document.getElementsByTagName("script");
+                for (var i = 0; i < scripts.length; i++) {
+                    var script = scripts[i];
+                    var endsWith = this._endsWith(script.src, "/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js");
+                    if (endsWith !== -1) {
+                        this._virtualRootBase = script.src.substring(0, endsWith);
+                        break;
+                    }
+                }
+            }
+            return this._virtualRootBase;
+        },
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.
          *
          * @member
          */
-        forerunnerFolder: "./forerunner",
+        forerunnerFolder: function ()
+        {
+            
+            return this._getVirtualRootBase() + "/forerunner";
+        },
         /**
          * Base path to the REST api controlers
          *
          * @member
          */
-        forerunnerAPIBase: "./api/",
+        forerunnerAPIBase: function () {
+            return this._getVirtualRootBase() + "/api/";
+        },
     };
     /**
      * Defines the methods used to localize string data in the SDK.
@@ -472,7 +497,7 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
-            reportViewerAPI: "../api/ReportViewer",
+            reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -493,7 +518,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -2020,7 +2045,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var exportType = forerunner.ssr.constants.exportType;
 
     // Tool Info data
@@ -2448,7 +2473,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var exportType = forerunner.ssr.constants.exportType;
 
     // Tool Info data
@@ -3145,8 +3170,8 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
         options: {
-            reportManagerAPI: "../api/ReportManager",
-            forerunnerPath: "../forerunner",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+            forerunnerPath: forerunner.config.forerunnerFolder(),
             path: null,
             view: null,
             selectedItemPath: null,
@@ -5744,7 +5769,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -5758,8 +5783,8 @@ $(function () {
             $lefttoolbar: null,
             $righttoolbar: null,
             $docMap: null,
-            ReportViewerAPI: "./api/ReportViewer",
-            ReportManagerAPI: "./api/ReportManager",
+            ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
+            ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
@@ -6074,7 +6099,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
-                ReportViewerAPI: forerunner.config.forerunnerAPIBase + "/ReportViewer",
+                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager
@@ -6163,8 +6188,8 @@ $(function () {
             layout.$mainsection.show();
             layout.$docmapsection.hide();
             layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase + "/ReportManager",
-                forerunnerPath: forerunner.config.forerunnerFolder ,
+                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "/ReportManager",
+                forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,

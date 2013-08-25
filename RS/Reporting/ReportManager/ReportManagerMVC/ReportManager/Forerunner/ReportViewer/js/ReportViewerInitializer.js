@@ -51,7 +51,7 @@ $(function () {
 
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
-            $toolbar.toolbar({ $reportViewer: $viewer });
+            $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this });
 
             if (me.options.isReportManager) {
                 var btnHome = {
@@ -74,29 +74,15 @@ $(function () {
                     imageClass: "fr-image-delFav",
                     events: {
                         click: function (e) {
-                            var action;
-                            var $img = $(e.target);
-                            if (!$img.hasClass("fr-icons24x24"))
-                                $img = $img.find(".fr-icons24x24");
-
-                            if ($img.hasClass("fr-image-delFav"))
+                            var action = "add";
+                            if (me.$btnFavorite.hasClass("fr-image-delFav"))
                                 action = "delete";
-                            else
-                                action = "add";
-
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath
-                            }).done(function (Data) {
-                                if (action === "add") {
-                                    $img.addClass("fr-image-delFav");
-                                    $img.removeClass("fr-image-addFav");
-                                }
-                                else {
-                                    $img.removeClass("fr-image-delFav");
-                                    $img.addClass("fr-image-addFav");
-                                }
+                            }).done(function (data) {
+                                me.updateFavoriteState.call(me, action === "add");
                             })
                             .fail(function () { alert("Failed"); });
                         }
@@ -180,30 +166,16 @@ $(function () {
                     text: locData.toolPane.favorites,
                     events: {
                         click: function (e) {
-                            var action;
-                            var $img = $(e.target);
-                            if (!$img.hasClass("fr-icons24x24"))
-                                $img = $img.find(".fr-icons24x24");
-
-                            if ($img.hasClass("fr-image-delFav"))
+                            var action = "add";
+                            if (me.$itemFavorite.hasClass("fr-image-delFav"))
                                 action = "delete";
-                            else
-                                action = "add";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath
-                            }).done(function (Data) {
-
-                                if (action === "add") {
-                                    $img.addClass("fr-image-delFav");
-                                    $img.removeClass("fr-image-addFav");
-                                }
-                                else {
-                                    $img.removeClass("fr-image-delFav");
-                                    $img.addClass("fr-image-addFav");
-                                }
+                            }).done(function (data) {
+                                me.updateFavoriteState.call(me, action === "add");
                             })
                             .fail(function () { alert("Failed"); });
                         }
@@ -232,44 +204,55 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
         },
-
         setFavoriteState: function (path) {
             var me = this;
-            var $toolbar = me.options.$toolbar;
-            var $toolPane = me.options.$toolPane;
+            me.$btnFavorite = null;
+            if (me.options.$toolbar !== null) {
+                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div");
+            }
+            me.$itemFavorite = null;
+            if (me.options.$toolPane !== null) {
+                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
+            }
             $.ajax({
                 url: me.options.ReportManagerAPI + "/isFavorite?path=" + path,
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    var $tb;
-                    if ($toolbar !== null) {
-                        $tb = $toolbar.find(".fr-button-update-fav").find("div");
-                        if (data.IsFavorite) {
-                            $tb.addClass("fr-image-delFav");
-                            $tb.removeClass("fr-image-addFav");
-                        }
-                        else {
-                            $tb.removeClass("fr-image-delFav");
-                            $tb.addClass("fr-image-addFav");
-                        }
-                    }
-                    if ($toolPane !== null) {
-                        $tb = $toolPane.find(".fr-item-update-fav").find("div");
-                        if (data.IsFavorite) {
-                            $tb.addClass("fr-image-delFav");
-                            $tb.removeClass("fr-image-addFav");
-                        }
-                        else {
-                            $tb.removeClass("fr-image-delFav");
-                            $tb.addClass("fr-image-addFav");
-                        }
-                    }
+                    me.updateFavoriteState(data.IsFavorite);
                 },
                 fail: function () {
-                    $toolbar.find(".fr-button-update-fav").hide();
+                    if (me.$btnFavorite) {
+                        me.$btnFavorite.hide();
+                    }
+                    if (me.$itemFavorite) {
+                        me.$itemFavorite.hide();
+                    }
                 }
             });
+        },
+        updateFavoriteState: function (isFavorite) {
+            var me = this;
+            if (isFavorite) {
+                if (me.$btnFavorite) {
+                    me.$btnFavorite.addClass("fr-image-delFav");
+                    me.$btnFavorite.removeClass("fr-image-addFav");
+                }
+                if (me.$itemFavorite) {
+                    me.$itemFavorite.addClass("fr-image-delFav");
+                    me.$itemFavorite.removeClass("fr-image-addFav");
+                }
+            }
+            else {
+                if (me.$btnFavorite) {
+                    me.$btnFavorite.removeClass("fr-image-delFav");
+                    me.$btnFavorite.addClass("fr-image-addFav");
+                }
+                if (me.$itemFavorite) {
+                    me.$itemFavorite.removeClass("fr-image-delFav");
+                    me.$itemFavorite.addClass("fr-image-addFav");
+                }
+            }
         },
     };
 });  // $(function ()

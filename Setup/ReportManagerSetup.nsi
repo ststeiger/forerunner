@@ -61,12 +61,24 @@ Page custom fnc_RunConfigTool_Show */
 !insertmacro MUI_UNPAGE_INSTFILES
 ; MUI end ------
 
+RequestExecutionLevel admin
+
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerReportManagerSetup.exe"
 InstallDir "$PROGRAMFILES\Forerunner Report Manager"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
+
+!macro VerifyUserIsAdmin
+UserInfo::GetAccountType
+pop $0
+${If} $0 != "admin" ;Require admin rights on NT4+
+        MessageBox MB_OK|MB_ICONSTOP "Administrator rights required!"
+        setErrorLevel 740 ;ERROR_ELEVATION_REQUIRED
+        quit
+${EndIf}
+!macroend
 
 Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\bin"
@@ -241,7 +253,7 @@ Section -AdditionalIcons
   CreateDirectory "$SMPROGRAMS\ForerunnerReportManager"
   CreateShortCut "$SMPROGRAMS\ForerunnerReportManager\Uninstall.lnk" "$INSTDIR\uninst.exe"
   SetOutPath "$INSTDIR\Config"
-  CreateShortCut "$SMPROGRAMS\ForerunnerReportManager\ReportManangerConfigTool.lnk" "$INSTDIR\Config\ReportManagerConfigTool.exe"
+  CreateShortCut "$SMPROGRAMS\ForerunnerReportManager\ReportManagerConfigTool.lnk" "$INSTDIR\Config\ReportManagerConfigTool.exe"
 SectionEnd
 
 Section -Post
@@ -256,6 +268,8 @@ SectionEnd
 
 ;Detect .Net Framework before install
 Function .onInit
+  !insertmacro VerifyUserIsAdmin
+  
   Call IsDotNETInstalled
   Pop $0
   StrCmp $0 1 found noFound
@@ -272,6 +286,8 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
+  !insertmacro VerifyUserIsAdmin
+  
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
   Abort
 FunctionEnd

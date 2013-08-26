@@ -59,6 +59,7 @@ $(function () {
                     selectorClass: "fr-button-home",
                     sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
                     imageClass: "fr-icons24x24-home",
+                    tooltip: locData.toolbar.home,
                     events: {
                         click: function (e) {
                             me.options.navigateTo("home", null);
@@ -72,6 +73,7 @@ $(function () {
                     selectorClass: "fr-button-update-fav",
                     sharedClass: "fr-toolbar-hidden-on-small",
                     imageClass: "fr-image-delFav",
+                    tooltip: locData.toolbar.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";

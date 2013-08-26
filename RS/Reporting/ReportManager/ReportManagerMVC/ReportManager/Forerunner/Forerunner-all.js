@@ -1765,6 +1765,10 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
+            if (toolInfo.tooltip) {
+                $tool.attr("title", toolInfo.tooltip);
+            }
+
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
             }
@@ -2053,6 +2057,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-reportback-button",
         imageClass: "fr-icons24x24-reportback",
+        tooltip: locData.toolbar.back,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
@@ -2063,6 +2068,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
+        tooltip: locData.toolbar.menu,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.menuClick, null, {});
@@ -2074,6 +2080,7 @@ $(function () {
         selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium",
+        tooltip: locData.toolbar.navigation,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -2084,6 +2091,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-paramarea-button",
         imageClass: "fr-icons24x24-paramarea",
+        tooltip: locData.toolbar.paramarea,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.paramAreaClick, null, {});
@@ -2096,6 +2104,7 @@ $(function () {
         selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.refresh,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -2107,6 +2116,7 @@ $(function () {
         selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
         sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.firstPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -2118,6 +2128,7 @@ $(function () {
         selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
         sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.previousPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -2128,6 +2139,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-reportpage-textbox",
         inputType: "number",
+        tooltip: locData.toolbar.reportPage,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -2154,6 +2166,7 @@ $(function () {
         selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
         sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -2165,6 +2178,7 @@ $(function () {
         selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
         sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.lastPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -2181,6 +2195,7 @@ $(function () {
         selectorClass: "fr-toolbar-documentmap-button",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         imageClass: "fr-icons24x24-documentmap",
+        tooltip: locData.toolbar.docMap,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
@@ -2191,6 +2206,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-keyword-textbox",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.keyword,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -2204,6 +2220,7 @@ $(function () {
         selectorClass: "fr-toolbar-find-button",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.find,
+        tooltip: locData.toolbar.find,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -2222,6 +2239,7 @@ $(function () {
         selectorClass: "fr-toolbar-findnext-button",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.next,
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -2331,7 +2349,7 @@ $(function () {
         selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        //text: locData.toolbar.exportMenu,
+        tooltip: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
@@ -3042,7 +3060,54 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var widgets = forerunner.ssr.constants.widgets;
+
+    // Button Info
+    var btnHome = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-home",
+        imageClass: "fr-icons24x24-home",
+        tooltip: locData.toolbar.home,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("home", null);
+            }
+        }
+    };
+    var btnBack = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-back",
+        imageClass: "fr-icons24x24-back",
+        tooltip: locData.toolbar.back,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("back", null);
+            }
+        }
+    };
+    var btnFav = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-fav",
+        imageClass: "fr-image-fav",
+        tooltip: locData.toolbar.favorites,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("favorites", null);
+            }
+        }
+    };
+    var btnRecent = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-recent",
+        imageClass: "fr-image-recent",
+        tooltip: locData.toolbar.recent,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("recent", null);
+            }
+        }
+    };
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -3061,55 +3126,12 @@ $(function () {
             navigateTo: null,
             toolClass: "fr-toolbar"
         },
-        // Button Info
-        btnHome: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-home",
-            imageClass: "fr-icons24x24-home",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("home", null);
-                }
-            }
-        },
-        btnBack: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-back",
-            imageClass: "fr-icons24x24-back",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("back", null);
-                }
-            }
-        },
-        btnFav: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-fav",
-            imageClass: "fr-image-fav",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("favorites", null);
-                }
-            }
-        },
-        btnRecent: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-recent",
-            imageClass: "fr-image-recent",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("recent", null);
-                }
-            }
-        },
-        
-
         _initCallbacks: function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([me.btnHome, me.btnBack, me.btnFav, me.btnRecent]);
+            me.enableTools([btnHome, btnBack, btnFav, btnRecent]);
         },
         _init: function () {
             var me = this;
@@ -3122,7 +3144,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [me.btnBack, me.btnHome, me.btnFav, me.btnRecent]);
+            me.addTools(1, true, [btnBack, btnHome, btnFav, btnRecent]);
             me._initCallbacks();
         },
 
@@ -5820,6 +5842,7 @@ $(function () {
                     selectorClass: "fr-button-home",
                     sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
                     imageClass: "fr-icons24x24-home",
+                    tooltip: locData.toolbar.home,
                     events: {
                         click: function (e) {
                             me.options.navigateTo("home", null);
@@ -5833,6 +5856,7 @@ $(function () {
                     selectorClass: "fr-button-update-fav",
                     sharedClass: "fr-toolbar-hidden-on-small",
                     imageClass: "fr-image-delFav",
+                    tooltip: locData.toolbar.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";

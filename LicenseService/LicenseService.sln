@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "LicenseService", "LicenseService\LicenseService.ccproj", "{6291C895-689F-4018-8D76-CEC913B787ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Register", "Register\Register.csproj", "{849B675D-F920-4E85-A944-20699743451A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worker", "Worker\Worker.csproj", "{3C2FCEFC-3D09-4ED9-9554-2928D0DC68A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6291C895-689F-4018-8D76-CEC913B787ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6291C895-689F-4018-8D76-CEC913B787ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6291C895-689F-4018-8D76-CEC913B787ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6291C895-689F-4018-8D76-CEC913B787ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849B675D-F920-4E85-A944-20699743451A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849B675D-F920-4E85-A944-20699743451A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849B675D-F920-4E85-A944-20699743451A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849B675D-F920-4E85-A944-20699743451A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C2FCEFC-3D09-4ED9-9554-2928D0DC68A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C2FCEFC-3D09-4ED9-9554-2928D0DC68A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C2FCEFC-3D09-4ED9-9554-2928D0DC68A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C2FCEFC-3D09-4ED9-9554-2928D0DC68A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

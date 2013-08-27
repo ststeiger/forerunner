@@ -1,0 +1,8 @@
+﻿IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'TrialRegistration')
+BEGIN	                            
+	CREATE TABLE TrialRegistration (DownloadID uniqueidentifier NOT NULL,Email varchar(200) NOT NULL , FirstName varchar(200) NOT NULL ,LastName varchar(200) NOT NULL ,CompanyName varchar(200) NOT NULL ,RegisterDate datetime NOT NULL,DownloadAttempts INT,RegistrationAttempts INT,PRIMARY KEY (Email) )
+END
+IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'WorkerTasks')
+BEGIN	                            
+	CREATE TABLE WorkerTasks (TaskID uniqueidentifier NOT NULL,TaskType varchar(100) NOT NULL,TaskCreated datetime NOT NULL, TaskData xml NOT NULL , TaskStatus int NOT NULL,TaskAttempts INT,TaskMessage varchar(max) null,PRIMARY KEY (TaskID) )
+END

@@ -19,15 +19,6 @@
 !define MUI_ICON "${LOCALROOT}\ForerunnerSetup.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
-/*
-!include "ApplicationConfig.nsdinc"
-!include "WebServerConfig.nsdinc"
-!include "RunRegister.nsh"
-
-!include "RunConfigTool.nsdinc"
-!include "RunConfigTool.nsh"
-*/
-
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; Directory page
@@ -35,16 +26,6 @@
 ; Instfiles page
 !insertmacro MUI_PAGE_INSTFILES
 Page custom fun_ApplicationConfig_RunRegister
-/*
-; Set Application Config page
-Page custom fnc_ApplicationConfig_Show fnc_ApplicationConfig_Leave
-; Update Web.config file
-Page custom fun_ApplicationConfig_RunRegister
-; Set Web Server Config page
-Page custom fnc_WebServerConfig_Show fnc_WebServerConfig_Leave
-; Run Deploy Script if user choose to config it
-
-Page custom fnc_RunConfigTool_Show */
 
 ; Finish page
 !define MUI_UNTEXT_FINISH_TITLE "Install Finish!"
@@ -167,29 +148,6 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolpane"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
-  /*SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\Toolbar"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\XML.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Word.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\tiff.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Thumbs.db"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\playback_rew_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\playback_reload_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\playback_prev_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\playback_next_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\playback_ff_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\PDF.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\page_layout_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\MHT.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\list_bullets_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\home_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\export.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\Excel.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\CSV.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\CSV.jpg"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\burst_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\arrow_left_icon.png"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\Toolbar\align_just_icon.png"
-  */
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortDecending.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\SortAccending.gif"
@@ -222,8 +180,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Scripts\Util\backbone_ui.js"
   File "${LOCALROOT}\Scripts\Util\backbone.js"
   File "${LOCALROOT}\Scripts\Util\_references.js"
-  /*SetOutPath "$INSTDIR\Views\Debug"
-  File "${LOCALROOT}\Views\Debug\Index.cshtml"*/
   SetOutPath "$INSTDIR\Views\Home"
   File "${LOCALROOT}\Views\Home\Index.cshtml"
   SetOutPath "$INSTDIR\Views\Shared"
@@ -266,18 +222,11 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
 SectionEnd
 
-;Detect .Net Framework before install
 Function .onInit
+  ;Verify admin right before install
   !insertmacro VerifyUserIsAdmin
-  
+  ;Verify .net framework 4 is installed.
   Call IsDotNETInstalled
-  Pop $0
-  StrCmp $0 1 found noFound
-  found:
-    Goto +4
-  noFound:
-    MessageBox MB_OK|MB_ICONSTOP ".Net Framework is needed before install"
-    Abort
 FunctionEnd
 
 Function un.onUninstSuccess
@@ -286,6 +235,7 @@ Function un.onUninstSuccess
 FunctionEnd
 
 Function un.onInit
+  ;Verify admin right before install
   !insertmacro VerifyUserIsAdmin
   
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
@@ -293,54 +243,23 @@ Function un.onInit
 FunctionEnd
 
 Function IsDotNETInstalled
-   Push $0
-   Push $1
-   Push $2
-   Push $3
-   Push $4
+    ReadRegStr $0 HKEY_LOCAL_MACHINE Software\Microsoft\.NETFramework "InstallRoot"
 
-   ReadRegStr $4 HKEY_LOCAL_MACHINE \
-     "Software\Microsoft\.NETFramework" "InstallRoot"
-   # ÒÆ³ýÍË¸ñ¼ü
-   Push $4
-   Exch $EXEDIR
-   Exch $EXEDIR
-   Pop $4
+    Push $0
+    Exch $EXEDIR
+    Exch $EXEDIR
+    Pop $0
 
-   IfFileExists $4 0 noDotNET
+    IfFileExists $0 0 noDotNET
 
-   StrCpy $0 0
-
-   EnumStart:
-
-     EnumRegKey $2 HKEY_LOCAL_MACHINE \
-       "Software\Microsoft\.NETFramework\Policy"  $0
-     IntOp $0 $0 + 1
-     StrCmp $2 "" noDotNET
-
-     StrCpy $1 0
-
-     EnumPolicy:
-
-       EnumRegValue $3 HKEY_LOCAL_MACHINE \
-         "Software\Microsoft\.NETFramework\Policy\$2" $1
-       IntOp $1 $1 + 1
-        StrCmp $3 "" EnumStart
-         IfFileExists "$4\$2.$3" foundDotNET EnumPolicy
-
-   noDotNET:
-     StrCpy $0 0
-     Goto done
-
-   foundDotNET:
-     StrCpy $0 1
-
-   done:
-     Pop $4
-     Pop $3
-     Pop $2
-     Pop $1
-     Exch $0
+    ReadRegStr $0 HKLM SOFTWARE\Microsoft\.NETFramework\policy\v4.0 "30319"	
+        StrCmp $0 "30319-30319" 0 noDotNet
+	Return
+        	
+    noDotNET:
+      	MessageBox MB_OK|MB_ICONSTOP "To work with this software, you will need .NET Framework 4.0 or above.$\n If you don't have it on your PC,click OK to download it from official website."
+      	ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
+	abort
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister
@@ -363,7 +282,6 @@ Section Uninstall
   Delete "$INSTDIR\Views\Shared\_RMLayout.cshtml"
   Delete "$INSTDIR\Views\Shared\Error.cshtml"
   Delete "$INSTDIR\Views\Home\Index.cshtml"
-  ;Delete "$INSTDIR\Views\Debug\Index.cshtml"
   Delete "$INSTDIR\Scripts\App\router.js"
   Delete "$INSTDIR\Scripts\Util\backbone.js"
   Delete "$INSTDIR\Scripts\Util\_references.js"

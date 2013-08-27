@@ -215,7 +215,7 @@ namespace ReportMannagerConfigTool
             string targetPath = winform.getTextBoxValue(txtReportServer);
             if (targetPath.Equals(string.Empty))
             {
-                winform.showWarning(StaticMessages.portEmpty);
+                winform.showWarning(StaticMessages.reportServerPathEmpty);
                 return;
             }
 

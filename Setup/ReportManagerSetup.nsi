@@ -195,6 +195,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Register\SetupUtil.exe"
   File "${LOCALROOT}\ReportManagerConfigTool.exe"
+  File "${LOCALROOT}\ReportManagerConfigTool.exe.config"
   File "${LOCALROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
@@ -384,6 +385,7 @@ Section Uninstall
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
   Delete "$INSTDIR\Config\SetupUtil.exe"
   Delete "$INSTDIR\Config\ReportManagerConfigTool.exe"
+  Delete "$INSTDIR\Config\ReportManagerConfigTool.exe.config"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
   Delete "$SMPROGRAMS\ForerunnerReportManager\Uninstall.lnk"

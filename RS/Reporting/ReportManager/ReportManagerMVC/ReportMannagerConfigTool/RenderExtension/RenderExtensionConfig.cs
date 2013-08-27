@@ -1,4 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -7,22 +10,21 @@ namespace ReportMannagerConfigTool
     public static class RenderExtensionConfig
     {
         #region Static Strings
-        private static readonly string forerunnerJSONDLL = "../SSRSExtension/Forerunner.Json.dll";
-        private static readonly string forerunnerRenderExtensionDLL = "../SSRSExtension/Forerunner.RenderingExtensions.dll";
+        private static string forerunnerJSONDLL = ConfigurationSettings.AppSettings["forerunnerJSONDLL"];
+        private static string forerunnerRenderExtensionDLL = ConfigurationSettings.AppSettings["forerunnerRenderExtensionDLL"];
 
-        private static readonly string rplRendering = "Microsoft.ReportingServices.RPLRendering";
-        private static readonly string htmlRendering = "Microsoft.ReportingServices.HTMLRendering";
-        private static readonly string forerunnerJSON = "ForerunnerJSON";
-        private static readonly string forerunnerThumbnail = "ForerunnerThumbnail";
-        private static readonly string codeGroupName = "Forerunner_JSON_Renderer";
+        private static string rplRendering = ConfigurationSettings.AppSettings["rplRendering"];
+        private static string htmlRendering = ConfigurationSettings.AppSettings["htmlRendering"];
+        private static string forerunnerJSON = ConfigurationSettings.AppSettings["forerunnerJSON"];
+        private static string forerunnerThumbnail = ConfigurationSettings.AppSettings["forerunnerThumbnail"];
+        private static string codeGroupName = ConfigurationSettings.AppSettings["codeGroupName"];
+        private static string reportServerWebConfig = ConfigurationSettings.AppSettings["reportServerWebConfig"];
+        private static string rsConfig = ConfigurationSettings.AppSettings["rsConfig"];
+        private static string srvPolicyConfig = ConfigurationSettings.AppSettings["srvPolicyConfig"];
 
-        private static readonly string xForerunnerJSON = "<Extension Name='ForerunnerJSON' Type='Forerunner.RenderingExtensions.JSONRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
-        private static readonly string xForerunnerThumbnail = "<Extension Name='ForerunnerThumbnail' Type='Forerunner.RenderingExtensions.ThumbnailRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
-        private static readonly string xCodeGroup = "<CodeGroup class='UnionCodeGroup' version='1' PermissionSetName='FullTrust' Name='Forerunner_JSON_Renderer' Description='This code group grants Forerunner JSON Renderer code full trust.'><IMembershipCondition class='StrongNameMembershipCondition' version='1' PublicKeyBlob='0024000004800000940000000602000000240000525341310004000001000100b3ce6944622dd1d04857d494118907f56368d05042eec4ac87160554f250bc7fab32362151aef7e898e48fa0867cde4dca5c40cabc790a39b1cebf76921ba1744834666a1876f6980a969e726d8d7eae37a7089b55d5adccbf772a5d17c6705b75656ee727d2eeac5338f64d57817508d4e61bbffa809e27eee28d2d22da64c5' /></CodeGroup>";
-
-        private static readonly string webConfig = "/web.config";
-        private static readonly string rsConfig = "/rsreportserver.config";
-        private static readonly string srvPolicyConfig = "/rssrvpolicy.config";
+        private static string xForerunnerJSON = "<Extension Name='ForerunnerJSON' Type='Forerunner.RenderingExtensions.JSONRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
+        private static string xForerunnerThumbnail = "<Extension Name='ForerunnerThumbnail' Type='Forerunner.RenderingExtensions.ThumbnailRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
+        private static string xCodeGroup = "<CodeGroup class='UnionCodeGroup' version='1' PermissionSetName='FullTrust' Name='Forerunner_JSON_Renderer' Description='This code group grants Forerunner JSON Renderer code full trust.'><IMembershipCondition class='StrongNameMembershipCondition' version='1' PublicKeyBlob='0024000004800000940000000602000000240000525341310004000001000100b3ce6944622dd1d04857d494118907f56368d05042eec4ac87160554f250bc7fab32362151aef7e898e48fa0867cde4dca5c40cabc790a39b1cebf76921ba1744834666a1876f6980a969e726d8d7eae37a7089b55d5adccbf772a5d17c6705b75656ee727d2eeac5338f64d57817508d4e61bbffa809e27eee28d2d22da64c5' /></CodeGroup>";
         #endregion
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace ReportMannagerConfigTool
         /// <returns>True: path right; False: path wrong</returns>
         public static bool VerifyReportServerPath(string targetPath)
         {
-            if (File.Exists(targetPath + RenderExtensionConfig.webConfig) &&
+            if (File.Exists(targetPath + RenderExtensionConfig.reportServerWebConfig) &&
                    File.Exists(targetPath + RenderExtensionConfig.rsConfig) &&
                    File.Exists(targetPath + RenderExtensionConfig.srvPolicyConfig) &&
                    Directory.Exists(targetPath + "/bin"))
@@ -158,9 +160,11 @@ namespace ReportMannagerConfigTool
         /// <returns>Success or not</returns>
         private static bool updateWebConfig(string path)
         {
+            if (isTargetSqlServer2008(path))
+                return true;
             try
             {
-                XDocument doc = XDocument.Load(path + webConfig);
+                XDocument doc = XDocument.Load(path + reportServerWebConfig);
                 XNamespace ns = "urn:schemas-microsoft-com:asm.v1";
                 
                 var result = from a in doc.Descendants(ns + "assemblyIdentity")
@@ -183,7 +187,7 @@ namespace ReportMannagerConfigTool
                     root.Add(getHTMLRendering(ns));
                 }
 
-                doc.Save(path + webConfig);
+                doc.Save(path + reportServerWebConfig);
             }
             catch {
 
@@ -200,9 +204,11 @@ namespace ReportMannagerConfigTool
         /// <returns>Success or not</returns>
         private static bool removeWebConfig(string path)
         {
+            if (isTargetSqlServer2008(path))
+                return true;
             try
             {
-                XDocument doc = XDocument.Load(path + webConfig);
+                XDocument doc = XDocument.Load(path + reportServerWebConfig);
                 XNamespace ns = "urn:schemas-microsoft-com:asm.v1";
 
                 var result = from a in doc.Descendants(ns + "dependentAssembly")
@@ -213,7 +219,7 @@ namespace ReportMannagerConfigTool
                 if (result.Count() > 0)
                     result.Remove();
 
-                doc.Save(path + webConfig);
+                doc.Save(path + reportServerWebConfig);
             }
             catch
             {
@@ -410,5 +416,17 @@ namespace ReportMannagerConfigTool
 
             return ele;
         }
+
+        private static bool isTargetSqlServer2008(string path)
+        {
+            string RPLFilePath = path + ConfigurationSettings.AppSettings["rplRenderingDllPath"];
+            FileVersionInfo info = FileVersionInfo.GetVersionInfo(RPLFilePath);
+            
+            if (info.FileMajorPart == 10)
+                return true;
+
+            return false;
+        }
+    
     }
 }

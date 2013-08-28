@@ -19,6 +19,7 @@ namespace ReportMannagerConfigTool
                 winform = new WinFormHelper();
 
                 LoadWebConfig();
+                SetReportManagerFolderPath();
             }
             catch(Exception ex)
             {
@@ -114,7 +115,6 @@ namespace ReportMannagerConfigTool
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            
             var existConfig = ReportManagerConfig.GetConfig();
 
             winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
@@ -123,6 +123,11 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
             winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
+        }
+
+        private void SetReportManagerFolderPath()
+        {
+            txtReportServer.Text = RenderExtensionConfig.ReprotManagerFolderPath;
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -160,7 +165,7 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)));
-
+                
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
             catch
@@ -222,6 +227,7 @@ namespace ReportMannagerConfigTool
             if (RenderExtensionConfig.VerifyReportServerPath(targetPath))
             {
                 RenderExtensionConfig.addRenderExtension(targetPath);
+                RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
             }
             else
             {

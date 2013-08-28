@@ -11,19 +11,19 @@ namespace ReportMannagerConfigTool
 {
     public static class ReportManagerConfig
     {
-        private static string forerunnerPoolName = ConfigurationSettings.AppSettings["ForerunnerPool"];
-        private static string defaultSite = ConfigurationSettings.AppSettings["DefaultSiteName"];
-        private static string filePath = ConfigurationSettings.AppSettings["ReportManagerWebConfigPath"];
+        private static string forerunnerPoolName = ConfigurationManager.AppSettings["ForerunnerPool"];
+        private static string defaultSite = ConfigurationManager.AppSettings["DefaultSiteName"];
+        private static string filePath = ConfigurationManager.AppSettings["ReportManagerWebConfigPath"];
 
-        private static string reportServerWSUrl = ConfigurationSettings.AppSettings["ReportServerWSUrl"];
-        private static string reportServerDataSource = ConfigurationSettings.AppSettings["ReportServerDataSource"];
-        private static string reportServerDB = ConfigurationSettings.AppSettings["ReportServerDB"];
-        private static string reportServerDBDomain = ConfigurationSettings.AppSettings["ReportServerDBDomain"];
-        private static string reportServerDBUser = ConfigurationSettings.AppSettings["ReportServerDBUser"];
-        private static string reportServerDBPWD = ConfigurationSettings.AppSettings["ReportServerDBPWD"];
+        private static string reportServerWSUrl = ConfigurationManager.AppSettings["ReportServerWSUrl"];
+        private static string reportServerDataSource = ConfigurationManager.AppSettings["ReportServerDataSource"];
+        private static string reportServerDB = ConfigurationManager.AppSettings["ReportServerDB"];
+        private static string reportServerDBDomain = ConfigurationManager.AppSettings["ReportServerDBDomain"];
+        private static string reportServerDBUser = ConfigurationManager.AppSettings["ReportServerDBUser"];
+        private static string reportServerDBPWD = ConfigurationManager.AppSettings["ReportServerDBPWD"];
 
-        private static string anonymousAuthenticationPath = ConfigurationSettings.AppSettings["anonymousAuthentication"];
-        private static string windowsAuthenticationPath = ConfigurationSettings.AppSettings["windowsAuthentication"];
+        private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
+        private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -168,14 +168,14 @@ namespace ReportMannagerConfigTool
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                Configuration config = serverManager.GetApplicationHostConfiguration();
+                Microsoft.Web.Administration.Configuration config = serverManager.GetApplicationHostConfiguration();
 
                 //disable anonymous authentication which is the default value of IIS
-                ConfigurationSection anonymousAuthenticationSection = config.GetSection(anonymousAuthenticationPath, siteName);
+                Microsoft.Web.Administration.ConfigurationSection anonymousAuthenticationSection = config.GetSection(anonymousAuthenticationPath, siteName);
                 anonymousAuthenticationSection["enabled"] = false;
 
                 //Enable window authentication
-                ConfigurationSection windowsAuthenticationSection = config.GetSection(windowsAuthenticationPath, siteName);
+                Microsoft.Web.Administration.ConfigurationSection windowsAuthenticationSection = config.GetSection(windowsAuthenticationPath, siteName);
                 windowsAuthenticationSection["enabled"] = true;
 
                 serverManager.CommitChanges();

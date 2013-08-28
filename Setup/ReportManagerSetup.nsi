@@ -257,9 +257,13 @@ Function IsDotNETInstalled
 	Return
         	
     noDotNET:
-      	MessageBox MB_OK|MB_ICONSTOP "To work with this software, you will need .NET Framework 4.0 or above.$\n If you don't have it on your PC,click OK to download it from official website."
-      	ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
-	abort
+      	MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 4.0 or above.$\nIf you don't have it on your PC,click OK to download it from official website.$\nClick Cancel to quit the installation" IDOK Download IDCANCEL QuitInstallation
+		
+	Download:
+            ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
+            abort
+	QuitInstallation:
+	    abort
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister

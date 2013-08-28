@@ -10,22 +10,44 @@ namespace ReportMannagerConfigTool
     public static class RenderExtensionConfig
     {
         #region Static Strings
-        private static string forerunnerJSONDLL = ConfigurationSettings.AppSettings["forerunnerJSONDLL"];
-        private static string forerunnerRenderExtensionDLL = ConfigurationSettings.AppSettings["forerunnerRenderExtensionDLL"];
+        
+        private static string forerunnerJSONDLL = ConfigurationManager.AppSettings["forerunnerJSONDLL"];
+        private static string forerunnerRenderExtensionDLL = ConfigurationManager.AppSettings["forerunnerRenderExtensionDLL"];
 
-        private static string rplRendering = ConfigurationSettings.AppSettings["rplRendering"];
-        private static string htmlRendering = ConfigurationSettings.AppSettings["htmlRendering"];
-        private static string forerunnerJSON = ConfigurationSettings.AppSettings["forerunnerJSON"];
-        private static string forerunnerThumbnail = ConfigurationSettings.AppSettings["forerunnerThumbnail"];
-        private static string codeGroupName = ConfigurationSettings.AppSettings["codeGroupName"];
-        private static string reportServerWebConfig = ConfigurationSettings.AppSettings["reportServerWebConfig"];
-        private static string rsConfig = ConfigurationSettings.AppSettings["rsConfig"];
-        private static string srvPolicyConfig = ConfigurationSettings.AppSettings["srvPolicyConfig"];
+        private static string rplRendering = ConfigurationManager.AppSettings["rplRendering"];
+        private static string htmlRendering = ConfigurationManager.AppSettings["htmlRendering"];
+        private static string forerunnerJSON = ConfigurationManager.AppSettings["forerunnerJSON"];
+        private static string forerunnerThumbnail = ConfigurationManager.AppSettings["forerunnerThumbnail"];
+        private static string codeGroupName = ConfigurationManager.AppSettings["codeGroupName"];
+        private static string reportServerWebConfig = ConfigurationManager.AppSettings["reportServerWebConfig"];
+        private static string rsConfig = ConfigurationManager.AppSettings["rsConfig"];
+        private static string srvPolicyConfig = ConfigurationManager.AppSettings["srvPolicyConfig"];
 
         private static string xForerunnerJSON = "<Extension Name='ForerunnerJSON' Type='Forerunner.RenderingExtensions.JSONRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
         private static string xForerunnerThumbnail = "<Extension Name='ForerunnerThumbnail' Type='Forerunner.RenderingExtensions.ThumbnailRenderer,Forerunner.RenderingExtensions'  Visible='false'/>";
         private static string xCodeGroup = "<CodeGroup class='UnionCodeGroup' version='1' PermissionSetName='FullTrust' Name='Forerunner_JSON_Renderer' Description='This code group grants Forerunner JSON Renderer code full trust.'><IMembershipCondition class='StrongNameMembershipCondition' version='1' PublicKeyBlob='0024000004800000940000000602000000240000525341310004000001000100b3ce6944622dd1d04857d494118907f56368d05042eec4ac87160554f250bc7fab32362151aef7e898e48fa0867cde4dca5c40cabc790a39b1cebf76921ba1744834666a1876f6980a969e726d8d7eae37a7089b55d5adccbf772a5d17c6705b75656ee727d2eeac5338f64d57817508d4e61bbffa809e27eee28d2d22da64c5' /></CodeGroup>";
         #endregion
+
+        /// <summary>
+        /// Get and Set Report Manager Folder Path on Client
+        /// </summary>
+        public static string ReprotManagerFolderPath
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["ReportManagerFolderPath"];
+            }
+
+            set 
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                config.AppSettings.Settings["ReportManagerFolderPath"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");   
+            }
+        }
+
+
 
         /// <summary>
         /// Verify the specific path contain web.config. rereportserver.config and rssrvpolicy.config files
@@ -419,7 +441,7 @@ namespace ReportMannagerConfigTool
 
         private static bool isTargetSqlServer2008(string path)
         {
-            string RPLFilePath = path + ConfigurationSettings.AppSettings["rplRenderingDllPath"];
+            string RPLFilePath = path + ConfigurationManager.AppSettings["rplRenderingDllPath"];
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(RPLFilePath);
             
             if (info.FileMajorPart == 10)
@@ -427,6 +449,5 @@ namespace ReportMannagerConfigTool
 
             return false;
         }
-    
     }
 }

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ReportMannagerConfigTool")]
+[assembly: AssemblyTitle("MobilizerConfigTool")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hewlett-Packard")]
-[assembly: AssemblyProduct("ReportMannagerConfigTool")]
-[assembly: AssemblyCopyright("Copyright © Hewlett-Packard 2013")]
+[assembly: AssemblyCompany("Forerunner Software")]
+[assembly: AssemblyProduct("MobilizerrConfigTool")]
+[assembly: AssemblyCopyright("Copyright © Forerunner Software 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

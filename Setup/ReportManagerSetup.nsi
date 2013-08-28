@@ -21,15 +21,16 @@
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
+; License Page
+!define MUI_LICENSEPAGE_CHECKBOX
+!insertmacro MUI_PAGE_LICENSE "${LOCALROOT}\License.txt"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
-; Instfiles page
+; Install files page
 !insertmacro MUI_PAGE_INSTFILES
+; Add registry key
 Page custom fun_ApplicationConfig_RunRegister
 
-; Finish page
-!define MUI_UNTEXT_FINISH_TITLE "Install Finish!"
-!define MUI_UNTEXT_FINISH_SUBTITLE "Please choose run report manager config tool or not."
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Config\ReportManagerConfigTool.exe"
 !define MUI_FINISHPAGE_RUN_TEXT "Run Report Manager Config Tool"
@@ -37,7 +38,6 @@ Page custom fun_ApplicationConfig_RunRegister
 
 ; Language files
 !insertmacro MUI_LANGUAGE "English"
-
 ; Uninstaller pages
 !insertmacro MUI_UNPAGE_INSTFILES
 ; MUI end ------
@@ -199,7 +199,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\Web.config"
-  File "${LOCALROOT}\Readme.txt"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
   File "${LOCALROOT}\ForerunnerSetup.ico"
@@ -274,7 +273,6 @@ Section Uninstall
   Delete "$INSTDIR\ForerunnerSetup.ico"
   Delete "$INSTDIR\Global.asax"
   Delete "$INSTDIR\packages.config"
-  Delete "$INSTDIR\Readme.txt"
   Delete "$INSTDIR\Web.config"
   Delete "$INSTDIR\CSS\ReportManager.css"
   Delete "$INSTDIR\Views\_ViewStart.cshtml"

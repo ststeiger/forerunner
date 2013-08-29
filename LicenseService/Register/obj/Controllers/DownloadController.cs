@@ -47,12 +47,13 @@ namespace Register.Controllers
         [HttpGet]
         public HttpResponseMessage Get(string id)
         {
+            string errorString = "<DIV><H1>Thank you for your interest in Forerunner Software</H1><BR><BR><H3>We are sorry but we are unable to complete your request either becasue your ID is invalid or you have apttempted to download too many times.</h3><h3>If you need to download the file again please send mail to support@forerunnersw.com</h3>";
             try
             {
                 if (Reg.ValidateDownload(id))
-                    return GetResponseFromBytes(Reg.GetSetupFile(), "application/exe", false, "ForerunnerReportManagerSetup.exe");
+                    return GetResponseFromBytes(Reg.GetSetupFile(), "application/exe", false, "ForerunnerMobilizerSetup.exe");
                 else
-                    return GetResponseFromBytes(null, "application/exe");
+                    return GetResponseFromBytes(Encoding.UTF8.GetBytes(errorString), "text/HTML");
             }
             catch (Exception e)
             {
@@ -63,7 +64,7 @@ namespace Register.Controllers
 
         public void Post()
         {
-            Stream content = this.Request.Content.ReadAsStreamAsync().Result;
+            string content = this.Request.Content.ReadAsStringAsync().Result;
             Reg.RegisterDownload(content);
         }
 

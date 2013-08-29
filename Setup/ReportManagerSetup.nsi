@@ -16,12 +16,15 @@
 
 ; MUI Settings
 !define MUI_ABORTWARNING
-!define MUI_ICON "${LOCALROOT}\ForerunnerSetup.ico"
+!define MUI_ICON "${LOCALROOT}\Mobilizer_32.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
+
 
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE_3LINES
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${LOCALROOT}\Mobilizer_Setup.bmp"
 !insertmacro MUI_PAGE_WELCOME
+
 ; License Page
 !define MUI_LICENSEPAGE_CHECKBOX
 !insertmacro MUI_PAGE_LICENSE "${LOCALROOT}\License.rtf"

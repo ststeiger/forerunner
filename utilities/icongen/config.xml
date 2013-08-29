@@ -22,5 +22,6 @@
     <sourcefile name="tiff.jpg" classname="fr-icons24x24-exportTIFF"></sourcefile>
     <sourcefile name="Word.png" classname="fr-icons24x24-exportWord"></sourcefile>
     <sourcefile name="XML.jpg" classname="fr-icons24x24-exportXML"></sourcefile>
+    <sourcefile name="burst_icon.png" classname="fr-icons24x24-zoom"></sourcefile>
   </compositeimage>
 </iconfiles>

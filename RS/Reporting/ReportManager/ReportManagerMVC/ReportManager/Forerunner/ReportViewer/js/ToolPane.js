@@ -29,7 +29,7 @@ $(function () {
     var itemZoom = {
         toolType: toolTypes.containerItem,
         selectorClass: "fr-item-zoom",
-        imageClass: "fr-icons24x24-nav",
+        imageClass: "fr-icons24x24-zoom",
         text: locData.toolPane.zoom,
         events: {
             click: function (e) {                
@@ -91,10 +91,11 @@ $(function () {
         inputType: "number",
         events: {
             keydown: function (e) {
-                if (e.keyCode === 13) {
+                if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
                 }
+                return false;
             }
         }
     };
@@ -266,10 +267,11 @@ $(function () {
         selectorClass: "fr-item-textbox-keyword",
         events: {
             keydown: function (e) {
-                if (e.keyCode === 13) {
+                if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                 }
+                return false;
             }
         }
     };

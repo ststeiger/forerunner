@@ -9,6 +9,7 @@ using Forerunner.SSRS.JSONRender;
 using Forerunner.Thumbnail;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Security;
 using Forerunner.Security;
 
 namespace Forerunner.SSRS.Viewer
@@ -55,6 +56,20 @@ namespace Forerunner.SSRS.Viewer
             SetRSURL();
         }
 
+        private ICredentials GetCredentials()
+        {
+            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+            {
+                return CredentialCache.DefaultNetworkCredentials;
+            }
+
+            // Get it from Cookies otherwise
+            HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+            return new NetworkCredential(authTicket.Name, authTicket.UserData);
+        }
+
         internal bool GetServerRendering()
         {
             if (checkedServerRendering)
@@ -62,7 +77,7 @@ namespace Forerunner.SSRS.Viewer
                 return this.ServerRendering;
             }
             if (rs.Credentials == null)
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
@@ -86,7 +101,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
 
                 ExecutionInfo execInfo = new ExecutionInfo();
                 ExecutionHeader execHeader = new ExecutionHeader();
@@ -110,7 +125,7 @@ namespace Forerunner.SSRS.Viewer
  
         public byte[] NavigateTo(string NavType, string SessionID, string UniqueID)
         {
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             switch (NavType)
             {
                 case "toggle":
@@ -129,7 +144,7 @@ namespace Forerunner.SSRS.Viewer
         {
             JsonWriter w = new JsonTextWriter();
             w.WriteStartObject();
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
 
             if (SessionID != "" && SessionID != null)
             {
@@ -178,7 +193,7 @@ namespace Forerunner.SSRS.Viewer
             string NewSession;
             ReportJSONWriter rw;
 
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             GetServerRendering();
             if (this.ServerRendering)
                 format = "ForerunnerJSON";
@@ -261,7 +276,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
@@ -283,7 +298,7 @@ namespace Forerunner.SSRS.Viewer
 
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 execInfo = rs.LoadReport(ReportPath, historyID);
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
@@ -309,7 +324,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 string ReportItem = string.Empty;
                 int NumPages = 0;
                 ExecutionHeader execHeader = new ExecutionHeader();
@@ -354,7 +369,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 bool result;
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
@@ -385,7 +400,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
@@ -416,7 +431,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
@@ -455,7 +470,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
@@ -481,7 +496,7 @@ namespace Forerunner.SSRS.Viewer
         {
             try
             {
-                rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+                rs.Credentials = GetCredentials();
                 ExecutionHeader execHeader = new ExecutionHeader();
                 rs.ExecutionHeaderValue = execHeader;
 
@@ -543,7 +558,7 @@ namespace Forerunner.SSRS.Viewer
             else
                 NewSession = SessionID;
 
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
 
@@ -604,7 +619,7 @@ namespace Forerunner.SSRS.Viewer
 
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             FileName = "";
             rs.ExecutionHeaderValue = execHeader;
             try

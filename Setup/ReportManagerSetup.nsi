@@ -279,6 +279,7 @@ Section Uninstall
   Delete "$INSTDIR\Global.asax"
   Delete "$INSTDIR\packages.config"
   Delete "$INSTDIR\Web.config"
+  Delete "$INSTDIR\TextWriterOutput.log"
   Delete "$INSTDIR\CSS\ReportManager.css"
   Delete "$INSTDIR\Views\_ViewStart.cshtml"
   Delete "$INSTDIR\Views\Web.config"
@@ -392,7 +393,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk"
-  Delete "$SMPROGRAMS\ForerunnerMobilizer\ReportManagerConfigTool.lnk"
+  Delete "$SMPROGRAMS\ForerunnerMobilizer\MobilizerConfigTool.lnk"
   RMDir "$SMPROGRAMS\ForerunnerMobilizer"
   
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"

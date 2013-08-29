@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Net;
 using System.Xml;
@@ -10,9 +11,19 @@ namespace ReportMannagerConfigTool
 {
     public static class ReportManagerConfig
     {
-        private static readonly string appPoolName = "ForerunnerPool";
-        private static readonly string defaultSite = "Default Web Site";
-        private static string filePath = "../Web.config";
+        private static string forerunnerPoolName = ConfigurationManager.AppSettings["ForerunnerPool"];
+        private static string defaultSite = ConfigurationManager.AppSettings["DefaultSiteName"];
+        private static string filePath = ConfigurationManager.AppSettings["ReportManagerWebConfigPath"];
+
+        private static string reportServerWSUrl = ConfigurationManager.AppSettings["ReportServerWSUrl"];
+        private static string reportServerDataSource = ConfigurationManager.AppSettings["ReportServerDataSource"];
+        private static string reportServerDB = ConfigurationManager.AppSettings["ReportServerDB"];
+        private static string reportServerDBDomain = ConfigurationManager.AppSettings["ReportServerDBDomain"];
+        private static string reportServerDBUser = ConfigurationManager.AppSettings["ReportServerDBUser"];
+        private static string reportServerDBPWD = ConfigurationManager.AppSettings["ReportServerDBPWD"];
+
+        private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
+        private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
 
         /// <summary>
         /// Create a website and open it in IIS server
@@ -38,7 +49,7 @@ namespace ReportMannagerConfigTool
                     reportManager.Applications.Add("/" + siteName, physicalPath);
                    
                     Application app = reportManager.Applications["/" + siteName];
-                    app.ApplicationPoolName = appPoolName;
+                    app.ApplicationPoolName = forerunnerPoolName;
 
                     siteUrl = GetSiteUrl(reportManager, siteName);
                     manager.CommitChanges();
@@ -48,7 +59,7 @@ namespace ReportMannagerConfigTool
                 {
                     //if default site not exist then create a new site.
                     Site reportManager = manager.Sites.Add(siteName, "http", bindingAddress, physicalPath);
-                    reportManager.ApplicationDefaults.ApplicationPoolName = appPoolName;
+                    reportManager.ApplicationDefaults.ApplicationPoolName = forerunnerPoolName;
 
                     siteUrl = GetSiteUrl(reportManager);
                     manager.CommitChanges();
@@ -99,7 +110,7 @@ namespace ReportMannagerConfigTool
             {
                 foreach (ApplicationPool pool in serverManager.ApplicationPools)
                 {
-                    if (appPoolName.Equals(pool.Name, StringComparison.OrdinalIgnoreCase))
+                    if (forerunnerPoolName.Equals(pool.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         return true;
                     }
@@ -112,7 +123,7 @@ namespace ReportMannagerConfigTool
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                ApplicationPool newpool = serverManager.ApplicationPools.Add(appPoolName);
+                ApplicationPool newpool = serverManager.ApplicationPools.Add(forerunnerPoolName);
                 newpool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
                 newpool.ManagedRuntimeVersion = "v4.0";
                 serverManager.CommitChanges();
@@ -157,14 +168,14 @@ namespace ReportMannagerConfigTool
         {
             using (ServerManager serverManager = new ServerManager())
             {
-                Configuration config = serverManager.GetApplicationHostConfiguration();
+                Microsoft.Web.Administration.Configuration config = serverManager.GetApplicationHostConfiguration();
 
                 //disable anonymous authentication which is the default value of IIS
-                ConfigurationSection anonymousAuthenticationSection = config.GetSection("system.webServer/security/authentication/anonymousAuthentication", siteName);
+                Microsoft.Web.Administration.ConfigurationSection anonymousAuthenticationSection = config.GetSection(anonymousAuthenticationPath, siteName);
                 anonymousAuthenticationSection["enabled"] = false;
 
                 //Enable window authentication
-                ConfigurationSection windowsAuthenticationSection = config.GetSection("system.webServer/security/authentication/windowsAuthentication", siteName);
+                Microsoft.Web.Administration.ConfigurationSection windowsAuthenticationSection = config.GetSection(windowsAuthenticationPath, siteName);
                 windowsAuthenticationSection["enabled"] = true;
 
                 serverManager.CommitChanges();
@@ -220,17 +231,17 @@ namespace ReportMannagerConfigTool
             //need update in installer
             doc.Load(filePath);
 
-            GetConfigNode(doc, "Forerunner.ReportServerWSUrl").UpdateValue(wsurl);                       
+            GetConfigNode(doc,reportServerWSUrl).UpdateValue(wsurl);                       
             
-            GetConfigNode(doc, "Forerunner.ReportServerDataSource").UpdateValue(reportserverdatasource);
+            GetConfigNode(doc, reportServerDataSource).UpdateValue(reportserverdatasource);
 
-            GetConfigNode(doc, "Forerunner.ReportServerDB").UpdateValue(reportserverdb);
+            GetConfigNode(doc, reportServerDB).UpdateValue(reportserverdb);
 
-            GetConfigNode(doc, "Forerunner.ReportServerDBDomain").UpdateValue(reportserverdbuserdomain);
+            GetConfigNode(doc, reportServerDBDomain).UpdateValue(reportserverdbuserdomain);
 
-            GetConfigNode(doc, "Forerunner.ReportServerDBUser").UpdateValue(reportserverdbuser);
+            GetConfigNode(doc, reportServerDBUser).UpdateValue(reportserverdbuser);
 
-            GetConfigNode(doc, "Forerunner.ReportServerDBPWD").UpdateValue(reportserverdbpwd);
+            GetConfigNode(doc, reportServerDBPWD).UpdateValue(reportserverdbpwd);
 
             doc.Save(filePath);
         }
@@ -246,12 +257,12 @@ namespace ReportMannagerConfigTool
             XmlDocument doc = new XmlDocument();
             doc.Load(filePath);
 
-            result.Add("WSUrl", GetConfigNode(doc, "Forerunner.ReportServerWSUrl").GetValue());
-            result.Add("DataSource", GetConfigNode(doc, "Forerunner.ReportServerDataSource").GetValue());
-            result.Add("Database", GetConfigNode(doc, "Forerunner.ReportServerDB").GetValue());
-            result.Add("UserDomain", GetConfigNode(doc, "Forerunner.ReportServerDBDomain").GetValue());
-            result.Add("User", GetConfigNode(doc, "Forerunner.ReportServerDBUser").GetValue());
-            result.Add("Password", GetConfigNode(doc, "Forerunner.ReportServerDBPWD").GetValue());
+            result.Add("WSUrl", GetConfigNode(doc, reportServerWSUrl).GetValue());
+            result.Add("DataSource", GetConfigNode(doc, reportServerDataSource).GetValue());
+            result.Add("Database", GetConfigNode(doc, reportServerDB).GetValue());
+            result.Add("UserDomain", GetConfigNode(doc, reportServerDBDomain).GetValue());
+            result.Add("User", GetConfigNode(doc, reportServerDBUser).GetValue());
+            result.Add("Password", GetConfigNode(doc, reportServerDBPWD).GetValue());
 
             return result;
         }

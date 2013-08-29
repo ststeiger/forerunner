@@ -9,7 +9,6 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
-        private string siteUrl = string.Empty;
 
         public frmMain()
         {
@@ -20,6 +19,7 @@ namespace ReportMannagerConfigTool
                 winform = new WinFormHelper();
 
                 LoadWebConfig();
+                SetReportManagerFolderPath();
             }
             catch(Exception ex)
             {
@@ -76,6 +76,7 @@ namespace ReportMannagerConfigTool
                 string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
+                string siteUrl = "";
 
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
@@ -107,21 +108,13 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-            if(string.Empty.Equals(siteUrl))
-            {
-                winform.showMessage("Please deploy the site first");
-            }
-            else
-            {
-                Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
-            }
+             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
         }
         #endregion
 
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            
             var existConfig = ReportManagerConfig.GetConfig();
 
             winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
@@ -130,6 +123,11 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
             winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
+        }
+
+        private void SetReportManagerFolderPath()
+        {
+            txtReportServer.Text = RenderExtensionConfig.ReprotManagerFolderPath;
         }
 
         private void btnTest_Click(object sender, EventArgs e)
@@ -167,7 +165,7 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)));
-
+                
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
             catch
@@ -222,13 +220,14 @@ namespace ReportMannagerConfigTool
             string targetPath = winform.getTextBoxValue(txtReportServer);
             if (targetPath.Equals(string.Empty))
             {
-                winform.showWarning(StaticMessages.portEmpty);
+                winform.showWarning(StaticMessages.reportServerPathEmpty);
                 return;
             }
 
             if (RenderExtensionConfig.VerifyReportServerPath(targetPath))
             {
                 RenderExtensionConfig.addRenderExtension(targetPath);
+                RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
             }
             else
             {

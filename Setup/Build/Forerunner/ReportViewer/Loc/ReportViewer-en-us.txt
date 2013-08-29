@@ -37,10 +37,25 @@
 		"zoom": "Enable Zoom"
     },
 	"toolbar": {
-        "pageOf": "of",
+        "back": "Back",
+        "docMap": "Document Map",
+        "exportMenu": "Export",
+        "favorites": "Favorites",
         "find": "Find",
+        "firstPage": "First",
+        "home": "Home",
+		"keyword": "Keyword",
+		"lastPage": "Last",
+		"menu": "Menu",
+        "navigation": "Navigation",
         "next": "Next",
-        "exportMenu": "Export"
+        "pageOf": "of",
+		"paramarea": "Parmeters",
+		"previousPage": "Previous",
+		"recent": "Recent",
+        "refresh": "Refresh",
+		"reportPage": "Page",
+		"zoom": "Enable Zoom"
     },
 	"paramPane": {
         "nullField": "Null",

@@ -1765,6 +1765,10 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
+            if (toolInfo.tooltip) {
+                $tool.attr("title", toolInfo.tooltip);
+            }
+
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
             }
@@ -2053,6 +2057,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-reportback-button",
         imageClass: "fr-icons24x24-reportback",
+        tooltip: locData.toolbar.back,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
@@ -2063,6 +2068,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
+        tooltip: locData.toolbar.menu,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.menuClick, null, {});
@@ -2073,7 +2079,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium",
+        tooltip: locData.toolbar.navigation,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -2084,6 +2091,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-paramarea-button",
         imageClass: "fr-icons24x24-paramarea",
+        tooltip: locData.toolbar.paramarea,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.paramAreaClick, null, {});
@@ -2095,7 +2103,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.refresh,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -2106,7 +2115,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.firstPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -2117,7 +2127,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.previousPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -2128,6 +2139,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-reportpage-textbox",
         inputType: "number",
+        tooltip: locData.toolbar.reportPage,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -2153,7 +2165,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -2164,7 +2177,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.lastPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -2179,8 +2193,9 @@ $(function () {
     var btnDocumentMap = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-documentmap-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         imageClass: "fr-icons24x24-documentmap",
+        tooltip: locData.toolbar.docMap,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
@@ -2190,7 +2205,8 @@ $(function () {
     var btnKeyword = {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-keyword-textbox",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.keyword,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -2202,8 +2218,9 @@ $(function () {
     var btnFind = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-find-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.find,
+        tooltip: locData.toolbar.find,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -2214,14 +2231,15 @@ $(function () {
     var btnSeparator = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: "|&nbsp"
     };
     var btnFindNext = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-findnext-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.next,
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -2323,15 +2341,15 @@ $(function () {
     var btnSeparator2 = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
-        sharedClass: "fr-toolbar-touch-hidden",
-        //text: locData.toolbar.exportMenu,
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
@@ -3042,7 +3060,54 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var widgets = forerunner.ssr.constants.widgets;
+
+    // Button Info
+    var btnHome = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-home",
+        imageClass: "fr-icons24x24-home",
+        tooltip: locData.toolbar.home,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("home", null);
+            }
+        }
+    };
+    var btnBack = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-button-back",
+        imageClass: "fr-icons24x24-back",
+        tooltip: locData.toolbar.back,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("back", null);
+            }
+        }
+    };
+    var btnFav = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-fav",
+        imageClass: "fr-image-fav",
+        tooltip: locData.toolbar.favorites,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("favorites", null);
+            }
+        }
+    };
+    var btnRecent = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-recent",
+        imageClass: "fr-image-recent",
+        tooltip: locData.toolbar.recent,
+        events: {
+            click: function (e) {
+                e.data.me.options.navigateTo("recent", null);
+            }
+        }
+    };
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -3061,55 +3126,12 @@ $(function () {
             navigateTo: null,
             toolClass: "fr-toolbar"
         },
-        // Button Info
-        btnHome: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-home",
-            imageClass: "fr-icons24x24-home",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("home", null);
-                }
-            }
-        },
-        btnBack: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-back",
-            imageClass: "fr-icons24x24-back",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("back", null);
-                }
-            }
-        },
-        btnFav: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-fav",
-            imageClass: "fr-image-fav",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("favorites", null);
-                }
-            }
-        },
-        btnRecent: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-rm-button-recent",
-            imageClass: "fr-image-recent",
-            events: {
-                click: function (e) {
-                    e.data.me.options.navigateTo("recent", null);
-                }
-            }
-        },
-        
-
         _initCallbacks: function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([me.btnHome, me.btnBack, me.btnFav, me.btnRecent]);
+            me.enableTools([btnHome, btnBack, btnFav, btnRecent]);
         },
         _init: function () {
             var me = this;
@@ -3122,7 +3144,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [me.btnBack, me.btnHome, me.btnFav, me.btnRecent]);
+            me.addTools(1, true, [btnBack, btnHome, btnFav, btnRecent]);
             me._initCallbacks();
         },
 
@@ -5812,14 +5834,15 @@ $(function () {
 
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
-            $toolbar.toolbar({ $reportViewer: $viewer });
+            $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this });
 
             if (me.options.isReportManager) {
                 var btnHome = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-home",
-                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-touch-hidden",
+                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
                     imageClass: "fr-icons24x24-home",
+                    tooltip: locData.toolbar.home,
                     events: {
                         click: function (e) {
                             me.options.navigateTo("home", null);
@@ -5831,33 +5854,20 @@ $(function () {
                 var btnFav = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-update-fav",
-                    sharedClass: "fr-toolbar-touch-hidden",
+                    sharedClass: "fr-toolbar-hidden-on-small",
                     imageClass: "fr-image-delFav",
+                    tooltip: locData.toolbar.favorites,
                     events: {
                         click: function (e) {
-                            var action;
-                            var $img = $(e.target);
-                            if (!$img.hasClass("fr-icons24x24"))
-                                $img = $img.find(".fr-icons24x24");
-
-                            if ($img.hasClass("fr-image-delFav"))
+                            var action = "add";
+                            if (me.$btnFavorite.hasClass("fr-image-delFav"))
                                 action = "delete";
-                            else
-                                action = "add";
-
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath
-                            }).done(function (Data) {
-                                if (action === "add") {
-                                    $img.addClass("fr-image-delFav");
-                                    $img.removeClass("fr-image-addFav");
-                                }
-                                else {
-                                    $img.removeClass("fr-image-delFav");
-                                    $img.addClass("fr-image-addFav");
-                                }
+                            }).done(function (data) {
+                                me.updateFavoriteState.call(me, action === "add");
                             })
                             .fail(function () { alert("Failed"); });
                         }
@@ -5941,30 +5951,16 @@ $(function () {
                     text: locData.toolPane.favorites,
                     events: {
                         click: function (e) {
-                            var action;
-                            var $img = $(e.target);
-                            if (!$img.hasClass("fr-icons24x24"))
-                                $img = $img.find(".fr-icons24x24");
-
-                            if ($img.hasClass("fr-image-delFav"))
+                            var action = "add";
+                            if (me.$itemFavorite.hasClass("fr-image-delFav"))
                                 action = "delete";
-                            else
-                                action = "add";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
                                 path: me.options.ReportPath
-                            }).done(function (Data) {
-
-                                if (action === "add") {
-                                    $img.addClass("fr-image-delFav");
-                                    $img.removeClass("fr-image-addFav");
-                                }
-                                else {
-                                    $img.removeClass("fr-image-delFav");
-                                    $img.addClass("fr-image-addFav");
-                                }
+                            }).done(function (data) {
+                                me.updateFavoriteState.call(me, action === "add");
                             })
                             .fail(function () { alert("Failed"); });
                         }
@@ -5993,44 +5989,55 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
         },
-
         setFavoriteState: function (path) {
             var me = this;
-            var $toolbar = me.options.$toolbar;
-            var $toolPane = me.options.$toolPane;
+            me.$btnFavorite = null;
+            if (me.options.$toolbar !== null) {
+                me.$btnFavorite = me.options.$toolbar.find(".fr-button-update-fav").find("div");
+            }
+            me.$itemFavorite = null;
+            if (me.options.$toolPane !== null) {
+                me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
+            }
             $.ajax({
                 url: me.options.ReportManagerAPI + "/isFavorite?path=" + path,
                 dataType: "json",
                 async: true,
                 success: function (data) {
-                    var $tb;
-                    if ($toolbar !== null) {
-                        $tb = $toolbar.find(".fr-button-update-fav").find("div");
-                        if (data.IsFavorite) {
-                            $tb.addClass("fr-image-delFav");
-                            $tb.removeClass("fr-image-addFav");
-                        }
-                        else {
-                            $tb.removeClass("fr-image-delFav");
-                            $tb.addClass("fr-image-addFav");
-                        }
-                    }
-                    if ($toolPane !== null) {
-                        $tb = $toolPane.find(".fr-item-update-fav").find("div");
-                        if (data.IsFavorite) {
-                            $tb.addClass("fr-image-delFav");
-                            $tb.removeClass("fr-image-addFav");
-                        }
-                        else {
-                            $tb.removeClass("fr-image-delFav");
-                            $tb.addClass("fr-image-addFav");
-                        }
-                    }
+                    me.updateFavoriteState(data.IsFavorite);
                 },
                 fail: function () {
-                    $toolbar.find(".fr-button-update-fav").hide();
+                    if (me.$btnFavorite) {
+                        me.$btnFavorite.hide();
+                    }
+                    if (me.$itemFavorite) {
+                        me.$itemFavorite.hide();
+                    }
                 }
             });
+        },
+        updateFavoriteState: function (isFavorite) {
+            var me = this;
+            if (isFavorite) {
+                if (me.$btnFavorite) {
+                    me.$btnFavorite.addClass("fr-image-delFav");
+                    me.$btnFavorite.removeClass("fr-image-addFav");
+                }
+                if (me.$itemFavorite) {
+                    me.$itemFavorite.addClass("fr-image-delFav");
+                    me.$itemFavorite.removeClass("fr-image-addFav");
+                }
+            }
+            else {
+                if (me.$btnFavorite) {
+                    me.$btnFavorite.removeClass("fr-image-delFav");
+                    me.$btnFavorite.addClass("fr-image-addFav");
+                }
+                if (me.$itemFavorite) {
+                    me.$itemFavorite.removeClass("fr-image-delFav");
+                    me.$itemFavorite.addClass("fr-image-addFav");
+                }
+            }
         },
     };
 });  // $(function ()

@@ -57,6 +57,7 @@
             this.lblReportServer = new System.Windows.Forms.Label();
             this.txtReportServer = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.btnInstallUWS = new System.Windows.Forms.Button();
             this.btnTestWeb = new System.Windows.Forms.Button();
             this.btnApplyWebServer = new System.Windows.Forms.Button();
             this.lblPort = new System.Windows.Forms.Label();
@@ -65,7 +66,6 @@
             this.txtSiteName = new System.Windows.Forms.TextBox();
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
-            this.btnInstallUWS = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -273,6 +273,13 @@
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // btnInstallUWS
+            // 
+            resources.ApplyResources(this.btnInstallUWS, "btnInstallUWS");
+            this.btnInstallUWS.Name = "btnInstallUWS";
+            this.btnInstallUWS.UseVisualStyleBackColor = true;
+            this.btnInstallUWS.Click += new System.EventHandler(this.btnInstallUWS_Click);
+            // 
             // btnTestWeb
             // 
             resources.ApplyResources(this.btnTestWeb, "btnTestWeb");
@@ -320,13 +327,6 @@
             this.rdoIIS.Name = "rdoIIS";
             this.rdoIIS.TabStop = true;
             this.rdoIIS.UseVisualStyleBackColor = true;
-            // 
-            // btnInstallUWS
-            // 
-            resources.ApplyResources(this.btnInstallUWS, "btnInstallUWS");
-            this.btnInstallUWS.Name = "btnInstallUWS";
-            this.btnInstallUWS.UseVisualStyleBackColor = true;
-            this.btnInstallUWS.Click += new System.EventHandler(this.btnInstallUWS_Click);
             // 
             // frmMain
             // 

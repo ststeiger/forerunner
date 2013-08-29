@@ -19,6 +19,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-reportback-button",
         imageClass: "fr-icons24x24-reportback",
+        tooltip: locData.toolbar.back,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("back");
@@ -29,6 +30,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-menu-button",
         imageClass: "fr-icons24x24-menu",
+        tooltip: locData.toolbar.menu,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.menuClick, null, {});
@@ -39,7 +41,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-nav-button",
         imageClass: "fr-icons24x24-nav",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium",
+        tooltip: locData.toolbar.navigation,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showNav");
@@ -50,6 +53,7 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-paramarea-button",
         imageClass: "fr-icons24x24-paramarea",
+        tooltip: locData.toolbar.paramarea,
         events: {
             click: function (e) {
                 e.data.me._trigger(events.paramAreaClick, null, {});
@@ -61,7 +65,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-refresh-button",
         imageClass: "fr-icons24x24-refresh",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.refresh,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("refreshReport");
@@ -72,7 +77,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-firstpage-button",
         imageClass: "fr-icons24x24-firstpage",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.firstPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -83,7 +89,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-prev-button",
         imageClass: "fr-icons24x24-prev",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.previousPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -94,6 +101,7 @@ $(function () {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-reportpage-textbox",
         inputType: "number",
+        tooltip: locData.toolbar.reportPage,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -119,7 +127,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-next-button",
         imageClass: "fr-icons24x24-next",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -130,7 +139,8 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-lastpage-button",
         imageClass: "fr-icons24x24-lastpage",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small",
+        tooltip: locData.toolbar.lastPage,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -145,8 +155,9 @@ $(function () {
     var btnDocumentMap = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-documentmap-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         imageClass: "fr-icons24x24-documentmap",
+        tooltip: locData.toolbar.docMap,
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showDocMap");
@@ -156,7 +167,8 @@ $(function () {
     var btnKeyword = {
         toolType: toolTypes.input,
         selectorClass: "fr-toolbar-keyword-textbox",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.keyword,
         events: {
             keydown: function (e) {
                 if (e.keyCode === 13) {
@@ -168,8 +180,9 @@ $(function () {
     var btnFind = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-find-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.find,
+        tooltip: locData.toolbar.find,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -180,14 +193,15 @@ $(function () {
     var btnSeparator = {
         toolType: toolTypes.plainText,
         selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: "|&nbsp"
     };
     var btnFindNext = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-findnext-button",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: locData.toolbar.next,
+        tooltip: locData.toolbar.next,
         events: {
             click: function (e) {
                 var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
@@ -289,15 +303,15 @@ $(function () {
     var btnSeparator2 = {
         toolType: toolTypes.textButton,
         selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-touch-hidden",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: "|&nbsp"
     };
     var btnExport = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-export-button",
         imageClass: "fr-icons24x24-export",
-        sharedClass: "fr-toolbar-touch-hidden",
-        //text: locData.toolbar.exportMenu,
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.exportMenu,
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };

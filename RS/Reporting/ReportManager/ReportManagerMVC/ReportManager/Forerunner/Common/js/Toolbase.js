@@ -111,6 +111,10 @@ $(function () {
                 $tool.addClass(toolInfo.sharedClass);
             }
 
+            if (toolInfo.tooltip) {
+                $tool.attr("title", toolInfo.tooltip);
+            }
+
             if (toolInfo.dropdown) {
                 me._createDropdown($tool, toolInfo);
             }

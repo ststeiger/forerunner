@@ -12,6 +12,7 @@ using Forerunner.Security;
 using ReportManager.Util.Logging;
 using Jayrock.Json;
 using System.Threading;
+using System.Web.Security;
 using System.Security.Principal;
 
 namespace Forerunner.SSRS.Manager
@@ -93,9 +94,22 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        private ICredentials GetCredentials()
+        {
+            if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+            {
+                return CredentialCache.DefaultNetworkCredentials;
+            }
+
+            HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+            FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+            
+            return new NetworkCredential(authTicket.Name, authTicket.UserData);
+        }
+
         private CatalogItem[] callListChildren(string path, Boolean isRecursive)
         {
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             return rs.ListChildren(HttpUtility.UrlDecode(path), isRecursive);
         }
 
@@ -104,13 +118,13 @@ namespace Forerunner.SSRS.Manager
             // Please review this call stack.
             // This call is already in the impersonated context
             // No need to impersonate again.
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             return rs.GetProperties(path, props);
         }
 
         private string[] callGetPermissions(string path)
         {
-            rs.Credentials = CredentialCache.DefaultNetworkCredentials;
+            rs.Credentials = GetCredentials();
             return rs.GetPermissions(path);
         }
 

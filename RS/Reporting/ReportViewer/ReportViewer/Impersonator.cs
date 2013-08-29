@@ -99,17 +99,17 @@ namespace Forerunner.Security
 
     //wirte in this way is for application which run from the local computer and run together with full trust
     //if develop reusable library then should be define a SafeNativeMethods or UnsafeNativeMethods class.
-    internal static class NativeMethods
+    public static class NativeMethods
     {
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        internal static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType,
+        public static extern bool LogonUser(string lpszUsername, string lpszDomain, string lpszPassword, int dwLogonType,
             int dwLogonProvider, ref IntPtr phToken);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        internal static extern bool CloseHandle(IntPtr handle);
+        public static extern bool CloseHandle(IntPtr handle);
 
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool DuplicateToken(IntPtr ExistingTokenHandle, int SECURITY_IMPERSONATION_LEVEL, 
+        public static extern bool DuplicateToken(IntPtr ExistingTokenHandle, int SECURITY_IMPERSONATION_LEVEL, 
             ref IntPtr DuplicateTokenHandle);
     }
 }

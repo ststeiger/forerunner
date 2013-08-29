@@ -244,27 +244,23 @@ Function un.onInit
 FunctionEnd
 
 Function IsDotNETInstalled
-    ReadRegStr $0 HKEY_LOCAL_MACHINE Software\Microsoft\.NETFramework "InstallRoot"
+    ReadRegDWORD $0 HKEY_LOCAL_MACHINE "Software\Microsoft\NET Framework Setup\NDP\v3.5" "Install"
+    StrCmp $0 "1" 0 noNotNET35
 
-    Push $0
-    Exch $EXEDIR
-    Exch $EXEDIR
-    Pop $0
+    ;detect .net framework 4.5
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"	
+    StrCmp $0 "378389" Continue noNotNET45
 
-    IfFileExists $0 0 noDotNET
-
-    ReadRegStr $0 HKLM SOFTWARE\Microsoft\.NETFramework\policy\v4.0 "30319"	
-        StrCmp $0 "30319-30319" 0 noDotNet
-	Return
-        	
-    noDotNET:
-      	MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 4.0 or above.$\nIf you don't have it on your PC,click OK to download it from official website.$\nClick Cancel to quit the installation" IDOK Download IDCANCEL QuitInstallation
-		
-	Download:
-            ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
-            abort
-	QuitInstallation:
-	    abort
+    noNotNET35:
+        MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 3.5 or above on your machine. Installtion will abort.$\n$\nIf you don't have it on your PC,click OK to download it from official website. click Cancel to abort the installation." IDOK Download
+        abort
+    noNotNET45:
+        MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found in your machine, component Moblizier will not work, do you want to continue? $\n$\nClick Yes to continue,click No download it from official website, click Cancel to abort the installation." IDYES Continue IDNO Download
+        abort
+    Download:
+        ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
+        abort
+    Continue:
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister

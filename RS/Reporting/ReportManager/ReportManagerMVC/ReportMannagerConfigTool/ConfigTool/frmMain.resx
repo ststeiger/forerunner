@@ -121,6 +121,85 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="rdoFormAuth.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="rdoFormAuth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 46</value>
+  </data>
+  <data name="rdoFormAuth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>119, 17</value>
+  </data>
+  <data name="rdoFormAuth.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="rdoFormAuth.Text" xml:space="preserve">
+    <value>Form Authentication</value>
+  </data>
+  <data name="&gt;&gt;rdoFormAuth.Name" xml:space="preserve">
+    <value>rdoFormAuth</value>
+  </data>
+  <data name="&gt;&gt;rdoFormAuth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoFormAuth.Parent" xml:space="preserve">
+    <value>gbAuthType</value>
+  </data>
+  <data name="&gt;&gt;rdoFormAuth.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="rdoWinAuth.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoWinAuth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>8, 20</value>
+  </data>
+  <data name="rdoWinAuth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>140, 17</value>
+  </data>
+  <data name="rdoWinAuth.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="rdoWinAuth.Text" xml:space="preserve">
+    <value>Windows Authentication</value>
+  </data>
+  <data name="&gt;&gt;rdoWinAuth.Name" xml:space="preserve">
+    <value>rdoWinAuth</value>
+  </data>
+  <data name="&gt;&gt;rdoWinAuth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoWinAuth.Parent" xml:space="preserve">
+    <value>gbAuthType</value>
+  </data>
+  <data name="&gt;&gt;rdoWinAuth.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="gbAuthType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 153</value>
+  </data>
+  <data name="gbAuthType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 71</value>
+  </data>
+  <data name="gbAuthType.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="gbAuthType.Text" xml:space="preserve">
+    <value>Authentication Type</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Name" xml:space="preserve">
+    <value>gbAuthType</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Type" xml:space="preserve">
+    <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.Parent" xml:space="preserve">
+    <value>tabPage2</value>
+  </data>
+  <data name="&gt;&gt;gbAuthType.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="lblDomain.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -128,7 +207,6 @@
   <data name="lblDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="lblDomain.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 103</value>
   </data>
@@ -148,7 +226,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;lblDomain.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
     <value>0</value>
@@ -169,7 +247,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtDomain.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtDomain.ZOrder" xml:space="preserve">
     <value>1</value>
@@ -199,7 +277,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label1.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>2</value>
@@ -223,7 +301,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtPWD.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtPWD.ZOrder" xml:space="preserve">
     <value>3</value>
@@ -253,7 +331,7 @@
     <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;label2.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>4</value>
@@ -274,7 +352,7 @@
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;txtUser.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;txtUser.ZOrder" xml:space="preserve">
     <value>5</value>
@@ -304,7 +382,7 @@
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;rdoSQL.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;rdoSQL.ZOrder" xml:space="preserve">
     <value>6</value>
@@ -334,34 +412,34 @@
     <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;rdoDomain.Parent" xml:space="preserve">
-    <value>groupBox1</value>
+    <value>gbDBLoginInfo</value>
   </data>
   <data name="&gt;&gt;rdoDomain.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="groupBox1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="gbDBLoginInfo.Location" type="System.Drawing.Point, System.Drawing">
     <value>225, 7</value>
   </data>
-  <data name="groupBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>207, 167</value>
+  <data name="gbDBLoginInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>207, 178</value>
   </data>
-  <data name="groupBox1.TabIndex" type="System.Int32, mscorlib">
+  <data name="gbDBLoginInfo.TabIndex" type="System.Int32, mscorlib">
     <value>19</value>
   </data>
-  <data name="groupBox1.Text" xml:space="preserve">
+  <data name="gbDBLoginInfo.Text" xml:space="preserve">
     <value>Database Login information</value>
   </data>
-  <data name="&gt;&gt;groupBox1.Name" xml:space="preserve">
-    <value>groupBox1</value>
+  <data name="&gt;&gt;gbDBLoginInfo.Name" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
   </data>
-  <data name="&gt;&gt;groupBox1.Type" xml:space="preserve">
+  <data name="&gt;&gt;gbDBLoginInfo.Type" xml:space="preserve">
     <value>System.Windows.Forms.GroupBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;groupBox1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;gbDBLoginInfo.Parent" xml:space="preserve">
     <value>tabPage2</value>
   </data>
-  <data name="&gt;&gt;groupBox1.ZOrder" xml:space="preserve">
-    <value>0</value>
+  <data name="&gt;&gt;gbDBLoginInfo.ZOrder" xml:space="preserve">
+    <value>1</value>
   </data>
   <data name="lblWSUrl.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -391,7 +469,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;lblWSUrl.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="txtWSUrl.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 127</value>
@@ -415,7 +493,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;txtWSUrl.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="lblDBName.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -445,7 +523,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;lblDBName.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="txtDBName.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 80</value>
@@ -469,7 +547,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;txtDBName.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="lblServer.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 19</value>
@@ -493,7 +571,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;lblServer.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="txtServerName.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 35</value>
@@ -517,13 +595,13 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;txtServerName.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="btnTest.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnTest.Location" type="System.Drawing.Point, System.Drawing">
-    <value>285, 192</value>
+    <value>277, 202</value>
   </data>
   <data name="btnTest.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 22</value>
@@ -544,13 +622,13 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;btnTest.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="btnApply.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnApply.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 192</value>
+    <value>358, 202</value>
   </data>
   <data name="btnApply.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -571,7 +649,7 @@
     <value>tabPage2</value>
   </data>
   <data name="&gt;&gt;btnApply.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="tabPage2.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
@@ -580,7 +658,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tabPage2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>448, 217</value>
+    <value>448, 229</value>
   </data>
   <data name="tabPage2.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -634,7 +712,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnRemoveEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>286, 190</value>
+    <value>286, 202</value>
   </data>
   <data name="btnRemoveEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -661,7 +739,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnAddEx.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 190</value>
+    <value>366, 202</value>
   </data>
   <data name="btnAddEx.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -763,7 +841,7 @@
     <value>4, 22</value>
   </data>
   <data name="tabPage3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>448, 217</value>
+    <value>448, 234</value>
   </data>
   <data name="tabPage3.TabIndex" type="System.Int32, mscorlib">
     <value>2</value>
@@ -787,7 +865,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnInstallUWS.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 189</value>
+    <value>7, 202</value>
   </data>
   <data name="btnInstallUWS.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -814,7 +892,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnTestWeb.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 189</value>
+    <value>87, 202</value>
   </data>
   <data name="btnTestWeb.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -841,7 +919,7 @@
     <value>NoControl</value>
   </data>
   <data name="btnApplyWebServer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>366, 189</value>
+    <value>366, 202</value>
   </data>
   <data name="btnApplyWebServer.Size" type="System.Drawing.Size, System.Drawing">
     <value>74, 22</value>
@@ -1039,7 +1117,7 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="tabPage1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>448, 217</value>
+    <value>448, 234</value>
   </data>
   <data name="tabPage1.TabIndex" type="System.Int32, mscorlib">
     <value>4</value>
@@ -1063,7 +1141,7 @@
     <value>1, -1</value>
   </data>
   <data name="tabMain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>456, 243</value>
+    <value>456, 255</value>
   </data>
   <data name="tabMain.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -1090,7 +1168,7 @@
     <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>457, 245</value>
+    <value>457, 252</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Report Manager Configuration</value>

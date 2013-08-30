@@ -21,6 +21,7 @@ namespace ReportMannagerConfigTool
         private static string reportServerDBDomain = ConfigurationManager.AppSettings["ReportServerDBDomain"];
         private static string reportServerDBUser = ConfigurationManager.AppSettings["ReportServerDBUser"];
         private static string reportServerDBPWD = ConfigurationManager.AppSettings["ReportServerDBPWD"];
+        private static string reportServerDBAccountType = ConfigurationManager.AppSettings["ReportServerDBAccountType"];
 
         private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
         private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
@@ -225,23 +226,28 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdb">Report Server Database Name</param>
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
-        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, string reportserverdbuser, string reportserverdbpwd)
+        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, 
+            string reportserverdbuser, string reportserverdbpwd, string dblogininfo, string authtype)
         {
             XmlDocument doc = new XmlDocument();
             //need update in installer
             doc.Load(filePath);
 
-            GetConfigNode(doc,reportServerWSUrl).UpdateValue(wsurl);                       
+            GetAppSettingNode(doc,reportServerWSUrl).SetAppSettingValue(wsurl);                       
             
-            GetConfigNode(doc, reportServerDataSource).UpdateValue(reportserverdatasource);
+            GetAppSettingNode(doc, reportServerDataSource).SetAppSettingValue(reportserverdatasource);
 
-            GetConfigNode(doc, reportServerDB).UpdateValue(reportserverdb);
+            GetAppSettingNode(doc, reportServerDB).SetAppSettingValue(reportserverdb);
 
-            GetConfigNode(doc, reportServerDBDomain).UpdateValue(reportserverdbuserdomain);
+            GetAppSettingNode(doc, reportServerDBDomain).SetAppSettingValue(reportserverdbuserdomain);
 
-            GetConfigNode(doc, reportServerDBUser).UpdateValue(reportserverdbuser);
+            GetAppSettingNode(doc, reportServerDBUser).SetAppSettingValue(reportserverdbuser);
 
-            GetConfigNode(doc, reportServerDBPWD).UpdateValue(reportserverdbpwd);
+            GetAppSettingNode(doc, reportServerDBPWD).SetAppSettingValue(reportserverdbpwd);
+
+            GetAppSettingNode(doc, reportServerDBAccountType).SetAppSettingValue(dblogininfo);
+
+            GetAuthNode(doc).SetAuthMode(authtype, doc);
 
             doc.Save(filePath);
         }
@@ -250,19 +256,21 @@ namespace ReportMannagerConfigTool
         /// Get exist value from web.config
         /// </summary>
         /// <returns>value collection</returns>
-        public static Dictionary<string, string> GetConfig()
+        public static Dictionary<string, string> GetForerunnerWebConfig()
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
             XmlDocument doc = new XmlDocument();
             doc.Load(filePath);
 
-            result.Add("WSUrl", GetConfigNode(doc, reportServerWSUrl).GetValue());
-            result.Add("DataSource", GetConfigNode(doc, reportServerDataSource).GetValue());
-            result.Add("Database", GetConfigNode(doc, reportServerDB).GetValue());
-            result.Add("UserDomain", GetConfigNode(doc, reportServerDBDomain).GetValue());
-            result.Add("User", GetConfigNode(doc, reportServerDBUser).GetValue());
-            result.Add("Password", GetConfigNode(doc, reportServerDBPWD).GetValue());
+            result.Add("WSUrl", GetAppSettingNode(doc, reportServerWSUrl).GetAppSettingValue());
+            result.Add("DataSource", GetAppSettingNode(doc, reportServerDataSource).GetAppSettingValue());
+            result.Add("Database", GetAppSettingNode(doc, reportServerDB).GetAppSettingValue());
+            result.Add("UserDomain", GetAppSettingNode(doc, reportServerDBDomain).GetAppSettingValue());
+            result.Add("User", GetAppSettingNode(doc, reportServerDBUser).GetAppSettingValue());
+            result.Add("Password", GetAppSettingNode(doc, reportServerDBPWD).GetAppSettingValue());
+            result.Add("DBAccountType", GetAppSettingNode(doc, reportServerDBAccountType).GetAppSettingValue());
+            result.Add("AuthType", GetAuthNode(doc).GetAuthMode());
 
             return result;
         }
@@ -273,29 +281,99 @@ namespace ReportMannagerConfigTool
         /// <param name="doc">xml document</param>
         /// <param name="name">key name</param>
         /// <returns>First match node</returns>
-        private static XmlNode GetConfigNode(XmlDocument doc, string name)
+        private static XmlElement GetAppSettingNode(XmlDocument doc, string name)
         {
             string xpath = string.Format("/configuration/appSettings/add[@key='{0}']", name);
-            return doc.SelectSingleNode(xpath);
+            return doc.SelectSingleNode(xpath) as XmlElement;
         }
 
         /// <summary>
         /// Extend method for XmlNode, update value attribute
         /// </summary>
         /// <param name="node">xml node</param>
-        private static void UpdateValue(this XmlNode node, string value)
+        private static void SetAppSettingValue(this XmlElement node, string value)
         {
-            ((XmlElement)node).SetAttribute("value", value);
+            if (node != null)
+            {
+                node.SetAttribute("value", value);
+            }
         }
 
         /// <summary>
         /// Extend method for XmlNode, get value attribute
         /// </summary>
-        private static string GetValue(this XmlNode node)
+        private static string GetAppSettingValue(this XmlElement node)
         {
-            if (((XmlElement)node) == null)
-                return "";
-            return ((XmlElement)node).GetAttribute("value");
+            if (node == null)
+            {
+                return string.Empty;
+            }
+            return node.GetAttribute("value");
+        }
+
+        private static void CheckAuthType(XmlDocument doc, string authtype)
+        {
+            if (authtype.Equals("Forms"))
+            {
+                XmlNode authNode = GetAuthNode(doc) as XmlNode;
+                if (authNode.SelectSingleNode("forms") == null)
+                {
+                    authNode.AppendChild(FormsNode(doc));
+                }
+            }
+            else if (authtype.Equals("Windows"))
+            {
+                XmlNode authNode = GetAuthNode(doc) as XmlNode;
+                if (authNode.SelectSingleNode("forms") != null)
+                {
+                    authNode.RemoveChild(GetAuthNode(doc).SelectSingleNode("forms"));
+                }
+                
+            }
+        }
+
+        private static XmlElement GetAuthNode(XmlDocument doc)
+        {
+             string xpath = "/configuration/system.web/authentication";
+             return doc.SelectSingleNode(xpath) as XmlElement;
+        }
+
+        private static string GetAuthMode(this XmlElement authNode)
+        {
+            if (authNode == null)
+            {
+                return string.Empty;
+            }
+            return authNode.GetAttribute("mode");
+        }
+
+        private static void SetAuthMode(this XmlElement authNode, string authType, XmlDocument doc)
+        {
+            if (authNode != null)
+            {
+                authNode.SetAttribute("mode", authType);
+                CheckAuthType(doc, authType);
+            }
+        }
+
+        private static XmlNode FormsNode(XmlDocument doc)
+        {
+            XmlNode node = doc.CreateNode(XmlNodeType.Element, "forms", doc.NamespaceURI);
+
+            XmlAttribute loginUrl = doc.CreateAttribute("loginUrl");
+            loginUrl.InnerText = ConfigurationManager.AppSettings["FormAuthenticationLoginUrl"];
+
+            XmlAttribute timeOut = doc.CreateAttribute("timeout");
+            timeOut.InnerText = ConfigurationManager.AppSettings["FormAuthenticationTimeout"];
+
+            XmlAttribute name = doc.CreateAttribute("name");
+            name.InnerText = ConfigurationManager.AppSettings["FormAuthenticationName"];
+
+            node.Attributes.Append(loginUrl);
+            node.Attributes.Append(timeOut);
+            node.Attributes.Append(name);
+
+            return node;
         }
     }
 }

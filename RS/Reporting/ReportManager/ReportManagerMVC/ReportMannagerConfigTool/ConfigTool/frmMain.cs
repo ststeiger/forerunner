@@ -115,7 +115,7 @@ namespace ReportMannagerConfigTool
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            var existConfig = ReportManagerConfig.GetConfig();
+            var existConfig = ReportManagerConfig.GetForerunnerWebConfig();
 
             winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
             winform.setTextBoxValue(txtServerName , existConfig["DataSource"]);
@@ -123,6 +123,8 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
             winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
+            winform.setSelectRdoValue(gbDBLoginInfo, existConfig["DBAccountType"]);
+            winform.setSelectRdoValue(gbAuthType, existConfig["AuthType"]);
         }
 
         private void SetReportManagerFolderPath()
@@ -164,7 +166,8 @@ namespace ReportMannagerConfigTool
             {
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
-                    winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)));
+                    winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
+                    winform.getSelectRdoValue(gbDBLoginInfo),winform.getSelectRdoValue(gbAuthType));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

@@ -5621,13 +5621,21 @@ $(function () {
         toggleZoom: function () {
             var me = this;
             var ratio = forerunner.device.zoomLevel();
-
-            if (me.isZoomed() && !me.wasZoomed){            
+            
+            if (me.isZoomed() && !me.wasZoomed) {
+                //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
+                //to fill the full width
+                if (forerunner.device.isAndroid() && $(".fr-layout-topdiv").is(":visible")) {
+                    $(".fr-layout-topdiv").fadeOut(10).fadeIn(10);
+                }
                 me.wasZoomed = true;
                 return;
             }
 
-            if (!me.isZoomed() && me.wasZoomed){
+            if (!me.isZoomed() && me.wasZoomed) {
+                if (forerunner.device.isAndroid() && $(".fr-layout-topdiv").is(":visible")) {
+                    $(".fr-layout-topdiv").fadeOut(10).fadeIn(10);
+                }
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
                 me.wasZoomed = false;

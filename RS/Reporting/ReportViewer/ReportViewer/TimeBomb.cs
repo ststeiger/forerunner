@@ -19,8 +19,10 @@ namespace Forerunner.SSRS.Security
 
         // Time bomb grace period expressed in days
         private const int trialPeriod = 30;
+        private const String software = "SOFTWARE";
+        private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";
-        private const String ssrKey = "ssrs";
+        private const String ssrsKey = "ssrs";
         private const String timeBombName = "setupdata";
         private const String machineHashName = "setupkey";
 
@@ -45,11 +47,19 @@ namespace Forerunner.SSRS.Security
         }
         internal static void Remove()
         {
-            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
-            RegistryKey forerunnerKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey, true);
-            if (forerunnerKey != null)
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software, true);
+            // Here we will let the Registry Redirection get us to the Wow6432Node see:
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/aa384232(v=vs.85).aspx
+            RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey, true);
+            if (forerunnerswKey == null)
             {
-                forerunnerKey.DeleteSubKey(TimeBomb.ssrKey, false);
+                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(TimeBomb.wow6432Node);
+                forerunnerswKey = wow6432NodeKey.OpenSubKey(TimeBomb.forerunnerKey, true);
+            }
+
+            if (forerunnerswKey != null)
+            {
+                forerunnerswKey.DeleteSubKey(TimeBomb.ssrsKey, false);
             }
         }
         internal Byte[] Serialize()
@@ -72,25 +82,33 @@ namespace Forerunner.SSRS.Security
             byte[] timeBombProtected = Encryption.Encrypt(timeBomb);
 
             // Save the time bomb to the registry
-            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE", true);
-            RegistryKey forerunnerswKey = softwareKey.CreateSubKey(TimeBomb.forerunnerKey);
-            RegistryKey ssrKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrKey);
-            ssrKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
-            ssrKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software, true);
+            RegistryKey wow6432NodeKey = softwareKey.CreateSubKey(TimeBomb.wow6432Node);
+            RegistryKey forerunnerswKey = wow6432NodeKey.CreateSubKey(TimeBomb.forerunnerKey);
+            RegistryKey ssrsKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrsKey);
+            ssrsKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
+            ssrsKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
         }
         internal static TimeBomb LoadFromRegistry()
         {
             // Load the time bomb from the registry
-            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software);
+            // Here we will let the Registry Redirection get us to the Wow6432Node see:
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/aa384232(v=vs.85).aspx
             RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
             if (forerunnerswKey == null)
             {
-                LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
-                e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
-                throw e;
+                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(TimeBomb.wow6432Node);
+                forerunnerswKey = wow6432NodeKey.OpenSubKey(TimeBomb.forerunnerKey);
+                if (forerunnerswKey == null)
+                {
+                    LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
+                    e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
+                    throw e;
+                }
             }
 
-            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrKey);
+            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsKey);
             if (ssrKey == null)
             {
                 LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
@@ -117,14 +135,21 @@ namespace Forerunner.SSRS.Security
         }
         internal static bool PreviouslyInstalled()
         {
-            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey("SOFTWARE");
+            RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software);
+            // Here we will let the Registry Redirection get us to the Wow6432Node see:
+            // http://msdn.microsoft.com/en-us/library/windows/desktop/aa384232(v=vs.85).aspx
             RegistryKey forerunnerswKey = softwareKey.OpenSubKey(TimeBomb.forerunnerKey);
             if (forerunnerswKey == null)
             {
-                return false;
+                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(TimeBomb.wow6432Node);
+                forerunnerswKey = wow6432NodeKey.OpenSubKey(TimeBomb.forerunnerKey);
+                if (forerunnerswKey == null)
+                {
+                    return false;
+                }
             }
 
-            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrKey);
+            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsKey);
             if (ssrKey == null)
             {
                 return false;
@@ -137,6 +162,13 @@ namespace Forerunner.SSRS.Security
             TimeSpan timeSpan = DateTime.Now.Subtract(start);
             if (timeSpan.Days > trialPeriod)
             {
+                return false;
+            }
+
+            if (timeSpan.Days < 0)
+            {
+                // This could happen if someone runs install with the system date set to a future
+                // date
                 return false;
             }
 

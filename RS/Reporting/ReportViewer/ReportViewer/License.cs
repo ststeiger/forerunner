@@ -32,24 +32,13 @@ namespace Forerunner.SSRS.Security
     {
         #region methods
 
-        private static void ThreadProc()
-        {
-            timeBomb = TimeBomb.LoadFromRegistry();
-            currentMachineId = MachineId.CreateCurrentMachineId();
-            isSameMachine = timeBomb.IsSameMachine(currentMachineId);
-        }
-
-        internal static void CheckInit()
+        internal static void ThreadProc()
         {
             try
             {
-                if (timeBomb == null || currentMachineId == null)
-                {
-                    // We spin up another thread so as to execute this code using the service account
-                    Thread t = new Thread(new ThreadStart(ThreadProc));
-                    t.Start();
-                    t.Join();                    
-                }
+                timeBomb = TimeBomb.LoadFromRegistry();
+                currentMachineId = MachineId.CreateCurrentMachineId();
+                isSameMachine = timeBomb.IsSameMachine(currentMachineId);
             }
             catch (System.Management.ManagementException /*e*/)
             {
@@ -61,13 +50,34 @@ namespace Forerunner.SSRS.Security
             {
                 LicenseException licenseException = new LicenseException(TimeBomb.genericRegistyError, e);
                 licenseException.Data.Add(LicenseException.failKey, LicenseException.FailReason.SetupError);
-                throw licenseException;
+                exception = licenseException;
+            }
+        }
+
+        internal static void CheckInit()
+        {
+            if (exception != null)
+            {
+                throw exception;
+            }
+
+            if (timeBomb == null || currentMachineId == null)
+            {
+                // We spin up another thread so as to execute this code using the service account
+                Thread t = new Thread(new ThreadStart(ThreadProc));
+                t.Start();
+                t.Join();
             }
         }
 
         internal static void ThrowIfNotValid()
         {
             CheckInit();
+            if (exception != null)
+            {
+                throw exception;
+            }
+
             if (!timeBomb.IsValid())
             {
                 // Timebomb has expired, time to buy a license
@@ -92,6 +102,7 @@ namespace Forerunner.SSRS.Security
         private static TimeBomb timeBomb = null;
         private static MachineId currentMachineId = null;
         private static bool isSameMachine = true;
+        private static Exception exception = null;
 
         #endregion
     }

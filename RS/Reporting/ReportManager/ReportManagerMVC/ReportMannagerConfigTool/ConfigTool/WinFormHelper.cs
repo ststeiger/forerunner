@@ -66,5 +66,35 @@ namespace ReportMannagerConfigTool
             if (value != "")
                 textbox.Text = value;
         }
+
+        public string getSelectRdoValue(GroupBox groupBox)
+        {
+            foreach(Control control in groupBox.Controls)
+            {
+                if (control is RadioButton)
+                {
+                    var rdo = control as RadioButton;
+                    if (rdo.Checked)
+                        return rdo.Tag.ToString();
+                }
+            }
+            return string.Empty;
+        }
+
+        public void setSelectRdoValue(GroupBox groupBox, string value)
+        {
+            foreach (Control control in groupBox.Controls)
+            {
+                if (control is RadioButton)
+                {
+                    var rdo = control as RadioButton;
+                    if (rdo.Tag.Equals(value))
+                    {
+                        rdo.Checked = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

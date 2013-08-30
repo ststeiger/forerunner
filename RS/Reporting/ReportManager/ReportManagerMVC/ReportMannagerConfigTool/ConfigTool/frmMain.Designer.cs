@@ -32,7 +32,10 @@
             this.folderSSRS = new System.Windows.Forms.FolderBrowserDialog();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbAuthType = new System.Windows.Forms.GroupBox();
+            this.rdoFormAuth = new System.Windows.Forms.RadioButton();
+            this.rdoWinAuth = new System.Windows.Forms.RadioButton();
+            this.gbDBLoginInfo = new System.Windows.Forms.GroupBox();
             this.lblDomain = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -68,7 +71,8 @@
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.gbAuthType.SuspendLayout();
+            this.gbDBLoginInfo.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -84,7 +88,8 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.groupBox1);
+            this.tabPage2.Controls.Add(this.gbAuthType);
+            this.tabPage2.Controls.Add(this.gbDBLoginInfo);
             this.tabPage2.Controls.Add(this.lblWSUrl);
             this.tabPage2.Controls.Add(this.txtWSUrl);
             this.tabPage2.Controls.Add(this.lblDBName);
@@ -97,19 +102,43 @@
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // groupBox1
+            // gbAuthType
             // 
-            this.groupBox1.Controls.Add(this.lblDomain);
-            this.groupBox1.Controls.Add(this.txtDomain);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.txtPWD);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtUser);
-            this.groupBox1.Controls.Add(this.rdoSQL);
-            this.groupBox1.Controls.Add(this.rdoDomain);
-            resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.TabStop = false;
+            this.gbAuthType.Controls.Add(this.rdoFormAuth);
+            this.gbAuthType.Controls.Add(this.rdoWinAuth);
+            resources.ApplyResources(this.gbAuthType, "gbAuthType");
+            this.gbAuthType.Name = "gbAuthType";
+            this.gbAuthType.TabStop = false;
+            // 
+            // rdoFormAuth
+            // 
+            resources.ApplyResources(this.rdoFormAuth, "rdoFormAuth");
+            this.rdoFormAuth.Name = "rdoFormAuth";
+            this.rdoFormAuth.Tag = "Forms";
+            this.rdoFormAuth.UseVisualStyleBackColor = true;
+            // 
+            // rdoWinAuth
+            // 
+            resources.ApplyResources(this.rdoWinAuth, "rdoWinAuth");
+            this.rdoWinAuth.Checked = true;
+            this.rdoWinAuth.Name = "rdoWinAuth";
+            this.rdoWinAuth.TabStop = true;
+            this.rdoWinAuth.Tag = "Windows";
+            this.rdoWinAuth.UseVisualStyleBackColor = true;
+            // 
+            // gbDBLoginInfo
+            // 
+            this.gbDBLoginInfo.Controls.Add(this.lblDomain);
+            this.gbDBLoginInfo.Controls.Add(this.txtDomain);
+            this.gbDBLoginInfo.Controls.Add(this.label1);
+            this.gbDBLoginInfo.Controls.Add(this.txtPWD);
+            this.gbDBLoginInfo.Controls.Add(this.label2);
+            this.gbDBLoginInfo.Controls.Add(this.txtUser);
+            this.gbDBLoginInfo.Controls.Add(this.rdoSQL);
+            this.gbDBLoginInfo.Controls.Add(this.rdoDomain);
+            resources.ApplyResources(this.gbDBLoginInfo, "gbDBLoginInfo");
+            this.gbDBLoginInfo.Name = "gbDBLoginInfo";
+            this.gbDBLoginInfo.TabStop = false;
             // 
             // lblDomain
             // 
@@ -149,6 +178,7 @@
             resources.ApplyResources(this.rdoSQL, "rdoSQL");
             this.rdoSQL.Name = "rdoSQL";
             this.rdoSQL.TabStop = true;
+            this.rdoSQL.Tag = "SQLAccount";
             this.rdoSQL.UseVisualStyleBackColor = true;
             this.rdoSQL.CheckedChanged += new System.EventHandler(this.rdoSQL_CheckedChanged);
             // 
@@ -158,6 +188,7 @@
             this.rdoDomain.Checked = true;
             this.rdoDomain.Name = "rdoDomain";
             this.rdoDomain.TabStop = true;
+            this.rdoDomain.Tag = "DomainAccount";
             this.rdoDomain.UseVisualStyleBackColor = true;
             // 
             // lblWSUrl
@@ -339,8 +370,10 @@
             this.tabMain.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.gbAuthType.ResumeLayout(false);
+            this.gbAuthType.PerformLayout();
+            this.gbDBLoginInfo.ResumeLayout(false);
+            this.gbDBLoginInfo.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
@@ -377,7 +410,7 @@
         private System.Windows.Forms.Label lblWSUrl;
         private System.Windows.Forms.TextBox txtWSUrl;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbDBLoginInfo;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button btnTestWeb;
         private System.Windows.Forms.Button btnApplyWebServer;
@@ -388,6 +421,9 @@
         private System.Windows.Forms.RadioButton rdoUWS;
         private System.Windows.Forms.RadioButton rdoIIS;
         private System.Windows.Forms.Button btnInstallUWS;
+        private System.Windows.Forms.GroupBox gbAuthType;
+        private System.Windows.Forms.RadioButton rdoFormAuth;
+        private System.Windows.Forms.RadioButton rdoWinAuth;
     }
 }
 

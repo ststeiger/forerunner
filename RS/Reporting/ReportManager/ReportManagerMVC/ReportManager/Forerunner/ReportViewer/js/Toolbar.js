@@ -107,6 +107,7 @@ $(function () {
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
                 }
+                return false;
             },
             click: function (e) {
                 e.target.select();
@@ -171,9 +172,10 @@ $(function () {
         tooltip: locData.toolbar.keyword,
         events: {
             keydown: function (e) {
-                if (e.keyCode === 13) {
+                if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                 }
+                return false;
             }
         }
     };
@@ -306,6 +308,18 @@ $(function () {
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
         text: "|&nbsp"
     };
+    var btnZoom = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-toolbar-zoom-button",
+        imageClass: "fr-icons24x24-zoom",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolPane.zoom,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("allowZoom", true);
+            }
+        }
+    };
     var btnExport = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-export-button",
@@ -381,7 +395,7 @@ $(function () {
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,
-                               btnLastPage, btnDocumentMap, btnFind, btnFindNext]);
+                               btnLastPage, btnDocumentMap, btnFind, btnFindNext, btnZoom]);
         },
         _init: function () {
             var me = this;
@@ -393,7 +407,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnExport, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnZoom, btnExport, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

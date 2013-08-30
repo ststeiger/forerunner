@@ -165,6 +165,10 @@ $(function () {
             values.windowHeight = 0;
             values.containerHeight = me.$container.height();
 
+            //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
+            //            ", $(window).height(): " + $(window).height() +
+            //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
+
             // Start out by adding the height of the location bar to the height
             if (forerunner.device.isiOS()) {
                 // iOS reliably returns the innerWindow size for documentElement.clientHeight
@@ -179,9 +183,6 @@ $(function () {
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
-                //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
-                //            ", $(window).height(): " + $(window).height() +
-                //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
             } else {
                 // PC
                 values.windowHeight = $(window).height();

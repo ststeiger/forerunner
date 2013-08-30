@@ -169,9 +169,12 @@ $(function () {
         showTool: function(selectorClass){
             var me = this;
             if (me.allTools[selectorClass]) {
+                // NOTE: that you cannot know when hiding a tool if it should be made
+                // visible in the showTool function. So the strategy here is to remove
+                // the display style on the element and thereby revert the visibility
+                // back to the style sheet definition.
                 var $toolEl = $("." + selectorClass, me.element);
-                if (me.allTools[selectorClass].Display)
-                    $toolEl.fadeIn();
+                $toolEl.css({"display": ""});
             }
         },
         /**
@@ -181,8 +184,11 @@ $(function () {
         hideTool: function (selectorClass) {
             var me = this;
             if (me.allTools[selectorClass]) {
+                // NOTE: that you cannot know when hiding a tool if it should be made
+                // visible in the showTool function. That is because a resize / orientation
+                // change may happen that changes which buttons should be visible at the 
+                // time showTool is called.
                 var $toolEl = $("." + selectorClass, me.element);
-                me.allTools[selectorClass].Display = $toolEl.is(":visible");
                 $toolEl.fadeOut();
             }
         },

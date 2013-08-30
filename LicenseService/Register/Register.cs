@@ -141,7 +141,7 @@ namespace Register
             string MailBody =
 @"<b>" + RegData.FirstName + @", thank you for registering for your FREE Trial!</b><br><br> 
 
-To dowload your software click <a href='http://" + Domain + "/api/Download?id=" + RegData.ID + "'>here</a> or copy this link to your brower http://" + Domain + "/api/Download?id=" + RegData.ID + "<br><br>  Sincerely:<br> The Forerunner Software Team";
+To download your software click <a href='http://" + Domain + "/api/Download?id=" + RegData.ID + "'>here</a> or copy this link to your browser http://" + Domain + "/api/Download?id=" + RegData.ID + "<br><br>  Sincerely:<br> The Forerunner Software Team";
 
             try
             {

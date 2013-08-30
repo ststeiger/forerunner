@@ -6,5 +6,7 @@
     <PackageProfile>Cloud</PackageProfile>
     <PackageSolutionConfiguration>Release</PackageSolutionConfiguration>
     <PackageEnableRemoteDesktop>False</PackageEnableRemoteDesktop>
+    <LocalProfile>Local</LocalProfile>
+    <UseEmulatorExpress>False</UseEmulatorExpress>
   </PropertyGroup>
 </Project>

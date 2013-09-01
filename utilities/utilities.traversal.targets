@@ -10,8 +10,7 @@
 			Projects="@(ProjectFiles)" 
 			BuildInParallel="$(BuildInParallel)" 
 			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
-			Targets="Build"
-		    Properties="OutputPath=$(OutputPath)" /> 
+			Targets="Build"/> 
 	</Target> 
 	<PropertyGroup> 
 		<RebuildDependsOn> $(RebuildDependsOn); CoreRebuild </RebuildDependsOn> 
@@ -22,8 +21,7 @@
 			Projects="@(ProjectFiles)" 
 			BuildInParallel="$(BuildInParallel)" 
 			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
-			Targets="Rebuild" 
-			Properties="OutputPath=$(OutputPath)" /> 
+			Targets="Rebuild"/> 
 	</Target> 
 	<PropertyGroup> 
 		<CleanDependsOn> $(CleanDependsOn); CoreClean </CleanDependsOn> 
@@ -34,8 +32,7 @@
 			Projects="@(ProjectFiles)" 
 			BuildInParallel="$(BuildInParallel)" 
 			SkipNonexistentProjects="$(SkipNonexistentProjects)" 
-			Targets="Clean" 
-			Properties="OutputPath=$(OutputPath)"/> 
+			Targets="Clean"/> 
 	</Target> 
 	<PropertyGroup> 
 		<CodeAnalysisRebuildDependsOn> $(CodeAnalysisRebuildDependsOn); CoreCodeAnalysisRebuild </CodeAnalysisRebuildDependsOn> 

@@ -5,6 +5,5 @@
 		<SkipNonexistentProjects Condition="'$(SkipNonexistentProjects)'==''">false</SkipNonexistentProjects> 
 		<VisualStudioVersion>11.0</VisualStudioVersion>
 		<Configuration Condition="'$(CONFIGURATION)'==''">Release</Configuration>
-		<OutputPath>bin\Release</OutputPath>
 	</PropertyGroup> 
 </Project>

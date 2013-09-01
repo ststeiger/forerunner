@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Forerunner.SSRS.Security;
 
-namespace InstallData
+namespace SetupUtil
 {
     class Program
     {

@@ -96,8 +96,11 @@ namespace Forerunner.SSRS.Security
                 {
                     try
                     {
-                        result = mo[wmiProperty].ToString();
-                        break;
+                        if (mo[wmiProperty] != null)
+                        {
+                            result = mo[wmiProperty].ToString();
+                            break;
+                        }
                     }
                     catch
                     {

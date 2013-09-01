@@ -142,6 +142,11 @@ namespace Forerunner.SSRS.Security
             if (forerunnerswKey == null)
             {
                 RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(TimeBomb.wow6432Node);
+                if (wow6432NodeKey == null)
+                {
+                    // This means we are compiled as 32 bit and cannot open this key.
+                    return false;
+                }
                 forerunnerswKey = wow6432NodeKey.OpenSubKey(TimeBomb.forerunnerKey);
                 if (forerunnerswKey == null)
                 {

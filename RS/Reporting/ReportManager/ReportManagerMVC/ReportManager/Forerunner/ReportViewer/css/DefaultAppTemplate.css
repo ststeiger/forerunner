@@ -118,7 +118,7 @@
 }
 
 .fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
-.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
+.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
 .fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button {
   display: none;
 }
@@ -141,7 +141,7 @@
 }
 
 .fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
-.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-zoom-button .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
+.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-zoom-button, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
 .fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button {
   display: none;
 }

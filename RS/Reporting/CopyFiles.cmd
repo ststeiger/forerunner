@@ -1,11 +1,7 @@
 :: copy necessary install files to build folder
 @echo off
 set Source="%~dp0ReportManager\ReportManagerMVC\ReportManager"
-if [%1]==[] (
-	set Destination="%~dp0..\..\Setup\Build"
-) else (
-	set Destination="%1\Setup\Build"
-)
+set Destination="%~dp0..\..\Setup\Build"
 
 if [%2]==[] (
 	set LOGFILE="%TEMP%\copy.log"

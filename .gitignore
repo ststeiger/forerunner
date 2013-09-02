@@ -466,4 +466,7 @@ LicenseService/Register/obj/Release/TransformWebConfig/assist/Web.config
 LicenseService/Register/obj/Release/TransformWebConfig/original/Web.config
 LicenseService/Register/obj/Release/TransformWebConfig/transformed/Web.config
 Setup/Build/~$icense.rtf
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release/*
 ~$RERUNNER SOFTWARE LICENSE TERMS - TRIAL.docx
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/*

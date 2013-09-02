@@ -18,15 +18,15 @@ if not exist "%BUILD_RELEASE%\Setup" (
 	mkdir "%BUILD_RELEASE%\Setup"
 )
 
-echo Copying setup manifest... >> %POSTBUILD_LOG%
-robocopy %~dp0..\Setup %BUILD_RELEASE%\Setup * /E /R:0
-if ERRORLEVEL 8 (
-	goto :Error
-)
-
 echo Copying Files for Setup... >> %POSTBUILD_LOG%
 call %~dp0..\RS\Reporting\CopyFiles.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
 if ERRORLEVEL 1 (
+	goto :Error
+)
+
+echo Copying setup manifest... >> %POSTBUILD_LOG%
+robocopy %~dp0..\Setup %BUILD_RELEASE%\Setup * /E /R:0
+if ERRORLEVEL 8 (
 	goto :Error
 )
 

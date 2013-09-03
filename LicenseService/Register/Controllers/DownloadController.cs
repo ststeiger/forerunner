@@ -62,10 +62,15 @@ namespace Register.Controllers
 
         }
 
-        public void Post()
+        public HttpResponseMessage Post()
         {
             string content = this.Request.Content.ReadAsStringAsync().Result;
             Reg.RegisterDownload(content);
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            resp.Headers.Location = new Uri("http://forerunnersw.com/thankyou.html");
+            resp.StatusCode = HttpStatusCode.Found;
+            return resp;
+            
         }
 
         // POST api/values

@@ -32,9 +32,6 @@
             this.folderSSRS = new System.Windows.Forms.FolderBrowserDialog();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.gbAuthType = new System.Windows.Forms.GroupBox();
-            this.rdoFormAuth = new System.Windows.Forms.RadioButton();
-            this.rdoWinAuth = new System.Windows.Forms.RadioButton();
             this.gbDBLoginInfo = new System.Windows.Forms.GroupBox();
             this.lblDomain = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
@@ -69,12 +66,15 @@
             this.txtSiteName = new System.Windows.Forms.TextBox();
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
+            this.gbAuthType = new System.Windows.Forms.GroupBox();
+            this.rdoFormAuth = new System.Windows.Forms.RadioButton();
+            this.rdoWinAuth = new System.Windows.Forms.RadioButton();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.gbAuthType.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.gbAuthType.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -88,7 +88,6 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.gbAuthType);
             this.tabPage2.Controls.Add(this.gbDBLoginInfo);
             this.tabPage2.Controls.Add(this.lblWSUrl);
             this.tabPage2.Controls.Add(this.txtWSUrl);
@@ -101,30 +100,6 @@
             resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // gbAuthType
-            // 
-            this.gbAuthType.Controls.Add(this.rdoFormAuth);
-            this.gbAuthType.Controls.Add(this.rdoWinAuth);
-            resources.ApplyResources(this.gbAuthType, "gbAuthType");
-            this.gbAuthType.Name = "gbAuthType";
-            this.gbAuthType.TabStop = false;
-            // 
-            // rdoFormAuth
-            // 
-            resources.ApplyResources(this.rdoFormAuth, "rdoFormAuth");
-            this.rdoFormAuth.Name = "rdoFormAuth";
-            this.rdoFormAuth.Tag = "Forms";
-            this.rdoFormAuth.UseVisualStyleBackColor = true;
-            // 
-            // rdoWinAuth
-            // 
-            resources.ApplyResources(this.rdoWinAuth, "rdoWinAuth");
-            this.rdoWinAuth.Checked = true;
-            this.rdoWinAuth.Name = "rdoWinAuth";
-            this.rdoWinAuth.TabStop = true;
-            this.rdoWinAuth.Tag = "Windows";
-            this.rdoWinAuth.UseVisualStyleBackColor = true;
             // 
             // gbDBLoginInfo
             // 
@@ -291,6 +266,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.gbAuthType);
             this.tabPage1.Controls.Add(this.btnInstallUWS);
             this.tabPage1.Controls.Add(this.btnTestWeb);
             this.tabPage1.Controls.Add(this.btnApplyWebServer);
@@ -359,6 +335,30 @@
             this.rdoIIS.TabStop = true;
             this.rdoIIS.UseVisualStyleBackColor = true;
             // 
+            // gbAuthType
+            // 
+            this.gbAuthType.Controls.Add(this.rdoFormAuth);
+            this.gbAuthType.Controls.Add(this.rdoWinAuth);
+            resources.ApplyResources(this.gbAuthType, "gbAuthType");
+            this.gbAuthType.Name = "gbAuthType";
+            this.gbAuthType.TabStop = false;
+            // 
+            // rdoFormAuth
+            // 
+            resources.ApplyResources(this.rdoFormAuth, "rdoFormAuth");
+            this.rdoFormAuth.Name = "rdoFormAuth";
+            this.rdoFormAuth.Tag = "Forms";
+            this.rdoFormAuth.UseVisualStyleBackColor = true;
+            // 
+            // rdoWinAuth
+            // 
+            resources.ApplyResources(this.rdoWinAuth, "rdoWinAuth");
+            this.rdoWinAuth.Checked = true;
+            this.rdoWinAuth.Name = "rdoWinAuth";
+            this.rdoWinAuth.TabStop = true;
+            this.rdoWinAuth.Tag = "Windows";
+            this.rdoWinAuth.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -370,14 +370,14 @@
             this.tabMain.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            this.gbAuthType.ResumeLayout(false);
-            this.gbAuthType.PerformLayout();
             this.gbDBLoginInfo.ResumeLayout(false);
             this.gbDBLoginInfo.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.gbAuthType.ResumeLayout(false);
+            this.gbAuthType.PerformLayout();
             this.ResumeLayout(false);
 
         }

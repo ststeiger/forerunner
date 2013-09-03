@@ -35,7 +35,7 @@ echo HOME [%HOME%] >> %BUILD_LOG%
 echo SPSITE [%SPSITE%] >> %BUILD_LOG%
 echo SPRELEASE [%SPRELEASE%] >> %BUILD_LOG%
 set SPBUILD_RELEASE=%SPRELEASE%/%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
-set SPBUILD_URL=%SPSITE%/%SPBUILD_RELEASE%
+set SPBUILD_URL=%SPSITE%%SPBUILD_RELEASE%
 set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 git pull %GITHUBSSH% >> %BUILD_LOG%
@@ -88,7 +88,9 @@ robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
 %ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerReportManagerSetup.exe.zip
 %UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
-call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %SPBUILD_URL%. See build.log for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
+set MailSubject="BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
+call %~dp0\buildpassed.htm.template.cmd %BUILD_RELEASE%\buildpassed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"
+call %~dp0\SendMail.cmd %MailSubject% -File %BUILD_RELEASE%\buildpassed.htm -BodyAsHtml -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 0
 
 :InitError
@@ -103,5 +105,7 @@ mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
 %ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
 %UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
-call %~dp0\SendMail.cmd "BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed. See %SPBUILD_URL%/build.log or %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
+set MailSubject="BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
+call %~dp0\buildfailed.htm.template.cmd %BUILD_RELEASE%\buildfailed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"
+call %~dp0\SendMail.cmd %MailSubject% -File %BUILD_RELEASE%\buildfailed.htm -BodyAsHtml -Attachments "@("""%BUILD_RELEASE%\build.err""","""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.err""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 1

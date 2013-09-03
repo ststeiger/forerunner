@@ -8,5 +8,5 @@ set GITHUBSSH=git@github.com:forerunnersw/Forerunner.git
 set PROJECT_NAME=Forerunner
 set HOME=%HOMEDRIVE%%HOMEPATH%
 set SPSITE=https://forerunnersw.sharepoint.com
-set SPRELEASE=/Shared Documents/Build/
+set SPRELEASE=/Shared Documents/Build
 call %~dp0%COMPUTERNAME%.cmd

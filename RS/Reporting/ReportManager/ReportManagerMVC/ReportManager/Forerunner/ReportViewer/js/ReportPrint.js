@@ -41,8 +41,8 @@ $(function () {
                "<input class='fr-print-text' name='MarginLeft' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginLeft) + " /></div>" +
                "<div><label class='fr-print-label'>MarginRight (in):</label>" +
                "<input class='fr-print-text' name='MarginRight' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginRight) + " /></div>" +
-               "<div><input class='fr-print-button fr-print-submit' name='submit' type='button' value='Print' />" +
-               "<input class='fr-print-button fr-print-cancel' name='Cancel' type='button' value='Cancel' /></div>" +
+               "<div><input class='fr-print-button fr-print-submit fr-rounded' name='submit' type='button' value='Print' />" +
+               "<input class='fr-print-button fr-print-cancel fr-rounded' name='Cancel' type='button' value='Cancel' /></div>" +
                "</fidleset></form></div></div>");
 
             var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });

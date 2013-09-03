@@ -18,7 +18,7 @@ try {
     $Body = (gc $BodyFile | out-string)
   }
 
-  $MaxRetryCount = 10
+  [int]$MaxRetryCount = 10
 
   foreach($retry in 0..$MaxRetryCount) {
     if($Config.SmtpConfiguration.UserName) {
@@ -26,15 +26,15 @@ try {
       $password = ConvertTo-SecureString -AsPlainText -Force -String $Config.SmtpConfiguration.Password
       $cred = new-object System.Management.Automation.PSCredential $userName,$password
       if($Attachments) {
-        Send-MailMessage -To $emailTo -Subject $Subject -From -$emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -Credential $cred -BodyAsHtml:$BodyAsHtml -Attachments $Attachments -ErrorVariable SendMailError
+        Send-MailMessage -To $emailTo -Subject $Subject -From $emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -Credential $cred -BodyAsHtml:$BodyAsHtml -Attachments $Attachments -ErrorVariable SendMailError
       } else {
-        Send-MailMessage -To $emailTo -Subject $Subject -From -$emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -Credential $cred -BodyAsHtml:$BodyAsHtml -ErrorVariable SendMailError
+        Send-MailMessage -To $emailTo -Subject $Subject -From $emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -Credential $cred -BodyAsHtml:$BodyAsHtml -ErrorVariable SendMailError
       }
     } else {
       if($Attachments) {
-        Send-MailMessage -To $emailTo -Subject $Subject -From -$emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -BodyAsHtml:$BodyAsHtml -Attachments $Attachments -ErrorVariable SendMailError
+        Send-MailMessage -To $emailTo -Subject $Subject -From $emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -BodyAsHtml:$BodyAsHtml -Attachments $Attachments -ErrorVariable SendMailError
       } else {
-        Send-MailMessage -To $emailTo -Subject $Subject -From -$emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -BodyAsHtml:$BodyAsHtml -ErrorVariable SendMailError
+        Send-MailMessage -To $emailTo -Subject $Subject -From $emailFrom -SmtpServer $smtpServer -Body $Body -UseSsl:$useSsl -BodyAsHtml:$BodyAsHtml -ErrorVariable SendMailError
       }
     }
     if($SendMailError) {
@@ -45,8 +45,8 @@ try {
     } else {
       exit 0
     }
+    Write-Output ('Retry {0} of {1}...' -f ($retry,$MaxRetryCount))
     Start-Sleep -Seconds 30
-    Write-Output 'Retry {0} of {1}...' -f $retry+1, $MaxRetryCount
   }
 } catch {
   Write-Output $_.ToString()

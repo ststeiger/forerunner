@@ -460,7 +460,7 @@ namespace Forerunner.SSRS.Manager
                             FROM Catalog c INNER JOIN (
                             SELECT ReportID,max(TimeStart) TimeStart
                             FROM ExecutionLogStorage 
-                            WHERE UserName = @DomainUser AND ReportAction = 1 AND format IS NOT NULL AND format <> 'MHTML' AND TimeStart > DATEADD(dd,-60,GETDATE()) 
+                            WHERE  (UserName like '%\'+ @UserName OR UserName = @DomainUser) AND ReportAction = 1 AND format IS NOT NULL AND format <> 'MHTML' AND TimeStart > DATEADD(dd,-60,GETDATE()) 
                             GROUP BY ReportID
                             ) e
                             ON e.ReportID = c.ItemID 
@@ -469,8 +469,8 @@ namespace Forerunner.SSRS.Manager
 
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                
-                SQLComm.Parameters.AddWithValue("@DomainUser", HttpContext.Current.User.Identity.Name);
+
+                SetUserNameParameters(SQLComm);
 
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();

@@ -56,8 +56,18 @@ namespace Forerunner.SSRS.Viewer
             SetRSURL();
         }
 
+        private ICredentials credentials = null;
+
+        internal void SetCredentials(ICredentials credentials)
+        {
+            this.credentials = credentials;
+        }
+
         private ICredentials GetCredentials()
         {
+            if (credentials != null)
+                return credentials;
+
             if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
             {
                 return CredentialCache.DefaultNetworkCredentials;

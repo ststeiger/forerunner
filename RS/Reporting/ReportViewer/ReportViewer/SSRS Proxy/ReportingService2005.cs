@@ -253,7 +253,7 @@ namespace Forerunner.SSRS.Management
         /// <remarks/>
         public ReportingService2005()
         {
-            this.Url = "http://gs-hvkd7r1:80/ReportServer_ENTERPRISE/ReportService2005.asmx";
+            this.Url = "";
         }
 
         public ServerInfoHeader ServerInfoHeaderValue

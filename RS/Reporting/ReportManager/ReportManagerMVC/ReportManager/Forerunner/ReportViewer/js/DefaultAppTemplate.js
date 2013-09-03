@@ -162,12 +162,8 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
-            values.windowHeight = 0;
+            values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
-
-            //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
-            //            ", $(window).height(): " + $(window).height() +
-            //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
 
             // Start out by adding the height of the location bar to the height
             if (forerunner.device.isiOS()) {
@@ -177,15 +173,12 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isFullscreen()) {
+                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen()) {
                     values.windowHeight += 60;
                     values.containerHeight += 60;
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
-            } else {
-                // PC
-                values.windowHeight = $(window).height();
             }
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
@@ -259,7 +252,44 @@ $(function () {
                 $(".fr-layout-pagesection", me.$container).show();
             });
         },
-
+        getScrollPosition: function() {
+            var position = {};
+            position.left = $(window).scrollLeft();
+            position.top = $(window).scrollTop();
+            return position;
+        },
+        scrollToPosition: function (position) {
+            var me = this;
+            me.savePosition = me.getScrollPosition();
+            $(window).scrollLeft(position.left);
+            $(window).scrollTop(position.top);
+        },
+        restoreScrollPosition: function () {
+            var me = this;
+            if (me.savePosition) {
+                $(window).scrollLeft(me.savePosition.left);
+                $(window).scrollTop(me.savePosition.top);
+                me.savePosition = null;
+            }
+        },
+        hideAddressBar: function () {
+            var me = this;
+            if (document.height <= window.outerHeight + 10) {
+                setTimeout(function () { me.scrollToPosition( {left: 0, top: 0} ); }, 50);
+            }
+            else {
+                setTimeout(function () { me.scrollToPosition( { left: 0, top: 0 } ); }, 0);
+            }
+        },
+        restoreScroll: function () {
+            var me = this;
+            if (document.height <= window.outerHeight + 10) {
+                setTimeout(function () { me.restoreScrollPosition(); }, 50);
+            }
+            else {
+                setTimeout(function () { me.restoreScrollPosition(); }, 0);
+            }
+        },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -276,6 +306,9 @@ $(function () {
                 topdiv.removeClass(className, delay);
                 $(".fr-layout-mainheadersection", me.$container).toolbar("showAllTools");
             }
+
+            // Make sure the scroll position is restored after the call to hideAddressBar
+            me.restoreScroll();
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -299,6 +332,9 @@ $(function () {
                 forerunner.device.allowZoom(false);
                 $(".fr-layout-mainheadersection", me.$container).toolbar("hideAllTools");
             }
+
+            // Make sure the address bar is not showing when a side out pane is showing
+            me.hideAddressBar();
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;

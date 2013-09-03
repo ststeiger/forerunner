@@ -94,8 +94,17 @@ namespace Forerunner.SSRS.Manager
                 return null;
         }
 
+        private ICredentials credentials = null;
+        private void SetCredentials(ICredentials credentials)
+        {
+            this.credentials = credentials;
+        }
+
         private ICredentials GetCredentials()
         {
+            if (credentials != null)
+                return credentials;
+
             if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
             {
                 return CredentialCache.DefaultNetworkCredentials;
@@ -660,6 +669,7 @@ namespace Forerunner.SSRS.Manager
 
                         sqlImpersonator = tryImpersonate(true);
                         context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, !GetServerRendering());
+                        this.SetCredentials(context.NetworkCredential);
                         ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
                         //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
                         //t.Start(path);
@@ -704,7 +714,7 @@ namespace Forerunner.SSRS.Manager
         {
             ThreadContext threadContext = (ThreadContext)context;
             String path = threadContext.Path;
-            String userName = threadContext.UserName;
+            String userName = threadContext.UserName != null ? threadContext.UserName : threadContext.NetworkCredential.UserName;
             byte[] retval = null;
             int isUserSpecific = 0;
             bool isException = false;
@@ -714,6 +724,10 @@ namespace Forerunner.SSRS.Manager
                 threadContext.Impersonate();
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetImpersonator(threadContext.SecondImpersonator);
+                if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+                {
+                    rep.SetCredentials(threadContext.NetworkCredential);
+                }
                 retval = rep.GetThumbnail(path, "", "1", 1.2);
                 isUserSpecific = IsUserSpecific(path);
             }

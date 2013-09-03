@@ -40,13 +40,13 @@ set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
-	goto :Error
+	goto :InitError
 )
 
 echo %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% > %~dp0\..\build.txt
 git commit %~dp0\..\build.txt -n -m "Official Build" >> %BUILD_LOG%
 if ERRORLEVEL 1 (
-	goto :Error
+	goto :InitError
 )
 
 echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
@@ -91,6 +91,11 @@ robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
 call %~dp0\SendMail.cmd "BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build succeeded. Drop location: %SPBUILD_URL%. See build.log for more details." -Attachments "@("""%BUILD_RELEASE%\build.wrn""","""%BUILD_RELEASE%\codeanalysis.wrn""")"
 exit /b 0
 
+:InitError
+echo The Build Failed to initialize. >> %BUILD_LOG%
+echo There was an issue with GIT. >> %BUILD_LOG%
+call %~dp0\SendMail.cmd "BUILD INIT FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%" "The build failed to initialize. See attached build.log or %BUILD_LOG% for more details." -Attachments "@("""%BUILD_RELEASE%\build.log""")"
+exit /b 1
 
 :Error
 echo The Build Failed. >> %BUILD_LOG%

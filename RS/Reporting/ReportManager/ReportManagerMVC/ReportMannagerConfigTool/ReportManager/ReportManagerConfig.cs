@@ -169,15 +169,27 @@ namespace ReportMannagerConfigTool
         {
             using (ServerManager serverManager = new ServerManager())
             {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
+
                 Microsoft.Web.Administration.Configuration config = serverManager.GetApplicationHostConfiguration();
 
                 //disable anonymous authentication which is the default value of IIS
                 Microsoft.Web.Administration.ConfigurationSection anonymousAuthenticationSection = config.GetSection(anonymousAuthenticationPath, siteName);
-                anonymousAuthenticationSection["enabled"] = false;
 
                 //Enable window authentication
                 Microsoft.Web.Administration.ConfigurationSection windowsAuthenticationSection = config.GetSection(windowsAuthenticationPath, siteName);
-                windowsAuthenticationSection["enabled"] = true;
+
+                if (GetAuthNode(doc).GetAuthMode() == StaticMessages.windowsAuth)
+                {
+                    anonymousAuthenticationSection["enabled"] = false;
+                    windowsAuthenticationSection["enabled"] = true;
+                }
+                else if (GetAuthNode(doc).GetAuthMode() == StaticMessages.formsAuth)
+                {
+                    anonymousAuthenticationSection["enabled"] = true;
+                    windowsAuthenticationSection["enabled"] = false;
+                }
 
                 serverManager.CommitChanges();
             }
@@ -230,7 +242,6 @@ namespace ReportMannagerConfigTool
             string reportserverdbuser, string reportserverdbpwd, string dblogininfo, string authtype)
         {
             XmlDocument doc = new XmlDocument();
-            //need update in installer
             doc.Load(filePath);
 
             GetAppSettingNode(doc,reportServerWSUrl).SetAppSettingValue(wsurl);                       
@@ -313,7 +324,7 @@ namespace ReportMannagerConfigTool
 
         private static void CheckAuthType(XmlDocument doc, string authtype)
         {
-            if (authtype.Equals("Forms"))
+            if (authtype.Equals(StaticMessages.formsAuth))
             {
                 XmlNode authNode = GetAuthNode(doc) as XmlNode;
                 if (authNode.SelectSingleNode("forms") == null)
@@ -321,7 +332,7 @@ namespace ReportMannagerConfigTool
                     authNode.AppendChild(FormsNode(doc));
                 }
             }
-            else if (authtype.Equals("Windows"))
+            else if (authtype.Equals(StaticMessages.windowsAuth))
             {
                 XmlNode authNode = GetAuthNode(doc) as XmlNode;
                 if (authNode.SelectSingleNode("forms") != null)

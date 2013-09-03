@@ -77,6 +77,16 @@ namespace ReportMannagerConfigTool
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
                 string siteUrl = "";
+                string authType = string.Empty;
+                
+                if (rdoFormAuth.Checked)
+                {
+                    authType = StaticMessages.formsAuth;
+                }
+                else if (rdoWinAuth.Checked)
+                {
+                    authType = StaticMessages.windowsAuth;
+                }
 
                 //deploy site to IIS web server
                 if (rdoIIS.Checked)
@@ -89,13 +99,13 @@ namespace ReportMannagerConfigTool
 
                     //ip:port:domain
                     bindingAddress = string.Format("{0}:{1}:{2}", "*", port, "");
-                    ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress, ref siteUrl);
+                    ReportManagerConfig.CreateAnIISSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
                 //deploy site to UWS web server
                 else if (rdoUWS.Checked)
                 {
                     bindingAddress = string.Format("http://{0}:{1}", "*", port);
-                    ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl);
+                    ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
@@ -167,7 +177,7 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    winform.getSelectRdoValue(gbDBLoginInfo),winform.getSelectRdoValue(gbAuthType));
+                    winform.getSelectRdoValue(gbDBLoginInfo));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

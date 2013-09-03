@@ -34,7 +34,8 @@
         "docMap": "Document Map",
         "find": "Find",
         "next": "Next",
-		"zoom": "Enable Zoom"
+		"zoom": "Enable Zoom",
+		"print": "Print"
     },
 	"toolbar": {
         "back": "Back",
@@ -55,7 +56,8 @@
 		"recent": "Recent",
         "refresh": "Refresh",
 		"reportPage": "Page",
-		"zoom": "Enable Zoom"
+		"zoom": "Enable Zoom",
+		"print": "Print"
     },
 	"paramPane": {
         "nullField": "Null",

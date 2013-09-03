@@ -26,6 +26,20 @@ namespace ReportMannagerConfigTool
         private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
         private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
 
+        private static XmlDocument doc = null;
+        private static XmlDocument xmlDoc
+        {
+            get
+            {
+                if (doc == null)
+                {
+                    doc = new XmlDocument();
+                    doc.Load(filePath);
+                }
+                return doc;
+            }
+        }
+
         /// <summary>
         /// Create a website and open it in IIS server
         /// </summary>
@@ -33,7 +47,7 @@ namespace ReportMannagerConfigTool
         /// <param name="physicalPath">physical path in disk</param>
         /// <param name="appPoolName">application pool name</param>
         /// <returns>new site indentifier</returns>
-        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl)
+        public static void CreateAnIISSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl, string authType)
         {
             //if forerunnerpool not exist then create on: .net framework version 4.0; mode: classic
             if (!ForerunnerPoolExist())
@@ -54,7 +68,7 @@ namespace ReportMannagerConfigTool
 
                     siteUrl = GetSiteUrl(reportManager, siteName);
                     manager.CommitChanges();
-                    UpdateIISAuthentication(defaultSite + "/" + siteName);
+                    UpdateIISAuthentication(defaultSite + "/" + siteName, authType);
                 }
                 else
                 {
@@ -64,9 +78,9 @@ namespace ReportMannagerConfigTool
 
                     siteUrl = GetSiteUrl(reportManager);
                     manager.CommitChanges();
-                    UpdateIISAuthentication(siteName);
+                    UpdateIISAuthentication(siteName, authType);
                 }
-
+                UpdateAuthMode(authType);
             }
         }
 
@@ -165,19 +179,31 @@ namespace ReportMannagerConfigTool
         /// Microsoft.Web.Administration.dll Under: Forerunner\RS\Externals\IIS\Microsoft.Web.Administration.dll
         /// </summary>
         /// <param name="siteName">target site name</param>
-        private static void UpdateIISAuthentication(string siteName)
+        private static void UpdateIISAuthentication(string siteName, string authType)
         {
             using (ServerManager serverManager = new ServerManager())
             {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(filePath);
+
                 Microsoft.Web.Administration.Configuration config = serverManager.GetApplicationHostConfiguration();
 
                 //disable anonymous authentication which is the default value of IIS
                 Microsoft.Web.Administration.ConfigurationSection anonymousAuthenticationSection = config.GetSection(anonymousAuthenticationPath, siteName);
-                anonymousAuthenticationSection["enabled"] = false;
 
                 //Enable window authentication
                 Microsoft.Web.Administration.ConfigurationSection windowsAuthenticationSection = config.GetSection(windowsAuthenticationPath, siteName);
-                windowsAuthenticationSection["enabled"] = true;
+
+                if (authType == StaticMessages.windowsAuth)
+                {
+                    anonymousAuthenticationSection["enabled"] = false;
+                    windowsAuthenticationSection["enabled"] = true;
+                }
+                else if (authType == StaticMessages.formsAuth)
+                {
+                    anonymousAuthenticationSection["enabled"] = true;
+                    windowsAuthenticationSection["enabled"] = false;
+                }
 
                 serverManager.CommitChanges();
             }
@@ -189,7 +215,7 @@ namespace ReportMannagerConfigTool
         /// <param name="siteName">site name</param>
         /// <param name="physicalPath">physical path in disk</param>
         /// <returns>new site indentifier</returns>
-        public static void CreateAnUWSSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl)
+        public static void CreateAnUWSSite(string siteName, string physicalPath, string bindingAddress, ref string siteUrl, string authType)
         {
             //Console.WriteLine("Register begin to deploy the site to the UWS Server !");
 
@@ -199,17 +225,24 @@ namespace ReportMannagerConfigTool
             entry.ApplicationName = siteName;
             entry.VirtualDirectory = siteName;
             entry.AppType = ApplicationType.AspNetOrStaticHtml;
-            entry.AuthenicationMode = AuthenticationSchemes.IntegratedWindowsAuthentication;
-            entry.CompressResponseIfPossible = true;          
+            if (authType.Equals(StaticMessages.windowsAuth))
+            {
+                entry.AuthenicationMode = AuthenticationSchemes.IntegratedWindowsAuthentication;
+            }
+            else if(authType.Equals(StaticMessages.formsAuth))
+            {
+                entry.AuthenicationMode = AuthenticationSchemes.Anonymous;
+            }
+            entry.CompressResponseIfPossible = true;
 
-            ListenAddress address = new ListenAddress(bindingAddress);            
+            ListenAddress address = new ListenAddress(bindingAddress);
             entry.ListenAddresses.Clear();
             entry.ListenAddresses.Add(address);
             entry.PhysicalDirectory = physicalPath;
             
             Metabase.RegisterApplication(RuntimeVersion.AspNet_4, false, false, ProcessIdentity.NetworkService, entry);
             Metabase.WaitForAppToStart(guid,2000);
-
+            UpdateAuthMode(authType);
             //siteUrl = bindingAddress + "/" + siteName;
             siteUrl = "localhost" + "/" + siteName;
             //Console.WriteLine("Deploy Done! New application's guid in UWS is: " + guid);
@@ -227,29 +260,25 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
         public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, 
-            string reportserverdbuser, string reportserverdbpwd, string dblogininfo, string authtype)
+            string reportserverdbuser, string reportserverdbpwd, string dblogininfo)
         {
-            XmlDocument doc = new XmlDocument();
-            //need update in installer
-            doc.Load(filePath);
+            GetAppSettingNode(xmlDoc, reportServerWSUrl).SetAppSettingValue(wsurl);
 
-            GetAppSettingNode(doc,reportServerWSUrl).SetAppSettingValue(wsurl);                       
-            
-            GetAppSettingNode(doc, reportServerDataSource).SetAppSettingValue(reportserverdatasource);
+            GetAppSettingNode(xmlDoc, reportServerDataSource).SetAppSettingValue(reportserverdatasource);
 
-            GetAppSettingNode(doc, reportServerDB).SetAppSettingValue(reportserverdb);
+            GetAppSettingNode(xmlDoc, reportServerDB).SetAppSettingValue(reportserverdb);
 
-            GetAppSettingNode(doc, reportServerDBDomain).SetAppSettingValue(reportserverdbuserdomain);
+            GetAppSettingNode(xmlDoc, reportServerDBDomain).SetAppSettingValue(reportserverdbuserdomain);
 
-            GetAppSettingNode(doc, reportServerDBUser).SetAppSettingValue(reportserverdbuser);
+            GetAppSettingNode(xmlDoc, reportServerDBUser).SetAppSettingValue(reportserverdbuser);
 
-            GetAppSettingNode(doc, reportServerDBPWD).SetAppSettingValue(reportserverdbpwd);
+            GetAppSettingNode(xmlDoc, reportServerDBPWD).SetAppSettingValue(reportserverdbpwd);
 
-            GetAppSettingNode(doc, reportServerDBAccountType).SetAppSettingValue(dblogininfo);
+            GetAppSettingNode(xmlDoc, reportServerDBAccountType).SetAppSettingValue(dblogininfo);
 
-            GetAuthNode(doc).SetAuthMode(authtype, doc);
+            //GetAuthNode(doc).SetAuthMode(authtype, doc);
 
-            doc.Save(filePath);
+            xmlDoc.Save(filePath);
         }
 
         /// <summary>
@@ -260,17 +289,14 @@ namespace ReportMannagerConfigTool
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(filePath);
-
-            result.Add("WSUrl", GetAppSettingNode(doc, reportServerWSUrl).GetAppSettingValue());
-            result.Add("DataSource", GetAppSettingNode(doc, reportServerDataSource).GetAppSettingValue());
-            result.Add("Database", GetAppSettingNode(doc, reportServerDB).GetAppSettingValue());
-            result.Add("UserDomain", GetAppSettingNode(doc, reportServerDBDomain).GetAppSettingValue());
-            result.Add("User", GetAppSettingNode(doc, reportServerDBUser).GetAppSettingValue());
-            result.Add("Password", GetAppSettingNode(doc, reportServerDBPWD).GetAppSettingValue());
-            result.Add("DBAccountType", GetAppSettingNode(doc, reportServerDBAccountType).GetAppSettingValue());
-            result.Add("AuthType", GetAuthNode(doc).GetAuthMode());
+            result.Add("WSUrl", GetAppSettingNode(xmlDoc, reportServerWSUrl).GetAppSettingValue());
+            result.Add("DataSource", GetAppSettingNode(xmlDoc, reportServerDataSource).GetAppSettingValue());
+            result.Add("Database", GetAppSettingNode(xmlDoc, reportServerDB).GetAppSettingValue());
+            result.Add("UserDomain", GetAppSettingNode(xmlDoc, reportServerDBDomain).GetAppSettingValue());
+            result.Add("User", GetAppSettingNode(xmlDoc, reportServerDBUser).GetAppSettingValue());
+            result.Add("Password", GetAppSettingNode(xmlDoc, reportServerDBPWD).GetAppSettingValue());
+            result.Add("DBAccountType", GetAppSettingNode(xmlDoc, reportServerDBAccountType).GetAppSettingValue());
+            result.Add("AuthType", GetAuthNode().GetAuthMode());
 
             return result;
         }
@@ -311,31 +337,36 @@ namespace ReportMannagerConfigTool
             return node.GetAttribute("value");
         }
 
-        private static void CheckAuthType(XmlDocument doc, string authtype)
+        private static void UpdateAuthMode(string authType)
         {
-            if (authtype.Equals("Forms"))
+            GetAuthNode().SetAuthMode(authType);
+        }
+
+        private static void CheckAuthType(string authtype)
+        {
+            if (authtype.Equals(StaticMessages.formsAuth))
             {
-                XmlNode authNode = GetAuthNode(doc) as XmlNode;
+                XmlNode authNode = GetAuthNode() as XmlNode;
                 if (authNode.SelectSingleNode("forms") == null)
                 {
-                    authNode.AppendChild(FormsNode(doc));
+                    authNode.AppendChild(FormsNode(xmlDoc));
                 }
             }
-            else if (authtype.Equals("Windows"))
+            else if (authtype.Equals(StaticMessages.windowsAuth))
             {
-                XmlNode authNode = GetAuthNode(doc) as XmlNode;
+                XmlNode authNode = GetAuthNode() as XmlNode;
                 if (authNode.SelectSingleNode("forms") != null)
                 {
-                    authNode.RemoveChild(GetAuthNode(doc).SelectSingleNode("forms"));
+                    authNode.RemoveChild(GetAuthNode().SelectSingleNode("forms"));
                 }
                 
             }
         }
 
-        private static XmlElement GetAuthNode(XmlDocument doc)
+        private static XmlElement GetAuthNode()
         {
-             string xpath = "/configuration/system.web/authentication";
-             return doc.SelectSingleNode(xpath) as XmlElement;
+            string xpath = "/configuration/system.web/authentication";
+            return xmlDoc.SelectSingleNode(xpath) as XmlElement;
         }
 
         private static string GetAuthMode(this XmlElement authNode)
@@ -347,13 +378,14 @@ namespace ReportMannagerConfigTool
             return authNode.GetAttribute("mode");
         }
 
-        private static void SetAuthMode(this XmlElement authNode, string authType, XmlDocument doc)
+        private static void SetAuthMode(this XmlElement authNode, string authType)
         {
             if (authNode != null)
             {
                 authNode.SetAttribute("mode", authType);
-                CheckAuthType(doc, authType);
+                CheckAuthType(authType);
             }
+            xmlDoc.Save(filePath);
         }
 
         private static XmlNode FormsNode(XmlDocument doc)

@@ -107,6 +107,8 @@ $(function () {
             toolBase: "toolBase",
             /** @constant */
             toolPane: "toolPane",
+            /** @constant */
+            reportPrint: "reportPrint",
 
             /** @constant */
             namespace: "forerunner",

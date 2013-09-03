@@ -54,7 +54,7 @@ $(function () {
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-
+            printArea:null,
         },
 
         _destroy: function () {
@@ -853,6 +853,30 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
+        /**
+         * Print the report in PDF format, allow user to custom page size
+         *
+         * @function $.forerunner.reportViewer#printReport         
+         * @see forerunner.ssr.constants
+         */
+        showPrint: function () {
+            var me = this;
+            var printArea = me.options.printArea;
+
+            printArea.reportPrint("togglePrintPane");
+        },
+        printReport: function (printPropertyList) {
+            var me = this;
+            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
+            window.open(url);
+        },
+        _setPrint:function(pageLayout){
+            var me = this;
+            var printArea = me.options.printArea;
+
+            printArea.reportPrint({ $reportViewer: this });
+            printArea.reportPrint("setPrint", pageLayout);
+        },
 
         //Page Loading
         _loadParameters: function (pageNum) {
@@ -956,7 +980,7 @@ $(function () {
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me._setPage(newPageNum);                        
+                        me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
                             me.element.show(); //scrollto does not work with the slide in functions:(
                         if (bookmarkID)
@@ -979,7 +1003,9 @@ $(function () {
                 ParameterList: paramList
             })
             .done(function (data) {
-                me._writePage(data, newPageNum, loadOnly);                
+                me._writePage(data, newPageNum, loadOnly);
+                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
                 if (bookmarkID)

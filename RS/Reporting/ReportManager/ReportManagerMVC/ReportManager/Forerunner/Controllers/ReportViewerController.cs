@@ -222,5 +222,22 @@ namespace ReportManager.Controllers
             }
          
         }
+
+        [HttpGet]
+        public HttpResponseMessage PrintReport(string ReportPath, string SessionID, string Parameterlist, string PrintPropertyString)
+        {
+            try
+            {
+                byte[] result = null;
+                string mimeType;
+                string fileName;
+                result = GetReportViewer().PrintExport(ReportPath, SessionID, Parameterlist, PrintPropertyString, out mimeType, out fileName);
+                return GetResponseFromBytes(result, mimeType, false, fileName);
+            }
+            catch (Exception e)
+            {
+                return ReturnError(e);
+            }
+        }
     }
 }

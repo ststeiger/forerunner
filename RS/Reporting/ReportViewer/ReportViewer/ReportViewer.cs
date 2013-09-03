@@ -607,7 +607,13 @@ namespace Forerunner.SSRS.Viewer
             }
         }
 
-        public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName)
+        //Support print by producing a PDF, allow user to change page layout
+        public byte[] PrintExport(string ReportPath, string SessionID, string ParametersList, string PrintPropertyString, out string MimeType, out string FileName)
+        {
+            return RenderExtension(ReportPath, SessionID, ParametersList, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+        }
+
+        public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName, string devInfo=null)
         {
             string historyID = null;
             string encoding;
@@ -639,7 +645,10 @@ namespace Forerunner.SSRS.Viewer
                     }
                 }
 
-                string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
+                if (devInfo == null)
+                {
+                    devInfo = @"<DeviceInfo><Toolbar>false</Toolbar><Section>0</Section></DeviceInfo>";
+                }
                 result = rs.Render(ExportType, devInfo, out Extension, out MimeType, out encoding, out warnings, out streamIDs);
                 FileName = Path.GetFileName(ReportPath).Replace(' ', '_') + "." + Extension;
                 return result;

@@ -131,7 +131,7 @@ $(function () {
 
             me._closeAllDropdown();
             var paramList = me.getParamsList();
-            if (paramList) {                
+            if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList);
                 me._trigger(events.submit);
             }

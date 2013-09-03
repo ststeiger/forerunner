@@ -22,6 +22,7 @@ $(function () {
             $lefttoolbar: null,
             $righttoolbar: null,
             $docMap: null,
+            $print:null,
             ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             ReportPath: null,
@@ -202,6 +203,13 @@ $(function () {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
+
+            var $print = me.options.$print;
+            if ($print !== null) {
+                $print.reportPrint({ $reportViewer: $viewer });
+                $viewer.reportViewer("option", "printArea", $print);
+            }
+
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }

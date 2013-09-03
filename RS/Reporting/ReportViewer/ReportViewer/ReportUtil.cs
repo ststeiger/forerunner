@@ -85,6 +85,35 @@ namespace Forerunner
             }
         }
 
+        //Convert property json string to devInfo in xml format
+        internal static string GetPrintPDFDevInfo(string propertyString)
+        {
+            StringBuilder printProperty = new StringBuilder();
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(propertyString)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+
+                JsonArray propertyList = jsonObj["PrintPropertyList"] as JsonArray;
+
+                printProperty.Append("<DeviceInfo>");
+                foreach (JsonObject obj in propertyList)
+                {
+                    printProperty.Append("<");
+                    printProperty.Append(obj["key"].ToString());
+                    printProperty.Append(">");
+                    printProperty.Append(obj["value"].ToString());
+                    printProperty.Append("in");
+                    printProperty.Append("</");
+                    printProperty.Append(obj["key"].ToString());
+                    printProperty.Append(">");
+                }
+                printProperty.Append("</DeviceInfo>");
+
+                return printProperty.ToString();
+            }
+        }
+
         public static string WriteExceptionJSON(Exception e, String userName = null)
         {
             JsonWriter w = new JsonTextWriter();

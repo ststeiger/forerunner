@@ -64,6 +64,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
+                $print: layout.$printsection,
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
                 navigateTo: me.options.navigateTo,

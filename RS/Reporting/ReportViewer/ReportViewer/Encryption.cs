@@ -58,6 +58,8 @@ namespace Forerunner.SSRS.Security
         internal static String Decrypt(String encryptedText)
         {
             byte[] buffer = Convert.FromBase64String(encryptedText);
+            if (encryptedText == "")
+                return encryptedText;
             return Encoding.UTF8.GetString(Decrypt(buffer));
         }
 

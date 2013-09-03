@@ -10,31 +10,28 @@
 }
 
 <section id="loginForm">
-@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl})) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-    <div style="display: table; position: absolute; height: 100%; width: 100%">
+    <div class="loginForm" >
         <div style="display: table-cell; vertical-align: middle">
-            <div style="margin-left: auto; margin-right: auto; width:60%">
+            <div style="margin-left: auto; margin-right: auto;">
     <fieldset>
-        <ul>
+        <ol>
             <li class="centeralign">
                 <img src="~/Forerunner/Common/images/ForerunnerLogo.jpg" width="250px"/>
             </li>
             <li class="centeralign">
-                @Html.TextBoxFor(m => m.UserName, new {@placeholder="User name"})
+                @Html.TextBoxFor(m => m.UserName, new {@placeholder="User name", autocomplete="on"})
             </li>
             <li class="centeralign">
-                @Html.PasswordFor(m => m.Password, new {@placeholder="Password"})
-            </li>
-            <li class="centeralign">
-                @Html.TextBoxFor(m => m.Domain, new {@placeholder="Domain"})
+                @Html.PasswordFor(m => m.Password, new {@placeholder="Password", autocomplete="on"})
             </li>
             <li class="centeralign">
                 <br />
                 <input class="login rounded" type="submit" value="Log in" />
             </li>
-        </ul>
+        </ol>
     </fieldset>
     </div></div></div>
 }

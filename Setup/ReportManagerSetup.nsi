@@ -22,6 +22,7 @@
 
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE_3LINES
+!define MUI_FINISHPAGE_TITLE_3LINES
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${LOCALROOT}\Mobilizer_Setup.bmp"
 !insertmacro MUI_PAGE_WELCOME
 

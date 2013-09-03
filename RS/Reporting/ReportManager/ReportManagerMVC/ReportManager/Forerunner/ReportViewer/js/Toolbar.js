@@ -103,7 +103,7 @@ $(function () {
         inputType: "number",
         tooltip: locData.toolbar.reportPage,
         events: {
-            keydown: function (e) {
+            keydown: function (e) {                
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
                     return false;

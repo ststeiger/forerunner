@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Text;
 using System.Security.Principal;
 using System.Web;
+using System.Web.Security;
 
 namespace Forerunner.Security
 {
@@ -11,9 +12,20 @@ namespace Forerunner.Security
     {
         public CurrentUserImpersonator()
         {
+            if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+            {
+                // Get it from Cookies otherwise
+                HttpCookie authCookie = HttpContext.Current.Request.Cookies[FormsAuthentication.FormsCookieName];
+                FormsAuthenticationTicket authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+
+                this.NetworkCredential = new NetworkCredential(authTicket.Name, authTicket.UserData);
+                return;
+            }
+
             duplicateIdentity();
         }
 
+        public NetworkCredential NetworkCredential { get; set; }
         private IntPtr duplicateToken;
         private WindowsIdentity identity;
         private string userName;
@@ -21,7 +33,6 @@ namespace Forerunner.Security
         private void duplicateIdentity()
         {
             var token = WindowsIdentity.GetCurrent().Token;
-                //((WindowsIdentity)HttpContext.Current.User.Identity).Token;
             duplicateToken = new IntPtr(0);
             userName = WindowsIdentity.GetCurrent().Name;
             const int SecurityLevel = 2;
@@ -58,9 +69,12 @@ namespace Forerunner.Security
         private WindowsImpersonationContext context;
         public WindowsImpersonationContext Impersonate()
         {
-            if (context == null)
+            if (identity != null)
             {
-                context = identity.Impersonate();
+                if (context == null)
+                {
+                    context = identity.Impersonate();
+                }
             }
             return context;
         }

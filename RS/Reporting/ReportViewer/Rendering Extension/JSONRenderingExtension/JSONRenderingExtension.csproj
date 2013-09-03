@@ -49,6 +49,7 @@
       <HintPath>External\Microsoft.ReportingServices.ProcessingCore.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
@@ -78,6 +79,9 @@
     </Compile>
     <Compile Include="..\..\ReportViewer\CurrentUserImpersonator.cs">
       <Link>CurrentUserImpersonator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ReportViewer\AuthenticationMode.cs">
+      <Link>AuthenticationMode.cs</Link>
     </Compile>
     <Compile Include="..\..\ReportViewer\Impersonator.cs">
       <Link>Impersonator.cs</Link>

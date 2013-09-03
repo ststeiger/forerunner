@@ -17,10 +17,6 @@ namespace ReportManager.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required]
-        [Display(Name = "Domain")]
-        public string Domain { get; set; }
-
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
     }

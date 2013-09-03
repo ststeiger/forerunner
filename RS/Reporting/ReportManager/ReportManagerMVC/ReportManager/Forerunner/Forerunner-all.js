@@ -392,9 +392,16 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
-        isFullscreen: function () {
+        /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
+        isStandalone: function () {
             if (window.navigator.standalone) {
+                return true;
+            }
+            return false;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
+        isiPhoneFullscreen: function () {
+            if (forerunner.device.isiPhone() && document.documentElement.clientHeight === 320) {
                 return true;
             }
             return false;
@@ -2147,11 +2154,11 @@ $(function () {
         inputType: "number",
         tooltip: locData.toolbar.reportPage,
         events: {
-            keydown: function (e) {
+            keydown: function (e) {                
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
+                    return false;
                 }
-                return false;
             },
             click: function (e) {
                 e.target.select();
@@ -2218,8 +2225,8 @@ $(function () {
             keydown: function (e) {
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
+                    return false;
                 }
-                return false;
             }
         }
     };
@@ -2595,8 +2602,8 @@ $(function () {
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("navToPage", this.value);
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
+                    return false;
                 }
-                return false;
             }
         }
     };
@@ -2771,8 +2778,8 @@ $(function () {
                 if (e.keyCode === 13 || e.keyCode === 9) {
                     e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+                    return false;
                 }
-                return false;
             }
         }
     };
@@ -5659,12 +5666,8 @@ $(function () {
         getHeightValues: function () {
             var me = this;
             var values = {};
-            values.windowHeight = 0;
+            values.windowHeight = $(window).height();  // PC case
             values.containerHeight = me.$container.height();
-
-            //console.log("getWindowHeight - window.innerHeight: " + window.innerHeight +
-            //            ", $(window).height(): " + $(window).height() +
-            //            ", document.documentElement.clientHeight: " + document.documentElement.clientHeight);
 
             // Start out by adding the height of the location bar to the height
             if (forerunner.device.isiOS()) {
@@ -5674,15 +5677,12 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isFullscreen()) {
+                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen()) {
                     values.windowHeight += 60;
                     values.containerHeight += 60;
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
-            } else {
-                // PC
-                values.windowHeight = $(window).height();
             }
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
@@ -5756,7 +5756,44 @@ $(function () {
                 $(".fr-layout-pagesection", me.$container).show();
             });
         },
-
+        getScrollPosition: function() {
+            var position = {};
+            position.left = $(window).scrollLeft();
+            position.top = $(window).scrollTop();
+            return position;
+        },
+        scrollToPosition: function (position) {
+            var me = this;
+            me.savePosition = me.getScrollPosition();
+            $(window).scrollLeft(position.left);
+            $(window).scrollTop(position.top);
+        },
+        restoreScrollPosition: function () {
+            var me = this;
+            if (me.savePosition) {
+                $(window).scrollLeft(me.savePosition.left);
+                $(window).scrollTop(me.savePosition.top);
+                me.savePosition = null;
+            }
+        },
+        hideAddressBar: function () {
+            var me = this;
+            if (document.height <= window.outerHeight + 10) {
+                setTimeout(function () { me.scrollToPosition( {left: 0, top: 0} ); }, 50);
+            }
+            else {
+                setTimeout(function () { me.scrollToPosition( { left: 0, top: 0 } ); }, 0);
+            }
+        },
+        restoreScroll: function () {
+            var me = this;
+            if (document.height <= window.outerHeight + 10) {
+                setTimeout(function () { me.restoreScrollPosition(); }, 50);
+            }
+            else {
+                setTimeout(function () { me.restoreScrollPosition(); }, 0);
+            }
+        },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -5773,6 +5810,9 @@ $(function () {
                 topdiv.removeClass(className, delay);
                 $(".fr-layout-mainheadersection", me.$container).toolbar("showAllTools");
             }
+
+            // Make sure the scroll position is restored after the call to hideAddressBar
+            me.restoreScroll();
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -5796,6 +5836,9 @@ $(function () {
                 forerunner.device.allowZoom(false);
                 $(".fr-layout-mainheadersection", me.$container).toolbar("hideAllTools");
             }
+
+            // Make sure the address bar is not showing when a side out pane is showing
+            me.hideAddressBar();
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;

@@ -393,9 +393,16 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
-        isFullscreen: function () {
+        /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
+        isStandalone: function () {
             if (window.navigator.standalone) {
+                return true;
+            }
+            return false;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
+        isiPhoneFullscreen: function () {
+            if (forerunner.device.isiPhone() && document.documentElement.clientHeight === 320) {
                 return true;
             }
             return false;

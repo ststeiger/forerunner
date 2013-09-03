@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LicenseService</RootNamespace>
     <AssemblyName>LicenseService</AssemblyName>
-    <StartDevelopmentStorage>True</StartDevelopmentStorage>
+    <StartDevelopmentStorage>False</StartDevelopmentStorage>
     <Name>LicenseService</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

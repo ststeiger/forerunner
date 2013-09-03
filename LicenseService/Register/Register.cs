@@ -8,6 +8,7 @@ using System.Net.Mail;
 using System.Xml;
 using System.IO;
 
+
 namespace Register
 {
 
@@ -50,6 +51,33 @@ namespace Register
             public RegistrationData(XmlReader XMLData)
             {
                 Read(XMLData);
+            }
+            public RegistrationData(String Data)
+            {
+                string[] del = {"&","="};
+                string[] parts = Data.Split(del, System.StringSplitOptions.None);
+
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    switch (parts[i].ToLower())
+                    {
+                        case "id":
+                            ID = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "email":
+                            Email = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "firstname":
+                            FirstName = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "lastname":
+                            LastName = HttpUtility.UrlDecode(parts[++i]);
+                            break;
+                        case "companyname":
+                            CompanyName = HttpUtility.UrlDecode(parts[++i]);
+                            break;             
+                    }
+                }
             }
             private void Read(XmlReader XMLData)
             {
@@ -113,7 +141,7 @@ namespace Register
             string MailBody =
 @"<b>" + RegData.FirstName + @", thank you for registering for your FREE Trial!</b><br><br> 
 
-To dowload your software click <a href='http://" + Domain + "/api/Download?id=" + RegData.ID + "'>here</a> or copy this link to your brower http://" + Domain + "/api/Download?id=" + RegData.ID + "<br><br>  Sincerely:<br> The Forerunner Software Team";
+To download your software click <a href='http://" + Domain + "/api/Download?id=" + RegData.ID + "'>here</a> or copy this link to your browser http://" + Domain + "/api/Download?id=" + RegData.ID + "<br><br>  Sincerely:<br> The Forerunner Software Team";
 
             try
             {
@@ -141,16 +169,24 @@ To dowload your software click <a href='http://" + Domain + "/api/Download?id=" 
 
 
         }
+        public string RegisterDownload(String Value)
+        {
+            return RegisterDownload(new RegistrationData(Value));
+        }
+
         public string RegisterDownload(Stream XMLValue)
+        {
+             return RegisterDownload(new RegistrationData(XMLValue));
+        }
+        private string RegisterDownload(RegistrationData RegData)
         {
             SqlConnection SQLConn = GetSQLCon();
             SqlDataReader SQLReader;
-            Guid ID = Guid.NewGuid();
-            RegistrationData RegData = new RegistrationData(XMLValue);
+            Guid ID = Guid.NewGuid();          
 
             string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
-                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1
+                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3
                             ELSE
                                 UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1
                             SELECT DownloadID FROM TrialRegistration WHERE Email = @Email
@@ -184,7 +220,7 @@ To dowload your software click <a href='http://" + Domain + "/api/Download?id=" 
             SqlDataReader SQLReader;
 
             string SQL = @" UPDATE TrialRegistration SET DownloadAttempts = DownloadAttempts+1 WHERE DownloadID = @ID
-                            SELECT DownloadAttempts FROM TrialRegistration WHERE DownloadID = @ID
+                            SELECT DownloadAttempts,MaxDownloadAttempts FROM TrialRegistration WHERE DownloadID = @ID
                            ";
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
@@ -192,14 +228,16 @@ To dowload your software click <a href='http://" + Domain + "/api/Download?id=" 
 
             SQLReader = SQLComm.ExecuteReader();
             int DownloadAttempts = -1;
+            int MaxDownloadAttempts = -1;
             while (SQLReader.Read())
             {
                 DownloadAttempts = SQLReader.GetInt32(0);
+                MaxDownloadAttempts = SQLReader.GetInt32(1);
             }
             SQLReader.Close();
             SQLConn.Close();
 
-            if (DownloadAttempts == -1 || DownloadAttempts > 10)
+            if (DownloadAttempts == -1 || DownloadAttempts > MaxDownloadAttempts)
                 return false;
             else
                 return true;
@@ -211,7 +249,7 @@ To dowload your software click <a href='http://" + Domain + "/api/Download?id=" 
         {
             if (SetupFile == null)
             {
-                SetupFile = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "/Content/ForerunnerReportManagerSetup.exe");
+                SetupFile = System.IO.File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "/Content/ForerunnerMobilizerSetup.exe");
             }
             return SetupFile;
         }

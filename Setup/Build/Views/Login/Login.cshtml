@@ -1,0 +1,45 @@
+﻿@model ReportManager.Models.LoginModel
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "../Shared/_RMLayout.cshtml"; 
+}
+
+@section styles {
+    <link href="~/CSS/Login.css" rel="stylesheet"/>
+}
+
+<section id="loginForm">
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div style="display: table; position: absolute; height: 100%; width: 100%">
+        <div style="display: table-cell; vertical-align: middle">
+            <div style="margin-left: auto; margin-right: auto; width:60%">
+    <fieldset>
+        <ul>
+            <li class="centeralign">
+                <img src="~/Forerunner/Common/images/ForerunnerLogo.jpg" width="250px"/>
+            </li>
+            <li class="centeralign">
+                @Html.TextBoxFor(m => m.UserName, new {@placeholder="User name"})
+            </li>
+            <li class="centeralign">
+                @Html.PasswordFor(m => m.Password, new {@placeholder="Password"})
+            </li>
+            <li class="centeralign">
+                @Html.TextBoxFor(m => m.Domain, new {@placeholder="Domain"})
+            </li>
+            <li class="centeralign">
+                <br />
+                <input class="login rounded" type="submit" value="Log in" />
+            </li>
+        </ul>
+    </fieldset>
+    </div></div></div>
+}
+</section>
+
+@section scripts {
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/Placeholders.min.js"></script>
+}

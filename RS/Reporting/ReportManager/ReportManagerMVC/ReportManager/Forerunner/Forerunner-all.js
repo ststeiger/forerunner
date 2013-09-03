@@ -399,6 +399,13 @@ $(function () {
             }
             return false;
         },
+        /** @return {bool} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
+        isiPhoneFullscreen: function () {
+            if (forerunner.device.isiPhone() && document.documentElement.clientHeight === 320) {
+                return true;
+            }
+            return false;
+        },
         /** @return {bool} Returns a boolean that indicates if the device is an Android device */
         isAndroid: function () {
             var ua = navigator.userAgent;
@@ -5670,7 +5677,7 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isStandalone()) {
+                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen()) {
                     values.windowHeight += 60;
                     values.containerHeight += 60;
                 }
@@ -5757,9 +5764,6 @@ $(function () {
         },
         scrollToPosition: function (position) {
             var me = this;
-
-            console.log("scrollToPosition - left: " + position.left + ", top: " + position.top);
-
             me.savePosition = me.getScrollPosition();
             $(window).scrollLeft(position.left);
             $(window).scrollTop(position.top);
@@ -5767,9 +5771,6 @@ $(function () {
         restoreScrollPosition: function () {
             var me = this;
             if (me.savePosition) {
-
-                console.log("restoreScrollPosition - left: " + me.savePosition.left + ", top: " + me.savePosition.top);
-
                 $(window).scrollLeft(me.savePosition.left);
                 $(window).scrollTop(me.savePosition.top);
                 me.savePosition = null;

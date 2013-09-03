@@ -398,6 +398,13 @@ $(function () {
             }
             return false;
         },
+        /** @return {bool} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
+        isiPhoneFullscreen: function () {
+            if (forerunner.device.isiPhone() && document.documentElement.clientHeight === 320) {
+                return true;
+            }
+            return false;
+        },
         /** @return {bool} Returns a boolean that indicates if the device is an Android device */
         isAndroid: function () {
             var ua = navigator.userAgent;

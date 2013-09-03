@@ -40,23 +40,33 @@ namespace ReportManager.Controllers
                     const int LOGON32_LOGON_NETWORK = 3;
                     const int LOGON32_PROVIDER_DEFAULT = 0;
 
+                    string userName;
+                    string domain = "";
+                    string[] results = model.UserName.Split('\\');
+                    if (results.Length > 1)
+                    {
+                        domain = results[0];
+                        userName = results[1];
+                    }
+                    else
+                    {
+                        userName = results[0];
+                    }
+
                     try {
                         if (Forerunner.Security.NativeMethods.LogonUser(
-                            model.UserName,
-                            model.Domain,
+                            userName,
+                            domain,
                             model.Password,
                             LOGON32_LOGON_NETWORK,
                             LOGON32_PROVIDER_DEFAULT, ref token))
                         {
                             // Write the cookie
                             //FormsAuthentication.SetAuthCookie(model.UserName, false);
-
-                            string userName = (model.Domain != null && model.Domain.Length > 0) ? 
-                                model.Domain + "\\" + model.UserName : model.UserName;
                             
                             FormsAuthenticationTicket ticket = new FormsAuthenticationTicket(
                                 1,
-                                userName,
+                                model.UserName,
                                 DateTime.Now,
                                 DateTime.Now.AddMinutes(30),
                                 false,

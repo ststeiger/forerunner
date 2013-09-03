@@ -58,10 +58,10 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
 
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));           
-            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, "")); });
-
-
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+                me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+            });
         },
         writeError: function (errorData) {
             var me = this;
@@ -103,7 +103,6 @@ $(function () {
                 $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
             }
         },
-
         _writeSection: function (RIContext) {
             var me = this;
             var $newObj = me._getDefaultHTMLTable();

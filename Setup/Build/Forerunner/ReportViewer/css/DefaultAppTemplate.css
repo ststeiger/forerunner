@@ -119,7 +119,7 @@
 
 .fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
 .fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
-.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button {
+.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button, .fr-layout-rightheader .fr-toolbar-print-button {
   display: none;
 }
 .fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 

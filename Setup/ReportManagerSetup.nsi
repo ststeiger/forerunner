@@ -22,6 +22,7 @@
 
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE_3LINES
+!define MUI_FINISHPAGE_TITLE_3LINES
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${LOCALROOT}\Mobilizer_Setup.bmp"
 !insertmacro MUI_PAGE_WELCOME
 
@@ -148,6 +149,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer-all.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportRender.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportPrint.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
@@ -208,7 +210,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
-  File "${LOCALROOT}\Web.config"
+  File /oname=Web.config "${LOCALROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
  ; File "${LOCALROOT}\ForerunnerSetup.ico"
@@ -328,6 +330,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportParameter.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportRender.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewer.css"
+    Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportPrint.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewer-all.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewerEZ.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"

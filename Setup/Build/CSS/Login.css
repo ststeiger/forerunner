@@ -11,25 +11,69 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8d9ea5', endColorstr='#a9c2d7',GradientType=1 ); /* IE6-8 */
 }
 
+.loginForm{
+    display: table; 
+    position: absolute; 
+    height: 100%; 
+    width:100%;
+}
 fieldset {
     background: white;
+    width: 250px;
+    margin:0px auto 0px auto;
+}
+
+ol li 
+{
+    margin: 0px;
+    padding: 0px;
+    text-indent: -40px;    
 }
 
 .centeralign {
-    display:table;margin:0px auto 0px auto;padding:0px;
+    display:table;
+    margin:0px auto 0px auto;
+    padding:0px;
 }
 
 .centeralign input
 {
-    width:300px;
+    width:150px;    
 }
 
 .checkbox input {
     width:auto;
+    
 }
 
-.login{ width:200px;border:0px; }
+.login{ 
+    width:250px;
+    border:0px;
+    margin-left: -40px;
+    display:block;
+}
 
 .rounded {
     -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; background-color:#0A1366; color: white; padding: 0px 30px 0px 30px;
+}
+/* The following sizes will be supported and are device agnostic */
+
+/* Small (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  
+}
+
+/* Medium  (E.g., for phones, landscape) */
+@media only screen and (min-width : 480px) and (max-width : 567px) {
+  
+}
+
+/* Large  (E.g., for larger phones, landscape) */
+@media only screen and (min-width : 568px) and (max-width : 767px) {
+ 
+}
+
+/* Full  (I.e., width of greater than or equal to 768 devices) */
+@media only screen and (min-width : 768px) {
+ 
 }

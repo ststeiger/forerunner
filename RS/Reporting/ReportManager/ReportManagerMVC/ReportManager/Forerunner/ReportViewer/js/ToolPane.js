@@ -309,6 +309,17 @@ $(function () {
         selectorClass: "fr-item-findgroup",
         tools: [itemKeyword, itemFind, itemSeparator, itemFindNext]
     };
+    var itemPrint = {
+        toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-printreport",
+        imageClass: "fr-icons24x24-printreport",
+        text: locData.toolPane.print,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showPrint");
+            }
+        }
+    };
 
     /**
      * ToolPane widget used with the reportViewer
@@ -378,7 +389,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemPrint, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();

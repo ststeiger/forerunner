@@ -57,6 +57,9 @@
             this.lblReportServer = new System.Windows.Forms.Label();
             this.txtReportServer = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.gbAuthType = new System.Windows.Forms.GroupBox();
+            this.rdoFormAuth = new System.Windows.Forms.RadioButton();
+            this.rdoWinAuth = new System.Windows.Forms.RadioButton();
             this.btnInstallUWS = new System.Windows.Forms.Button();
             this.btnTestWeb = new System.Windows.Forms.Button();
             this.btnApplyWebServer = new System.Windows.Forms.Button();
@@ -66,9 +69,6 @@
             this.txtSiteName = new System.Windows.Forms.TextBox();
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
-            this.gbAuthType = new System.Windows.Forms.GroupBox();
-            this.rdoFormAuth = new System.Windows.Forms.RadioButton();
-            this.rdoWinAuth = new System.Windows.Forms.RadioButton();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
@@ -280,6 +280,30 @@
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // gbAuthType
+            // 
+            this.gbAuthType.Controls.Add(this.rdoFormAuth);
+            this.gbAuthType.Controls.Add(this.rdoWinAuth);
+            resources.ApplyResources(this.gbAuthType, "gbAuthType");
+            this.gbAuthType.Name = "gbAuthType";
+            this.gbAuthType.TabStop = false;
+            // 
+            // rdoFormAuth
+            // 
+            resources.ApplyResources(this.rdoFormAuth, "rdoFormAuth");
+            this.rdoFormAuth.Name = "rdoFormAuth";
+            this.rdoFormAuth.Tag = "Forms";
+            this.rdoFormAuth.UseVisualStyleBackColor = true;
+            // 
+            // rdoWinAuth
+            // 
+            resources.ApplyResources(this.rdoWinAuth, "rdoWinAuth");
+            this.rdoWinAuth.Checked = true;
+            this.rdoWinAuth.Name = "rdoWinAuth";
+            this.rdoWinAuth.TabStop = true;
+            this.rdoWinAuth.Tag = "Windows";
+            this.rdoWinAuth.UseVisualStyleBackColor = true;
+            // 
             // btnInstallUWS
             // 
             resources.ApplyResources(this.btnInstallUWS, "btnInstallUWS");
@@ -334,30 +358,6 @@
             this.rdoIIS.Name = "rdoIIS";
             this.rdoIIS.TabStop = true;
             this.rdoIIS.UseVisualStyleBackColor = true;
-            // 
-            // gbAuthType
-            // 
-            this.gbAuthType.Controls.Add(this.rdoFormAuth);
-            this.gbAuthType.Controls.Add(this.rdoWinAuth);
-            resources.ApplyResources(this.gbAuthType, "gbAuthType");
-            this.gbAuthType.Name = "gbAuthType";
-            this.gbAuthType.TabStop = false;
-            // 
-            // rdoFormAuth
-            // 
-            resources.ApplyResources(this.rdoFormAuth, "rdoFormAuth");
-            this.rdoFormAuth.Name = "rdoFormAuth";
-            this.rdoFormAuth.Tag = "Forms";
-            this.rdoFormAuth.UseVisualStyleBackColor = true;
-            // 
-            // rdoWinAuth
-            // 
-            resources.ApplyResources(this.rdoWinAuth, "rdoWinAuth");
-            this.rdoWinAuth.Checked = true;
-            this.rdoWinAuth.Name = "rdoWinAuth";
-            this.rdoWinAuth.TabStop = true;
-            this.rdoWinAuth.Tag = "Windows";
-            this.rdoWinAuth.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 

@@ -13,11 +13,11 @@
 @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl})) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-    <div style="display: table; position: absolute; height: 100%; width: 100%">
+    <div class="loginForm" >
         <div style="display: table-cell; vertical-align: middle">
-            <div style="margin-left: auto; margin-right: auto; width:60%">
+            <div style="margin-left: auto; margin-right: auto;">
     <fieldset>
-        <ul>
+        <ol>
             <li class="centeralign">
                 <img src="~/Forerunner/Common/images/ForerunnerLogo.jpg" width="250px"/>
             </li>
@@ -31,7 +31,7 @@
                 <br />
                 <input class="login rounded" type="submit" value="Log in" />
             </li>
-        </ul>
+        </ol>
     </fieldset>
     </div></div></div>
 }

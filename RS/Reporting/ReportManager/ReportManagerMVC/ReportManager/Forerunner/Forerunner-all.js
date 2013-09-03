@@ -108,6 +108,8 @@ $(function () {
             toolBase: "toolBase",
             /** @constant */
             toolPane: "toolPane",
+            /** @constant */
+            reportPrint: "reportPrint",
 
             /** @constant */
             namespace: "forerunner",
@@ -512,7 +514,7 @@ $(function () {
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-
+            printArea:null,
         },
 
         _destroy: function () {
@@ -1311,6 +1313,30 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
+        /**
+         * Print the report in PDF format, allow user to custom page size
+         *
+         * @function $.forerunner.reportViewer#printReport         
+         * @see forerunner.ssr.constants
+         */
+        showPrint: function () {
+            var me = this;
+            var printArea = me.options.printArea;
+
+            printArea.reportPrint("togglePrintPane");
+        },
+        printReport: function (printPropertyList) {
+            var me = this;
+            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
+            window.open(url);
+        },
+        _setPrint:function(pageLayout){
+            var me = this;
+            var printArea = me.options.printArea;
+
+            printArea.reportPrint({ $reportViewer: this });
+            printArea.reportPrint("setPrint", pageLayout);
+        },
 
         //Page Loading
         _loadParameters: function (pageNum) {
@@ -1414,7 +1440,7 @@ $(function () {
             if (me.pages[newPageNum])
                 if (me.pages[newPageNum].$container) {
                     if (!loadOnly) {
-                        me._setPage(newPageNum);                        
+                        me._setPage(newPageNum);
                         if (!me.element.is(":visible") && !loadOnly)
                             me.element.show(); //scrollto does not work with the slide in functions:(
                         if (bookmarkID)
@@ -1437,7 +1463,9 @@ $(function () {
                 ParameterList: paramList
             })
             .done(function (data) {
-                me._writePage(data, newPageNum, loadOnly);                
+                me._writePage(data, newPageNum, loadOnly);
+                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
                 if (bookmarkID)
@@ -2380,6 +2408,18 @@ $(function () {
         dropdown: true,
         tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
     };
+    var btnPrint = {
+        toolType: toolTypes.button,
+        selectorClass: "fr-toolbar-print-button",
+        imageClass: "fr-icons24x24-printreport",
+        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+        tooltip: locData.toolbar.print,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showPrint");
+            }
+        }
+    };
 
     /**
      * Toobar widget used by the reportViewer
@@ -2458,7 +2498,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnZoom, btnExport, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnZoom, btnExport, btnPrint, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -2817,6 +2857,17 @@ $(function () {
         selectorClass: "fr-item-findgroup",
         tools: [itemKeyword, itemFind, itemSeparator, itemFindNext]
     };
+    var itemPrint = {
+        toolType: toolTypes.containerItem,
+        selectorClass: "fr-item-printreport",
+        imageClass: "fr-icons24x24-printreport",
+        text: locData.toolPane.print,
+        events: {
+            click: function (e) {
+                e.data.$reportViewer.reportViewer("showPrint");
+            }
+        }
+    };
 
     /**
      * ToolPane widget used with the reportViewer
@@ -2886,7 +2937,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemFindGroup]);
+            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemPrint, itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -3431,10 +3482,10 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
 
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageStyle));           
-            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) { me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, "")); });
-
-
+            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+                me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+            });
         },
         writeError: function (errorData) {
             var me = this;
@@ -3476,7 +3527,6 @@ $(function () {
                 $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
             }
         },
-
         _writeSection: function (RIContext) {
             var me = this;
             var $newObj = me._getDefaultHTMLTable();
@@ -4868,7 +4918,7 @@ $(function () {
 
             me._closeAllDropdown();
             var paramList = me.getParamsList();
-            if (paramList) {                
+            if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList);
                 me._trigger(events.submit);
             }
@@ -5501,6 +5551,162 @@ $(function () {
 
 });  // $(function ()
 
+///#source 1 1 /Forerunner/ReportViewer/js/ReportPrint.js
+/**
+ * @file Contains the print widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    $.widget(widgets.getFullname(widgets.reportPrint), {
+        options: {
+            $reportViewer: null,
+        },
+        _create: function () {
+
+        },
+        _init: function () {
+
+        },
+        _printOpen: false,
+        setPrint: function (pageLayout) {
+            var me = this;
+            me.element.html("");
+
+            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage'><div class='fr-print-title'>" +
+               "Print Page Layout Option:<p class=fr-render-close-print' title='Close'>x</p></div><form class='fr-print-form'>" +
+               "<fidleset><div><label class='fr-print-label'>PageHeight (in):</label>" +
+               "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._convertMilmeterToInch(pageLayout.PageHeight) + " /></div>" +
+               "<div><label class='fr-print-label'>PageWidth (in):</label>" +
+               "<input class='fr-print-text' name='PageWidth' type='text' value=" + me._convertMilmeterToInch(pageLayout.PageWidth) + " /></div>" +
+               "<div><label class='fr-print-label'>MarginTop (in):</label>" +
+               "<input class='fr-print-text' name='MarginTop' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginTop) + " /></div>" +
+               "<div><label class='fr-print-label'>MarginBottom (in):</label>" +
+               "<input class='fr-print-text' name='MarginBottom' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginBottom) + " /></div>" +
+               "<div><label class='fr-print-label'>MarginLeft (in):</label>" +
+               "<input class='fr-print-text' name='MarginLeft' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginLeft) + " /></div>" +
+               "<div><label class='fr-print-label'>MarginRight (in):</label>" +
+               "<input class='fr-print-text' name='MarginRight' type='text' value=" + me._convertMilmeterToInch(pageLayout.MarginRight) + " /></div>" +
+               "<div><input class='fr-print-button fr-print-submit fr-rounded' name='submit' type='button' value='Print' />" +
+               "<input class='fr-print-button fr-print-cancel fr-rounded' name='Cancel' type='button' value='Cancel' /></div>" +
+               "</fidleset></form></div></div>");
+
+            var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
+
+            me.element.append($maskDiv).append($printForm);
+
+            me.element.find(".fr-print-text").each(function () {
+                $(this).attr("required", "true").attr("number", "true");
+                $(this).parent().addClass('fr-print-item').append($("<span class='fr-print-error-span'/>").clone());
+            });
+
+            me._validateForm(me.element.find(".fr-print-form"));
+
+            me.element.find(".fr-print-submit").on("click", function (e) {
+                me._resetValidateMessage();
+                var printPropertyList = me._generatePrintProperty();
+                if (printPropertyList !== null) {
+                    me.options.$reportViewer.printReport(me._generatePrintProperty());
+                    me.options.$reportViewer.showPrint();
+                }
+            });
+
+            me.element.find(".fr-print-cancel").on("click", function (e) {
+                me.options.$reportViewer.showPrint();
+            });
+        },
+        togglePrintPane: function () {
+            var me = this;
+
+            var $mask = me.element.find(".fr-print-mask");
+            var $printPane = me.element.find(".fr-print-page");
+
+            //To open print pane
+            if (!me._printOpen) {
+                $mask.show('fast', function () {
+                    $(this).fadeTo('fast', 0.5, function () {
+                        $("body").eq(0).css("overflow", "hidden");
+                        $printPane.show();
+                    });
+                });
+
+                me._printOpen = true;
+            }
+            //To close print pane
+            else {
+                $mask.hide('fast', 0, function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $printPane.hide();
+                });
+
+                me._printOpen = false;
+            }
+        },
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).next("span"));
+                },
+                highlight: function (element) {
+                    $(element).next("span").addClass("fr-print-error-position");
+                    $(element).addClass("fr-print-error");
+                },
+                unhighlight: function (element) {
+                    $(element).next("span").removeClass("fr-print-error-position");
+                    $(element).removeClass("fr-print-error");
+                }
+            });
+        },
+        _generatePrintProperty: function () {
+            var me = this;
+            var a = [];
+            if (me.element.find(".fr-print-form").valid() === true) {
+
+                me.element.find(".fr-print-text").each(function () {
+                    a.push({ key: this.name, value: this.value });
+                });
+
+                var tempJson = "[";
+                for (i = 0; i < a.length; i++) {
+                    if (i !== a.length - 1) {
+                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"},";
+                    }
+                    else {
+                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"}";
+                    }
+                }
+                tempJson += "]";
+                return "{\"PrintPropertyList\":" + tempJson + "}";
+            }
+            else {
+                return null;
+            }
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = me.options.$reportViewer.locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
+        },
+        //milimeter is the unit of the RPL, inch is the format unit for PDF
+        _convertMilmeterToInch: function (milimeter) {
+            //keep two decimal places
+            return Math.round(milimeter / 25.4 *100) / 100;
+        },
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportViewer/js/DefaultAppTemplate.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
@@ -5578,6 +5784,9 @@ $(function () {
             me.$docmapsection = new $("<div />");
             me.$docmapsection.addClass("fr-layout-docmapsection");
             me.$pagesection.append(me.$docmapsection);
+            me.$printsection = new $("<div />")
+            me.$printsection.addClass("fr-layout-printsection");
+            me.$pagesection.append(me.$printsection);
             //bottom div
             var $bottomdiv = new $("<div />");
             $bottomdiv.addClass("fr-layout-bottomdiv");
@@ -5879,6 +6088,7 @@ $(function () {
             $lefttoolbar: null,
             $righttoolbar: null,
             $docMap: null,
+            $print:null,
             ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             ReportPath: null,
@@ -6059,6 +6269,13 @@ $(function () {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
+
+            var $print = me.options.$print;
+            if ($print !== null) {
+                $print.reportPrint({ $reportViewer: $viewer });
+                $viewer.reportViewer("option", "printArea", $print);
+            }
+
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
@@ -6183,6 +6400,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
+                $print: layout.$printsection,
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
                 navigateTo: me.options.navigateTo,

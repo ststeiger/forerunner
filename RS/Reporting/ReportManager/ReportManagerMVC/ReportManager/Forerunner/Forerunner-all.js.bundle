@@ -12,6 +12,7 @@
   <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
   <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
   <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportPrint.js</file>
   <file>/Forerunner/ReportViewer/js/DefaultAppTemplate.js</file>
   <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
   <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>

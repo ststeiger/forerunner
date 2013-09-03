@@ -29,5 +29,8 @@
         public static readonly string updateDone = "Update completed!";
 
         public static readonly string siteExist = "Site name {0} is already exist, please input another name";
+
+        public static readonly string windowsAuth = "Windows";
+        public static readonly string formsAuth = "Forms";
     }
 }

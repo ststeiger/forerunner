@@ -176,7 +176,7 @@ $(function () {
 
                 // Only add extra padding to the height on iphone / ipod, since the ipad browser
                 // doesn't scroll off the location bar.
-                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen()) {
+                if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
                     values.containerHeight += 60;
                 }

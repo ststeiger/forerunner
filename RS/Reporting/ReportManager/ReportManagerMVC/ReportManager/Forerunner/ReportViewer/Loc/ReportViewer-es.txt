@@ -1,0 +1,87 @@
+﻿{
+    "comunicación": {
+        "loading": "Cargando...",
+        "completeFind": "El informe completo ha sido registrada",
+        "keyNotFound": "La llave no se encuentra",
+        "sessionExpired": "Su sesión ha expirado",
+        "imageNotDisplay": "No se puede mostrar la imagene"
+    },
+    "tag error": {
+        "moreDetail": "Haga clic para obtener más detalles",
+        "serverError": "Excepción lanzada desde un servidor",
+        "type": "tipo",
+        "targetSite": "Sitio de destino",
+        "source": "Origen",
+        "message": "Mensaje",
+        "stackTrace": "StackTrace"
+    },
+    "tipo de exportar": {
+        "xml": "XML archivo con los datos del informe",
+        "csv": "CSV (delimitado por comas)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (web archive)",
+        "excel": "Excel",
+        "tiff": "TIFF file",
+        "word": "Word"
+    },
+	"panel de herramientas": {
+        "pageOf": "de",
+        "home": "Casa",
+        "navigation": "Navegación",
+        "favorites": "Favoritos",
+        "back": "Retroceder",
+        "refresh": "Reanudar",
+        "docMap": "Mapa de documento",
+        "find": "encontrar",
+        "next": "después",
+		"zoom": "Habilitar zoom",
+		"print": "imprimir"
+    },
+	"barra de herramientas": {
+        "back": "de vuelta",
+        "docMap": "Mapa del documento",
+        "exportMenu": "menú Exportar",
+        "favorites": "Favoritos",
+        "find": "encontrar",
+        "firstPage": "primera página",
+        "home": "casa",
+		"keyword": "palabra clave",
+		"lastPage": "última página",
+		"menu": "menú",
+        "navigation": "navegación",
+        "next": "después",
+        "page": "página de",
+		"Parámetros": "Parmeters",
+		"previousPage": "Página anterior",
+		"recent": "reciente",
+        "refresh": "reanudar",
+		"reportPage": "Page",
+		"zoom": "Habilitar zoom",
+		"print": "imprimir"
+    },
+	"panel de parámetros": {
+        "nullField": "Campo nulo",
+        "isTrue": "es cierto",
+        "isFalse": "es falso",
+        "required": "necesario",
+        "viewReport": "Ver informe"
+    },
+	"validar Error": {
+		"required": "necesario",
+		"remote": "Por favor, corrija este campo",
+		"email": "email inválido",
+		"url": "URL no válida",
+		"date": "Inválido Fecha",
+		"dateISO": "Inválido Fecha",
+		"number": "Número no válido",
+		"digits": "dígitos Sólo",
+		"maxlength": "No más de {0} caracteres",
+		"minlength": "Al menos {0} charaters",
+		"rangelength": "Introduzca un valor entre {0} y {1} caracteres de longitud",
+		"range": "Introduzca un valor entre {0} y {1}",
+		"max": "Introduzca un valor menor o igual a {0}",
+		"min": "Introduzca un valor mayor o igual a {0}"
+	}
+}
+
+        

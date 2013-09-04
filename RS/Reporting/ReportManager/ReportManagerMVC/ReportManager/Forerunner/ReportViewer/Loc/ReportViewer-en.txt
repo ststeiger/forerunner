@@ -59,6 +59,18 @@
 		"zoom": "Enable Zoom",
 		"print": "Print"
     },
+	"print":{
+	    "title": "Print Page Layout Option",
+		"pageHeight": "PageHeight",
+		"pageWidth": "PageWidth",
+		"marginTop": "MarginTop",
+		"marginBottom": "MarginBotton",
+		"marginLeft": "MarginLeft",
+		"marginRight": "MarginRight",
+		"print": "Print",
+		"cancel": "Cancel",
+		"unit": "in"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "True",

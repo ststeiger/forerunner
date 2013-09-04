@@ -190,6 +190,16 @@ $(function () {
             reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
 
             /** @constant */
+            showModalDialog: "showModalDialog",
+            /** widget + event, lowercase */
+            reportViewerShowModalDialog: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showModalDialog).toLowerCase(); },
+
+            /** @constant */
+            closeModalDialog: "closeModalDialog",
+            /** widget + event, lowercase */
+            reportViewerCloseModalDialog: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.closeModalDialog).toLowerCase(); },
+
+            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -269,7 +279,7 @@ $(function () {
             return str.indexOf(suffix, str.length - suffix.length);
         },
         _getVirtualRootBase: function () {
-            if (this._virtualRootBase == null) {
+            if (!this._virtualRootBase) {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
                     var script = scripts[i];

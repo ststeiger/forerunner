@@ -1,0 +1,90 @@
+﻿{
+    "messages": {
+        "loading": "Chargement...",
+        "completeFind": "L'ensemble du rapport a été recherché",
+        "keyNotFound": "Clé introuvable",
+        "sessionExpired": "Votre session a expiré",
+        "imageNotDisplay": "Impossible d'afficher l'image"
+    },
+    "erreur de Tag": {
+        "moreDetail": "Cliquez pour plus de détails",
+        "serverError": "Une exception est levée à partir du serveur",
+        "type": "Catégorie",
+        "targetSite": "Site cible",
+        "source": "Origine",
+        "message": "Un message",
+        "stackTrace": "StackTrace"
+    },
+    "Type exporter": {
+        "xml": "XML fichier avec les données du rapport",
+        "csv": "CSV (séparées par des virgules)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (web archive)",
+        "excel": "Excel",
+        "tiff": "TIFF file",
+        "word": "Word"
+    },
+	"volet d'outils": {
+        "pageOf": "Page d'",
+        "home": "Maison",
+        "navigation": "Navigation",
+        "favorites": "Favoris",
+        "back": "Réintégrer",
+        "refresh": "Reprendre",
+        "docMap": "Plan du document"
+	 
+	  	
+Explorateur de documents",
+        "find": "trouver",
+        "next": "Suivant",
+		"zoom": "Activer Zoom",
+		"print": "Imprimer"
+    },
+	"barre d'outils": {
+        "back": "Retour",
+        "docMap": "Plan du document",
+        "exportMenu": "Menu Exporter",
+        "favorites": "favoris",
+        "find": "Trouvez",
+        "firstPage": "première page",
+        "home": "maison",
+		"keyword": "Mots-clés",
+		"lastPage": "Dernière page",
+		"menu": "Menu",
+        "navigation": "Navigation",
+        "next": "ensuite",
+        "page": "Page sur",
+		"paramarea": "paramètres",
+		"précédent page": "Previous",
+		"recent": "récents",
+        "refresh": "renouveler",
+		"reportPage": "rapport page",
+		"zoom": "Activer Zoom",
+		"print": "imprimer"
+    },
+	"volet des paramètres": {
+        "nullField": "champ nul",
+        "isTrue": "est vrai",
+        "isFalse": "est faux",
+        "required": "voulu",
+        "viewReport": "voir le rapport"
+    },
+	"valider erreur": {
+		"required": "demandé",
+		"remote": "S'il vous plaît corriger ce domaine",
+		"email": "email invalide",
+		"url": "URL invalide",
+		"date": "Nombre non valide",
+		"dateISO": "date invalide",
+		"number": "Nombre non valide",
+		"digits": "Seuls les chiffres",
+		"maxlength": "Pas plus que {0} caractères",
+		"minlength": "Au moins {0} charaters",
+		"rangelength": "Entrez une valeur comprise entre {0} et {1} caractères",
+		"range": "Entrez une valeur comprise entre {0} et {1}",
+		"max": "Entrez une valeur inférieure ou égale à {0}",
+		"min": "Entrez une valeur supérieure ou égale à {0}"
+	}
+}
+
+        

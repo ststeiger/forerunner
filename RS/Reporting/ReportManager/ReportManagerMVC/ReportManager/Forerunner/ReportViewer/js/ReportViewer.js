@@ -853,6 +853,20 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
+        openModalDialog: function () {
+            var me = this;
+
+            me.element.addClass("fr-report-mask").attr("disabled", true);
+            $("body").eq(0).css("overflow", "hidden");
+            me._trigger(events.showModalDialog);
+        },
+        closeModalDialog: function () {
+            var me = this;
+
+            me.element.removeClass("fr-report-mask").removeAttr("disabled")
+            $("body").eq(0).css("overflow", "auto");
+            me._trigger(events.closeModalDialog);
+        },
         /**
          * Print the report in PDF format, allow user to custom page size
          *

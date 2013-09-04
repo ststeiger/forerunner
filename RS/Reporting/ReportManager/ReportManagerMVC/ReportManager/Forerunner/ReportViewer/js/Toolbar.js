@@ -394,6 +394,14 @@ $(function () {
                 me.enableAllTools();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowModalDialog(), function (e, data) {
+                me.disableAllTools();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerCloseModalDialog(), function (e, data) {
+                me.enableAllTools();
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
                 if (data.open) {
                     me.disableAllTools();

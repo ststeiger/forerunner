@@ -317,6 +317,7 @@ $(function () {
         events: {
             click: function (e) {
                 e.data.$reportViewer.reportViewer("showPrint");
+                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-printreport"]);
             }
         }
     };

@@ -51,7 +51,7 @@ $(function () {
 
             me.element.find(".fr-print-text").each(function () {
                 $(this).attr("required", "true").attr("number", "true");
-                $(this).parent().addClass('fr-print-item').append($("<span class='fr-print-error-span'/>").clone());
+                $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
             me._validateForm(me.element.find(".fr-print-form"));
@@ -77,8 +77,8 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                $mask.show('fast', function () {
-                    $(this).fadeTo('fast', 0.5, function () {
+                $mask.show("fast", function () {
+                    $(this).fadeTo("fast", 0.5, function () {
                         $("body").eq(0).css("overflow", "hidden");
                         $printPane.show();
                     });
@@ -88,7 +88,7 @@ $(function () {
             }
             //To close print pane
             else {
-                $mask.hide('fast', 0, function () {
+                $mask.hide("fast", 0, function () {
                     $("body").eq(0).css("overflow", "auto");
                     $printPane.hide();
                 });
@@ -121,7 +121,7 @@ $(function () {
                 });
 
                 var tempJson = "[";
-                for (i = 0; i < a.length; i++) {
+                for (var i = 0; i < a.length; i++) {
                     if (i !== a.length - 1) {
                         tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"},";
                     }

@@ -269,7 +269,7 @@ $(function () {
             return str.indexOf(suffix, str.length - suffix.length);
         },
         _getVirtualRootBase: function () {
-            if (this._virtualRootBase == null) {
+            if (!this._virtualRootBase) {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
                     var script = scripts[i];

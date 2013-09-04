@@ -74,7 +74,7 @@ $(function () {
             me.$docmapsection = new $("<div />");
             me.$docmapsection.addClass("fr-layout-docmapsection");
             me.$pagesection.append(me.$docmapsection);
-            me.$printsection = new $("<div />")
+            me.$printsection = new $("<div />");
             me.$printsection.addClass("fr-layout-printsection");
             me.$pagesection.append(me.$printsection);
             //bottom div

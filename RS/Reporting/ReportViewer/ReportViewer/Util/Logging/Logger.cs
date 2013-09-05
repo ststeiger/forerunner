@@ -119,7 +119,7 @@ namespace ReportManager.Util.Logging
                 stackTraceInfo.AppendLine();
             }
 
-            string rplOutput = string.Empty;
+            StringBuilder rplOutput = new StringBuilder();
             int len = 0;
             byte[] rplBuffer = new byte[1024 * 3];
 
@@ -127,11 +127,11 @@ namespace ReportManager.Util.Logging
             RPLStream.Position = 0;
             while ((len = RPLStream.Read(rplBuffer, 0, rplBuffer.Length)) > 0)
             {
-                rplOutput += Convert.ToBase64String(rplBuffer, 0, len, Base64FormattingOptions.None);
+                rplOutput.Append(Convert.ToBase64String(rplBuffer, 0, len, Base64FormattingOptions.None));
             }
 
             string error = string.Format("[Time: {0}]\r\n[Type: {1}]\r\n[Message: {2}]\r\n[StackTrace:\r\n{3}]\r\n[RPL: {4}]",
-                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), e.GetType(), e.Message, stackTraceInfo.ToString(), rplOutput);
+                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), e.GetType(), e.Message, stackTraceInfo.ToString(), rplOutput.ToString());
 
             Logger.Trace(LogType.Error, "Exception:\r\n{0}", new object[] { error });
 

@@ -289,16 +289,17 @@ namespace Forerunner.SSRS.JSONRender
 
         private void ThrowParseError()
         {
-            throw new Exception();
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(string.Empty, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg)
         {
-            throw new Exception(Msg);
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg, Exception e)
-        {            
-            throw new Exception(Msg,e);
+        {
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream, e);
         }
+
         private Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)
         {
             w.WriteMember(ArrayName);
@@ -1935,6 +1936,11 @@ namespace Forerunner.SSRS.JSONRender
         public RPLReader(Stream RPL)
         {
             this.RPL = RPL;
+        }
+
+        public Stream RPLStream
+        {
+            get { return this.RPL; }
         }
 
         public long position

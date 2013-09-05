@@ -34,6 +34,10 @@
   text-align:center;
 }
 
+.fr-report-mask{
+    opacity:0.3;
+}
+
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {

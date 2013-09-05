@@ -22,6 +22,7 @@ namespace Forerunner.SSRS.Security
         private const String software = "SOFTWARE";
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";
+        private const String ssrsBetaKey = "ssrsBeta";
         private const String ssrsKey = "ssrs";
         private const String timeBombName = "setupdata";
         private const String machineHashName = "setupkey";
@@ -57,9 +58,17 @@ namespace Forerunner.SSRS.Security
                 forerunnerswKey = wow6432NodeKey.OpenSubKey(TimeBomb.forerunnerKey, true);
             }
 
+
             if (forerunnerswKey != null)
             {
-                forerunnerswKey.DeleteSubKey(TimeBomb.ssrsKey, false);
+                RegistryKey ssrsBetawKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsBetaKey, true);
+                if (ssrsBetawKey != null)
+                {
+                    ssrsBetawKey.DeleteSubKey(TimeBomb.ssrsKey, false);
+
+                    ssrsBetawKey.Close();
+                    forerunnerswKey.DeleteSubKey(TimeBomb.ssrsBetaKey, false);
+                }
             }
         }
         internal Byte[] Serialize()
@@ -85,7 +94,8 @@ namespace Forerunner.SSRS.Security
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software, true);
             RegistryKey wow6432NodeKey = softwareKey.CreateSubKey(TimeBomb.wow6432Node);
             RegistryKey forerunnerswKey = wow6432NodeKey.CreateSubKey(TimeBomb.forerunnerKey);
-            RegistryKey ssrsKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrsKey);
+            RegistryKey ssrsBetaKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrsBetaKey);
+            RegistryKey ssrsKey = ssrsBetaKey.CreateSubKey(TimeBomb.ssrsKey);
             ssrsKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);
             ssrsKey.SetValue(TimeBomb.machineHashName, cryptoHash, RegistryValueKind.String);
         }
@@ -108,7 +118,15 @@ namespace Forerunner.SSRS.Security
                 }
             }
 
-            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsKey);
+            RegistryKey ssrBetaKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsBetaKey);
+            if (ssrBetaKey == null)
+            {
+                LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
+                e.Data.Add(LicenseException.failKey, LicenseException.FailReason.TimeBombMissing);
+                throw e;
+            }
+
+            RegistryKey ssrKey = ssrBetaKey.OpenSubKey(TimeBomb.ssrsKey);
             if (ssrKey == null)
             {
                 LicenseException e = new LicenseException(TimeBomb.genericRegistyError);
@@ -154,8 +172,8 @@ namespace Forerunner.SSRS.Security
                 }
             }
 
-            RegistryKey ssrKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsKey);
-            if (ssrKey == null)
+            RegistryKey ssrsBetaKey = forerunnerswKey.OpenSubKey(TimeBomb.ssrsBetaKey);
+            if (ssrsBetaKey == null)
             {
                 return false;
             }

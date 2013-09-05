@@ -1,30 +1,30 @@
 ﻿{
-    "comunicación": {
+    "messages": {
         "loading": "Cargando...",
         "completeFind": "El informe completo ha sido registrada",
         "keyNotFound": "La llave no se encuentra",
         "sessionExpired": "Su sesión ha expirado",
         "imageNotDisplay": "No se puede mostrar la imagene"
     },
-    "tag error": {
+    "errorTag": {
         "moreDetail": "Haga clic para obtener más detalles",
         "serverError": "Excepción lanzada desde un servidor",
-        "type": "tipo",
-        "targetSite": "Sitio de destino",
+        "type": "Tipo",
+        "targetSite": "sitioobjetivo",
         "source": "Origen",
         "message": "Mensaje",
-        "stackTrace": "StackTrace"
+        "stackTrace": "Seguimiento de la pila"
     },
-    "tipo de exportar": {
+    "exportType": {
         "xml": "XML archivo con los datos del informe",
         "csv": "CSV (delimitado por comas)",
         "pdf": "PDF",
-        "mhtml": "MHTML (web archive)",
+        "mhtml": "MHTML (archivo web)",
         "excel": "Excel",
-        "tiff": "TIFF file",
+        "tiff": "TIFF expediente",
         "word": "Word"
     },
-	"panel de herramientas": {
+	"toolPane": {
         "pageOf": "de",
         "home": "Casa",
         "navigation": "Navegación",
@@ -32,45 +32,45 @@
         "back": "Retroceder",
         "refresh": "Reanudar",
         "docMap": "Mapa de documento",
-        "find": "encontrar",
-        "next": "después",
+        "find": "Encontrar",
+        "next": "Fespués",
 		"zoom": "Habilitar zoom",
-		"print": "imprimir"
+		"print": "Imprimir"
     },
-	"barra de herramientas": {
+	"toolbar": {
         "back": "de vuelta",
         "docMap": "Mapa del documento",
-        "exportMenu": "menú Exportar",
+        "exportMenu": "Exportador",
         "favorites": "Favoritos",
-        "find": "encontrar",
-        "firstPage": "primera página",
-        "home": "casa",
-		"keyword": "palabra clave",
-		"lastPage": "última página",
-		"menu": "menú",
-        "navigation": "navegación",
-        "next": "después",
-        "page": "página de",
-		"Parámetros": "Parmeters",
+        "find": "Encontrar",
+        "firstPage": "Primero",
+        "home": "Casa",
+		"keyword": "Palabra clave",
+		"lastPage": "Último",
+		"menu": "Menú",
+        "navigation": "Navegación",
+        "next": "Ddespués",
+        "pageOf": "de",
+		"Parmeters":"Parámetros",
 		"previousPage": "Página anterior",
-		"recent": "reciente",
-        "refresh": "reanudar",
-		"reportPage": "Page",
-		"zoom": "Habilitar zoom",
-		"print": "imprimir"
+		"recent": "Reciente",
+        "refresh": "Reanudar",
+		"reportPage": "Página",
+		"zoom": "Habilitar Zoom",
+		"print": "Imprimir"
     },
-	"panel de parámetros": {
-        "nullField": "Campo nulo",
-        "isTrue": "es cierto",
-        "isFalse": "es falso",
-        "required": "necesario",
-        "viewReport": "Ver informe"
+	"paramPane": {
+        "nullField": "cero",
+        "isTrue": "verdadero",
+        "isFalse": "Falso",
+        "required": "Necesario",
+        "viewReport": "Ver Informe"
     },
-	"validar Error": {
+	"validateError": {
 		"required": "necesario",
 		"remote": "Por favor, corrija este campo",
 		"email": "email inválido",
-		"url": "URL no válida",
+		"url": "URL No Válida",
 		"date": "Inválido Fecha",
 		"dateISO": "Inválido Fecha",
 		"number": "Número no válido",

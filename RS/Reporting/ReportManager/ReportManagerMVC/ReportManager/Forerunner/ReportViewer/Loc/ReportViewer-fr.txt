@@ -6,7 +6,7 @@
         "sessionExpired": "Votre session a expiré",
         "imageNotDisplay": "Impossible d'afficher l'image"
     },
-    "erreur de Tag": {
+    "errorTag": {
         "moreDetail": "Cliquez pour plus de détails",
         "serverError": "Une exception est levée à partir du serveur",
         "type": "Catégorie",
@@ -15,67 +15,65 @@
         "message": "Un message",
         "stackTrace": "StackTrace"
     },
-    "Type exporter": {
+    "exportType": {
         "xml": "XML fichier avec les données du rapport",
         "csv": "CSV (séparées par des virgules)",
         "pdf": "PDF",
-        "mhtml": "MHTML (web archive)",
+        "mhtml": "MHTML (archive web)",
         "excel": "Excel",
-        "tiff": "TIFF file",
+        "tiff": "TIFF fichier",
         "word": "Word"
     },
-	"volet d'outils": {
-        "pageOf": "Page d'",
+	"toolPane": {
+        "pageOf": "de",
         "home": "Maison",
         "navigation": "Navigation",
         "favorites": "Favoris",
         "back": "Réintégrer",
         "refresh": "Reprendre",
-        "docMap": "Plan du document"
-	 
-	  	
-Explorateur de documents",
-        "find": "trouver",
+        "docMap": "Plan du document",
+	    "exportMenu": "Explorateur de documents",
+        "find": "Trouver",
         "next": "Suivant",
 		"zoom": "Activer Zoom",
 		"print": "Imprimer"
     },
-	"barre d'outils": {
+	"toolbar": {
         "back": "Retour",
         "docMap": "Plan du document",
-        "exportMenu": "Menu Exporter",
-        "favorites": "favoris",
+        "exportMenu": "Exporter",
+        "favorites": "Favoris",
         "find": "Trouvez",
-        "firstPage": "première page",
-        "home": "maison",
-		"keyword": "Mots-clés",
-		"lastPage": "Dernière page",
+        "firstPage": "Premier",
+        "home": "Maison",
+		"keyword": "Mot-clé",
+		"lastPage": "Dernier",
 		"menu": "Menu",
         "navigation": "Navigation",
-        "next": "ensuite",
-        "page": "Page sur",
-		"paramarea": "paramètres",
-		"précédent page": "Previous",
-		"recent": "récents",
-        "refresh": "renouveler",
-		"reportPage": "rapport page",
+        "next": "Ensuite",
+        "pageOf": "de",
+		"paramarea": "Paramètres",
+		"previousPage": "Previous",
+		"recent": "Récents",
+        "refresh": "Renouveler",
+		"reportPage": "Page",
 		"zoom": "Activer Zoom",
-		"print": "imprimer"
+		"print": "Imprimer"
     },
-	"volet des paramètres": {
-        "nullField": "champ nul",
-        "isTrue": "est vrai",
-        "isFalse": "est faux",
-        "required": "voulu",
-        "viewReport": "voir le rapport"
+	"paramPane": {
+        "nullField": "Zéro",
+        "isTrue": "Vrai",
+        "isFalse": "Faux",
+        "required": "Voulu",
+        "viewReport": "Voir le Rapport"
     },
-	"valider erreur": {
-		"required": "demandé",
+	"validateError": {
+		"required": "Demandé",
 		"remote": "S'il vous plaît corriger ce domaine",
-		"email": "email invalide",
-		"url": "URL invalide",
+		"email": "Email Invalide",
+		"url": "URL Invalide",
 		"date": "Nombre non valide",
-		"dateISO": "date invalide",
+		"dateISO": "Date Invalide",
 		"number": "Nombre non valide",
 		"digits": "Seuls les chiffres",
 		"maxlength": "Pas plus que {0} caractères",

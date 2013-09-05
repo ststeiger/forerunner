@@ -25,5 +25,6 @@
         "query": "",
         "private": true,
         "lenient": true,
+		"template": "templates/forerunner"
     }
 }

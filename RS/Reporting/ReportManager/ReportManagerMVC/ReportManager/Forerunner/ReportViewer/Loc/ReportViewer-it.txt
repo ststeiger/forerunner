@@ -1,0 +1,87 @@
+﻿{
+    "messages": {
+        "loading": "caricamento...",
+        "completeFind": "L'intero rapporto è stato cercato",
+        "keyNotFound": "Chiave non trovata",
+        "sessionExpired": "La sessione è scaduta",
+        "imageNotDisplay": "Impossibile visualizzare l'immagine"
+    },
+    "errorTag": {
+        "moreDetail": "Clicca per maggiori dettagli",
+        "serverError": "Eccezione generata dal server",
+        "type": "dattilografare",
+        "targetSite": "targetSite",
+        "source": "origine",
+        "message": "comunicazione",
+        "stackTrace": "StackTrace"
+    },
+    "exportType": {
+        "xml": "XML file con i dati del rapporto",
+        "csv": "CSV (delimitato da virgola)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (archivio web)",
+        "excel": "Excel",
+        "tiff": "TIFF file",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "di",
+        "home": "Casa",
+        "navigation": "navigazione",
+        "favorites": "Preferiti",
+        "back": "indietro",
+        "refresh": "Refresh",
+        "docMap": "Mappa documento",
+        "find": "trovare",
+        "next": "Successivo",
+	"zoom": "Abilita Zoom",
+	"print": "stampare"
+    },
+	"toolbar": {
+        "back": "indietro",
+        "docMap": "Mappa documento",
+        "exportMenu": "Esportazione",
+        "favorites": "Preferiti",
+        "find": "trovare",
+        "firstPage": "Primo",
+        "home": "Casa",
+	"keyword": "parola chiave",
+	"lastPage": "Ultimo",
+	"menu": "Menu",
+        "navigation": "Navigazione",
+        "next": "seguente",
+        "pageOf": "di",
+	"paramarea": "Parametri",
+	"previousPage": "precedente",
+	"recent": "Recenti",
+        "refresh": "Refresh",
+	"reportPage": "Pagina",
+	"zoom": "Abilita Zoom",
+	"print": "Stampare"
+    },
+	"paramPane": {
+        "nullField": "Zero",
+        "isTrue": "Vero",
+        "isFalse": "Falso",
+        "required": "Richiesto",
+        "viewReport": "Visualizza report"
+    },
+	"validateError": {
+	"required": "Richiesto",
+	"remote": "Si prega di correggere questo campo",
+	"email": "Mail non valido",
+	"url": "URL non valido",
+	"date": "Data non valida",
+	"dateISO": "Data non valida",
+	"number": "Numero non valido",
+	"digits": "Solo cifre",
+	"maxlength": "Non più di {0} caratteri",
+	"minlength": "Almeno {0} caratteri",
+	"rangelength": "Immettere un valore compreso tra {0} e lungo {1} caratteri",
+	"range": "Immettere un valore compreso tra {0} e {1}",
+	"max": "Immettere un valore inferiore o uguale a {0}",
+	"min": "Immettere un valore maggiore o uguale a {0}"
+	}
+}
+
+        

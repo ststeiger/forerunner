@@ -1041,6 +1041,7 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONMeasurement()
         {
 
+
             w.WriteStartObject();
             w.WriteMember("Left");
             w.WriteNumber(RPL.ReadSingle());
@@ -1054,9 +1055,45 @@ namespace Forerunner.SSRS.JSONRender
             w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("State");
             w.WriteNumber(RPL.ReadByte());
-            w.WriteMember("EndOffset");
-            w.WriteNumber(RPL.ReadInt64());
+            w.WriteMember("Type");
+            w.WriteString(VerifyMeasurementType());
+           
             w.WriteEndObject();
+
+        }
+        private string VerifyMeasurementType()
+        {
+            string retval = "";
+            long offset = RPL.ReadInt64();
+            long CurrIndex = RPL.position;
+            RPL.position = offset;
+
+            if (RPL.ReadByte() != 0xFE)
+                ThrowParseError("VerifyMeasurementType: Not Report Element End");
+            
+            long ElementOffset = RPL.ReadInt64();            
+            RPL.position = ElementOffset;
+            byte ElementType = RPL.ReadByte();
+
+            if (ElementType == 0x10) //Measurements
+            {
+                ElementOffset = RPL.ReadInt64();
+                RPL.position = ElementOffset;
+                ElementType = RPL.ReadByte();
+            }
+
+            switch (ElementType)
+            {
+                case 0x04:
+                    retval = "PageHeader";
+                    break;
+                case 0x05:
+                    retval = "PageFooter";
+                    break;
+            }
+            //Set back
+            RPL.position = CurrIndex;
+            return retval;
 
         }
         private Boolean WriteJSONOrigionalValue(byte TypeCode)

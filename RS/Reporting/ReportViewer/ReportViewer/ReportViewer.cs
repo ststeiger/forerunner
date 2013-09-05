@@ -96,7 +96,7 @@ namespace Forerunner.SSRS.Viewer
                     break;
                 }
             }
-            //this.ServerRendering = false;
+            this.ServerRendering = false;
             checkedServerRendering = true;
 
             return this.ServerRendering;

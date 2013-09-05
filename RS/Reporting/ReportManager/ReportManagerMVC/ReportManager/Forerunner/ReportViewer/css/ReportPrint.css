@@ -4,14 +4,14 @@
     left:0px;
     right:0px;
     position:fixed;
+    z-index:10;
+    display:none;
 }
 .fr-print-page{
     position:fixed;
     left:0px;
     top:0px;
     width:100%;
-    z-index:5500;
-    display:none;
 }
 .fr-print-innerPage{
     width: 260px;

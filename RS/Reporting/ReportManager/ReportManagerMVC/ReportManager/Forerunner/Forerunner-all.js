@@ -1323,19 +1323,24 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
-        openModalDialog: function () {
-            var me = this;
+        openModalDialog: function (showModal) {
+            var $mask = $("<div class='fr-report-mask'></div>");
+            $mask.appendTo($("body"));
 
-            me.element.addClass("fr-report-mask").attr("disabled", true);
-            $("body").eq(0).css("overflow", "hidden");
-            me._trigger(events.showModalDialog);
+            $mask.show("fast", function () {
+                $(this).fadeTo("fast", 0.5, function () {
+                    $("body").eq(0).css("overflow", "hidden");
+                    showModal();
+                });
+            });
         },
-        closeModalDialog: function () {
-            var me = this;
-
-            me.element.removeClass("fr-report-mask").removeAttr("disabled")
-            $("body").eq(0).css("overflow", "auto");
-            me._trigger(events.closeModalDialog);
+        closeModalDialog: function (closeModal) {
+            var $mask = $(".fr-report-mask");
+            closeModal();
+            $mask.hide("fast", function () {
+                $("body").eq(0).css("overflow", "auto");
+                $(this).remove();
+            });
         },
         /**
          * Print the report in PDF format, allow user to custom page size
@@ -2494,14 +2499,6 @@ $(function () {
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
-                me.enableAllTools();
-            });
-
-            me.options.$reportViewer.on(events.reportViewerShowModalDialog(), function (e, data) {
-                me.disableAllTools();
-            });
-
-            me.options.$reportViewer.on(events.reportViewerCloseModalDialog(), function (e, data) {
                 me.enableAllTools();
             });
 
@@ -5677,15 +5674,18 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.openModalDialog();
-                $printPane.show();
+                me.options.$reportViewer.openModalDialog(function () {
+                    me.element.show();
+                });
 
                 me._printOpen = true;
             }
-            //To close print pane
+                //To close print pane
             else {
-                me.options.$reportViewer.closeModalDialog();
-                $printPane.hide();
+                me.options.$reportViewer.closeModalDialog(function () {
+                    me.element.hide();
+                });
+
                 me._printOpen = false;
             }
         },

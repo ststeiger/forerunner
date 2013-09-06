@@ -1601,75 +1601,82 @@ namespace Forerunner.SSRS.JSONRender
             w.WriteEndObject();
 
         }
+
+        private Boolean WriteJSONParagraphProperties()
+        {
+            RPLProperties prop;
+
+            if (RPL.ReadByte() != 0x0F)
+                ThrowParseError();
+
+            switch (RPL.InspectByte())
+            {
+                case 0x02:
+                    //Shared Image so unshare
+                    RPL.ReadByte();
+                    long NewIndex = RPL.ReadInt64();
+                    DeReference(NewIndex, this.WriteJSONParagraphProperties);
+                    break;
+                case 0x00:
+                    //Shared Properties
+                    w.WriteMember("SharedElements");
+                    w.WriteStartObject();
+                    prop = new RPLProperties(0x00);
+                    prop.Add("ID", "String", 0x05);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    prop.Add("ListStyle", "Byte", 0x07);
+                    prop.Add("ListLevel", "Int32", 0x08);
+                    prop.Add("LeftIndent", "String", 0x09);
+                    prop.Add("RightIndent", "String", 0x0A);
+                    prop.Add("HangingIndent", "String", 0x0B);
+                    prop.Add("SpaceBefore", "String", 0x0C);
+                    prop.Add("SpaceAfter", "String", 0x0D);
+                    prop.Add("ContentHeight", "Single", 0x03);
+                    prop.Write(this);
+                    w.WriteEndObject();
+
+                    break;
+            }
+
+            //NonShared                     
+            if (RPL.InspectByte() == 0x01)
+            {
+                prop = new RPLProperties(0x01);
+                w.WriteMember("NonSharedElements");
+                w.WriteStartObject();
+                prop.Add("UniqueName", "String", 0x04);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                prop.Add("ListStyle", "Byte", 0x07);
+                prop.Add("ListLevel", "Int32", 0x08);
+                prop.Add("LeftIndent", "String", 0x09);
+                prop.Add("RightIndent", "String", 0x0A);
+                prop.Add("HangingIndent", "String", 0x0B);
+                prop.Add("SpaceBefore", "String", 0x0C);
+                prop.Add("SpaceAfter", "String", 0x0D);
+                prop.Add("ParagraphNumber", "Int32", 0x0E);
+                prop.Add("FirstLine", "Byte", 0x0F);
+                prop.Add("ContentTop", "Single", 0x00);
+                prop.Add("ContentLeft", "Single", 0x01);
+                prop.Add("ContentWidth", "Single", 0x02);
+                prop.Add("ContentHeight", "Single", 0x03);
+                prop.Write(this);
+                w.WriteEndObject();
+            }
+
+            return true;
+        }
         private Boolean WriteJSONParagraph()
         {
             if (RPL.ReadByte() == 0x13)
             {
                 w.WriteMember("Paragraph");
                 //WriteJSONElements();
-                RPLProperties prop;
 
-                if (RPL.ReadByte() != 0x0F)
-                    ThrowParseError();
-
-                switch (RPL.InspectByte())
-                {
-                    case 0x02:
-                        //Shared Image so unshare
-                        long NewIndex = RPL.ReadInt64();
-                        DeReference(NewIndex, this.WriteJSONParagraph);
-                        break;
-                    case 0x00:
-                        //Shared Properties
-                        w.WriteStartObject();
-                        w.WriteMember("SharedElements");
-                        w.WriteStartObject();
-                        prop = new RPLProperties(0x00);
-                        prop.Add("ID", "String", 0x05);
-                        prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-                        prop.Add("ListStyle", "Byte", 0x07);
-                        prop.Add("ListLevel", "Int32", 0x08);
-                        prop.Add("LeftIndent", "String", 0x09);
-                        prop.Add("RightIndent", "String", 0x0A);
-                        prop.Add("HangingIndent", "String", 0x0B);
-                        prop.Add("SpaceBefore", "String", 0x0C);
-                        prop.Add("SpaceAfter", "String", 0x0D);
-                        prop.Add("ContentHeight", "Single", 0x03);
-                        prop.Write(this);
-                        w.WriteEndObject();
-
-                        //NonShared                     
-                        if (RPL.InspectByte() == 0x01)
-                        {
-                            prop = new RPLProperties(0x01);
-                            w.WriteMember("NonSharedElements");
-                            w.WriteStartObject();
-                            prop.Add("UniqueName", "String", 0x04);
-                            prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-                            prop.Add("ListStyle", "Byte", 0x07);
-                            prop.Add("ListLevel", "Int32", 0x08);
-                            prop.Add("LeftIndent", "String", 0x09);
-                            prop.Add("RightIndent", "String", 0x0A);
-                            prop.Add("HangingIndent", "String", 0x0B);
-                            prop.Add("SpaceBefore", "String", 0x0C);
-                            prop.Add("SpaceAfter", "String", 0x0D);
-                            prop.Add("ParagraphNumber", "Int32", 0x0E);
-                            prop.Add("FirstLine", "Byte", 0x0F);
-                            prop.Add("ContentTop", "Single", 0x00);
-                            prop.Add("ContentLeft", "Single", 0x01);
-                            prop.Add("ContentWidth", "Single", 0x02);
-                            prop.Add("ContentHeight", "Single", 0x03);
-                            prop.Write(this);
-                            w.WriteEndObject();
-                        }
-                        w.WriteEndObject();
-
-                        if (RPL.ReadByte() != 0xFF)
-                            //The end of ElementProperties
-                            ThrowParseError("No End Tag");
-                        break;
-                }
-
+                w.WriteStartObject();
+                WriteJSONParagraphProperties();
+                if (RPL.ReadByte() != 0xFF)
+                    ThrowParseError("No End Tag");
+                w.WriteEndObject();
                 //TextRuns
                 w.WriteMember("TextRunCount");
                 int Count = RPL.ReadInt32();
@@ -1687,26 +1694,25 @@ namespace Forerunner.SSRS.JSONRender
 
             return true;
         }
-        private Boolean WriteJSONTextRun()
+
+        private Boolean WriteJSONTextRunElements()
         {
-            //Properties
-            w.WriteStartObject();
-            w.WriteMember("Elements");
-            RPLProperties prop;
-
-            if (RPL.ReadByte() != 0x0F)
+            byte elementBeginMarker = RPL.ReadByte();
+            if (elementBeginMarker != 0x0F)
+            {
                 ThrowParseError("Not a Text Run");
-
+            }
+            RPLProperties prop;
             switch (RPL.InspectByte())
             {
                 case 0x02:
                     //Shared Image so unshare
+                    RPL.ReadByte();
                     long NewIndex = RPL.ReadInt64();
-                    DeReference(NewIndex, WriteJSONTextRun);
+                    DeReference(NewIndex, WriteJSONTextRunElements);
                     break;
                 case 0x00:
                     //Shared Properties
-                    w.WriteStartObject();
                     w.WriteMember("SharedElements");
                     w.WriteStartObject();
                     prop = new RPLProperties(0x00);
@@ -1720,37 +1726,54 @@ namespace Forerunner.SSRS.JSONRender
                     prop.Add("ContentHeight", "Single", 0x03);
                     prop.Write(this);
                     w.WriteEndObject();
-
-                    //NonShared                     
-                    if (RPL.InspectByte() == 0x01)
-                    {
-                        prop = new RPLProperties(0x01);
-                        w.WriteMember("NonSharedElements");
-                        w.WriteStartObject();
-                        prop.Add("UniqueName", "String", 0x04);
-                        prop.Add("Markup", "Byte", 0x07);
-                        prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
-                        prop.Add("Label", "String", 0x08);
-                        prop.Add("Tooltip", "String", 0x09);
-                        prop.Add("Value", "String", 0x0A);
-                        prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
-                        prop.Add("ProcessedWithError", "Byte", 0x0D);
-                        prop.Add("ContentTop", "Single", 0x00);
-                        prop.Add("ContentLeft", "Single", 0x01);
-                        prop.Add("ContentWidth", "Single", 0x02);
-                        prop.Add("ContentHeight", "Single", 0x03);
-                        prop.Write(this);
-                        w.WriteEndObject();
-                    }
-                    w.WriteEndObject();
-
-                    if (RPL.ReadByte() != 0xFF)
-                        //The end of ElementProperties
-                        ThrowParseError("No Element End Tag");
                     break;
+                default:
+                    // Write empty shared element if there is no shared element.
+                    w.WriteMember("SharedElements");
+                    w.WriteStartObject();
+                    w.WriteEndObject();
+                    break;
+
             }
 
+            //NonShared                     
+            if (RPL.InspectByte() == 0x01)
+            {
+                prop = new RPLProperties(0x01);
+                w.WriteMember("NonSharedElements");
+                w.WriteStartObject();
+                prop.Add("UniqueName", "String", 0x04);
+                prop.Add("Markup", "Byte", 0x07);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                prop.Add("Label", "String", 0x08);
+                prop.Add("Tooltip", "String", 0x09);
+                prop.Add("Value", "String", 0x0A);
+                prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
+                prop.Add("ProcessedWithError", "Byte", 0x0D);
+                prop.Add("ContentTop", "Single", 0x00);
+                prop.Add("ContentLeft", "Single", 0x01);
+                prop.Add("ContentWidth", "Single", 0x02);
+                prop.Add("ContentHeight", "Single", 0x03);
+                prop.Write(this);
+
+                w.WriteEndObject();
+            }
+            return true;
+        }
+        private Boolean WriteJSONTextRun()
+        {
+            //Properties
+            w.WriteStartObject();
+            w.WriteMember("Elements");
+            
+            w.WriteStartObject();
+            WriteJSONTextRunElements();
             if (RPL.ReadByte() != 0xFF)
+                ThrowParseError("No end marker");
+            w.WriteEndObject();
+
+            byte elementEndMarker = RPL.ReadByte();
+            if (elementEndMarker != 0xFF)
                 ThrowParseError();
 
             w.WriteEndObject();

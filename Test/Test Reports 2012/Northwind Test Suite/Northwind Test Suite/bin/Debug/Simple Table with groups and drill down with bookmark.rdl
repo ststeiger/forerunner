@@ -556,10 +556,10 @@
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
         <PageBreak>
-          <BreakLocation>End</BreakLocation>
+          <BreakLocation>StartAndEnd</BreakLocation>
         </PageBreak>
-        <Top>2.82069in</Top>
-        <Left>0.11459in</Left>
+        <Top>4.6218in</Top>
+        <Left>0.17583in</Left>
         <Height>1.96167in</Height>
         <Width>4.60417in</Width>
         <Style>
@@ -909,8 +909,8 @@
         <DataSetName>DataSet1</DataSetName>
         <Top>0.655in</Top>
         <Left>0.17583in</Left>
-        <Height>2in</Height>
-        <Width>6.09375in</Width>
+        <Height>3.79167in</Height>
+        <Width>7.70833in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>

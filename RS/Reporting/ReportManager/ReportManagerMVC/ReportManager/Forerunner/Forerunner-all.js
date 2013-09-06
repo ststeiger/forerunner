@@ -3567,20 +3567,14 @@ $(function () {
             var headerIndex;
             var footerIndex;
 
-            // Header and Footer could either be on Section or PageContent
-            if (RIContext.CurrObj.PageFooter) {
-                footerIndex = RIContext.CurrObj.Columns.length;
-                headerIndex = footerIndex + 1;
-            }
-            else
-                headerIndex = RIContext.CurrObj.Columns.length;
-            if (RIContext.CurrObjParent.PageHeader) {
-                headerIndex = 1;
-                footerIndex = 2;
-            }
-            else if (RIContext.CurrObjParent.PageFooter)
-                footerIndex = 1;
 
+            for (var i = 0; i< RIContext.CurrObj.Measurement.Count;i++){
+                if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageHeader")
+                    headerIndex = i
+                if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageFooter")
+                    footerIndex = i
+            }
+          
             //Page Header
             if (RIContext.CurrObj.PageHeader)
                 $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));
@@ -3675,7 +3669,12 @@ $(function () {
                 if (RIContext.CurrObj.ReportItems.length === 0)
                     Style += "height:" + (RIContext.CurrLocation.Height + 1) + "mm;";
                 else {
-                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) + (parseFloat(RIContext.CurrLocation.Height) - (parseFloat(Measurements[RecLayout.LowestIndex].Top) + parseFloat(Measurements[RecLayout.LowestIndex].Height))) + 1;
+                    var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
+                                       parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
+                                       (parseFloat(RIContext.CurrLocation.Height) -
+                                            (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
+                                            parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
+                                       1;
                     Style += "height:" + parentHeight + "mm;";
                 }
         

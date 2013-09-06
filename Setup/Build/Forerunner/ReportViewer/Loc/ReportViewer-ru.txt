@@ -1,0 +1,87 @@
+﻿{
+    "messages": {
+        "loading": "загрузка...",
+        "completeFind": "Весь отчет был проведен поиск",
+        "keyNotFound": "Ключ не найден",
+        "sessionExpired": "Ваша сессия истекла",
+        "imageNotDisplay": "Невозможно отобразить изображения"
+    },
+    "errorTag": {
+        "moreDetail": "Щелчок для больше детали",
+        "serverError": "Исключение с сервера",
+        "type": "типаж",
+        "targetSite": "целевойсайт",
+        "source": "исходный текст",
+        "message": "сообщение",
+        "stackTrace": "трассировкастека"
+    },
+    "exportType": {
+        "xml": "XML файл с данными отчета",
+        "csv": "CSV (запятую)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (веб-архив)",
+        "excel": "Excel",
+        "tiff": "TIFF файл",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "из",
+        "home": "дома",
+        "navigation": "навигация",
+        "favorites": "Избранное",
+        "back": "назад",
+        "refresh": "регенерация",
+        "docMap": "Схема документа",
+        "find": "Поиск",
+        "next": "следующий",
+		"zoom": "Enable Zoom",
+		"print": "напечатать"
+    },
+	"toolbar": {
+        "back": "назад",
+        "docMap": "Схема документа",
+        "exportMenu": "экспорт",
+        "favorites": "Избранное",
+        "find": "Поиск",
+        "firstPage": "первый",
+        "home": "дома",
+		"keyword": "ключевое слово",
+		"lastPage": "последний",
+		"menu": "меню",
+        "navigation": "судовождение",
+        "next": "следующий",
+        "pageOf": "из",
+		"paramarea": "Параметры",
+		"previousPage": "предшествующий",
+		"recent": "последний",
+        "refresh": "регенерация",
+		"reportPage": "страница",
+		"zoom": "Enable Zoom",
+		"print": "напечатать"
+    },
+	"paramPane": {
+        "nullField": "ноль",
+        "isTrue": "правда",
+        "isFalse": "ложный",
+        "required": "необходимый",
+        "viewReport": "Просмотр отчета"
+    },
+	"validateError": {
+		"required": "необходимый",
+		"remote": "Пожалуйста, исправьте это поле",
+		"email": "Неверный email",
+		"url": "Неверный URL",
+		"date": "неверная дата",
+		"dateISO": "неверная дата",
+		"number": "Неверный номер",
+		"digits": "только цифры",
+		"maxlength": "Не больше, чем {0} символов",
+		"minlength": "По крайней мере {0} символов",
+		"rangelength": "Введите значение от {0} и {1} символов",
+		"range": "Введите значение от {0} и {1}",
+		"max": "Введите значение меньше или равно {0}",
+		"min": "Введите значение больше или равно {0}"
+	}
+}
+
+        

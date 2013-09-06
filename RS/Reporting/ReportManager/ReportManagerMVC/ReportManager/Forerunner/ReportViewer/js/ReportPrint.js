@@ -90,15 +90,18 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.openModalDialog();
-                $printPane.show();
+                me.options.$reportViewer.openModalDialog(function () {
+                    me.element.show();
+                });
 
                 me._printOpen = true;
             }
-            //To close print pane
+                //To close print pane
             else {
-                me.options.$reportViewer.closeModalDialog();
-                $printPane.hide();
+                me.options.$reportViewer.closeModalDialog(function () {
+                    me.element.hide();
+                });
+
                 me._printOpen = false;
             }
         },

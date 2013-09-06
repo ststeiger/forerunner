@@ -289,16 +289,17 @@ namespace Forerunner.SSRS.JSONRender
 
         private void ThrowParseError()
         {
-            throw new Exception();
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(string.Empty, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg)
         {
-            throw new Exception(Msg);
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg, Exception e)
-        {            
-            throw new Exception(Msg,e);
+        {
+            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream, e);
         }
+
         private Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)
         {
             w.WriteMember(ArrayName);
@@ -1040,6 +1041,7 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONMeasurement()
         {
 
+
             w.WriteStartObject();
             w.WriteMember("Left");
             w.WriteNumber(RPL.ReadSingle());
@@ -1053,9 +1055,45 @@ namespace Forerunner.SSRS.JSONRender
             w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("State");
             w.WriteNumber(RPL.ReadByte());
-            w.WriteMember("EndOffset");
-            w.WriteNumber(RPL.ReadInt64());
+            w.WriteMember("Type");
+            w.WriteString(VerifyMeasurementType());
+           
             w.WriteEndObject();
+
+        }
+        private string VerifyMeasurementType()
+        {
+            string retval = "";
+            long offset = RPL.ReadInt64();
+            long CurrIndex = RPL.position;
+            RPL.position = offset;
+
+            if (RPL.ReadByte() != 0xFE)
+                ThrowParseError("VerifyMeasurementType: Not Report Element End");
+            
+            long ElementOffset = RPL.ReadInt64();            
+            RPL.position = ElementOffset;
+            byte ElementType = RPL.ReadByte();
+
+            if (ElementType == 0x10) //Measurements
+            {
+                ElementOffset = RPL.ReadInt64();
+                RPL.position = ElementOffset;
+                ElementType = RPL.ReadByte();
+            }
+
+            switch (ElementType)
+            {
+                case 0x04:
+                    retval = "PageHeader";
+                    break;
+                case 0x05:
+                    retval = "PageFooter";
+                    break;
+            }
+            //Set back
+            RPL.position = CurrIndex;
+            return retval;
 
         }
         private Boolean WriteJSONOrigionalValue(byte TypeCode)
@@ -1935,6 +1973,11 @@ namespace Forerunner.SSRS.JSONRender
         public RPLReader(Stream RPL)
         {
             this.RPL = RPL;
+        }
+
+        public Stream RPLStream
+        {
+            get { return this.RPL; }
         }
 
         public long position

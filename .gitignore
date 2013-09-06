@@ -40,9 +40,6 @@ RS/Reporting/SecurityExtensions/SAML/SAMLUtils/TestSAMLUtils/bin/codeanalysis/*
 RS/Reporting/ReportManager/ReportManagerMVC/testPage.html
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/JSDoc/Docs/*
 RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/build.force
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
 utilities/icongen/obj/Debug/*
 utilities/icongen/obj/Release/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/Images/Toolbar/Thumbs.db
@@ -54,13 +51,9 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewe
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/Images/Toolbar/Thumbs.db
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Thumbs.db
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/ReportViewer/Images/Toolbar/Thumbs.db
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
 Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegister.exe.config
 Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegister.vshost.exe.config
 Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegister.vshost.exe.manifest
-RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Forerunner/Forerunner-all.min.js.map
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/*
@@ -470,3 +463,24 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release
 ~$RERUNNER SOFTWARE LICENSE TERMS - TRIAL.docx
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/*
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Simple Table with groups and drill down with bookmark.rdl
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build.obj
+Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Simple Table with groups and drill down with bookmark.rdl
+Test/AdventureWorks Sample Reports/Backup/AdventureWorks 2008 Sample Reports.sln
+Test/AdventureWorks Sample Reports/bin/Debug/AdventureWorks2008.rds
+Test/AdventureWorks Sample Reports/bin/Debug/build.obj
+Test/AdventureWorks Sample Reports/bin/Debug/Company Sales 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Employee Sales Summary 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Product Catalog 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Product Line Sales 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Sales Order Detail 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Sales Trend 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Store Contacts 2008.rdl
+Test/AdventureWorks Sample Reports/bin/Debug/Territory Sales Drilldown 2008.rdl
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport.css
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport.xslt
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Error.png
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Information.png
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Success.png
+Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Warning.png

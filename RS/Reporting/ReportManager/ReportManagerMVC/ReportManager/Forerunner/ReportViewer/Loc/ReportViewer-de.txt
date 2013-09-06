@@ -1,0 +1,87 @@
+﻿{
+    "messages": {
+        "loading": "Beladung...",
+        "completeFind": "Der gesamte Bericht wurde gesucht",
+        "keyNotFound": "Key nicht gefunden",
+        "sessionExpired": "Ihre Sitzung ist abgelaufen",
+        "imageNotDisplay": "Bild kann nicht angezeigt werden"
+    },
+    "errorTag": {
+        "moreDetail": "Klicken Sie hier für mehr Details",
+        "serverError": "Ausnahme vom Server geworfen",
+        "type": "Sorte",
+        "targetSite": "Ziel-Site",
+        "source": "Ursprung",
+        "message": "Information",
+        "stackTrace": "StackTrace"
+    },
+    "exportType": {
+        "xml": "XML Datei mit Berichtsdaten",
+        "csv": "CSV (Komma getrennt)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (Web-Archiv)",
+        "excel": "Excel",
+        "tiff": "TIFF Datei",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "von",
+        "home": "Haus",
+        "navigation": "Steuerung",
+        "favorites": "Favoriten",
+        "back": "Zurück",
+        "refresh": "erfrischen",
+        "docMap": "Document Map",
+        "find": "Zurück",
+        "next": "Weiter",
+		"zoom": "Zoomen",
+		"print": "Drucken"
+    },
+	"toolbar": {
+        "back": "um Zurückzugehen",
+        "docMap": "Document Map",
+        "exportMenu": "Export",
+        "favorites": "Favoriten",
+        "find": "Zurück",
+        "firstPage": "Erste",
+        "home": "Zuhause",
+		"keyword": "Schlüsselwort",
+		"lastPage": "Letzte",
+		"menu": "Menü",
+        "navigation": "Navigation",
+        "next": "Weiter",
+        "pageOf": "von",
+		"paramarea": "Parmeters",
+		"previousPage": "vorhergehend",
+		"recent": "Kürzlich",
+        "refresh": "Dieses Seite neu laden",
+		"reportPage": "Seite",
+		"zoom": "Aktivieren Zoomen",
+		"print": "Drucken"
+    },
+	"paramPane": {
+        "nullField": "Null",
+        "isTrue": "Wahre",
+        "isFalse": "Falsch",
+        "required": "Erforderlich",
+        "viewReport": "Bericht anzeigen"
+    },
+	"validateError": {
+		"required": "Erforderlich",
+		"remote": "Bitte korrigieren Sie dieses Feld",
+		"email": "Ungültige E-Mail",
+		"url": "Ungültige URL",
+		"date": "Ungültiges Datum",
+		"dateISO": "Ungültiges Datum",
+		"number": "Ungültige Anzahl",
+		"digits": "Nur Ziffern",
+		"maxlength": "Nicht mehr als {0} Zeichen",
+		"minlength": "Mindestens {0} Zeichen",
+		"rangelength": "Geben Sie einen Wert zwischen {0} und {1} Zeichen lang sein",
+		"range": "Geben Sie einen Wert zwischen {0} und {1}",
+		"max": "Geben Sie einen Wert kleiner oder gleich {0}",
+		"min": "Geben Sie einen Wert größer oder gleich {0}"
+	}
+}
+
+        

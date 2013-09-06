@@ -195,7 +195,10 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-is.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-it.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ja.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-pt.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ru.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />

@@ -40,6 +40,7 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
+            layout.removeModalDialog();
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();

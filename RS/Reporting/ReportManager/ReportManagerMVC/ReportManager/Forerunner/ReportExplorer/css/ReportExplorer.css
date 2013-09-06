@@ -100,11 +100,11 @@
 */
 
 .fr-image-addFav {
-    background-image: url('../Images/sq_plus_icon.png');
+    background-image: url('../Images/FavPlus.png');
 }
 
 .fr-image-delFav {
-    background-image: url('../Images/sq_minus_icon.png');
+    background-image: url('../Images/FavMinus.png');
 }
 
 .fr-image-fav {

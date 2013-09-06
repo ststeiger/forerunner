@@ -1613,7 +1613,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 case 0x02:
                     //Shared Image so unshare
-                    RPL.ReadByte();
+                    RPL.position++;
                     long NewIndex = RPL.ReadInt64();
                     DeReference(NewIndex, this.WriteJSONParagraphProperties);
                     break;
@@ -1707,7 +1707,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 case 0x02:
                     //Shared Image so unshare
-                    RPL.ReadByte();
+                    RPL.position++;
                     long NewIndex = RPL.ReadInt64();
                     DeReference(NewIndex, WriteJSONTextRunElements);
                     break;

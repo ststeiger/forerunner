@@ -59,6 +59,18 @@
 		"zoom": "Aktivieren Zoomen",
 		"print": "Drucken"
     },
+	"print":{
+	    "title": "Drucken Seitenlayout Option",
+		"pageHeight": "SeiteHöhe",
+		"pageWidth": "Seitenbreite",
+		"marginTop": "MarginTop",
+		"marginBottom": "MarginBottom",
+		"marginLeft": "Rand links",
+		"marginRight": "Margin Rechts",
+		"print": "drucken",
+		"cancel": "stornieren",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "Wahre",

@@ -59,6 +59,18 @@
 		"zoom": "ズームを有効にする",
 		"print": "刷り出す"
     },
+	"print":{
+	    "title": "ページレイアウトオプションを印刷",
+		"pageHeight": "ページの高さ",
+		"pageWidth": "ページ幅",
+		"marginTop": "マージントップ",
+		"marginBottom": "マージンボトム",
+		"marginLeft": "マージンは左",
+		"marginRight": "マージン右",
+		"print": "印刷",
+		"cancel": "キャンセル",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "ゼロ",
         "isTrue": "真",

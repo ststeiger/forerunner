@@ -59,6 +59,18 @@
 	"zoom": "Abilita Zoom",
 	"print": "Stampare"
     },
+	"print":{
+	    "title": "Stampa Pagina opzione di layout",
+		"pageHeight": "pagina Altezza",
+		"pageWidth": "Larghezza pagina",
+		"marginTop": "margine alto",
+		"marginBottom": "margine inferiore",
+		"marginLeft": "margine sinistro",
+		"marginRight": "margine destro",
+		"print": "Stampa",
+		"cancel": "annullare",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Zero",
         "isTrue": "Vero",

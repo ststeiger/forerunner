@@ -59,6 +59,18 @@
 		"zoom": "Enable Zoom",
 		"print": "напечатать"
     },
+	"print":{
+	    "title": "Возможность печати макета страницы",
+		"pageHeight": "Страница Высота",
+		"pageWidth": "Ширина страницы",
+		"marginTop": "Поле вверху",
+		"marginBottom": "нижнего поля",
+		"marginLeft": "Поле слева",
+		"marginRight": "размер правого поля",
+		"print": "печатать",
+		"cancel": "отменить",
+		"unit": "in"
+	},
 	"paramPane": {
         "nullField": "ноль",
         "isTrue": "правда",

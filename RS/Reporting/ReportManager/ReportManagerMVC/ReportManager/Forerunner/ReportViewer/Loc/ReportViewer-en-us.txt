@@ -64,7 +64,7 @@
 		"pageHeight": "PageHeight",
 		"pageWidth": "PageWidth",
 		"marginTop": "MarginTop",
-		"marginBottom": "MarginBotton",
+		"marginBottom": "MarginBottom",
 		"marginLeft": "MarginLeft",
 		"marginRight": "MarginRight",
 		"print": "Print",

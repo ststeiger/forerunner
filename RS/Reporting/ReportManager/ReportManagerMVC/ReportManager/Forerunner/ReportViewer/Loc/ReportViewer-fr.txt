@@ -60,6 +60,18 @@
 		"zoom": "Activer Zoom",
 		"print": "Imprimer"
     },
+	"print":{
+	    "title": "Imprimer option de mise en",
+		"pageHeight": "page Hauteur",
+		"pageWidth": "Largeur de page",
+		"marginTop": "marge haut",
+		"marginBottom": "Bottom Marge",
+		"marginLeft": "Mrg.gauche",
+		"marginRight": "marge droite",
+		"print": "Imprimer",
+		"cancel": "résilier",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Zéro",
         "isTrue": "Vrai",

@@ -2527,7 +2527,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnZoom, btnExport, btnPrint, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnSeparator2, btnZoom, btnPrint, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -6232,7 +6232,7 @@ $(function () {
                 var btnSavParam = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-save-param",
-                    imageClass: "fr-image-save-param",
+                    imageClass: "fr-icons24x24-save-param",
                     parameterWidget: me.options.$paramarea,
                     events: {
                         click: function (e) {

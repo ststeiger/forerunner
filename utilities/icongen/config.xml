@@ -25,8 +25,10 @@
     <sourcefile name="ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
     <sourcefile name="PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
     <sourcefile name="Search.png" classname="fr-icons24x24-search"></sourcefile>
-    <sourcefile name="FavPlus.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
-    <sourcefile name="FavMinus.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
+    <sourcefile name="FavOff.png" classname="fr-icons24x24-favorite"></sourcefile>
+    <sourcefile name="FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
+    <sourcefile name="FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
     <sourcefile name="SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
+    <sourcefile name="RecentOff.png" classname="fr-icons24x24-recent"></sourcefile>
   </compositeimage>
 </iconfiles>

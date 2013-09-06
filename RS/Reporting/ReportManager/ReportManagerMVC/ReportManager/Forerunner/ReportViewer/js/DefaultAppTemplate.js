@@ -278,10 +278,10 @@ $(function () {
         hideAddressBar: function () {
             var me = this;
             if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition( {left: 0, top: 0} ); }, 50);
+                setTimeout(function () { me.scrollToPosition( {left: 0, top: 1} ); }, 50);
             }
             else {
-                setTimeout(function () { me.scrollToPosition( { left: 0, top: 0 } ); }, 0);
+                setTimeout(function () { me.scrollToPosition( { left: 0, top: 1 } ); }, 0);
             }
         },
         restoreScroll: function () {

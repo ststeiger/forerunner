@@ -99,22 +99,6 @@
     }
 */
 
-.fr-image-addFav {
-    background-image: url('../Images/FavPlus.png');
-}
-
-.fr-image-delFav {
-    background-image: url('../Images/FavMinus.png');
-}
-
-.fr-image-fav {
-    background-image: url('../Images/star_fav_icon.png');
-}
-
-.fr-image-recent {
-    background-image: url('../Images/clock_icon.png');
-}
-
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
     /* Styles */

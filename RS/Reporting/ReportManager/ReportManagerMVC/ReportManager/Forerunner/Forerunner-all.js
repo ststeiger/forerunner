@@ -3199,7 +3199,7 @@ $(function () {
     var btnFav = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-fav",
-        imageClass: "fr-image-fav",
+        imageClass: "fr-icons24x24-favorite",
         tooltip: locData.toolbar.favorites,
         events: {
             click: function (e) {
@@ -3210,7 +3210,7 @@ $(function () {
     var btnRecent = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-recent",
-        imageClass: "fr-image-recent",
+        imageClass: "fr-icons24x24-recent",
         tooltip: locData.toolbar.recent,
         events: {
             click: function (e) {
@@ -6042,10 +6042,10 @@ $(function () {
         hideAddressBar: function () {
             var me = this;
             if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition( {left: 0, top: 0} ); }, 50);
+                setTimeout(function () { me.scrollToPosition( {left: 0, top: 1} ); }, 50);
             }
             else {
-                setTimeout(function () { me.scrollToPosition( { left: 0, top: 0 } ); }, 0);
+                setTimeout(function () { me.scrollToPosition( { left: 0, top: 1 } ); }, 0);
             }
         },
         restoreScroll: function () {
@@ -6193,12 +6193,12 @@ $(function () {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-update-fav",
                     sharedClass: "fr-toolbar-hidden-on-small",
-                    imageClass: "fr-image-delFav",
+                    imageClass: "fr-icons24x24-favorite-minus",
                     tooltip: locData.toolbar.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";
-                            if (me.$btnFavorite.hasClass("fr-image-delFav"))
+                            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus"))
                                 action = "delete";
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
@@ -6285,12 +6285,12 @@ $(function () {
                 var itemFav = {
                     toolType: toolTypes.containerItem,
                     selectorClass: "fr-item-update-fav",
-                    imageClass: "fr-image-delFav",
+                    imageClass: "fr-icons24x24-favorite-minus",
                     text: locData.toolPane.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";
-                            if (me.$itemFavorite.hasClass("fr-image-delFav"))
+                            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus"))
                                 action = "delete";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
@@ -6365,22 +6365,22 @@ $(function () {
             var me = this;
             if (isFavorite) {
                 if (me.$btnFavorite) {
-                    me.$btnFavorite.addClass("fr-image-delFav");
-                    me.$btnFavorite.removeClass("fr-image-addFav");
+                    me.$btnFavorite.addClass("fr-icons24x24-favorite-minus");
+                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-plus");
                 }
                 if (me.$itemFavorite) {
-                    me.$itemFavorite.addClass("fr-image-delFav");
-                    me.$itemFavorite.removeClass("fr-image-addFav");
+                    me.$itemFavorite.addClass("fr-icons24x24-favorite-minus");
+                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-plus");
                 }
             }
             else {
                 if (me.$btnFavorite) {
-                    me.$btnFavorite.removeClass("fr-image-delFav");
-                    me.$btnFavorite.addClass("fr-image-addFav");
+                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-minus");
+                    me.$btnFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
                 if (me.$itemFavorite) {
-                    me.$itemFavorite.removeClass("fr-image-delFav");
-                    me.$itemFavorite.addClass("fr-image-addFav");
+                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-minus");
+                    me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
             }
         },

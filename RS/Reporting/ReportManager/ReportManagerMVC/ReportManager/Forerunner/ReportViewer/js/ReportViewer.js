@@ -853,30 +853,50 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
-        openModalDialog: function (showModal) {
-            var $mask = $("<div class='fr-report-mask'></div>");
-            $mask.appendTo($("body"));
+        /**
+        * Append a mask with 50% opacity layer to the body
+        *
+        * @function $.forerunner.reportViewer#insertMaskLayer
+        * @param {function} showModal - Callback function after insert, open specific modal dialog
+        */
+        insertMaskLayer: function (showModal) {
+            var $mask = $(".fr-report-mask");
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-report-mask'></div>");
+                $mask.appendTo($("body"));
+            }
 
             $mask.show("fast", function () {
                 $(this).fadeTo("fast", 0.5, function () {
                     $("body").eq(0).css("overflow", "hidden");
-                    showModal();
+                    if (showModal) {
+                        showModal();
+                    }
                 });
             });
         },
-        closeModalDialog: function (closeModal) {
+        /**
+        * Remove exist mask layer from the body
+        *
+        * @function $.forerunner.reportViewer#removeMaskLayer
+        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        */
+        removeMaskLayer: function (closeModal) {
             var $mask = $(".fr-report-mask");
-            closeModal();
-            $mask.hide("fast", function () {
-                $("body").eq(0).css("overflow", "auto");
-                $(this).remove();
-            });
+            if ($mask.length !== 0) {
+                if(closeModal){
+                    closeModal();
+                }
+                $mask.hide("fast", function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $(this).remove();
+                });
+            }
         },
         /**
-         * Print the report in PDF format, allow user to custom page size
+         * show print modal dialog, close it if opened
          *
-         * @function $.forerunner.reportViewer#printReport         
-         * @see forerunner.ssr.constants
+         * @function $.forerunner.reportViewer#showPrint
          */
         showPrint: function () {
             var me = this;
@@ -884,6 +904,12 @@ $(function () {
 
             printArea.reportPrint("togglePrintPane");
         },
+        /**
+        * print current reprot in custom PDF format
+        *
+        * @function $.forerunner.reportViewer#printReport         
+        * @param {function} printPropertyList - custom print page layout option
+        */
         printReport: function (printPropertyList) {
             var me = this;
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
@@ -896,7 +922,18 @@ $(function () {
             printArea.reportPrint({ $reportViewer: this });
             printArea.reportPrint("setPrint", pageLayout);
         },
+        /**
+       * close all opened modal dialogs
+       *
+       * @function $.forerunner.reportViewer#closeModalDialog         
+       */
+        closeModalDialog: function () {
+            var me = this;
+            me.removeMaskLayer(null);
 
+            //List all modal dialog need to close here.
+            me.options.printArea.reportPrint("closePrintPane");
+        },
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;

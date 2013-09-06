@@ -202,6 +202,9 @@ $(function () {
                 else if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
         
+                if (Obj.Type !== "Tablix")
+                    Style += me._getFullBorderStyle(Obj);
+
                 $LocDiv.attr("Style", Style);
                 $LocDiv.append($RI);
                 RIContext.$HTMLParent.append($LocDiv);
@@ -349,14 +352,18 @@ $(function () {
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;float:left;";
-            Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-            $TextObj.attr("Style", Style);
+            
+           
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                if (RIContext.CurrObj.Elements.SharedElements.Value)
+                if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                else if (RIContext.CurrObj.Elements.NonSharedElements.Value)
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                }
+                else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                }
                 else
                     $TextObj.html("&nbsp");
             }
@@ -389,7 +396,8 @@ $(function () {
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
             me._writeBookMark(RIContext);
-    
+            $TextObj.attr("Style", Style);
+
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
@@ -739,6 +747,7 @@ $(function () {
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);
 
             var colgroup = $("<colgroup/>");
@@ -970,7 +979,7 @@ $(function () {
             //Need left, top, right bottom border
             Obj = CurrObj.Elements.SharedElements.Style;
             if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined)
+                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
                     Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
                     Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
@@ -983,7 +992,7 @@ $(function () {
             }
             Obj = CurrObj.Elements.NonSharedElements.Style;
             if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined)
+                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
                     Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
                     Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";

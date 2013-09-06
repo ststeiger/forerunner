@@ -1918,7 +1918,7 @@ $(function () {
 
 
         /**
-        * Make tool visible if it was visible before hidden
+        * Make tool visible
         * @function $.forerunner.toolBase#hideTool
         */
         showTool: function(selectorClass){
@@ -1933,7 +1933,20 @@ $(function () {
             }
         },
         /**
-        * Make tool hidden and remember if it was visible
+         * Make all tools visible
+         * @function $.forerunner.toolBase#showAllTools
+         */
+        showAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Obj) {
+                if (Obj.selectorClass)
+                    me.showTool(Obj.selectorClass);
+            });
+
+        },
+        /**
+        * Make tool hidden
         * @function $.forerunner.toolBase#hideTool
         */
         hideTool: function (selectorClass) {
@@ -1944,12 +1957,12 @@ $(function () {
                 // change may happen that changes which buttons should be visible at the 
                 // time showTool is called.
                 var $toolEl = $("." + selectorClass, me.element);
-                $toolEl.fadeOut();
+                $toolEl.hide();
             }
         },
 
         /**
-         * Make all tools hidden and remember which ones where visible
+         * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
         hideAllTools: function (){
@@ -1958,19 +1971,6 @@ $(function () {
             $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass)
                     me.hideTool(Obj.selectorClass);
-            });
-
-        },
-        /**
-         * Make all tools visible that where visible before hidden
-         * @function $.forerunner.toolBase#showAllTools
-         */
-        showAllTools: function () {
-            var me = this;
-
-            $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
-                    me.showTool(Obj.selectorClass);
             });
 
         },

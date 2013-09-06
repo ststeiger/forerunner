@@ -709,7 +709,7 @@ $(function () {
                 $Cell.attr("rowspan", Obj.RowSpan);
             if (Obj.ColSpan !== undefined)
                 $Cell.attr("colspan", Obj.ColSpan);
-
+               
             //Background color goes on the cell
             if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
                 Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
@@ -738,10 +738,15 @@ $(function () {
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             $Tablix.attr("Style", Style);
-    
+
+            var colgroup = $("<colgroup/>");
+            for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
+                colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
+            }
+            $Tablix.append(colgroup);
+
             $Row = new $("<TR/>");
             $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
-
 
                 if (Obj.RowIndex !== LastRowIndex) {
                     $Tablix.append($Row);
@@ -751,6 +756,12 @@ $(function () {
                         $FixedColHeader.append($Row.clone(true, true));
 
                     $Row = new $("<TR/>");
+
+                    //Handle missing rows
+                    for (var ri = LastRowIndex+1; ri < Obj.RowIndex ; ri++) {
+                        $Tablix.append($Row);
+                        $Row = new $("<TR/>");
+                    }
                     LastRowIndex = Obj.RowIndex;
                 }
 
@@ -775,7 +786,8 @@ $(function () {
                     });
                 }
                 else {
-                    if (Obj.Cell) $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    if (Obj.Cell)
+                        $Row.append(me._writeTablixCell(RIContext, Obj, Index));
                 }
                 LastObjType = Obj.Type;
             });

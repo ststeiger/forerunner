@@ -23,6 +23,11 @@ $(function () {
 
         },
         _printOpen: false,
+        /**
+       * @function $.forerunner.reportPrint#setPrint
+       * @Generate print pane html code and append to the dom tree
+       * @param {String} pageLayout - default loaded page layout data from RPL
+       */
         setPrint: function (pageLayout) {
             var me = this;
             var locData = me.options.$reportViewer.locData.print;
@@ -30,7 +35,7 @@ $(function () {
 
             me.element.html("");
 
-            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage'><div class='fr-print-title'>" +
+            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage fr-print-layout'><div class='fr-print-title'>" +
                locData.title + "</div><form class='fr-print-form'>" +
                "<fidleset><div><label class='fr-print-label'>" + locData.pageHeight+":</label>" +
                "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._unitConvert(pageLayout.PageHeight) + " />" +
@@ -69,10 +74,10 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
+            me._resetValidateMessage();
             me._validateForm(me.element.find(".fr-print-form"));
 
             me.element.find(".fr-print-submit").on("click", function (e) {
-                me._resetValidateMessage();
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
                     me.options.$reportViewer.printReport(me._generatePrintProperty());
@@ -84,13 +89,17 @@ $(function () {
                 me.options.$reportViewer.showPrint();
             });
         },
+        /**
+       * @function $.forerunner.reportPrint#togglePrintPane
+       * @Open or close print pane.
+       */
         togglePrintPane: function () {
             var me = this;
             var $printPane = me.element.find(".fr-print-page");
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.openModalDialog(function () {
+                me.options.$reportViewer.insertMaskLayer(function () {
                     me.element.show();
                 });
 
@@ -98,11 +107,21 @@ $(function () {
             }
                 //To close print pane
             else {
-                me.options.$reportViewer.closeModalDialog(function () {
+                me.options.$reportViewer.removeMaskLayer(function () {
                     me.element.hide();
                 });
 
                 me._printOpen = false;
+            }
+        },
+        /**
+       * @function $.forerunner.reportDocumentMap#closePrintPane
+       * @close print pane, happened when page switch.
+       */
+        closePrintPane: function () {
+            var me = this;
+            if (me._printOpen === true) {
+                me.togglePrintPane();
             }
         },
         _validateForm: function (form) {

@@ -112,7 +112,7 @@ $(function () {
                 var btnSavParam = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-save-param",
-                    imageClass: "fr-image-save-param",
+                    imageClass: "fr-icons24x24-save-param",
                     parameterWidget: me.options.$paramarea,
                     events: {
                         click: function (e) {

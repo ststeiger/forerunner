@@ -116,9 +116,9 @@ $(function () {
 
             for (var i = 0; i< RIContext.CurrObj.Measurement.Count;i++){
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageHeader")
-                    headerIndex = i
+                    headerIndex = i;
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageFooter")
-                    footerIndex = i
+                    footerIndex = i;
             }
           
             //Page Header
@@ -348,7 +348,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;float:left;";
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
             $TextObj.attr("Style", Style);
 
@@ -707,8 +707,10 @@ $(function () {
             //Row and column span
             if (Obj.RowSpan !== undefined)
                 $Cell.attr("rowspan", Obj.RowSpan);
-            if (Obj.ColSpan !== undefined)
+            if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
+                
+            }
                
             //Background color goes on the cell
             if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
@@ -744,6 +746,7 @@ $(function () {
                 colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
             }
             $Tablix.append(colgroup);
+            //$FixedRowHeader.append(colgroup);  //Need to alligh fixed header on chrome, makes FF fail
 
             $Row = new $("<TR/>");
             $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {

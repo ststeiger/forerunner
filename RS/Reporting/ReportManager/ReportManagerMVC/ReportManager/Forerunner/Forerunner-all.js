@@ -1323,30 +1323,50 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
-        openModalDialog: function (showModal) {
-            var $mask = $("<div class='fr-report-mask'></div>");
-            $mask.appendTo($("body"));
+        /**
+        * Append a mask with 50% opacity layer to the body
+        *
+        * @function $.forerunner.reportViewer#insertMaskLayer
+        * @param {function} showModal - Callback function after insert, open specific modal dialog
+        */
+        insertMaskLayer: function (showModal) {
+            var $mask = $(".fr-report-mask");
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-report-mask'></div>");
+                $mask.appendTo($("body"));
+            }
 
             $mask.show("fast", function () {
                 $(this).fadeTo("fast", 0.5, function () {
                     $("body").eq(0).css("overflow", "hidden");
-                    showModal();
+                    if (showModal) {
+                        showModal();
+                    }
                 });
             });
         },
-        closeModalDialog: function (closeModal) {
+        /**
+        * Remove exist mask layer from the body
+        *
+        * @function $.forerunner.reportViewer#removeMaskLayer
+        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        */
+        removeMaskLayer: function (closeModal) {
             var $mask = $(".fr-report-mask");
-            closeModal();
-            $mask.hide("fast", function () {
-                $("body").eq(0).css("overflow", "auto");
-                $(this).remove();
-            });
+            if ($mask.length !== 0) {
+                if(closeModal){
+                    closeModal();
+                }
+                $mask.hide("fast", function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $(this).remove();
+                });
+            }
         },
         /**
-         * Print the report in PDF format, allow user to custom page size
+         * show print modal dialog, close it if opened
          *
-         * @function $.forerunner.reportViewer#printReport         
-         * @see forerunner.ssr.constants
+         * @function $.forerunner.reportViewer#showPrint
          */
         showPrint: function () {
             var me = this;
@@ -1354,6 +1374,12 @@ $(function () {
 
             printArea.reportPrint("togglePrintPane");
         },
+        /**
+        * print current reprot in custom PDF format
+        *
+        * @function $.forerunner.reportViewer#printReport         
+        * @param {function} printPropertyList - custom print page layout option
+        */
         printReport: function (printPropertyList) {
             var me = this;
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
@@ -1366,7 +1392,18 @@ $(function () {
             printArea.reportPrint({ $reportViewer: this });
             printArea.reportPrint("setPrint", pageLayout);
         },
+        /**
+       * close all opened modal dialogs
+       *
+       * @function $.forerunner.reportViewer#closeModalDialog         
+       */
+        closeModalDialog: function () {
+            var me = this;
+            me.removeMaskLayer(null);
 
+            //List all modal dialog need to close here.
+            me.options.printArea.reportPrint("closePrintPane");
+        },
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
@@ -3570,9 +3607,9 @@ $(function () {
 
             for (var i = 0; i< RIContext.CurrObj.Measurement.Count;i++){
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageHeader")
-                    headerIndex = i
+                    headerIndex = i;
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageFooter")
-                    footerIndex = i
+                    footerIndex = i;
             }
           
             //Page Header
@@ -3802,7 +3839,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;float:left;";
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
             $TextObj.attr("Style", Style);
 
@@ -4161,8 +4198,10 @@ $(function () {
             //Row and column span
             if (Obj.RowSpan !== undefined)
                 $Cell.attr("rowspan", Obj.RowSpan);
-            if (Obj.ColSpan !== undefined)
+            if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
+                
+            }
                
             //Background color goes on the cell
             if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
@@ -4198,6 +4237,7 @@ $(function () {
                 colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
             }
             $Tablix.append(colgroup);
+            //$FixedRowHeader.append(colgroup);  //Need to alligh fixed header on chrome, makes FF fail
 
             $Row = new $("<TR/>");
             $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
@@ -5618,6 +5658,11 @@ $(function () {
 
         },
         _printOpen: false,
+        /**
+       * @function $.forerunner.reportPrint#setPrint
+       * @Generate print pane html code and append to the dom tree
+       * @param {String} pageLayout - default loaded page layout data from RPL
+       */
         setPrint: function (pageLayout) {
             var me = this;
             var locData = me.options.$reportViewer.locData.print;
@@ -5625,7 +5670,7 @@ $(function () {
 
             me.element.html("");
 
-            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage'><div class='fr-print-title'>" +
+            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage fr-print-layout'><div class='fr-print-title'>" +
                locData.title + "</div><form class='fr-print-form'>" +
                "<fidleset><div><label class='fr-print-label'>" + locData.pageHeight+":</label>" +
                "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._unitConvert(pageLayout.PageHeight) + " />" +
@@ -5664,10 +5709,10 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
+            me._resetValidateMessage();
             me._validateForm(me.element.find(".fr-print-form"));
 
             me.element.find(".fr-print-submit").on("click", function (e) {
-                me._resetValidateMessage();
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
                     me.options.$reportViewer.printReport(me._generatePrintProperty());
@@ -5679,13 +5724,17 @@ $(function () {
                 me.options.$reportViewer.showPrint();
             });
         },
+        /**
+       * @function $.forerunner.reportPrint#togglePrintPane
+       * @Open or close print pane.
+       */
         togglePrintPane: function () {
             var me = this;
             var $printPane = me.element.find(".fr-print-page");
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.openModalDialog(function () {
+                me.options.$reportViewer.insertMaskLayer(function () {
                     me.element.show();
                 });
 
@@ -5693,11 +5742,21 @@ $(function () {
             }
                 //To close print pane
             else {
-                me.options.$reportViewer.closeModalDialog(function () {
+                me.options.$reportViewer.removeMaskLayer(function () {
                     me.element.hide();
                 });
 
                 me._printOpen = false;
+            }
+        },
+        /**
+       * @function $.forerunner.reportDocumentMap#closePrintPane
+       * @close print pane, happened when page switch.
+       */
+        closePrintPane: function () {
+            var me = this;
+            if (me._printOpen === true) {
+                me.togglePrintPane();
             }
         },
         _validateForm: function (form) {
@@ -6068,6 +6127,12 @@ $(function () {
             else {
                 setTimeout(function () { me.restoreScrollPosition(); }, 0);
             }
+        },
+        removeModalDialog: function () {
+            var me = this;
+
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
+            $viewer.reportViewer("closeModalDialog");
         },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -6539,6 +6604,7 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
+            layout.removeModalDialog();
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();

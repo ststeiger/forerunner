@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<iconfiles>
+  <compositeimage name="icons24x24.png" cssname="icons24x24.css" classname="fr-icons24x24" relativeurlpath="../images" width="24" height="24" margin="5">
+    <sourcefile name="align_just_icon.png" classname="fr-icons24x24-menu"></sourcefile>
+    <sourcefile name="arrow_left_icon.png" classname="fr-icons24x24-back"></sourcefile>
+    <sourcefile name="arrow_left_icon.png" classname="fr-icons24x24-reportback"></sourcefile>
+    <sourcefile name="burst_icon.png" classname="fr-icons24x24-nav"></sourcefile>
+    <sourcefile name="home_icon.png" classname="fr-icons24x24-home"></sourcefile>
+    <sourcefile name="list_bullets_icon.png" classname="fr-icons24x24-paramarea"></sourcefile>
+    <sourcefile name="list_bullets_icon.png" classname="fr-icons24x24-documentmap"></sourcefile>
+    <sourcefile name="playback_ff_icon.png" classname="fr-icons24x24-lastpage"></sourcefile>
+    <sourcefile name="playback_next_icon.png" classname="fr-icons24x24-next"></sourcefile>
+    <sourcefile name="playback_prev_icon.png" classname="fr-icons24x24-prev"></sourcefile>
+    <sourcefile name="playback_reload_icon.png" classname="fr-icons24x24-refresh"></sourcefile>
+    <sourcefile name="playback_rew_icon.png" classname="fr-icons24x24-firstpage"></sourcefile>
+    <sourcefile name="doc_export_icon24.png" classname="fr-icons24x24-export"></sourcefile>
+    <sourcefile name="CSV.png" classname="fr-icons24x24-exportCSV"></sourcefile>
+    <sourcefile name="Excel.png" classname="fr-icons24x24-exportExcel"></sourcefile>
+    <sourcefile name="MHT.jpg" classname="fr-icons24x24-exportMHT"></sourcefile>
+    <sourcefile name="PDF.jpg" classname="fr-icons24x24-exportPDF"></sourcefile>
+    <sourcefile name="tiff.jpg" classname="fr-icons24x24-exportTIFF"></sourcefile>
+    <sourcefile name="Word.png" classname="fr-icons24x24-exportWord"></sourcefile>
+    <sourcefile name="XML.jpg" classname="fr-icons24x24-exportXML"></sourcefile>
+    <sourcefile name="burst_icon.png" classname="fr-icons24x24-zoom"></sourcefile>
+  </compositeimage>
+</iconfiles>

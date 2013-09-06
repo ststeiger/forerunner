@@ -61,20 +61,27 @@
     <Content Include="images\align_just_icon.png" />
     <Content Include="images\BackOff.png" />
     <Content Include="images\BackPageOff.png" />
+    <Content Include="images\CSV.png" />
     <Content Include="images\DocMapOff.png" />
+    <Content Include="images\DocMapOn.png" />
     <Content Include="images\Excel.png" />
     <Content Include="images\ExportOff.png" />
+    <Content Include="images\ExportOn.png" />
     <Content Include="images\FavMinus.png" />
     <Content Include="images\FavPlus.png" />
     <Content Include="images\FirstPageOff.png" />
     <Content Include="images\ForwardPageOff.png" />
     <Content Include="images\HomeOff.png" />
+    <Content Include="images\HomeOn.png" />
     <Content Include="images\LastPageOff.png" />
     <Content Include="images\MHT.jpg" />
     <Content Include="images\PageNavOff.png" />
+    <Content Include="images\PageNavOn.png" />
     <Content Include="images\ParametersOff.png" />
+    <Content Include="images\ParametersOn.png" />
     <Content Include="images\PDF.jpg" />
     <Content Include="images\PrintOff.png" />
+    <Content Include="images\PrintOn.png" />
     <Content Include="images\Refresh.png" />
     <Content Include="images\SaveParameters.png" />
     <Content Include="images\Search.png" />
@@ -82,12 +89,14 @@
     <Content Include="images\Word.png" />
     <Content Include="images\XML.jpg" />
     <Content Include="images\ZoomOff.png" />
+    <Content Include="images\ZoomOn.png" />
     <Content Include="preBetaImages\align_just_icon.png" />
     <Content Include="preBetaImages\arrow_left_icon.png" />
     <Content Include="preBetaImages\burst_icon.png" />
     <Content Include="preBetaImages\config.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="preBetaImages\CSV.png" />
     <Content Include="preBetaImages\Excel.png" />
     <Content Include="preBetaImages\home_icon.png" />
     <Content Include="preBetaImages\list_bullets_icon.png" />

@@ -404,6 +404,11 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is an Firefox Browser  */
+        isFirefox: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(Firefox)/);
+        },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
             if (window.navigator.standalone) {
@@ -1323,30 +1328,50 @@ $(function () {
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },
-        openModalDialog: function (showModal) {
-            var $mask = $("<div class='fr-report-mask'></div>");
-            $mask.appendTo($("body"));
+        /**
+        * Append a mask with 50% opacity layer to the body
+        *
+        * @function $.forerunner.reportViewer#insertMaskLayer
+        * @param {function} showModal - Callback function after insert, open specific modal dialog
+        */
+        insertMaskLayer: function (showModal) {
+            var $mask = $(".fr-report-mask");
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-report-mask'></div>");
+                $mask.appendTo($("body"));
+            }
 
             $mask.show("fast", function () {
                 $(this).fadeTo("fast", 0.5, function () {
                     $("body").eq(0).css("overflow", "hidden");
-                    showModal();
+                    if (showModal) {
+                        showModal();
+                    }
                 });
             });
         },
-        closeModalDialog: function (closeModal) {
+        /**
+        * Remove exist mask layer from the body
+        *
+        * @function $.forerunner.reportViewer#removeMaskLayer
+        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        */
+        removeMaskLayer: function (closeModal) {
             var $mask = $(".fr-report-mask");
-            closeModal();
-            $mask.hide("fast", function () {
-                $("body").eq(0).css("overflow", "auto");
-                $(this).remove();
-            });
+            if ($mask.length !== 0) {
+                if(closeModal){
+                    closeModal();
+                }
+                $mask.hide("fast", function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $(this).remove();
+                });
+            }
         },
         /**
-         * Print the report in PDF format, allow user to custom page size
+         * show print modal dialog, close it if opened
          *
-         * @function $.forerunner.reportViewer#printReport         
-         * @see forerunner.ssr.constants
+         * @function $.forerunner.reportViewer#showPrint
          */
         showPrint: function () {
             var me = this;
@@ -1354,6 +1379,12 @@ $(function () {
 
             printArea.reportPrint("togglePrintPane");
         },
+        /**
+        * print current reprot in custom PDF format
+        *
+        * @function $.forerunner.reportViewer#printReport         
+        * @param {function} printPropertyList - custom print page layout option
+        */
         printReport: function (printPropertyList) {
             var me = this;
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
@@ -1366,7 +1397,18 @@ $(function () {
             printArea.reportPrint({ $reportViewer: this });
             printArea.reportPrint("setPrint", pageLayout);
         },
+        /**
+       * close all opened modal dialogs
+       *
+       * @function $.forerunner.reportViewer#closeModalDialog         
+       */
+        closeModalDialog: function () {
+            var me = this;
+            me.removeMaskLayer(null);
 
+            //List all modal dialog need to close here.
+            me.options.printArea.reportPrint("closePrintPane");
+        },
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
@@ -1881,7 +1923,7 @@ $(function () {
 
 
         /**
-        * Make tool visible if it was visible before hidden
+        * Make tool visible
         * @function $.forerunner.toolBase#hideTool
         */
         showTool: function(selectorClass){
@@ -1896,7 +1938,20 @@ $(function () {
             }
         },
         /**
-        * Make tool hidden and remember if it was visible
+         * Make all tools visible
+         * @function $.forerunner.toolBase#showAllTools
+         */
+        showAllTools: function () {
+            var me = this;
+
+            $.each(me.allTools, function (Index, Obj) {
+                if (Obj.selectorClass)
+                    me.showTool(Obj.selectorClass);
+            });
+
+        },
+        /**
+        * Make tool hidden
         * @function $.forerunner.toolBase#hideTool
         */
         hideTool: function (selectorClass) {
@@ -1907,12 +1962,12 @@ $(function () {
                 // change may happen that changes which buttons should be visible at the 
                 // time showTool is called.
                 var $toolEl = $("." + selectorClass, me.element);
-                $toolEl.fadeOut();
+                $toolEl.hide();
             }
         },
 
         /**
-         * Make all tools hidden and remember which ones where visible
+         * Make all tools hidden
          * @function $.forerunner.toolBase#hideAllTools
          */
         hideAllTools: function (){
@@ -1921,19 +1976,6 @@ $(function () {
             $.each(me.allTools, function (Index, Obj) {
                 if (Obj.selectorClass)
                     me.hideTool(Obj.selectorClass);
-            });
-
-        },
-        /**
-         * Make all tools visible that where visible before hidden
-         * @function $.forerunner.toolBase#showAllTools
-         */
-        showAllTools: function () {
-            var me = this;
-
-            $.each(me.allTools, function (Index, Obj) {
-                if (Obj.selectorClass)
-                    me.showTool(Obj.selectorClass);
             });
 
         },
@@ -2527,7 +2569,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnFindGroup, btnSeparator2, btnZoom, btnExport, btnPrint, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnSeparator2, btnZoom, btnPrint, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -3199,7 +3241,7 @@ $(function () {
     var btnFav = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-fav",
-        imageClass: "fr-image-fav",
+        imageClass: "fr-icons24x24-favorite",
         tooltip: locData.toolbar.favorites,
         events: {
             click: function (e) {
@@ -3210,7 +3252,7 @@ $(function () {
     var btnRecent = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-recent",
-        imageClass: "fr-image-recent",
+        imageClass: "fr-icons24x24-recent",
         tooltip: locData.toolbar.recent,
         events: {
             click: function (e) {
@@ -3570,9 +3612,9 @@ $(function () {
 
             for (var i = 0; i< RIContext.CurrObj.Measurement.Count;i++){
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageHeader")
-                    headerIndex = i
+                    headerIndex = i;
                 if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageFooter")
-                    footerIndex = i
+                    footerIndex = i;
             }
           
             //Page Header
@@ -3761,7 +3803,7 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-    
+            Style += "overflow: hidden;";
             RIContext.$HTMLParent.attr("Style", Style);
 
             if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
@@ -3802,15 +3844,22 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
-            Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-            $TextObj.attr("Style", Style);
+            Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) 
+                Style += "display: table-cell;";
+            else
+                Style += "display: block;";
+
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                if (RIContext.CurrObj.Elements.SharedElements.Value)
+                if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                else if (RIContext.CurrObj.Elements.NonSharedElements.Value)
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                }
+                else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                }
                 else
                     $TextObj.html("&nbsp");
             }
@@ -3842,9 +3891,11 @@ $(function () {
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
-            me._writeBookMark(RIContext);
-    
+            me._writeBookMark(RIContext);            
+            $TextObj.attr("Style", Style);
+
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
+           
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
             return RIContext.$HTMLParent;
@@ -3935,6 +3986,7 @@ $(function () {
             var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
             Url += "SessionID=" + me.options.reportViewer.sessionID;
             Url += "&ImageID=" + ImageName;
+            Url += "#" + new Date().getTime();
             return Url;
         },
         _writeImage: function (RIContext) {
@@ -4161,9 +4213,11 @@ $(function () {
             //Row and column span
             if (Obj.RowSpan !== undefined)
                 $Cell.attr("rowspan", Obj.RowSpan);
-            if (Obj.ColSpan !== undefined)
+            if (Obj.ColSpan !== undefined) {
                 $Cell.attr("colspan", Obj.ColSpan);
-
+                
+            }
+               
             //Background color goes on the cell
             if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
                 Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
@@ -4180,7 +4234,7 @@ $(function () {
             var Style = "border-collapse:collapse;padding:0;margin:0;";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
+            var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
@@ -4191,11 +4245,21 @@ $(function () {
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);
-    
+
+            var colgroup = $("<colgroup/>");
+            for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
+                colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
+            }
+            $Tablix.append(colgroup);
+            if (!forerunner.device.isFirefox()) {
+                $FixedColHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
+                $FixedRowHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
+            }
+
             $Row = new $("<TR/>");
             $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
-
 
                 if (Obj.RowIndex !== LastRowIndex) {
                     $Tablix.append($Row);
@@ -4205,6 +4269,12 @@ $(function () {
                         $FixedColHeader.append($Row.clone(true, true));
 
                     $Row = new $("<TR/>");
+
+                    //Handle missing rows
+                    for (var ri = LastRowIndex+1; ri < Obj.RowIndex ; ri++) {
+                        $Tablix.append($Row);
+                        $Row = new $("<TR/>");
+                    }
                     LastRowIndex = Obj.RowIndex;
                 }
 
@@ -4229,7 +4299,8 @@ $(function () {
                     });
                 }
                 else {
-                    if (Obj.Cell) $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    if (Obj.Cell)
+                        $Row.append(me._writeTablixCell(RIContext, Obj, Index));
                 }
                 LastObjType = Obj.Type;
             });
@@ -4248,8 +4319,8 @@ $(function () {
                 $FixedRowHeader = null;
 
             var ret = $("<div style='position:relative'></div");
-            ret.append($FixedColHeader);
-            ret.append($FixedRowHeader);
+            $Tablix.append($FixedColHeader);
+            $Tablix.append($FixedRowHeader);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
@@ -4409,7 +4480,7 @@ $(function () {
             //Need left, top, right bottom border
             Obj = CurrObj.Elements.SharedElements.Style;
             if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined)
+                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
                     Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
                     Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
@@ -4422,7 +4493,7 @@ $(function () {
             }
             Obj = CurrObj.Elements.NonSharedElements.Style;
             if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined)
+                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
                     Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
                     Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
@@ -5606,6 +5677,11 @@ $(function () {
 
         },
         _printOpen: false,
+        /**
+       * @function $.forerunner.reportPrint#setPrint
+       * @Generate print pane html code and append to the dom tree
+       * @param {String} pageLayout - default loaded page layout data from RPL
+       */
         setPrint: function (pageLayout) {
             var me = this;
             var locData = me.options.$reportViewer.locData.print;
@@ -5613,7 +5689,7 @@ $(function () {
 
             me.element.html("");
 
-            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage'><div class='fr-print-title'>" +
+            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage fr-print-layout'><div class='fr-print-title'>" +
                locData.title + "</div><form class='fr-print-form'>" +
                "<fidleset><div><label class='fr-print-label'>" + locData.pageHeight+":</label>" +
                "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._unitConvert(pageLayout.PageHeight) + " />" +
@@ -5652,10 +5728,10 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
+            me._resetValidateMessage();
             me._validateForm(me.element.find(".fr-print-form"));
 
             me.element.find(".fr-print-submit").on("click", function (e) {
-                me._resetValidateMessage();
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
                     me.options.$reportViewer.printReport(me._generatePrintProperty());
@@ -5667,13 +5743,17 @@ $(function () {
                 me.options.$reportViewer.showPrint();
             });
         },
+        /**
+       * @function $.forerunner.reportPrint#togglePrintPane
+       * @Open or close print pane.
+       */
         togglePrintPane: function () {
             var me = this;
             var $printPane = me.element.find(".fr-print-page");
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.openModalDialog(function () {
+                me.options.$reportViewer.insertMaskLayer(function () {
                     me.element.show();
                 });
 
@@ -5681,11 +5761,21 @@ $(function () {
             }
                 //To close print pane
             else {
-                me.options.$reportViewer.closeModalDialog(function () {
+                me.options.$reportViewer.removeMaskLayer(function () {
                     me.element.hide();
                 });
 
                 me._printOpen = false;
+            }
+        },
+        /**
+       * @function $.forerunner.reportDocumentMap#closePrintPane
+       * @close print pane, happened when page switch.
+       */
+        closePrintPane: function () {
+            var me = this;
+            if (me._printOpen === true) {
+                me.togglePrintPane();
             }
         },
         _validateForm: function (form) {
@@ -6042,10 +6132,10 @@ $(function () {
         hideAddressBar: function () {
             var me = this;
             if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition( {left: 0, top: 0} ); }, 50);
+                setTimeout(function () { me.scrollToPosition( {left: 0, top: 1} ); }, 50);
             }
             else {
-                setTimeout(function () { me.scrollToPosition( { left: 0, top: 0 } ); }, 0);
+                setTimeout(function () { me.scrollToPosition( { left: 0, top: 1 } ); }, 0);
             }
         },
         restoreScroll: function () {
@@ -6056,6 +6146,12 @@ $(function () {
             else {
                 setTimeout(function () { me.restoreScrollPosition(); }, 0);
             }
+        },
+        removeModalDialog: function () {
+            var me = this;
+
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
+            $viewer.reportViewer("closeModalDialog");
         },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -6193,12 +6289,12 @@ $(function () {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-update-fav",
                     sharedClass: "fr-toolbar-hidden-on-small",
-                    imageClass: "fr-image-delFav",
+                    imageClass: "fr-icons24x24-favorite-minus",
                     tooltip: locData.toolbar.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";
-                            if (me.$btnFavorite.hasClass("fr-image-delFav"))
+                            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus"))
                                 action = "delete";
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
@@ -6232,7 +6328,7 @@ $(function () {
                 var btnSavParam = {
                     toolType: toolTypes.button,
                     selectorClass: "fr-button-save-param",
-                    imageClass: "fr-image-save-param",
+                    imageClass: "fr-icons24x24-save-param",
                     parameterWidget: me.options.$paramarea,
                     events: {
                         click: function (e) {
@@ -6285,12 +6381,12 @@ $(function () {
                 var itemFav = {
                     toolType: toolTypes.containerItem,
                     selectorClass: "fr-item-update-fav",
-                    imageClass: "fr-image-delFav",
+                    imageClass: "fr-icons24x24-favorite-minus",
                     text: locData.toolPane.favorites,
                     events: {
                         click: function (e) {
                             var action = "add";
-                            if (me.$itemFavorite.hasClass("fr-image-delFav"))
+                            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus"))
                                 action = "delete";
                             e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
@@ -6365,22 +6461,22 @@ $(function () {
             var me = this;
             if (isFavorite) {
                 if (me.$btnFavorite) {
-                    me.$btnFavorite.addClass("fr-image-delFav");
-                    me.$btnFavorite.removeClass("fr-image-addFav");
+                    me.$btnFavorite.addClass("fr-icons24x24-favorite-minus");
+                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-plus");
                 }
                 if (me.$itemFavorite) {
-                    me.$itemFavorite.addClass("fr-image-delFav");
-                    me.$itemFavorite.removeClass("fr-image-addFav");
+                    me.$itemFavorite.addClass("fr-icons24x24-favorite-minus");
+                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-plus");
                 }
             }
             else {
                 if (me.$btnFavorite) {
-                    me.$btnFavorite.removeClass("fr-image-delFav");
-                    me.$btnFavorite.addClass("fr-image-addFav");
+                    me.$btnFavorite.removeClass("fr-icons24x24-favorite-minus");
+                    me.$btnFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
                 if (me.$itemFavorite) {
-                    me.$itemFavorite.removeClass("fr-image-delFav");
-                    me.$itemFavorite.addClass("fr-image-addFav");
+                    me.$itemFavorite.removeClass("fr-icons24x24-favorite-minus");
+                    me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
             }
         },
@@ -6527,6 +6623,7 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
+            layout.removeModalDialog();
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();

@@ -403,6 +403,11 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is an Firefox Browser  */
+        isFirefox: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(Firefox)/);
+        },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
             if (window.navigator.standalone) {

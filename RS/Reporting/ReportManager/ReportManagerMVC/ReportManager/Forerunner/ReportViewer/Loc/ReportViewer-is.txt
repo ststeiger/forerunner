@@ -59,6 +59,18 @@
 	"zoom": "Virkja Zoom",
 	"print": "Prenta"
     },
+	"print":{
+	    "title": "Prenta Page Layout Valkostur",
+		"pageHeight": "Page Hæð",
+		"pageWidth": "Page Width",
+		"marginTop": "spássía Top",
+		"marginBottom": "spássía Bottom",
+		"marginLeft": "spássía vinstri",
+		"marginRight": "spássía Hægri",
+		"print": "Prenta",
+		"cancel": "hætta",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Zero",
         "isTrue": "True",

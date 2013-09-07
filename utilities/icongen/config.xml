@@ -3,25 +3,32 @@
 <iconfiles>
   <compositeimage name="icons24x24.png" cssname="icons24x24.css" classname="fr-icons24x24" relativeurlpath="../images" width="24" height="24" margin="5">
     <sourcefile name="align_just_icon.png" classname="fr-icons24x24-menu"></sourcefile>
-    <sourcefile name="arrow_left_icon.png" classname="fr-icons24x24-back"></sourcefile>
-    <sourcefile name="arrow_left_icon.png" classname="fr-icons24x24-reportback"></sourcefile>
-    <sourcefile name="burst_icon.png" classname="fr-icons24x24-nav"></sourcefile>
-    <sourcefile name="home_icon.png" classname="fr-icons24x24-home"></sourcefile>
-    <sourcefile name="list_bullets_icon.png" classname="fr-icons24x24-paramarea"></sourcefile>
-    <sourcefile name="list_bullets_icon.png" classname="fr-icons24x24-documentmap"></sourcefile>
-    <sourcefile name="playback_ff_icon.png" classname="fr-icons24x24-lastpage"></sourcefile>
-    <sourcefile name="playback_next_icon.png" classname="fr-icons24x24-next"></sourcefile>
-    <sourcefile name="playback_prev_icon.png" classname="fr-icons24x24-prev"></sourcefile>
-    <sourcefile name="playback_reload_icon.png" classname="fr-icons24x24-refresh"></sourcefile>
-    <sourcefile name="playback_rew_icon.png" classname="fr-icons24x24-firstpage"></sourcefile>
-    <sourcefile name="doc_export_icon24.png" classname="fr-icons24x24-export"></sourcefile>
+    <sourcefile name="BackOff.png" classname="fr-icons24x24-back"></sourcefile>
+    <sourcefile name="BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
+    <sourcefile name="PageNavOff.png" classname="fr-icons24x24-nav"></sourcefile>
+    <sourcefile name="HomeOff.png" classname="fr-icons24x24-home"></sourcefile>
+    <sourcefile name="ParametersOff.png" classname="fr-icons24x24-paramarea"></sourcefile>
+    <sourcefile name="DocMapOff.png" classname="fr-icons24x24-documentmap"></sourcefile>
+    <sourcefile name="LastPageOff.png" classname="fr-icons24x24-lastpage"></sourcefile>
+    <sourcefile name="ForwardPageOff.png" classname="fr-icons24x24-next"></sourcefile>
+    <sourcefile name="BackPageOff.png" classname="fr-icons24x24-prev"></sourcefile>
+    <sourcefile name="Refresh.png" classname="fr-icons24x24-refresh"></sourcefile>
+    <sourcefile name="FirstPageOff.png" classname="fr-icons24x24-firstpage"></sourcefile>
+    <sourcefile name="ExportOff.png" classname="fr-icons24x24-export"></sourcefile>
     <sourcefile name="CSV.png" classname="fr-icons24x24-exportCSV"></sourcefile>
     <sourcefile name="Excel.png" classname="fr-icons24x24-exportExcel"></sourcefile>
-    <sourcefile name="MHT.jpg" classname="fr-icons24x24-exportMHT"></sourcefile>
-    <sourcefile name="PDF.jpg" classname="fr-icons24x24-exportPDF"></sourcefile>
-    <sourcefile name="tiff.jpg" classname="fr-icons24x24-exportTIFF"></sourcefile>
+    <sourcefile name="MHT.png" classname="fr-icons24x24-exportMHT"></sourcefile>
+    <sourcefile name="PDF.png" classname="fr-icons24x24-exportPDF"></sourcefile>
+    <sourcefile name="TIF.png" classname="fr-icons24x24-exportTIFF"></sourcefile>
     <sourcefile name="Word.png" classname="fr-icons24x24-exportWord"></sourcefile>
-    <sourcefile name="XML.jpg" classname="fr-icons24x24-exportXML"></sourcefile>
-    <sourcefile name="burst_icon.png" classname="fr-icons24x24-zoom"></sourcefile>
+    <sourcefile name="XML.png" classname="fr-icons24x24-exportXML"></sourcefile>
+    <sourcefile name="ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
+    <sourcefile name="PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
+    <sourcefile name="Search.png" classname="fr-icons24x24-search"></sourcefile>
+    <sourcefile name="FavOff.png" classname="fr-icons24x24-favorite"></sourcefile>
+    <sourcefile name="FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
+    <sourcefile name="FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
+    <sourcefile name="SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
+    <sourcefile name="RecentOff.png" classname="fr-icons24x24-recent"></sourcefile>
   </compositeimage>
 </iconfiles>

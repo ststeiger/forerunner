@@ -39,7 +39,7 @@ $(function () {
     var btnFav = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-fav",
-        imageClass: "fr-image-fav",
+        imageClass: "fr-icons24x24-favorite",
         tooltip: locData.toolbar.favorites,
         events: {
             click: function (e) {
@@ -50,7 +50,7 @@ $(function () {
     var btnRecent = {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-recent",
-        imageClass: "fr-image-recent",
+        imageClass: "fr-icons24x24-recent",
         tooltip: locData.toolbar.recent,
         events: {
             click: function (e) {

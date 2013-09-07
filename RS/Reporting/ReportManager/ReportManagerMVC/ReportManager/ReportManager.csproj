@@ -179,14 +179,10 @@
     <Content Include="Forerunner\ReportViewer\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />
-    <Content Include="Forerunner\ReportExplorer\images\clock_icon.png" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportRender.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewerEZ.css" />
-    <Content Include="Forerunner\ReportExplorer\images\sq_minus_icon.png" />
-    <Content Include="Forerunner\ReportExplorer\images\sq_plus_icon.png" />
-    <Content Include="Forerunner\ReportExplorer\images\star_fav_icon.png" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
@@ -199,7 +195,12 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-es.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-fr.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ga.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-is.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-it.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ja.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-pt.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ro.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ru.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />

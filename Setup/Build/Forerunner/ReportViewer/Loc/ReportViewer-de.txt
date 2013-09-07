@@ -1,0 +1,87 @@
+﻿{
+    "messages": {
+        "loading": "Laden...",
+        "completeFind": "Der gesamte Bericht wurde durchsucht",
+        "keyNotFound": "Key nicht gefunden",
+        "sessionExpired": "Ihre Sitzung ist abgelaufen",
+        "imageNotDisplay": "Bild kann nicht angezeigt werden"
+    },
+    "errorTag": {
+        "moreDetail": "Klicken Sie hier für mehr Details",
+        "serverError": "Ausnahme vom Server geworfen",
+        "type": "Type",
+        "targetSite": "targeSite",
+        "source": "Ursprung",
+        "message": "Information",
+        "stackTrace": "StackTrace"
+    },
+    "exportType": {
+        "xml": "XML-Datei mit Daten",
+        "csv": "CSV (Komma getrennt)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (Web-Archiv)",
+        "excel": "Excel",
+        "tiff": "TIFF Datei",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "von",
+        "home": "Haus",
+        "navigation": "Steuerung",
+        "favorites": "Favoriten",
+        "back": "Zurück",
+        "refresh": "erfrischen",
+        "docMap": "Document Map",
+        "find": "Finden",
+        "next": "nächster",
+	"zoom": "Zoomen",
+	"print": "Drucken"
+    },
+	"toolbar": {
+        "back": "Zurück",
+        "docMap": "Document Map",
+        "exportMenu": "Export",
+        "favorites": "Favoriten",
+        "find": "Finden",
+        "firstPage": "Erste",
+        "home": "Haus",
+	"keyword": "Schlüsselwort",
+	"lastPage": "Letzte",
+	"menu": "Menü",
+        "navigation": "Navigation",
+        "next": "nächster",
+        "pageOf": "von",
+	"paramarea": "Parmeters",
+	"previousPage": "vorhergehend",
+	"recent": "Kürzlich",
+        "refresh": "Dieses Seite neu laden",
+	"reportPage": "Seite",
+	"zoom": "Aktivieren Zoomen",
+	"print": "Drucken"
+    },
+	"paramPane": {
+        "nullField": "Null",
+        "isTrue": "Wahr",
+        "isFalse": "Falsch",
+        "required": "Erforderlich",
+        "viewReport": "Bericht anzeigen"
+    },
+	"validateError": {
+		"required": "Erforderlich",
+		"remote": "Bitte korrigieren Sie dieses Feld",
+		"email": "Ungültige E-Mail",
+		"url": "Ungültige URL",
+		"date": "Ungültiges Datum",
+		"dateISO": "Ungültiges Datum",
+		"number": "Ungültige Nummer",
+		"digits": "Nur Ziffern",
+		"maxlength": "Nicht mehr als {0} Zeichen",
+		"minlength": "Mindestens {0} Zeichen",
+		"rangelength": "Geben Sie einen Wert zwischen {0} und {1} Zeichen lang",
+		"range": "Geben Sie einen Wert zwischen {0} und {1}",
+		"max": "Geben Sie einen Wert kleiner oder gleich {0}",
+		"min": "Geben Sie einen Wert größer oder gleich {0}"
+	}
+}
+
+        

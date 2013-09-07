@@ -1,0 +1,87 @@
+﻿{
+    "messages": {
+        "loading": "Luchtú...",
+        "completeFind": "Tá an tuarascáil iomlán a chuardach",
+        "keyNotFound": "Eochair gan aimsiú",
+        "sessionExpired": "Tá do seisiún in éag",
+        "imageNotDisplay": "Ní féidir íomhá a thaispeáint"
+    },
+    "errorTag": {
+        "moreDetail": "Cliceáil chun níos mó sonraí",
+        "serverError": "Eisceacht thrown ó fhreastalaí",
+        "type": "cineál",
+        "targetSite": "targetSite",
+        "source": "Foinse",
+        "message": "teachtaireacht",
+        "stackTrace": "StackTrace"
+    },
+    "exportType": {
+        "xml": "Comhad XML le sonraí tuarascáil",
+        "csv": "CSV (teormharcáilte le camóga)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (web archive)",
+        "excel": "Excel",
+        "tiff": "comhad TIFF",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "de",
+        "home": "Baile",
+        "navigation": "Nascleanúint",
+        "favorites": "Cheanáin",
+        "back": "Ar ais",
+        "refresh": "Athnuaigh",
+        "docMap": "Léarscáil doiciméad",
+        "find": "Faigh",
+        "next": "Ar Aghaidh",
+	"zoom": "Cumasaigh Zoom",
+	"print": "Priontáil"
+    },
+	"toolbar": {
+        "back": "ar ais",
+        "docMap": "Léarscáil doiciméad",
+        "exportMenu": "Easpórtáil",
+        "favorites": "Cheanáin",
+        "find": "Faigh",
+        "firstPage": "chéad",
+        "home": "Baile",
+	"keyword": "Eochairfhocal",
+	"lastPage": "Last",
+	"menu": "Menu",
+        "navigation": "Nascleanúint",
+        "next": "Ar Aghaidh",
+        "pageOf": "de",
+	"paramarea": "Paraiméadair",
+	"previousPage": "roimhe Seo",
+	"recent": "déanaí",
+        "refresh": "Athnuaigh",
+	"reportPage": "leathanach",
+	"zoom": "Cumasaigh Zoom",
+	"print": "Priontáil"
+    },
+	"paramPane": {
+        "nullField": "Null",
+        "isTrue": "True",
+        "isFalse": "bréagach",
+        "required": "Riachtanach",
+        "viewReport": "Féach Tuarascáil"
+    },
+	"validateError": {
+	"required": "Riachtanach",
+	"remote": "Tabhair réimse seo a shocrú",
+	"email": "r-phost neamhbhailí",
+	"url": "URL neamhbhailí",
+	"date": "Dáta neamhbhailí",
+	"dateISO": "Dáta neamhbhailí",
+	"number": "Líon neamhbhailí",
+	"digits": "digití Amháin",
+	"maxlength": "Gan níos mó ná {0} carachtair",
+	"minlength": "Ar a laghad {0} carachtair",
+	"rangelength": "Iontráil luach idir {0} agus {1} carachtair fada",
+	"range": "Iontráil luach idir {0} agus {1}",
+	"max": "Iontráil luach níos lú ná nó cothrom le {0}",
+	"min": "Iontráil luach níos mó ná nó cothrom le {0}"
+	}
+}
+
+        

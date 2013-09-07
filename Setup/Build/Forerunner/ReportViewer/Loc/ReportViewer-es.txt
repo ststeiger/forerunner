@@ -1,0 +1,99 @@
+﻿{
+    "messages": {
+        "loading": "Cargando...",
+        "completeFind": "El informe completo ha sido registrada",
+        "keyNotFound": "La llave no se encuentra",
+        "sessionExpired": "Su sesión ha expirado",
+        "imageNotDisplay": "No se puede mostrar la imagene"
+    },
+    "errorTag": {
+        "moreDetail": "Haga clic para obtener más detalles",
+        "serverError": "Excepción lanzada desde un servidor",
+        "type": "Tipo",
+        "targetSite": "sitioobjetivo",
+        "source": "Origen",
+        "message": "Mensaje",
+        "stackTrace": "Seguimiento de la pila"
+    },
+    "exportType": {
+        "xml": "XML archivo con los datos del informe",
+        "csv": "CSV (delimitado por comas)",
+        "pdf": "PDF",
+        "mhtml": "MHTML (archivo web)",
+        "excel": "Excel",
+        "tiff": "TIFF expediente",
+        "word": "Word"
+    },
+	"toolPane": {
+        "pageOf": "de",
+        "home": "Casa",
+        "navigation": "Navegación",
+        "favorites": "Favoritos",
+        "back": "Retroceder",
+        "refresh": "Reanudar",
+        "docMap": "Mapa de documento",
+        "find": "Encontrar",
+        "next": "Fespués",
+		"zoom": "Habilitar zoom",
+		"print": "Imprimir"
+    },
+	"toolbar": {
+        "back": "de vuelta",
+        "docMap": "Mapa del documento",
+        "exportMenu": "Exportador",
+        "favorites": "Favoritos",
+        "find": "Encontrar",
+        "firstPage": "Primero",
+        "home": "Casa",
+		"keyword": "Palabra clave",
+		"lastPage": "Último",
+		"menu": "Menú",
+        "navigation": "Navegación",
+        "next": "Ddespués",
+        "pageOf": "de",
+		"Parmeters":"Parámetros",
+		"previousPage": "Página anterior",
+		"recent": "Reciente",
+        "refresh": "Reanudar",
+		"reportPage": "Página",
+		"zoom": "Habilitar Zoom",
+		"print": "Imprimir"
+    },
+	"print":{
+	    "title": "Imprima opción Diseño de página",
+		"pageHeight": "Página Altura",
+		"pageWidth": "Ancho de página",
+		"marginTop": "MarginTop",
+		"marginBottom": "Margen inferior",
+		"marginLeft": "Margen Izquierda",
+		"marginRight": "Margen Derecha",
+		"print": "imprimir",
+		"cancel": "cancelar",
+		"unit": "mm"
+	},
+	"paramPane": {
+        "nullField": "cero",
+        "isTrue": "verdadero",
+        "isFalse": "Falso",
+        "required": "Necesario",
+        "viewReport": "Ver Informe"
+    },
+	"validateError": {
+		"required": "necesario",
+		"remote": "Por favor, corrija este campo",
+		"email": "email inválido",
+		"url": "URL No Válida",
+		"date": "Inválido Fecha",
+		"dateISO": "Inválido Fecha",
+		"number": "Número no válido",
+		"digits": "dígitos Sólo",
+		"maxlength": "No más de {0} caracteres",
+		"minlength": "Al menos {0} charaters",
+		"rangelength": "Introduzca un valor entre {0} y {1} caracteres de longitud",
+		"range": "Introduzca un valor entre {0} y {1}",
+		"max": "Introduzca un valor menor o igual a {0}",
+		"min": "Introduzca un valor mayor o igual a {0}"
+	}
+}
+
+        

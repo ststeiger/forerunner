@@ -484,3 +484,23 @@ Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Error.png
 Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Information.png
 Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Success.png
 Test/AdventureWorks Sample Reports/_UpgradeReport_Files/UpgradeReport_Warning.png
+Test/AdventureWorks 2008R2/bin/Debug/AdventureWorks2008R2.rds
+Test/AdventureWorks 2008R2/bin/Debug/AdventureWorks2008R2_Base.rdl
+Test/AdventureWorks 2008R2/bin/Debug/build.obj
+Test/AdventureWorks 2008R2/bin/Debug/Customers_Near_Stores_2008R2.rdl
+Test/AdventureWorks 2008R2/bin/Debug/Employee_Sales_Summary_2008R2.rdl
+Test/AdventureWorks 2008R2/bin/Debug/Employee_Sales_Summary_2008R2_EndLesson1.rdl
+Test/AdventureWorks 2008R2/bin/Debug/Employee_Sales_Summary_2008R2_EndLesson2.rdl
+Test/AdventureWorks 2008R2/bin/Debug/Employee_Sales_Summary_2008R2_EndLesson3.rdl
+Test/AdventureWorks 2008R2/bin/Debug/EmployeeSalesDetail2008R2.rsd
+Test/AdventureWorks 2008R2/bin/Debug/EmployeeSalesYearOverYear2008R2.rsd
+Test/AdventureWorks 2008R2/bin/Debug/EmpSalesMonth2008R2.rsd
+Test/AdventureWorks 2008R2/bin/Debug/Sales_by_Region_2008R2.rdl
+Test/AdventureWorks 2008R2/bin/Debug/Sales_Order_Detail_2008R2.rdl
+Test/AdventureWorks 2008R2/bin/Debug/SalesEmployees2008R2.rsd
+Test/AdventureWorks 2008R2/bin/Debug/Store_Contacts_2008R2.rdl
+Test/UpgradeLog.XML
+Test/_UpgradeReport_Files/UpgradeReport.css
+Test/_UpgradeReport_Files/UpgradeReport.xslt
+Test/_UpgradeReport_Files/UpgradeReport_Minus.gif
+Test/_UpgradeReport_Files/UpgradeReport_Plus.gif

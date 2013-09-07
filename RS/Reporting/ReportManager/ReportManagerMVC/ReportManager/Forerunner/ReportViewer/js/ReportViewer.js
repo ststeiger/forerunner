@@ -1102,7 +1102,7 @@ $(function () {
             }
             catch (error) {
                 me.numPages = 0;
-            }
+            } 
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);
@@ -1160,9 +1160,9 @@ $(function () {
         },
         _navToLink: function (elementID) {
             var me = this;
-            var navTo = me.element.find("[name='" + elementID + "']");
+            var navTo = me.element.find("[name='" + elementID + "']")[0];
 
-            $(document).scrollTop(navTo.offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+            $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
         },
         _stopDefaultEvent: function (e) {
             //IE

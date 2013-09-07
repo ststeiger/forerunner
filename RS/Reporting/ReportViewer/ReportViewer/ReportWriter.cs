@@ -385,6 +385,8 @@ namespace Forerunner.SSRS.JSONRender
                     w.WriteMember("PageLayoutStart");
                     w.WriteStartObject();
                     WriteJSONPageProp();
+                    if (RPL.ReadByte() != 0xFF)
+                        ThrowParseError("WriteJSONReportContent: End Tag not Found");
                     w.WriteEndObject();
 
                     //Sections
@@ -533,9 +535,6 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("PageStyle", "Object", 0x06, this.WriteJSONStyle);
 
             prop.Write(this);
-
-            if (RPL.ReadByte() != 0xFF)
-                ThrowParseError("WriteJSONPageProp: End Tag not Found");
 
 
         }

@@ -96,12 +96,13 @@ namespace Forerunner.SSRS.Viewer
                     break;
                 }
             }
-            //this.ServerRendering = false;
+#if DEBUG 
+            this.ServerRendering = false;
+#endif
             checkedServerRendering = true;
 
             return this.ServerRendering;
         }
-
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
             return GetImageInternal(SessionID, ImageID, out mimeType);

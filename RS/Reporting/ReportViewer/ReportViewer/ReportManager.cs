@@ -570,7 +570,8 @@ namespace Forerunner.SSRS.Manager
             //try
             //{
             //    impersonator = tryImpersonate();
-                string SQL = @" DECLARE @UID uniqueidentifier
+                string SQL = @" BEGIN TRAN t1
+                                DECLARE @UID uniqueidentifier
                                 DECLARE @IID uniqueidentifier
                                 SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )                                                        
                                 IF (@UserSpecific = 1)
@@ -584,6 +585,10 @@ namespace Forerunner.SSRS.Manager
                                         DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
                                     END
                                 INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
+                                IF @@error <> 0
+                                    ROLLBACK TRAN t1
+                                ELSE
+                                    COMMIT TRAN t1        
                                 ";
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

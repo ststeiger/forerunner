@@ -228,7 +228,7 @@ $(function () {
             RIContext.$HTMLParent.attr("Style", Style);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-
+            me._writeBookMark(RIContext);
             return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
@@ -349,11 +349,8 @@ $(function () {
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
-            if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) 
-                Style += "display: table-cell;";
-            else
-                Style += "display: block;";
-
+            Style += "display: table-cell;";
+         
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
@@ -529,6 +526,7 @@ $(function () {
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
             RIContext.$HTMLParent.attr("style", Style);
+            me._writeBookMark(RIContext);
             RIContext.$HTMLParent.append(NewImage);
             return RIContext.$HTMLParent;
         },
@@ -827,7 +825,8 @@ $(function () {
             $Tablix.append($FixedRowHeader);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
-
+            RIContext.$HTMLParent = ret;
+            me._writeBookMark(RIContext);
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
@@ -836,6 +835,7 @@ $(function () {
             var me = this;
             RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
             RIContext.CurrObj = RIContext.CurrObj.BodyElements;
+            me._writeBookMark(RIContext);
             return me._writeRectangle(RIContext);
     
         },

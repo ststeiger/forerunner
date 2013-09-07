@@ -404,6 +404,11 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is an Firefox Browser  */
+        isFirefox: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(Firefox)/);
+        },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
             if (window.navigator.standalone) {
@@ -3693,9 +3698,6 @@ $(function () {
                 else if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
         
-                if (Obj.Type !== "Tablix")
-                    Style += me._getFullBorderStyle(Obj);
-
                 $LocDiv.attr("Style", Style);
                 $LocDiv.append($RI);
                 RIContext.$HTMLParent.append($LocDiv);
@@ -3801,7 +3803,7 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-    
+            Style += "overflow: hidden;";
             RIContext.$HTMLParent.attr("Style", Style);
 
             if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
@@ -3842,9 +3844,12 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "display: table-cell;white-space:pre-wrap;word-break:break-word;word-wrap:break-word;float:left;";
-            
-           
+            Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) 
+                Style += "display: table-cell;";
+            else
+                Style += "display: block;";
+
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
@@ -3886,10 +3891,11 @@ $(function () {
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
-            me._writeBookMark(RIContext);
+            me._writeBookMark(RIContext);            
             $TextObj.attr("Style", Style);
 
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
+           
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
             return RIContext.$HTMLParent;
@@ -3980,6 +3986,7 @@ $(function () {
             var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
             Url += "SessionID=" + me.options.reportViewer.sessionID;
             Url += "&ImageID=" + ImageName;
+            Url += "#" + new Date().getTime();
             return Url;
         },
         _writeImage: function (RIContext) {
@@ -4227,7 +4234,7 @@ $(function () {
             var Style = "border-collapse:collapse;padding:0;margin:0;";
             var $Row;
             var LastRowIndex = 0;
-            var $FixedColHeader = new $("<DIV/>").css({ display: "table", position: "absolute", top: "0px", left: "0px",padding: "0",margin:"0", "border-collapse": "collapse"});
+            var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             var $FixedRowHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
             $FixedRowHeader.attr("CELLSPACING", 0);
             $FixedRowHeader.attr("CELLPADDING", 0);
@@ -4246,7 +4253,10 @@ $(function () {
                 colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
             }
             $Tablix.append(colgroup);
-            //$FixedRowHeader.append(colgroup);  //Need to alligh fixed header on chrome, makes FF fail
+            if (!forerunner.device.isFirefox()) {
+                $FixedColHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
+                $FixedRowHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
+            }
 
             $Row = new $("<TR/>");
             $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
@@ -4309,8 +4319,8 @@ $(function () {
                 $FixedRowHeader = null;
 
             var ret = $("<div style='position:relative'></div");
-            ret.append($FixedColHeader);
-            ret.append($FixedRowHeader);
+            $Tablix.append($FixedColHeader);
+            $Tablix.append($FixedRowHeader);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 

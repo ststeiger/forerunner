@@ -214,7 +214,6 @@ Section "ReportManager" SEC01
   File /oname=Web.config "${LOCALROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
- ; File "${LOCALROOT}\ForerunnerSetup.ico"
 
 SectionEnd
 

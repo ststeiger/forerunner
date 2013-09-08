@@ -605,6 +605,8 @@ namespace Forerunner.SSRS.Viewer
 
                 if (!this.ServerRendering)
                 {
+                    // Cache the current httpcontext credential for other threads to use
+                    SetCredentials(GetCredentials());
                     WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
                 }

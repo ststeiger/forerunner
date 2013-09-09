@@ -191,7 +191,7 @@ $(function () {
             var me = this;
            
             me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 200);
+            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
         /**
          * Shows the loading Indicator

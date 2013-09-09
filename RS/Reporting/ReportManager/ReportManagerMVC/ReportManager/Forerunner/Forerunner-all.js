@@ -666,7 +666,7 @@ $(function () {
             var me = this;
            
             me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 200);
+            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
         /**
          * Shows the loading Indicator
@@ -5025,7 +5025,7 @@ $(function () {
                         if ($(element).attr("IsMultiple") === "True")
                             error.appendTo(element.parent("div").next("span"));
                         else
-                            error.appendTo(element.next("span"));
+                            error.appendTo(element.nextAll(".fr-param-error-placeholder"));
                     }
                 },
                 highlight: function (element) {
@@ -5088,7 +5088,7 @@ $(function () {
 
             $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
-                $(datePicker).datepicker("option", "buttonImageOnly", "true");
+                $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },
         _getPredefinedValue: function (param) {
@@ -5227,19 +5227,25 @@ $(function () {
 
             switch (param.Type) {
                 case "DateTime":
-                    //$control.attr("readonly", "true");
                     $control.datepicker({
                         showOn: "button",
                         dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,
                         changeYear: true,
+                        showButtonPanel: true,
+                        gotoCurrent: true,
+                        closeText: "Close",
                         onClose: function () {
+                            $control.removeAttr("disabled");
                             $("[name='" + param.Name + "']").valid();
                             if (me._paramCount === 1)
                                 me._submitForm();
                         },
+                        beforeShow: function () {
+                            $control.attr("disabled", true);
+                        },
                     });
-                    $control.attr("dateISO","true");
+                    $control.attr("dateISO", "true");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -5531,7 +5537,7 @@ $(function () {
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
-
+            
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
                 remote: error.remote,

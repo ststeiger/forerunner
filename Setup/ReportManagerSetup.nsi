@@ -171,6 +171,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\calendar.gif"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
@@ -330,6 +331,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Parameter_Expand.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\SortAccending.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\SortDecending.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\calendar.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"

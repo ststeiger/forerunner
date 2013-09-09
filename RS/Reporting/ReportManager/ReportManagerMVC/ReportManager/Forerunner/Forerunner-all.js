@@ -3355,58 +3355,80 @@ $(function () {
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
-              + "/GetThumbnail/?ReportPath=" + catalogItem.Path + "&DefDate=" + catalogItem.ModifiedDate;
-            var $item = new $("<div />");
-            if (isSelected) {
-                $item.addClass("fr-explorer-item-selected");
-                me.$selectedItem = $item;
-            }
-            $item.addClass("fr-explorer-item");            
-            var $caption = new $("<div />");
-            $caption.addClass("fr-explorer-item-center");
-            $item.append($caption);
-            var $captiontext = new $("<h3 />");
-            $captiontext.addClass("fr-explorer-item-centertext");
-            $captiontext.html(catalogItem.Name);
-            $caption.append($captiontext);
-            var $imageblock = new $("<div />");
-            $imageblock.addClass("fr-report-item-image-block");
-            $item.append($imageblock);
-            var imageSrc;
-            var $anchor = new $("<a />");
-            var $img = new $("<img />");
-            $img.addClass("fr-explorer-item-width");
-            $img.addClass("fr-explorer-item-center");            
-            if (catalogItem.Type === 1)
-                imageSrc = me.options.forerunnerPath + "/ReportExplorer/images/folder-icon.png";
-            else {
-                imageSrc = reportThumbnailPath;
-                $imageblock.addClass("fr-report-item-image-block-shadow");
-            }
+              + "/GetThumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
 
+            //Item
+            var $item = new $("<div />");
+            $item.addClass("fr-explorer-item");
+            if (isSelected)
+                $item.addClass("fr-explorer-item-selcted");
+
+            var $anchor = new $("<a />");
+            //action
             var action = catalogItem.Type === 1 ? "explore" : "browse";
-            $img.attr("src", imageSrc);
-            $img.error(function () {
-                $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
-            });
-            $img.removeAttr("height"); //JQuery adds height for IE8, remove.
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
                 }
             });
-            var $reflection = new $("<div />");
-            $reflection.addClass("fr-report-item-reflection");
-            var $reflImg = $img.clone();
-            $reflImg.addClass("fr-report-item-reflection");
-            $reflImg.error(function () {
-                $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
-            });
-            $reflection.append($reflImg);
+            $item.append($anchor);
 
-            $anchor.append($img);
-            $anchor.append($reflection);
-            $imageblock.append($anchor);
+
+            //Image Block
+            var $imageblock = new $("<div />");
+            $imageblock.addClass("fr-report-item-image-block");
+            $anchor.append($imageblock);
+            var outerImage = new $("<div />");            
+            $imageblock.append(outerImage);
+           
+
+            //Images
+            if (catalogItem.Type === 1)
+                if (isSelected)
+                    outerImage.addClass("fr-explorer-folder-selected");
+                else
+                    outerImage.addClass("fr-explorer-folder");
+            else {
+                
+                var innerImage = new $("<img />");                
+                $imageblock.append(innerImage);
+                var EarImage = new $("<div />");
+                $imageblock.append(EarImage);
+                imageSrc =  reportThumbnailPath;
+                innerImage.addClass("fr-report-item-inner-image");
+                innerImage.addClass("fr-report-item-image-base");
+                outerImage.addClass("fr-report-item-image-base");
+                EarImage.addClass("fr-report-item-image-base");
+                if (isSelected) {
+                    outerImage.addClass("fr-report-item-outer-image-selected");
+                    EarImage.addClass("fr-explorer-item-ear-selcted");                   
+                }
+                else {
+                    outerImage.addClass("fr-report-item-outer-image");                    
+                    EarImage.addClass("fr-report-item-ear-image");
+                }
+               
+                innerImage.attr("src", imageSrc);
+                innerImage.error(function () {
+                    $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
+                });
+                
+                innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.
+            }
+            if (isSelected)
+                me.$selectedItem = $item;
+
+            
+            
+            //Caption
+            var $caption = new $("<div />");
+            $caption.addClass("fr-explorer-caption");
+            var $captiontext = new $("<div />");
+            $captiontext.addClass("fr-explorer-item-title");
+            $captiontext.html(catalogItem.Name);
+            $caption.append($captiontext);
+            $item.append($caption);            
+           
             return $item;
         },
         _renderPCView: function (catalogItems) {
@@ -6627,7 +6649,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
-            layout.$topdivspacer.css({height: "38px"});
+            layout.$topdivspacer.css({height: "32px"});
           
             layout.$mainviewport.css({ width: "100%", height: "100%"});
 

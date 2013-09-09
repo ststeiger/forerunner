@@ -70,7 +70,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://demo.forerunnersw.com/reportserver</TargetServerURL>
         <TargetFolder>AdventureWorks 2008R2</TargetFolder>
         <TargetDataSourceFolder>AdventureWorks 2008R2/Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>AdventureWorks 2008R2/Datasets</TargetDatasetFolder>

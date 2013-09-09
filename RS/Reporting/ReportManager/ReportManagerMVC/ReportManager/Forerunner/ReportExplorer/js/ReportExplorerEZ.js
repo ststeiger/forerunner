@@ -44,7 +44,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
-            layout.$topdivspacer.css({height: "38px"});
+            layout.$topdivspacer.css({height: "32px"});
           
             layout.$mainviewport.css({ width: "100%", height: "100%"});
 

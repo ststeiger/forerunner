@@ -115,8 +115,10 @@ $(function () {
                 me._submitForm();
             else if (me._paramCount === me._savedParamCount)
                 me._submitForm();
-            else
+            else {
                 me._trigger(events.render);
+                me.options.$reportViewer.removeLoadingIndicator();
+            }
 
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
@@ -124,7 +126,8 @@ $(function () {
 
             me._savedParamExist = false;
             me._savedParamCount = 0;
-            me.options.$reportViewer.removeLoadingIndicator();
+
+            me._setDatePicker();
         },
         _submitForm: function () {
             var me = this;
@@ -145,6 +148,14 @@ $(function () {
                 me._savedParamList[param.Parameter] = param.Value;
                 me._savedParamCount++;
                 });
+        },
+        _setDatePicker: function () {
+            var me = this;
+
+            $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
+                $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
+                $(datePicker).datepicker("option", "buttonImageOnly", "true");
+            });
         },
         _getPredefinedValue: function (param) {
             var me = this;
@@ -284,6 +295,7 @@ $(function () {
                 case "DateTime":
                     //$control.attr("readonly", "true");
                     $control.datepicker({
+                        showOn: "button",
                         dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,
                         changeYear: true,

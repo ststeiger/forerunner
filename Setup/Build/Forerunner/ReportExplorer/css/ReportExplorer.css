@@ -39,8 +39,15 @@
     width: 200px;
     display: block;
     margin-left: auto;
-    margin-right: auto;
-    text-align: center;
+    margin-right: auto;    
+}
+
+.fr-explorer-item-title {
+    text-align: center;    
+    font-size:  11pt;
+    font-family:Helvetica Neue;
+    color: #212729;
+    font-weight:700;
     -ms-text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
@@ -124,9 +131,6 @@
     background-position: center;
 }
 
-.fr-explorer-item-title {
-    text-align: center;
-}
 
 
 .fr-rm-button-home {

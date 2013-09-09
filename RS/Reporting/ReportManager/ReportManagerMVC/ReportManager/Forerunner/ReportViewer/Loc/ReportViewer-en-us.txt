@@ -84,7 +84,7 @@
 		"email": "Invalid email",
 		"url": "Invalid URL",
 		"date": "Invalid Date",
-		"dateISO": "Invalid Date",
+		"dateISO": "Invalid Date (yyyy-mm-dd)",
 		"number": "Invalid Number",
 		"digits": "Digits Only",
 		"maxlength": "No more than {0} characters",

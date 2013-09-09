@@ -191,7 +191,7 @@ $(function () {
             var me = this;
            
             me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+            setTimeout(function () { me.showLoadingIndictator(me); }, 200);
         },
         /**
          * Shows the loading Indicator
@@ -254,6 +254,7 @@ $(function () {
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
 
+            me.removeLoadingIndicator();
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
             if (me.options.setPageDone) {
                 me._trigger(events.setPageDone);
@@ -476,7 +477,8 @@ $(function () {
                 me._removeParameters();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
-                me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
+                me._loadParameters(action.CurrentPage);
+                //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
             }
             else {
@@ -651,6 +653,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
+            me._addLoadingIndicator();
 
             me._prepareAction();
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
@@ -659,8 +662,10 @@ $(function () {
                 UniqueID: drillthroughID
             }).done(function (data) {
                 me.backupCurPage(true);
-                if (data.Exception)
+                if (data.Exception) {
                     me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
+                    me.removeLoadingIndicator();
+                }
                 else {
                     me.sessionID = data.SessionID;
                     if (me.origionalReportPath === "")
@@ -677,7 +682,6 @@ $(function () {
                         me._loadPage(1, false, null, null, true);
                     }
                 }
-
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
@@ -711,6 +715,7 @@ $(function () {
          */
         backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
+
             var top = $(window).scrollTop();
             var left = $(window).scrollLeft();
 
@@ -721,7 +726,9 @@ $(function () {
                 left = me.savedLeft;
             }
 
-            me.actionHistory.push({ ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top , ScrollLeft: left, FlushCache: flushCache });
+            me.actionHistory.push({
+                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top, ScrollLeft: left, FlushCache: flushCache
+            });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -968,9 +975,10 @@ $(function () {
         },
         _showParameters: function (pageNum, data) {
             var me = this;
+            
             if (data.Type === "Parameters") {
                 me._removeParameters();
-
+                
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
@@ -1124,7 +1132,6 @@ $(function () {
 
             if (!loadOnly) {
                 me._renderPage(newPageNum);
-                me.removeLoadingIndicator();
                 me._setPage(newPageNum);
             }
         },

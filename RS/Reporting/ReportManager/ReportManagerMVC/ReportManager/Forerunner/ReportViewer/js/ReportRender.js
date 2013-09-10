@@ -436,7 +436,7 @@ $(function () {
                         $ParagraphItem = new $("<DIV />");
                     }
 
-                    var ParagraphStyle = "";
+                    var ParagraphStyle = "font-size: 0;";
                     ParagraphStyle += me._getMeasurements(me._getMeasurmentsObj(Obj, Index));
                     ParagraphStyle += me._getElementsStyle(RIContext.RS, Obj.Paragraph);
                     $ParagraphItem.attr("Style", ParagraphStyle);
@@ -481,6 +481,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
+                    $ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
@@ -766,8 +767,8 @@ $(function () {
             }
             $Tablix.append(colgroup);
             if (!forerunner.device.isFirefox()) {
-                $FixedColHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
-                $FixedRowHeader.append(colgroup);  //Need to allign fixed header on chrome, makes FF fail
+                $FixedColHeader.append(colgroup.clone(true,true));  //Need to allign fixed header on chrome, makes FF fail
+                $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
             }
 
             $Row = new $("<TR/>");

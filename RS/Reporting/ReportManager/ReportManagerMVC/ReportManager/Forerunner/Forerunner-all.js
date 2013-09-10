@@ -5087,7 +5087,7 @@ $(function () {
             var me = this;
 
             $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.gif");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },
@@ -5308,7 +5308,7 @@ $(function () {
 
             var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='../../Forerunner/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");

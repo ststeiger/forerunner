@@ -289,15 +289,15 @@ namespace Forerunner.SSRS.JSONRender
 
         private void ThrowParseError()
         {
-            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(string.Empty, RPL.RPLStream);
+            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(string.Empty, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg)
         {
-            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream);
+            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg, Exception e)
         {
-            ReportManager.Util.Logging.ExceptionInfoGenerator.LogExceptionInfo(Msg, RPL.RPLStream, e);
+            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream, e);
         }
 
         private Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)

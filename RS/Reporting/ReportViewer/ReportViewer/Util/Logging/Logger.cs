@@ -15,25 +15,25 @@ namespace ReportManager.Util.Logging
     public class Logger
     {
         //private static string logPath = ConfigurationManager.AppSettings["ForeRunner.LogPath"];
-        private static string logPath = string.Empty;
+        //private static string logPath = string.Empty;
 
-        public static string LogPath
-        {
-            get
-            {
-                if (logPath == string.Empty)
-                    logPath = AppDomain.CurrentDomain.BaseDirectory + @"bin\Logs\" + DateTime.Now.ToString("yyyy-MM-dd") + @"\";
-                return logPath;
-            }
-            set { logPath = value; }
-        }
+        //public static string LogPath
+        //{
+        //    get
+        //    {
+        //        if (logPath == string.Empty)
+        //            logPath = AppDomain.CurrentDomain.BaseDirectory + @"bin\Logs\" + DateTime.Now.ToString("yyyy-MM-dd") + @"\";
+        //        return logPath;
+        //    }
+        //    set { logPath = value; }
+        //}
 
-        private static string logFilePrefix = string.Empty;
-        public static string LogFilePrefix
-        {
-            get { return logFilePrefix; }
-            set { logFilePrefix = value; }
-        }
+        //private static string logFilePrefix = string.Empty;
+        //public static string LogFilePrefix
+        //{
+        //    get { return logFilePrefix; }
+        //    set { logFilePrefix = value; }
+        //}
 
         public static void WriteLineIf(bool isTrace, String category, String message)
         {
@@ -78,9 +78,23 @@ namespace ReportManager.Util.Logging
         }
     }
 
-    public class ExceptionInfoGenerator
+    public class ExceptionLogGenerator
     {
-        public static void LogExceptionInfo(string errorMsg, Stream RPLStream)
+        public static void LogException(object obj)
+        {
+            Exception e = (Exception)obj;
+            LogException(e);
+        }
+
+        public static void LogException(Exception e)
+        {
+            string error = string.Format("[Time:{0}] \r\n [Type:{1}] \r\n [TargetSite:{2}] \r\n [Source:{3}] \r\n [Message:{4}] \r\n [StackTrace:{5}] ",
+                   DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), e.GetType(), e.TargetSite, e.Source, e.Message, e.StackTrace);
+
+            Logger.Trace(LogType.Error, "Exception:\r\n{0}", new object[] { error });
+        }
+
+        public static void LogExceptionWithRPL(string errorMsg, Stream RPLStream)
         {
             try
             {
@@ -88,11 +102,11 @@ namespace ReportManager.Util.Logging
             }
             catch (Exception e)
             {
-                GenerateExceptionInfo(e, RPLStream);
+                GenerateExceptionWithRPL(e, RPLStream);
             }
         }
 
-        public static void LogExceptionInfo(string errorMsg, Stream RPLStream, Exception subEx)
+        public static void LogExceptionWithRPL(string errorMsg, Stream RPLStream, Exception subEx)
         {
             try
             {
@@ -100,11 +114,11 @@ namespace ReportManager.Util.Logging
             }
             catch (Exception e)
             {
-                GenerateExceptionInfo(e, RPLStream);
+                GenerateExceptionWithRPL(e, RPLStream);
             }
         }
 
-        private static void GenerateExceptionInfo(Exception e, Stream RPLStream)
+        private static void GenerateExceptionWithRPL(Exception e, Stream RPLStream)
         {
             StackTrace trace = new StackTrace(true);
             StringBuilder stackTraceInfo = new StringBuilder();
@@ -134,7 +148,7 @@ namespace ReportManager.Util.Logging
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), e.GetType(), e.Message, stackTraceInfo.ToString(), rplOutput.ToString());
 
             Logger.Trace(LogType.Error, "Exception:\r\n{0}", new object[] { error });
-
+            
             throw e;
         }
     }

@@ -64,6 +64,7 @@ namespace ReportManager.Controllers
             }
             catch(Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
             
@@ -81,6 +82,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }            
         }
@@ -96,8 +98,9 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
-            }        
+            }
         }
 
         [HttpGet]
@@ -111,6 +114,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }       
             
@@ -127,6 +131,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
 
@@ -144,6 +149,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
 
@@ -160,6 +166,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
          
@@ -183,6 +190,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
 
@@ -200,6 +208,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
 
@@ -218,6 +227,7 @@ namespace ReportManager.Controllers
             }
             catch(Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
          
@@ -236,6 +246,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return ReturnError(e);
             }
         }

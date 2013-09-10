@@ -92,6 +92,7 @@ $(function () {
             me.pageNavOpen = false;
             me.savedTop = 0;
             me.savedLeft = 0;
+            me.origionalReportPath = "";
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -190,7 +191,7 @@ $(function () {
             var me = this;
            
             me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 200);
+            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
         /**
          * Shows the loading Indicator
@@ -627,6 +628,20 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+
+        /**
+         * Determines if the current report being viewed is the result of a drillthough action
+         *
+         * @function $.forerunner.reportViewer#isDrillThoughReport
+         */
+        isDrillThoughReport: function()
+        {
+            var me = this;
+            if (me.origionalReportPath === me.options.reportPath)
+                return true;
+            else
+                return false;
+        },
         /**
          * Navigate to the given drill through item
          *
@@ -653,6 +668,8 @@ $(function () {
                 }
                 else {
                     me.sessionID = data.SessionID;
+                    if (me.origionalReportPath === "")
+                        me.origionalReportPath = me.options.reportPath;
                     me.options.reportPath = data.ReportPath;
                     me._trigger(events.drillThrough, null, { path: data.ReportPath });
                     if (data.ParametersRequired) {
@@ -1006,6 +1023,7 @@ $(function () {
             me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
+            me.origionalReportPath = "";
         },
         /**
          * Load the given report

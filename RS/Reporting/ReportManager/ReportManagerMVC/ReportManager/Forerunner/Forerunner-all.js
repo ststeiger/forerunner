@@ -567,6 +567,7 @@ $(function () {
             me.pageNavOpen = false;
             me.savedTop = 0;
             me.savedLeft = 0;
+            me.origionalReportPath = "";
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -665,7 +666,7 @@ $(function () {
             var me = this;
            
             me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 200);
+            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
         },
         /**
          * Shows the loading Indicator
@@ -1102,6 +1103,20 @@ $(function () {
             })
            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
+
+        /**
+         * Determines if the current report being viewed is the result of a drillthough action
+         *
+         * @function $.forerunner.reportViewer#isDrillThoughReport
+         */
+        isDrillThoughReport: function()
+        {
+            var me = this;
+            if (me.origionalReportPath === me.options.reportPath)
+                return true;
+            else
+                return false;
+        },
         /**
          * Navigate to the given drill through item
          *
@@ -1128,6 +1143,8 @@ $(function () {
                 }
                 else {
                     me.sessionID = data.SessionID;
+                    if (me.origionalReportPath === "")
+                        me.origionalReportPath = me.options.reportPath;
                     me.options.reportPath = data.ReportPath;
                     me._trigger(events.drillThrough, null, { path: data.ReportPath });
                     if (data.ParametersRequired) {
@@ -1481,6 +1498,7 @@ $(function () {
             me.docMapData = null;
             me.togglePageNum = 0;
             me.findKeyword = null;
+            me.origionalReportPath = "";
         },
         /**
          * Load the given report
@@ -5007,7 +5025,7 @@ $(function () {
                         if ($(element).attr("IsMultiple") === "True")
                             error.appendTo(element.parent("div").next("span"));
                         else
-                            error.appendTo(element.next("span"));
+                            error.appendTo(element.nextAll(".fr-param-error-placeholder"));
                     }
                 },
                 highlight: function (element) {
@@ -5070,7 +5088,7 @@ $(function () {
 
             $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
-                $(datePicker).datepicker("option", "buttonImageOnly", "true");
+                $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },
         _getPredefinedValue: function (param) {
@@ -5209,19 +5227,25 @@ $(function () {
 
             switch (param.Type) {
                 case "DateTime":
-                    //$control.attr("readonly", "true");
                     $control.datepicker({
                         showOn: "button",
                         dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,
                         changeYear: true,
+                        showButtonPanel: true,
+                        gotoCurrent: true,
+                        closeText: "Close",
                         onClose: function () {
+                            $control.removeAttr("disabled");
                             $("[name='" + param.Name + "']").valid();
                             if (me._paramCount === 1)
                                 me._submitForm();
                         },
+                        beforeShow: function () {
+                            $control.attr("disabled", true);
+                        },
                     });
-                    $control.attr("dateISO","true");
+                    $control.attr("dateISO", "true");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -5513,7 +5537,7 @@ $(function () {
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
-
+            
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
                 remote: error.remote,
@@ -6340,7 +6364,7 @@ $(function () {
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
-                                path: me.options.ReportPath
+                                path: $viewer.reportViewer("option", "reportPath")
                             }).done(function (data) {
                                 me.updateFavoriteState.call(me, action === "add");
                             })
@@ -6376,7 +6400,7 @@ $(function () {
                             var parameterList = e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList");
                             if (parameterList) {
                                 $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
-                                    reportPath: me.options.ReportPath,
+                                    reportPath: $viewer.reportViewer("option", "reportPath"),
                                     parameters: parameterList,
                                 }).done(function (Data) {
                                     alert("Saved");
@@ -6399,6 +6423,7 @@ $(function () {
                     });
 
                 });
+
             }
 
 
@@ -6447,6 +6472,15 @@ $(function () {
                     $toolPane.toolPane("enableTools", [itemFav]);
                     $toolbar.toolbar("enableTools", [btnFav]);
                 });
+
+                $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                });
+                $viewer.on(events.reportViewerDrillBack(), function (e, data) {
+                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                });
+               
+
             }
 
             var $nav = me.options.$nav;

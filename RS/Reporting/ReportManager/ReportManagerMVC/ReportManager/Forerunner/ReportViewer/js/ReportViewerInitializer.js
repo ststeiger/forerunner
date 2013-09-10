@@ -83,7 +83,7 @@ $(function () {
                             $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
                                 view: "favorites",
                                 action: action,
-                                path: me.options.ReportPath
+                                path: $viewer.reportViewer("option", "reportPath")
                             }).done(function (data) {
                                 me.updateFavoriteState.call(me, action === "add");
                             })
@@ -119,7 +119,7 @@ $(function () {
                             var parameterList = e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList");
                             if (parameterList) {
                                 $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
-                                    reportPath: me.options.ReportPath,
+                                    reportPath: $viewer.reportViewer("option", "reportPath"),
                                     parameters: parameterList,
                                 }).done(function (Data) {
                                     alert("Saved");
@@ -142,6 +142,7 @@ $(function () {
                     });
 
                 });
+
             }
 
 
@@ -190,6 +191,15 @@ $(function () {
                     $toolPane.toolPane("enableTools", [itemFav]);
                     $toolbar.toolbar("enableTools", [btnFav]);
                 });
+
+                $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                });
+                $viewer.on(events.reportViewerDrillBack(), function (e, data) {
+                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                });
+               
+
             }
 
             var $nav = me.options.$nav;

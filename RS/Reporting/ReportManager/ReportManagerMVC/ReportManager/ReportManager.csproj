@@ -171,8 +171,12 @@
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
-    <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
+    <Content Include="Forerunner\ReportExplorer\images\folder.png" />
+    <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
+    <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
+    <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
+    <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />

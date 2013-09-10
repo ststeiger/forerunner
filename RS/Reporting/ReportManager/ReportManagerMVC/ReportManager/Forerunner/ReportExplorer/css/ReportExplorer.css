@@ -59,7 +59,7 @@
 
 
 .fr-explorer-item:hover {
-    background: steelblue;
+    /*background: steelblue;*/
     -webkit-transform: scale(1.1);
     -moz-transform: scale(1.1);
     -ms-transform: scale(1.1);
@@ -92,6 +92,7 @@
 
 .fr-report-item-outer-image {
     background-image: url(../../reportexplorer/Images/report_bkg.png);
+    
 }
 
 .fr-report-item-outer-image-selected {

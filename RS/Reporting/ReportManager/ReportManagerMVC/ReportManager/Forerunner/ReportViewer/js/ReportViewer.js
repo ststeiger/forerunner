@@ -566,6 +566,9 @@ $(function () {
                 SortItem: id,
                 Direction: newDir
             }).done(function (data) {
+                me.scrollLeft = $(window).scrollLeft();
+                me.scrollTop = $(window).scrollTop();
+
                 me.numPages = data.NumPages;
                 me._loadPage(data.NewPage, false, null, null, true);
             })

@@ -307,7 +307,7 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += "overflow: hidden;";
+            Style += "overflow: hidden;position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);
 
             if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
@@ -350,12 +350,22 @@ $(function () {
 
             Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
             Style += "display: table-cell;";
-         
+            Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+
+            var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
+            if (dirClass !== "") {
+                Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Width + "mm;";
+                Style += "position:absolute;";
+                var nTop = -(RIContext.CurrLocation.Width - RIContext.CurrLocation.Height) / 2;
+                var nLeft = -(RIContext.CurrLocation.Height - RIContext.CurrLocation.Width) / 2;
+                Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
+                $TextObj.addClass(dirClass);
+            }
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    //Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
@@ -461,7 +471,7 @@ $(function () {
                         if (flag) {
                             var TextRunStyle = "";
                             TextRunStyle += me._getMeasurements(me._getMeasurmentsObj(Obj.TextRuns[i], i));
-                            TextRunStyle += me._getElementsStyle(RIContext.RS, Obj.TextRuns[i].Elements);
+                            TextRunStyle += me._getElementsTextStyle(Obj.TextRuns[i].Elements);
                             $TextRun.attr("Style", TextRunStyle);
                         }
 
@@ -1011,6 +1021,29 @@ $(function () {
 
             return Style;
         },
+        _getMeasurementsInvert: function (CurrObj) {
+            var me = this;
+            var Style = "";
+            //TODO:  zIndex
+
+            if (!CurrObj)
+                return "";
+
+            //Top and left are set in set location, height is not set becasue differnt browsers measure and break words differently
+            if (CurrObj.Width !== undefined) {
+                Style += "height:" + CurrObj.Width + "mm;";
+                Style += "min-height:" + CurrObj.Width + "mm;";
+                Style += "max-height:" + (CurrObj.Width) + "mm;";
+            }
+
+            if (CurrObj.Height !== undefined) {
+                Style += "width:" + CurrObj.Height + "mm;";
+                Style += "min-width:" + CurrObj.Height + "mm;";
+                Style += "max-width:" + (CurrObj.Height) + "mm;";
+            }
+
+            return Style;
+        },
         _getMeasurements: function (CurrObj, includeHeight) {
             var me = this;
             var Style = "";
@@ -1074,6 +1107,25 @@ $(function () {
 
             return Style;
         },
+        _getTextDirection:function(CurrObj){
+            var Dirclass = "";
+
+            if (CurrObj.SharedElements.Style && CurrObj.SharedElements.Style.WritingMode !== undefined){
+                if (CurrObj.SharedElements.Style.WritingMode === 1)
+                    Dirclass = "fr-rotate-90";
+                if (CurrObj.SharedElements.Style.WritingMode === 2)
+                    Dirclass = "fr-rotate-270";
+            }
+            if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
+                if (CurrObj.NonSharedElements.Style.WritingMode === 1)
+                    Dirclass = "fr-rotate-90";
+                if (CurrObj.NonSharedElements.Style.WritingMode === 2)
+                    Dirclass = "fr-rotate-270";
+            }
+            return Dirclass;
+
+          
+        },
         _getTextStyle: function (CurrObj, TypeCodeObj) {
             var me = this;
             var Style = "";
@@ -1093,8 +1145,8 @@ $(function () {
                 Style += "unicode-bidi:" + me._getBiDi(CurrObj.UnicodeBiDi) + ";";
             if (CurrObj.VerticalAlign !== undefined)
                 Style += "vertical-align:" + me._getVAligh(CurrObj.VerticalAlign) + ";";
-            if (CurrObj.WritingMode !== undefined)
-                Style += "layout-flow:" + me._getLayoutFlow(CurrObj.WritingMode) + ";";
+            //if (CurrObj.WritingMode !== undefined)
+            //    Style += "layout-flow:" + me._getLayoutFlow(CurrObj.WritingMode) + ";";
             if (CurrObj.Direction !== undefined)
                 Style += "Direction:" + me._getDirection(CurrObj.Direction) + ";";
 

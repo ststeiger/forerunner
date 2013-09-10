@@ -178,6 +178,8 @@ Section "ReportManager" SEC01
   
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-en.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh.txt"
@@ -316,6 +318,8 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-en.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-zh.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"

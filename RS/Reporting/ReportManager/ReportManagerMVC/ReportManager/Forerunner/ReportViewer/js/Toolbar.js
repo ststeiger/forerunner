@@ -180,10 +180,10 @@ $(function () {
         }
     };
     var btnFind = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.button,
         selectorClass: "fr-toolbar-find-button",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: locData.toolbar.find,
+        imageClass: "fr-icons24x24-search",
         tooltip: locData.toolbar.find,
         events: {
             click: function (e) {
@@ -192,29 +192,10 @@ $(function () {
             }
         }
     };
-    var btnSeparator = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: "|&nbsp"
-    };
-    var btnFindNext = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-findnext-button",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: locData.toolbar.next,
-        tooltip: locData.toolbar.next,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
-                e.data.$reportViewer.reportViewer("findNext", value);
-            }
-        }
-    };
     var btnFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-toolbar-find-group-id",
-        tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
+        tools: [btnKeyword, btnFind]
     };
     //
     // Export tools
@@ -302,12 +283,12 @@ $(function () {
             }
         }
     };
-    var btnSeparator2 = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: "|&nbsp"
-    };
+    //var btnSeparator2 = {
+    //    toolType: toolTypes.textButton,
+    //    selectorClass: "fr-toolbar-sparator-text",
+    //    sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+    //    text: "|&nbsp"
+    //};
     var btnZoom = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-zoom-button",
@@ -407,7 +388,7 @@ $(function () {
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,
-                               btnLastPage, btnDocumentMap, btnFind, btnFindNext, btnZoom]);
+                               btnLastPage, btnDocumentMap, btnFind, btnZoom]);
         },
         _init: function () {
             var me = this;
@@ -419,7 +400,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnSeparator2, btnZoom, btnPrint, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnZoom, btnPrint, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

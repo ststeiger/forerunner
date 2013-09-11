@@ -276,8 +276,9 @@ $(function () {
         }
     };
     var itemFind = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.button,
         selectorClass: "fr-item-find",
+        imageClass: "fr-icons24x24-search",
         text: locData.toolPane.find,
         events: {
             click: function (e) {
@@ -286,28 +287,11 @@ $(function () {
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
             }
         }
-    };
-    var itemSeparator = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-item-span-sparator",
-        text: "|&nbsp"
-    };
-    var itemFindNext = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-item-findnext",
-        text: locData.toolPane.next,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
-                e.data.$reportViewer.reportViewer("findNext", value);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-findnext"]);
-            }
-        }
-    };
+    };   
     var itemFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-item-findgroup",
-        tools: [itemKeyword, itemFind, itemSeparator, itemFindNext]
+        tools: [itemKeyword, itemFind]
     };
     var itemPrint = {
         toolType: toolTypes.containerItem,
@@ -379,7 +363,7 @@ $(function () {
 
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
-                            itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);
+                            itemReportBack, itemRefresh, itemDocumentMap, itemFind]);
         },
         _init: function () {
             var me = this;

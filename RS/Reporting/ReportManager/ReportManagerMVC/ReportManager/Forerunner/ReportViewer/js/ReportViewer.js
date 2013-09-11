@@ -84,10 +84,11 @@ $(function () {
             me.loadLock = 0;
             me.finding = false;
             me.findStartPage = null;
+            me.findEndPage = null;
+            me.findKeyword = null;
             me.hasDocMap = false;
             me.docMapData = null;
             me.togglePageNum = 0;
-            me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
             me.pageNavOpen = false;
             me.savedTop = 0;
@@ -746,61 +747,68 @@ $(function () {
          * @param {int} startPage - Starting page of the search range
          * @param {int} endPage - Ending page of the search range
          */
-        find: function (keyword, startPage, endPage) {
+        find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
-            if (keyword === "") return;
-
-            if (!me.findKeyword || me.findKeyword !== keyword) {
-                me.findKeyword = keyword;
-                me.findStartPage = null;
+            if (me.finding && !findInNewPage) {
+                me.findNext(keyword);
             }
+            else {
+                if (keyword === "") return;
 
-            if (startPage === undefined)
-                startPage = me.getCurPage();
+                //input new keyword
+                if (!me.findKeyword || me.findKeyword !== keyword) {
+                    me.findKeyword = keyword;
+                    me.findStartPage = null;
+                }
 
-            if (endPage === undefined)
-                endPage = me.getNumPages();
+                if (startPage === undefined)
+                    startPage = me.getCurPage();
 
-            if (startPage > endPage) {
-                me.resetFind();
-                alert(me.locData.messages.completeFind);
-                return;
+                if (endPage === undefined)
+                    endPage = me.getNumPages();
+
+                if (startPage > endPage) {
+                    me.resetFind();
+                    alert(me.locData.messages.completeFind);
+                    return;
+                }
+
+                //mark up find start page
+                if (me.findStartPage === null)
+                    me.findStartPage = startPage;
+
+                $.getJSON(me.options.reportViewerAPI + "/FindString/", {
+                    SessionID: me.sessionID,
+                    StartPage: startPage,
+                    EndPage: endPage,
+                    FindValue: keyword
+                }).done(function (data) {
+                    if (data.NewPage !== 0) {//keyword exist
+                        me.finding = true;
+                        if (data.NewPage !== me.getCurPage()) {
+                            me.options.setPageDone = function () { me.setFindHighlight(keyword); };
+                            me.pages[data.NewPage] = null;
+                            me._loadPage(data.NewPage, false);
+                        } else {
+                            me.setFindHighlight(keyword);
+                        }
+                    }
+                    else {//keyword not exist
+                        if (me.findStartPage !== 1) {
+                            me.find(keyword, 1, me.findStartPage - 1);
+                            me.findStartPage = 1;
+                        }
+                        else {
+                            if (me.finding === true)
+                                alert(me.locData.messages.completeFind);
+                            else
+                                alert(me.locData.messages.keyNotFound);
+                            me.resetFind();
+                        }
+                    }
+                })
+              .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
             }
-
-            if (me.findStartPage === null)
-                me.findStartPage = startPage;
-
-            $.getJSON(me.options.reportViewerAPI + "/FindString/", {
-                SessionID: me.sessionID,
-                StartPage: startPage,
-                EndPage: endPage,
-                FindValue: keyword
-            }).done(function (data) {
-                if (data.NewPage !== 0) {
-                    me.finding = true;
-                    if (data.NewPage !== me.curPage) {
-                        me.options.setPageDone = function () { me.setFindHighlight(keyword); };
-                        me.pages[data.NewPage] = null;
-                        me._loadPage(data.NewPage, false);
-                    } else {
-                        me.setFindHighlight(keyword);
-                    }
-                }
-                else {
-                    if (me.findStartPage !== 1) {
-                        me.find(keyword, 1, me.findStartPage - 1);
-                        me.findStartPage = 1;
-                    }
-                    else {
-                        if (me.finding === true)
-                            alert(me.locData.messages.completeFind);
-                        else
-                            alert(me.locData.messages.keyNotFound);
-                        me.resetFind();
-                    }
-                }
-            })
-          .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
         /**
          * Find the next occurance of the given keyword
@@ -817,8 +825,6 @@ $(function () {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 $(window).scrollTop($nextWord.offset().top - 150);
                 $(window).scrollLeft($nextWord.offset().left - 250);
-                
-                //window.scrollTo($nextWord.offset().left, $nextWord.offset().top - 100);
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -826,11 +832,21 @@ $(function () {
                     me.resetFind();
                     return;
                 }
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
 
-                if (me.getCurPage() + 1 <= me.getNumPages())
-                    me.find(keyword, me.getCurPage() + 1);
-                else if (me.findStartPage > 1)
-                    me.find(keyword, 1, me.findStartPage - 1);
+                if (me.getCurPage() + 1 <= endPage){
+                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                }
+                else if (me.findStartPage > 1) {
+                    me.findEndPage = me.findStartPage - 1;
+                    if (me.getCurPage() === me.findEndPage) {
+                        alert(me.locData.messages.completeFind);
+                        me.resetFind();
+                    }
+                    else {
+                        me.find(keyword, 1, me.findStartPage - 1, true);
+                    }
+                }
                 else {
                     alert(me.locData.messages.completeFind);
                     me.resetFind();
@@ -865,8 +881,9 @@ $(function () {
         resetFind: function () {
             var me = this;
             me.finding = false;
-            me.findStartPage = null;
             me.findKeyword = null;
+            me.findStartPage = null;
+            me.findEndPage = null;
         },
         /**
          * Export the report in the given format

@@ -10,9 +10,11 @@ using System.Text;
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
+using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
+    [ExceptionLog]
     [Authorize]
     public class ReportManagerController : ApiController
     {

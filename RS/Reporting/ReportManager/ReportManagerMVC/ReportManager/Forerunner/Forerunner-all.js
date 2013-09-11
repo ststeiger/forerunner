@@ -559,10 +559,11 @@ $(function () {
             me.loadLock = 0;
             me.finding = false;
             me.findStartPage = null;
+            me.findEndPage = null;
+            me.findKeyword = null;
             me.hasDocMap = false;
             me.docMapData = null;
             me.togglePageNum = 0;
-            me.findKeyword = null;
             me.element.append(me.$loadingIndicator);
             me.pageNavOpen = false;
             me.savedTop = 0;
@@ -1221,61 +1222,68 @@ $(function () {
          * @param {int} startPage - Starting page of the search range
          * @param {int} endPage - Ending page of the search range
          */
-        find: function (keyword, startPage, endPage) {
+        find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
-            if (keyword === "") return;
-
-            if (!me.findKeyword || me.findKeyword !== keyword) {
-                me.findKeyword = keyword;
-                me.findStartPage = null;
+            if (me.finding && !findInNewPage) {
+                me.findNext(keyword);
             }
+            else {
+                if (keyword === "") return;
 
-            if (startPage === undefined)
-                startPage = me.getCurPage();
+                //input new keyword
+                if (!me.findKeyword || me.findKeyword !== keyword) {
+                    me.findKeyword = keyword;
+                    me.findStartPage = null;
+                }
 
-            if (endPage === undefined)
-                endPage = me.getNumPages();
+                if (startPage === undefined)
+                    startPage = me.getCurPage();
 
-            if (startPage > endPage) {
-                me.resetFind();
-                alert(me.locData.messages.completeFind);
-                return;
+                if (endPage === undefined)
+                    endPage = me.getNumPages();
+
+                if (startPage > endPage) {
+                    me.resetFind();
+                    alert(me.locData.messages.completeFind);
+                    return;
+                }
+
+                //mark up find start page
+                if (me.findStartPage === null)
+                    me.findStartPage = startPage;
+
+                $.getJSON(me.options.reportViewerAPI + "/FindString/", {
+                    SessionID: me.sessionID,
+                    StartPage: startPage,
+                    EndPage: endPage,
+                    FindValue: keyword
+                }).done(function (data) {
+                    if (data.NewPage !== 0) {//keyword exist
+                        me.finding = true;
+                        if (data.NewPage !== me.getCurPage()) {
+                            me.options.setPageDone = function () { me.setFindHighlight(keyword); };
+                            me.pages[data.NewPage] = null;
+                            me._loadPage(data.NewPage, false);
+                        } else {
+                            me.setFindHighlight(keyword);
+                        }
+                    }
+                    else {//keyword not exist
+                        if (me.findStartPage !== 1) {
+                            me.find(keyword, 1, me.findStartPage - 1);
+                            me.findStartPage = 1;
+                        }
+                        else {
+                            if (me.finding === true)
+                                alert(me.locData.messages.completeFind);
+                            else
+                                alert(me.locData.messages.keyNotFound);
+                            me.resetFind();
+                        }
+                    }
+                })
+              .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
             }
-
-            if (me.findStartPage === null)
-                me.findStartPage = startPage;
-
-            $.getJSON(me.options.reportViewerAPI + "/FindString/", {
-                SessionID: me.sessionID,
-                StartPage: startPage,
-                EndPage: endPage,
-                FindValue: keyword
-            }).done(function (data) {
-                if (data.NewPage !== 0) {
-                    me.finding = true;
-                    if (data.NewPage !== me.curPage) {
-                        me.options.setPageDone = function () { me.setFindHighlight(keyword); };
-                        me.pages[data.NewPage] = null;
-                        me._loadPage(data.NewPage, false);
-                    } else {
-                        me.setFindHighlight(keyword);
-                    }
-                }
-                else {
-                    if (me.findStartPage !== 1) {
-                        me.find(keyword, 1, me.findStartPage - 1);
-                        me.findStartPage = 1;
-                    }
-                    else {
-                        if (me.finding === true)
-                            alert(me.locData.messages.completeFind);
-                        else
-                            alert(me.locData.messages.keyNotFound);
-                        me.resetFind();
-                    }
-                }
-            })
-          .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
         },
         /**
          * Find the next occurance of the given keyword
@@ -1292,8 +1300,6 @@ $(function () {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 $(window).scrollTop($nextWord.offset().top - 150);
                 $(window).scrollLeft($nextWord.offset().left - 250);
-                
-                //window.scrollTo($nextWord.offset().left, $nextWord.offset().top - 100);
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -1301,11 +1307,21 @@ $(function () {
                     me.resetFind();
                     return;
                 }
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
 
-                if (me.getCurPage() + 1 <= me.getNumPages())
-                    me.find(keyword, me.getCurPage() + 1);
-                else if (me.findStartPage > 1)
-                    me.find(keyword, 1, me.findStartPage - 1);
+                if (me.getCurPage() + 1 <= endPage){
+                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                }
+                else if (me.findStartPage > 1) {
+                    me.findEndPage = me.findStartPage - 1;
+                    if (me.getCurPage() === me.findEndPage) {
+                        alert(me.locData.messages.completeFind);
+                        me.resetFind();
+                    }
+                    else {
+                        me.find(keyword, 1, me.findStartPage - 1, true);
+                    }
+                }
                 else {
                     alert(me.locData.messages.completeFind);
                     me.resetFind();
@@ -1340,8 +1356,9 @@ $(function () {
         resetFind: function () {
             var me = this;
             me.finding = false;
-            me.findStartPage = null;
             me.findKeyword = null;
+            me.findStartPage = null;
+            me.findEndPage = null;
         },
         /**
          * Export the report in the given format
@@ -1927,7 +1944,8 @@ $(function () {
             // tool click event handler
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
                 $dropdown.css("left", e.data.$tool.filter(":visible").offset().left);
-                $dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
+                //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
+                $dropdown.css("top", e.data.$tool.height());
                 $dropdown.toggle();
             });
 
@@ -2358,10 +2376,10 @@ $(function () {
         }
     };
     var btnFind = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.button,
         selectorClass: "fr-toolbar-find-button",
         sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: locData.toolbar.find,
+        imageClass: "fr-icons24x24-search",
         tooltip: locData.toolbar.find,
         events: {
             click: function (e) {
@@ -2370,29 +2388,10 @@ $(function () {
             }
         }
     };
-    var btnSeparator = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: "|&nbsp"
-    };
-    var btnFindNext = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-findnext-button",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: locData.toolbar.next,
-        tooltip: locData.toolbar.next,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
-                e.data.$reportViewer.reportViewer("findNext", value);
-            }
-        }
-    };
     var btnFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-toolbar-find-group-id",
-        tools: [btnKeyword, btnFind, btnSeparator, btnFindNext]
+        tools: [btnKeyword, btnFind]
     };
     //
     // Export tools
@@ -2480,12 +2479,12 @@ $(function () {
             }
         }
     };
-    var btnSeparator2 = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-toolbar-sparator-text",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        text: "|&nbsp"
-    };
+    //var btnSeparator2 = {
+    //    toolType: toolTypes.textButton,
+    //    selectorClass: "fr-toolbar-sparator-text",
+    //    sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+    //    text: "|&nbsp"
+    //};
     var btnZoom = {
         toolType: toolTypes.button,
         selectorClass: "fr-toolbar-zoom-button",
@@ -2585,7 +2584,7 @@ $(function () {
             // Hook up the toolbar element events
             me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
                                btnRefresh, btnFirstPage, btnPrev, btnNext,
-                               btnLastPage, btnDocumentMap, btnFind, btnFindNext, btnZoom]);
+                               btnLastPage, btnDocumentMap, btnFind, btnZoom]);
         },
         _init: function () {
             var me = this;
@@ -2597,7 +2596,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnSeparator2, btnZoom, btnPrint, btnParamarea]);
+            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnZoom, btnPrint, btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -2923,8 +2922,9 @@ $(function () {
         }
     };
     var itemFind = {
-        toolType: toolTypes.textButton,
+        toolType: toolTypes.button,
         selectorClass: "fr-item-find",
+        imageClass: "fr-icons24x24-search",
         text: locData.toolPane.find,
         events: {
             click: function (e) {
@@ -2933,28 +2933,11 @@ $(function () {
                 e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
             }
         }
-    };
-    var itemSeparator = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-item-span-sparator",
-        text: "|&nbsp"
-    };
-    var itemFindNext = {
-        toolType: toolTypes.textButton,
-        selectorClass: "fr-item-findnext",
-        text: locData.toolPane.next,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
-                e.data.$reportViewer.reportViewer("findNext", value);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-findnext"]);
-            }
-        }
-    };
+    };   
     var itemFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-item-findgroup",
-        tools: [itemKeyword, itemFind, itemSeparator, itemFindNext]
+        tools: [itemKeyword, itemFind]
     };
     var itemPrint = {
         toolType: toolTypes.containerItem,
@@ -3026,7 +3009,7 @@ $(function () {
 
             // Hook up the toolbar element events
             me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
-                            itemReportBack, itemRefresh, itemDocumentMap, itemFind, itemFindNext]);
+                            itemReportBack, itemRefresh, itemDocumentMap, itemFind]);
         },
         _init: function () {
             var me = this;
@@ -5143,7 +5126,7 @@ $(function () {
             var me = this;
 
             $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.gif");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },
@@ -5165,34 +5148,44 @@ $(function () {
         _writeParamControl: function (param, $parent) {
             var me = this;
             var $lable = new $("<div class='fr-param-label'>" + param.Name + "</div>");
+            var bindingEnter = true;
             
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
             var $element = null;
 
-            if (param.ValidValues !== "") {
-                //dropdown with checkbox
-                if (param.MultiValue === "True") {
+            if (param.MultiValue === "True") { // Allow multiple values in one textbox
+
+                if (param.ValidValues !== "") { // Dropdown with checkbox
                     $element = me._writeDropDownWithCheckBox(param);
                 }
-                else {
-                    $element = me._writeDropDownControl(param);
+                else if (param.DefaultValues !== "") { // Dropdown with editable textarea
+                    bindingEnter = false;
+                    $element = me._writeDropDownWithTextArea(param);
                 }
             }
-            else {
-                if (param.Type === "Boolean")
+            else { // Only one value allowed
+
+                if (param.ValidValues !== "") { // Dropdown box
+                    $element = me._writeDropDownControl(param);
+                }
+                else if (param.Type === "Boolean") {
+                    //Radio Button, RS will return MultiValue false even set it to true
                     $element = me._writeRadioButton(param);
-                else
+                }
+                else { // Textbox
                     $element = me._writeTextArea(param);
+                }
             }
 
-            $element.on("keydown", function (e) {
-                if (e.keyCode === 13) {
-                    me._submitForm();
-                } // Enter
-            });
-
+            if ($element !== undefined && bindingEnter) {
+                $element.on("keydown", function (e) {
+                    if (e.keyCode === 13) {
+                        me._submitForm();
+                    } // Enter
+                });               
+            }
             $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
             $parent.append($lable).append($container);
 
@@ -5278,7 +5271,7 @@ $(function () {
         _writeTextArea: function (param) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<input class='fr-param' type='text' size='30' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
+            var $control = new $("<input class='fr-param' type='text' size='100' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
             me._getParameterControlProperty(param, $control);
 
             switch (param.Type) {
@@ -5364,13 +5357,13 @@ $(function () {
 
             var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='../../Forerunner/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
 
             $(document).on("click", function (e) {
-                if ($(e.target).hasClass("ViewReport")) return;
+                if ($(e.target).hasClass("fr-param-viewreport")) return;
 
                 if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param-client") || $(e.target).hasClass(param.Name + "_DropDown_CB") || $(e.target).hasClass(param.Name + "_DropDown_lable"))) {
                     if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
@@ -5444,21 +5437,85 @@ $(function () {
 
             return $control;
         },
-        _setMultipleInputValues: function (param) {
-            var showValue = "";
-            var hiddenValue = "";
-            $("." + param.Name + "_DropDown_CB").each(function () {
-                if (this.checked && this.value !== "Select All") {
-                    showValue += $("[name='" + param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
-                    hiddenValue += this.value + ",";
+        _writeDropDownWithTextArea: function (param) {
+            var me = this;
+            var predefinedValue = me._getPredefinedValue(param);
+            me._getTextAreaValue(predefinedValue);
+            var $control = new $("<div style='display:inline-block;'/>");
+
+            var $multipleTextArea = new $("<Input type='text' class='fr-param' id='" + param.Name + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
+            me._getParameterControlProperty(param, $multipleTextArea);
+            $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
+
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
+
+            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
+
+            var $textarea = new $("<textarea name='" + param.Name + "_DropDownTextArea' class='fr-param-dropdown-textarea' />");
+            
+            $textarea.val(me._getTextAreaValue(predefinedValue, true));
+            $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+
+            //$(document).on("click", function (e) {
+            //    if ($(e.target).hasClass("fr-param-viewreport")) return;
+
+            //    if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param"))) {
+            //        if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
+            //            me._closeDropDownPanel(param);
+            //        }
+            //    }
+            //});
+
+            $dropDownContainer.append($textarea);
+            $control.append($multipleTextArea).append($openDropDown).append($dropDownContainer);
+            return $control;
+        },
+        _getTextAreaValue: function (predifinedValue, forArea) {
+            var result = "";
+            if (forArea) {
+                for (var i = 0; i < predifinedValue.length; i++) {
+                    result += predifinedValue[i] + "\n";
                 }
-            });
-            $("#" + param.Name + "_fore").val(showValue.substr(0, showValue.length - 1));
-            $("#" + param.Name + "_hidden").val(hiddenValue.substr(0, hiddenValue.length - 1));
+            }
+            else {
+                for (var i = 0; i < predifinedValue.length; i++) {
+                    result += predifinedValue[i] + ",";
+                }
+                result = result.substr(0, result.length - 1);
+            }
+            return result;
+        },
+        _setMultipleInputValues: function (param) {
+            var target = $("[name='" + param.Name + "']");
+
+            if (target.hasClass("fr-param-client")) {
+                var showValue = "";
+                var hiddenValue = "";
+                $("." + param.Name + "_DropDown_CB").each(function () {
+                    if (this.checked && this.value !== "Select All") {
+                        showValue += $("[name='" + param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
+                        hiddenValue += this.value + ",";
+                    }
+                });
+                $("#" + param.Name + "_fore").val(showValue.substr(0, showValue.length - 1));
+                $("#" + param.Name + "_hidden").val(hiddenValue.substr(0, hiddenValue.length - 1));
+            }
+            else {
+                var currentValue = target.val();
+                var newValue = $("[name='" + param.Name + "_DropDownTextArea']").val();
+                newValue=newValue.replace(/\n/g,",");
+                
+                if (newValue.charAt(newValue.length - 1) === ",") {
+                    newValue = newValue.substr(0, newValue.length - 1);
+                }
+                target.val(newValue);
+            }
         },
         _popupDropDownPanel: function(param) {
             var me = this;
-            
+            me._closeAllDropdown();
+
             var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
             var $multipleControl = $("[name='" + param.Name + "']");
             var $multipleControlParent = $multipleControl.parent();
@@ -5472,8 +5529,8 @@ $(function () {
                 $dropDown.css("top", positionTop + $multipleControlParent.height());
             }
 
-            if ($dropDown.hasClass("fr-param-dropdown-hidden")) {
-                $dropDown.width($multipleControl.width()).fadeOut("fast").removeClass("fr-param-dropdown-hidden").addClass("fr-param-dropdown-show");
+            if ($dropDown.is(":hidden")){
+                $dropDown.width($multipleControl.width()).show(10);
             }
             else {
                 me._closeDropDownPanel(param);
@@ -5481,14 +5538,12 @@ $(function () {
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            if ($("[name='" + param.Name + "_DropDownContainer']").hasClass("fr-param-dropdown-show")) {
-                $("[name='" + param.Name + "_DropDownContainer']").fadeIn("fast", function () {
+            if ($("[name='" + param.Name + "_DropDownContainer']").is(":visible")){
+                $("[name='" + param.Name + "_DropDownContainer']").hide(10, function () {
                     me._setMultipleInputValues(param);
                 });
-                $("[name='" + param.Name + "_DropDownContainer']").addClass("fr-param-dropdown-hidden").removeClass("fr-param-dropdown-show");
                 $("[name='" + param.Name + "']").focus().blur().focus();
             }
-
         },
         _closeAllDropdown: function () {
             var me = this;

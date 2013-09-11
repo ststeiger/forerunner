@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
 using Forerunner.Security;
+using ReportManager.Util.Logging;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -129,6 +130,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 mimeType = "";
                 return null;
             }
@@ -173,6 +175,7 @@ namespace Forerunner.SSRS.Viewer
                 }
                 catch (Exception e)
                 {
+                    ExceptionLogGenerator.LogException(e);
                     // Need to check the error, just retuen fail on all right now
                     w.WriteMember("Status");
                     w.WriteString("Fail");
@@ -279,6 +282,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 return JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name);
             }
@@ -298,6 +302,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -323,6 +328,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 return JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name); //return e.Message;
             }
@@ -371,6 +377,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -402,6 +409,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -432,6 +440,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -472,6 +481,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -499,6 +509,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -525,6 +536,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
@@ -616,6 +628,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                ExceptionLogGenerator.LogException(e);
                 return null;
             }
         }
@@ -669,6 +682,7 @@ namespace Forerunner.SSRS.Viewer
             catch (Exception e)
             {
                 MimeType = string.Empty;
+                ExceptionLogGenerator.LogException(e);
                 Console.WriteLine(e.Message);
                 return null;
             }

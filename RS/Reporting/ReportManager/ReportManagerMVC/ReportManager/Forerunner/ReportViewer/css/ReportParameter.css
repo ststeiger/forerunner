@@ -80,13 +80,14 @@
 .fr-param-dropdown
 {
      padding:4px;
-     margin:0px 4px 4px 4px;
+     margin:-4px 4px 4px 4px;
      border:1px solid DarkGray;
      color: black;
      overflow: auto; 
      background-color: window; 
      position: absolute; 
      z-index: 11;
+     display:none;
 }
 .fr-param-dropdown input[type="checkbox"]
 {
@@ -102,14 +103,11 @@
 {
     margin-bottom:0px;
 }
-.fr-param-dropdown-hidden
-{
-    display:none;
-}
-.fr-param-dropdown-show
-{
-    display:block;
-    margin-top:-4px;
+.fr-param-dropdown-textarea{
+    width: 95%;
+    height:80px;
+    overflow: auto;
+    padding: 2px;
 }
 .fr-param-checkbox-container
 {

@@ -153,7 +153,7 @@ $(function () {
             var me = this;
 
             $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", "../../forerunner/reportviewer/Images/calendar.gif");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.gif");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },
@@ -175,34 +175,44 @@ $(function () {
         _writeParamControl: function (param, $parent) {
             var me = this;
             var $lable = new $("<div class='fr-param-label'>" + param.Name + "</div>");
+            var bindingEnter = true;
             
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
             var $element = null;
 
-            if (param.ValidValues !== "") {
-                //dropdown with checkbox
-                if (param.MultiValue === "True") {
+            if (param.MultiValue === "True") { // Allow multiple values in one textbox
+
+                if (param.ValidValues !== "") { // Dropdown with checkbox
                     $element = me._writeDropDownWithCheckBox(param);
                 }
-                else {
-                    $element = me._writeDropDownControl(param);
+                else if (param.DefaultValues !== "") { // Dropdown with editable textarea
+                    bindingEnter = false;
+                    $element = me._writeDropDownWithTextArea(param);
                 }
             }
-            else {
-                if (param.Type === "Boolean")
+            else { // Only one value allowed
+
+                if (param.ValidValues !== "") { // Dropdown box
+                    $element = me._writeDropDownControl(param);
+                }
+                else if (param.Type === "Boolean") {
+                    //Radio Button, RS will return MultiValue false even set it to true
                     $element = me._writeRadioButton(param);
-                else
+                }
+                else { // Textbox
                     $element = me._writeTextArea(param);
+                }
             }
 
-            $element.on("keydown", function (e) {
-                if (e.keyCode === 13) {
-                    me._submitForm();
-                } // Enter
-            });
-
+            if ($element !== undefined && bindingEnter) {
+                $element.on("keydown", function (e) {
+                    if (e.keyCode === 13) {
+                        me._submitForm();
+                    } // Enter
+                });               
+            }
             $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
             $parent.append($lable).append($container);
 
@@ -288,7 +298,7 @@ $(function () {
         _writeTextArea: function (param) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<input class='fr-param' type='text' size='30' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
+            var $control = new $("<input class='fr-param' type='text' size='100' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'  name='" + param.Name + "'/>");
             me._getParameterControlProperty(param, $control);
 
             switch (param.Type) {
@@ -374,13 +384,13 @@ $(function () {
 
             var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='../../Forerunner/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
             var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
 
             $(document).on("click", function (e) {
-                if ($(e.target).hasClass("ViewReport")) return;
+                if ($(e.target).hasClass("fr-param-viewreport")) return;
 
                 if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param-client") || $(e.target).hasClass(param.Name + "_DropDown_CB") || $(e.target).hasClass(param.Name + "_DropDown_lable"))) {
                     if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
@@ -454,21 +464,85 @@ $(function () {
 
             return $control;
         },
-        _setMultipleInputValues: function (param) {
-            var showValue = "";
-            var hiddenValue = "";
-            $("." + param.Name + "_DropDown_CB").each(function () {
-                if (this.checked && this.value !== "Select All") {
-                    showValue += $("[name='" + param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
-                    hiddenValue += this.value + ",";
+        _writeDropDownWithTextArea: function (param) {
+            var me = this;
+            var predefinedValue = me._getPredefinedValue(param);
+            me._getTextAreaValue(predefinedValue);
+            var $control = new $("<div style='display:inline-block;'/>");
+
+            var $multipleTextArea = new $("<Input type='text' class='fr-param' id='" + param.Name + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
+            me._getParameterControlProperty(param, $multipleTextArea);
+            $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
+
+            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
+
+            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
+
+            var $textarea = new $("<textarea name='" + param.Name + "_DropDownTextArea' class='fr-param-dropdown-textarea' />");
+            
+            $textarea.val(me._getTextAreaValue(predefinedValue, true));
+            $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+
+            //$(document).on("click", function (e) {
+            //    if ($(e.target).hasClass("fr-param-viewreport")) return;
+
+            //    if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param"))) {
+            //        if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
+            //            me._closeDropDownPanel(param);
+            //        }
+            //    }
+            //});
+
+            $dropDownContainer.append($textarea);
+            $control.append($multipleTextArea).append($openDropDown).append($dropDownContainer);
+            return $control;
+        },
+        _getTextAreaValue: function (predifinedValue, forArea) {
+            var result = "";
+            if (forArea) {
+                for (var i = 0; i < predifinedValue.length; i++) {
+                    result += predifinedValue[i] + "\n";
                 }
-            });
-            $("#" + param.Name + "_fore").val(showValue.substr(0, showValue.length - 1));
-            $("#" + param.Name + "_hidden").val(hiddenValue.substr(0, hiddenValue.length - 1));
+            }
+            else {
+                for (var i = 0; i < predifinedValue.length; i++) {
+                    result += predifinedValue[i] + ",";
+                }
+                result = result.substr(0, result.length - 1);
+            }
+            return result;
+        },
+        _setMultipleInputValues: function (param) {
+            var target = $("[name='" + param.Name + "']");
+
+            if (target.hasClass("fr-param-client")) {
+                var showValue = "";
+                var hiddenValue = "";
+                $("." + param.Name + "_DropDown_CB").each(function () {
+                    if (this.checked && this.value !== "Select All") {
+                        showValue += $("[name='" + param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
+                        hiddenValue += this.value + ",";
+                    }
+                });
+                $("#" + param.Name + "_fore").val(showValue.substr(0, showValue.length - 1));
+                $("#" + param.Name + "_hidden").val(hiddenValue.substr(0, hiddenValue.length - 1));
+            }
+            else {
+                var currentValue = target.val();
+                var newValue = $("[name='" + param.Name + "_DropDownTextArea']").val();
+                newValue=newValue.replace(/\n/g,",");
+                
+                if (newValue.charAt(newValue.length - 1) === ",") {
+                    newValue = newValue.substr(0, newValue.length - 1);
+                }
+                target.val(newValue);
+            }
         },
         _popupDropDownPanel: function(param) {
             var me = this;
-            
+            me._closeAllDropdown();
+
             var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
             var $multipleControl = $("[name='" + param.Name + "']");
             var $multipleControlParent = $multipleControl.parent();
@@ -482,8 +556,8 @@ $(function () {
                 $dropDown.css("top", positionTop + $multipleControlParent.height());
             }
 
-            if ($dropDown.hasClass("fr-param-dropdown-hidden")) {
-                $dropDown.width($multipleControl.width()).fadeOut("fast").removeClass("fr-param-dropdown-hidden").addClass("fr-param-dropdown-show");
+            if ($dropDown.is(":hidden")){
+                $dropDown.width($multipleControl.width()).show(10);
             }
             else {
                 me._closeDropDownPanel(param);
@@ -491,14 +565,12 @@ $(function () {
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            if ($("[name='" + param.Name + "_DropDownContainer']").hasClass("fr-param-dropdown-show")) {
-                $("[name='" + param.Name + "_DropDownContainer']").fadeIn("fast", function () {
+            if ($("[name='" + param.Name + "_DropDownContainer']").is(":visible")){
+                $("[name='" + param.Name + "_DropDownContainer']").hide(10, function () {
                     me._setMultipleInputValues(param);
                 });
-                $("[name='" + param.Name + "_DropDownContainer']").addClass("fr-param-dropdown-hidden").removeClass("fr-param-dropdown-show");
                 $("[name='" + param.Name + "']").focus().blur().focus();
             }
-
         },
         _closeAllDropdown: function () {
             var me = this;

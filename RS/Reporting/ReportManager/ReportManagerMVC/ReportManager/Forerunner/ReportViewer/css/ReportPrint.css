@@ -19,7 +19,7 @@
     height: 100%;
     margin-left: auto;
     margin-right: auto;
-    overflow-y:scroll;
+    overflow-y:auto;
     overflow-x:hidden;
     background: rgb(176,192,210); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */

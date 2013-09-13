@@ -191,9 +191,10 @@ $(function () {
         },
         _addLoadingIndicator: function () {
             var me = this;
-           
-            me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+            if (me.loadLock === 0) {
+                me.loadLock = 1;
+                setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+            }
         },
         /**
          * Shows the loading Indicator
@@ -604,6 +605,7 @@ $(function () {
                 return;
             me.lock = 1;
 
+            me._addLoadingIndicator();
             me._prepareAction();
 
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {

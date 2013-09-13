@@ -249,6 +249,16 @@ $(function () {
                 
             });
 
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                var bgLayer = $(".fr-render-bglayer");
+                if (bgLayer.height() > document.documentElement.clientHeight - 38) { // 38 is toolbar height
+                    bgLayer.css("position", "absolute");
+                }
+                else {
+                    bgLayer.css("position", "fixed");
+                }
+            });
+
 
             //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {

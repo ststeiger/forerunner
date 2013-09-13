@@ -94,6 +94,7 @@ $(function () {
             me.savedTop = 0;
             me.savedLeft = 0;
             me.origionalReportPath = "";
+            me._setPageCallback = null;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -254,14 +255,30 @@ $(function () {
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-
             me.removeLoadingIndicator();
-            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone) {
-                me._trigger(events.setPageDone);
-                me.options.setPageDone = null;
-            }
             me.lock = 0;
+
+            if (typeof (me._setPageCallback) === "function") {
+                me._setPageCallback();
+                me._setPageCallback = null;
+            }
+            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
+            me._trigger(events.setPageDone);
+        },
+        _addSetPageCallback: function (func) {
+            if (typeof (func) !== "function") return;
+
+            var me = this;
+            var priorCallback = me._setPageCallback;
+
+            if (priorCallback === null) {
+                me._setPageCallback = func;
+            } else {
+                me._setPageCallback = function () {
+                    priorCallback();
+                    func();
+                }
+            }
         },
         allowZoom: function (isEnabled) {
             var me = this;
@@ -786,7 +803,7 @@ $(function () {
                     if (data.NewPage !== 0) {//keyword exist
                         me.finding = true;
                         if (data.NewPage !== me.getCurPage()) {
-                            me.options.setPageDone = function () { me.setFindHighlight(keyword); };
+                            me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
                             me.pages[data.NewPage] = null;
                             me._loadPage(data.NewPage, false);
                         } else {

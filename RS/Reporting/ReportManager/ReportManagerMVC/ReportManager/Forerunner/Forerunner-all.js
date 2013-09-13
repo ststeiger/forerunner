@@ -569,6 +569,7 @@ $(function () {
             me.savedTop = 0;
             me.savedLeft = 0;
             me.origionalReportPath = "";
+            me._setPageCallback = null;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -729,14 +730,30 @@ $(function () {
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-
             me.removeLoadingIndicator();
-            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone) {
-                me._trigger(events.setPageDone);
-                me.options.setPageDone = null;
-            }
             me.lock = 0;
+
+            if (typeof (me._setPageCallback) === "function") {
+                me._setPageCallback();
+                me._setPageCallback = null;
+            }
+            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
+            me._trigger(events.setPageDone);
+        },
+        _addSetPageCallback: function (func) {
+            if (typeof (func) !== "function") return;
+
+            var me = this;
+            var priorCallback = me._setPageCallback;
+
+            if (priorCallback === null) {
+                me._setPageCallback = func;
+            } else {
+                me._setPageCallback = function () {
+                    priorCallback();
+                    func();
+                }
+            }
         },
         allowZoom: function (isEnabled) {
             var me = this;
@@ -1261,7 +1278,7 @@ $(function () {
                     if (data.NewPage !== 0) {//keyword exist
                         me.finding = true;
                         if (data.NewPage !== me.getCurPage()) {
-                            me.options.setPageDone = function () { me.setFindHighlight(keyword); };
+                            me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
                             me.pages[data.NewPage] = null;
                             me._loadPage(data.NewPage, false);
                         } else {
@@ -3586,11 +3603,20 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
+            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+        },
+        _addPageStyle: function (reportViewer, pageStyle) {
+            var me = this;
+
+            var style = me._getStyle(reportViewer, pageStyle);
+            var bgLayer = new $("<div class='fr-render-bglayer'></div>");
+            bgLayer.attr("style", style);
+
+            me.element.append(bgLayer);
         },
         writeError: function (errorData) {
             var me = this;
@@ -6272,6 +6298,16 @@ $(function () {
                 }
 
                 
+            });
+
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                var bgLayer = $(".fr-render-bglayer");
+                if (bgLayer.height() > document.documentElement.clientHeight - 38) { // 38 is toolbar height
+                    bgLayer.css("position", "absolute");
+                }
+                else {
+                    bgLayer.css("position", "fixed");
+                }
             });
 
 

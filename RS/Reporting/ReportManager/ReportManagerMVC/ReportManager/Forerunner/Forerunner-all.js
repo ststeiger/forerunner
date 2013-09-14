@@ -569,6 +569,7 @@ $(function () {
             me.savedTop = 0;
             me.savedLeft = 0;
             me.origionalReportPath = "";
+            me._setPageCallback = null;
   
             $(window).scroll(function () { me._updateTableHeaders(me); });
 
@@ -665,9 +666,10 @@ $(function () {
         },
         _addLoadingIndicator: function () {
             var me = this;
-           
-            me.loadLock = 1;
-            setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+            if (me.loadLock === 0) {
+                me.loadLock = 1;
+                setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+            }
         },
         /**
          * Shows the loading Indicator
@@ -729,14 +731,30 @@ $(function () {
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
-
             me.removeLoadingIndicator();
-            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            if (me.options.setPageDone) {
-                me._trigger(events.setPageDone);
-                me.options.setPageDone = null;
-            }
             me.lock = 0;
+
+            if (typeof (me._setPageCallback) === "function") {
+                me._setPageCallback();
+                me._setPageCallback = null;
+            }
+            // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
+            me._trigger(events.setPageDone);
+        },
+        _addSetPageCallback: function (func) {
+            if (typeof (func) !== "function") return;
+
+            var me = this;
+            var priorCallback = me._setPageCallback;
+
+            if (priorCallback === null) {
+                me._setPageCallback = func;
+            } else {
+                me._setPageCallback = function () {
+                    priorCallback();
+                    func();
+                }
+            }
         },
         allowZoom: function (isEnabled) {
             var me = this;
@@ -1062,6 +1080,7 @@ $(function () {
                 return;
             me.lock = 1;
 
+            me._addLoadingIndicator();
             me._prepareAction();
 
             $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
@@ -1261,7 +1280,7 @@ $(function () {
                     if (data.NewPage !== 0) {//keyword exist
                         me.finding = true;
                         if (data.NewPage !== me.getCurPage()) {
-                            me.options.setPageDone = function () { me.setFindHighlight(keyword); };
+                            me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
                             me.pages[data.NewPage] = null;
                             me._loadPage(data.NewPage, false);
                         } else {
@@ -2936,11 +2955,20 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
+            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+        },
+        _addPageStyle: function (reportViewer, pageStyle) {
+            var me = this;
+
+            var style = me._getStyle(reportViewer, pageStyle);
+            var bgLayer = new $("<div class='fr-render-bglayer'></div>");
+            bgLayer.attr("style", style);
+
+            me.element.append(bgLayer);
         },
         writeError: function (errorData) {
             var me = this;
@@ -4396,7 +4424,7 @@ $(function () {
             me._paramCount = parseInt(data.Count, 10);
 
             me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
-            me._loadedForDefault = true && !me._savedParamExist;            
+            me._loadedForDefault = true && !me._savedParamExist;
             me._render();
 
             var $eleBorder = $(".fr-param-element-border");
@@ -4451,6 +4479,7 @@ $(function () {
             me._savedParamCount = 0;
 
             me._setDatePicker();
+            $(document).on("click", function (e) { me._checkExternalClick(e); });
         },
         _submitForm: function () {
             var me = this;
@@ -4475,7 +4504,7 @@ $(function () {
         _setDatePicker: function () {
             var me = this;
 
-            $.each(me.element.find('.hasDatepicker'), function (index, datePicker) {
+            $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.gif");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
@@ -4701,26 +4730,16 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<div style='display:inline-block;'/>");
 
-            var $multipleCheckBox = new $("<Input type='text' class='fr-param-client' id='" + param.Name + "_fore' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $multipleCheckBox = new $("<Input type='text' class='fr-param-client fr-param-dropdown-textbox' id='" + param.Name + "_fore' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
             me._getParameterControlProperty(param, $multipleCheckBox);
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
             var $hiddenCheckBox = new $("<Input id='" + param.Name + "_hidden' class='fr-param' type='hidden' name='" + param.Name + "' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img class='fr-param-dropdown-img' alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
-
-            $(document).on("click", function (e) {
-                if ($(e.target).hasClass("fr-param-viewreport")) return;
-
-                if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param-client") || $(e.target).hasClass(param.Name + "_DropDown_CB") || $(e.target).hasClass(param.Name + "_DropDown_lable"))) {
-                    if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
-                        me._closeDropDownPanel(param);
-                    }
-                }
-            });
+            var $dropDownContainer = new $("<div class='fr-param-dropdown' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
 
             var $table = me._getDefaultHTMLTable();
             param.ValidValues.push({ Key: "Select All", Value: "Select All" });
@@ -4744,7 +4763,7 @@ $(function () {
                 var $col = new $("<TD/>");
 
                 var $span = new $("<Span />");
-                var $checkbox = new $("<input type='checkbox' class='" + param.Name + "_DropDown_CB' id='" + param.Name + "_DropDown_" + value + "' value='" + value + "' />");
+                var $checkbox = new $("<input type='checkbox' class='fr-param-dropdown-checkbox " + param.Name + "_DropDown_CB' id='" + param.Name + "_DropDown_" + value + "' value='" + value + "' />");
 
                 if (predefinedValue && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
@@ -4767,7 +4786,7 @@ $(function () {
                     }
                 });
 
-                var $label = new $("<label for='" + param.Name + "_DropDown_" + value + "' class='" + param.Name + "_DropDown_lable" + "' name='"
+                var $label = new $("<label for='" + param.Name + "_DropDown_" + value + "' class='fr-param-dropdown-label " + param.Name + "_DropDown_lable" + "' name='"
                     + param.Name + "_DropDown_" + value + "_lable" + "'/>");
                 $label.html(key);
 
@@ -4793,29 +4812,19 @@ $(function () {
             me._getTextAreaValue(predefinedValue);
             var $control = new $("<div style='display:inline-block;'/>");
 
-            var $multipleTextArea = new $("<Input type='text' class='fr-param' id='" + param.Name + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
+            var $multipleTextArea = new $("<Input type='text' class='fr-param fr-param-dropdown-textbox' id='" + param.Name + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
             me._getParameterControlProperty(param, $multipleTextArea);
             $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $openDropDown = new $("<Img alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
+            var $openDropDown = new $("<Img class='fr-param-dropdown-img' alt='Open DropDown List' src='" + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' name='" + param.Name + "OpenDropDown' />");
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-param-dropdown-hidden' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
+            var $dropDownContainer = new $("<div class='fr-param-dropdown' name='" + param.Name + "_DropDownContainer' value='" + param.Name + "' />");
 
             var $textarea = new $("<textarea name='" + param.Name + "_DropDownTextArea' class='fr-param-dropdown-textarea' />");
             
             $textarea.val(me._getTextAreaValue(predefinedValue, true));
             $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
-
-            //$(document).on("click", function (e) {
-            //    if ($(e.target).hasClass("fr-param-viewreport")) return;
-
-            //    if (!($(e.target).hasClass("fr-param-dropdown") || $(e.target).hasClass("fr-param"))) {
-            //        if ($(e.target).attr("name") !== param.Name + "OpenDropDown") {
-            //            me._closeDropDownPanel(param);
-            //        }
-            //    }
-            //});
 
             $dropDownContainer.append($textarea);
             $control.append($multipleTextArea).append($openDropDown).append($dropDownContainer);
@@ -4829,8 +4838,8 @@ $(function () {
                 }
             }
             else {
-                for (var i = 0; i < predifinedValue.length; i++) {
-                    result += predifinedValue[i] + ",";
+                for (var j = 0; j < predifinedValue.length; j++) {
+                    result += predifinedValue[j] + ",";
                 }
                 result = result.substr(0, result.length - 1);
             }
@@ -4854,7 +4863,7 @@ $(function () {
             else {
                 var currentValue = target.val();
                 var newValue = $("[name='" + param.Name + "_DropDownTextArea']").val();
-                newValue=newValue.replace(/\n/g,",");
+                newValue=newValue.replace(/\n+/g,",");
                 
                 if (newValue.charAt(newValue.length - 1) === ",") {
                     newValue = newValue.substr(0, newValue.length - 1);
@@ -4866,21 +4875,21 @@ $(function () {
             var me = this;
             me._closeAllDropdown();
 
+            var $container = $(".fr-layout-rightpanecontent");
+            var scrollTop = $container.scrollTop();
             var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
             var $multipleControl = $("[name='" + param.Name + "']");
-            var $multipleControlParent = $multipleControl.parent();
-            var $paramContainer = me.element.find("." + paramContainerClass);
-            var positionTop = $multipleControlParent.position().top + $paramContainer.scrollTop();
+            var positionTop = $multipleControl.offset().top;
             
-            if ($paramContainer.height() - positionTop - 10 < $dropDown.height() + $multipleControlParent.height() * 2) {
-                $dropDown.css("top", positionTop - $paramContainer.position().top - $dropDown.height());
+            if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
+                $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
             }
             else {
-                $dropDown.css("top", positionTop + $multipleControlParent.height());
+                $dropDown.css("top", positionTop + $multipleControl.height() - 28 + scrollTop);
             }
 
             if ($dropDown.is(":hidden")){
-                $dropDown.width($multipleControl.width()).show(10);
+                $dropDown.width($multipleControl.width()).addClass("fr-param-dropdown-show").show(10);
             }
             else {
                 me._closeDropDownPanel(param);
@@ -4889,10 +4898,11 @@ $(function () {
         _closeDropDownPanel: function (param) {
             var me = this;
             if ($("[name='" + param.Name + "_DropDownContainer']").is(":visible")){
-                $("[name='" + param.Name + "_DropDownContainer']").hide(10, function () {
+                $("[name='" + param.Name + "_DropDownContainer']").removeClass("fr-param-dropdown-show").hide(10, function () {
                     me._setMultipleInputValues(param);
+                    //$("[name='" + param.Name + "']").focus().blur().focus();
                 });
-                $("[name='" + param.Name + "']").focus().blur().focus();
+                
             }
         },
         _closeAllDropdown: function () {
@@ -4900,6 +4910,19 @@ $(function () {
             $(".fr-param-dropdown").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
+        },
+        _checkExternalClick:function(e){
+            var me = this;
+            var $target = $(e.target);
+
+            if (!$target.hasClass("fr-param-dropdown-img") &&
+                !$target.hasClass("fr-param-dropdown-textbox") &&
+                !$target.hasClass("fr-param-dropdown") &&
+                !$target.hasClass("fr-param-dropdown-label") &&
+                !$target.hasClass("fr-param-dropdown-checkbox") &&
+                !$target.hasClass("fr-param-dropdown-textarea")) {
+                me._closeAllDropdown();
+            }
         },
         /**
          * @function $.forerunner.reportParameter#getParamList
@@ -5625,8 +5648,21 @@ $(function () {
                     $(".fr-layout-topdiv").show();
                     $viewer.reportViewer("option", "toolbarHeight", $(".fr-layout-topdiv").outerHeight());
                 }
+            });
 
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                var reportArea = $(".fr-report-areacontainer");
                 
+                if (reportArea.height() > document.documentElement.clientHeight - 38 // 38 is toolbar height
+                    || reportArea.width() > document.documentElement.clientWidth) {
+
+                    $(".fr-render-bglayer").css("position", "absolute").
+                        css("height", Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
+                        .css("width", Math.max(reportArea.width(), document.documentElement.clientWidth));
+                }
+                else {
+                    $(".fr-render-bglayer").css("position", "fixed").css("top", 38);
+                }
             });
 
 

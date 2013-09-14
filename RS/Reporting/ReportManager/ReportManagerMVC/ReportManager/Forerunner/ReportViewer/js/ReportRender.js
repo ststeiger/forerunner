@@ -57,11 +57,20 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
+            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+        },
+        _addPageStyle: function (reportViewer, pageStyle) {
+            var me = this;
+
+            var style = me._getStyle(reportViewer, pageStyle);
+            var bgLayer = new $("<div class='fr-render-bglayer'></div>");
+            bgLayer.attr("style", style);
+
+            me.element.append(bgLayer);
         },
         writeError: function (errorData) {
             var me = this;

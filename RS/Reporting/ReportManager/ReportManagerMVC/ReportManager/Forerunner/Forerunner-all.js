@@ -753,19 +753,59 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
+        _allowSwipeState : false,
+
         allowSwipe: function(isEnabled){
             var me = this;
-            
+            //$(me.element).data('swipeEnabled', isEnabled);
+            /*
             if (isEnabled === true)
                 $(me.element).swipe("enable");
             else
                 $(me.element).swipe("disable");
+            */
         },
         _touchNav: function () {
             // Touch Events
             var me = this;
-    
-  
+            $(me.element).hammer({}).on('touch',
+                function (ev) {
+                    if (!ev.gesture) return;
+                    switch (ev.type) {
+                        case 'swipeleft':
+                            if ($(me.element).data('swipeEnabled') == false)
+                                return;
+                            me.navToPage(me.curPage + 1);
+                            break;
+
+                        case 'swiperight':
+                            if ($(me.element).data('swipeEnabled') == false)
+                                return;
+                            me.navToPage(me.curPage - 1);
+                            break;
+
+                        case 'dragstart':
+                            me._updateTableHeaders(me);
+                            break;
+
+                        case 'dragend':
+                            me._hideTableHeaders();
+                            break;
+                        case 'touch':
+                            if ($(me.element).data('swipeEnabled') == false)
+                                return;
+
+                            if (ev.gesture['direction'] == 'left') {
+                                me.navToPage(me.curPage + 1);
+                            } else if (ev.gesture['direction'] == 'right') {
+                                me.navToPage(me.curPage - 1);
+                            }
+                      
+                            break;
+                    }
+                }
+            );
+            /*
             $(me.element).swipe({
                 fallbackToMouseEvents: false,
                 allowPageScroll: "auto",
@@ -786,7 +826,8 @@ $(function () {
                 },
 
 
-            });
+            });*/
+
         },
         /**
          * Refreshes the current report

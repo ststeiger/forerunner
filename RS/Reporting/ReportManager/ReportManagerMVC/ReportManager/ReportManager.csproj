@@ -154,6 +154,7 @@
     <Content Include="Forerunner\Common\css\icons24x24.css" />
     <Content Include="Forerunner\Common\images\ForerunnerLogo.jpg" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
+    <Content Include="Forerunner\Common\js\forerunner-tools.js" />
     <Content Include="Forerunner\Forerunner-all.js">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>

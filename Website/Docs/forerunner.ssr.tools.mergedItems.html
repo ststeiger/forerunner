@@ -64,7 +64,7 @@
 </div>
 
 <div id="main">
-    <h1 class="page-title">Namespace: toolbar</h1>
+    <h1 class="page-title">Namespace: mergedItems</h1>
     
 
 
@@ -73,9 +73,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
+        <span class="ancestors"><a href="forerunner.html">forerunner</a><a href="forerunner.ssr.html">.ssr</a><a href="forerunner.ssr.tools.html">.tools</a>.</span>
     
-    toolbar
+    mergedItems
     </h2>
     
 </header>  
@@ -86,132 +86,11 @@
     
     
         
-            <div class="description">Toobar widget used by the reportViewer</div>
+            <div class="description">Defines all the tools that are merged into the Report Viewer Toolpanewhen the Report Viewer is created via the report Explorer. If the ReportViewer is created directly then these tools will not be merged.</div>
         
         
         
 <dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The options for toolbar
-                <h6>Properties</h6>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>$reportViewer</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The report viewer widget</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>toolClass</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The top level class for this tool (E.g., fr-toolbar)</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
     
         
     
@@ -233,7 +112,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/Toolbar.js, line 17
+        Common/js/forerunner-tools.js, line 754
     </li></ul></dd>
     
     
@@ -245,11 +124,6 @@
 </dl>
 
         
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>$("#toolbarId").toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar"});Note: Toolbar can be extended by calling the addTools method defined by <a href="$.forerunner.toolBase.html">$.forerunner.toolBase</a></code></pre>
-
         
     
     </div>
@@ -264,6 +138,110 @@
     
     
     
+    
+        <h3 class="subsection-title">Members</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="itemFav"><span class="type-signature">&lt;static> </span>itemFav<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        Common/js/forerunner-tools.js, line 769
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="itemHome"><span class="type-signature">&lt;static> </span>itemHome<span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    
+
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        Common/js/forerunner-tools.js, line 756
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        </dl>
     
     
     

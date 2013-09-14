@@ -2225,318 +2225,9 @@ $(function () {
     // Useful namespaces
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-    var exportType = forerunner.ssr.constants.exportType;
+    var tb = forerunner.ssr.tools.toolbar;
+    var tg = forerunner.ssr.tools.groups;
 
-    // Tool Info data
-    var btnReportBack = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-reportback-button",
-        imageClass: "fr-icons24x24-reportback",
-        tooltip: locData.toolbar.back,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("back");
-            }
-        }
-    };
-    var btnMenu = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-menu-button",
-        imageClass: "fr-icons24x24-menu",
-        tooltip: locData.toolbar.menu,
-        events: {
-            click: function (e) {
-                e.data.me._trigger(events.menuClick, null, {});
-            }
-        }
-    };
-    var btnNav = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-nav-button",
-        imageClass: "fr-icons24x24-nav",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium",
-        tooltip: locData.toolbar.navigation,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showNav");
-            }
-        }
-    };
-    var btnParamarea = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-paramarea-button",
-        imageClass: "fr-icons24x24-paramarea",
-        tooltip: locData.toolbar.paramarea,
-        events: {
-            click: function (e) {
-                e.data.me._trigger(events.paramAreaClick, null, {});
-            }
-        }
-    };
-   
-    var btnRefresh = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-refresh-button",
-        imageClass: "fr-icons24x24-refresh",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        tooltip: locData.toolbar.refresh,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("refreshReport");
-            }
-        }
-    };
-    var btnFirstPage = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-firstpage-button",
-        imageClass: "fr-icons24x24-firstpage",
-        sharedClass: "fr-toolbar-hidden-on-small",
-        tooltip: locData.toolbar.firstPage,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", 1);
-            }
-        }
-    };
-    var btnPrev = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-prev-button",
-        imageClass: "fr-icons24x24-prev",
-        sharedClass: "fr-toolbar-hidden-on-small",
-        tooltip: locData.toolbar.previousPage,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
-            }
-        }
-    };
-    var btnReportPage = {
-        toolType: toolTypes.input,
-        selectorClass: "fr-toolbar-reportpage-textbox",
-        inputType: "number",
-        tooltip: locData.toolbar.reportPage,
-        events: {
-            keydown: function (e) {
-                if (e.keyCode === 13 || e.keyCode === 9) {
-                    e.data.$reportViewer.reportViewer("navToPage", this.value);
-                    return false;
-                }
-            },
-            click: function (e) {
-                e.target.select();
-            }
-        }
-    };
-    var btnPageOf = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-pageOf-button",
-        text: locData.toolbar.pageOf
-    };
-    var btnNumPages = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-numPages-button",
-        text: "0"
-    };
-    var btnNext = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-next-button",
-        imageClass: "fr-icons24x24-next",
-        sharedClass: "fr-toolbar-hidden-on-small",
-        tooltip: locData.toolbar.next,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
-            }
-        }
-    };
-    var btnLastPage = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-lastpage-button",
-        imageClass: "fr-icons24x24-lastpage",
-        sharedClass: "fr-toolbar-hidden-on-small",
-        tooltip: locData.toolbar.lastPage,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
-            }
-        }
-    };
-    var btnVCRGroup = {
-        toolType: toolTypes.toolGroup,
-        selectorClass: "fr-toolbar-VCR-group-id",
-        tools: [btnFirstPage, btnPrev, btnReportPage, btnPageOf, btnNumPages, btnNext, btnLastPage]
-    };
-    var btnDocumentMap = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-documentmap-button",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        imageClass: "fr-icons24x24-documentmap",
-        tooltip: locData.toolbar.docMap,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showDocMap");
-            }
-        }
-    };
-    var btnKeyword = {
-        toolType: toolTypes.input,
-        selectorClass: "fr-toolbar-keyword-textbox",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        tooltip: locData.toolbar.keyword,
-        events: {
-            keydown: function (e) {
-                if (e.keyCode === 13 || e.keyCode === 9) {
-                    e.data.$reportViewer.reportViewer("find", $.trim(this.value));
-                    return false;
-                }
-            }
-        }
-    };
-    var btnFind = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-find-button",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        imageClass: "fr-icons24x24-search",
-        tooltip: locData.toolbar.find,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-toolbar-keyword-textbox").val());
-                e.data.$reportViewer.reportViewer("find", value);
-            }
-        }
-    };
-    var btnFindGroup = {
-        toolType: toolTypes.toolGroup,
-        selectorClass: "fr-toolbar-find-group-id",
-        tools: [btnKeyword, btnFind]
-    };
-    //
-    // Export tools
-    var btnExportXML = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportXML-id",
-        imageClass: "fr-icons24x24-exportXML",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.xml,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
-            }
-        }
-    };
-    var btnExportCSV = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportCSV-id",
-        imageClass: "fr-icons24x24-exportCSV",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.csv,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
-            }
-        }
-    };
-    var btnExportPDF = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportPDF-id",
-        imageClass: "fr-icons24x24-exportPDF",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.pdf,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
-            }
-        }
-    };
-    var btnExportMHTML = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportMHTML-id",
-        imageClass: "fr-icons24x24-exportMHT",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.mhtml,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
-            }
-        }
-    };
-    var btnExportExcel = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportExcel-id",
-        imageClass: "fr-icons24x24-exportExcel",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.excel,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
-            }
-        }
-    };
-    var btnExportTiff = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportTiff-id",
-        imageClass: "fr-icons24x24-exportTIFF",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.tiff,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
-            }
-        }
-    };
-    var btnExportWord = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-button-exportWord-id",
-        imageClass: "fr-icons24x24-exportWord",
-        sharedClass: "fr-toolbase-dropdown-item",
-        text: locData.exportType.word,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.word);
-            }
-        }
-    };
-    //var btnSeparator2 = {
-    //    toolType: toolTypes.textButton,
-    //    selectorClass: "fr-toolbar-sparator-text",
-    //    sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-    //    text: "|&nbsp"
-    //};
-    var btnZoom = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-zoom-button",
-        imageClass: "fr-icons24x24-zoom",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        tooltip: locData.toolPane.zoom,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("allowZoom", true);
-            }
-        }
-    };
-    var btnExport = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-export-button",
-        imageClass: "fr-icons24x24-export",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        tooltip: locData.toolbar.exportMenu,
-        dropdown: true,
-        tools: [btnExportXML, btnExportCSV, btnExportPDF, btnExportMHTML, btnExportExcel, btnExportTiff, btnExportWord],
-    };
-    var btnPrint = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-toolbar-print-button",
-        imageClass: "fr-icons24x24-printreport",
-        sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-        tooltip: locData.toolbar.print,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showPrint");
-            }
-        }
-    };
 
     /**
      * Toobar widget used by the reportViewer
@@ -2569,7 +2260,7 @@ $(function () {
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
                 if (data.paramLoaded === false)
-                    me.disableTools([btnParamarea]);
+                    me.disableTools([tb.btnParamarea]);
                
             });
 
@@ -2578,12 +2269,12 @@ $(function () {
             });
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
-                me.enableTools([btnParamarea]);
+                me.enableTools([tb.btnParamarea]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([btnDocumentMap, btnMenu, btnReportBack]);
+                me.enableTools([tb.btnDocumentMap, tb.btnMenu, tb.btnReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -2593,7 +2284,7 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
                 if (data.open) {
                     me.disableAllTools();
-                    me.enableTools([btnNav, btnMenu]);
+                    me.enableTools([tb.btnNav, tb.btnMenu]);
                 }
                 else {
                     me.enableAllTools();
@@ -2601,9 +2292,9 @@ $(function () {
             });
 
             // Hook up the toolbar element events
-            me.enableTools([btnMenu, btnParamarea, btnNav, btnReportBack,
-                               btnRefresh, btnFirstPage, btnPrev, btnNext,
-                               btnLastPage, btnDocumentMap, btnFind, btnZoom]);
+            me.enableTools([tb.btnMenu, tb.btnParamarea, tb.btnNav, tb.btnReportBack,
+                               tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom]);
         },
         _init: function () {
             var me = this;
@@ -2615,7 +2306,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [btnMenu, btnReportBack, btnNav, btnRefresh, btnVCRGroup, btnDocumentMap, btnExport, btnFindGroup, btnZoom, btnPrint, btnParamarea]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -2627,27 +2318,27 @@ $(function () {
             me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
-                me.enableTools([btnDocumentMap]);
+                me.enableTools([tb.btnDocumentMap]);
             else
-                me.disableTools([btnDocumentMap]);
+                me.disableTools([tb.btnDocumentMap]);
 
             if (curPage <= 1) {
-                me.disableTools([btnPrev, btnFirstPage]);
+                me.disableTools([tb.btnPrev, tb.btnFirstPage]);
             }
             else {
-                me.enableTools([btnPrev, btnFirstPage]);
+                me.enableTools([tb.btnPrev, tb.btnFirstPage]);
             }
 
             if (curPage >= maxPage) {
-                me.disableTools([btnNext, btnLastPage]);
+                me.disableTools([tb.btnNext, tb.btnLastPage]);
             }
             else {
-                me.enableTools([btnNext, btnLastPage]);
+                me.enableTools([tb.btnNext, tb.btnLastPage]);
             }
             if (maxPage ===1 )
-                me.disableTools([btnNav]);
+                me.disableTools([tb.btnNav]);
             else
-                me.enableTools([btnNav]);
+                me.enableTools([tb.btnNav]);
         },
         _clearBtnStates: function () {
             var me = this;
@@ -2674,302 +2365,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-    var exportType = forerunner.ssr.constants.exportType;
-
-    // Tool Info data
-    var itemNav = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-id-nav",
-        imageClass: "fr-icons24x24-nav",
-        text: locData.toolPane.navigation,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showNav");
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-nav"]);
-            }
-        }
-    };
-    var itemZoom = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-item-zoom",
-        imageClass: "fr-icons24x24-zoom",
-        text: locData.toolPane.zoom,
-        events: {
-            click: function (e) {                
-                e.data.$reportViewer.reportViewer("allowZoom",true);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
-                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-zoom"]);
-            }
-        }
-    };
-    var itemReportBack = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-id-reportback",
-        imageClass: "fr-icons24x24-reportback",
-        text: locData.toolPane.back,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("back");
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-reportback"]);
-            }
-        }
-    };
-    var itemRefresh = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-id-refresh",
-        imageClass: "fr-icons24x24-refresh",
-        text: locData.toolPane.refresh,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("refreshReport");
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-refresh"]);
-            }
-        }
-    };
-    var itemFirstPage = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-id-firstpage",
-        imageClass: "fr-icons24x24-firstpage",
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", 1);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-firstpage"]);
-            }
-        }
-    };
-    var itemPrev = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-id-prev",
-        imageClass: "fr-icons24x24-prev",
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-prev"]);
-            }
-        }
-    };
-    var itemReportPage = {
-        toolType: toolTypes.input,
-        selectorClass: "fr-item-textbox-reportpage",
-        inputType: "number",
-        events: {
-            keydown: function (e) {
-                if (e.keyCode === 13 || e.keyCode === 9) {
-                    e.data.$reportViewer.reportViewer("navToPage", this.value);
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
-                    return false;
-                }
-            }
-        }
-    };
-    var itemPageOf = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-pageOf-button",
-        text: locData.toolPane.pageOf
-    };
-    var itemNumPages = {
-        toolType: toolTypes.plainText,
-        selectorClass: "fr-toolbar-numPages-button",
-        text: ""
-    };
-    var itemNext = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-id-next",
-        imageClass: "fr-icons24x24-next",
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-next"]);
-            }
-        }
-    };
-    var itemLastPage = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-id-lastpage",
-        imageClass: "fr-icons24x24-lastpage",
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-lastpage"]);
-            }
-        }
-    };
-    var itemVCRGroup = {
-        toolType: toolTypes.toolGroup,
-        selectorClass: "fr-item-VCRgroup",
-        tools: [itemFirstPage, itemPrev, itemReportPage, itemPageOf, itemNumPages, itemNext, itemLastPage]
-    };
-    var itemDocumentMap = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-id-documentmap",
-        imageClass: "fr-icons24x24-documentmap",
-        text: locData.toolPane.docMap,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showDocMap");
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-id-documentmap"]);
-            }
-        }
-    };
-    //
-    // Export group
-    var itemExportXML = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportXML",
-        text: locData.exportType.xml,
-        selectorClass: "fr-item-exportXML",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
-            }
-        }
-    };
-    var itemExportCSV = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportCSV",
-        text: locData.exportType.csv,
-        selectorClass: "fr-item-exportCSV",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
-            }
-        }
-    };
-    var itemExportPDF = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportPDF",
-        text: locData.exportType.pdf,
-        selectorClass: "fr-item-exportPDF",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
-            }
-        }
-    };
-    var itemExportMHTML = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportMHT",
-        text: locData.exportType.mhtml,
-        selectorClass: "fr-item-exportMHTML",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
-            }
-        }
-    };
-    var itemExportExcel = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportExcel",
-        text: locData.exportType.excel,
-        selectorClass: "fr-item-exportExcel",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
-            }
-        }
-    };
-    var itemExportTiff = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportTIFF",
-        text: locData.exportType.tiff,
-        selectorClass: "fr-item-exportTiff",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
-            }
-        }
-    };
-    var itemExportWord = {
-        toolType: toolTypes.containerItem,
-        imageClass: "fr-icons24x24-exportWord",
-        text: locData.exportType.word,
-        selectorClass: "fr-item-exportWord",
-        indent: 1,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("exportReport", exportType.word);
-            }
-        }
-    };
-    var itemExportGroup = {
-        toolType: toolTypes.toolGroup,
-        visible: false,
-        selectorClass: "fr-item-export-group",
-        tools: [itemExportXML, itemExportCSV, itemExportPDF, itemExportMHTML, itemExportExcel, itemExportTiff, itemExportWord]
-    };
-    var itemExport = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-item-export",
-        imageClass: "fr-icons24x24-export",
-        text: locData.toolbar.exportMenu,
-        rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
-        accordionGroup: itemExportGroup,
-        events: {
-            click: function (e) {
-                var toolInfo = e.data.me.allTools["fr-item-export"];
-                var $rightIcon = e.data.me.element.find("." + "fr-toolpane-icon16x16");
-                $rightIcon.toggleClass("fr-toolpane-down-icon");
-                $rightIcon.toggleClass("fr-toolpane-up-icon");
-
-                var accordionGroup = toolInfo.accordionGroup;
-                var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
-                $accordionGroup.toggle();
-            }
-        }
-    };
-    //
-    // Find group
-    var itemKeyword = {
-        toolType: toolTypes.input,
-        selectorClass: "fr-item-textbox-keyword",
-        events: {
-            keydown: function (e) {
-                if (e.keyCode === 13 || e.keyCode === 9) {
-                    e.data.$reportViewer.reportViewer("find", $.trim(this.value));
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
-                    return false;
-                }
-            }
-        }
-    };
-    var itemFind = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-item-find",
-        imageClass: "fr-icons24x24-search",
-        text: locData.toolPane.find,
-        events: {
-            click: function (e) {
-                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
-                e.data.$reportViewer.reportViewer("find", value);
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
-            }
-        }
-    };   
-    var itemFindGroup = {
-        toolType: toolTypes.toolGroup,
-        selectorClass: "fr-item-findgroup",
-        tools: [itemKeyword, itemFind]
-    };
-    var itemPrint = {
-        toolType: toolTypes.containerItem,
-        selectorClass: "fr-item-printreport",
-        imageClass: "fr-icons24x24-printreport",
-        text: locData.toolPane.print,
-        events: {
-            click: function (e) {
-                e.data.$reportViewer.reportViewer("showPrint");
-                e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-printreport"]);
-            }
-        }
-    };
+    var tp = forerunner.ssr.tools.toolpane;
+    var tg = forerunner.ssr.tools.groups;
 
     /**
      * ToolPane widget used with the reportViewer
@@ -3009,7 +2406,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([itemDocumentMap, itemReportBack]);
+                me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -3019,7 +2416,7 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
                 if (data.open) {
                     me.disableAllTools();
-                    me.enableTools([itemNav]);
+                    me.enableTools([tp.itemNav]);
                 }
                 else {
                     me.enableAllTools();
@@ -3027,8 +2424,8 @@ $(function () {
             });
 
             // Hook up the toolbar element events
-            me.enableTools([itemFirstPage, itemPrev, itemNext, itemLastPage, itemNav,
-                            itemReportBack, itemRefresh, itemDocumentMap, itemFind]);
+            me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
+                            tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
         },
         _init: function () {
             var me = this;
@@ -3039,7 +2436,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [itemVCRGroup, itemNav, itemReportBack, itemRefresh, itemDocumentMap,itemZoom, itemExport, itemExportGroup, itemPrint, itemFindGroup]);
+            me.addTools(1, true, [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap,tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup]);
 
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -3052,27 +2449,27 @@ $(function () {
 
             me.options.$reportViewer.reportViewer("getNumPages", curPage);
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
-                me.enableTools([itemDocumentMap]);
+                me.enableTools([tp.itemDocumentMap]);
             else
-                me.disableTools([itemDocumentMap]);
+                me.disableTools([tp.itemDocumentMap]);
 
             if (curPage > 1) {
-                me.enableTools([itemPrev, itemFirstPage]);
+                me.enableTools([tp.itemPrev, tp.itemFirstPage]);
             }
             else {
-                me.disableTools([itemPrev, itemFirstPage]);
+                me.disableTools([tp.itemPrev, tp.itemFirstPage]);
             }
 
             if (curPage < maxPage) {
-                me.enableTools([itemNext, itemLastPage]);
+                me.enableTools([tp.itemNext, tp.itemLastPage]);
             }
             else {
-                me.disableTools([itemNext, itemLastPage]);
+                me.disableTools([tp.itemNext, tp.itemLastPage]);
             }
             if (maxPage === 1)
-                me.disableTools([itemNav]);
+                me.disableTools([tp.itemNav]);
             else
-                me.enableTools([itemNav]);
+                me.enableTools([tp.itemNav]);
         },
         _clearItemStates: function () {
             var me = this;
@@ -3241,55 +2638,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var widgets = forerunner.ssr.constants.widgets;
-
-    // Button Info
-    var btnHome = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-home",
-        imageClass: "fr-icons24x24-home",
-        tooltip: locData.toolbar.home,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("home", null);
-            }
-        }
-    };
-    var btnBack = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-button-back",
-        imageClass: "fr-icons24x24-back",
-        tooltip: locData.toolbar.back,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("back", null);
-            }
-        }
-    };
-    var btnFav = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-fav",
-        imageClass: "fr-icons24x24-favorite",
-        tooltip: locData.toolbar.favorites,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("favorites", null);
-            }
-        }
-    };
-    var btnRecent = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-recent",
-        imageClass: "fr-icons24x24-recent",
-        tooltip: locData.toolbar.recent,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("recent", null);
-            }
-        }
-    };
+    var tb = forerunner.ssr.tools.reportExplorerToolbar;
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -3313,7 +2663,7 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([btnHome, btnBack, btnFav, btnRecent]);
+            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
         },
         _init: function () {
             var me = this;
@@ -3326,7 +2676,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [btnBack, btnHome, btnFav, btnRecent]);
+            me.addTools(1, true, [tb.btnBack, tb.btnHome, tb.btnFav, tb.btnRecent]);
             me._initCallbacks();
         },
 
@@ -6489,45 +5839,11 @@ $(function () {
             var $toolbar = me.options.$toolbar;
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this });
 
+            var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
-                var btnHome = {
-                    toolType: toolTypes.button,
-                    selectorClass: "fr-button-home",
-                    sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
-                    imageClass: "fr-icons24x24-home",
-                    tooltip: locData.toolbar.home,
-                    events: {
-                        click: function (e) {
-                            me.options.navigateTo("home", null);
-                        }
-                    }
-                };
-                $toolbar.toolbar("addTools", 12, true, [btnHome]);
-
-                var btnFav = {
-                    toolType: toolTypes.button,
-                    selectorClass: "fr-button-update-fav",
-                    sharedClass: "fr-toolbar-hidden-on-small",
-                    imageClass: "fr-icons24x24-favorite-minus",
-                    tooltip: locData.toolbar.favorites,
-                    events: {
-                        click: function (e) {
-                            var action = "add";
-                            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus"))
-                                action = "delete";
-                            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
-                                view: "favorites",
-                                action: action,
-                                path: $viewer.reportViewer("option", "reportPath")
-                            }).done(function (data) {
-                                me.updateFavoriteState.call(me, action === "add");
-                            })
-                            .fail(function () { alert("Failed"); });
-                        }
-                    }
-                };
-                $toolbar.toolbar("addTools", 3, true, [btnFav]);
-                $toolbar.toolbar("disableTools", [btnFav]);
+                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnFavorite]);
+                $toolbar.toolbar("addTools", 3, true, [tb.btnFav]);
+                $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
             // Let the report viewer know the height of the toolbar
@@ -6535,36 +5851,16 @@ $(function () {
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                $lefttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide" });
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
-                $righttoolbar.toolbar({ $reportViewer: $viewer, toolClass: "fr-toolbar-slide" });
+                $righttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide" });
             }
 
             if (me.options.isReportManager) {
-                var btnSavParam = {
-                    toolType: toolTypes.button,
-                    selectorClass: "fr-button-save-param",
-                    imageClass: "fr-icons24x24-save-param",
-                    parameterWidget: me.options.$paramarea,
-                    events: {
-                        click: function (e) {
-                            var parameterList = e.data.me.getTool("fr-button-save-param").parameterWidget.reportParameter("getParamsList");
-                            if (parameterList) {
-                                $.getJSON(me.options.ReportManagerAPI + "/SaveUserParameters", {
-                                    reportPath: $viewer.reportViewer("option", "reportPath"),
-                                    parameters: parameterList,
-                                }).done(function (Data) {
-                                    alert("Saved");
-                                })
-                                .fail(function () { alert("Failed"); });
-                            }
-                        }
-                    }
-                };
-                $righttoolbar.toolbar("addTools", 2, true, [btnSavParam]);
+                $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
                 $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
                     $.ajax({
                         url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
@@ -6577,54 +5873,19 @@ $(function () {
                     });
 
                 });
-
             }
 
-
             // Create / render the menu pane
-            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer });
+            var tp = forerunner.ssr.tools.mergedItems;
+            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this });
             if (me.options.isReportManager) {
-                var itemHome = {
-                    toolType: toolTypes.containerItem,
-                    selectorClass: "fr-id-home",
-                    sharedClass: "fr-toolbase-no-disable-id",
-                    imageClass: "fr-icons24x24-home",
-                    text: locData.toolPane.home,
-                    events: {
-                        click: function (e) {
-                            me.options.navigateTo("home", null);
-                        }
-                    }
-                };
-                $toolPane.toolPane("addTools", 2, true, [itemHome]);
+                $toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
 
-                var itemFav = {
-                    toolType: toolTypes.containerItem,
-                    selectorClass: "fr-item-update-fav",
-                    imageClass: "fr-icons24x24-favorite-minus",
-                    text: locData.toolPane.favorites,
-                    events: {
-                        click: function (e) {
-                            var action = "add";
-                            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus"))
-                                action = "delete";
-                            e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-update-fav"]);
-                            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
-                                view: "favorites",
-                                action: action,
-                                path: me.options.ReportPath
-                            }).done(function (data) {
-                                me.updateFavoriteState.call(me, action === "add");
-                            })
-                            .fail(function () { alert("Failed"); });
-                        }
-                    }
-                };
-                $toolPane.toolPane("addTools", 4, true, [itemFav]);
-                $toolPane.toolPane("disableTools", [itemFav]);
+                $toolPane.toolPane("addTools", 4, true, [tp.itemFav]);
+                $toolPane.toolPane("disableTools", [tp.itemFav]);
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                    $toolPane.toolPane("enableTools", [itemFav]);
-                    $toolbar.toolbar("enableTools", [btnFav]);
+                    $toolPane.toolPane("enableTools", [tp.itemFav]);
+                    $toolbar.toolbar("enableTools", [tb.btnFav]);
                 });
 
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
@@ -6684,6 +5945,47 @@ $(function () {
                         me.$itemFavorite.hide();
                     }
                 }
+            });
+        },
+        onClickBtnFavorite: function (e) {
+            var me = this;
+            var $toolbar = e.data.me;
+
+            var action = "add";
+            if (me.$btnFavorite.hasClass("fr-icons24x24-favorite-minus")) {
+                action = "delete";
+            }
+
+            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
+                view: "favorites",
+                action: action,
+                path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath")
+            }).done(function (data) {
+                me.updateFavoriteState.call(me, action === "add");
+            })
+            .fail(function () {
+                alert("Failed");
+            });
+        },
+        onClickItemFavorite: function (e) {
+            var me = this;
+            var $toolpane = e.data.me;
+
+            var action = "add";
+            if (me.$itemFavorite.hasClass("fr-icons24x24-favorite-minus")) {
+                action = "delete";
+            }
+
+            $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
+            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
+                view: "favorites",
+                action: action,
+                path: me.options.ReportPath
+            }).done(function (data) {
+                me.updateFavoriteState.call(me, action === "add");
+            })
+            .fail(function () {
+                alert("Failed");
             });
         },
         updateFavoriteState: function (isFavorite) {

@@ -69,7 +69,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#304d84', end
   line-height:36px;
   text-align:center;  
 }
-.fr-button-home, .fr-toolbar-paramarea-button {
+.fr-button-home, .fr-toolbar-paramarea-button, .fr-button-favorite {
     float:right;
 }
 
@@ -93,14 +93,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#304d84', end
 }
 
 /* Large toolbar (E.g., for larger phones, landscape) */
-@media only screen and (min-width : 568px) and (max-width : 767px) {
+@media only screen and (min-width : 568px) and (max-width : 768px) {
   .fr-toolbar-hidden-on-large {
     display: none;
   }
 }
 
 /* Full toolbar (I.e., width of greater than or equal to 768 devices) */
-@media only screen and (min-width : 768px) {
+@media only screen and (min-width : 769px) {
   .fr-toolbar-menu-button {
     display: none;
   }

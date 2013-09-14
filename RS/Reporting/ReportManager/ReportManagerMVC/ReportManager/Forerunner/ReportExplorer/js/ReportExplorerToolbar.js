@@ -9,55 +9,8 @@ var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
-    var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     var widgets = forerunner.ssr.constants.widgets;
-
-    // Button Info
-    var btnHome = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-home",
-        imageClass: "fr-icons24x24-home",
-        tooltip: locData.toolbar.home,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("home", null);
-            }
-        }
-    };
-    var btnBack = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-button-back",
-        imageClass: "fr-icons24x24-back",
-        tooltip: locData.toolbar.back,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("back", null);
-            }
-        }
-    };
-    var btnFav = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-fav",
-        imageClass: "fr-icons24x24-favorite",
-        tooltip: locData.toolbar.favorites,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("favorites", null);
-            }
-        }
-    };
-    var btnRecent = {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-recent",
-        imageClass: "fr-icons24x24-recent",
-        tooltip: locData.toolbar.recent,
-        events: {
-            click: function (e) {
-                e.data.me.options.navigateTo("recent", null);
-            }
-        }
-    };
+    var tb = forerunner.ssr.tools.reportExplorerToolbar;
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -81,7 +34,7 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
 
             // Hook up the toolbar element events
-            me.enableTools([btnHome, btnBack, btnFav, btnRecent]);
+            me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
         },
         _init: function () {
             var me = this;
@@ -94,7 +47,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [btnBack, btnHome, btnFav, btnRecent]);
+            me.addTools(1, true, [tb.btnBack, tb.btnHome, tb.btnFav, tb.btnRecent]);
             me._initCallbacks();
         },
 

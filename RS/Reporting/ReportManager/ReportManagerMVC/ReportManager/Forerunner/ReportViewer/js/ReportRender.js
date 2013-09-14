@@ -358,7 +358,7 @@ $(function () {
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
-            Style += "margin:0;display: table-cell;";            
+            Style += "margin:0;display: table-cell;float:right;";            
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
 
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);

@@ -5,7 +5,6 @@
     right:0px;
     position:fixed;
     z-index:10;
-    overflow:auto;
     display:none;
 }
 .fr-print-page{
@@ -16,8 +15,11 @@
 }
 .fr-print-innerPage{
     width: 260px;
+    max-width:320px;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
+    overflow-y:auto;
     overflow-x:hidden;
     background: rgb(176,192,210); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */
@@ -31,7 +33,7 @@
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0c0d2', endColorstr='#dae3ea',GradientType=1 ); /* IE6-8 */
 }
 .fr-print-layout{
-    margin-top: 10%;
+    margin-top:100px;
 }
 .fr-print-title{
     text-align:left;
@@ -55,6 +57,7 @@
 }
 .fr-print-unit-label{
     width:40px;
+    margin:4px;
     font-size:0.8em;
 }
 .fr-print-text{
@@ -110,10 +113,10 @@
 
 
 /* Smartphones (landscape) ----------- */
-@media only screen and (max-device-height : 320px) and (min-device-width : 400px) and (orientation : landscape) {
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
      .fr-print-layout{
-        margin-top: 25px;
-        max-height: 220px;
+        margin-top: 50px;
+        max-height: 200px;
         overflow-y: auto;
     }
 }
@@ -128,7 +131,7 @@
 }
 
 /* For phone with 845 * 480 ------------- */
-@media only screen and (max-width:480px) and (min-height: 780px) and (orientation: portrait){
+@media only screen and (max-width:480px) and (min-height: 800px) and (orientation: portrait){
     .fr-print-layout{
         margin-top:50px;
         max-height:480px;
@@ -137,7 +140,7 @@
 }
 
 /* For phone with 845 * 480 ------------- */
-@media only screen and (max-height:480px) and (min-width:780px) and (orientation: landscape){
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape){
     .fr-print-layout{
         margin-top:50px;
         max-height:320px;
@@ -146,19 +149,19 @@
 }
 
 /* iPads (landscape) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1280px) and (orientation : landscape) {
+@media only screen and (min-device-height : 768px) and (max-device-width : 1280px) and (orientation : landscape) {
     .fr-print-layout{
         margin-top: 50px;
-        max-height: 320px;
+        max-height: 360px;
         overflow-y: auto;
-    }
+    } 
 }
 
 /* iPads (portrait) ----------- */
-@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+@media only screen and (max-device-width : 768px) and (min-device-height : 1024px) and (orientation : portrait) {
       .fr-print-layout{
         margin-top: 50px;
-        max-height: 320px;
+        max-height: 540px;
         overflow-y: auto;
     }
 }
@@ -167,19 +170,22 @@
 @media only screen and (min-width : 1224px) {
     /* Styles */
     .fr-print-layout{
-        max-height: 320px;
+        max-height: 600px;
+        overflow-y: auto;
+        margin-top: 100px;
+    }
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:landscape) {
+    .fr-print-layout{
+        max-height: 200px;
         overflow-y: auto;
         margin-top: 50px;
     }
 }
 
-/* Large screens ----------- */
-@media only screen and (min-width : 1824px) {
-    
-}
-
-/* iPhone 4 ----------- */
-@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:portrait) {
     .fr-print-layout{
         max-height: 320px;
         overflow-y: auto;

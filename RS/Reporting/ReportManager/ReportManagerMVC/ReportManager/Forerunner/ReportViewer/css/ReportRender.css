@@ -33,14 +33,14 @@
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
+    transform: rotate(90deg);   
 }
 .fr-rotate-270{
    -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
   -o-transform: rotate(270deg);
-  transform: rotate(270deg);
+  transform: rotate(270deg);  
 }
 .fr-render-error-details {
     cursor:pointer;
@@ -76,16 +76,16 @@
     list-style-type:square;
 }
 .fr-render-list-disc{
-    list-style-type:disc;
+    list-style-type:disc;   
 }
 .fr-render-list-decimal{
-    list-style-type:decimal;
+    list-style-type:decimal;    
 }
-.fr-render-list-.lower-roman {
-    list-style-type:lower-roman;
+.fr-render-list-lower-roman {
+    list-style-type:lower-roman;    
 }
 .fr-render-list-lower-latin {
-    list-style-type:lower-latin;
+    list-style-type:lower-latin;    
 }
 
 

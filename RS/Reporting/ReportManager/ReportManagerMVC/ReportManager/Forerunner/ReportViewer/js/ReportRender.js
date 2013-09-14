@@ -358,7 +358,7 @@ $(function () {
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
             Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
-            Style += "margin:0;display: table-cell;float:right;";            
+            Style += "margin:0;display: table-cell;";            
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
 
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
@@ -391,7 +391,7 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-
+                Style += "float: right";
                 //Build paragraph tree
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {

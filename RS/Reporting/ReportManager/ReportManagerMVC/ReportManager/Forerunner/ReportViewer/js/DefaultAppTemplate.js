@@ -245,8 +245,21 @@ $(function () {
                     $(".fr-layout-topdiv").show();
                     $viewer.reportViewer("option", "toolbarHeight", $(".fr-layout-topdiv").outerHeight());
                 }
+            });
 
+            $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
+                var reportArea = $(".fr-report-areacontainer");
                 
+                if (reportArea.height() > document.documentElement.clientHeight - 38 // 38 is toolbar height
+                    || reportArea.width() > document.documentElement.clientWidth) {
+
+                    $(".fr-render-bglayer").css("position", "absolute").
+                        css("height", Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
+                        .css("width", Math.max(reportArea.width(), document.documentElement.clientWidth));
+                }
+                else {
+                    $(".fr-render-bglayer").css("position", "fixed").css("top", 38);
+                }
             });
 
 

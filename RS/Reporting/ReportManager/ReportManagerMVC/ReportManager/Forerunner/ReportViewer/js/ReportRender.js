@@ -57,11 +57,20 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-
-            reportDiv.attr("Style", me._getStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle));
+            
             $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
+            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+        },
+        _addPageStyle: function (reportViewer, pageStyle) {
+            var me = this;
+
+            var style = me._getStyle(reportViewer, pageStyle);
+            var bgLayer = new $("<div class='fr-render-bglayer'></div>");
+            bgLayer.attr("style", style);
+
+            me.element.append(bgLayer);
         },
         writeError: function (errorData) {
             var me = this;
@@ -348,8 +357,8 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style += "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
-            Style += "display: table-cell;";
+            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            Style += "margin:0;display: table-cell;";            
             Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
 
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
@@ -361,6 +370,8 @@ $(function () {
                 Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
                 $TextObj.addClass(dirClass);
             }
+            else
+                Style += "width:100%;height:100%;";
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
@@ -380,7 +391,7 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-
+                Style += "float: right";
                 //Build paragraph tree
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
@@ -418,25 +429,30 @@ $(function () {
             $.each(Paragraphs[Index], function (SubIndex, Obj) {
                 if (Obj.Parent === ParentName) {
                     var $ParagraphItem;
+                    var ParagraphStyle = "font-size:small;";
                     Obj = Obj.Value;
-                    if (Obj.Paragraph.SharedElements.ListStyle === 1) {
-                        if (!$ParagraphList || !$ParagraphList.is("ol")) $ParagraphList = new $("<OL />");
-                        $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
 
+                    if (Obj.Paragraph.SharedElements.ListStyle === 1) {
+                        if (!$ParagraphList || !$ParagraphList.is("ol"))
+                            $ParagraphList = new $("<OL />");
+                        $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
                         $ParagraphItem = new $("<LI />");
+                        //ParagraphStyle = "font-size:small;"
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
-                        if (!$ParagraphList || !$ParagraphList.is("ul")) $ParagraphList = new $("<UL />");
+                        if (!$ParagraphList || !$ParagraphList.is("ul"))
+                            $ParagraphList = new $("<UL />");
                         $ParagraphList.addClass(me._getListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
-
                         $ParagraphItem = new $("<LI />");
+                        //ParagraphStyle = "font-size:small;"
                     }
                     else {
-                        if (!$ParagraphList || !$ParagraphList.is("div")) $ParagraphList = new $("<DIV />");
+                        if (!$ParagraphList || !$ParagraphList.is("div"))
+                            $ParagraphList = new $("<DIV />");
                         $ParagraphItem = new $("<DIV />");
                     }
 
-                    var ParagraphStyle = "font-size: 0;";
+                    
                     ParagraphStyle += me._getMeasurements(me._getMeasurmentsObj(Obj, Index));
                     ParagraphStyle += me._getElementsStyle(RIContext.RS, Obj.Paragraph);
                     $ParagraphItem.attr("Style", ParagraphStyle);

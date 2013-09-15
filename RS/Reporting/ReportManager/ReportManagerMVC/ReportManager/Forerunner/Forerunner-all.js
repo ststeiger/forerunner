@@ -3257,8 +3257,7 @@ $(function () {
 
             Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
             Style += "margin:0;display: table-cell;";            
-            Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-
+            
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
                 Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Width + "mm;";
@@ -3274,7 +3273,7 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    //Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
@@ -3289,7 +3288,8 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right";
+                Style += "float: right";  //fixed padding problem in table cells
+                Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
@@ -3327,22 +3327,20 @@ $(function () {
             $.each(Paragraphs[Index], function (SubIndex, Obj) {
                 if (Obj.Parent === ParentName) {
                     var $ParagraphItem;
-                    var ParagraphStyle = "font-size:small;";
+                    var ParagraphStyle = "font-size:small;"; //needed for paragraph spacing 
                     Obj = Obj.Value;
 
                     if (Obj.Paragraph.SharedElements.ListStyle === 1) {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
                         $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
-                        $ParagraphItem = new $("<LI />");
-                        //ParagraphStyle = "font-size:small;"
+                        $ParagraphItem = new $("<LI />");                        
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
                             $ParagraphList = new $("<UL />");
                         $ParagraphList.addClass(me._getListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
                         $ParagraphItem = new $("<LI />");
-                        //ParagraphStyle = "font-size:small;"
                     }
                     else {
                         if (!$ParagraphList || !$ParagraphList.is("div"))

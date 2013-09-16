@@ -505,3 +505,4 @@ Test/_UpgradeReport_Files/UpgradeReport.xslt
 Test/_UpgradeReport_Files/UpgradeReport_Minus.gif
 Test/_UpgradeReport_Files/UpgradeReport_Plus.gif
 Setup/Build/TextWriterOutput.log
+Setup/Build/bin

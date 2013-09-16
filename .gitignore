@@ -518,3 +518,11 @@ Setup/Build/Forerunner/ReportViewer/css/ReportRender.css
 Setup/Build/Forerunner/ReportViewer/css/Toolbar.css
 Setup/Build/Views/Debug/Index.cshtml
 Setup/Build/Views/Home/Index.cshtml
+Setup/Build/favicon.ico
+Setup/Build/favicon.png
+Setup/Build/Forerunner/Forerunner-all.min.js
+Setup/Build/Forerunner/ReportViewer/css/DefaultAppTemplate.css
+Setup/Build/Forerunner/ReportViewer/css/ReportParameter.css
+Setup/Build/Forerunner/ReportViewer/css/ReportPrint.css
+Setup/Build/Forerunner/ReportViewer/css/ReportRender.css
+Setup/Build/Forerunner/ReportViewer/css/ToolPane.css

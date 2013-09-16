@@ -96,7 +96,13 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
   
-            $(window).scroll(function () { me._updateTableHeaders(me); });
+            var isTouch = forerunner.device.isTouch();
+            // For touch device, update the header only on scrollstop.
+            if (isTouch) {
+                $(window).bind('scrollstop', function () { me._updateTableHeaders(me); });
+            } else {
+                $(window).scroll(function () { me._updateTableHeaders(me); });
+            }
 
             //Log in screen if needed
 
@@ -300,7 +306,7 @@ $(function () {
 
         allowSwipe: function(isEnabled){
             var me = this;
-            //$(me.element).data('swipeEnabled', isEnabled);
+            $(me.element).data('swipeEnabled', isEnabled);
             /*
             if (isEnabled === true)
                 $(me.element).swipe("enable");
@@ -311,66 +317,38 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on('touch',
+            $(me.element).hammer({}).on('swipe drag touch release',
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
-                        case 'swipeleft':
-                            if ($(me.element).data('swipeEnabled') == false)
-                                return;
-                            me.navToPage(me.curPage + 1);
-                            break;
-
-                        case 'swiperight':
-                            if ($(me.element).data('swipeEnabled') == false)
-                                return;
-                            me.navToPage(me.curPage - 1);
-                            break;
-
-                        case 'dragstart':
-                            me._updateTableHeaders(me);
-                            break;
-
-                        case 'dragend':
+                        // Hide the header on touch
+                        case 'touch':
                             me._hideTableHeaders();
                             break;
-                        case 'touch':
+                        // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
+                        case 'swipe':
+                        case 'drag':
                             if ($(me.element).data('swipeEnabled') == false)
                                 return;
 
-                            if (ev.gesture['direction'] == 'left') {
+                            if (ev.gesture['direction'] == 'left' && ev.gesture['velocityX'] > 0.2) {
                                 me.navToPage(me.curPage + 1);
-                            } else if (ev.gesture['direction'] == 'right') {
+                            }
+
+                            if (ev.gesture['direction'] == 'right' && ev.gesture['velocityX'] > 0.2) {
                                 me.navToPage(me.curPage - 1);
                             }
-                      
+                            
+                            break;
+                        // Show the header on release only if this is not scrolling.
+                        // If it is scrolling, we will let scrollstop handle that.
+                        case 'release':
+                            if (ev.gesture['velocityX'] == 0 && ev.gesture['velocityY'] == 0)
+                                me._updateTableHeaders(me);
                             break;
                     }
                 }
             );
-            /*
-            $(me.element).swipe({
-                fallbackToMouseEvents: false,
-                allowPageScroll: "auto",
-                swipe: function (event, direction, distance, duration, fingerCount) {            
-                    if (direction === "left" || direction === "up")
-                        me.navToPage(me.curPage + 1);
-                    else
-                        me.navToPage(me.curPage - 1);
-                },
-                swipeStatus: function (event, phase, direction, distance) {
-                    if (phase === "start")
-                        me._hideTableHeaders();                   
-                    if (phase === "end")
-                        me._updateTableHeaders(me);
-                },
-                tap: function (event, target) {
-                    $(target).trigger("click");
-                },
-
-
-            });*/
-
         },
         /**
          * Refreshes the current report

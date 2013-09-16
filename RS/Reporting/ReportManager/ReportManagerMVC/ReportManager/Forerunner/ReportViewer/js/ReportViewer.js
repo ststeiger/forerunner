@@ -496,6 +496,9 @@ $(function () {
                 me._removeParameters();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                if (action.FlushCache) {
+                    me.flushCache();
+                }
                 me._loadParameters(action.CurrentPage);
                 //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 

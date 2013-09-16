@@ -226,6 +226,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-pt.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ro.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ru.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-sw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />

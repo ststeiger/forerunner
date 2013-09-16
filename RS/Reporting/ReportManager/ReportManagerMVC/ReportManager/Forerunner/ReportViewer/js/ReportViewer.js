@@ -278,7 +278,7 @@ $(function () {
                 me._setPageCallback = function () {
                     priorCallback();
                     func();
-                }
+                };
             }
         },
         allowZoom: function (isEnabled) {

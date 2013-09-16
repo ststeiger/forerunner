@@ -279,7 +279,7 @@ $(function () {
                 me._setPageCallback = function () {
                     priorCallback();
                     func();
-                }
+                };
             }
         },
         allowZoom: function (isEnabled) {
@@ -407,7 +407,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { alert("Fail"); }
+                    fail: function () { me._showMessageBox("Fail"); }
                 });
             }
 
@@ -497,6 +497,9 @@ $(function () {
                 me._removeParameters();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                if (action.FlushCache) {
+                    me.flushCache();
+                }
                 me._loadParameters(action.CurrentPage);
                 //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
@@ -554,7 +557,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { alert("Fail"); }
+                    fail: function () { me._showMessageBox("Fail"); }
                 });
             }
         },
@@ -770,7 +773,7 @@ $(function () {
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
             if (me.finding && !findInNewPage) {
-                me.findNext(keyword);
+                me._findNext(keyword);
             }
             else {
                 if (keyword === "") return;
@@ -789,7 +792,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     return;
                 }
 
@@ -820,9 +823,9 @@ $(function () {
                         }
                         else {
                             if (me.finding === true)
-                                alert(me.locData.messages.completeFind);
+                                me._showMessageBox(me.locData.messages.completeFind);
                             else
-                                alert(me.locData.messages.keyNotFound);
+                                me._showMessageBox(me.locData.messages.keyNotFound);
                             me.resetFind();
                         }
                     }
@@ -836,7 +839,7 @@ $(function () {
          * @function $.forerunner.reportViewer#findNext
          * @param {String} keyword - Keyword to find
          */
-        findNext: function (keyword) {
+        _findNext: function (keyword) {
             var me = this;
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
@@ -848,7 +851,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -860,7 +863,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        alert(me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind);
                         me.resetFind();
                     }
                     else {
@@ -868,7 +871,7 @@ $(function () {
                     }
                 }
                 else {
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -997,6 +1000,14 @@ $(function () {
 
             //List all modal dialog need to close here.
             me.options.printArea.reportPrint("closePrintPane");
+            $(".fr-render-messagebox").hide();
+        },
+        _showMessageBox: function (msg) {
+            var me = this;
+            me.insertMaskLayer(function () {
+                $(".fr-render-messagebox-msg").html(msg);
+                $(".fr-render-messagebox").show();
+            });
         },
         //Page Loading
         _loadParameters: function (pageNum) {
@@ -1126,7 +1137,9 @@ $(function () {
             })
             .done(function (data) {
                 me._writePage(data, newPageNum, loadOnly);
-                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                if (data.ReportContainer) {
+                    me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                }
 
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(
@@ -2486,6 +2499,7 @@ $(function () {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+            me._addMessageBox();
         },
         _addPageStyle: function (reportViewer, pageStyle) {
             var me = this;
@@ -2496,44 +2510,72 @@ $(function () {
 
             me.element.append(bgLayer);
         },
+        _addMessageBox: function () {
+            var me = this;
+            var $messageBox = new $("<div class='fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
+                "<div class='fr-render-messagebox-header'><span class='fr-render-messagebox-title'>Notice</span></div>" +
+                "<div class='fr-render-messagebox-content'><span class='fr-render-messagebox-msg'/></div>" +
+                "<div class='fr-render-messagebox-buttongroup'>" +
+                "<input class='fr-render-messagebox-button fr-render-messagebox-close' name='close' type='button' value='close' />" +
+                "</div></div>");
+
+            $("body").append($messageBox);
+
+            $(".fr-render-messagebox-close").on("click", function () {
+                me.options.reportViewer.removeMaskLayer(function () {
+                    $(".fr-render-messagebox-msg").val();
+                    $messageBox.hide();
+                });
+            });
+        },
         writeError: function (errorData) {
             var me = this;
-            //var errorTag = forerunner.ssr.constants.errorTag;
             var errorTag = me.options.reportViewer.locData.errorTag;
 
-            me.element.html($(
-                "<div class='fr-render-error-message'></div>" +
-                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
-                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
-                "<div class='fr-render-error fr-render-error-type'></div>" +
-                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
-                "<div class='fr-render-error fr-render-error-source'></div>" +
-                "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
-                "</div>"));
+            if (errorData.Exception.Type === "LicenseException") {
+                //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
+                var licenseError = new $("<div class='fr-render-error-license'>" +
+                    "<div class='fr-render-error-license-container'><h3>Your mobilizer is expired or not registe, "+
+                    "go to Forerunner Offical Site to get the latest build.</h3>"+
+                    "<a href='http://www.forerunnersw.com'>Go to Forerunner</a></div></div>");
 
-            if (me.options.reportViewer) {
-                var $cell;
+                me.element.html(licenseError);
+            }
+            else {
+                me.element.html($(
+               "<div class='fr-render-error-message'></div>" +
+               "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
+               "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-type'></div>" +
+               "<div class='fr-render-error fr-render-error-targetsite'></div>" +
+               "<div class='fr-render-error fr-render-error-source'></div>" +
+               "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
+               "</div>"));
 
-                $cell = me.element.find(".fr-render-error");
-                $cell.hide();
+                if (me.options.reportViewer) {
+                    var $cell;
 
-                $cell = me.element.find(".fr-render-error-details");
-                $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+                    $cell = me.element.find(".fr-render-error");
+                    $cell.hide();
 
-                $cell = me.element.find(".fr-render-error-type");
-                $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
+                    $cell = me.element.find(".fr-render-error-details");
+                    $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
 
-                $cell = me.element.find(".fr-render-error-targetsite");
-                $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
+                    $cell = me.element.find(".fr-render-error-type");
+                    $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
 
-                $cell = me.element.find(".fr-render-error-source");
-                $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
+                    $cell = me.element.find(".fr-render-error-targetsite");
+                    $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
 
-                $cell = me.element.find(".fr-render-error-message");
-                $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+                    $cell = me.element.find(".fr-render-error-source");
+                    $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
 
-                $cell = me.element.find(".fr-render-error-stacktrace");
-                $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+                    $cell = me.element.find(".fr-render-error-message");
+                    $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+
+                    $cell = me.element.find(".fr-render-error-stacktrace");
+                    $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+                }
             }
         },
         _writeSection: function (RIContext) {
@@ -2783,8 +2825,7 @@ $(function () {
 
             Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
             Style += "margin:0;display: table-cell;";            
-            Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-
+            
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
                 Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Width + "mm;";
@@ -2800,7 +2841,7 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    //Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
@@ -2815,7 +2856,8 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right";
+                Style += "float: right";  //fixed padding problem in table cells
+                Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
@@ -2853,22 +2895,20 @@ $(function () {
             $.each(Paragraphs[Index], function (SubIndex, Obj) {
                 if (Obj.Parent === ParentName) {
                     var $ParagraphItem;
-                    var ParagraphStyle = "font-size:small;";
+                    var ParagraphStyle = "font-size:small;"; //needed for paragraph spacing 
                     Obj = Obj.Value;
 
                     if (Obj.Paragraph.SharedElements.ListStyle === 1) {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
                         $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
-                        $ParagraphItem = new $("<LI />");
-                        //ParagraphStyle = "font-size:small;"
+                        $ParagraphItem = new $("<LI />");                        
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
                             $ParagraphList = new $("<UL />");
                         $ParagraphList.addClass(me._getListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
                         $ParagraphItem = new $("<LI />");
-                        //ParagraphStyle = "font-size:small;"
                     }
                     else {
                         if (!$ParagraphList || !$ParagraphList.is("div"))
@@ -5087,7 +5127,7 @@ $(function () {
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
                 me.wasZoomed = false;
-             }
+            }
         },
         wasZoomed: false,
         isZoomed: function(){
@@ -5133,7 +5173,15 @@ $(function () {
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
+
             var heightValues = me.getHeightValues();
+
+            // Setting the min-height allows the iPhone to scroll the left and right panes
+            // properly even when the report has not been loaded due to paramters not being
+            // entered or is very small
+            if (forerunner.device.isiPhone()) {
+                $("body").css({ minHeight: heightValues.max });
+            }
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: heightValues.max });

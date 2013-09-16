@@ -5106,6 +5106,7 @@ $(function () {
 
             // Start out by adding the height of the location bar to the height
             if (forerunner.device.isiOS()) {
+
                 // iOS reliably returns the innerWindow size for documentElement.clientHeight
                 // but window.innerHeight is sometimes the wrong value after rotating the orientation
                 values.windowHeight = document.documentElement.clientHeight;

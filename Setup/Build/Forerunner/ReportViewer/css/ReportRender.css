@@ -33,14 +33,14 @@
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
+    transform: rotate(90deg);   
 }
 .fr-rotate-270{
    -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
   -o-transform: rotate(270deg);
-  transform: rotate(270deg);
+  transform: rotate(270deg);  
 }
 .fr-render-error-details {
     cursor:pointer;
@@ -76,16 +76,16 @@
     list-style-type:square;
 }
 .fr-render-list-disc{
-    list-style-type:disc;
+    list-style-type:disc;   
 }
 .fr-render-list-decimal{
-    list-style-type:decimal;
+    list-style-type:decimal;    
 }
-.fr-render-list-.lower-roman {
-    list-style-type:lower-roman;
+.fr-render-list-lower-roman {
+    list-style-type:lower-roman;    
 }
 .fr-render-list-lower-latin {
-    list-style-type:lower-latin;
+    list-style-type:lower-latin;    
 }
 
 
@@ -110,4 +110,72 @@
 {
     background-color:Highlight;
     color:HighlightText;
+}
+.fr-render-bglayer
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: -1;
+}
+.fr-render-messagebox
+{
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    position:fixed;
+    z-index:10;
+    display:none;
+}
+.fr-render-messagebox-innerpage
+{
+    width:400px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:50px;
+    background-color:white;
+}
+.fr-render-messagebox-header
+{
+    background-color:#35afe3;
+    color:white;
+    height:30px;
+    padding:4px;
+}
+.fr-render-messagebox-title
+{
+    margin:4px;
+    display:block;
+}
+.fr-render-messagebox-content
+{
+    min-height:80px;
+    padding:4px;
+   border-bottom:1px dotted #35afe3;
+}
+.fr-render-messagebox-msg
+{
+    margin:4px;
+    width:100%;
+    height:100%;
+    display:block;
+}
+.fr-render-messagebox-buttongroup
+{
+    height:40px;
+}
+.fr-render-messagebox-button
+{
+    padding:4px;
+    margin:8px;
+    width:76px;
+    text-align:center;
+    cursor:pointer;
+    float:right;
+    color:white;
+    font-weight:700;
+    background-color:#35afe3;
 }

@@ -149,6 +149,24 @@
   <ItemGroup>
     <Content Include="CSS\Login.css" />
     <Content Include="CSS\ReportManager.css" />
+    <Content Include="Forerunner\Bundles\Forerunner-tools.js">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.js">
+      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js">
+      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner.js">
+      <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner.min.js">
+      <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
@@ -210,6 +228,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-pt.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ro.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-ru.txt" />
+    <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-sw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
@@ -269,10 +288,28 @@
     <Content Include="JSdoc\buildDocs.cmd" />
     <Content Include="JSdoc\conf.json" />
     <Content Include="Forerunner.snk" />
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.js.bundle">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Forerunner\Forerunner-all.js.bundle">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Debug\Index.cshtml" />
+    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
+      <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
+      <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
+      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Forerunner-all.min.js.map">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>

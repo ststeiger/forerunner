@@ -1,0 +1,5 @@
+# Files in these folders are generated as part of the build and not maintained in Git
+TestResults/
+packages/
+bin/
+obj/

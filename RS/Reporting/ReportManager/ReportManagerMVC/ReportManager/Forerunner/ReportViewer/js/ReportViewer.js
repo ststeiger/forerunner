@@ -406,7 +406,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { alert("Fail"); }
+                    fail: function () { me._showMessageBox("Fail"); }
                 });
             }
 
@@ -496,6 +496,9 @@ $(function () {
                 me._removeParameters();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                if (action.FlushCache) {
+                    me.flushCache();
+                }
                 me._loadParameters(action.CurrentPage);
                 //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
@@ -553,7 +556,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { alert("Fail"); }
+                    fail: function () { me._showMessageBox("Fail"); }
                 });
             }
         },
@@ -769,7 +772,7 @@ $(function () {
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
             if (me.finding && !findInNewPage) {
-                me.findNext(keyword);
+                me._findNext(keyword);
             }
             else {
                 if (keyword === "") return;
@@ -788,7 +791,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     return;
                 }
 
@@ -819,9 +822,9 @@ $(function () {
                         }
                         else {
                             if (me.finding === true)
-                                alert(me.locData.messages.completeFind);
+                                me._showMessageBox(me.locData.messages.completeFind);
                             else
-                                alert(me.locData.messages.keyNotFound);
+                                me._showMessageBox(me.locData.messages.keyNotFound);
                             me.resetFind();
                         }
                     }
@@ -835,7 +838,7 @@ $(function () {
          * @function $.forerunner.reportViewer#findNext
          * @param {String} keyword - Keyword to find
          */
-        findNext: function (keyword) {
+        _findNext: function (keyword) {
             var me = this;
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
@@ -847,7 +850,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -859,7 +862,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        alert(me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind);
                         me.resetFind();
                     }
                     else {
@@ -867,7 +870,7 @@ $(function () {
                     }
                 }
                 else {
-                    alert(me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -996,6 +999,14 @@ $(function () {
 
             //List all modal dialog need to close here.
             me.options.printArea.reportPrint("closePrintPane");
+            $(".fr-render-messagebox").hide();
+        },
+        _showMessageBox: function (msg) {
+            var me = this;
+            me.insertMaskLayer(function () {
+                $(".fr-render-messagebox-msg").html(msg);
+                $(".fr-render-messagebox").show();
+            });
         },
         //Page Loading
         _loadParameters: function (pageNum) {
@@ -1125,7 +1136,9 @@ $(function () {
             })
             .done(function (data) {
                 me._writePage(data, newPageNum, loadOnly);
-                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                if (data.ReportContainer) {
+                    me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                }
 
                 if (!me.element.is(":visible") && !loadOnly)
                     me.element.show();  //scrollto does not work with the slide in functions:(

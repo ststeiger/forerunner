@@ -62,6 +62,7 @@ $(function () {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+            me._addMessageBox();
         },
         _addPageStyle: function (reportViewer, pageStyle) {
             var me = this;
@@ -72,44 +73,72 @@ $(function () {
 
             me.element.append(bgLayer);
         },
+        _addMessageBox: function () {
+            var me = this;
+            var $messageBox = new $("<div class='fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
+                "<div class='fr-render-messagebox-header'><span class='fr-render-messagebox-title'>Notice</span></div>" +
+                "<div class='fr-render-messagebox-content'><span class='fr-render-messagebox-msg'/></div>" +
+                "<div class='fr-render-messagebox-buttongroup'>" +
+                "<input class='fr-render-messagebox-button fr-render-messagebox-close' name='close' type='button' value='close' />" +
+                "</div></div>");
+
+            $("body").append($messageBox);
+
+            $(".fr-render-messagebox-close").on("click", function () {
+                me.options.reportViewer.removeMaskLayer(function () {
+                    $(".fr-render-messagebox-msg").val();
+                    $messageBox.hide();
+                });
+            });
+        },
         writeError: function (errorData) {
             var me = this;
-            //var errorTag = forerunner.ssr.constants.errorTag;
             var errorTag = me.options.reportViewer.locData.errorTag;
 
-            me.element.html($(
-                "<div class='fr-render-error-message'></div>" +
-                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
-                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
-                "<div class='fr-render-error fr-render-error-type'></div>" +
-                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
-                "<div class='fr-render-error fr-render-error-source'></div>" +
-                "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
-                "</div>"));
+            if (errorData.Exception.Type === "LicenseException") {
+                //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
+                var licenseError = new $("<div class='fr-render-error-license'>" +
+                    "<div class='fr-render-error-license-container'><h3>Your mobilizer is expired or not registe, "+
+                    "go to Forerunner Offical Site to get the latest build.</h3>"+
+                    "<a href='http://www.forerunnersw.com'>Go to Forerunner</a></div></div>");
 
-            if (me.options.reportViewer) {
-                var $cell;
+                me.element.html(licenseError);
+            }
+            else {
+                me.element.html($(
+               "<div class='fr-render-error-message'></div>" +
+               "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
+               "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-type'></div>" +
+               "<div class='fr-render-error fr-render-error-targetsite'></div>" +
+               "<div class='fr-render-error fr-render-error-source'></div>" +
+               "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
+               "</div>"));
 
-                $cell = me.element.find(".fr-render-error");
-                $cell.hide();
+                if (me.options.reportViewer) {
+                    var $cell;
 
-                $cell = me.element.find(".fr-render-error-details");
-                $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+                    $cell = me.element.find(".fr-render-error");
+                    $cell.hide();
 
-                $cell = me.element.find(".fr-render-error-type");
-                $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
+                    $cell = me.element.find(".fr-render-error-details");
+                    $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
 
-                $cell = me.element.find(".fr-render-error-targetsite");
-                $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
+                    $cell = me.element.find(".fr-render-error-type");
+                    $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
 
-                $cell = me.element.find(".fr-render-error-source");
-                $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
+                    $cell = me.element.find(".fr-render-error-targetsite");
+                    $cell.html("<h4>" + errorTag.targetSite + ":</h4>" + errorData.Exception.TargetSite);
 
-                $cell = me.element.find(".fr-render-error-message");
-                $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+                    $cell = me.element.find(".fr-render-error-source");
+                    $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
 
-                $cell = me.element.find(".fr-render-error-stacktrace");
-                $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+                    $cell = me.element.find(".fr-render-error-message");
+                    $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+
+                    $cell = me.element.find(".fr-render-error-stacktrace");
+                    $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);
+                }
             }
         },
         _writeSection: function (RIContext) {

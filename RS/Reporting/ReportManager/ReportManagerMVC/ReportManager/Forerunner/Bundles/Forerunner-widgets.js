@@ -5127,7 +5127,7 @@ $(function () {
                 var $viewer = $(".fr-layout-reportviewer", me.$container);
                 $viewer.reportViewer("allowZoom", false);
                 me.wasZoomed = false;
-             }
+            }
         },
         wasZoomed: false,
         isZoomed: function(){
@@ -5173,7 +5173,15 @@ $(function () {
             //if (!me.isZoomed())
             //    $viewer.reportViewer("allowZoom", false);
 
+
             var heightValues = me.getHeightValues();
+
+            // Setting the min-height allows the iPhone to scroll the left and right panes
+            // properly even when the report has not been loaded due to paramters not being
+            // entered or is very small
+            if (forerunner.device.isiPhone()) {
+                $("body").css({ minHeight: heightValues.max });
+            }
 
             $(".fr-layout-mainviewport", me.$container).css({ height: "100%" });
             $(".fr-layout-leftpane", me.$container).css({ height: heightValues.max });

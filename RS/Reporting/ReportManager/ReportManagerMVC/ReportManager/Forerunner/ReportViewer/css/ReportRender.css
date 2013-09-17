@@ -120,3 +120,30 @@
     top: 0;
     z-index: -1;
 }
+.fr-render-error-license
+{
+    margin:16px 8px;
+    width:100%;
+    position:absolute;
+    font-size:16px;
+    font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.fr-render-error-license-title
+{
+    margin:0px 4px;
+    padding:4px;
+    color:lightslategray;
+}
+.fr-render-error-license-link
+{
+    width:200px;
+    margin:8px;
+    padding:6px 0px 6px 18px;
+    background-color:#35afe3;
+}
+.fr-render-error-license-link a
+{
+    text-decoration:none;
+    color:white;
+    font-size:1.2em;
+}

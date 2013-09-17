@@ -79,9 +79,9 @@ $(function () {
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
                 var licenseError = new $("<div class='fr-render-error-license'>" +
-                    "<div class='fr-render-error-license-container'><h3>Your mobilizer is expired or not registe, "+
-                    "go to Forerunner Offical Site to get the latest build.</h3>"+
-                    "<a href='http://www.forerunnersw.com'>Go to Forerunner</a></div></div>");
+                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thanks for using Forerunner mobilizer, your mobilizer is expired or not registe.<br/> " +
+                    "Please go to Forerunner Offical Site to get the latest build.</h3>"+
+                    "<div class='fr-render-error-license-link'><a href='http://www.forerunnersw.com'><strong>Go to Forerunner !<strong></a></div></div></div>");
 
                 me.element.html(licenseError);
             }

@@ -469,10 +469,7 @@ $(function () {
     forerunner.device = {
         /** @return {bool} Returns a boolean that indicates if the device is a touch device */
         isTouch: function () {
-            var ua = navigator.userAgent;
-            return !!("ontouchstart" in window) // works on most browsers
-                || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
+            return ("ontouchstart" in window) || (navigator.msMaxTouchPoints > 0);
         },
         /** @return {bool} Returns a boolean that indicates if the device is in portrait */
         isPortrait: function () {
@@ -565,6 +562,21 @@ $(function () {
                 return false;
         },
     };
+
+    $(document).ready(function () {
+        // Update all dynamic styles
+        var isTouchRule = {
+            selector: ".fr-toolbase-hide-if-not-touch",
+            properties: function () {
+                var pairs = { display: "none" };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = null;
+                }
+                return pairs;
+            }
+        };
+        forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+    });
     
 });
 

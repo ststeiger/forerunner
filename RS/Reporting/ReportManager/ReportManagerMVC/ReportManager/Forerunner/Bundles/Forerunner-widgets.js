@@ -1733,7 +1733,6 @@ $(function () {
         },
         _destroy: function () {
         },
-
         _create: function () {
         },
     });  // $.widget

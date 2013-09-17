@@ -308,7 +308,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbase-hide-if-not-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolPane.zoom,
             events: {
                 click: function (e) {
@@ -355,6 +355,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-zoom",
             imageClass: "fr-icons24x24-zoom",
+            sharedClass: "fr-toolbase-hide-if-not-touch",
             text: locData.toolPane.zoom,
             events: {
                 click: function (e) {                

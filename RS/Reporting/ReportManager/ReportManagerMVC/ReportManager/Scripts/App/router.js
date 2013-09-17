@@ -94,6 +94,19 @@ var ApplicationRouter = Backbone.Router.extend({
 // This call essential starts the application. It will Load the initial Application Page View
 // and then start the Backbone Router processing (I.e., g_App.router)
 $(document).ready(function () {
+    // Update all dynamic styles
+    var isTouchRule = {
+        selector: ".fr-toolbase-hide-if-not-touch",
+        properties: function () {
+            var pairs = { display: "none" };
+            if (forerunner.device.isTouch()) {
+                pairs.display = null;
+            }
+            return pairs;
+        }
+    };
+    forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+
     // Create the application Router 
     g_App.router = new ApplicationRouter();
     Backbone.history.length = 0;

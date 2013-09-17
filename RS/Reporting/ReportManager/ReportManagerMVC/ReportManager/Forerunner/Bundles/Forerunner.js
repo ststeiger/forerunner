@@ -563,6 +563,95 @@ $(function () {
         },
     };
 
+    /**
+    * Defines utility methods used to show and close modal dialog
+    *
+    * @namespace
+    */
+    forerunner.dialog = {
+        /**
+       * Append a mask with 50% opacity layer to the body
+       *
+       * @function $.forerunner.reportViewer#insertMaskLayer
+       * @param {function} showModal - Callback function after insert, open specific modal dialog
+       */
+        insertMaskLayer: function (showModal) {
+            var $mask = $(".fr-mask");
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-mask'></div>");
+                $mask.appendTo($("body"));
+            }
+
+            $mask.show("fast", function () {
+                $(this).fadeTo("fast", 0.5, function () {
+                    $("body").eq(0).css("overflow", "hidden");
+                    if (showModal && typeof (showModal) === "function") {
+                        showModal();
+                    }
+                });
+            });
+        },
+        /**
+        * Remove exist mask layer from the body
+        *
+        * @function $.forerunner.reportViewer#removeMaskLayer
+        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        */
+        removeMaskLayer: function (closeModal) {
+            var $mask = $(".fr-mask");
+            if ($mask.length !== 0) {
+                if (closeModal && typeof (closeModal) === "function") {
+                    closeModal();
+                }
+                $mask.hide("fast", function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $(this).remove();
+                });
+            }
+        },
+        /**
+        * close all opened modal dialogs with classname 'fr-dialog'
+        *
+        * @function $.forerunner.reportViewer#closeModalDialog
+        */
+        closeModalDialog: function () {
+            var me = this;
+            me.removeMaskLayer(null);
+            $(".fr-dialog").hide();
+        },
+        /**
+        * Show message box by modal dialog
+        *
+        * @member
+        */
+        showMessageBox: function (msg) {
+            var me = this;
+
+            if ($(".fr-messagebox").length === 0) {
+                var $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
+                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>Notice</span></div>" +
+                    "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
+                    "<div class='fr-messagebox-buttongroup'>" +
+                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='close' />" +
+                    "</div></div>");
+
+                $("body").append($messageBox);
+
+                $(".fr-messagebox-close").on("click", function () {
+                    forerunner.dialog.removeMaskLayer(function () {
+                        $(".fr-messagebox-msg").val();
+                        $messageBox.hide();
+                    });
+                });
+            }
+
+            me.insertMaskLayer(function () {
+                $(".fr-messagebox-msg").html(msg);
+                $(".fr-messagebox").show();
+            });
+        },
+    };
+
     $(document).ready(function () {
         // Update all dynamic styles
         var isTouchRule = {

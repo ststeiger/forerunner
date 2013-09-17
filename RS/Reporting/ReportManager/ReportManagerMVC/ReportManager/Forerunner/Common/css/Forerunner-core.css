@@ -5,3 +5,74 @@
 .fr-rounded {
     -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;
 }
+
+.fr-messagebox
+{
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    position:fixed;
+    z-index:10;
+    display:none;
+}
+.fr-messagebox-innerpage
+{
+    width:400px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:50px;
+    background-color:white;
+}
+.fr-messagebox-header
+{
+    background-color:#35afe3;
+    color:white;
+    height:30px;
+    padding:4px;
+}
+.fr-messagebox-title
+{
+    margin:4px;
+    display:block;
+}
+.fr-messagebox-content
+{
+    min-height:80px;
+    padding:4px;
+   border-bottom:1px dotted #35afe3;
+}
+.fr-messagebox-msg
+{
+    margin:4px;
+    width:100%;
+    height:100%;
+    display:block;
+}
+.fr-messagebox-buttongroup
+{
+    height:40px;
+}
+.fr-messagebox-button
+{
+    padding:4px;
+    margin:8px;
+    width:76px;
+    text-align:center;
+    cursor:pointer;
+    float:right;
+    color:white;
+    font-weight:700;
+    background-color:#35afe3;
+}
+
+.fr-mask{
+    opacity:0;
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background-color:black;
+    z-index:2;
+}

@@ -737,9 +737,9 @@ $(function () {
                             reportPath: e.data.me.options.$reportViewer.reportViewer("option", "reportPath"),
                             parameters: parameterList,
                         }).done(function (Data) {
-                            alert("Saved");
+                            forerunner.dialog.showMessageBox("Saved");
                         })
-                        .fail(function () { alert("Failed"); });
+                        .fail(function () { forerunner.dialog.showMessageBox("Failed"); });
                     }
                 }
             }

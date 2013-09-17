@@ -426,7 +426,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { me._showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
                 });
             }
 
@@ -576,7 +576,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { me._showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
                 });
             }
         },
@@ -811,7 +811,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     return;
                 }
 
@@ -842,9 +842,9 @@ $(function () {
                         }
                         else {
                             if (me.finding === true)
-                                me._showMessageBox(me.locData.messages.completeFind);
+                                forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                             else
-                                me._showMessageBox(me.locData.messages.keyNotFound);
+                                forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
                             me.resetFind();
                         }
                     }
@@ -870,7 +870,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -882,7 +882,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        me._showMessageBox(me.locData.messages.completeFind);
+                        forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                         me.resetFind();
                     }
                     else {
@@ -890,7 +890,7 @@ $(function () {
                     }
                 }
                 else {
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -938,47 +938,7 @@ $(function () {
             var me = this;
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
-        },
-        /**
-        * Append a mask with 50% opacity layer to the body
-        *
-        * @function $.forerunner.reportViewer#insertMaskLayer
-        * @param {function} showModal - Callback function after insert, open specific modal dialog
-        */
-        insertMaskLayer: function (showModal) {
-            var $mask = $(".fr-report-mask");
-            if ($mask.length === 0) {
-                $mask = $("<div class='fr-report-mask'></div>");
-                $mask.appendTo($("body"));
-            }
-
-            $mask.show("fast", function () {
-                $(this).fadeTo("fast", 0.5, function () {
-                    $("body").eq(0).css("overflow", "hidden");
-                    if (showModal) {
-                        showModal();
-                    }
-                });
-            });
-        },
-        /**
-        * Remove exist mask layer from the body
-        *
-        * @function $.forerunner.reportViewer#removeMaskLayer
-        * @param {function} closeModal - Callback function after removed, close specific modal dialog
-        */
-        removeMaskLayer: function (closeModal) {
-            var $mask = $(".fr-report-mask");
-            if ($mask.length !== 0) {
-                if(closeModal){
-                    closeModal();
-                }
-                $mask.hide("fast", function () {
-                    $("body").eq(0).css("overflow", "auto");
-                    $(this).remove();
-                });
-            }
-        },
+        },       
         /**
          * show print modal dialog, close it if opened
          *
@@ -1008,26 +968,7 @@ $(function () {
             printArea.reportPrint({ $reportViewer: this });
             printArea.reportPrint("setPrint", pageLayout);
         },
-        /**
-       * close all opened modal dialogs
-       *
-       * @function $.forerunner.reportViewer#closeModalDialog         
-       */
-        closeModalDialog: function () {
-            var me = this;
-            me.removeMaskLayer(null);
-
-            //List all modal dialog need to close here.
-            me.options.printArea.reportPrint("closePrintPane");
-            $(".fr-render-messagebox").hide();
-        },
-        _showMessageBox: function (msg) {
-            var me = this;
-            me.insertMaskLayer(function () {
-                $(".fr-render-messagebox-msg").html(msg);
-                $(".fr-render-messagebox").show();
-            });
-        },
+       
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
@@ -2431,7 +2372,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    alert("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
                 }
             });
         },
@@ -2517,7 +2458,6 @@ $(function () {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
-            me._addMessageBox();
         },
         _addPageStyle: function (reportViewer, pageStyle) {
             var me = this;
@@ -2527,24 +2467,6 @@ $(function () {
             bgLayer.attr("style", style);
 
             me.element.append(bgLayer);
-        },
-        _addMessageBox: function () {
-            var me = this;
-            var $messageBox = new $("<div class='fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
-                "<div class='fr-render-messagebox-header'><span class='fr-render-messagebox-title'>Notice</span></div>" +
-                "<div class='fr-render-messagebox-content'><span class='fr-render-messagebox-msg'/></div>" +
-                "<div class='fr-render-messagebox-buttongroup'>" +
-                "<input class='fr-render-messagebox-button fr-render-messagebox-close' name='close' type='button' value='close' />" +
-                "</div></div>");
-
-            $("body").append($messageBox);
-
-            $(".fr-render-messagebox-close").on("click", function () {
-                me.options.reportViewer.removeMaskLayer(function () {
-                    $(".fr-render-messagebox-msg").val();
-                    $messageBox.hide();
-                });
-            });
         },
         writeError: function (errorData) {
             var me = this;
@@ -4811,10 +4733,11 @@ $(function () {
             $reportViewer: null,
         },
         _create: function () {
-
+            
         },
         _init: function () {
-
+            var me = this;
+            this._printOpen = false;
         },
         _printOpen: false,
         /**
@@ -4893,7 +4816,7 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.insertMaskLayer(function () {
+                forerunner.dialog.insertMaskLayer(function () {
                     me.element.show();
                 });
 
@@ -4901,7 +4824,7 @@ $(function () {
             }
                 //To close print pane
             else {
-                me.options.$reportViewer.removeMaskLayer(function () {
+                forerunner.dialog.removeMaskLayer(function () {
                     me.element.hide();
                 });
 
@@ -5070,6 +4993,7 @@ $(function () {
             me.$pagesection.append(me.$docmapsection);
             me.$printsection = new $("<div />");
             me.$printsection.addClass("fr-layout-printsection");
+            me.$printsection.addClass("fr-dialog");
             me.$pagesection.append(me.$printsection);
             //bottom div
             var $bottomdiv = new $("<div />");
@@ -5556,7 +5480,7 @@ $(function () {
                 me.updateFavoriteState.call(me, action === "add");
             })
             .fail(function () {
-                alert("Failed");
+                forerunner.dialog.showMessageBox("Failed");
             });
         },
         onClickItemFavorite: function (e) {
@@ -5577,7 +5501,7 @@ $(function () {
                 me.updateFavoriteState.call(me, action === "add");
             })
             .fail(function () {
-                alert("Failed");
+                forerunner.dialog.showMessageBox("Failed");
             });
         },
         updateFavoriteState: function (isFavorite) {
@@ -5746,8 +5670,8 @@ $(function () {
             var layout = me.DefaultAppTemplate;
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
-            layout.removeModalDialog();
             forerunner.device.allowZoom(false);
+            forerunner.dialog.closeModalDialog();
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
             layout.$topdivspacer.css({height: "32px"});

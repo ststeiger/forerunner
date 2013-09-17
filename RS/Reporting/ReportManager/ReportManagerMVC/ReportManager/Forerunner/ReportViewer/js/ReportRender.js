@@ -62,7 +62,6 @@ $(function () {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
-            me._addMessageBox();
         },
         _addPageStyle: function (reportViewer, pageStyle) {
             var me = this;
@@ -72,24 +71,6 @@ $(function () {
             bgLayer.attr("style", style);
 
             me.element.append(bgLayer);
-        },
-        _addMessageBox: function () {
-            var me = this;
-            var $messageBox = new $("<div class='fr-dialog fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
-                "<div class='fr-render-messagebox-header'><span class='fr-render-messagebox-title'>Notice</span></div>" +
-                "<div class='fr-render-messagebox-content'><span class='fr-render-messagebox-msg'/></div>" +
-                "<div class='fr-render-messagebox-buttongroup'>" +
-                "<input class='fr-render-messagebox-button fr-render-messagebox-close' name='close' type='button' value='close' />" +
-                "</div></div>");
-
-            $("body").append($messageBox);
-
-            $(".fr-render-messagebox-close").on("click", function () {
-                forerunner.dialog.removeMaskLayer(function () {
-                    $(".fr-render-messagebox-msg").val();
-                    $messageBox.hide();
-                });
-            });
         },
         writeError: function (errorData) {
             var me = this;

@@ -17,10 +17,11 @@ $(function () {
             $reportViewer: null,
         },
         _create: function () {
-
+            
         },
         _init: function () {
-
+            var me = this;
+            this._printOpen = false;
         },
         _printOpen: false,
         /**
@@ -99,7 +100,7 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                me.options.$reportViewer.insertMaskLayer(function () {
+                forerunner.dialog.insertMaskLayer(function () {
                     me.element.show();
                 });
 
@@ -107,7 +108,7 @@ $(function () {
             }
                 //To close print pane
             else {
-                me.options.$reportViewer.removeMaskLayer(function () {
+                forerunner.dialog.removeMaskLayer(function () {
                     me.element.hide();
                 });
 

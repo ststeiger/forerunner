@@ -75,7 +75,7 @@ $(function () {
         },
         _addMessageBox: function () {
             var me = this;
-            var $messageBox = new $("<div class='fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
+            var $messageBox = new $("<div class='fr-dialog fr-render-messagebox'><div class='fr-render-messagebox-innerpage'>" +
                 "<div class='fr-render-messagebox-header'><span class='fr-render-messagebox-title'>Notice</span></div>" +
                 "<div class='fr-render-messagebox-content'><span class='fr-render-messagebox-msg'/></div>" +
                 "<div class='fr-render-messagebox-buttongroup'>" +
@@ -85,7 +85,7 @@ $(function () {
             $("body").append($messageBox);
 
             $(".fr-render-messagebox-close").on("click", function () {
-                me.options.reportViewer.removeMaskLayer(function () {
+                forerunner.dialog.removeMaskLayer(function () {
                     $(".fr-render-messagebox-msg").val();
                     $messageBox.hide();
                 });

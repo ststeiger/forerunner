@@ -182,7 +182,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    alert("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
                 }
             });
         },

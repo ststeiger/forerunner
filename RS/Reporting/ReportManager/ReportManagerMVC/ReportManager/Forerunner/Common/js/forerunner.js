@@ -468,10 +468,7 @@ $(function () {
     forerunner.device = {
         /** @return {bool} Returns a boolean that indicates if the device is a touch device */
         isTouch: function () {
-            var ua = navigator.userAgent;
-            return !!("ontouchstart" in window) // works on most browsers
-                || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
+            return ("ontouchstart" in window) || (navigator.msMaxTouchPoints > 0);
         },
         /** @return {bool} Returns a boolean that indicates if the device is in portrait */
         isPortrait: function () {
@@ -564,5 +561,90 @@ $(function () {
                 return false;
         },
     };
+
+    /**
+    * Defines utility methods used to show and close modal dialog
+    *
+    * @namespace
+    */
+    forerunner.dialog = {
+        /**
+       * Append a mask with 50% opacity layer to the body
+       *
+       * @function $.forerunner.reportViewer#insertMaskLayer
+       * @param {function} showModal - Callback function after insert, open specific modal dialog
+       */
+        insertMaskLayer: function (showModal) {
+            var $mask = $(".fr-report-mask");
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-report-mask'></div>");
+                $mask.appendTo($("body"));
+            }
+
+            $mask.show("fast", function () {
+                $(this).fadeTo("fast", 0.5, function () {
+                    $("body").eq(0).css("overflow", "hidden");
+                    if (showModal && typeof (showModal) === "function") {
+                        showModal();
+                    }
+                });
+            });
+        },
+        /**
+        * Remove exist mask layer from the body
+        *
+        * @function $.forerunner.reportViewer#removeMaskLayer
+        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        */
+        removeMaskLayer: function (closeModal) {
+            var $mask = $(".fr-report-mask");
+            if ($mask.length !== 0) {
+                if (closeModal && typeof (closeModal) === "function") {
+                    closeModal();
+                }
+                $mask.hide("fast", function () {
+                    $("body").eq(0).css("overflow", "auto");
+                    $(this).remove();
+                });
+            }
+        },
+        /**
+        * close all opened modal dialogs with classname 'fr-dialog'
+        *
+        * @function $.forerunner.reportViewer#closeModalDialog
+        */
+        closeModalDialog: function () {
+            var me = this;
+            me.removeMaskLayer(null);
+            $(".fr-dialog").hide();
+        },
+        /**
+        * Show message box by modal dialog
+        *
+        * @member
+        */
+        showMessageBox: function (msg) {
+            var me = this;
+            me.insertMaskLayer(function () {
+                $(".fr-render-messagebox-msg").html(msg);
+                $(".fr-render-messagebox").show();
+            });
+        },
+    };
+
+    $(document).ready(function () {
+        // Update all dynamic styles
+        var isTouchRule = {
+            selector: ".fr-toolbase-hide-if-not-touch",
+            properties: function () {
+                var pairs = { display: "none" };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = null;
+                }
+                return pairs;
+            }
+        };
+        forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+    });
     
 });

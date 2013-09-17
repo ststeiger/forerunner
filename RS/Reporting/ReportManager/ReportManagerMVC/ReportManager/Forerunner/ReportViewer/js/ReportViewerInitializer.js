@@ -179,7 +179,7 @@ $(function () {
                 me.updateFavoriteState.call(me, action === "add");
             })
             .fail(function () {
-                alert("Failed");
+                forerunner.dialog.showMessageBox("Failed");
             });
         },
         onClickItemFavorite: function (e) {
@@ -200,7 +200,7 @@ $(function () {
                 me.updateFavoriteState.call(me, action === "add");
             })
             .fail(function () {
-                alert("Failed");
+                forerunner.dialog.showMessageBox("Failed");
             });
         },
         updateFavoriteState: function (isFavorite) {

@@ -425,7 +425,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { me._showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
                 });
             }
 
@@ -575,7 +575,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { me._showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
                 });
             }
         },
@@ -810,7 +810,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     return;
                 }
 
@@ -841,9 +841,9 @@ $(function () {
                         }
                         else {
                             if (me.finding === true)
-                                me._showMessageBox(me.locData.messages.completeFind);
+                                forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                             else
-                                me._showMessageBox(me.locData.messages.keyNotFound);
+                                forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
                             me.resetFind();
                         }
                     }
@@ -869,7 +869,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -881,7 +881,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        me._showMessageBox(me.locData.messages.completeFind);
+                        forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                         me.resetFind();
                     }
                     else {
@@ -889,7 +889,7 @@ $(function () {
                     }
                 }
                 else {
-                    me._showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -937,47 +937,7 @@ $(function () {
             var me = this;
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
-        },
-        /**
-        * Append a mask with 50% opacity layer to the body
-        *
-        * @function $.forerunner.reportViewer#insertMaskLayer
-        * @param {function} showModal - Callback function after insert, open specific modal dialog
-        */
-        insertMaskLayer: function (showModal) {
-            var $mask = $(".fr-report-mask");
-            if ($mask.length === 0) {
-                $mask = $("<div class='fr-report-mask'></div>");
-                $mask.appendTo($("body"));
-            }
-
-            $mask.show("fast", function () {
-                $(this).fadeTo("fast", 0.5, function () {
-                    $("body").eq(0).css("overflow", "hidden");
-                    if (showModal) {
-                        showModal();
-                    }
-                });
-            });
-        },
-        /**
-        * Remove exist mask layer from the body
-        *
-        * @function $.forerunner.reportViewer#removeMaskLayer
-        * @param {function} closeModal - Callback function after removed, close specific modal dialog
-        */
-        removeMaskLayer: function (closeModal) {
-            var $mask = $(".fr-report-mask");
-            if ($mask.length !== 0) {
-                if(closeModal){
-                    closeModal();
-                }
-                $mask.hide("fast", function () {
-                    $("body").eq(0).css("overflow", "auto");
-                    $(this).remove();
-                });
-            }
-        },
+        },       
         /**
          * show print modal dialog, close it if opened
          *
@@ -1007,26 +967,7 @@ $(function () {
             printArea.reportPrint({ $reportViewer: this });
             printArea.reportPrint("setPrint", pageLayout);
         },
-        /**
-       * close all opened modal dialogs
-       *
-       * @function $.forerunner.reportViewer#closeModalDialog         
-       */
-        closeModalDialog: function () {
-            var me = this;
-            me.removeMaskLayer(null);
-
-            //List all modal dialog need to close here.
-            me.options.printArea.reportPrint("closePrintPane");
-            $(".fr-render-messagebox").hide();
-        },
-        _showMessageBox: function (msg) {
-            var me = this;
-            me.insertMaskLayer(function () {
-                $(".fr-render-messagebox-msg").html(msg);
-                $(".fr-render-messagebox").show();
-            });
-        },
+       
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;

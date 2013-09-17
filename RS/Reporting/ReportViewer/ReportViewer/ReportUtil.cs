@@ -127,6 +127,8 @@ namespace Forerunner
                 w.WriteString("LicenseException");
                 w.WriteMember("Reason");
                 w.WriteString(e.Data[Forerunner.SSRS.Security.LicenseException.failKey].ToString());
+                w.WriteMember("Message");
+                w.WriteString(e.Message);
             }
             else
             {

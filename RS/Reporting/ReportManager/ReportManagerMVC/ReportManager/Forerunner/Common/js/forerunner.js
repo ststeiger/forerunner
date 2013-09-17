@@ -312,6 +312,102 @@ $(function () {
         },
     };
     /**
+     * Defines utility methods used to update style sheets
+     *
+     * @namespace
+     */
+    forerunner.styleSheet = {
+        _findImportedSheet: function (name, inSheet) {
+            var rules = (inSheet.cssRules || inSheet.rules);
+            var returnSheet = null;
+
+            // Enumerate the rules
+            $.each(rules, function (rulesIndex, rule) {
+                if (rule.styleSheet) {
+                    if (rule.styleSheet.href.match(new RegExp(name, "i"))) {
+                        returnSheet = rule.styleSheet;
+                        return false;
+                    }
+
+                    returnSheet = forerunner.styleSheet._findImportedSheet(name, rule.styleSheet)
+                    if (returnSheet) {
+                        return false;
+                    }
+                }
+            });
+
+            return returnSheet;
+        },
+        _findSheet: function (name) {
+            var returnSheet = null;
+
+            // Find the toolbase.css style sheet
+            $.each(document.styleSheets, function (sheetsIndex, sheet) {
+                if (sheet.href.match(new RegExp(name, "i"))) {
+                    returnSheet = sheet;
+                    return false;
+                }
+
+                returnSheet = forerunner.styleSheet._findImportedSheet(name, sheet)
+                if (returnSheet) {
+                    return false;
+                }
+            });
+
+            return returnSheet;
+        },
+        /**
+         * Updates the given style sheet filename based upon the dynamic rule. Note that
+         * this function assumes that the rule already exists in the css file and it
+         * will cannot be used to create new rules.
+         *
+         * @member
+         *
+         * @example
+         *  var isTouchRule = {
+         *      selector: ".fr-toolbase-hide-if-not-touch",
+         *      properties: function () {
+         *          var pairs = { display: "none" };
+         *          if (forerunner.device.isTouch()) {
+         *              pairs.display = null;
+         *          }
+         *          return pairs;
+         *      }
+         *  };
+         *
+         *  updateDynamicRules([isTouchRule]);
+         */
+        updateDynamicRules: function (dynamicRules, sheetname) {
+            var sheet = forerunner.styleSheet._findSheet(sheetname);
+            if (sheet) {
+                var rules = (sheet.cssRules || sheet.rules);
+                var rulesLength = rules.length;
+
+                // Enumerate the rules
+                for (var ruleIndex = 0; ruleIndex < rulesLength; ruleIndex++) {
+                    var rule = rules[ruleIndex];
+
+                    // Check each rule and see if it matches the desired dynamic rule
+                    $.each(dynamicRules, function (dynamicIndex, dynamicRule) {
+                        var lowerSelector = dynamicRule.selector.toLowerCase();
+                        if (rule.selectorText && (rule.selectorText.toLowerCase() === lowerSelector)) {
+                            // Add or remove all properties from the dynamic rule into toolbase.css
+                            for (var prop in dynamicRule.properties()) {
+                                var value = dynamicRule.properties()[prop];
+                                if (value != null || value == "") {
+                                    rule.style[prop] = value;
+                                }
+                                else {
+                                    rule.style.removeProperty(prop);
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        },
+    },
+    /**
      * Defines the methods used to localize string data in the SDK.
      *
      * @namespace
@@ -372,10 +468,7 @@ $(function () {
     forerunner.device = {
         /** @return {bool} Returns a boolean that indicates if the device is a touch device */
         isTouch: function () {
-            var ua = navigator.userAgent;
-            return !!("ontouchstart" in window) // works on most browsers
-                || !!("onmsgesturechange" in window) || ua.match(/(iPhone|iPod|iPad)/)
-                || ua.match(/BlackBerry/) || ua.match(/Android/); // works on ie10
+            return ("ontouchstart" in window) || (navigator.msMaxTouchPoints > 0);
         },
         /** @return {bool} Returns a boolean that indicates if the device is in portrait */
         isPortrait: function () {
@@ -468,5 +561,20 @@ $(function () {
                 return false;
         },
     };
+
+    $(document).ready(function () {
+        // Update all dynamic styles
+        var isTouchRule = {
+            selector: ".fr-toolbase-hide-if-not-touch",
+            properties: function () {
+                var pairs = { display: "none" };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = null;
+                }
+                return pairs;
+            }
+        };
+        forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+    });
     
 });

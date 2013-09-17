@@ -34,17 +34,6 @@
   text-align:center;
 }
 
-.fr-report-mask{
-    opacity:0;
-    position:fixed;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-    background-color:black;
-    z-index:2;
-}
-
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
     /* Styles */

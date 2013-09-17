@@ -10,25 +10,26 @@
 
 ; LOCAL ADDRESS DEFINE
 !define LOCALROOT ".\build"
+!define RESOURCEROOT ".\Resource"
 
 ; MUI2
 !include MUI2.nsh
 
 ; MUI Settings
 !define MUI_ABORTWARNING
-!define MUI_ICON "${LOCALROOT}\Mobilizer_32.ico"
+!define MUI_ICON "${RESOURCEROOT}\Mobilizer_32.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
 
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_FINISHPAGE_TITLE_3LINES
-!define MUI_WELCOMEFINISHPAGE_BITMAP "${LOCALROOT}\Mobilizer_Setup.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${RESOURCEROOT}\Mobilizer_Setup.bmp"
 !insertmacro MUI_PAGE_WELCOME
 
 ; License Page
 !define MUI_LICENSEPAGE_CHECKBOX
-!insertmacro MUI_PAGE_LICENSE "${LOCALROOT}\License.rtf"
+!insertmacro MUI_PAGE_LICENSE "${RESOURCEROOT}\License.rtf"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Install files page
@@ -231,12 +232,12 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Register\SetupUtil.exe"
-  File "${LOCALROOT}\MobilizerConfigTool.exe"
-  File "${LOCALROOT}\MobilizerConfigTool.exe.config"
-  File "${LOCALROOT}\UltiDev.WebServer.msi"
+  File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
+  File "${LOCALROOT}\Config\MobilizerConfigTool.exe.config"
+  File "${RESOURCEROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
-  File /oname=Web.config "${LOCALROOT}\Web.config.setup"
+  File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
 

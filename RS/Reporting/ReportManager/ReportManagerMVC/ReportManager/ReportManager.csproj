@@ -297,19 +297,19 @@
     <Content Include="Forerunner\Bundles\Forerunner-tools.js.bundle">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Forerunner\Forerunner-all.js.bundle">
-      <SubType>Designer</SubType>
-    </None>
-    <Content Include="Views\Debug\Index.cshtml" />
-    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
-      <DependentUpon>Forerunner.js.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
+      <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
+    <None Include="Forerunner\Forerunner-all.js.bundle">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Views\Debug\Index.cshtml" />
     <Content Include="Forerunner\Forerunner-all.min.js.map">
       <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
     </Content>

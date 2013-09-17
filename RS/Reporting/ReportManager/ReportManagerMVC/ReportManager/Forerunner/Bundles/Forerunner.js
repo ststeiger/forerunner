@@ -562,6 +562,21 @@ $(function () {
                 return false;
         },
     };
+
+    $(document).ready(function () {
+        // Update all dynamic styles
+        var isTouchRule = {
+            selector: ".fr-toolbase-hide-if-not-touch",
+            properties: function () {
+                var pairs = { display: "none" };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = null;
+                }
+                return pairs;
+            }
+        };
+        forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+    });
     
 });
 

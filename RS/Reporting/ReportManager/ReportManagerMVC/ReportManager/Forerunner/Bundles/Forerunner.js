@@ -425,6 +425,7 @@ $(function () {
          */
         getLocData: function(locFileLocation){
             var lang = navigator.language || navigator.userLanguage;
+            var lang = lang.toLocaleLowerCase();
             var langData = this._loadFile(locFileLocation, lang);
 
             if (langData === null || langData === undefined)
@@ -451,7 +452,7 @@ $(function () {
                     fail: function () {
                         me._locData[locFileLocation][lang] = null;
                     },
-                    error: function () {
+                    error: function ( jqXHR ,textStatus, errorThrown) {
                         me._locData[locFileLocation][lang] = null;
                 },
                 });

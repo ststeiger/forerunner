@@ -4393,26 +4393,29 @@ $(function () {
         },
         _popupDropDownPanel: function(param) {
             var me = this;
+            var isVisible = $("[name='" + param.Name + "_DropDownContainer'").is(":visible");
             me._closeAllDropdown();
 
-            var $container = $(".fr-layout-rightpanecontent");
-            var scrollTop = $container.scrollTop();
-            var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
-            var $multipleControl = $("[name='" + param.Name + "']");
-            var positionTop = $multipleControl.offset().top;
-            
-            if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
-            }
-            else {
-                $dropDown.css("top", positionTop + $multipleControl.height() - 28 + scrollTop);
-            }
+            if (!isVisible) {
+                var $container = $(".fr-layout-rightpanecontent");
+                var scrollTop = $container.scrollTop();
+                var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
+                var $multipleControl = $("[name='" + param.Name + "']");
+                var positionTop = $multipleControl.offset().top;
 
-            if ($dropDown.is(":hidden")){
-                $dropDown.width($multipleControl.width()).addClass("fr-param-dropdown-show").show(10);
-            }
-            else {
-                me._closeDropDownPanel(param);
+                if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
+                    $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
+                }
+                else {
+                    $dropDown.css("top", positionTop + $multipleControl.height() - 28 + scrollTop);
+                }
+
+                if ($dropDown.is(":hidden")) {
+                    $dropDown.width($multipleControl.width()).addClass("fr-param-dropdown-show").show(10);
+                }
+                else {
+                    me._closeDropDownPanel(param);
+                }
             }
         },
         _closeDropDownPanel: function (param) {
@@ -4423,7 +4426,7 @@ $(function () {
         },
         _closeAllDropdown: function () {
             var me = this;
-            $(".fr-param-dropdown").filter(":visible").each(function (index, param) {
+            $(".fr-param-dropdown-show").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
@@ -4588,12 +4591,9 @@ $(function () {
             if (/^(\d{4})-(0\d{1}|1[0-2])-(0\d{1}|[12]\d{1}|3[01])$/.test(defaultDatetime))
                 return defaultDatetime;
 
-            var date = defaultDatetime.substr(0, defaultDatetime.indexOf(" "));
+            var date = new Date(defaultDatetime.substr(0, defaultDatetime.indexOf(" ")));
 
-            var datetime = date.substring(date.lastIndexOf("/") + 1, defaultDatetime.indexOf(" ")) + "-" +
-                           date.substring(0, date.indexOf("/")) + "-" +
-                           date.substring(date.indexOf("/") + 1, date.lastIndexOf("/"));
-            return datetime;
+            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         },
     });  // $.widget
 });

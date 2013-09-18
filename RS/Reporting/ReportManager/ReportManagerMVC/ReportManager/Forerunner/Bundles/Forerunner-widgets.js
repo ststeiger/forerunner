@@ -2550,7 +2550,7 @@ $(function () {
             if (RIContext.CurrObjParent.PageHeader)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
-            $sec.attr("Style", "width:" + location.Width + "mm;");
+            $sec.attr("Style", "width:" + me._getWidth(location.Width) + "mm;");
             //Columns
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
@@ -2576,7 +2576,7 @@ $(function () {
                 var $headerTD = $("<TD/>");
                 $header.append($headerTD);
                 var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, Index);
-                $header.attr("Style", "width:" + headerLoc.Width + "mm;");
+                $header.attr("Style", "width:" + me._getWidth(headerLoc.Width) + "mm;");
                 $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
                 return $header;
             }
@@ -2633,7 +2633,7 @@ $(function () {
             Style += me._getFullBorderStyle(RIContext.CurrObj);
 
             if (RIContext.CurrLocation) {
-                Style += "width:" + RIContext.CurrLocation.Width + "mm;";
+                Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
                     Style += "height:" + (RIContext.CurrLocation.Height + 1) + "mm;";
                 else {
@@ -2775,10 +2775,10 @@ $(function () {
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
-                Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + RIContext.CurrLocation.Width + "mm;";
+                Style += "width:" + RIContext.CurrLocation.Height + "mm;height:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 Style += "position:absolute;";
-                var nTop = -(RIContext.CurrLocation.Width - RIContext.CurrLocation.Height) / 2;
-                var nLeft = -(RIContext.CurrLocation.Height - RIContext.CurrLocation.Width) / 2;
+                var nTop = -(me._getWidth(RIContext.CurrLocation.Width) - RIContext.CurrLocation.Height) / 2;
+                var nLeft = -(RIContext.CurrLocation.Height - me._getWidth(RIContext.CurrLocation.Width)) / 2;
                 Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
                 $TextObj.addClass(dirClass);
             }
@@ -3146,7 +3146,7 @@ $(function () {
             else
                 RowIndex = BodyCellRowIndex;
 
-            width = RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width;
+            width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
             Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  + "height:" + height + "mm;";
 
@@ -3190,7 +3190,7 @@ $(function () {
 
             var colgroup = $("<colgroup/>");
             for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
-                colgroup.append($("<col/>").css("width", RIContext.CurrObj.ColumnWidths.Columns[cols].Width + "mm"));
+                colgroup.append($("<col/>").css("width", me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width) + "mm"));
             }
             $Tablix.append(colgroup);
             if (!forerunner.device.isFirefox()) {
@@ -3482,9 +3482,9 @@ $(function () {
 
             //Top and left are set in set location, height is not set becasue differnt browsers measure and break words differently
             if (CurrObj.Width !== undefined) {
-                Style += "width:" + CurrObj.Width + "mm;";
-                Style += "min-width:" + CurrObj.Width + "mm;";
-                Style += "max-width:" + (CurrObj.Width) + "mm;";
+                Style += "width:" + me._getWidth(CurrObj.Width) + "mm;";
+                Style += "min-width:" + me._getWidth(CurrObj.Width ) + "mm;";
+                Style += "max-width:" + me._getWidth(CurrObj.Width) + "mm;";
             }
 
             if (includeHeight && CurrObj.Height !== undefined){
@@ -3866,6 +3866,10 @@ $(function () {
             else
                 return false;
         },
+        _getWidth: function (val) {
+            // might be usfull for text sizing issues between browsers
+            return val ;
+        }
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js

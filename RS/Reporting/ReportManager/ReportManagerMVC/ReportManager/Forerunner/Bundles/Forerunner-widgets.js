@@ -4417,17 +4417,13 @@ $(function () {
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            if ($("[name='" + param.Name + "_DropDownContainer']").is(":visible")){
-                $("[name='" + param.Name + "_DropDownContainer']").removeClass("fr-param-dropdown-show").hide(10, function () {
-                    me._setMultipleInputValues(param);
-                    //$("[name='" + param.Name + "']").focus().blur().focus();
-                });
-                
-            }
+            me._setMultipleInputValues(param);
+            $("[name='" + param.Name + "_DropDownContainer']").removeClass("fr-param-dropdown-show").hide();
+            //$("[name='" + param.Name + "']").focus().blur().focus();
         },
         _closeAllDropdown: function () {
             var me = this;
-            $(".fr-param-dropdown").each(function (index, param) {
+            $(".fr-param-dropdown").filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
@@ -4448,7 +4444,7 @@ $(function () {
          * @function $.forerunner.reportParameter#getParamList
          * @generate parameter list base on the user input and return
          */
-        getParamsList: function() {
+        getParamsList: function () {
             var me = this;
             var i;
             if ($("[name='ParameterForm']").length !== 0 && $("[name='ParameterForm']").valid() === true) {

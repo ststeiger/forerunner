@@ -323,30 +323,37 @@ $(function () {
                     switch (ev.type) {
                         // Hide the header on touch
                         case "touch":
-                            me._hideTableHeaders();
+                            me._hideTableHeaders();                            
                             break;
-                        // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
-                        case "swipe":
-                        case "drag":
-                            if ($(me.element).data("swipeEnabled") === false)
-                                return;
 
-                            if (ev.gesture.direction === "left" && ev.gesture.velocityX > 0.2) {
-                                me.navToPage(me.curPage + 1);
-                            }
-
-                            if (ev.gesture.direction === "right" && ev.gesture.velocityX > 0.2) {
-                                me.navToPage(me.curPage - 1);
-                            }
-                            
-                            break;
-                        // Show the header on release only if this is not scrolling.
+                         // Show the header on release only if this is not scrolling.
                         // If it is scrolling, we will let scrollstop handle that.
                         case "release":
-                            if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
+                            
+                            if ($(me.element).data("swipeEnabled") === false)
+                                break;
+
+                            var swipeNav = false;
+                            if (ev.gesture.touches.length > 1)
+                                swipeNav = true;
+                            
+                            if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
+                                ev.gesture.preventDefault();
+                                me.navToPage(me.curPage + 1); 
+                                break;
+                            }
+
+                            if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
+                                ev.gesture.preventDefault();
+                                me.navToPage(me.curPage - 1); 
+                                break;
+                            }
+
+                           if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
+                   
                 }
             );
         },

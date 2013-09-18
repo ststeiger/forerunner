@@ -578,7 +578,7 @@ $(function () {
             var $mask = $(".fr-mask");
             if ($mask.length === 0) {
                 $mask = $("<div class='fr-mask'></div>");
-                $mask.appendTo($("body"));
+                $mask.appendTo($("body"));                
             }
 
             $mask.show("fast", function () {

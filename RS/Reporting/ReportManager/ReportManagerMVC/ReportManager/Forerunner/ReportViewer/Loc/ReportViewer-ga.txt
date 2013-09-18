@@ -59,6 +59,18 @@
 	"zoom": "Cumasaigh Zoom",
 	"print": "Priontáil"
     },
+	"print":{
+	    "title": "Imprimir páxina de opción de esquema",
+		"pageHeight": "páxina Alto",
+		"pageWidth": "ancho da Páxina",
+		"marginTop": "marxe superior",
+		"marginBottom": "marxe inferior",
+		"marginLeft": "marxe esquerda",
+		"marginRight": "marxe dereito",
+		"print": "imprimir",
+		"cancel": "cancelar",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "True",
@@ -81,6 +93,10 @@
 	"range": "Iontráil luach idir {0} agus {1}",
 	"max": "Iontráil luach níos lú ná nó cothrom le {0}",
 	"min": "Iontráil luach níos mó ná nó cothrom le {0}"
+	},
+	"dialog":{
+	    "title":"incitar",
+		"close":"pechar"
 	}
 }
 

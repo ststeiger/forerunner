@@ -59,6 +59,18 @@
 	"zoom": "Aktivera Zoom",
 	"print": "Skriv ut"
     },
+	"print":{
+	    "title": "Skriv Option Sidlayout",
+		"pageHeight": "Sidan Höjd",
+		"pageWidth": "sidan Bredd",
+		"marginTop": "marginal Top",
+		"marginBottom": "marginal Botten",
+		"marginLeft": "marginal Vänster",
+		"marginRight": "marginal höger",
+		"print": "skriva ut",
+		"cancel": "avbryta",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Noll",
         "isTrue": "Sant",
@@ -81,6 +93,10 @@
 	"range": "Ange ett värde mellan {0} och {1}",
 	"max": "Ange ett värde mindre än eller lika med {0}",
 	"min": "Ange ett värde som är större än eller lika med {0}"
+	},
+	"dialog":{
+	    "title":"föranleda",
+		"close":"nära"
 	}
 }
 

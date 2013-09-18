@@ -93,6 +93,10 @@
 		"range": "Enter a value between {0} and {1}",
 		"max": "Enter a value less than or equal to {0}",
 		"min": "Enter a value greater than or equal to {0}"
+	},
+	"dialog":{
+	    "title":"Prompt",
+		"close":"Close"
 	}
 }
 

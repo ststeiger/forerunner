@@ -59,6 +59,18 @@
 	"zoom": "Aktivera Zoom",
 	"print": "Skriv ut"
     },
+	"print":{
+	    "title": "Skriv Option Sidlayout",
+		"pageHeight": "Sidan Höjd",
+		"pageWidth": "sidan Bredd",
+		"marginTop": "marginal Top",
+		"marginBottom": "marginal Botten",
+		"marginLeft": "marginal Vänster",
+		"marginRight": "marginal höger",
+		"print": "skriva ut",
+		"cancel": "avbryta",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Noll",
         "isTrue": "Sant",

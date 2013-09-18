@@ -59,6 +59,18 @@
 	"zoom": "Permite Zoom",
 	"print": "Print"
     },
+	"print":{
+	    "title": "Opțiunea Print Page Layout",
+		"pageHeight": "Înălțime pagină",
+		"pageWidth": "Lățime pagină",
+		"marginTop": "Top margin",
+		"marginBottom": "marginea inferioară",
+		"marginLeft": "marginea stânga",
+		"marginRight": "marginea dreapta",
+		"print": "imprima",
+		"cancel": "anula",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "Adevărat",

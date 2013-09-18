@@ -93,6 +93,10 @@
 	"range": "Insira um valor entre {0} e {1}",
 	"max": "Insira um valor menor ou igual a {0}",
 	"min": "Insira um valor maior ou igual a {0}"
+	},
+	"dialog":{
+	    "title":"incitar",
+		"close":"fechar"
 	}
 }
 

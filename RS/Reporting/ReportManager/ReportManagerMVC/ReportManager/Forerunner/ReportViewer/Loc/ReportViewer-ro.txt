@@ -93,6 +93,10 @@
 	"range": "Introduceti o valoare între {0} şi {1}",
 	"max": "Introduceti o valoare mai mică decât sau egală cu a {0}",
 	"min": "Introduceti o valoare mai mare sau egal cu {0}"
+	},
+	"dialog":{
+	    "title":"prompt",
+		"close":"închide"
 	}
 }
 

@@ -93,6 +93,10 @@
 	"range": "Iontráil luach idir {0} agus {1}",
 	"max": "Iontráil luach níos lú ná nó cothrom le {0}",
 	"min": "Iontráil luach níos mó ná nó cothrom le {0}"
+	},
+	"dialog":{
+	    "title":"incitar",
+		"close":"pechar"
 	}
 }
 

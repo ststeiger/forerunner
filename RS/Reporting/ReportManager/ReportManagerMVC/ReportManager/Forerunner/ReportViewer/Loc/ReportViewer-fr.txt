@@ -94,6 +94,10 @@
 		"range": "Entrez une valeur comprise entre {0} et {1}",
 		"max": "Entrez une valeur inférieure ou égale à {0}",
 		"min": "Entrez une valeur supérieure ou égale à {0}"
+	},
+	"dialog":{
+	    "title":"invite",
+		"close":"proche"
 	}
 }
 

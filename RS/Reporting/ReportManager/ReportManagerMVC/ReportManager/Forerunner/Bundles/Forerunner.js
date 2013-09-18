@@ -629,11 +629,13 @@ $(function () {
             var me = this;
 
             if ($(".fr-messagebox").length === 0) {
+                var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
                 var $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
-                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>Notice</span></div>" +
+                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>" + locData.dialog.title + "</span></div>" +
                     "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
                     "<div class='fr-messagebox-buttongroup'>" +
-                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='close' />" +
+                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='" + locData.dialog.close + "' />" +
                     "</div></div>");
 
                 $("body").append($messageBox);

@@ -31,6 +31,7 @@ $(function () {
     function reportItemLocation(index) {
         this.TopDelta = 0;
         this.Height = 0;
+        this.Left = 0;
         this.Index = index;
         this.IndexAbove = null;
         this.NewHeight = null;
@@ -47,6 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewer: null,
+            responsive: false,
         },
         // Constructor
         _create: function () {
@@ -148,6 +150,7 @@ $(function () {
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
             $sec.attr("Style", "width:" + me._getWidth(location.Width) + "mm;");
+
             //Columns
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
@@ -173,7 +176,9 @@ $(function () {
                 var $headerTD = $("<TD/>");
                 $header.append($headerTD);
                 var headerLoc = me._getMeasurmentsObj(RIContext.CurrObj, Index);
+
                 $header.attr("Style", "width:" + me._getWidth(headerLoc.Width) + "mm;");
+
                 $headerTD.append(me._writeRectangle(new reportItemContext(RIContext.RS, RIContext.CurrObj[HeaderOrFooter], Index, RIContext.CurrObj, new $("<DIV/>"), null, headerLoc)));
                 return $header;
             }
@@ -213,9 +218,9 @@ $(function () {
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
                 else
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
-                Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + Measurements[Index].Left + "mm;";
+                Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
 
-                //Background color and border go on container
+                //Background color goes on container
                 if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
                 else if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
@@ -257,6 +262,7 @@ $(function () {
             $.each(Measurements, function (Index, Obj) {
                 l.ReportItems[Index] = new reportItemLocation(Index);
                 var curRI = l.ReportItems[Index];
+                curRI.Left = Obj.Left;
 
                 if (me.isNull(l.LowestIndex))
                     l.LowestIndex = Index;
@@ -265,14 +271,7 @@ $(function () {
 
                 for (var i = 0; i < Measurements.length; i++) {
                     var bottom =  Measurements[i].Top + Measurements[i].Height;
-                    //var right = Measurements[i].Left + Measurements[i].Width;
-                    if ((Obj.Top > bottom) //&& (
-                        //    ((Obj.Left > Measurements[i].Left) && (Obj.Left < right)) ||
-                        //     ((Obj.Left + Obj.Width > Measurements[i].Left) && (Obj.Left + Obj.Width < right)) ||
-                        //     ((Obj.Left < Measurements[i].Left) && (Obj.Left + Obj.Width > right))
-                        // )
-                        )
-            
+                    if (Obj.Top > bottom)           
                     {
                         if (!curRI.IndexAbove){
                             curRI.IndexAbove = i;
@@ -287,7 +286,72 @@ $(function () {
                
             });
     
+            if (me.options.responsive)
+                return me._getResponsiveRectangleLayout(Measurements,l);
             return l;
+        },
+        _getResponsiveRectangleLayout: function (Measurements,layout) {           
+            var me = this;
+
+            var viewerWidth = me._convertToMM(me.options.reportViewer.element.width()+"px");
+            var anyMove = false;
+
+            $.each(Measurements, function (Index, Obj) {               
+                var curRI = layout.ReportItems[Index];                
+                curRI.OrgBottom = Obj.Top + Obj.Height;
+                curRI.OrgRight = Obj.Left + Obj.Width;
+                curRI.OrgIndexAbove = curRI.IndexAbove;
+                var bottompMove = false;
+                
+                var topMove = false;
+
+                if (curRI.OrgRight > viewerWidth) {
+                    curRI.Left = 0;
+
+                    for (var i = 0; i < Measurements.length; i++) {
+                        var bottom = Measurements[i].Top + Measurements[i].Height;
+                        var right = Measurements[i].Left + Measurements[i].Width;
+
+                        //Above
+                        if (!topMove && (Index !== i) && (Obj.Top < Measurements[i].Top) && (curRI.OrgBottom > Measurements[i].Top) && (layout.ReportItems[i].Left < Obj.Width)) {
+                            layout.ReportItems[i].IndexAbove = Index;
+                            layout.ReportItems[i].TopDelta = 1;
+                            if (Index === layout.LowestIndex)
+                                layout.LowestIndex = layout.ReportItems[i].Index;                            
+                            anyMove = true;
+                            topMove = true;
+                        }
+                        //Below
+                        if ( (Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && (layout.ReportItems[i].Left < Obj.Width)) {
+                            curRI.IndexAbove = i;
+                            curRI.TopDelta = 1;
+                            if (i === layout.LowestIndex)
+                                layout.LowestIndex = Index;
+                            bottompMove = true;
+                            anyMove = true;
+                        }
+
+                        
+                    }
+                }
+
+                if ( anyMove || (Index === Measurements.length - 1)) {
+                    for (i = 0; i < curRI.Index ; i++) {
+                        if (curRI.IndexAbove === layout.ReportItems[i].IndexAbove && curRI.OrgRight <= viewerWidth  && layout.ReportItems[i].OrgRight > viewerWidth)
+                            curRI.IndexAbove = i;
+                        if (layout.ReportItems[i].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
+                            if (curRI.IndexAbove === layout.ReportItems[i].IndexAbove  )
+                                curRI.IndexAbove = layout.ReportItems[i].Index;
+                            else if (layout.ReportItems[i].OrgIndexAbove === curRI.IndexAbove )
+                                layout.ReportItems[i].IndexAbove = curRI.Index;
+                        }
+                    }
+                }
+                
+
+            });
+
+            return layout;
         },
         _writeReportItems: function (RIContext) {
             var me = this;
@@ -923,7 +987,7 @@ $(function () {
             $copiedElem.find("img").remove();
 
             $("body").append($copiedElem);
-            height = $copiedElem.height() + "px";
+            height = $copiedElem.outerHeight() + "px";
 
             $copiedElem.remove();
 

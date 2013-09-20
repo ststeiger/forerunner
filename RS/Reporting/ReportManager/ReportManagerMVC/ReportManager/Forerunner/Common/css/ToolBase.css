@@ -39,7 +39,7 @@
   filter: alpha(opacity='30');
 }
 .fr-toolbase-hide-if-not-touch {
-  /* Note: when the toolbase widget is created, this "display: none" will be removed if the device is a touch device.  */
+  /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */
   display: none;
 }
 .fr-indent24x24 {

@@ -1504,7 +1504,7 @@ $(function () {
                 // visible in the showTool function. So the strategy here is to remove
                 // the display style on the element and thereby revert the visibility
                 // back to the style sheet definition.
-                var $toolEl = $("." + selectorClass, me.element);
+                var $toolEl = me.element.find("." + selectorClass);
                 $toolEl.css({"display": ""});
             }
         },
@@ -1532,7 +1532,7 @@ $(function () {
                 // visible in the showTool function. That is because a resize / orientation
                 // change may happen that changes which buttons should be visible at the 
                 // time showTool is called.
-                var $toolEl = $("." + selectorClass, me.element);
+                var $toolEl = me.element.find("." + selectorClass);
                 $toolEl.hide();
             }
         },
@@ -1558,7 +1558,7 @@ $(function () {
         enableTools: function (tools) {
             var me = this;
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = $("." + toolInfo.selectorClass, me.element);
+                var $toolEl = me.element.find("." + toolInfo.selectorClass);
                 $toolEl.removeClass("fr-toolbase-disabled");
                 if (toolInfo.events) {
                     $toolEl.addClass("fr-core-cursorpointer");
@@ -1578,7 +1578,7 @@ $(function () {
         disableTools: function (tools) {
             var me = this;
             $.each(tools, function (index, toolInfo) {
-                var $toolEl = $("." + toolInfo.selectorClass, me.element);
+                var $toolEl = me.element.find("." + toolInfo.selectorClass);
                 $toolEl.addClass("fr-toolbase-disabled");
                 if (toolInfo.events) {
                     $toolEl.removeClass("fr-core-cursorpointer");
@@ -1611,7 +1611,7 @@ $(function () {
 
             $.each(me.allTools, function (Index, Tools) {
                 if (Tools.selectorClass) {
-                    var $toolEl = $("." + Tools.selectorClass, me.element);
+                    var $toolEl = me.element.find("." + Tools.selectorClass);
                     if (!$toolEl.hasClass("fr-toolbase-no-disable-id")) {
                         me.allTools[Tools.selectorClass].isEnable = !$toolEl.hasClass("fr-toolbase-disabled");
                         me.disableTools([Tools]);

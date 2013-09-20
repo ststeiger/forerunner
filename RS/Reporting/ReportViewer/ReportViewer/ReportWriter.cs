@@ -458,11 +458,17 @@ namespace Forerunner.SSRS.JSONRender
                         //Write properties from page that belong on section                        
                         WriteTempProperty("ColumnSpacing");
                         WriteTempProperty("ColumnCount");
+
+                        //if for some reason there is another onw skip it too - this is probably some other error
+                        if (RPL.InspectByte() == 0xFF)
+                            RPL.position++;   
+
                         WriteJSONHeaderFoooter();
                         //Skip the end 0xFF
                         if (RPL.InspectByte() == 0xFF)
-                            RPL.position++;                        
+                            RPL.position++;
 
+                    
                     }
                     //Measurments
                     WriteJSONMeasurements();

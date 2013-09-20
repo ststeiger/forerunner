@@ -128,17 +128,22 @@ $(function () {
             var me = this;
             var $newObj = me._getDefaultHTMLTable();
             var $sec = $("<TR/>");
-            var location = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+            var loc = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
 
             //Need to determine Header and footer Index
             var headerIndex;
             var footerIndex;
 
-
-            for (var i = 0; i< RIContext.CurrObj.Measurement.Count;i++){
-                if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageHeader")
+            var sectionMeasurement;
+            if (RIContext.CurrObj.Measurement)
+                sectionMeasurement = RIContext.CurrObj.Measurement;
+            else
+                sectionMeasurement = RIContext.CurrObjParent.Measurement;
+            
+            for (var i = 0; i < sectionMeasurement.Count; i++) {
+                if (sectionMeasurement.Measurements[i].Type === "PageHeader")
                     headerIndex = i;
-                if (RIContext.CurrObj.Measurement.Measurements[i].Type === "PageFooter")
+                if (sectionMeasurement.Measurements[i].Type === "PageFooter")
                     footerIndex = i;
             }
           
@@ -155,7 +160,7 @@ $(function () {
             $newObj.append($sec);
             $.each(RIContext.CurrObj.Columns, function (index, obj) {
                 var $col = new $("<TD/>");
-                $col.append(me._writeRectangle(new reportItemContext(RIContext.RS, obj, index, RIContext.CurrObj, new $("<Div/>"), null, location)));
+                $col.append(me._writeRectangle(new reportItemContext(RIContext.RS, obj, index, RIContext.CurrObj, new $("<Div/>"), null, loc)));
                 $sec.append($col);
             });
 

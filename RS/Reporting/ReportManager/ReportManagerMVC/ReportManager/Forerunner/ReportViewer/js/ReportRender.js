@@ -336,14 +336,14 @@ $(function () {
                 }
 
                 if ( anyMove || (Index === Measurements.length - 1)) {
-                    for (i = 0; i < curRI.Index ; i++) {
-                        if (curRI.IndexAbove === layout.ReportItems[i].IndexAbove && curRI.OrgRight <= viewerWidth  && layout.ReportItems[i].OrgRight > viewerWidth)
-                            curRI.IndexAbove = i;
-                        if (layout.ReportItems[i].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
-                            if (curRI.IndexAbove === layout.ReportItems[i].IndexAbove  )
-                                curRI.IndexAbove = layout.ReportItems[i].Index;
-                            else if (layout.ReportItems[i].OrgIndexAbove === curRI.IndexAbove )
-                                layout.ReportItems[i].IndexAbove = curRI.Index;
+                    for (var j = 0; j < curRI.Index ; j++) {
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
+                            curRI.IndexAbove = j;
+                        if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
+                            if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
+                                curRI.IndexAbove = layout.ReportItems[j].Index;
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove)
+                                layout.ReportItems[j].IndexAbove = curRI.Index;
                         }
                     }
                 }

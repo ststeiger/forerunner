@@ -64,7 +64,7 @@
 </div>
 
 <div id="main">
-    <h1 class="page-title">Namespace: reportExplorerEZ</h1>
+    <h1 class="page-title">Namespace: styleSheet</h1>
     
 
 
@@ -73,9 +73,9 @@
     
 <header>
     <h2>
-        <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
+        <span class="ancestors"><a href="forerunner.html">forerunner</a>.</span>
     
-    reportExplorerEZ
+    styleSheet
     </h2>
     
 </header>  
@@ -86,132 +86,11 @@
     
     
         
-            <div class="description">Widget used to explore available reports and launch the Report Viewer</div>
+            <div class="description">Defines utility methods used to update style sheets</div>
         
         
         
 <dl class="details">
-    
-        
-        <h5 class="subsection-title">Properties:</h5>
-        
-        <dl>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The options for reportExplorerEZ
-                <h6>Properties</h6>
-
-<table class="props">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>navigateTo</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Callback function used to navigate to a selected report</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>historyBack</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Callback function used to go back in browsing history.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table></dl>
-        
     
         
     
@@ -233,7 +112,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportExplorer/js/ReportExplorerEZ.js, line 12
+        Common/js/forerunner.js, line 319
     </li></ul></dd>
     
     
@@ -245,11 +124,6 @@
 </dl>
 
         
-        
-            <h3>Example</h3>
-            
-    <pre class="prettyprint"><code>$("#reportExplorerEZId").reportExplorerEZ({ navigateTo: me.navigateTo, historyBack: me.historyBack});</code></pre>
-
         
     
     </div>
@@ -265,102 +139,24 @@
     
     
     
-    
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
         
         <dl>
             
 <dt>
-    <h4 class="name" id="transitionToReportManager"><span class="type-signature"></span>transitionToReportManager<span class="signature">(path, view)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="updateDynamicRules"><span class="type-signature">&lt;static> </span>updateDynamicRules<span class="type-signature"></span></h4>
     
     
 </dt>
 <dd>
     
-    
     <div class="description">
-        Transition to ReportManager view.
+        Updates the given style sheet filename based upon the dynamic rule. Note thatthis function assumes that the rule already exists in the css file and itwill cannot be used to create new rules.
     </div>
     
+    
+    
 
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The explorer path to display.  Null for favorites and recent views.</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>view</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The view to display.  Valid values are null, favorites and recent.  Null is simply the report manager.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
     
 <dl class="details">
     
@@ -384,7 +180,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportExplorer/js/ReportExplorerEZ.js, line 30
+        Common/js/forerunner.js, line 380
     </li></ul></dd>
     
     
@@ -397,136 +193,16 @@
 
     
     
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
+        <h5>Example</h5>
         
-            
-<dt>
-    <h4 class="name" id="transitionToReportView"><span class="type-signature"></span>transitionToReportView<span class="signature">(path)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Transition to ReportViewer view
-    </div>
-    
+    <pre class="prettyprint"><code> var isTouchRule = {     selector: ".fr-toolbase-hide-if-not-touch",     properties: function () {         var pairs = { display: "none" };         if (forerunner.device.isTouch()) {             pairs.display = null;         }         return pairs;     } }; updateDynamicRules([isTouchRule]);</code></pre>
 
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">The report path to display.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        ReportExplorer/js/ReportExplorerEZ.js, line 80
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
     
 </dd>
 
         </dl>
+    
+    
     
     
     

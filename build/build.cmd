@@ -34,10 +34,16 @@ echo HOMEPATH [%HOMEPATH%] >> %BUILD_LOG%
 echo HOME [%HOME%] >> %BUILD_LOG%
 echo SPSITE [%SPSITE%] >> %BUILD_LOG%
 echo SPRELEASE [%SPRELEASE%] >> %BUILD_LOG%
+echo SECRETS_ROOT [%SECRETS_ROOT%] >> %BUILD_LOG%
 set SPBUILD_RELEASE=%SPRELEASE%/%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
 set SPBUILD_URL=%SPSITE%%SPBUILD_RELEASE%
 set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
+echo Cleaning Build Files... >> %BUILD_LOG%
+git clean -f -x >> %BUILD_LOG%
+echo Resetting Local Changes... >> %BUILD_LOG%
+git reset --hard >> %BUILD_LOG%
+echo Syncing Files From Remote... >> %BUILD_LOG%
 git pull %GITHUBSSH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :InitError

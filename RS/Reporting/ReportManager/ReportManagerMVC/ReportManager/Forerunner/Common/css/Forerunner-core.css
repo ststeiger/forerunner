@@ -76,3 +76,27 @@
     background-color:black;
     z-index:2;
 }
+
+/* Small toolbar (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+    .fr-messagebox-innerpage
+    {
+        width: 260px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+        background-color: white;
+    }
+}
+
+/* Medium toolbar (E.g., for phones, landscape) */
+@media only screen and (min-width : 480px) and (max-width : 567px) {
+    .fr-messagebox-innerpage
+    {
+        width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+        background-color: white;
+    }
+}

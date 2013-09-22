@@ -5315,12 +5315,6 @@ $(function () {
                 setTimeout(function () { me.restoreScrollPosition(); }, 0);
             }
         },
-        removeModalDialog: function () {
-            var me = this;
-
-            var $viewer = $(".fr-layout-reportviewer", me.$container);
-            $viewer.reportViewer("closeModalDialog");
-        },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
@@ -5363,7 +5357,6 @@ $(function () {
                 forerunner.device.allowZoom(false);
                 $(".fr-layout-mainheadersection", me.$container).toolbar("hideAllTools");
             }
-
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
         },

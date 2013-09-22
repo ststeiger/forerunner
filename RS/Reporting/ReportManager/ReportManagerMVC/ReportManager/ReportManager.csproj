@@ -228,6 +228,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
+    <Content Include="JSdoc\Tutorials\GettingStarted.html" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
@@ -301,6 +302,7 @@
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
     <Content Include="Views\Debug\Index.cshtml" />
+    <Content Include="JSdoc\readme.md" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

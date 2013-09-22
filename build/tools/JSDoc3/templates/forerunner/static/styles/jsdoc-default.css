@@ -24,15 +24,15 @@ body {
 }
 
 a {
-  color: #444;
+  color: #0026ff;
 }
 
   a:visited {
-    color: #444;
+    color: #b200ff;
   }
 
   a:active {
-    color: #444;
+    color: #b200ff;
   }
 
 header {

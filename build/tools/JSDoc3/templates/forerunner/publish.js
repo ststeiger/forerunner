@@ -117,8 +117,8 @@ function generate(title, docs, filename, resolveLinks) {
         docs: docs
     };
     
-    var outpath = path.join(outdir, filename),
-        html = view.render('container.tmpl', docData);
+    var outpath = path.join(outdir, filename);
+    var html = view.render('container.tmpl', docData);
     
     if (resolveLinks) {
         html = helper.resolveLinks(html); // turn {@link foo} into <a href="foodoc.html">foo</a>
@@ -493,7 +493,7 @@ exports.publish = function(taffyData, opts, tutorials) {
     generate('Index',
         packages.concat(
             [{kind: 'mainpage', readme: opts.readme, longname: (opts.mainpagetitle) ? opts.mainpagetitle : 'Main Page'}]
-        ).concat(files),
+        )/*.concat(files)*/,
     indexUrl);
 
     // set up the lists that we'll use to generate pages

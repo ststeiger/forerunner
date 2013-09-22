@@ -359,7 +359,7 @@ $(function () {
         /**
          * Updates the given style sheet filename based upon the dynamic rule. Note that
          * this function assumes that the rule already exists in the css file and it
-         * will cannot be used to create new rules.
+         * cannot be used to create new rules.
          *
          * @member
          *

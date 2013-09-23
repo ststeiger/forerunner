@@ -5057,7 +5057,7 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv");
             me.$topdiv = $topdiv;
-            $container.append($topdiv);
+            $mainviewport.append($topdiv);
             var $mainheadersection = new $("<div />");
             $mainheadersection.addClass("fr-layout-mainheadersection");
             me.$mainheadersection = $mainheadersection;
@@ -5065,12 +5065,12 @@ $(function () {
             var $topdivspacer = new $("<div />");
             $topdivspacer.addClass("fr-layout-topdivspacer");
             me.$topdivspacer = $topdivspacer;
-            $container.append($topdivspacer);
+            $mainviewport.append($topdivspacer);
             // Page section
             var $pagesection = new $("<div />");
             $pagesection.addClass("fr-layout-pagesection");
             me.$pagesection = $pagesection;
-            $container.append($pagesection);
+            $mainviewport.append($pagesection);
             me.$mainsection = new $("<div />");
             me.$mainsection.addClass("fr-layout-mainsection");
             me.$pagesection.append(me.$mainsection);
@@ -5085,11 +5085,11 @@ $(function () {
             var $bottomdiv = new $("<div />");
             $bottomdiv.addClass("fr-layout-bottomdiv");
             me.$bottomdiv = $bottomdiv;
-            $container.append($bottomdiv);
+            $mainviewport.append($bottomdiv);
             var $bottomdivspacer = new $("<div />");
             $bottomdivspacer.addClass("fr-layout-bottomdivspacer");
             me.$bottomdivspacer = $bottomdivspacer;
-            $container.append($bottomdivspacer);
+            $mainviewport.append($bottomdivspacer);
             //right pane
             var $rightpane = new $("<div />");
             $rightpane.addClass("fr-layout-rightpane");

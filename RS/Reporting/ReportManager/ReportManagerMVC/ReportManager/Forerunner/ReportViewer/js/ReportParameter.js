@@ -522,7 +522,7 @@ $(function () {
         },
         _popupDropDownPanel: function(param) {
             var me = this;
-            var isVisible = $("[name='" + param.Name + "_DropDownContainer'").is(":visible");
+            var isVisible = $("[name='" + param.Name + "_DropDownContainer']").is(":visible");
             me._closeAllDropdown();
 
             if (!isVisible) {
@@ -555,7 +555,7 @@ $(function () {
         },
         _closeAllDropdown: function () {
             var me = this;
-            $(".fr-param-dropdown-show").each(function (index, param) {
+            $(".fr-param-dropdown-show").filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },

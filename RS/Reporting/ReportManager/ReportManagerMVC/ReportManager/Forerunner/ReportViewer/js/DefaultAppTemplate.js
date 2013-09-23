@@ -368,7 +368,10 @@ $(function () {
                         .css("width", Math.max(reportArea.width(), document.documentElement.clientWidth));
                 }
                 else {
-                    $(".fr-render-bglayer").css("position", "fixed").css("top", 38);
+                    $(".fr-render-bglayer").css("position", "absolute").
+                       css("height", Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
+                       .css("width", Math.max(reportArea.width(), document.documentElement.clientWidth));
+                    //$(".fr-render-bglayer").css("position", "fixed").css("top", 38);
                 }
             });
 

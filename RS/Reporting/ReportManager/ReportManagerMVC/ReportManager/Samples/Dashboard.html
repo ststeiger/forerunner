@@ -35,15 +35,25 @@
   <script>
       $(document).ready(function () {
           $('#pane1').reportViewerEZ({
-              DefaultAppTemplate: null,
-              path: '/AdventureWorks 2008R2/Customers_Near_Stores_2008R2',
-              navigateTo: null,
-              historyBack: null,
-              isReportManager: false,
+              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+              isFullScreen: false
+          });
+          $('#pane2').reportViewerEZ({
+              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
               isFullScreen: false
           });
       });
   </script>
-  <div id="pane1"/>
+    <h1>This is a bunch of HTML</h1>
+    <table>
+        <tr>
+            <td>
+                <div id="pane1" style="width:500px;height:500px;"/>
+            </td>
+            <td>
+                <div id="pane2" style="width:500px;height:500px;"/>
+            </td>
+        </tr>
+     </table>
 </body>
 </html>

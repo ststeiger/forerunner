@@ -12,6 +12,7 @@ Setting up a New Build Machine
 3. Create a build account (buildbot) which has logon as batch rights. This could be a local or domain account. For initial setup, it is useful to allow the user logon locally rights on the build machine. In practice, buildbot is a local admin on the build machine.
 4. Create an enlistment directory. ex. (C:\Code\Forerunner).
 	a. Make sure the build account is the owner and has full control over all files and directories.
+    b. Create a directory that is not under the enlistment for secrets files. These files will get wiped out by GIT clean if they are under the enlistment. Putting it under the build account's user directory is a good place, ex. C:\Users\buildbot\Forerunner. Define SECRETS_ROOT in build\%COMPUTERNAME%.cmd to be this dir in step 9a.
 5. Create an SSH key for the build account.
 	a. Logon as the build account (if not already).
 	b. Follow these directions. (https://help.github.com/articles/generating-ssh-keys) except for the part
@@ -25,7 +26,7 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 10. Test the build: "build\build.cmd"
 11. Setup E-Mail.
 	a. In Powershell, execute "Set-ExecutionPolicy Unrestricted"
-    b. Create smtp.config.xml under build.
+    b. Create smtp.config.xml under the SECRETS_ROOT dir.
 	The format of this file is:
 		<?xml version="1.0"?>
 		<SmtpConfiguration 
@@ -40,10 +41,9 @@ about the passphrase. Keep that blank - otherwise all git operations will prompt
 	a. Import "Daily Build.xml" to Task Scheduler.
 	b. Run the job manually to make sure it is working.
 13. Setup Drop to Sharepoint.
-	a. Create a Credentials.xml in the build dir for connecting to SP:
+	a. Create a Credentials.xml in the SECRETS_ROOT dir for connecting to SP:
 <?xml version="1.0" encoding="utf-8" ?>
 <Credential UserName="stellar@forerunnersw.com" Password="*******"/>
-	b. Make sure this is in .gitignore so it does not get checked in.
 
 Adding a new Project
 --------------------

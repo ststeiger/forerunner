@@ -329,7 +329,7 @@ $(function () {
                         return false;
                     }
 
-                    returnSheet = forerunner.styleSheet._findImportedSheet(name, rule.styleSheet)
+                    returnSheet = forerunner.styleSheet._findImportedSheet(name, rule.styleSheet);
                     if (returnSheet) {
                         return false;
                     }
@@ -348,7 +348,7 @@ $(function () {
                     return false;
                 }
 
-                returnSheet = forerunner.styleSheet._findImportedSheet(name, sheet)
+                returnSheet = forerunner.styleSheet._findImportedSheet(name, sheet);
                 if (returnSheet) {
                     return false;
                 }
@@ -359,7 +359,7 @@ $(function () {
         /**
          * Updates the given style sheet filename based upon the dynamic rule. Note that
          * this function assumes that the rule already exists in the css file and it
-         * will cannot be used to create new rules.
+         * cannot be used to create new rules.
          *
          * @member
          *
@@ -394,7 +394,7 @@ $(function () {
                             // Add or remove all properties from the dynamic rule into toolbase.css
                             for (var prop in dynamicRule.properties()) {
                                 var value = dynamicRule.properties()[prop];
-                                if (value != null || value == "") {
+                                if (value !== null || value === "") {
                                     rule.style[prop] = value;
                                 }
                                 else {
@@ -424,6 +424,7 @@ $(function () {
          */
         getLocData: function(locFileLocation){
             var lang = navigator.language || navigator.userLanguage;
+            lang = lang.toLocaleLowerCase();
             var langData = this._loadFile(locFileLocation, lang);
 
             if (langData === null || langData === undefined)
@@ -450,7 +451,7 @@ $(function () {
                     fail: function () {
                         me._locData[locFileLocation][lang] = null;
                     },
-                    error: function () {
+                    error: function ( jqXHR ,textStatus, errorThrown) {
                         me._locData[locFileLocation][lang] = null;
                 },
                 });
@@ -578,7 +579,7 @@ $(function () {
             var $mask = $(".fr-mask");
             if ($mask.length === 0) {
                 $mask = $("<div class='fr-mask'></div>");
-                $mask.appendTo($("body"));
+                $mask.appendTo($("body"));                
             }
 
             $mask.show("fast", function () {
@@ -627,11 +628,13 @@ $(function () {
             var me = this;
 
             if ($(".fr-messagebox").length === 0) {
+                var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
                 var $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
-                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>Notice</span></div>" +
+                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>" + locData.dialog.title + "</span></div>" +
                     "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
                     "<div class='fr-messagebox-buttongroup'>" +
-                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='close' />" +
+                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='" + locData.dialog.close + "' />" +
                     "</div></div>");
 
                 $("body").append($messageBox);

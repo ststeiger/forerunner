@@ -197,8 +197,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sw.txt"
   
   
-  SetOutPath "$INSTDIR\Forerunner"
-  File "${LOCALROOT}\Forerunner\Forerunner-all.js"
   SetOutPath "$INSTDIR\Forerunner\Bundles"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner.min.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.js"
@@ -333,7 +331,6 @@ Section Uninstall
   Delete "$INSTDIR\Scripts\Util\modernizr-2.5.3.js"
   Delete "$INSTDIR\Scripts\Util\laconic.js"
   Delete "$INSTDIR\Scripts\Util\underscore.js"
-  Delete "$INSTDIR\Forerunner\Forerunner-all.min.js"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner.min.js"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner-tools.js"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner-tools.min.js"

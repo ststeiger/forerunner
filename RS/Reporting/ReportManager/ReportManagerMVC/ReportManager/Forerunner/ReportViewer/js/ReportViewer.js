@@ -306,7 +306,7 @@ $(function () {
 
         allowSwipe: function(isEnabled){
             var me = this;
-            $(me.element).data('swipeEnabled', isEnabled);
+            $(me.element).data("swipeEnabled", isEnabled);
             /*
             if (isEnabled === true)
                 $(me.element).swipe("enable");
@@ -317,36 +317,45 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on('swipe drag touch release',
+            $(me.element).hammer({}).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
                         // Hide the header on touch
-                        case 'touch':
-                            me._hideTableHeaders();
+                        case "touch":
+                            me._hideTableHeaders();                            
                             break;
-                        // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
-                        case 'swipe':
-                        case 'drag':
-                            if ($(me.element).data('swipeEnabled') == false)
-                                return;
 
-                            if (ev.gesture['direction'] == 'left' && ev.gesture['velocityX'] > 0.2) {
-                                me.navToPage(me.curPage + 1);
+                         // Show the header on release only if this is not scrolling.
+                            // If it is scrolling, we will let scrollstop handle that.
+                   
+                        case "release":
+                            if ($(me.element).data("swipeEnabled") === false)
+                                break;
+
+                            var swipeNav = false;                            
+                            if (ev.gesture.touches.length > 1) {                                
+                                swipeNav = true;
                             }
 
-                            if (ev.gesture['direction'] == 'right' && ev.gesture['velocityX'] > 0.2) {
+                            if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
+                                ev.gesture.preventDefault();
+                                me.navToPage(me.curPage + 1);
+                                break;
+                            }
+
+                            if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
+                                ev.gesture.preventDefault();
                                 me.navToPage(me.curPage - 1);
+                                break;
                             }
                             
-                            break;
-                        // Show the header on release only if this is not scrolling.
-                        // If it is scrolling, we will let scrollstop handle that.
-                        case 'release':
-                            if (ev.gesture['velocityX'] == 0 && ev.gesture['velocityY'] == 0)
+
+                           if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
+                   
                 }
             );
         },
@@ -438,7 +447,11 @@ $(function () {
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report
+            var me = this;
+
             if ($(".fr-docmap-panel").length !== 0) {
+                me.hideDocMap();
+                me.docMapData = null;
                 $(".fr-docmap-panel").remove();
             }
         },
@@ -507,17 +520,18 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
-                //me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
+                me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
+                
                 me._loadParameters(action.CurrentPage);
                 //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 

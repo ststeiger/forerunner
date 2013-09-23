@@ -59,6 +59,18 @@
 	"zoom": "Permite Zoom",
 	"print": "Print"
     },
+	"print":{
+	    "title": "Opțiunea Print Page Layout",
+		"pageHeight": "Înălțime pagină",
+		"pageWidth": "Lățime pagină",
+		"marginTop": "Top margin",
+		"marginBottom": "marginea inferioară",
+		"marginLeft": "marginea stânga",
+		"marginRight": "marginea dreapta",
+		"print": "imprima",
+		"cancel": "anula",
+		"unit": "mm"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "Adevărat",
@@ -81,6 +93,10 @@
 	"range": "Introduceti o valoare între {0} şi {1}",
 	"max": "Introduceti o valoare mai mică decât sau egală cu a {0}",
 	"min": "Introduceti o valoare mai mare sau egal cu {0}"
+	},
+	"dialog":{
+	    "title":"prompt",
+		"close":"închide"
 	}
 }
 

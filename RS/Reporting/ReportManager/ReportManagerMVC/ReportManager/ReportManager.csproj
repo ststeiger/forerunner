@@ -173,12 +173,6 @@
     <Content Include="Forerunner\Common\images\ForerunnerLogo.jpg" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
-    <Content Include="Forerunner\Forerunner-all.js">
-      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Forerunner-all.min.js">
-      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />
@@ -236,6 +230,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
     <Content Include="Samples\FullPage.html" />
     <Content Include="Samples\Dashboard.html" />
+    <Content Include="JSdoc\Tutorials\GettingStarted.html" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
@@ -308,13 +303,8 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
-    <None Include="Forerunner\Forerunner-all.js.bundle">
-      <SubType>Designer</SubType>
-    </None>
     <Content Include="Views\Debug\Index.cshtml" />
-    <Content Include="Forerunner\Forerunner-all.min.js.map">
-      <DependentUpon>Forerunner-all.js.bundle</DependentUpon>
-    </Content>
+    <Content Include="JSdoc\readme.md" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

@@ -244,9 +244,9 @@
               <Actions>
                 <Action>
                   <Drillthrough>
-                    <ReportName>Parameter1</ReportName>
+                    <ReportName>Parameter by Category</ReportName>
                     <Parameters>
-                      <Parameter Name="ReportParameter1">
+                      <Parameter Name="Category">
                         <Value>="SP"</Value>
                       </Parameter>
                     </Parameters>
@@ -364,9 +364,9 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Parameter1</ReportName>
+                          <ReportName>Parameter by Category</ReportName>
                           <Parameters>
-                            <Parameter Name="ReportParameter1">
+                            <Parameter Name="Category">
                               <Value>="NM"</Value>
                             </Parameter>
                           </Parameters>
@@ -774,7 +774,12 @@
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>Parameter1</ReportName>
+                            <ReportName>Parameter by Region</ReportName>
+                            <Parameters>
+                              <Parameter Name="ReportParameter1">
+                                <Value>=Fields!Region.Value</Value>
+                              </Parameter>
+                            </Parameters>
                           </Drillthrough>
                         </Action>
                       </Actions>
@@ -903,15 +908,6 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>ProductName</rd:DefaultName>
-                      <ActionInfo>
-                        <Actions>
-                          <Action>
-                            <Drillthrough>
-                              <ReportName>Parameter1</ReportName>
-                            </Drillthrough>
-                          </Action>
-                        </Actions>
-                      </ActionInfo>
                       <Style>
                         <Border>
                           <Color>LightGrey</Color>
@@ -953,6 +949,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -995,9 +992,9 @@
           <Actions>
             <Action>
               <Drillthrough>
-                <ReportName>Parameter1</ReportName>
+                <ReportName>Parameter by Category</ReportName>
                 <Parameters>
-                  <Parameter Name="ReportParameter1">
+                  <Parameter Name="Category">
                     <Value>="WA"</Value>
                   </Parameter>
                 </Parameters>

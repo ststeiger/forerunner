@@ -421,12 +421,6 @@ $(function () {
                 setTimeout(function () { me.restoreScrollPosition(); }, 0);
             }
         },
-        removeModalDialog: function () {
-            var me = this;
-
-            var $viewer = $(".fr-layout-reportviewer", me.$container);
-            $viewer.reportViewer("closeModalDialog");
-        },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";

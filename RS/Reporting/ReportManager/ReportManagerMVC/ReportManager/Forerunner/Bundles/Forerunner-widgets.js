@@ -5363,7 +5363,7 @@ $(function () {
                 var reportArea = $(".fr-report-areacontainer");
                 
                 if (reportArea.height() > document.documentElement.clientHeight - 38 // 38 is toolbar height
-                    || reportArea.width() > document.documentElement.clientWidth) {
+                    || reportArea.width() > document.documentElement.clientWidth || !me.options.isFullScreen) {
 
                     $(".fr-render-bglayer").css("position", "absolute").
                         css("height", Math.max(reportArea.height(), document.documentElement.clientHeight - 38))

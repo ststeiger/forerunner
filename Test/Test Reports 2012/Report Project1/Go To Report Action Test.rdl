@@ -54,7 +54,12 @@
                       <Actions>
                         <Action>
                           <Drillthrough>
-                            <ReportName>Parameter1</ReportName>
+                            <ReportName>Parameter by Category</ReportName>
+                            <Parameters>
+                              <Parameter Name="Category">
+                                <Value>1</Value>
+                              </Parameter>
+                            </Parameters>
                           </Drillthrough>
                         </Action>
                       </Actions>
@@ -247,7 +252,7 @@
                     <ReportName>Parameter by Category</ReportName>
                     <Parameters>
                       <Parameter Name="Category">
-                        <Value>="SP"</Value>
+                        <Value>=1</Value>
                       </Parameter>
                     </Parameters>
                   </Drillthrough>
@@ -949,7 +954,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>

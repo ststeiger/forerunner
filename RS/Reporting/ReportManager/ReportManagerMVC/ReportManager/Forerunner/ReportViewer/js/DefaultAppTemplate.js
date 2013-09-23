@@ -161,7 +161,7 @@ $(function () {
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
 
                             case 'release':
-                                if (ev.gesture.velocityX == 0 && ev.gesture.velocityY == 0)
+                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                     me._updateTopDiv(me);
                                 break;
                         }

@@ -3989,6 +3989,7 @@ $(function () {
         _savedParamExist:false,
         _savedParamList: null,
         _savedParamCount: 0,
+        $params: null,
 
         _init: function () {
             var me = this;
@@ -4010,7 +4011,7 @@ $(function () {
                 "</form></div>");
             me.element.css("display", "block");
             me.element.html($params);
-
+            me.$params = $params;
             me._formInit = true;
         },
         /**
@@ -4532,23 +4533,23 @@ $(function () {
         getParamsList: function () {
             var me = this;
             var i;
-            if ($("[name='ParameterForm']").length !== 0 && $("[name='ParameterForm']").valid() === true) {
+            if ($("[name='ParameterForm']", me.$params).length !== 0 && $("[name='ParameterForm']", me.$params).valid() === true) {
                 var a = [];
                 //Text
-                $(".fr-param").filter(":text").each(function () {
+                $(".fr-param", me.$params).filter(":text").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //Hidden
-                $(".fr-param").filter("[type='hidden']").each(function () {
+                $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //dropdown
-                $(".fr-param").filter("select").each(function () {
+                $(".fr-param", me.$params).filter("select").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
-                $(".fr-param").filter(":radio").each(function () {
+                $(".fr-param", me.$params).filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
                         radioList[this.name] = null;
                     }
@@ -4561,7 +4562,7 @@ $(function () {
                 }
                 //combobox - multiple values
                 var tempCb = "";
-                $(".fr-param").filter(":checkbox").filter(":checked").each(function () {
+                $(".fr-param", me.$params).filter(":checkbox").filter(":checked").each(function () {
                     if (tempCb.indexOf(this.name) === -1) {
                         tempCb += this.name + ",";
                     }
@@ -4571,8 +4572,8 @@ $(function () {
                 var cbValue = "";
                 for (i = 0; i < cbArray.length - 1; i++) {
                     cbName = cbArray[i];
-                    var cbValueLength = $("input[name='" + cbArray[i] + "']:checked").length;
-                    $("input[name='" + cbArray[i] + "']:checked").each(function (i) {
+                    var cbValueLength = $("input[name='" + cbArray[i] + "']:checked", me.$params).length;
+                    $("input[name='" + cbArray[i] + "']:checked", me.$params).each(function (i) {
                         if (i === cbValueLength - 1)
                             cbValue += this.value;
                         else

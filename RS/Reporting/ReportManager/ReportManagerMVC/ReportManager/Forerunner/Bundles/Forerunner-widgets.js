@@ -4481,9 +4481,11 @@ $(function () {
                 var scrollTop = $container.scrollTop();
                 var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
                 var $multipleControl = $("[name='" + param.Name + "']");
-                var positionTop = $multipleControl.offset().top;
-
+                //get the relative position
+                var positionTop = $multipleControl.offset().top - $container.offset().top + 38;
+                
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
+                    
                     $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
                 }
                 else {

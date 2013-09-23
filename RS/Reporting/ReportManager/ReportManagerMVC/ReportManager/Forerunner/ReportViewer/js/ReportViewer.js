@@ -99,9 +99,9 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).bind('scrollstop', function () { me._updateTableHeaders(me); });
+                $(window).on('scrollstop', function () { me._updateTableHeaders(me); });
             } else {
-                $(window).scroll(function () { me._updateTableHeaders(me); });
+                $(window).on('scroll', function () { me._updateTableHeaders(me); });
             }
 
             //Log in screen if needed

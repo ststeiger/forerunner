@@ -7,7 +7,7 @@
 
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-
+    overflow-y:auto;
 }
 
 .fr-toolpane .fr-toolbase-toolcontainer {

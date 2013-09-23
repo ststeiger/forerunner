@@ -25,7 +25,8 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {
         options: {
             navigateTo: null,
-            historyBack: null
+            historyBack: null,
+            isFullScreen: true
         },
         /**
          * Transition to ReportManager view.
@@ -99,7 +100,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element }).render();
+            me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
         }
     });  // $.widget
 });  // function()

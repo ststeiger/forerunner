@@ -3,13 +3,13 @@ Forerunner SDK
 --------------
 
 The Forerunner SDK is comprised of a collection of JQuery Widgets and JavaScript namespaces. All 
-Forerunner Widgets are defined as part of the [$](/Docs/$.html) namespace. All Forerunner namspaces 
+Forerunner Widgets are defined as part of the [$](/Docs/$.html) namespace. All Forerunner namespaces 
 are defined under the [forerunner](/Docs/forerunner.html) namespace. As an example, all the buttons 
 used in the [$.forerunner.toolbar](/Docs/$.forerunner.toolbar.html) widget are defined in the 
 [forerunner.ssr.tools.toolbar](/Docs/forerunner.ssr.tools.toolbar.html) namespace. All the code used 
 to create the Forerunner Mobilizer product is available in the SDK via widgets. In point of fact, 
-Mobilizer is built from Forerunner SDK itself. Additionally all Forerunner widgets use cascading style 
-sheets. These .css files can be used as is or modified in your own web applications.
+Mobilizer is built from the Forerunner SDK itself. Additionally, all Forerunner widgets use cascading 
+style sheets. These .css files can be used as is or modified in your own web applications.
 
 Folder Structure
 ----------------
@@ -19,7 +19,7 @@ folder is:
 
 c:\Program Files (x86)\Forerunner Mobilizer\ForerunnerMobilizer\
 
-But this can be changed during installation. From the destination folder, the SDK folders are as follows:
+From the destination folder, the SDK folders are as follows:
 
 	destination\
 		Forerunner\
@@ -62,5 +62,5 @@ Where:
 Tutorials / Sample Code
 -----------------------
 
-See the "[Getting Started](tutorial-GettingStarted.html)" tutorial to get some hands on creating your own Forerunner enabled 
+See the "[Getting Started](tutorial-GettingStarted.html)" tutorial to get some hands on experience creating your own Forerunner enabled 
 web applications.

@@ -369,9 +369,9 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>Parameter by Category</ReportName>
+                          <ReportName>Parameter by Region</ReportName>
                           <Parameters>
-                            <Parameter Name="Category">
+                            <Parameter Name="ReportParameter1">
                               <Value>="NM"</Value>
                             </Parameter>
                           </Parameters>
@@ -996,9 +996,9 @@
           <Actions>
             <Action>
               <Drillthrough>
-                <ReportName>Parameter by Category</ReportName>
+                <ReportName>Parameter by Region</ReportName>
                 <Parameters>
-                  <Parameter Name="Category">
+                  <Parameter Name="ReportParameter1">
                     <Value>="WA"</Value>
                   </Parameter>
                 </Parameters>

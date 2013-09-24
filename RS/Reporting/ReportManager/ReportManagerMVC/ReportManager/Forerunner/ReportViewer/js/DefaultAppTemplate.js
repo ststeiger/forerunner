@@ -167,9 +167,7 @@ $(function () {
                         }
                     });
                     $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
-                } else {
-                    $(me.$container).on('scroll', function () { me._updateTopDiv(me); });
-                }
+                } 
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
@@ -204,11 +202,9 @@ $(function () {
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
-                    if (me.$leftpane.is(':visible')) {
-                        me.$leftpane.css('top', $(window).scrollTop());
-                    } else if (me.$rightpane.is(':visible')) {
-                        me.$rightpane.css('top', $(window).scrollTop());
-                    }
+                    me._updateTopDiv(me);
+                });
+                me.$container.on('scroll', function () {
                     me._updateTopDiv(me);
                 });
             }
@@ -236,6 +232,11 @@ $(function () {
         },
         
         _updateTopDiv: function (me) {
+            if (me.$leftpane.is(':visible')) {
+                me.$leftpane.css('top', me.$container.scrollTop());
+            } else if (me.$rightpane.is(':visible')) {
+                me.$rightpane.css('top', me.$container.scrollTop());
+            }
             me.$topdiv.css('top', me.$container.scrollTop());
             me.$topdiv.css('left', me.$container.scrollLeft());
             me.$topdiv.show();
@@ -461,11 +462,14 @@ $(function () {
             if (!slideoutPane.is(':visible')) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
+                    slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideLeftShow(delay);                    
                 } else {
                     //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
+                    slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideRightShow(delay);
                 }
+                
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
                 me.$mainheadersection.toolbar('hideAllTools');

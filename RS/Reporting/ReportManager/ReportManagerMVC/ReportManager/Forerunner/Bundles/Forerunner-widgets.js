@@ -5171,7 +5171,9 @@ $(function () {
                         }
                     });
                     $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
-                } 
+                } else {
+                    $(me.$container).on('scroll', function () { me._updateTopDiv(me); });
+                }
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
@@ -5238,8 +5240,8 @@ $(function () {
         },
         
         _updateTopDiv: function (me) {
-            me.$topdiv.css('top', $(window).scrollTop());
-            me.$topdiv.css('left', $(window).scrollLeft());
+            me.$topdiv.css('top', me.$container.scrollTop());
+            me.$topdiv.css('left', me.$container.scrollLeft());
             me.$topdiv.show();
         },
         

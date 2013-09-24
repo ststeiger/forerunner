@@ -167,9 +167,7 @@ $(function () {
                         }
                     });
                     $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
-                } else {
-                    $(me.$container).on('scroll', function () { me._updateTopDiv(me); });
-                }
+                } 
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
@@ -209,6 +207,7 @@ $(function () {
                     } else if (me.$rightpane.is(':visible')) {
                         me.$rightpane.css('top', $(window).scrollTop());
                     }
+                    me._updateTopDiv(me);
                 });
             }
         },

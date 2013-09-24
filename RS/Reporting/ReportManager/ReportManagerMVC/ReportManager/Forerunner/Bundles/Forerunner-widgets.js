@@ -1767,7 +1767,7 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
-                $("input.fr-toolbar-reportpage-textbox", me.$el).val(data.newPageNum);
+                $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
@@ -1906,7 +1906,7 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
-                $("input.fr-item-textbox-reportpage", me.$el).val(data.newPageNum);
+                $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateItemStates(data.newPageNum, maxNumPages);
                 
@@ -5171,9 +5171,7 @@ $(function () {
                         }
                     });
                     $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
-                } else {
-                    $(me.$container).on('scroll', function () { me._updateTopDiv(me); });
-                }
+                } 
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
@@ -5213,6 +5211,7 @@ $(function () {
                     } else if (me.$rightpane.is(':visible')) {
                         me.$rightpane.css('top', $(window).scrollTop());
                     }
+                    me._updateTopDiv(me);
                 });
             }
         },

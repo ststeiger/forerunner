@@ -38,7 +38,7 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
-                $("input.fr-item-textbox-reportpage", me.$el).val(data.newPageNum);
+                $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateItemStates(data.newPageNum, maxNumPages);
                 

@@ -99,9 +99,9 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).on('scrollstop', function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on('scroll', function () { me._updateTableHeaders(me); });
+                $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //Log in screen if needed
@@ -1179,18 +1179,30 @@ $(function () {
         _sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
-            if (me.sessionID && me.sessionID !== "")
+
+            if (me._sessionPingPost(me.sessionID) === false)
+                me.sessionID = "";
+
+            $.each(me.actionHistory, function (index, obj) {
+                me._sessionPingPost(obj.SessionID);
+            });
+
+            },
+        _sessionPingPost: function (sessionID) {
+            var me = this;
+            if (sessionID && sessionID !== "")
                 $.getJSON(me.options.reportViewerAPI + "/PingSession", {
-                    PingSessionID: me.sessionID
+                    PingSessionID: sessionID
                 })
                 .done(function (data) {
                     if (data.Status === "Fail") {
-                        me.sessionID = "";                       
+                        return false;
                     }
+                    else
+                        return true;
                 })
                 .fail(function () { console.log("ping error"); });
-
-        },
+            },
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar

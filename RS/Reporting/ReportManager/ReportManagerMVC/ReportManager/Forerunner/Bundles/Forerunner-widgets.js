@@ -318,7 +318,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -1475,7 +1475,7 @@ $(function () {
 
             // tool click event handler
             $tool.on("click", { toolInfo: toolInfo, $tool: $tool }, function (e) {
-                $dropdown.css("left", e.data.$tool.filter(":visible").offset().left);
+                $dropdown.css("left", e.data.$tool.filter(":visible").offset().left - e.data.$tool.filter(":visible").offsetParent().offset().left);
                 //$dropdown.css("top", e.data.$tool.filter(":visible").offset().top + e.data.$tool.height());
                 $dropdown.css("top", e.data.$tool.height());
                 $dropdown.toggle();
@@ -5150,7 +5150,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
@@ -5219,7 +5219,7 @@ $(function () {
                 isContained = true;
             } else {
                 var parent = element.parentElement;
-                while (parent !== undefined) {
+                while (parent !== undefined && parent != null) {
                     console.log(parent);
                     if ($(parent).hasClass(className)) {
                         console.log('Contained');
@@ -5241,7 +5241,9 @@ $(function () {
             }
             me.$topdiv.css('top', me.$container.scrollTop());
             me.$topdiv.css('left', me.$container.scrollLeft());
-            me.$topdiv.show();
+            if (!me.isZoomed()) {
+                me.$topdiv.show();
+            }
         },
         
         toggleZoom: function () {

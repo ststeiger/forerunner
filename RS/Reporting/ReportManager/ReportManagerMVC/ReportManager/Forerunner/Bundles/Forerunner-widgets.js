@@ -318,7 +318,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -5152,7 +5152,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {

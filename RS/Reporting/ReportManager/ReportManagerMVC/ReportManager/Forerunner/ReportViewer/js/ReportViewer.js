@@ -99,9 +99,9 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).bind("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on('scrollstop', function () { me._updateTableHeaders(me); });
             } else {
-                $(window).scroll(function () { me._updateTableHeaders(me); });
+                $(window).on('scroll', function () { me._updateTableHeaders(me); });
             }
 
             //Log in screen if needed
@@ -447,7 +447,11 @@ $(function () {
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report
+            var me = this;
+
             if ($(".fr-docmap-panel").length !== 0) {
+                me.hideDocMap();
+                me.docMapData = null;
                 $(".fr-docmap-panel").remove();
             }
         },
@@ -516,17 +520,18 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
-                //me._resetViewer();
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 
                 me._trigger(events.drillBack);
                 me._removeParameters();
+                me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
+                
                 me._loadParameters(action.CurrentPage);
                 //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 

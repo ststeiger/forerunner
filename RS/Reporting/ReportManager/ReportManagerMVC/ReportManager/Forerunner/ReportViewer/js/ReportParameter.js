@@ -38,6 +38,7 @@ $(function () {
         _savedParamExist:false,
         _savedParamList: null,
         _savedParamCount: 0,
+        $params: null,
 
         _init: function () {
             var me = this;
@@ -59,7 +60,7 @@ $(function () {
                 "</form></div>");
             me.element.css("display", "block");
             me.element.html($params);
-
+            me.$params = $params;
             me._formInit = true;
         },
         /**
@@ -76,14 +77,14 @@ $(function () {
             me._loadedForDefault = true && !me._savedParamExist;
             me._render();
 
-            var $eleBorder = $(".fr-param-element-border");
+            var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 $eleBorder.append(me._writeParamControl(param, new $("<div />")));
             });
             
             me._resetLabelWidth();
             me.resetValidateMessage();
-            $("[name='ParameterForm']").validate({
+            $("[name='ParameterForm']", me.$params).validate({
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("span"));
@@ -107,7 +108,7 @@ $(function () {
                         $(element).removeClass("fr-param-error");
                 }
             });
-            $(".fr-param-viewreport").on("click", function () {
+            $(".fr-param-viewreport", me.$params).on("click", function () {
                 me._submitForm();
             });
             
@@ -495,23 +496,24 @@ $(function () {
             return result;
         },
         _setMultipleInputValues: function (param) {
-            var target = $("[name='" + param.Name + "']");
+            var me = this;
+            var target = $("[name='" + param.Name + "']", me.$params);
 
             if (target.hasClass("fr-param-client")) {
                 var showValue = "";
                 var hiddenValue = "";
-                $("." + param.Name + "_DropDown_CB").each(function () {
+                $("." + param.Name + "_DropDown_CB", me.$params).each(function () {
                     if (this.checked && this.value !== "Select All") {
                         showValue += $("[name='" + param.Name + "_DropDown_" + this.value + "_lable']").html() + ",";
                         hiddenValue += this.value + ",";
                     }
                 });
-                $("#" + param.Name + "_fore").val(showValue.substr(0, showValue.length - 1));
-                $("#" + param.Name + "_hidden").val(hiddenValue.substr(0, hiddenValue.length - 1));
+                $("#" + param.Name + "_fore", me.$params).val(showValue.substr(0, showValue.length - 1));
+                $("#" + param.Name + "_hidden", me.$params).val(hiddenValue.substr(0, hiddenValue.length - 1));
             }
             else {
                 var currentValue = target.val();
-                var newValue = $("[name='" + param.Name + "_DropDownTextArea']").val();
+                var newValue = $("[name='" + param.Name + "_DropDownTextArea']", me.$params).val();
                 newValue=newValue.replace(/\n+/g,",");
                 
                 if (newValue.charAt(newValue.length - 1) === ",") {
@@ -522,17 +524,19 @@ $(function () {
         },
         _popupDropDownPanel: function(param) {
             var me = this;
-            var isVisible = $("[name='" + param.Name + "_DropDownContainer'").is(":visible");
+            var isVisible = $("[name='" + param.Name + "_DropDownContainer']", me.$params).is(":visible");
             me._closeAllDropdown();
 
             if (!isVisible) {
-                var $container = $(".fr-layout-rightpanecontent");
+                var $container = $(".fr-layout-rightpanecontent", me.$params);
                 var scrollTop = $container.scrollTop();
-                var $dropDown = $("[name='" + param.Name + "_DropDownContainer']");
-                var $multipleControl = $("[name='" + param.Name + "']");
-                var positionTop = $multipleControl.offset().top;
-
+                var $dropDown = $("[name='" + param.Name + "_DropDownContainer']", me.$params);
+                var $multipleControl = $("[name='" + param.Name + "']", me.$params);
+                //get the relative position
+                var positionTop = $multipleControl.offset().top - $container.offset().top + 38;
+                
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
+                    
                     $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
                 }
                 else {
@@ -550,12 +554,12 @@ $(function () {
         _closeDropDownPanel: function (param) {
             var me = this;
             me._setMultipleInputValues(param);
-            $("[name='" + param.Name + "_DropDownContainer']").removeClass("fr-param-dropdown-show").hide();
+            $("[name='" + param.Name + "_DropDownContainer']", me.$params).removeClass("fr-param-dropdown-show").hide();
             //$("[name='" + param.Name + "']").focus().blur().focus();
         },
         _closeAllDropdown: function () {
             var me = this;
-            $(".fr-param-dropdown-show").each(function (index, param) {
+            $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
         },
@@ -579,23 +583,23 @@ $(function () {
         getParamsList: function () {
             var me = this;
             var i;
-            if ($("[name='ParameterForm']").length !== 0 && $("[name='ParameterForm']").valid() === true) {
+            if ($("[name='ParameterForm']", me.$params).length !== 0 && $("[name='ParameterForm']", me.$params).valid() === true) {
                 var a = [];
                 //Text
-                $(".fr-param").filter(":text").each(function () {
+                $(".fr-param", me.$params).filter(":text").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //Hidden
-                $(".fr-param").filter("[type='hidden']").each(function () {
+                $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 //dropdown
-                $(".fr-param").filter("select").each(function () {
+                $(".fr-param", me.$params).filter("select").each(function () {
                     a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
-                $(".fr-param").filter(":radio").each(function () {
+                $(".fr-param", me.$params).filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
                         radioList[this.name] = null;
                     }
@@ -608,7 +612,7 @@ $(function () {
                 }
                 //combobox - multiple values
                 var tempCb = "";
-                $(".fr-param").filter(":checkbox").filter(":checked").each(function () {
+                $(".fr-param", me.$params).filter(":checkbox").filter(":checked").each(function () {
                     if (tempCb.indexOf(this.name) === -1) {
                         tempCb += this.name + ",";
                     }
@@ -618,8 +622,8 @@ $(function () {
                 var cbValue = "";
                 for (i = 0; i < cbArray.length - 1; i++) {
                     cbName = cbArray[i];
-                    var cbValueLength = $("input[name='" + cbArray[i] + "']:checked").length;
-                    $("input[name='" + cbArray[i] + "']:checked").each(function (i) {
+                    var cbValueLength = $("input[name='" + cbArray[i] + "']:checked", me.$params).length;
+                    $("input[name='" + cbArray[i] + "']:checked", me.$params).each(function (i) {
                         if (i === cbValueLength - 1)
                             cbValue += this.value;
                         else
@@ -647,7 +651,7 @@ $(function () {
             }
         },
         _isParamNullable: function(param) {
-            var cb = $(".fr-param-checkbox").filter("[name='" + param.name + "']").first();
+            var cb = $(".fr-param-checkbox", this.$params).filter("[name='" + param.name + "']").first();
             if (cb.attr("checked") === "checked" || param.value === "")
                 return null;
             else
@@ -655,10 +659,10 @@ $(function () {
         },
         _resetLabelWidth: function () {
             var max = 0;
-            $(".fr-param-label").each(function (index, obj) {
+            $(".fr-param-label", this.$params).each(function (index, obj) {
                 if ($(obj).width() > max) max = $(obj).width();
             });
-            $(".fr-param-label").each(function (index, obj) {
+            $(".fr-param-label", this.$params).each(function (index, obj) {
                 $(obj).width(max);
             });
         },

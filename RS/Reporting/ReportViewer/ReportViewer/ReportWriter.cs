@@ -462,6 +462,7 @@ namespace Forerunner.SSRS.JSONRender
                         //if for some reason there is another onw skip it too - this is probably some other error
                         if (RPL.InspectByte() == 0xFF)
                             RPL.position++;   
+                    }
 
                         WriteJSONHeaderFoooter();
                         //Skip the end 0xFF
@@ -469,7 +470,7 @@ namespace Forerunner.SSRS.JSONRender
                             RPL.position++;
 
                     
-                    }
+                    
                     //Measurments
                     WriteJSONMeasurements();
 
@@ -608,51 +609,54 @@ namespace Forerunner.SSRS.JSONRender
         private void WriteJSONHeaderFoooter()
         {
             //Page Footer
-            if (RPL.InspectByte() == 0x05)
+            while (RPL.InspectByte() == 0x05 || RPL.InspectByte() == 0x04)
             {
-                RPL.position++;
-                w.WriteMember("PageFooter");
-                w.WriteStartObject();
-
-                w.WriteMember("Elements");
-                WriteJSONElements();
-
-                //Report Items
-                w.WriteMember("ReportItems");
-                WriteJSONReportItems();
-
-                //Measurments
-                WriteJSONMeasurements();
-                WriteJSONReportElementEnd();
-                w.WriteEndObject();
-                //Skip the end 0xFF
-                if (RPL.InspectByte() == 0xFF)
+                if (RPL.InspectByte() == 0x05)
+                {
                     RPL.position++;
-            }
+                    w.WriteMember("PageFooter");
+                    w.WriteStartObject();
 
-            //Page Header
-            if (RPL.InspectByte() == 0x04)
-            {
-                //Skip the 0x04
-                RPL.position++;
-                w.WriteMember("PageHeader");
-                w.WriteStartObject();
+                    w.WriteMember("Elements");
+                    WriteJSONElements();
 
-                w.WriteMember("Elements");
-                WriteJSONElements();
+                    //Report Items
+                    w.WriteMember("ReportItems");
+                    WriteJSONReportItems();
 
-                //Report Items
-                w.WriteMember("ReportItems");
-                WriteJSONReportItems();
+                    //Measurments
+                    WriteJSONMeasurements();
+                    WriteJSONReportElementEnd();
+                    w.WriteEndObject();
+                    //Skip the end 0xFF
+                    if (RPL.InspectByte() == 0xFF)
+                        RPL.position++;
+                }
 
-                //Measurments
-                WriteJSONMeasurements();
-                WriteJSONReportElementEnd();
-                w.WriteEndObject();
-
-                //Skip the end 0xFF
-                if (RPL.InspectByte() == 0xFF)
+                //Page Header
+                if (RPL.InspectByte() == 0x04)
+                {
+                    //Skip the 0x04
                     RPL.position++;
+                    w.WriteMember("PageHeader");
+                    w.WriteStartObject();
+
+                    w.WriteMember("Elements");
+                    WriteJSONElements();
+
+                    //Report Items
+                    w.WriteMember("ReportItems");
+                    WriteJSONReportItems();
+
+                    //Measurments
+                    WriteJSONMeasurements();
+                    WriteJSONReportElementEnd();
+                    w.WriteEndObject();
+
+                    //Skip the end 0xFF
+                    if (RPL.InspectByte() == 0xFF)
+                        RPL.position++;
+                }
             }
         }
         private Boolean WriteJSONBodyElement()

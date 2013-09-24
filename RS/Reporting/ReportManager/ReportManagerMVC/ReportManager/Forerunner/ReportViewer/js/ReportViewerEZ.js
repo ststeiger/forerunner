@@ -34,6 +34,7 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
+            isFullScreen: true
         },
         _render: function () {
             var me = this;
@@ -86,7 +87,7 @@ $(function () {
         _init: function () {
             var me = this;
             if (me.options.DefaultAppTemplate === null) {
-                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element }).render();
+                me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {
                 me.DefaultAppTemplate = me.options.DefaultAppTemplate;
             }

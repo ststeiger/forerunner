@@ -804,18 +804,18 @@ $(function () {
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
+            if (keyword === "") return;
+
+            //input new keyword
+            if (!me.findKeyword || me.findKeyword !== keyword) {
+                me.resetFind();
+                me.findKeyword = keyword;
+            }
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }
             else {
-                if (keyword === "") return;
-
-                //input new keyword
-                if (!me.findKeyword || me.findKeyword !== keyword) {
-                    me.findKeyword = keyword;
-                    me.findStartPage = null;
-                }
-
                 if (startPage === undefined)
                     startPage = me.getCurPage();
 

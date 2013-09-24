@@ -528,19 +528,17 @@ $(function () {
             me._closeAllDropdown();
 
             if (!isVisible) {
-                var $container = $(".fr-layout-rightpanecontent", me.$params);
-                var scrollTop = $container.scrollTop();
+                var $container = me.$params;
                 var $dropDown = $("[name='" + param.Name + "_DropDownContainer']", me.$params);
                 var $multipleControl = $("[name='" + param.Name + "']", me.$params);
-                //get the relative position
-                var positionTop = $multipleControl.offset().top - $container.offset().top + 38;
+                var positionTop = $multipleControl.offset().top;
                 
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    
-                    $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
+                    //popup at above, 10 is margin and border width
+                    $dropDown.css("top", positionTop - $container.offset().top - $dropDown.height() - 10);
                 }
-                else {
-                    $dropDown.css("top", positionTop + $multipleControl.height() - 28 + scrollTop);
+                else {//popup at bottom
+                    $dropDown.css("top", positionTop - $container.offset().top + $multipleControl.height() + 10);
                 }
 
                 if ($dropDown.is(":hidden")) {
@@ -698,7 +696,7 @@ $(function () {
         removeParameter: function () {
             var me = this;
             me._formInit = false;
-            $(".fr-param-container", this.element).detach();
+            $("." + paramContainerClass, me.element).detach();
         },
         _getDefaultHTMLTable: function() {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");

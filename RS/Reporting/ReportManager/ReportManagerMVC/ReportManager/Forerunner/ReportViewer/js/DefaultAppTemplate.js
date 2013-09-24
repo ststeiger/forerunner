@@ -217,7 +217,7 @@ $(function () {
                 isContained = true;
             } else {
                 var parent = element.parentElement;
-                while (parent !== undefined) {
+                while (parent !== undefined && parent != null) {
                     console.log(parent);
                     if ($(parent).hasClass(className)) {
                         console.log('Contained');

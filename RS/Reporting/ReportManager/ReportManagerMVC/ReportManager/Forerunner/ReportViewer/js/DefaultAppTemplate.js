@@ -148,7 +148,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
@@ -161,15 +161,13 @@ $(function () {
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
 
                             case 'release':
-                                if (ev.gesture.velocityX == 0 && ev.gesture.velocityY == 0)
+                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                     me._updateTopDiv(me);
                                 break;
                         }
                     });
                     $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
-                } else {
-                    $(me.$container).on('scroll', function () { me._updateTopDiv(me); });
-                }
+                } 
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
@@ -204,11 +202,10 @@ $(function () {
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
-                    if (me.$leftpane.is(':visible')) {
-                        me.$leftpane.css('top', $(window).scrollTop());
-                    } else if (me.$rightpane.is(':visible')) {
-                        me.$rightpane.css('top', $(window).scrollTop());
-                    }
+                    me._updateTopDiv(me);
+                });
+                me.$container.on('scroll', function () {
+                    me._updateTopDiv(me);
                 });
             }
         },
@@ -220,7 +217,7 @@ $(function () {
                 isContained = true;
             } else {
                 var parent = element.parentElement;
-                while (parent !== undefined) {
+                while (parent !== undefined && parent != null) {
                     console.log(parent);
                     if ($(parent).hasClass(className)) {
                         console.log('Contained');
@@ -235,9 +232,16 @@ $(function () {
         },
         
         _updateTopDiv: function (me) {
-            me.$topdiv.css('top', $(window).scrollTop());
-            me.$topdiv.css('left', $(window).scrollLeft());
-            me.$topdiv.show();
+            if (me.$leftpane.is(':visible')) {
+                me.$leftpane.css('top', me.$container.scrollTop());
+            } else if (me.$rightpane.is(':visible')) {
+                me.$rightpane.css('top', me.$container.scrollTop());
+            }
+            me.$topdiv.css('top', me.$container.scrollTop());
+            me.$topdiv.css('left', me.$container.scrollLeft());
+            if (!me.isZoomed()) {
+                me.$topdiv.show();
+            }
         },
         
         toggleZoom: function () {
@@ -460,11 +464,14 @@ $(function () {
             if (!slideoutPane.is(':visible')) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
+                    slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideLeftShow(delay);                    
                 } else {
                     //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
+                    slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideRightShow(delay);
                 }
+                
                 topdiv.addClass(className, delay);
                 forerunner.device.allowZoom(false);
                 me.$mainheadersection.toolbar('hideAllTools');

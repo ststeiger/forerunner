@@ -317,7 +317,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -804,18 +804,18 @@ $(function () {
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
+            if (keyword === "") return;
+
+            //input new keyword
+            if (!me.findKeyword || me.findKeyword !== keyword) {
+                me.resetFind();
+                me.findKeyword = keyword;
+            }
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }
             else {
-                if (keyword === "") return;
-
-                //input new keyword
-                if (!me.findKeyword || me.findKeyword !== keyword) {
-                    me.findKeyword = keyword;
-                    me.findStartPage = null;
-                }
-
                 if (startPage === undefined)
                     startPage = me.getCurPage();
 

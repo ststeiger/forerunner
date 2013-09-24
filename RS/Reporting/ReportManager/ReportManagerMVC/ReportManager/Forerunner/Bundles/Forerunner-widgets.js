@@ -5243,7 +5243,9 @@ $(function () {
             }
             me.$topdiv.css('top', me.$container.scrollTop());
             me.$topdiv.css('left', me.$container.scrollLeft());
-            me.$topdiv.show();
+            if (!me.isZoomed()) {
+                me.$topdiv.show();
+            }
         },
         
         toggleZoom: function () {

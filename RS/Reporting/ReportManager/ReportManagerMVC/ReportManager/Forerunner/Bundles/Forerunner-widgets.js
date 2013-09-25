@@ -100,9 +100,9 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).on('scrollstop', function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on('scroll', function () { me._updateTableHeaders(me); });
+                $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //Log in screen if needed
@@ -318,7 +318,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({}).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -551,17 +551,47 @@ $(function () {
             if (me.pageNavOpen) {
                 me.pageNavOpen = false;
                 document.body.parentNode.style.overflow = "scroll";
+                if (window.removeEventListener) {
+                    window.removeEventListener("orientationchange", me._handleOrientation, false);
+                }
+                else {
+                    window.detachEvent("orientationchange", me._handleOrientation);
+                }
             }
             else {
                 me.pageNavOpen = true;
                 document.body.parentNode.style.overflow = "hidden";
-            }            
+                if (window.addEventListener) {
+                    window.addEventListener("orientationchange", me._handleOrientation, false);
+                } else {
+                    window.attachEvent("orientationchange", me._handleOrientation);
+                }
+            }
 
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
+        _handleOrientation: function () {
+            if (window.orientation === undefined)
+                return;
+            var orientation = window.orientation;
+
+            var pageSection = $(".fr-layout-pagesection");
+            if (!forerunner.device.isSmall()) {//big screen, height>=768
+                //portrait
+                if (orientation === 0 || orientation === 180) {
+                    if (pageSection.is(":hidden")) pageSection.show();
+                }
+            }
+            else {//small screen, height<768
+                if (orientation === -90 || orientation === 90) {
+                    if (pageSection.is(":visible")) pageSection.hide();
+                }
+            }
+        },
+
         /**
          * Resets the Page Navigation cache
          *
@@ -805,18 +835,18 @@ $(function () {
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
+            if (keyword === "") return;
+
+            //input new keyword
+            if (!me.findKeyword || me.findKeyword !== keyword) {
+                me.resetFind();
+                me.findKeyword = keyword;
+            }
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }
             else {
-                if (keyword === "") return;
-
-                //input new keyword
-                if (!me.findKeyword || me.findKeyword !== keyword) {
-                    me.findKeyword = keyword;
-                    me.findStartPage = null;
-                }
-
                 if (startPage === undefined)
                     startPage = me.getCurPage();
 
@@ -1180,18 +1210,30 @@ $(function () {
         _sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
-            if (me.sessionID && me.sessionID !== "")
+
+            if (me._sessionPingPost(me.sessionID) === false)
+                me.sessionID = "";
+
+            $.each(me.actionHistory, function (index, obj) {
+                me._sessionPingPost(obj.SessionID);
+            });
+
+            },
+        _sessionPingPost: function (sessionID) {
+            var me = this;
+            if (sessionID && sessionID !== "")
                 $.getJSON(me.options.reportViewerAPI + "/PingSession", {
-                    PingSessionID: me.sessionID
+                    PingSessionID: sessionID
                 })
                 .done(function (data) {
                     if (data.Status === "Fail") {
-                        me.sessionID = "";                       
+                        return false;
                     }
+                    else
+                        return true;
                 })
                 .fail(function () { console.log("ping error"); });
-
-        },
+            },
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
@@ -4479,19 +4521,17 @@ $(function () {
             me._closeAllDropdown();
 
             if (!isVisible) {
-                var $container = $(".fr-layout-rightpanecontent", me.$params);
-                var scrollTop = $container.scrollTop();
+                var $container = me.$params;
                 var $dropDown = $("[name='" + param.Name + "_DropDownContainer']", me.$params);
                 var $multipleControl = $("[name='" + param.Name + "']", me.$params);
-                //get the relative position
-                var positionTop = $multipleControl.offset().top - $container.offset().top + 38;
+                var positionTop = $multipleControl.offset().top;
                 
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    
-                    $dropDown.css("top", positionTop - $dropDown.height() - 48 + scrollTop);
+                    //popup at above, 10 is margin and border width
+                    $dropDown.css("top", positionTop - $container.offset().top - $dropDown.height() - 10);
                 }
-                else {
-                    $dropDown.css("top", positionTop + $multipleControl.height() - 28 + scrollTop);
+                else {//popup at bottom
+                    $dropDown.css("top", positionTop - $container.offset().top + $multipleControl.height() + 10);
                 }
 
                 if ($dropDown.is(":hidden")) {
@@ -4649,7 +4689,7 @@ $(function () {
         removeParameter: function () {
             var me = this;
             me._formInit = false;
-            $(".fr-param-container", this.element).detach();
+            $("." + paramContainerClass, me.element).detach();
         },
         _getDefaultHTMLTable: function() {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");
@@ -5152,7 +5192,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
@@ -5243,7 +5283,9 @@ $(function () {
             }
             me.$topdiv.css('top', me.$container.scrollTop());
             me.$topdiv.css('left', me.$container.scrollLeft());
-            me.$topdiv.show();
+            if (!me.isZoomed()) {
+                me.$topdiv.show();
+            }
         },
         
         toggleZoom: function () {

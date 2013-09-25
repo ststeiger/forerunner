@@ -148,7 +148,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
@@ -239,7 +239,9 @@ $(function () {
             }
             me.$topdiv.css('top', me.$container.scrollTop());
             me.$topdiv.css('left', me.$container.scrollLeft());
-            me.$topdiv.show();
+            if (!me.isZoomed()) {
+                me.$topdiv.show();
+            }
         },
         
         toggleZoom: function () {

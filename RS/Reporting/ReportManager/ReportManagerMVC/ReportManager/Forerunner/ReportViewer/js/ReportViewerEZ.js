@@ -43,7 +43,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
-            //layout.$topdivspacer.attr("style", "height: 38px");
+
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {

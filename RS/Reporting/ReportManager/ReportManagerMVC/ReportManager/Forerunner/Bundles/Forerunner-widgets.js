@@ -5818,7 +5818,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
-            //layout.$topdivspacer.attr("style", "height: 38px");
+
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
             } else {
@@ -5918,7 +5918,6 @@ $(function () {
             forerunner.dialog.closeModalDialog();
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
-            layout.$topdivspacer.css({height: "32px"});
           
             layout.$mainviewport.css({ width: "100%", height: "100%"});
 

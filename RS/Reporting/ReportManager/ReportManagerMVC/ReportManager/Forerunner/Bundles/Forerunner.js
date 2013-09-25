@@ -205,6 +205,9 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
+            loadCascadingParam: "loadcascadingparam",
+            reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
+
             /** @constant */
             render: "render",
             /** widget + event, lowercase */

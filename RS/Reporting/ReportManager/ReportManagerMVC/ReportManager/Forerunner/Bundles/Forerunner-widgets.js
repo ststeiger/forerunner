@@ -1989,9 +1989,17 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don"t replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("");
+            $toolpane = new $("<div />");
+            $toolpane.addClass(me.options.toolClass);
+            $(me.element).append($toolpane);
             me.addTools(1, true, [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap,tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup]);
-
+            // Need to add this to work around the iOS7 footer.
+            // It has to be added to the scrollable area for it to scroll up.
+            // Bottom padding/border or margin won't be rendered in some cases.
+            $spacerdiv = new $("<div />");
+            $spacerdiv.attr("style", "height:65px");
+            $toolpane.append($spacerdiv);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

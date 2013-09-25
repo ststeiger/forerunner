@@ -173,7 +173,8 @@ $(function () {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
                         console.log(e.target);
 
-                        var isScrollable = me._containElement(e.target, 'fr-leftpane') || me._containElement(e.target, 'fr-rightpane');
+                        var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
+                            || me._containElement(e.target, 'fr-layout-rightpane');
                         console.log('isScrollable: ' + isScrollable);
 
                         if (isScrollable) {
@@ -199,6 +200,7 @@ $(function () {
 
             $(window).resize(function () {
                 me.ResetSize();
+                me._updateTopDiv(me);
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {

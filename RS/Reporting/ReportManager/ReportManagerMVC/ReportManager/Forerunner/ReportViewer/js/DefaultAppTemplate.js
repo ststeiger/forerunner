@@ -363,19 +363,20 @@ $(function () {
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 var reportArea = $('.fr-report-areacontainer');
-                
-                if (reportArea.height() > document.documentElement.clientHeight - 38 // 38 is toolbar height
-                    || reportArea.width() > document.documentElement.clientWidth || !me.options.isFullScreen) {
 
-                    $('.fr-render-bglayer').css('position', 'absolute').
-                        css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
-                        .css('width', Math.max(reportArea.width(), document.documentElement.clientWidth));
-                }
-                else {
-                    $('.fr-render-bglayer').css('position', 'absolute').
-                       css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
+                if (me.options.isFullScreen) {
+                    $('.fr-render-bglayer').css('position', 'fixed').css('top', 38)
+                       .css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
                        .css('width', Math.max(reportArea.width(), document.documentElement.clientWidth));
-                    //$('.fr-render-bglayer').css('position', 'fixed').css('top', 38);
+                } else {
+                    var height = reportArea.height() - 38;
+                    var width = reportArea.width();
+                    if (reportArea.height() > document.documentElement.clientHeight - 38)
+                        height = document.documentElement.clientHeight - 38;
+                    if (reportArea.width() > document.documentElement.clientWidth)
+                        width = document.documentElement.clientWidth;
+                    $('.fr-render-bglayer').css('position', 'absolute').css('top', 38)
+                        .css('height', height).css('width', width);
                 }
             });
 

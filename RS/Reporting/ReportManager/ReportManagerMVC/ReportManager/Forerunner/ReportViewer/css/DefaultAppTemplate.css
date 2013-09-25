@@ -113,8 +113,7 @@
 .fr-layout-rightpanecontent {
     width: 280px;
     display:block;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
      /* Putting this back in because of iOS7*/
     background: rgb(53,85,109); /* Old browsers */
     /* IE9 SVG, needs conditional override of 'filter' to 'none' */

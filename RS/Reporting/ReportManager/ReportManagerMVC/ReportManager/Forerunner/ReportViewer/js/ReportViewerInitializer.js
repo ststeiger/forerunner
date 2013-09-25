@@ -123,6 +123,20 @@ $(function () {
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
+
+                $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
+                    $.ajax({
+                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.ReportPath + "&paramList=" + data.paramList,
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            if (data.ParametersList) {
+                                $paramarea.reportParameter("removeParameter");
+                                $paramarea.reportParameter("writeParameterPanel", data);
+                            }
+                        }
+                    });
+                });
             }
 
             var $print = me.options.$print;

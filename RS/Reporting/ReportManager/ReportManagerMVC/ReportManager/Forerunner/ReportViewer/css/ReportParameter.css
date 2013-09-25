@@ -75,6 +75,7 @@
      position: absolute; 
      z-index: 11;
      display:none;
+     max-height:180px;
 }
 .fr-param-dropdown input[type="checkbox"]
 {

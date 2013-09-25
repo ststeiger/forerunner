@@ -4058,7 +4058,9 @@ $(function () {
                    "<div class='fr-param-submit-container'>" +
                       "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
                    "</div>" +
-                "</form></div>");
+                "</form>" +
+                "<div style='height:65px;'/>" +
+                "</div>");
             me.element.css("display", "block");
             me.element.html($params);
             me.$params = $params;

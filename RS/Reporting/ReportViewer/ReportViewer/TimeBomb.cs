@@ -92,8 +92,9 @@ namespace Forerunner.SSRS.Security
 
             // Save the time bomb to the registry
             RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(TimeBomb.software, true);
-            RegistryKey wow6432NodeKey = softwareKey.CreateSubKey(TimeBomb.wow6432Node);
-            RegistryKey forerunnerswKey = wow6432NodeKey.CreateSubKey(TimeBomb.forerunnerKey);
+            //RegistryKey wow6432NodeKey = softwareKey.CreateSubKey(TimeBomb.wow6432Node);
+            //RegistryKey forerunnerswKey = wow6432NodeKey.CreateSubKey(TimeBomb.forerunnerKey);
+            RegistryKey forerunnerswKey = softwareKey.CreateSubKey(TimeBomb.forerunnerKey);
             RegistryKey ssrsBetaKey = forerunnerswKey.CreateSubKey(TimeBomb.ssrsBetaKey);
             RegistryKey ssrsKey = ssrsBetaKey.CreateSubKey(TimeBomb.ssrsKey);
             ssrsKey.SetValue(TimeBomb.timeBombName, timeBombProtected, RegistryValueKind.Binary);

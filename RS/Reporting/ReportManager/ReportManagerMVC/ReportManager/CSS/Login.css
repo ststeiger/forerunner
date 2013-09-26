@@ -53,6 +53,10 @@ ol li
     display:block;
 }
 
+.logo{
+    width:250px;
+}
+
 .rounded {
     -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; background-color:#0A1366; color: white; padding: 0px 30px 0px 30px;
 }
@@ -60,7 +64,9 @@ ol li
 
 /* Small (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  
+  .logo{
+      width:230px;
+  }
 }
 
 /* Medium  (E.g., for phones, landscape) */

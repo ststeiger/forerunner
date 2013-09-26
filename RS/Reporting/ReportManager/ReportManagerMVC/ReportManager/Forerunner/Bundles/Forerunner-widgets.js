@@ -5303,26 +5303,8 @@ $(function () {
                             || me._containElement(e.target, 'fr-layout-rightpane');
                         console.log('isScrollable: ' + isScrollable);
 
-                        if (isScrollable) {
-                            // Check if there is a scrollbar
-                            var content = $('.fr-layout-leftpane', me.$container);
-                            if (content === null || content === undefined) {
-                                content = $('.fr-layout-rightpane', me.$container);
-                            }
-                            if (!(content[0].scrollHeight > content[0].clientHeight)) {
-                                isScrollable = false;
-                                console.log('scrollHeight: ' + content[0].scrollHeight);
-                                console.log('clientHeight: ' + content[0].clientHeight);
-                                console.log('No Vertical');
-                            } else {
-                                console.log('Vertical');
-                            }
-                        }
-
                         if (!isScrollable)
                             e.preventDefault();
-                        //else
-                        //    e.stopPropagation();
                     }
                 });
             }
@@ -5366,9 +5348,9 @@ $(function () {
         
         _updateMainViewPort : function (me) {
             if (me.$leftpane.is(':visible') || me.$rightpane.is(':visible')) {
+                
                 me.$mainviewport.css('top', me.$container.scrollTop());
-                if (me.options.isFullScreen)
-                    me.$container.scrollTop(0);
+                me.$container.scrollTop(0);
 
                 console.log('scroll container to top');
             } 

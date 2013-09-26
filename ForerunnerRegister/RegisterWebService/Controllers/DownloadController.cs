@@ -7,40 +7,16 @@ using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Text;
-using Register;
+using ForerunnerRegister;
+using ForerunnerWebService;
 
 namespace RegisterWebService.Controllers
 {
     public class DownloadController : ApiController
     {
 
-        private RegisterUtil Reg = new RegisterUtil();
-
-        private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
-        {
-            HttpResponseMessage resp = this.Request.CreateResponse();
-
-            if (result != null)
-            {
-                resp.Content = new ByteArrayContent(result); ;
-                resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
-                if (cache)
-                    resp.Headers.Add("Cache-Control", "max-age=86400");
-                if (fileName != null)
-                    resp.Content.Headers.Add("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(fileName));
-            }
-            else
-                resp.StatusCode = HttpStatusCode.NotFound;
-
-            return resp;
-        }
-        private HttpResponseMessage ReturnError(Exception e)
-        {
-            byte[] result = null;
-            result = Encoding.UTF8.GetBytes(e.Message);
-            return GetResponseFromBytes(result, "text/JSON");
-        }
-
+        private Register Reg = new Register();
+        
         [HttpGet]
         public HttpResponseMessage Get(string id)
         {
@@ -48,13 +24,13 @@ namespace RegisterWebService.Controllers
             try
             {
                 if (Reg.ValidateDownload(id))
-                    return GetResponseFromBytes(Reg.GetSetupFile(), "application/exe", false, "ForerunnerMobilizerSetup.exe");
+                    return WebSerivceHelper.GetResponseFromBytes(Reg.GetSetupFile(), "application/exe", this.Request.CreateResponse(), false, "ForerunnerMobilizerSetup.exe");
                 else
-                    return GetResponseFromBytes(Encoding.UTF8.GetBytes(errorString), "text/HTML");
+                    return WebSerivceHelper.GetResponseFromBytes(Encoding.UTF8.GetBytes(errorString), "text/HTML", this.Request.CreateResponse());
             }
             catch (Exception e)
             {
-                return ReturnError(e);
+                return WebSerivceHelper.ReturnError(e, this.Request.CreateResponse());
             }
 
         }
@@ -66,21 +42,8 @@ namespace RegisterWebService.Controllers
 #if DEBUG
             Reg.DoWork();
 #endif
-            HttpResponseMessage resp = this.Request.CreateResponse();
-            resp.Headers.Location = new Uri("http://forerunnersw.com/thankyou.html");
-            resp.StatusCode = HttpStatusCode.Found;
-            return resp;
+            return WebSerivceHelper.Redirect("http://forerunnersw.com/thankyou.html",this.Request.CreateResponse());
 
-        }
-
-        // POST api/values
-        //public void Post([FromBody]string value)
-        //{
-        //}
-
-        // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
-        {
         }
 
   

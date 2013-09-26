@@ -80,15 +80,15 @@ $(function () {
 
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
-                var licenseError = new $("<div class='fr-render-error-license'>" +
-                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thanks for using Forerunner mobilizer, your mobilizer is expired or not registe.<br/> " +
-                    "Please go to Forerunner Offical Site to get the latest build.</h3>"+
-                    "<div class='fr-render-error-license-link'><a href='http://www.forerunnersw.com'><strong>Go to Forerunner !<strong></a></div></div></div>");
-
+                var licenseError = new $("<div class='fr-render-error-license Page'>" +
+                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thank you for using Forerunner Mobilizer, your license has expired or is invalid.<br/> " +
+                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='http://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
+                    "</div></div>");
+                
                 me.element.html(licenseError);
             }
             else {
-                me.element.html($(
+                me.element.html($("<div class='Page' >" +
                "<div class='fr-render-error-message'></div>" +
                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
@@ -96,7 +96,7 @@ $(function () {
                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
                "<div class='fr-render-error fr-render-error-source'></div>" +
                "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
-               "</div>"));
+               "</div></div>"));
 
                 if (me.options.reportViewer) {
                     var $cell;
@@ -154,7 +154,7 @@ $(function () {
             if (RIContext.CurrObjParent.PageHeader)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
-            $sec.attr("Style", "width:" + me._getWidth(location.Width) + "mm;");
+            $sec.attr("Style", "width:" + me._getWidth(loc.Width) + "mm;");
 
             //Columns
             $newObj.append($sec);

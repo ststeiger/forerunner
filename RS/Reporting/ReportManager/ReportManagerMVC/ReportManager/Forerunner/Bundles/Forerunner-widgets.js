@@ -238,6 +238,9 @@ $(function () {
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
             if (!me.$reportAreaContainer) {
+                var errorpage = me.$reportContainer.find(".Page");
+                if (errorpage)
+                    errorpage.detach();
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);
@@ -2540,15 +2543,15 @@ $(function () {
 
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
-                var licenseError = new $("<div class='fr-render-error-license'>" +
-                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thanks for using Forerunner mobilizer, your mobilizer is expired or not registe.<br/> " +
-                    "Please go to Forerunner Offical Site to get the latest build.</h3>"+
-                    "<div class='fr-render-error-license-link'><a href='http://www.forerunnersw.com'><strong>Go to Forerunner !<strong></a></div></div></div>");
-
+                var licenseError = new $("<div class='fr-render-error-license Page'>" +
+                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thank you for using Forerunner Mobilizer, your license has expired or is invalid.<br/> " +
+                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='http://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
+                    "</div></div>");
+                
                 me.element.html(licenseError);
             }
             else {
-                me.element.html($(
+                me.element.html($("<div class='Page' >" +
                "<div class='fr-render-error-message'></div>" +
                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
@@ -2556,7 +2559,7 @@ $(function () {
                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
                "<div class='fr-render-error fr-render-error-source'></div>" +
                "<div class='fr-render-error fr-render-error-stacktrace'></div>" +
-               "</div>"));
+               "</div></div>"));
 
                 if (me.options.reportViewer) {
                     var $cell;
@@ -2614,7 +2617,7 @@ $(function () {
             if (RIContext.CurrObjParent.PageHeader)
                 $newObj.append(me._writeHeaderFooter(new reportItemContext(RIContext.RS, RIContext.CurrObjParent, null, null, null, null, null), "PageHeader", headerIndex));
             
-            $sec.attr("Style", "width:" + me._getWidth(location.Width) + "mm;");
+            $sec.attr("Style", "width:" + me._getWidth(loc.Width) + "mm;");
 
             //Columns
             $newObj.append($sec);
@@ -5304,12 +5307,17 @@ $(function () {
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
 
                             case 'release':
-                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
+                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0) {
                                     me._updateTopDiv(me);
+                                    me._updateMainViewPort(me);
+                                }
                                 break;
                         }
                     });
-                    $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
+                    $(me.$container).on('scrollstop', function () {
+                        me._updateTopDiv(me);
+                        me._updateMainViewPort(me);
+                    });
                 } 
 
                 $(me.$container).on('touchmove', function (e) {
@@ -5320,30 +5328,17 @@ $(function () {
                             || me._containElement(e.target, 'fr-layout-rightpane');
                         console.log('isScrollable: ' + isScrollable);
 
-                        if (isScrollable) {
-                            // Check if there is a scrollbar
-                            var toolpane = $('.fr-leftpane', me.$container);
-                            if (!(toolpane[0].scrollHeight > toolpane[0].clientHeight)) {
-                                isScrollable = false;
-                                console.log('scrollHeight: ' + toolpane[0].scrollHeight);
-                                console.log('clientHeight: ' + toolpane[0].clientHeight);
-                                console.log('No Vertical');
-                            } else {
-                                console.log('Vertical');
-                            }
-                        }
-
                         if (!isScrollable)
                             e.preventDefault();
-                        //else
-                        //    e.stopPropagation();
                     }
                 });
             }
 
             $(window).resize(function () {
                 me.ResetSize();
+
                 me._updateTopDiv(me);
+                me._updateMainViewPort(me);
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
@@ -5376,7 +5371,19 @@ $(function () {
             return isContained;
         },
         
+        _updateMainViewPort : function (me) {
+            if (me.$leftpane.is(':visible') || me.$rightpane.is(':visible')) {
+                
+                me.$mainviewport.css('top', me.$container.scrollTop());
+                me.$container.scrollTop(0);
+
+                console.log('scroll container to top');
+            } 
+        },
+
         _updateTopDiv: function (me) {
+            if (me.options.isFullScreen)
+                return;
             if (me.$leftpane.is(':visible')) {
                 me.$leftpane.css('top', me.$container.scrollTop());
             } else if (me.$rightpane.is(':visible')) {
@@ -5387,6 +5394,7 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
+            console.log('update top div');
         },
         
         toggleZoom: function () {

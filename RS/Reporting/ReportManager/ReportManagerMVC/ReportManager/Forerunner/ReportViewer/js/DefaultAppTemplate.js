@@ -161,12 +161,17 @@ $(function () {
                                 // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
 
                             case 'release':
-                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
+                                if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0) {
                                     me._updateTopDiv(me);
+                                    me._updateMainViewPort(me);
+                                }
                                 break;
                         }
                     });
-                    $(me.$container).on('scrollstop', function () { me._updateTopDiv(me); });
+                    $(me.$container).on('scrollstop', function () {
+                        me._updateTopDiv(me);
+                        me._updateMainViewPort(me);
+                    });
                 } 
 
                 $(me.$container).on('touchmove', function (e) {
@@ -177,30 +182,17 @@ $(function () {
                             || me._containElement(e.target, 'fr-layout-rightpane');
                         console.log('isScrollable: ' + isScrollable);
 
-                        if (isScrollable) {
-                            // Check if there is a scrollbar
-                            var toolpane = $('.fr-leftpane', me.$container);
-                            if (!(toolpane[0].scrollHeight > toolpane[0].clientHeight)) {
-                                isScrollable = false;
-                                console.log('scrollHeight: ' + toolpane[0].scrollHeight);
-                                console.log('clientHeight: ' + toolpane[0].clientHeight);
-                                console.log('No Vertical');
-                            } else {
-                                console.log('Vertical');
-                            }
-                        }
-
                         if (!isScrollable)
                             e.preventDefault();
-                        //else
-                        //    e.stopPropagation();
                     }
                 });
             }
 
             $(window).resize(function () {
                 me.ResetSize();
+
                 me._updateTopDiv(me);
+                me._updateMainViewPort(me);
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
@@ -233,7 +225,19 @@ $(function () {
             return isContained;
         },
         
+        _updateMainViewPort : function (me) {
+            if (me.$leftpane.is(':visible') || me.$rightpane.is(':visible')) {
+                
+                me.$mainviewport.css('top', me.$container.scrollTop());
+                me.$container.scrollTop(0);
+
+                console.log('scroll container to top');
+            } 
+        },
+
         _updateTopDiv: function (me) {
+            if (me.options.isFullScreen)
+                return;
             if (me.$leftpane.is(':visible')) {
                 me.$leftpane.css('top', me.$container.scrollTop());
             } else if (me.$rightpane.is(':visible')) {
@@ -244,6 +248,7 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
+            console.log('update top div');
         },
         
         toggleZoom: function () {

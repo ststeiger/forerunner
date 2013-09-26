@@ -3,34 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web;
-using System.Text;
 using System.Data.SqlClient;
-using System.Net.Mail;
 using System.Xml;
 using System.IO;
 
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Web;
+using System.Text;
+using ForerunnerWebService;
 
-namespace Register
+namespace ForerunnerRegister
 {
-
-    public class RegisterUtil
-    {
-        private byte[] SetupFile = null;
-        private SqlConnection SQLCon = null;
-        private string Domain = ConfigurationManager.AppSettings["Domain"];
-        private string DataSourse = ConfigurationManager.AppSettings["DataSourse"];
-        private string InitialCatalog = ConfigurationManager.AppSettings["InitialCatalog"];
-        private string UserID = ConfigurationManager.AppSettings["UserID"];
-        private string Password = ConfigurationManager.AppSettings["Password"];
-        private string MailSubject = ConfigurationManager.AppSettings["MailSubject"];
-        private string MailBody = ConfigurationManager.AppSettings["MailBody"];
-        private string MailHost = ConfigurationManager.AppSettings["MailHost"];
-        private string MailSendAccount = ConfigurationManager.AppSettings["MailSendAccount"];
-        private string MailSendPassword = ConfigurationManager.AppSettings["MailSendPassword"];
-        private string MailFromAccount = ConfigurationManager.AppSettings["MailFromAccount"];
-
-        private class RegistrationData
+     public class RegistrationData
         {
             public string Email = "";
             public string FirstName = "";
@@ -127,57 +113,11 @@ namespace Register
             }
         }
 
-        private SqlConnection GetSQLCon()
-        {
-            if (SQLCon == null)
-            {
-                SQLCon = new SqlConnection();
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.DataSource = DataSourse;
-                builder.InitialCatalog = InitialCatalog;
-                builder.UserID = UserID;
-                builder.Password = Password;
-                SQLCon.ConnectionString = builder.ConnectionString;
-            }
 
-            return SQLCon;
-        }
-
-        private string SendMail(RegistrationData RegData)
-        {
-#if DEBUG
-            Domain = "localhost";
-#endif
-
-            string MailSubject = this.MailSubject;
-            string MailBody = String.Format(this.MailBody, RegData.FirstName, Domain, RegData.ID);
-
-            try
-            {
-                SmtpClient client = new SmtpClient();
-                client.Port = 587;
-                client.Host = MailHost;
-                client.EnableSsl = true;
-                client.Timeout = 50000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential(MailSendAccount, MailSendPassword);
-
-                MailMessage mm = new MailMessage(MailFromAccount, RegData.Email, MailSubject, MailBody);
-                mm.BodyEncoding = UTF8Encoding.UTF8;
-                mm.IsBodyHtml = true;
-                mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-
-                client.Send(mm);
-                return "success";
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-
-
-        }
+    public class Register
+    {
+        private byte[] SetupFile = null;
+  
         public string RegisterDownload(String Value)
         {
             return RegisterDownload(new RegistrationData(Value));
@@ -189,7 +129,7 @@ namespace Register
         }
         private string RegisterDownload(RegistrationData RegData)
         {
-            SqlConnection SQLConn = GetSQLCon();
+            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
             SqlDataReader SQLReader;
             Guid ID = Guid.NewGuid();
 
@@ -225,7 +165,7 @@ namespace Register
 
         public bool ValidateDownload(string ID)
         {
-            SqlConnection SQLConn = GetSQLCon();
+            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
             SqlDataReader SQLReader;
 
             string SQL = @" UPDATE TrialRegistration SET DownloadAttempts = DownloadAttempts+1 WHERE DownloadID = @ID
@@ -263,88 +203,9 @@ namespace Register
             return SetupFile;
         }
 
-        public void DoWork()
-        {
-            SqlConnection SQLConn = GetSQLCon();
-            SqlDataReader SQLReader;
-            Guid TaskID = new Guid();
-            string StatusMessage = "";
-            int TaskStatus = 0;
-
-
-            string SQL = @"
-BEGIN TRANSACTION
-DECLARE @TaskID uniqueidentifier
-SELECT TOP 1 @TaskID = TaskID FROM WorkerTasks WHERE TaskStatus = 1 ORDER BY TaskCreated DESC
-UPDATE WorkerTasks SET TaskStatus = 2 WHERE TaskID = @TaskID
-SELECT TaskID ,TaskType,TaskData  , TaskStatus ,TaskAttempts FROM WorkerTasks WHERE TaskID = @TaskID
-COMMIT TRANSACTION          
-";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-
-            SQLReader = SQLComm.ExecuteReader();
-            while (SQLReader.Read())
-            {
-                if (SQLReader.GetString(1) == "SendRegistrationEmail")
-                {
-                    TaskID = SQLReader.GetGuid(0);
-                    RegistrationData RegData = new RegistrationData(SQLReader.GetXmlReader(2));
-
-                    if (RegData.ID != "" && RegData.Email != "")
-                        StatusMessage = SendMail(RegData);
-                    else
-                        break;
-                    if (StatusMessage == "success")
-                        TaskStatus = 3;
-                    else
-                        TaskStatus = 1;
-                }
-
-
-            }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            if (TaskStatus != 0)
-            {
-                //Save Status
-                SQL = @"
-    IF ((SELECT TaskAttempts+1 FROM WorkerTasks WHERE TaskID = @TaskID) > 10)
-       UPDATE WorkerTasks SET TaskStatus = 4  WHERE TaskID = @TaskID
-    ELSE
-        UPDATE WorkerTasks SET TaskMessage = @StatusMessage,TaskStatus = @Status,TaskAttempts = TaskAttempts+1  WHERE TaskID = @TaskID
-    ";
-                SQLConn.Open();
-                SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.Parameters.AddWithValue("@TaskID", TaskID);
-                SQLComm.Parameters.AddWithValue("@StatusMessage", StatusMessage);
-                SQLComm.Parameters.AddWithValue("@Status", TaskStatus);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
-            }
-
-        }
-
-        public void SaveTask(string TaskType, string TaskData)
-        {
-            SqlConnection SQLConn = GetSQLCon();
-            string SQL = @"
-INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAttempts) SELECT NEWID(),@TaskType,GETDATE(),@TaskData,1,0
-";
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLConn.Open();
-            SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@TaskType", TaskType);
-            SQLComm.Parameters.AddWithValue("@TaskData", TaskData);
-            SQLComm.ExecuteNonQuery();
-            SQLConn.Close();
-        }
-
         private void SaveEmailTask(RegistrationData RegData)
         {
-
-            SaveTask("SendRegistrationEmail", RegData.GetXML());
+            (new TaskWorker()).SaveTask("SendRegistrationEmail", RegData.GetXML());
 
         }
 

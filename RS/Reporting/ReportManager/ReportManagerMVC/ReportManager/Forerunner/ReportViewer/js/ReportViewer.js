@@ -237,6 +237,9 @@ $(function () {
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
             if (!me.$reportAreaContainer) {
+                var errorpage = me.$reportContainer.find(".Page");
+                if (errorpage)
+                    errorpage.detach();
                 me.$reportAreaContainer = $("<Div/>");
                 me.$reportAreaContainer.addClass("fr-report-areacontainer");
                 me.$reportContainer.append(me.$reportAreaContainer);

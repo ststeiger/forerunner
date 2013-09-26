@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Net.Mail;
-using Register;
+using ForerunnerWebService;
 using System.Threading;
 
 namespace ForerunnerRegister
@@ -48,11 +48,11 @@ namespace ForerunnerRegister
         {
             // This is a sample worker implementation. Replace with your logic.
             Trace.TraceInformation("Worker entry point called", "Information");
-            RegisterUtil Reg = new RegisterUtil();
+            TaskWorker tw = new TaskWorker();
 
             while (!ShouldStop)
             {
-                Reg.DoWork();
+                tw.DoWork();
                 Thread.Sleep(1000);
             }
         }

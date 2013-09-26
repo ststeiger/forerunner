@@ -209,7 +209,16 @@ namespace Forerunner
                 w.WriteMember("Source");
                 w.WriteString(e.Source);
                 w.WriteMember("Message");
-                w.WriteString(e.Message);
+
+                int start = e.Message.IndexOf(":")+1;
+                int end = e.Message.IndexOf("--->")-1;
+                string message;
+                if (start <= 0 || end <= 0)
+                    message = e.Message;                    
+                else
+                    message = e.Message.Substring(start, end - start);
+
+                w.WriteString(message);
                 w.WriteMember("StackTrace");
                 w.WriteString(e.StackTrace);
 

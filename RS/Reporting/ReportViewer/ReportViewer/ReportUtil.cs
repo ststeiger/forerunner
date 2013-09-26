@@ -255,6 +255,8 @@ namespace Forerunner
 
                         if (obj == null)
                             w.WriteString("");
+                        else if (obj.GetType().ToString().Contains("Boolean"))
+                            w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
                             w.WriteString(proInfo.GetValue(parameter, null).ToString());
                     }
@@ -350,6 +352,8 @@ namespace Forerunner
 
                         if (obj == null)
                             w.WriteString("");
+                        else if (obj.GetType().ToString().Contains("Boolean"))
+                            w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
                             w.WriteString(proInfo.GetValue(parameter, null).ToString());
                     }

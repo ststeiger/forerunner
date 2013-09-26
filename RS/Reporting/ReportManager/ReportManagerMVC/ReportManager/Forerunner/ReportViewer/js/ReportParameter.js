@@ -36,6 +36,7 @@ $(function () {
         _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
+        _reportDesignError:null,
 
         _savedParamExist:false,
         _savedParamList: null,
@@ -83,8 +84,14 @@ $(function () {
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
-                $eleBorder.append(me._writeParamControl(param, new $("<div />")));
+                if (param.Prompt !== "")
+                    $eleBorder.append(me._writeParamControl(param, new $("<div />")));
+                else
+                    me._checkHiddenParam(param);
             });
+
+            if (me._reportDesignError !== null)
+                me._reportDesignError += "Please contact report administrator for help";
             
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -137,8 +144,13 @@ $(function () {
         },
         _submitForm: function () {
             var me = this;
-
             me._closeAllDropdown();
+
+            if (me._reportDesignError !== null) {
+                forerunner.dialog.showMessageBox(me._reportDesignError);
+                return;
+            }
+            
             var paramList = me.getParamsList();
             if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList);
@@ -151,9 +163,9 @@ $(function () {
             me._savedParamCount = 0;
             me._savedParamExist = true;
             $.each(overrideParams.ParamsList, function (index, param) {
-                me._savedParamList[param.Parameter] = param.Value;
+                me._savedParamList[param.Name] = param.Value;
                 me._savedParamCount++;
-                });
+            });
         },
         _setDatePicker: function () {
             var me = this;
@@ -170,7 +182,7 @@ $(function () {
                 return me._savedParamList[param.Name];
             }
             else if (me._hasDefaultValue(param)) {
-                if (param.MultiValue==="False")
+                if (param.MultiValue === false)
                     return param.DefaultValues[0];
                 else
                     return param.DefaultValues;
@@ -189,7 +201,7 @@ $(function () {
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
             var $element = null;
             
-            if (param.MultiValue === "True") { // Allow multiple values in one textbox
+            if (param.MultiValue === true) { // Allow multiple values in one textbox
 
                 if (param.ValidValues !== "") { // Dropdown with checkbox
                     $element = me._writeDropDownWithCheckBox(param, dependenceDisable);
@@ -229,14 +241,14 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
             $control.attr("AllowBlank", param.AllowBlank);
-            if (param.Nullable !== "True") {
+            if (param.Nullable === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required);
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
         _addNullableCheckBox: function (param, $control) {
             var me = this;
-            if (param.Nullable === "True") {
+            if (param.Nullable === true) {
                 var $nullableSpan = new $("<Span />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
@@ -290,7 +302,7 @@ $(function () {
                     me._getParameterControlProperty(param, $radioItem);
 
                     if (predefinedValue) {
-                        if (param.Nullable === "True")
+                        if (param.Nullable === true)
                             $radioItem.attr("disabled", "true");
                         else if (predefinedValue === radioValues[i].value)
                             $radioItem.attr("checked", "true");
@@ -752,7 +764,7 @@ $(function () {
         },
         _hasDefaultValue: function (param) {
             var me = this;
-            return me._defaultValueExist && $.isArray(param.DefaultValues) && param.DefaultValues[0];
+            return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
             if (!defaultDatetime || defaultDatetime.length < 9)
@@ -791,6 +803,19 @@ $(function () {
         },
         _disabledSubSequenceControl: function ($control) {
             $control.attr("disabled", true).addClass("fr-param-disable");
+        },
+        _checkHiddenParam: function (param) {
+            var me = this;
+            //if (param.QueryParameter) {
+                //when no default value exist, it will set it as the first valid value
+                //if no valid value exist, will popup error.
+                if (!me._hasDefaultValue(param)) {
+                    if (me._reportDesignError === null) {
+                        me._reportDesignError = "";
+                    }
+                    me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                }
+            //}
         },
     });  // $.widget
 });

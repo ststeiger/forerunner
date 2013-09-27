@@ -162,8 +162,8 @@ $(function () {
             me._savedParamList = {};
             me._savedParamCount = 0;
             me._savedParamExist = true;
-            $.each(overrideParams.ParamsList, function (index, param) {
-                me._savedParamList[param.Name] = param.Value;
+            $.each(overrideParams.ParamsList, function (index, savedParam) {
+                me._savedParamList[savedParam.Parameter] = savedParam.Value;
                 me._savedParamCount++;
             });
         },

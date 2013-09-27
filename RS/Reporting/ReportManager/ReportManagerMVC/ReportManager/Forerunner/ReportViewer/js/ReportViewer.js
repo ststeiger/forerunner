@@ -1040,10 +1040,10 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea);
+                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
                     me.paramLoaded = true;
-                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {

@@ -76,9 +76,9 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
+                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
                         dataType: "json",
                         async: false,
                         success: function (data) {

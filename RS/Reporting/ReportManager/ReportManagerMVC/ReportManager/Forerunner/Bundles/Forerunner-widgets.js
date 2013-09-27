@@ -1041,10 +1041,10 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea);
+                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
                     me.paramLoaded = true;
-                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {
@@ -4167,8 +4167,8 @@ $(function () {
             me._savedParamList = {};
             me._savedParamCount = 0;
             me._savedParamExist = true;
-            $.each(overrideParams.ParamsList, function (index, param) {
-                me._savedParamList[param.Name] = param.Value;
+            $.each(overrideParams.ParamsList, function (index, savedParam) {
+                me._savedParamList[savedParam.Parameter] = savedParam.Value;
                 me._savedParamCount++;
             });
         },
@@ -5741,9 +5741,9 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
+                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
                         dataType: "json",
                         async: false,
                         success: function (data) {

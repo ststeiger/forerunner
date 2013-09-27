@@ -442,11 +442,12 @@ $(function () {
                 });
             }
 
-            me.savedTop = $(window).scrollTop();
             me.savedLeft = $(window).scrollLeft();
             me.savedTop = $(window).scrollTop();
             me.element.hide();
             docMap.slideUpShow();
+            setTimeout(function () { window.scrollTo(0, 0); }, 500);
+            
             me._trigger(events.showDocMap);
         },
         _removeDocMap: function () {

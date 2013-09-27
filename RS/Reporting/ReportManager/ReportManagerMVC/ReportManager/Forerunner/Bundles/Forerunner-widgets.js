@@ -577,21 +577,22 @@ $(function () {
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
-            if (window.orientation === undefined)
-                return;
-            var orientation = window.orientation;
+            //if (window.orientation === undefined)
+            //    return;
+            //var orientation = window.orientation;
 
             var pageSection = $(".fr-layout-pagesection");
-            if (!forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall()) {//big screen, height>=768
                 //portrait
-                if (orientation === 0 || orientation === 180) {
-                    if (pageSection.is(":hidden")) pageSection.show();
-                }
+                //if (orientation === 0 || orientation === 180) {
+                if (pageSection.is(":visible")) pageSection.hide();
+                //}
             }
             else {//small screen, height<768
-                if (orientation === -90 || orientation === 90) {
-                    if (pageSection.is(":visible")) pageSection.hide();
-                }
+                //if (orientation === -90 || orientation === 90) {
+                if (pageSection.is(":hidden")) pageSection.show();
+                    
+                //}
             }
         },
 

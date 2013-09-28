@@ -4984,6 +4984,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
 
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
@@ -5069,23 +5070,24 @@ $(function () {
        */
         togglePrintPane: function () {
             var me = this;
-            var $printPane = me.element.find(".fr-print-page");
 
             //To open print pane
             if (!me._printOpen) {
-                forerunner.dialog.insertMaskLayer(function () {
-                    me.element.show();
-                });
-
+                //forerunner.dialog.insertMaskLayer(function () {
+                //    me.element.show();
+                //});
+                me.element.mask().show();
                 me._printOpen = true;
+                me._trigger(events.showPrint);
             }
                 //To close print pane
             else {
-                forerunner.dialog.removeMaskLayer(function () {
-                    me.element.hide();
-                });
-
+                //forerunner.dialog.removeMaskLayer(function () {
+                //    me.element.hide();
+                //});
+                me.element.unmask().hide();
                 me._printOpen = false;
+                me._trigger(events.hidePrint);
             }
         },
         /**
@@ -5225,6 +5227,11 @@ $(function () {
             $mainviewport.addClass('fr-layout-mainviewport');
             me.$mainviewport = $mainviewport;
             $container.append($mainviewport);
+            //print section
+            me.$printsection = new $('<div />');
+            me.$printsection.addClass('fr-layout-printsection');
+            me.$printsection.addClass('fr-dialog');
+            $mainviewport.append(me.$printsection);
             //top div
             var $topdiv = new $('<div />');
             $topdiv.addClass('fr-layout-topdiv');
@@ -5249,10 +5256,6 @@ $(function () {
             me.$docmapsection = new $('<div />');
             me.$docmapsection.addClass('fr-layout-docmapsection');
             me.$pagesection.append(me.$docmapsection);
-            me.$printsection = new $('<div />');
-            me.$printsection.addClass('fr-layout-printsection');
-            me.$printsection.addClass('fr-dialog');
-            me.$pagesection.append(me.$printsection);
             //bottom div
             var $bottomdiv = new $('<div />');
             $bottomdiv.addClass('fr-layout-bottomdiv');
@@ -5317,6 +5320,16 @@ $(function () {
             $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+
+            $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
+                me.$container.css("overflow", "hidden");
+                me.$container.scrollTop(0).scrollLeft(0);
+                window.scrollTo(0, 0);
+            });
+
+            $(".fr-layout-printsection", me.$container).on(events.reportPrintHidePrint(), function () {
+                me.$container.css("overflow", "auto");
+            });
 
             var isTouch = forerunner.device.isTouch();
             if (!me.options.isFullScreen) {

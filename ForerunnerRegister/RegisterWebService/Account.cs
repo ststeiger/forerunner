@@ -118,8 +118,9 @@ namespace RegisterWebService
         public bool Save(string Value)
         {
             bool retval = true;
-            AccountData ad = new AccountData(Value);            
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            AccountData ad = new AccountData(Value);
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
             ad.ID = Guid.NewGuid().ToString();
 
             string SQL = @" 
@@ -151,7 +152,8 @@ namespace RegisterWebService
         public string Login(string email, string password)
         {
             string AccountID = null;
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
             string SQL = @" 
                             SELECT AccountID,Password from Account WHERE Email = @Email
                            ";

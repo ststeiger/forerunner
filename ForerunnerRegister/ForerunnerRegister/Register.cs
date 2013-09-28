@@ -116,6 +116,11 @@ namespace ForerunnerRegister
 
     public class Register
     {
+        private static string Domain = ConfigurationManager.AppSettings["Domain"];
+        private static string MailSubject = ConfigurationManager.AppSettings["RegMailSubject"];
+        private static string MailBody = ConfigurationManager.AppSettings["RegMailBody"];
+        private static string RegMailFromAccount = ConfigurationManager.AppSettings["RegMailFromAccount"];
+
         private byte[] SetupFile = null;
   
         public string RegisterDownload(String Value)
@@ -129,7 +134,8 @@ namespace ForerunnerRegister
         }
         private string RegisterDownload(RegistrationData RegData)
         {
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
             Guid ID = Guid.NewGuid();
 
@@ -165,7 +171,8 @@ namespace ForerunnerRegister
 
         public bool ValidateDownload(string ID)
         {
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
 
             string SQL = @" UPDATE TrialRegistration SET DownloadAttempts = DownloadAttempts+1 WHERE DownloadID = @ID
@@ -193,6 +200,16 @@ namespace ForerunnerRegister
 
         }
 
+        public string SendRegisterMail(XmlReader XMLReg,TaskWorker tw)
+        {
+#if DEBUG
+                Domain = "localhost";
+#endif
+            RegistrationData RegData = new RegistrationData(XMLReg);
+            string NewMailBody = String.Format(MailBody, RegData.FirstName, Domain, RegData.ID);
+            return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
+
+        }
 
         public byte[] GetSetupFile()
         {

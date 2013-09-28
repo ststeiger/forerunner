@@ -797,7 +797,7 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.change(function () { me._sendCascadingRequest(); });
+                    $targetElement.change(function () { me.refreshParameters(); });
                     //if dependence control don't have any value then disabled current one
                     if ($targetElement.val() === "") disabled = true;
                 });
@@ -805,12 +805,12 @@ $(function () {
 
             return disabled;
         },
-        _sendCascadingRequest: function () {
+        refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
-            var paramList = me.getParamsList(true);
+            var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me._trigger(events.loadCascadingParam, null, { sessionID: me.options.$reportViewer.sessionID, paramList: paramList });
+                me._trigger(events.loadCascadingParam, null, { reportPath: me.options.$reportViewer.options.reportPath, paramList: paramList });
             }
         },
         _disabledSubSequenceControl: function ($control) {

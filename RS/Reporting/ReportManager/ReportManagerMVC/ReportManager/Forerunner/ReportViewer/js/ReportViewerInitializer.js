@@ -86,7 +86,6 @@ $(function () {
                                 $paramarea.reportParameter("overrideDefaultParams", data);
                         }
                     });
-
                 });
             }
 
@@ -126,7 +125,7 @@ $(function () {
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.ReportPath + "&paramList=" + data.paramList,
+                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
                         success: function (data) {

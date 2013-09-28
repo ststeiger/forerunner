@@ -535,10 +535,16 @@ $(function () {
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-                
-                me._loadParameters(action.CurrentPage);
-                //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
+                if (action.paramLoaded && action.savedParams) {
+                    var $paramArea = me.options.paramArea;
+                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    me.paramLoaded = true;
+                }
+                else {
+                    me._loadParameters(action.CurrentPage);
+                }
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -812,6 +818,7 @@ $(function () {
 
             var top = $(window).scrollTop();
             var left = $(window).scrollLeft();
+            var savedParams;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -820,8 +827,15 @@ $(function () {
                 left = me.savedLeft;
             }
 
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                savedParams = $paramArea.reportParameter("getParamsList", true);
+            }
+
             me.actionHistory.push({
-                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top, ScrollLeft: left, FlushCache: flushCache
+                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams
             });
         },
         _setScrollLocation: function (top, left) {

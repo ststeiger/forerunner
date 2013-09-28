@@ -536,10 +536,16 @@ $(function () {
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-                
-                me._loadParameters(action.CurrentPage);
-                //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
+                if (action.paramLoaded && action.savedParams) {
+                    var $paramArea = me.options.paramArea;
+                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    me.paramLoaded = true;
+                }
+                else {
+                    me._loadParameters(action.CurrentPage);
+                }
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -813,6 +819,7 @@ $(function () {
 
             var top = $(window).scrollTop();
             var left = $(window).scrollLeft();
+            var savedParams;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -821,8 +828,15 @@ $(function () {
                 left = me.savedLeft;
             }
 
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                savedParams = $paramArea.reportParameter("getParamsList", true);
+            }
+
             me.actionHistory.push({
-                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top, ScrollLeft: left, FlushCache: flushCache
+                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams
             });
         },
         _setScrollLocation: function (top, left) {
@@ -4803,7 +4817,7 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.change(function () { me._sendCascadingRequest(); });
+                    $targetElement.change(function () { me.refreshParameters(); });
                     //if dependence control don't have any value then disabled current one
                     if ($targetElement.val() === "") disabled = true;
                 });
@@ -4811,12 +4825,12 @@ $(function () {
 
             return disabled;
         },
-        _sendCascadingRequest: function () {
+        refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
-            var paramList = me.getParamsList(true);
+            var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me._trigger(events.loadCascadingParam, null, { sessionID: me.options.$reportViewer.sessionID, paramList: paramList });
+                me._trigger(events.loadCascadingParam, null, { reportPath: me.options.$reportViewer.options.reportPath, paramList: paramList });
             }
         },
         _disabledSubSequenceControl: function ($control) {
@@ -5752,7 +5766,6 @@ $(function () {
                                 $paramarea.reportParameter("overrideDefaultParams", data);
                         }
                     });
-
                 });
             }
 
@@ -5792,7 +5805,7 @@ $(function () {
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.ReportPath + "&paramList=" + data.paramList,
+                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
                         success: function (data) {

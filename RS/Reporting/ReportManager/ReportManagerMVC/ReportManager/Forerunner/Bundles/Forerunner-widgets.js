@@ -5359,14 +5359,12 @@ $(function () {
                             case 'release':
                                 if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0) {
                                     me._updateTopDiv(me);
-                                    me._updateMainViewPort(me);
                                 }
                                 break;
                         }
                     });
                     $(me.$container).on('scrollstop', function () {
                         me._updateTopDiv(me);
-                        me._updateMainViewPort(me);
                     });
                 } 
 
@@ -5388,7 +5386,6 @@ $(function () {
                 me.ResetSize();
 
                 me._updateTopDiv(me);
-                me._updateMainViewPort(me);
             });
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
@@ -5421,15 +5418,6 @@ $(function () {
             return isContained;
         },
         
-        _updateMainViewPort : function (me) {
-            if (me.$leftpane.is(':visible') || me.$rightpane.is(':visible')) {
-                
-                me.$mainviewport.css('top', me.$container.scrollTop());
-                me.$container.scrollTop(0);
-
-                console.log('scroll container to top');
-            } 
-        },
 
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)

@@ -141,6 +141,15 @@ $(function () {
 
             me._setDatePicker();
             $(document).on("click", function (e) { me._checkExternalClick(e); });
+
+
+            $(':input', me.$params).each(
+                function (index) {
+                    var input = $(this);
+                    input.on('blur', function () { $(window).scrollTop(0); });
+                    input.on('focus', function () { $(window).scrollTop(0); });
+                }
+            );
         },
         _submitForm: function () {
             var me = this;

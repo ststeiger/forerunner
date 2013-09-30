@@ -328,7 +328,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {

@@ -160,7 +160,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {

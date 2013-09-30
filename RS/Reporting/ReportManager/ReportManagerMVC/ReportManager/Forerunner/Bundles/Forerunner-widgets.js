@@ -329,7 +329,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -2551,7 +2551,6 @@ $(function () {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
-
         },
         _addPageStyle: function (reportViewer, pageStyle) {
             var me = this;
@@ -5354,7 +5353,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {

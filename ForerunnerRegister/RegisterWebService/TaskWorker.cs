@@ -98,13 +98,13 @@ COMMIT TRANSACTION
 
         }
 
-        public void SaveTask(string TaskType, string TaskData)
+        public void SaveTask(string TaskType, string TaskData,string Requester = "No Requester")
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
             
             string SQL = @"
-INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAttempts) SELECT NEWID(),@TaskType,GETDATE(),@TaskData,1,0
+INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAttempts,Requester) SELECT NEWID(),@TaskType,GETDATE(),@TaskData,1,0,@Requester
 ";
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLConn.Open();
@@ -113,6 +113,7 @@ INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAtt
                 SQLComm = new SqlCommand(SQL, SQLConn);
                 SQLComm.Parameters.AddWithValue("@TaskType", TaskType);
                 SQLComm.Parameters.AddWithValue("@TaskData", TaskData);
+                SQLComm.Parameters.AddWithValue("@Requester", Requester);
                 SQLComm.ExecuteNonQuery();
             }
             catch (Exception e)

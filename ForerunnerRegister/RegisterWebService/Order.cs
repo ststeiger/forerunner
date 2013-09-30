@@ -16,10 +16,10 @@ namespace ForerunnerWebService
         private static string LicenseMailFromAccount = ConfigurationManager.AppSettings["LicenseMailFromAccount"];
 
 
-        public void AddWorkerNewShopifyOrder(string XMLOrder)
+        public void AddWorkerNewShopifyOrder(string XMLOrder,string HostName)
         {
 
-            (new TaskWorker()).SaveTask("NewShopifyOrder", XMLOrder);
+            (new TaskWorker()).SaveTask("NewShopifyOrder", XMLOrder, HostName);
             
         }
 
@@ -47,8 +47,12 @@ namespace ForerunnerWebService
                     case "order-number":
                         OrderNumber = XMLOrder.ReadElementContentAsString();
                         break;
-
-                        
+                    default:
+                        while (XMLOrder.NodeType != XmlNodeType.EndElement)
+                        {
+                            XMLOrder.Read();
+                        }
+                        break;
                     case "line-items":
                         while (XMLOrder.Read())
                         {
@@ -171,11 +175,11 @@ namespace ForerunnerWebService
             SQLReader = SQLComm.ExecuteReader();            
             while (SQLReader.Read())
             {
-                LicensesText = "SKU:";
+                LicensesText += "SKU: <b>";
                 LicensesText += SQLReader.GetString(1);
-                LicensesText += "  License Key:";
+                LicensesText += "</b>\tLicense Key: <b>";
                 LicensesText += SQLReader.GetString(0);
-
+                LicensesText += "</b><br>";
             }
             SQLReader.Close();
             SQLConn.Close();

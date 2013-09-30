@@ -452,7 +452,7 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
                 me.$viewer.reportViewer('triggerEvent', events.reportViewerHidePane());
             }
         },
@@ -487,7 +487,7 @@ $(function () {
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
 
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
                 me.$viewer.reportViewer('triggerEvent', events.reportViewerShowPane());
             }
         },

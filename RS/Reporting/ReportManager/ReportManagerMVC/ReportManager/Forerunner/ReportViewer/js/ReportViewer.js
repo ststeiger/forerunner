@@ -546,8 +546,10 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    var numVisibleParams = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (numVisibleParams > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
                 }
                 else {
@@ -1063,9 +1065,11 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    var numVisibleParams = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (numVisibleParams > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     me.paramLoaded = true;
                 }
             }

@@ -170,7 +170,7 @@
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
-    <Content Include="Forerunner\Common\images\ForerunnerLogo.jpg" />
+    <Content Include="Forerunner\Common\images\ForerunnerLogo.png" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />

@@ -270,7 +270,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -548,8 +548,8 @@ $(function () {
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    var numVisibleParams = $paramArea.reportParameter('getNumOfVisibleParameters');
-                    if (numVisibleParams > 0)
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
                 }
@@ -1067,8 +1067,8 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
-                    var numVisibleParams = $paramArea.reportParameter('getNumOfVisibleParameters');
-                    if (numVisibleParams > 0)
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
 
                     me.paramLoaded = true;
@@ -1844,7 +1844,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false)
+                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
                     me.disableTools([tb.btnParamarea]);
                
             });

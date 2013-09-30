@@ -160,6 +160,14 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
+        /**
+         * @function $.forerunner.reportViewer#triggerEvent
+         * @Triggers an event
+         */
+        triggerEvent: function (eventName) {
+            var me = this;
+            return me._trigger(eventName);
+        },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;

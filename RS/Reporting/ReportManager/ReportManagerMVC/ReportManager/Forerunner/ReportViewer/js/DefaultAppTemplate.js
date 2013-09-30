@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var ssr = forerunner.ssr;
     var toolTypes = ssr.constants.toolTypes;
+    var events = forerunner.ssr.constants.events;
 
     // This class provides the default app template for our app.
     // The EZ Viewer widget should use this template
@@ -185,11 +186,9 @@ $(function () {
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
-                        console.log(e.target);
 
                         var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
                             || me._containElement(e.target, 'fr-layout-rightpane');
-                        console.log('isScrollable: ' + isScrollable);
 
                         if (!isScrollable)
                             e.preventDefault();
@@ -215,14 +214,11 @@ $(function () {
         _containElement: function(element , className) {
             var isContained = false;
             if ($(element).hasClass(className)) {
-                console.log('Exact match');
                 isContained = true;
             } else {
                 var parent = element.parentElement;
                 while (parent !== undefined && parent != null) {
-                    console.log(parent);
                     if ($(parent).hasClass(className)) {
-                        console.log('Contained');
                         isContained = true;
                         break;
                     }
@@ -247,7 +243,6 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
-            console.log('update top div');
         },
         
         toggleZoom: function () {
@@ -332,6 +327,7 @@ $(function () {
             var events = forerunner.ssr.constants.events;
 
             var $viewer = $('.fr-layout-reportviewer', me.$container);
+            me.$viewer = $viewer;
             $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
@@ -456,6 +452,9 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            if (me.$viewer !== undefined) {
+                me.$viewer.reportViewer('triggerEvent', events.reportViewerHidePane());
+            }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -487,6 +486,10 @@ $(function () {
             
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
+
+            if (me.$viewer !== undefined) {
+                me.$viewer.reportViewer('triggerEvent', events.reportViewerShowPane());
+            }
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;

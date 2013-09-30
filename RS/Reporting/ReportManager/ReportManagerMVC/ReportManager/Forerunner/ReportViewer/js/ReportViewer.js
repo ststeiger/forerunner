@@ -160,6 +160,14 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
+        /**
+         * @function $.forerunner.reportViewer#triggerEvent
+         * @Triggers an event
+         */
+        triggerEvent: function (eventName) {
+            var me = this;
+            return me._trigger(eventName);
+        },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
@@ -261,7 +269,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -320,7 +328,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -538,8 +546,10 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
                 }
                 else {
@@ -1055,9 +1065,11 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     me.paramLoaded = true;
                 }
             }

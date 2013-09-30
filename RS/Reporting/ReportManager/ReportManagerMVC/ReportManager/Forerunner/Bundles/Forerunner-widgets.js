@@ -161,6 +161,14 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
+        /**
+         * @function $.forerunner.reportViewer#triggerEvent
+         * @Triggers an event
+         */
+        triggerEvent: function (eventName) {
+            var me = this;
+            return me._trigger(eventName);
+        },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
@@ -262,7 +270,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -321,7 +329,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -539,8 +547,10 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
                 }
                 else {
@@ -1056,9 +1066,11 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     me.paramLoaded = true;
                 }
             }
@@ -1832,7 +1844,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false)
+                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
                     me.disableTools([tb.btnParamarea]);
                
             });
@@ -1865,7 +1877,7 @@ $(function () {
             });
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnParamarea, tb.btnNav, tb.btnReportBack,
+            me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
                                tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
                                tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom]);
         },
@@ -1879,7 +1891,8 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnParamarea]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -4086,6 +4099,18 @@ $(function () {
             me.$params = $params;
             me._formInit = true;
         },
+
+        /**
+         * @function $.forerunner.reportParameter#getNumOfVisibleParameters
+         * @return {int} The number of visible parameters.
+         */
+        getNumOfVisibleParameters: function () {
+            var me = this;
+            if (me.$numVisibleParams !== undefined)
+                return me.$numVisibleParams;
+            return 0;
+        },
+    
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
@@ -4101,11 +4126,14 @@ $(function () {
             me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
             me._loadedForDefault = true && !me._savedParamExist;
             me._render();
+            me.$numVisibleParams = 0;
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
-                if (param.Prompt !== "")
+                if (param.Prompt !== "") {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />")));
+                    me.$numVisibleParams += 1;
+                }
                 else
                     me._checkHiddenParam(param);
             });
@@ -5192,6 +5220,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var ssr = forerunner.ssr;
     var toolTypes = ssr.constants.toolTypes;
+    var events = forerunner.ssr.constants.events;
 
     // This class provides the default app template for our app.
     // The EZ Viewer widget should use this template
@@ -5344,7 +5373,7 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: {userSelect : false}}).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on('touch release',
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
@@ -5370,11 +5399,9 @@ $(function () {
 
                 $(me.$container).on('touchmove', function (e) {
                     if (me.$container.hasClass('fr-layout-container-noscroll')) {
-                        console.log(e.target);
 
                         var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
                             || me._containElement(e.target, 'fr-layout-rightpane');
-                        console.log('isScrollable: ' + isScrollable);
 
                         if (!isScrollable)
                             e.preventDefault();
@@ -5400,14 +5427,11 @@ $(function () {
         _containElement: function(element , className) {
             var isContained = false;
             if ($(element).hasClass(className)) {
-                console.log('Exact match');
                 isContained = true;
             } else {
                 var parent = element.parentElement;
                 while (parent !== undefined && parent != null) {
-                    console.log(parent);
                     if ($(parent).hasClass(className)) {
-                        console.log('Contained');
                         isContained = true;
                         break;
                     }
@@ -5432,7 +5456,6 @@ $(function () {
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
-            console.log('update top div');
         },
         
         toggleZoom: function () {
@@ -5517,6 +5540,7 @@ $(function () {
             var events = forerunner.ssr.constants.events;
 
             var $viewer = $('.fr-layout-reportviewer', me.$container);
+            me.$viewer = $viewer;
             $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
@@ -5641,6 +5665,9 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
+                me.$viewer.reportViewer('triggerEvent', events.reportViewerHidePane());
+            }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
@@ -5672,6 +5699,10 @@ $(function () {
             
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
+
+            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
+                me.$viewer.reportViewer('triggerEvent', events.reportViewerShowPane());
+            }
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;

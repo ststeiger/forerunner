@@ -66,6 +66,18 @@ $(function () {
             me.$params = $params;
             me._formInit = true;
         },
+
+        /**
+         * @function $.forerunner.reportParameter#getNumOfVisibleParameters
+         * @return {int} The number of visible parameters.
+         */
+        getNumOfVisibleParameters: function () {
+            var me = this;
+            if (me.$numVisibleParams !== undefined)
+                return me.$numVisibleParams;
+            return 0;
+        },
+    
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
@@ -81,11 +93,14 @@ $(function () {
             me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
             me._loadedForDefault = true && !me._savedParamExist;
             me._render();
+            me.$numVisibleParams = 0;
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
-                if (param.Prompt !== "")
+                if (param.Prompt !== "") {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />")));
+                    me.$numVisibleParams += 1;
+                }
                 else
                     me._checkHiddenParam(param);
             });

@@ -11,19 +11,21 @@ body {
 
 fieldset {
   background: white;
-  width: 347px;
-  height: 320px;
+  width: 447px;
+  height: 323px;
   margin: 0px auto 0px auto;
   border: none;
-  box-shadow: rgba(0,0,0,.2) 20px 20px;
+  box-shadow: 0px 0px 20px #c6d1e1;
 }
 
 fieldset input {
-  width: 267px;
+  width: 367px;
   height: 38px;
   border:1px solid #d8d7d7;
+  box-shadow: 0px 0px 10px #f3f3f3 inset;
   font-size: 15pt;
   color: #999999;
+  font-family: sans-serif;
 }
 
 .fieldcontainer {
@@ -31,11 +33,11 @@ fieldset input {
 }
 
 .logocontainer {
-  margin: 0px 0px 42px 0px;
+  margin: 0px 0px 42px 5px;
 }
 
 .logo {
-  width: 267px;
+  /*width: 267px;*/
 }
 
 .usernamecontainer {
@@ -47,14 +49,16 @@ fieldset input {
 }
 
 .logincontainer {
-  margin: 0px 0px 0px 18px;
+  margin: 0px 0px 0px 68px;
 }
 
 .login {
   width: 230px;
   border:1px solid #546681;
+  box-shadow: none;
   font: 18pt bold;
   color: #ffffff;
+  font-family: sans-serif;
   background: #4e70b0; /* Old browsers */
   background: -moz-linear-gradient(top,  #4e70b0 0%, #5e96cf 0%, #4e70b0 100%, #5e96cf 100%, #5e96cf 100%); /* FF3.6+ */
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e70b0), color-stop(0%,#5e96cf), color-stop(100%,#4e70b0), color-stop(100%,#5e96cf), color-stop(100%,#5e96cf)); /* Chrome,Safari4+ */

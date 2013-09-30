@@ -76,9 +76,9 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + me.options.ReportPath,
+                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
                         dataType: "json",
                         async: false,
                         success: function (data) {
@@ -86,7 +86,6 @@ $(function () {
                                 $paramarea.reportParameter("overrideDefaultParams", data);
                         }
                     });
-
                 });
             }
 
@@ -126,7 +125,7 @@ $(function () {
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
                     $.ajax({
-                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.ReportPath + "&paramList=" + data.paramList,
+                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
                         success: function (data) {

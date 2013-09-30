@@ -1877,7 +1877,7 @@ $(function () {
             });
 
             // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnParamarea, tb.btnNav, tb.btnReportBack,
+            me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
                                tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
                                tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom]);
         },
@@ -1891,7 +1891,8 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint, tb.btnParamarea]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

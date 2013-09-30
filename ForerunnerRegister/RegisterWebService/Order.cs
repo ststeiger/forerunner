@@ -30,6 +30,7 @@ namespace ForerunnerWebService
             string GroupID = null;
             string SKU = null;
             string OrderNumber = null;
+            string ProductName = null;
             int Quantity = 0;
             TaskWorker Task = new TaskWorker();
 
@@ -70,15 +71,18 @@ namespace ForerunnerWebService
                                     case "sku":
                                         SKU = XMLOrder.ReadElementContentAsString();
                                         break;
+                                    case "name":
+                                        ProductName = XMLOrder.ReadElementContentAsString();
+                                        break;
                                 }
                                 if (XMLOrder.NodeType == XmlNodeType.EndElement && XMLOrder.Name == "line-item")
                                 {
                                     if (Quantity != 0 && Email != null && SKU != null)
                                     {
                                         GroupID = Guid.NewGuid().ToString();
-                                        WriteLicense(GroupID, SKU, Quantity);
-                                        WriteLicense(GroupID, SKU + "-Dev", Quantity);
-                                        WriteLicense(GroupID, SKU + "-Test", Quantity);
+                                        WriteLicense(GroupID, SKU,ProductName, Quantity);
+                                        WriteLicense(GroupID, SKU + "-Dev",ProductName, Quantity);
+                                        WriteLicense(GroupID, SKU + "-Test",ProductName, Quantity);
                                         Task.SaveTask("SendLicenseEmail", "<LicenseMail><OrderNumber>" + OrderNumber + "</OrderNumber><Email>" + Email + "</Email><GroupID>" + GroupID + "</GroupID></LicenseMail>");
                                         break;
                                     }
@@ -98,10 +102,10 @@ namespace ForerunnerWebService
             return "success";
         }
 
-        private void WriteLicense(string GroupID,string SKU, int Quantity)
+        private void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity)
         {
-            string SQL = @"INSERT License (LicenseID,LicenseGroupID, SKU,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
-                            SELECT @LicenseID, @GroupID,@SKU,@Quantity,NULL,0,GETDATE()";
+            string SQL = @"INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
+                            SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,GETDATE()";
 
             ForerunnerDB DB = new ForerunnerDB();
             string ID = ForerunnerDB.NewLicenseID();
@@ -115,6 +119,7 @@ namespace ForerunnerWebService
                 SQLComm.Parameters.AddWithValue("@LicenseID", ID);
                 SQLComm.Parameters.AddWithValue("@GroupID", GroupID);
                 SQLComm.Parameters.AddWithValue("@SKU", SKU);
+                SQLComm.Parameters.AddWithValue("@ProductName", ProductName);
                 SQLComm.Parameters.AddWithValue("@Quantity", Quantity);
                 SQLComm.ExecuteNonQuery();
             }
@@ -166,7 +171,7 @@ namespace ForerunnerWebService
             SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
 
-            string SQL = @"SELECT LicenseID, SKU FROM License WHERE LicenseGroupID = @GroupID";
+            string SQL = @"SELECT LicenseID, SKU,ProductName FROM License WHERE LicenseGroupID = @GroupID";
                             
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
@@ -175,9 +180,11 @@ namespace ForerunnerWebService
             SQLReader = SQLComm.ExecuteReader();            
             while (SQLReader.Read())
             {
-                LicensesText += "SKU: <b>";
+                LicensesText += "Product: <b>";
+                LicensesText += SQLReader.GetString(2);
+                LicensesText += "</b> SKU: <b>";
                 LicensesText += SQLReader.GetString(1);
-                LicensesText += "</b>\tLicense Key: <b>";
+                LicensesText += "</b> License Key: <b>";
                 LicensesText += SQLReader.GetString(0);
                 LicensesText += "</b><br>";
             }

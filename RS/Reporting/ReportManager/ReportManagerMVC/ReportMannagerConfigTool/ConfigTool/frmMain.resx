@@ -1143,6 +1143,240 @@
   <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="txtMachineKey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>91, 124</value>
+  </data>
+  <data name="txtMachineKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>349, 20</value>
+  </data>
+  <data name="txtMachineKey.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;txtMachineKey.Name" xml:space="preserve">
+    <value>txtMachineKey</value>
+  </data>
+  <data name="&gt;&gt;txtMachineKey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtMachineKey.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;txtMachineKey.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="label4.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 131</value>
+  </data>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 13</value>
+  </data>
+  <data name="label4.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Machine Key:</value>
+  </data>
+  <data name="&gt;&gt;label4.Name" xml:space="preserve">
+    <value>label4</value>
+  </data>
+  <data name="&gt;&gt;label4.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label4.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="btnProductInfo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnProductInfo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>266, 201</value>
+  </data>
+  <data name="btnProductInfo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
+  </data>
+  <data name="btnProductInfo.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="btnProductInfo.Text" xml:space="preserve">
+    <value>Product Info</value>
+  </data>
+  <data name="&gt;&gt;btnProductInfo.Name" xml:space="preserve">
+    <value>btnProductInfo</value>
+  </data>
+  <data name="&gt;&gt;btnProductInfo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnProductInfo.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnProductInfo.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btnManualActivation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnManualActivation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>118, 201</value>
+  </data>
+  <data name="btnManualActivation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 22</value>
+  </data>
+  <data name="btnManualActivation.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="btnManualActivation.Text" xml:space="preserve">
+    <value>Manual Activation</value>
+  </data>
+  <data name="&gt;&gt;btnManualActivation.Name" xml:space="preserve">
+    <value>btnManualActivation</value>
+  </data>
+  <data name="&gt;&gt;btnManualActivation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnManualActivation.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnManualActivation.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 7</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>78, 13</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Activation Key:</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="textBox2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 23</value>
+  </data>
+  <data name="textBox2.Multiline" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="textBox2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>433, 85</value>
+  </data>
+  <data name="textBox2.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;textBox2.Name" xml:space="preserve">
+    <value>textBox2</value>
+  </data>
+  <data name="&gt;&gt;textBox2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;textBox2.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;textBox2.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btnGetActivationKey.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnGetActivationKey.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 201</value>
+  </data>
+  <data name="btnGetActivationKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 22</value>
+  </data>
+  <data name="btnGetActivationKey.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="btnGetActivationKey.Text" xml:space="preserve">
+    <value>Get Activation Key</value>
+  </data>
+  <data name="&gt;&gt;btnGetActivationKey.Name" xml:space="preserve">
+    <value>btnGetActivationKey</value>
+  </data>
+  <data name="&gt;&gt;btnGetActivationKey.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnGetActivationKey.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnGetActivationKey.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="btnActivate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnActivate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>356, 201</value>
+  </data>
+  <data name="btnActivate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
+  </data>
+  <data name="btnActivate.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="btnActivate.Text" xml:space="preserve">
+    <value>Activate</value>
+  </data>
+  <data name="&gt;&gt;btnActivate.Name" xml:space="preserve">
+    <value>btnActivate</value>
+  </data>
+  <data name="&gt;&gt;btnActivate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnActivate.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 22</value>
+  </data>
+  <data name="tabActivation.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>3, 3, 3, 3</value>
+  </data>
+  <data name="tabActivation.Size" type="System.Drawing.Size, System.Drawing">
+    <value>448, 229</value>
+  </data>
+  <data name="tabActivation.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="tabActivation.Text" xml:space="preserve">
+    <value>Activation</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Name" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TabPage, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.Parent" xml:space="preserve">
+    <value>tabMain</value>
+  </data>
+  <data name="&gt;&gt;tabActivation.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="tabMain.Location" type="System.Drawing.Point, System.Drawing">
     <value>1, -1</value>
   </data>

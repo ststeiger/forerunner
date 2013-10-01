@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ForerunnerRegister;
 using ForerunnerWebService;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace RegisterTest
 {
@@ -15,11 +16,15 @@ namespace RegisterTest
         {
             TaskWorker tw = new TaskWorker();
 
-            while (true)
-            {
-                tw.DoWork();
-                Thread.Sleep(1000);
-            }
+            var rsa1 = new RSACryptoServiceProvider(2048);
+            string publicXml = rsa1.ToXmlString(false);
+            string privateXml = rsa1.ToXmlString(true); 
+
+            //while (true)
+            //{
+                //tw.DoWork();
+                //Thread.Sleep(1000);
+            //}
         }
     }
 }

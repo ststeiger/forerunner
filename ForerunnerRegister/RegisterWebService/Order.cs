@@ -133,10 +133,7 @@ namespace ForerunnerWebService
 
         public string SendLicenseMail(XmlReader LicenseXML,TaskWorker tw)
         {
-#if DEBUG
-                Domain = "localhost";
-#endif
-            string Email = null;
+           string Email = null;
             string LicensesText = "";
             string GroupID = null;
             string OrderNumber = null;

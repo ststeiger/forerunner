@@ -11,17 +11,7 @@ namespace RegisterWebService.Controllers
 {
     public class OrderController : ApiController
     {
-        // GET api/order
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET api/order/5
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST api/order
         public void Post()
@@ -42,14 +32,5 @@ namespace RegisterWebService.Controllers
             
         }
 
-        // PUT api/order/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/order/5
-        public void Delete(int id)
-        {
-        }
     }
 }

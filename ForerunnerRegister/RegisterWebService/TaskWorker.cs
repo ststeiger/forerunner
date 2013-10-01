@@ -126,9 +126,6 @@ INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAtt
 
         public string SendMail(string MailFromAccount,string Email,string MailSubject,string MailBody)
         {
-#if DEBUG
-                Domain = "localhost";
-#endif
 
             try
             {

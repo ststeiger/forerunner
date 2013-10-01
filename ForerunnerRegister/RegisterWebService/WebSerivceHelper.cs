@@ -12,6 +12,11 @@ namespace ForerunnerWebService
     static public class WebSerivceHelper
     {
 
+        static public HttpResponseMessage GetResponseFromString(string result, string mimeType, HttpResponseMessage resp, bool cache = false, string fileName = null)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(result), mimeType, resp, cache, fileName);
+        }
+
         static public HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, HttpResponseMessage resp, bool cache = false, string fileName = null)
         {
 

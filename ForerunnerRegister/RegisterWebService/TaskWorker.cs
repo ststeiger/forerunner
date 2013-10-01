@@ -8,58 +8,27 @@ using System.Xml;
 using System.IO;
 using System.Text;
 using ForerunnerRegister;
+using ForerunnerWebService;
 
 namespace ForerunnerWebService
 {
     public class TaskWorker
     {
-        private static string Domain = ConfigurationManager.AppSettings["Domain"];
-        private static string MailSubject = ConfigurationManager.AppSettings["MailSubject"];
-        private static string MailBody = ConfigurationManager.AppSettings["MailBody"];
+
+        
         private static string MailHost = ConfigurationManager.AppSettings["MailHost"];
         private static string MailSendAccount = ConfigurationManager.AppSettings["MailSendAccount"];
         private static string MailSendPassword = ConfigurationManager.AppSettings["MailSendPassword"];
-        private static string MailFromAccount = ConfigurationManager.AppSettings["MailFromAccount"];
+        
 
+       
+       
 
-        private string SendMail(RegistrationData RegData)
-        {
-            #if DEBUG
-                Domain = "localhost";
-            #endif
-
-            
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, Domain, RegData.ID);
-
-            try
-            {
-                SmtpClient client = new SmtpClient();
-                client.Port = 587;
-                client.Host = MailHost;
-                client.EnableSsl = true;
-                client.Timeout = 50000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new System.Net.NetworkCredential(MailSendAccount, MailSendPassword);
-
-                MailMessage mm = new MailMessage(MailFromAccount, RegData.Email, MailSubject, NewMailBody);
-                mm.BodyEncoding = UTF8Encoding.UTF8;
-                mm.IsBodyHtml = true;
-                mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-
-                client.Send(mm);
-                return "success";
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-
-        }
         
         public void DoWork()
         {
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
             Guid TaskID = new Guid();
             string StatusMessage = "";
@@ -77,24 +46,33 @@ COMMIT TRANSACTION
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
 
+            string TaskType;
             SQLReader = SQLComm.ExecuteReader();
             while (SQLReader.Read())
             {
-                if (SQLReader.GetString(1) == "SendRegistrationEmail")
+                TaskType = SQLReader.GetString(1);
+                TaskID = SQLReader.GetGuid(0);
+                if (TaskType == "SendRegistrationEmail")
                 {
-                    TaskID = SQLReader.GetGuid(0);
-                    RegistrationData RegData = new RegistrationData(SQLReader.GetXmlReader(2));
-
-                    if (RegData.ID != "" && RegData.Email != "")
-                        StatusMessage = SendMail(RegData);
-                    else
-                        break;
-                    if (StatusMessage == "success")
-                        TaskStatus = 3;
-                    else
-                        TaskStatus = 1;
+                    Register Reg = new Register();
+                    StatusMessage = Reg.SendRegisterMail(SQLReader.GetXmlReader(2),this);
+                }
+                if (TaskType == "NewShopifyOrder")
+                {
+                    Order Or = new Order();
+                    StatusMessage = Or.ProcessShopifyOrder(SQLReader.GetXmlReader(2));
+                }
+               
+                if (TaskType == "SendLicenseEmail")
+                {
+                    Order Or = new Order();
+                    StatusMessage = Or.SendLicenseMail(SQLReader.GetXmlReader(2),this);
                 }
 
+                if (StatusMessage == "success")
+                    TaskStatus = 3;
+                else
+                    TaskStatus = 1;
 
             }
             SQLReader.Close();
@@ -120,21 +98,60 @@ COMMIT TRANSACTION
 
         }
 
-        public void SaveTask(string TaskType, string TaskData)
+        public void SaveTask(string TaskType, string TaskData,string Requester = "No Requester")
         {
-            SqlConnection SQLConn = ForerunnerDB.GetSQLConn();
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+            
             string SQL = @"
-INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAttempts) SELECT NEWID(),@TaskType,GETDATE(),@TaskData,1,0
+INSERT WorkerTasks (TaskID,TaskType,TaskCreated , TaskData  , TaskStatus,TaskAttempts,Requester) SELECT NEWID(),@TaskType,GETDATE(),@TaskData,1,0,@Requester
 ";
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
             SQLConn.Open();
-            SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@TaskType", TaskType);
-            SQLComm.Parameters.AddWithValue("@TaskData", TaskData);
-            SQLComm.ExecuteNonQuery();
+            try
+            {
+                SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@TaskType", TaskType);
+                SQLComm.Parameters.AddWithValue("@TaskData", TaskData);
+                SQLComm.Parameters.AddWithValue("@Requester", Requester);
+                SQLComm.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                SQLConn.Close();
+                throw (e);
+            }
             SQLConn.Close();
         }
 
-       
+        public string SendMail(string MailFromAccount,string Email,string MailSubject,string MailBody)
+        {
+
+            try
+            {
+                SmtpClient client = new SmtpClient();
+                client.Port = 587;
+                client.Host = MailHost;
+                client.EnableSsl = true;
+                client.Timeout = 50000;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential(MailSendAccount, MailSendPassword);
+
+                MailMessage mm = new MailMessage(MailFromAccount, Email, MailSubject, MailBody);
+                mm.BodyEncoding = UTF8Encoding.UTF8;
+                mm.IsBodyHtml = true;
+                mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+
+                client.Send(mm);
+                return "success";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+
+        }   
     }
+
 }

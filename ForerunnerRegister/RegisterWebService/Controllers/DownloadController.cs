@@ -39,9 +39,7 @@ namespace RegisterWebService.Controllers
         {
             string content = this.Request.Content.ReadAsStringAsync().Result;
             Reg.RegisterDownload(content);
-#if DEBUG
-            Reg.DoWork();
-#endif
+
             return WebSerivceHelper.Redirect("http://forerunnersw.com/thankyou.html",this.Request.CreateResponse());
 
         }

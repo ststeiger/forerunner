@@ -10,22 +10,23 @@ body {
 }
 
 fieldset {
-  background: white;
-  width: 447px;
-  height: 323px;
   margin: 0px auto 0px auto;
-  border: none;
+  background: white;
+  border: 1px solid #97a4b1;
   box-shadow: 0px 0px 20px #c6d1e1;
 }
 
 fieldset input {
-  width: 367px;
-  height: 38px;
   border:1px solid #d8d7d7;
   box-shadow: 0px 0px 10px #f3f3f3 inset;
   font-size: 15pt;
   color: #999999;
   font-family: sans-serif;
+}
+
+.fieldsetsize {
+  width: 447px;
+  height: 323px;
 }
 
 .fieldcontainer {
@@ -36,8 +37,14 @@ fieldset input {
   margin: 0px 0px 42px 5px;
 }
 
-.logo {
-  /*width: 267px;*/
+.logosize {
+  /*width: 352px;*/
+}
+
+.inputsize {
+  width: 357px;
+  height: 38px;
+  padding-left: 10px;
 }
 
 .usernamecontainer {

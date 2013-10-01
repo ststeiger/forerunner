@@ -13,27 +13,26 @@
 @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl})) {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
-    <div class="loginForm" >
+    <div class="loginForm">
         <div style="display: table-cell; vertical-align: middle">
-            <div style="margin-left: auto; margin-right: auto;">
-    <fieldset>
-        <div class="fieldcontainer">
-            <div class="logocontainer">
-                <img class="logo" src="~/Forerunner/Common/images/ForerunnerLogo.png" />
-            </div>
-            <div class="usernamecontainer">
-                @Html.TextBoxFor(m => m.UserName, new { @placeholder = "User name", autocomplete = "on" })
-            </div>
-            <div class="passwordcontainer">
-                @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", autocomplete = "on" })
-            </div>
-            <div class="logincontainer">
-                <input class="login" type="submit" value="Log In" />
-            </div>
+            <fieldset class="fieldsetsize">
+                <div class="fieldcontainer">
+                    <div class="logocontainer">
+                        <img class="logosize" src="~/Forerunner/Common/images/ForerunnerLogo.png" />
+                    </div>
+                    <div class="usernamecontainer">
+                        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "User name", autocomplete = "on", @class = "inputsize" })
+                    </div>
+                    <div class="passwordcontainer">
+                        @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", autocomplete = "on", @class = "inputsize" })
+                    </div>
+                    <div class="logincontainer">
+                        <input class="login" type="submit" value="Log In" />
+                    </div>
+                </div>
+            </fieldset>
         </div>
-
-    </fieldset>
-    </div></div></div>
+    </div>
 }
 </section>
 

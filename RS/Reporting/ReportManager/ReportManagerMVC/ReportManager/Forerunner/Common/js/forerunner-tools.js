@@ -732,13 +732,18 @@ $(function () {
                 click: function (e) {
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
                     if (parameterList) {
-                        $.getJSON(e.data.me.options.$ReportViewerInitializer.options.ReportManagerAPI + "/SaveUserParameters", {
+                        forerunner.ajax.getJSON(e.data.me.options.$ReportViewerInitializer.options.ReportManagerAPI + "/SaveUserParameters",
+                            {
                             reportPath: e.data.me.options.$reportViewer.reportViewer("option", "reportPath"),
                             parameters: parameterList,
-                        }).done(function (Data) {
+                            },
+                            function (data) {
                             forerunner.dialog.showMessageBox("Saved");
-                        })
-                        .fail(function () { forerunner.dialog.showMessageBox("Failed"); });
+                            },
+                            function () {
+                                forerunner.dialog.showMessageBox("Failed");
+                            }
+                        );
                     }
                 }
             }

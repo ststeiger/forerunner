@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"побуждать",
 		"close":"близко"
+	},
+	"placeholders":{ 
+	    "Username":"Имя пользователя", 
+	    "Password":"пароль", 
+	    "Login": "Войти" 
 	}
 }
 

@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"Eingabeaufforderung",
 		"close":"schließen"
+	},
+	"placeholders":{ 
+	    "Username":"Benutzername", 
+	    "Password":"Kennwort", 
+	    "Login": "Anmelden" 
 	}
 }
 

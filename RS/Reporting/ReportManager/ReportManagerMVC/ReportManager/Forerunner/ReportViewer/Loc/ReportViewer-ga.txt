@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"incitar",
 		"close":"pechar"
+	},
+	"placeholders":{ 
+	    "Username":"ainm úsáideora", 
+	    "Password":"Pasfhocal", 
+	    "Login": "Logáil isteach" 
 	}
 }
 

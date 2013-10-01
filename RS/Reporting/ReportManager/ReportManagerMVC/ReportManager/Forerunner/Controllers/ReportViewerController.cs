@@ -52,6 +52,21 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(result, "text/JSON");
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage AcceptLanguage()
+        {
+            HttpHeaderValueCollection<StringWithQualityHeaderValue> acceptLanguage = this.Request.Headers.AcceptLanguage;
+            List<string> listOfLanguages = new List<string>();
+            foreach (StringWithQualityHeaderValue value in acceptLanguage)
+            {
+                if (value.Value != null && value.Value != "")
+                    listOfLanguages.Add(value.Value);
+            }
+            byte[] result = Encoding.UTF8.GetBytes(JsonUtility.ConvertListToJSON(listOfLanguages));
+            return GetResponseFromBytes(result, "text/json");
+        }
+
         [HttpGet]        
         public HttpResponseMessage Image( string SessionID, string ImageID)
         {

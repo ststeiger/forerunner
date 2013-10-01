@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"pronto",
 		"close":"cerrar"
+	},
+	"placeholders":{ 
+	    "Username":"nombre de usuario", 
+	    "Password":"contraseña", 
+	    "Login": "login" 
 	}
 }
 

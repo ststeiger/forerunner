@@ -21,13 +21,13 @@
                         <img class="logosize" src="~/Forerunner/Common/images/ForerunnerLogo.png" />
                     </div>
                     <div class="usernamecontainer">
-                        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "User name", autocomplete = "on", @class = "inputsize" })
+                        @Html.TextBoxFor(m => m.UserName, new { @placeholder = "User name", autocomplete = "on", @class = "inputsize", @id = "username" })
                     </div>
                     <div class="passwordcontainer">
-                        @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", autocomplete = "on", @class = "inputsize" })
+                        @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", autocomplete = "on", @class = "inputsize", @id = "password" })
                     </div>
                     <div class="logincontainer">
-                        <input class="login loginsize" type="submit" value="Log In" />
+                        <input class="login loginsize" type="submit" value="Log In" id="login"/>
                     </div>
                 </div>
             </fieldset>
@@ -37,5 +37,21 @@
 </section>
 
 @section scripts {
+  <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="~/Scripts/util/underscore.js"></script>
+  <script type="text/javascript" src="~/Scripts/util/json2.js"></script>
+  <script type="text/javascript" src="~/Scripts/util/backbone.js"></script>
+  <script type="text/javascript" src="~/Scripts/util/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Common/js/forerunner.js"></script>
   <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/Placeholders.min.js"></script>
+  <script type="text/javascript">
+      $(document).ready(function () {
+          var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
+          $('#username').attr('placeholder', locData.placeholders.Username);
+          $('#password').attr('placeholder', locData.placeholders.Password);
+          $('#login').attr('value', locData.placeholders.Login);
+      });
+  </script>
 }

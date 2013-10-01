@@ -130,6 +130,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\Lib\Misc\js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
@@ -393,6 +394,7 @@ Section Uninstall
 
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer.css"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
+  Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\Placeholders.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js"

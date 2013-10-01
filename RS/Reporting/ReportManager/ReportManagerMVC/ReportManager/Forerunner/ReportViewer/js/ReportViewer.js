@@ -434,7 +434,7 @@ $(function () {
 
             //get the doc map
             if (!me.docMapData) {
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: me.options.reportViewerAPI + "/DocMapJSON/",
                     data: {
                         SessionID: me.sessionID,
@@ -627,7 +627,7 @@ $(function () {
             var me = this;
 
             if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
-                $.ajax({
+                forerunner.ajax.ajax({
                     url: me.options.reportViewerAPI + "/GetReportJSON/",
                     data: {
                         ReportPath: me.options.reportPath,
@@ -667,18 +667,21 @@ $(function () {
             else
                 newDir = sortDirection.asc;
 
-            $.getJSON(me.options.reportViewerAPI + "/SortReport/", {
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
+                {
                 SessionID: me.sessionID,
                 SortItem: id,
                 Direction: newDir
-            }).done(function (data) {
-                me.scrollLeft = $(window).scrollLeft();
-                me.scrollTop = $(window).scrollTop();
+                },
+                function (data) {
+                    me.scrollLeft = $(window).scrollLeft();
+                    me.scrollTop = $(window).scrollTop();
 
-                me.numPages = data.NumPages;
-                me._loadPage(data.NewPage, false, null, null, true);
-            })
-            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+                    me.numPages = data.NumPages;
+                    me._loadPage(data.NewPage, false, null, null, true);
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
         /**
          * Sorts the current report
@@ -695,20 +698,23 @@ $(function () {
             me._addLoadingIndicator();
             me._prepareAction();
 
-            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                {
                 NavType: navigateType.toggle,
                 SessionID: me.sessionID,
                 UniqueID: toggleID
-            }).done(function (data) {
-                if (data.Result === true) {
-                    me.scrollLeft = $(window).scrollLeft();
-                    me.scrollTop = $(window).scrollTop();
+                },
+                function (data) {
+                    if (data.Result === true) {
+                        me.scrollLeft = $(window).scrollLeft();
+                        me.scrollTop = $(window).scrollTop();
 
-                    me.pages[me.curPage] = null;
-                    me._loadPage(me.curPage, false);
-                }
-            })
-           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+                        me.pages[me.curPage] = null;
+                        me._loadPage(me.curPage, false);
+                    }
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
         /**
          * Navigate to the given bookmark
@@ -723,20 +729,23 @@ $(function () {
             me.lock = 1;
 
             me._prepareAction();
-            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
-                NavType: navigateType.bookmark,
-                SessionID: me.sessionID,
-                UniqueID: bookmarkID
-            }).done(function (data) {
-                if (data.NewPage === me.curPage) {
-                    me._navToLink(bookmarkID);
-                    me.lock = 0;
-                } else {
-                    me.backupCurPage();
-                    me._loadPage(data.NewPage, false, bookmarkID);
-                }
-            })
-           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                {
+                    NavType: navigateType.bookmark,
+                    SessionID: me.sessionID,
+                    UniqueID: bookmarkID
+                },
+                function (data) {
+                    if (data.NewPage === me.curPage) {
+                        me._navToLink(bookmarkID);
+                        me.lock = 0;
+                    } else {
+                        me.backupCurPage();
+                        me._loadPage(data.NewPage, false, bookmarkID);
+                    }
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
 
         /**
@@ -766,34 +775,37 @@ $(function () {
             me._addLoadingIndicator();
 
             me._prepareAction();
-            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
-                NavType: navigateType.drillThrough,
-                SessionID: me.sessionID,
-                UniqueID: drillthroughID
-            }).done(function (data) {
-                me.backupCurPage(true);
-                if (data.Exception) {
-                    me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
-                    me.removeLoadingIndicator();
-                }
-                else {
-                    me.sessionID = data.SessionID;
-                    if (me.origionalReportPath === "")
-                        me.origionalReportPath = me.options.reportPath;
-                    me.options.reportPath = data.ReportPath;
-                    me._trigger(events.drillThrough, null, { path: data.ReportPath });
-                    if (data.ParametersRequired) {
-                        me.$reportAreaContainer.find(".Page").detach();
-                        me._setScrollLocation(0, 0);
-                        me._showParameters(1, data.Parameters);
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                {
+                    NavType: navigateType.drillThrough,
+                    SessionID: me.sessionID,
+                    UniqueID: drillthroughID
+                },
+                function (data) {
+                    me.backupCurPage(true);
+                    if (data.Exception) {
+                        me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
+                        me.removeLoadingIndicator();
                     }
                     else {
-                        me._setScrollLocation(0, 0);
-                        me._loadPage(1, false, null, null, true);
+                        me.sessionID = data.SessionID;
+                        if (me.origionalReportPath === "")
+                            me.origionalReportPath = me.options.reportPath;
+                        me.options.reportPath = data.ReportPath;
+                        me._trigger(events.drillThrough, null, { path: data.ReportPath });
+                        if (data.ParametersRequired) {
+                            me.$reportAreaContainer.find(".Page").detach();
+                            me._setScrollLocation(0, 0);
+                            me._showParameters(1, data.Parameters);
+                        }
+                        else {
+                            me._setScrollLocation(0, 0);
+                            me._loadPage(1, false, null, null, true);
+                        }
                     }
-                }
-            })
-           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
         /**
          * Navigate to the Document Map
@@ -807,16 +819,19 @@ $(function () {
                 return;
             me.lock = 1;
 
-            $.getJSON(me.options.reportViewerAPI + "/NavigateTo/", {
-                NavType: navigateType.docMap,
-                SessionID: me.sessionID,
-                UniqueID: docMapID
-            }).done(function (data) {
-                me.backupCurPage(false,true);
-                me.hideDocMap();
-                me._loadPage(data.NewPage, false, docMapID);
-            })
-           .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+                {
+                    NavType: navigateType.docMap,
+                    SessionID: me.sessionID,
+                    UniqueID: docMapID
+                },
+                function (data) {
+                    me.backupCurPage(false,true);
+                    me.hideDocMap();
+                    me._loadPage(data.NewPage, false, docMapID);
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
         /**
          * Push the current page onto the action history stack
@@ -891,37 +906,40 @@ $(function () {
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
-                $.getJSON(me.options.reportViewerAPI + "/FindString/", {
-                    SessionID: me.sessionID,
-                    StartPage: startPage,
-                    EndPage: endPage,
-                    FindValue: keyword
-                }).done(function (data) {
-                    if (data.NewPage !== 0) {//keyword exist
-                        me.finding = true;
-                        if (data.NewPage !== me.getCurPage()) {
-                            me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
-                            me.pages[data.NewPage] = null;
-                            me._loadPage(data.NewPage, false);
-                        } else {
-                            me.setFindHighlight(keyword);
+                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/FindString/",
+                    {
+                        SessionID: me.sessionID,
+                        StartPage: startPage,
+                        EndPage: endPage,
+                        FindValue: keyword
+                    },
+                    function (data) {
+                        if (data.NewPage !== 0) {//keyword exist
+                            me.finding = true;
+                            if (data.NewPage !== me.getCurPage()) {
+                                me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
+                                me.pages[data.NewPage] = null;
+                                me._loadPage(data.NewPage, false);
+                            } else {
+                                me.setFindHighlight(keyword);
+                            }
                         }
-                    }
-                    else {//keyword not exist
-                        if (me.findStartPage !== 1) {
-                            me.find(keyword, 1, me.findStartPage - 1);
-                            me.findStartPage = 1;
+                        else {//keyword not exist
+                            if (me.findStartPage !== 1) {
+                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findStartPage = 1;
+                            }
+                            else {
+                                if (me.finding === true)
+                                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                                else
+                                    forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
+                                me.resetFind();
+                            }
                         }
-                        else {
-                            if (me.finding === true)
-                                forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
-                            else
-                                forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
-                            me.resetFind();
-                        }
-                    }
-                })
-              .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+                    },
+                    function () { console.log("error"); me.removeLoadingIndicator(); }
+                );
             }
         },
         /**
@@ -1044,17 +1062,17 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
-            $.getJSON(me.options.reportViewerAPI + "/ParameterJSON/", {
-                ReportPath: me.options.reportPath
-            })
-           .done(function (data) {
-               me._addLoadingIndicator();
-               me._showParameters(pageNum, data);
-           })
-           .fail(function () {
-               console.log("error");
-               me.removeLoadingIndicator();
-           });
+            forerunner.ajax.getJSON(
+                me.options.reportViewerAPI + "/ParameterJSON/",
+                {ReportPath: me.options.reportPath},
+                function (data) {
+                   me._addLoadingIndicator();
+                   me._showParameters(pageNum, data);
+                },
+                function (data) {
+                   console.log("error");
+                   me.removeLoadingIndicator();
+                });
         },
         _showParameters: function (pageNum, data) {
             var me = this;
@@ -1163,26 +1181,28 @@ $(function () {
                 me._addLoadingIndicator();
             }
             me.togglePageNum = newPageNum;            
-            $.getJSON(me.options.reportViewerAPI + "/ReportJSON/", {
-                ReportPath: me.options.reportPath,
-                SessionID: me.sessionID,
-                PageNumber: newPageNum,
-                ParameterList: paramList
-            })
-            .done(function (data) {
-                me._writePage(data, newPageNum, loadOnly);
-                if (data.ReportContainer) {
-                    me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
-                }
+            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/ReportJSON/",
+                {
+                    ReportPath: me.options.reportPath,
+                    SessionID: me.sessionID,
+                    PageNumber: newPageNum,
+                    ParameterList: paramList
+                },
+                function (data) {
+                    me._writePage(data, newPageNum, loadOnly);
+                    if (data.ReportContainer) {
+                        me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                    }
 
-                if (!me.element.is(":visible") && !loadOnly)
-                    me.element.show();  //scrollto does not work with the slide in functions:(
-                if (bookmarkID)
-                    me._navToLink(bookmarkID);
-                if (!loadOnly && flushCache !== true)
-                    me._cachePages(newPageNum);
-            })
-            .fail(function () { console.log("error"); me.removeLoadingIndicator(); });
+                    if (!me.element.is(":visible") && !loadOnly)
+                        me.element.show();  //scrollto does not work with the slide in functions:(
+                    if (bookmarkID)
+                        me._navToLink(bookmarkID);
+                    if (!loadOnly && flushCache !== true)
+                        me._cachePages(newPageNum);
+                },
+                function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
         },
         
         _writePage: function (data, newPageNum, loadOnly) {
@@ -1252,17 +1272,19 @@ $(function () {
         _sessionPingPost: function (sessionID) {
             var me = this;
             if (sessionID && sessionID !== "")
-                $.getJSON(me.options.reportViewerAPI + "/PingSession", {
-                    PingSessionID: sessionID
-                })
-                .done(function (data) {
-                    if (data.Status === "Fail") {
-                        return false;
-                    }
-                    else
-                        return true;
-                })
-                .fail(function () { console.log("ping error"); });
+                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/PingSession",
+                    {
+                        PingSessionID: sessionID
+                    },
+                    function (data) {
+                        if (data.Status === "Fail") {
+                            return false;
+                        }
+                        else
+                            return true;
+                    },
+                    function () { console.log("ping error"); }
+                );
             },
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer

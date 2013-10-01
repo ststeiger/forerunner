@@ -463,25 +463,50 @@ $(function () {
          *
          * @return {object} Localization data
          */
-        getLocData: function(locFileLocation){
-            var lang = navigator.language || navigator.userLanguage;
-            lang = lang.toLocaleLowerCase();
-            var langData = this._loadFile(locFileLocation, lang);
+        getLocData: function (locFileLocation) {
+            var languageList = this._getLanguages();
 
-            if (langData === null || langData === undefined)
-                langData = this._loadFile(locFileLocation, lang.substr(0,2));
-
-            if (langData === null ||  langData === undefined)
+            var langData = null;
+            if (languageList != null && languageList !== undefined) {
+                for (var i = 0; i < languageList.length && langData == null; i++) {
+                    var lang = languageList[i];
+                    lang = lang.toLocaleLowerCase();
+                    langData = this._loadFile(locFileLocation, lang);
+                }
+            }
+            
+            // When all fails, load English.
+            if (langData === null)
                 langData = this._loadFile(locFileLocation, "en");
 
             return langData;
             
         },
+        _getLanguages: function () {
+            var returnValue = null;
+            $.ajax({
+                url: forerunner.config.forerunnerAPIBase() + '/reportViewer/AcceptLanguage',
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    returnValue = data;
+                },
+                fail: function () {
+                    returnValue = null;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    returnValue = null;
+                },
+            });
+            return returnValue;
+        },        
         _loadFile: function (locFileLocation, lang) {
             var me = this;
             if (me._locData[locFileLocation] === undefined)
                 me._locData[locFileLocation] = {};
             if (me._locData[locFileLocation][lang] === undefined) {
+                // This does not need to be wrapped because this should
+                // not require authn,
                 $.ajax({
                     url: locFileLocation + "-" + lang + ".txt",
                     dataType: "json",
@@ -494,13 +519,57 @@ $(function () {
                     },
                     error: function ( jqXHR ,textStatus, errorThrown) {
                         me._locData[locFileLocation][lang] = null;
-                },
+                    },
                 });
 
             }
             return me._locData[locFileLocation][lang];
         },
 
+    };
+    /**
+     * Defines the methods used to make Ajax calls.
+     *
+     * @namespace
+     */
+    forerunner.ajax = {
+        /**
+        * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
+        *
+        * @param {object} Options for the ajax call.
+        * @member
+        */
+        ajax: function (options) {
+            var error_callback = options.error;
+            options.error = function (data) {
+                if (data.status = 302) {
+                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                }
+                error_callback(data);
+            };
+            $.ajax(options);
+        },
+        /**
+        * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
+        *
+        * @param {String} Url of the ajax call
+        * @param {object} Options for the ajax call.
+        * @param {function} Handler for the success path.
+        * @param {function} Handler for the failure path.
+        * @member
+        */
+        getJSON: function (url, options, done, fail) {
+            $.getJSON(url, options)
+            .done(function (data) {
+                done(data);
+            })
+            .fail(function (data) {
+                if (data.status = 302) {
+                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                }
+                fail(data);
+            });
+        },
     };
     /**
      * Contains device specific methods.

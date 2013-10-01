@@ -169,7 +169,7 @@ $(function () {
 
         _fetch: function (view,path) {
             var me = this;
-            $.ajax({
+            forerunner.ajax.ajax({
                 dataType: "json",
                 url: me.options.reportManagerAPI + "/GetItems",
                 async: false,

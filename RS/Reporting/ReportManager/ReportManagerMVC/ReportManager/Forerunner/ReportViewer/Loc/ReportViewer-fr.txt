@@ -98,6 +98,11 @@
 	"dialog":{
 	    "title":"invite",
 		"close":"proche"
+	},
+	"placeholders":{ 
+	    "Username":"Nom d'utilisateur", 
+	    "Password":"mot de passe", 
+	    "Login": "Connexion" 
 	}
 }
 

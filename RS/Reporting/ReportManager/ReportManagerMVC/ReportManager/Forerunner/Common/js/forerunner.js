@@ -508,6 +508,12 @@ $(function () {
      * @namespace
      */
     forerunner.ajax = {
+        /**
+        * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
+        *
+        * @param {object} Options for the ajax call.
+        * @member
+        */
         ajax: function (options) {
             var error_callback = options.error;
             options.error = function (data) {
@@ -518,6 +524,15 @@ $(function () {
             };
             $.ajax(options);
         },
+        /**
+        * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
+        *
+        * @param {String} Url of the ajax call
+        * @param {object} Options for the ajax call.
+        * @param {function} Handler for the success path.
+        * @param {function} Handler for the failure path.
+        * @member
+        */
         getJSON: function (url, options, done, fail) {
             $.getJSON(url, options)
             .done(function (data) {

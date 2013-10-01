@@ -77,7 +77,7 @@ $(function () {
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
                 $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
-                    $.ajax({
+                    forerunner.ajax.ajax({
                         url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
                         dataType: "json",
                         async: false,
@@ -124,7 +124,7 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
-                    $.ajax({
+                    forerunner.ajax.ajax({
                         url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
@@ -158,7 +158,7 @@ $(function () {
             if (me.options.$toolPane !== null) {
                 me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
             }
-            $.ajax({
+            forerunner.ajax.ajax({
                 url: me.options.ReportManagerAPI + "/isFavorite?path=" + path,
                 dataType: "json",
                 async: true,
@@ -184,16 +184,19 @@ $(function () {
                 action = "delete";
             }
 
-            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
-                view: "favorites",
-                action: action,
-                path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath")
-            }).done(function (data) {
-                me.updateFavoriteState.call(me, action === "add");
-            })
-            .fail(function () {
+            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+                {
+                    view: "favorites",
+                    action: action,
+                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath")
+                },
+                function (data) {
+                    me.updateFavoriteState.call(me, action === "add");
+                },
+                function () {
                 forerunner.dialog.showMessageBox("Failed");
-            });
+                }
+            );
         },
         onClickItemFavorite: function (e) {
             var me = this;
@@ -205,16 +208,19 @@ $(function () {
             }
 
             $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            $.getJSON(me.options.ReportManagerAPI + "/UpdateView", {
-                view: "favorites",
-                action: action,
-                path: me.options.ReportPath
-            }).done(function (data) {
-                me.updateFavoriteState.call(me, action === "add");
-            })
-            .fail(function () {
-                forerunner.dialog.showMessageBox("Failed");
-            });
+            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+                {
+                    view: "favorites",
+                    action: action,
+                    path: me.options.ReportPath
+                },
+                function (data) {
+                    me.updateFavoriteState.call(me, action === "add");
+                },
+                function () {
+                    forerunner.dialog.showMessageBox("Failed");
+                }
+            );
         },
         updateFavoriteState: function (isFavorite) {
             var me = this;

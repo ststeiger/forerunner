@@ -33,6 +33,7 @@ namespace ReportManager.Controllers
             if (ModelState.IsValid && 
                 Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == AuthenticationMode.Forms)
             {
+                string decodedUrl = HttpUtility.UrlDecode(returnUrl);
                 HttpCookie authCookie = FindAuthCookie();
                 if (authCookie == null || System.Web.HttpContext.Current.Session["Forerunner.Principal"] == null)
                 {
@@ -76,7 +77,7 @@ namespace ReportManager.Controllers
                             // Encrypt the ticket.
                             string encTicket = FormsAuthentication.Encrypt(ticket);// Create the cookie.
                             Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
-                            return RedirectToLocal(returnUrl);
+                            return CheckNullAndRedirect(returnUrl, decodedUrl);
                         }
                     } 
                     finally 
@@ -89,17 +90,22 @@ namespace ReportManager.Controllers
                 }
                 else
                 {
-                    if (returnUrl == null)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-                    else
-                    {
-                        return RedirectToLocal(returnUrl);
-                    }
+                    return CheckNullAndRedirect(returnUrl, decodedUrl);
                 }
             }
             return View(model);
+        }
+
+        private ActionResult CheckNullAndRedirect(string returnUrl, string decodedUrl)
+        {
+            if (returnUrl == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return Redirect(decodedUrl);
+            }
         }
 
         [HttpPost]
@@ -108,18 +114,6 @@ namespace ReportManager.Controllers
             FormsAuthentication.SignOut();
 
             return RedirectToAction("Login", "Login");
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
         }
     }
 }

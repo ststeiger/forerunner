@@ -504,6 +504,35 @@ $(function () {
 
     };
     /**
+     * Defines the methods used to make Ajax calls.
+     *
+     * @namespace
+     */
+    forerunner.ajax = {
+        ajax: function (options) {
+            var error_callback = options.error;
+            options.error = function (data) {
+                if (data.status = 302) {
+                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                }
+                error_callback(data);
+            };
+            $.ajax(options);
+        },
+        getJSON: function (url, options, done, fail) {
+            $.getJSON(url, options)
+            .done(function (data) {
+                done(data);
+            })
+            .fail(function (data) {
+                if (data.status = 302) {
+                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                }
+                fail(data);
+            });
+        },
+    };
+    /**
      * Contains device specific methods.
      *
      * @namespace

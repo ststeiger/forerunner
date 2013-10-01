@@ -619,7 +619,11 @@ namespace Forerunner.SSRS.Viewer
                 {
                     // Cache the current httpcontext credential for other threads to use
                     SetCredentials(GetCredentials());
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+                    {
+                        impersonator = impersonator == null ? new CurrentUserImpersonator() : impersonator;
+                    }
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator == null ? new CurrentUserImpersonator(): impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
                 }
 

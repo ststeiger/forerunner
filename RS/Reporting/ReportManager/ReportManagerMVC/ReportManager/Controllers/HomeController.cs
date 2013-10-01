@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace ReportManager.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         //

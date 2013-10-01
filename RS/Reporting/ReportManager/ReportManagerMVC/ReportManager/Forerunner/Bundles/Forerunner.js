@@ -229,12 +229,12 @@ $(function () {
             /** @constant */
             showPrint: "showprint",
             /** widget + event, lowercase */
-            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase() },
+            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase(); },
 
             /** @constant */
             hidePrint: "hideprint",
             /** widget + event, lowercase */
-            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase() },
+            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase(); },
 
             /** @constant */
             render: "render",
@@ -468,8 +468,8 @@ $(function () {
             var languageList = this._getLanguages();
 
             var langData = null;
-            if (languageList != null && languageList !== undefined) {
-                for (var i = 0; i < languageList.length && langData == null; i++) {
+            if (languageList !== null && languageList !== undefined) {
+                for (var i = 0; i < languageList.length && langData === null; i++) {
                     var lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
@@ -543,7 +543,7 @@ $(function () {
         ajax: function (options) {
             var error_callback = options.error;
             options.error = function (data) {
-                if (data.status = 302) {
+                if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
                 }
                 error_callback(data);
@@ -565,9 +565,10 @@ $(function () {
                 done(data);
             })
             .fail(function (data) {
-                if (data.status = 302) {
+                if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
                 }
+                console.log(data);
                 fail(data);
             });
         },

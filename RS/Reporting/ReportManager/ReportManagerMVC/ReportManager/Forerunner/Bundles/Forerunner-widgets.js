@@ -2172,15 +2172,10 @@ $(function () {
             
             $slider.addClass("fr-nav-container");
  
-            var $sliderWrapper = new $("<DIV />");
-            
-            $slider.append($sliderWrapper);
-
-
             var $list = me._renderList();
             me.$list = $list;
 
-            $sliderWrapper.append($list);
+            $slider.append($list);
             me.element.css("display", "block");
             
             me.element.append($slider);

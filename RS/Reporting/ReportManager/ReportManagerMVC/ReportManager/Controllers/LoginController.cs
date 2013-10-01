@@ -13,6 +13,8 @@ namespace ReportManager.Controllers
     [Authorize]
     public class LoginController : Controller
     {
+        private string timeout = ConfigurationManager.AppSettings["Forerunner.FormsAuthenticationTimeout"];
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -23,6 +25,26 @@ namespace ReportManager.Controllers
         private HttpCookie FindAuthCookie()
         {
             return Request.Cookies[FormsAuthentication.FormsCookieName];
+        }
+
+        private const int defaultTimeout = 30;
+        private int GetTimeout()
+        {
+            int returnValue = defaultTimeout;
+            if (timeout != null)
+            {
+                
+                try
+                {
+                    returnValue = Int32.Parse(timeout);
+                }
+                catch
+                {
+                    returnValue = defaultTimeout;
+                }
+            }
+
+            return returnValue;
         }
 
         [HttpPost]
@@ -69,7 +91,7 @@ namespace ReportManager.Controllers
                                 1,
                                 model.UserName,
                                 DateTime.Now,
-                                DateTime.Now.AddMinutes(30),
+                                DateTime.Now.AddMinutes(GetTimeout()),
                                 false,
                                 model.Password,
                                 FormsAuthentication.FormsCookiePath);

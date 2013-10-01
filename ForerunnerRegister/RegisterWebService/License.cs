@@ -99,7 +99,7 @@ namespace ForerunnerWebService
             bool success = false;
 
             string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID
-                           SELECT MachineKey,LastActivateDate,Quantity,SKU FROM License WHERE LicenseID = @LicenseID";
+                           SELECT MachineKey,LastActivateDate,Quantity,SKU,FirstActivationDate FROM License WHERE LicenseID = @LicenseID";
            try
             {
                 SQLConn.Open();
@@ -115,6 +115,8 @@ namespace ForerunnerWebService
                         LastActivation = SQLReader.GetDateTime(1);
                     Quantity  = SQLReader.GetInt32(2);
                     SKU = SQLReader.GetString(3);
+                    if (!SQLReader.IsDBNull(4))
+                        FirstActivationDate = SQLReader.GetDateTime(4);
                 }
                 SQLReader.Close();
                 SQLConn.Close();
@@ -126,16 +128,25 @@ namespace ForerunnerWebService
                     {
                         Response = String.Format(Response, "Success", "0", GetActivatePackage());
                         success = true;
-                    }
+                    }                    
                     else
                     {
-                        TimeSpan ts = DateTime.Now - LastActivation;
-                        if (ts.TotalDays < 30)
-                            Response = String.Format(Response, "Fail", "101", "Already Activated");
-                        else
+                        TimeSpan ts = DateTime.Now - FirstActivationDate;
+                        if ((StoredMachineKey == MachineKey) && ((SKU == "MobSA1Year" || SKU == "MobSA1YearEx" || SKU == "Mob1YearSub") && ts.TotalDays < 365) || (SKU == "MobSA3Year" && ts.TotalDays < 365 * 3))
                         {
                             Response = String.Format(Response, "Success", "0", GetActivatePackage());
                             success = true;
+                        }
+                        else
+                        {
+                            ts = DateTime.Now - LastActivation;
+                            if (ts.TotalDays < 30)
+                                Response = String.Format(Response, "Fail", "101", "Already Activated");
+                            else
+                            {
+                                Response = String.Format(Response, "Success", "0", GetActivatePackage());
+                                success = true;
+                            }
                         }
                     }
                 }

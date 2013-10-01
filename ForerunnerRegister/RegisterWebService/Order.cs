@@ -16,7 +16,7 @@ namespace ForerunnerWebService
         private static string LicenseMailFromAccount = ConfigurationManager.AppSettings["LicenseMailFromAccount"];
 
 
-        public void AddWorkerNewShopifyOrder(string XMLOrder,string HostName)
+        public void AddWorkerNewShopifyOrder(string XMLOrder,string HostName = "")
         {
 
             (new TaskWorker()).SaveTask("NewShopifyOrder", XMLOrder, HostName);
@@ -168,7 +168,7 @@ namespace ForerunnerWebService
             SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
 
-            string SQL = @"SELECT LicenseID, SKU,ProductName FROM License WHERE LicenseGroupID = @GroupID";
+            string SQL = @"SELECT LicenseID, SKU,ProductName,Quantity FROM License WHERE LicenseGroupID = @GroupID";
                             
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
@@ -181,6 +181,8 @@ namespace ForerunnerWebService
                 LicensesText += SQLReader.GetString(2);
                 LicensesText += "</b> SKU: <b>";
                 LicensesText += SQLReader.GetString(1);
+                LicensesText += "</b> Quantity: <b>";
+                LicensesText += SQLReader.GetString(3);                
                 LicensesText += "</b> License Key: <b>";
                 LicensesText += SQLReader.GetString(0);
                 LicensesText += "</b><br>";

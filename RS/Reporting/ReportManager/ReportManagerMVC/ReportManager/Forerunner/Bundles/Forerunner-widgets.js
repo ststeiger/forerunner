@@ -548,7 +548,7 @@ $(function () {
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
@@ -1067,7 +1067,7 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
 
@@ -3309,8 +3309,14 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  + "height:" + height + "mm;";
+            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
 
+            //MSIE Hack
+            if (forerunner.device.isMSIE() )
+                Style +=  "min-height:" + height + "mm;";
+            else
+                Style += "height:" + height + "mm;";
+            
             //Row and column span
             if (Obj.RowSpan !== undefined)
                 $Cell.attr("rowspan", Obj.RowSpan);

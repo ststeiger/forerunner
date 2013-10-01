@@ -228,12 +228,12 @@ $(function () {
             /** @constant */
             showPrint: "showprint",
             /** widget + event, lowercase */
-            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase() },
+            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase(); },
 
             /** @constant */
             hidePrint: "hideprint",
             /** widget + event, lowercase */
-            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase() },
+            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase(); },
 
             /** @constant */
             render: "render",
@@ -542,6 +542,11 @@ $(function () {
         isFirefox: function () {
             var ua = navigator.userAgent;
             return ua.match(/(Firefox)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
+        isMSIE: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(MSIE)/);
         },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {

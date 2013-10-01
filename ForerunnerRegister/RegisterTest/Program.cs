@@ -16,15 +16,15 @@ namespace RegisterTest
         {
             TaskWorker tw = new TaskWorker();
 
-            var rsa1 = new RSACryptoServiceProvider(2048);
-            string publicXml = rsa1.ToXmlString(false);
-            string privateXml = rsa1.ToXmlString(true); 
+            //var rsa1 = new RSACryptoServiceProvider(2048);
+            //string publicXml = rsa1.ToXmlString(false);
+            //string privateXml = rsa1.ToXmlString(true); 
 
-            //while (true)
-            //{
-                //tw.DoWork();
-                //Thread.Sleep(1000);
-            //}
+            while (true)
+            {
+                tw.DoWork();
+                Thread.Sleep(1000);
+            }
         }
     }
 }

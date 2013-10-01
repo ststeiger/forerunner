@@ -15,6 +15,7 @@
   <script type="text/javascript" src="/Scripts/util/backbone.js"></script>
   <script type="text/javascript" src="/Scripts/util/jquery.hammer.min.js"></script>
   <script type="text/javascript" src="/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
   <script type="text/javascript" src="/Forerunner/Common/js/forerunner.js"></script>
   <script type="text/javascript" src="/Forerunner/Common/js/forerunner-tools.js"></script>
   <script type="text/javascript" src="/Forerunner/ReportViewer/js/ReportViewer.js"></script>
@@ -46,8 +47,6 @@
           $('.fr-layout-reportviewer', $('#Test')).on(forerunner.ssr.constants.events.reportViewerShowPane(), function () {
               console.log('I am here;');
           });
-          console.log('Hi');
-          console.log($('.fr-layout-reportviewer', $('#Test')));
       });
   </script>
   <div style="width:20%;float:left;"><nav style="background:blue;width:100%;height:764px">Left Nav</nav></div>

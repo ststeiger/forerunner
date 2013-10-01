@@ -183,6 +183,7 @@
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
+    <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
@@ -263,7 +264,6 @@
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />
     <Content Include="Scripts\Util\collection_view.js" />
-    <Content Include="Forerunner\Lib\Misc\js\jquery.touchSwipe.min.js" />
     <Content Include="Scripts\Util\json2.js" />
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />

@@ -63,7 +63,10 @@ $(function () {
                 $caption.addClass("fr-report-center");
                 var $thumbnail = new $("<IMG />");
                 $thumbnail.addClass("fr-nav-page-thumb");
-                $thumbnail.attr("src", url);
+                // Instead of stating the src, use data-original and add the lazy class so that
+                // we will use lazy loading.
+                $thumbnail.addClass("lazy");
+                $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
                     click: function (event) {
@@ -100,6 +103,7 @@ $(function () {
 
 
             var $list = me._renderList();
+            me.$list = $list;
 
             $sliderWrapper.append($list);
             me.element.css("display", "block");
@@ -128,6 +132,9 @@ $(function () {
                 me.isRendered = true;
             }
             me._makeVisible(!me.element.is(":visible"));
+
+            $container = $('ul.fr-nav-container', $(me.element));
+            $(".lazy", me.$list).lazyload({ container: $container });
         },
         _initCallbacks: function () {
             var me = this;

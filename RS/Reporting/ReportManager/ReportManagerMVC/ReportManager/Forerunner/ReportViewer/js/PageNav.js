@@ -133,6 +133,7 @@ $(function () {
             }
             me._makeVisible(!me.element.is(":visible"));
 
+            $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
             $container = $('ul.fr-nav-container', $(me.element));
             $(".lazy", me.$list).lazyload({ container: $container });
         },

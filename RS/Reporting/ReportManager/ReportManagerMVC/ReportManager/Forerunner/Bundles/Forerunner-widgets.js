@@ -2208,6 +2208,7 @@ $(function () {
             }
             me._makeVisible(!me.element.is(":visible"));
 
+            $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
             $container = $('ul.fr-nav-container', $(me.element));
             $(".lazy", me.$list).lazyload({ container: $container });
         },
@@ -6016,6 +6017,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
+            layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");

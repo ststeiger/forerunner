@@ -43,6 +43,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
+            layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");

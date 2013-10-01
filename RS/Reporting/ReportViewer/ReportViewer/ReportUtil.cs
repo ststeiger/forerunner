@@ -553,6 +553,13 @@ namespace Forerunner
             return mime;
         }
 
+        public static string ConvertListToJSON(List<string> listOfStrings)
+        {
+            JsonWriter w = new JsonTextWriter();
 
+            w.WriteStringArray(listOfStrings);
+
+            return w.ToString();
+        }
     }
 }

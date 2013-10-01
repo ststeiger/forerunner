@@ -36,26 +36,17 @@
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
   <script>
       $(document).ready(function () {
-          $('#pane1').reportViewerEZ({
+          $('#Test').reportViewerEZ({
+              DefaultAppTemplate: null,
               path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
-              isFullScreen: false
-          });
-          $('#pane2').reportViewerEZ({
-              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+              navigateTo: null,
+              historyBack: null,
+              isReportManager: false,
               isFullScreen: false
           });
       });
   </script>
-    <h1>This is a bunch of HTML</h1>
-    <table>
-        <tr>
-            <td>
-                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-            <td>
-                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-        </tr>
-     </table>
+  <header style="height:100px;background:blue;display:block;">Html5 header</header>
+  <div id="Test" />
 </body>
 </html>

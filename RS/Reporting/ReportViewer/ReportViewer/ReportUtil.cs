@@ -60,7 +60,7 @@ namespace Forerunner
 
                 foreach (JsonObject obj in parameterArray)
                 {
-                    if (obj["IsMultiple"].ToString() == "True")
+                    if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
                         string temp = obj["Value"].ToString();
                         foreach (string str in temp.Split(','))
@@ -101,7 +101,7 @@ namespace Forerunner
 
                 foreach (JsonObject obj in parameterArray)
                 {
-                    if (obj["IsMultiple"].ToString() == "True")
+                    if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
                         Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
                         string multipleValue = obj["Value"].ToString();
@@ -264,6 +264,8 @@ namespace Forerunner
 
                         if (obj == null)
                             w.WriteString("");
+                        else if (obj.GetType().ToString().Contains("Boolean"))
+                            w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
                             w.WriteString(proInfo.GetValue(parameter, null).ToString());
                     }
@@ -359,6 +361,8 @@ namespace Forerunner
 
                         if (obj == null)
                             w.WriteString("");
+                        else if (obj.GetType().ToString().Contains("Boolean"))
+                            w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
                             w.WriteString(proInfo.GetValue(parameter, null).ToString());
                     }

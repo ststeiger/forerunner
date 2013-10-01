@@ -28,34 +28,29 @@
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportParameter.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportDocumentMap.js"></script>
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportPrint.js"></script>
-  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
-  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
-  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script>
-  <script type="text/javascript" src="Forerunner/ReportViewer/js/DefaultAppTemplate.js"></script>
-  <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerInitializer.js"></script>
-  <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
+  <script type="text/javascript" src="/Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script>
+  <script type="text/javascript" src="/Forerunner/ReportViewer/js/DefaultAppTemplate.js"></script>
+  <script type="text/javascript" src="/Forerunner/ReportViewer/js/ReportViewerInitializer.js"></script>
+  <script type="text/javascript" src="/Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
   <script>
       $(document).ready(function () {
-          $('#pane1').reportViewerEZ({
+          $('#Test').reportViewerEZ({
+              DefaultAppTemplate: null,
               path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+              navigateTo: null,
+              historyBack: null,
+              isReportManager: false,
               isFullScreen: false
           });
-          $('#pane2').reportViewerEZ({
-              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
-              isFullScreen: false
+          $('#Test').css('height', $(document).height());
+          $('.fr-layout-reportviewer', $('#Test')).on(forerunner.ssr.constants.events.reportViewerShowPane(), function () {
+              console.log('I am here;');
           });
       });
   </script>
-    <h1>This is a bunch of HTML</h1>
-    <table>
-        <tr>
-            <td>
-                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-            <td>
-                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-        </tr>
-     </table>
+  <div style="width:20%;float:left;"><nav style="background:blue;width:100%;height:764px">Left Nav</nav></div>
+  <div style="width:80%;float:right;overflow:visible;"><div id="Test" style="display:block;height:100%"/></div>
 </body>
 </html>

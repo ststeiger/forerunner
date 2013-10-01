@@ -254,5 +254,27 @@ namespace ReportMannagerConfigTool
         {
             Process.Start("UltiDev.WebServer.msi");
         }
+
+        private void btnOpenStore_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://shop.forerunnersw.com");
+        }
+
+        private void btnApplyLicense_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnManualActivation_Click(object sender, EventArgs e)
+        {
+            frmManualActivation frm = new frmManualActivation();
+            DialogResult result = frm.ShowDialog();
+        }
+
+        private void btnProductInfo_Click(object sender, EventArgs e)
+        {
+            frmProductInfo frm = new frmProductInfo();
+            DialogResult result = frm.ShowDialog();
+        }
     }
 }

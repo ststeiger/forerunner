@@ -23,7 +23,7 @@
 var forerunner = forerunner || {};
 
 /**
- * Contains the SQL Server Report data
+ * Contains the SQL Server Report datal
  *
  * @namespace
  */
@@ -69,7 +69,23 @@ jQuery.fn.extend({
         return this.each(function () {
             $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
-    }    
+    },
+    mask: function () {
+        var $mask = $(this).find(".fr-mask");
+
+        if ($mask.length === 0) {
+            var page = $(this).siblings(".fr-layout-pagesection");
+
+            $mask = $("<div class='fr-mask'></div>");
+            $mask.height(page.height() + 38);
+            $(this).append($mask);
+        }
+        return $(this);
+    },
+    unmask: function () {
+        $(this).find(".fr-mask").remove();
+        return $(this);
+    }
 });
 $(function () {
     /**
@@ -205,8 +221,20 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
+            /** @constant */
             loadCascadingParam: "loadcascadingparam",
+            /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
+
+            /** @constant */
+            showPrint: "showprint",
+            /** widget + event, lowercase */
+            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase() },
+
+            /** @constant */
+            hidePrint: "hideprint",
+            /** widget + event, lowercase */
+            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase() },
 
             /** @constant */
             render: "render",
@@ -217,6 +245,16 @@ $(function () {
             submit: "submit",
             /** widget + event, lowercase */
             reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },
+
+            /** @constant */
+            showPane: "showPane",
+            /** widget + event, lowercase */
+            reportViewerShowPane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showPane).toLowerCase(); },
+
+            /** @constant */
+            hidePane: "hidePane",
+            /** widget + event, lowercase */
+            reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

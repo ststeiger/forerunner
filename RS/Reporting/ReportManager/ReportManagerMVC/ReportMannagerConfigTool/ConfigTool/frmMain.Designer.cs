@@ -69,12 +69,22 @@
             this.txtSiteName = new System.Windows.Forms.TextBox();
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
+            this.tabActivation = new System.Windows.Forms.TabPage();
+            this.txtMachineKey = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnProductInfo = new System.Windows.Forms.Button();
+            this.btnManualActivation = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.btnGetActivationKey = new System.Windows.Forms.Button();
+            this.btnActivate = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.gbAuthType.SuspendLayout();
+            this.tabActivation.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabMain
@@ -82,6 +92,7 @@
             this.tabMain.Controls.Add(this.tabPage2);
             this.tabMain.Controls.Add(this.tabPage3);
             this.tabMain.Controls.Add(this.tabPage1);
+            this.tabMain.Controls.Add(this.tabActivation);
             resources.ApplyResources(this.tabMain, "tabMain");
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -359,6 +370,70 @@
             this.rdoIIS.TabStop = true;
             this.rdoIIS.UseVisualStyleBackColor = true;
             // 
+            // tabActivation
+            // 
+            this.tabActivation.Controls.Add(this.txtMachineKey);
+            this.tabActivation.Controls.Add(this.label4);
+            this.tabActivation.Controls.Add(this.btnProductInfo);
+            this.tabActivation.Controls.Add(this.btnManualActivation);
+            this.tabActivation.Controls.Add(this.label3);
+            this.tabActivation.Controls.Add(this.textBox2);
+            this.tabActivation.Controls.Add(this.btnGetActivationKey);
+            this.tabActivation.Controls.Add(this.btnActivate);
+            resources.ApplyResources(this.tabActivation, "tabActivation");
+            this.tabActivation.Name = "tabActivation";
+            this.tabActivation.UseVisualStyleBackColor = true;
+            // 
+            // txtMachineKey
+            // 
+            this.txtMachineKey.CausesValidation = false;
+            resources.ApplyResources(this.txtMachineKey, "txtMachineKey");
+            this.txtMachineKey.Name = "txtMachineKey";
+            this.txtMachineKey.ReadOnly = true;
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
+            // 
+            // btnProductInfo
+            // 
+            resources.ApplyResources(this.btnProductInfo, "btnProductInfo");
+            this.btnProductInfo.Name = "btnProductInfo";
+            this.btnProductInfo.UseVisualStyleBackColor = true;
+            this.btnProductInfo.Click += new System.EventHandler(this.btnProductInfo_Click);
+            // 
+            // btnManualActivation
+            // 
+            resources.ApplyResources(this.btnManualActivation, "btnManualActivation");
+            this.btnManualActivation.Name = "btnManualActivation";
+            this.btnManualActivation.UseVisualStyleBackColor = true;
+            this.btnManualActivation.Click += new System.EventHandler(this.btnManualActivation_Click);
+            // 
+            // label3
+            // 
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // textBox2
+            // 
+            resources.ApplyResources(this.textBox2, "textBox2");
+            this.textBox2.Name = "textBox2";
+            // 
+            // btnGetActivationKey
+            // 
+            resources.ApplyResources(this.btnGetActivationKey, "btnGetActivationKey");
+            this.btnGetActivationKey.Name = "btnGetActivationKey";
+            this.btnGetActivationKey.UseVisualStyleBackColor = true;
+            this.btnGetActivationKey.Click += new System.EventHandler(this.btnOpenStore_Click);
+            // 
+            // btnActivate
+            // 
+            resources.ApplyResources(this.btnActivate, "btnActivate");
+            this.btnActivate.Name = "btnActivate";
+            this.btnActivate.UseVisualStyleBackColor = true;
+            this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
+            // 
             // frmMain
             // 
             resources.ApplyResources(this, "$this");
@@ -378,6 +453,8 @@
             this.tabPage1.PerformLayout();
             this.gbAuthType.ResumeLayout(false);
             this.gbAuthType.PerformLayout();
+            this.tabActivation.ResumeLayout(false);
+            this.tabActivation.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -424,6 +501,15 @@
         private System.Windows.Forms.GroupBox gbAuthType;
         private System.Windows.Forms.RadioButton rdoFormAuth;
         private System.Windows.Forms.RadioButton rdoWinAuth;
+        private System.Windows.Forms.TabPage tabActivation;
+        private System.Windows.Forms.Button btnActivate;
+        private System.Windows.Forms.Button btnGetActivationKey;
+        private System.Windows.Forms.Button btnManualActivation;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btnProductInfo;
+        private System.Windows.Forms.TextBox txtMachineKey;
+        private System.Windows.Forms.Label label4;
     }
 }
 

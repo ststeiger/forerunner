@@ -8,6 +8,25 @@
     <link href="/Forerunner/Lib/jQuery/css/jquery-ui.min.css" rel="stylesheet"/>
     <link href="/Forerunner/Lib/jQuery/css/jquery.ui.core.min.css" rel="stylesheet"/>
     <link href="/Forerunner/Lib/jQuery/css/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+    <style>
+        
+    * {
+    margin: 0;
+    }
+    html, body {
+    height: 100%;
+    }
+    .wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px;
+    }
+    .footer, .push {
+    height: 100px;
+    }
+
+    </style>
 </head>
 <body>
   <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
@@ -36,26 +55,22 @@
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
   <script>
       $(document).ready(function () {
-          $('#pane1').reportViewerEZ({
+          $('#Test').reportViewerEZ({
+              DefaultAppTemplate: null,
               path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
-              isFullScreen: false
-          });
-          $('#pane2').reportViewerEZ({
-              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+              navigateTo: null,
+              historyBack: null,
+              isReportManager: false,
               isFullScreen: false
           });
       });
   </script>
-    <h1>This is a bunch of HTML</h1>
-    <table>
-        <tr>
-            <td>
-                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-            <td>
-                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-        </tr>
-     </table>
+        <div class="wrapper">
+            <div id="Test"></div>
+            <div style="background:transparent;" class="push"></div>
+        </div>
+        <div style="background:blue;" class="footer">
+            <p>Copyright (c) 2008</p>
+        </div>
 </body>
 </html>

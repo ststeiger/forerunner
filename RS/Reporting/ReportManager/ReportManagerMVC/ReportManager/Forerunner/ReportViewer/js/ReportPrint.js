@@ -11,6 +11,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
 
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
@@ -96,23 +97,24 @@ $(function () {
        */
         togglePrintPane: function () {
             var me = this;
-            var $printPane = me.element.find(".fr-print-page");
 
             //To open print pane
             if (!me._printOpen) {
-                forerunner.dialog.insertMaskLayer(function () {
-                    me.element.show();
-                });
-
+                //forerunner.dialog.insertMaskLayer(function () {
+                //    me.element.show();
+                //});
+                me.element.mask().show();
                 me._printOpen = true;
+                me._trigger(events.showPrint);
             }
                 //To close print pane
             else {
-                forerunner.dialog.removeMaskLayer(function () {
-                    me.element.hide();
-                });
-
+                //forerunner.dialog.removeMaskLayer(function () {
+                //    me.element.hide();
+                //});
+                me.element.unmask().hide();
                 me._printOpen = false;
+                me._trigger(events.hidePrint);
             }
         },
         /**

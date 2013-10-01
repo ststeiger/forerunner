@@ -170,7 +170,7 @@
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
-    <Content Include="Forerunner\Common\images\ForerunnerLogo.jpg" />
+    <Content Include="Forerunner\Common\images\ForerunnerLogo.png" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
@@ -183,6 +183,7 @@
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
+    <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
@@ -228,9 +229,13 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
+    <Content Include="Samples\BottomNav.html" />
     <Content Include="Samples\FullPage.html" />
     <Content Include="Samples\Dashboard.html" />
     <Content Include="JSdoc\Tutorials\GettingStarted.html" />
+    <Content Include="Samples\SideNav.html" />
+    <Content Include="Samples\TopNav.html" />
+    <Content Include="Samples\TopNav2.html" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
@@ -259,7 +264,6 @@
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />
     <Content Include="Scripts\Util\collection_view.js" />
-    <Content Include="Forerunner\Lib\Misc\js\jquery.touchSwipe.min.js" />
     <Content Include="Scripts\Util\json2.js" />
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />

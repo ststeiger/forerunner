@@ -160,6 +160,14 @@ $(function () {
             var me = this;
             return me.hasDocMap;
         },
+        /**
+         * @function $.forerunner.reportViewer#triggerEvent
+         * @Triggers an event
+         */
+        triggerEvent: function (eventName) {
+            var me = this;
+            return me._trigger(eventName);
+        },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
@@ -261,7 +269,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -320,7 +328,7 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false } }).on("swipe drag touch release",
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
@@ -441,11 +449,12 @@ $(function () {
                 });
             }
 
-            me.savedTop = $(window).scrollTop();
             me.savedLeft = $(window).scrollLeft();
             me.savedTop = $(window).scrollTop();
             me.element.hide();
             docMap.slideUpShow();
+            setTimeout(function () { window.scrollTo(0, 0); }, 500);
+            
             me._trigger(events.showDocMap);
         },
         _removeDocMap: function () {
@@ -534,10 +543,18 @@ $(function () {
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-                
-                me._loadParameters(action.CurrentPage);
-                //me._loadPage(action.CurrentPage, false, null, null, action.FlushCache);
 
+                if (action.paramLoaded && action.savedParams) {
+                    var $paramArea = me.options.paramArea;
+                    $paramArea.reportParameter("refreshParameters", action.savedParams);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    me.paramLoaded = true;
+                }
+                else {
+                    me._loadParameters(action.CurrentPage);
+                }
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -576,21 +593,22 @@ $(function () {
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
-            if (window.orientation === undefined)
-                return;
-            var orientation = window.orientation;
+            //if (window.orientation === undefined)
+            //    return;
+            //var orientation = window.orientation;
 
             var pageSection = $(".fr-layout-pagesection");
-            if (!forerunner.device.isSmall()) {//big screen, height>=768
+            if (forerunner.device.isSmall()) {//big screen, height>=768
                 //portrait
-                if (orientation === 0 || orientation === 180) {
-                    if (pageSection.is(":hidden")) pageSection.show();
-                }
+                //if (orientation === 0 || orientation === 180) {
+                if (pageSection.is(":visible")) pageSection.hide();
+                //}
             }
             else {//small screen, height<768
-                if (orientation === -90 || orientation === 90) {
-                    if (pageSection.is(":visible")) pageSection.hide();
-                }
+                //if (orientation === -90 || orientation === 90) {
+                if (pageSection.is(":hidden")) pageSection.show();
+                    
+                //}
             }
         },
 
@@ -810,6 +828,7 @@ $(function () {
 
             var top = $(window).scrollTop();
             var left = $(window).scrollLeft();
+            var savedParams;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -818,8 +837,15 @@ $(function () {
                 left = me.savedLeft;
             }
 
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                savedParams = $paramArea.reportParameter("getParamsList", true);
+            }
+
             me.actionHistory.push({
-                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top, ScrollLeft: left, FlushCache: flushCache
+                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams
             });
         },
         _setScrollLocation: function (top, left) {
@@ -1039,10 +1065,12 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    me._trigger(events.showParamArea);
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    if (me.$numOfVisibleParameters > 0)
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     me.paramLoaded = true;
-                    //me._trigger(events.showParamArea);
                 }
             }
             else if (data.Exception) {

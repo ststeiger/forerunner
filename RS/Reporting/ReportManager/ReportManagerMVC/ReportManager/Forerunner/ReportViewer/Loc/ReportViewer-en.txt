@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"Prompt",
 		"close":"Close"
+	},
+	"placeholders":{ 
+	    "Username":"User name", 
+	    "Password":"Password", 
+	    "Login": "Login" 
 	}
 }
 

@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"プロンプト",
 		"close":"閉じる"
+	},
+	"placeholders":{ 
+	    "Username":"ユーザー名", 
+	    "Password":"パスワード", 
+	    "Login": "ログイン" 
 	}
 }
 

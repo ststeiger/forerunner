@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"incitar",
 		"close":"fechar"
+	},
+	"placeholders":{ 
+	    "Username":"Usuário", 
+	    "Password":"senha", 
+	    "Login": "login" 
 	}
 }
 

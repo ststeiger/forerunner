@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"chiederà",
 		"close":"chiudere"
+	},
+	"placeholders":{ 
+	    "Username":"nome utente", 
+	    "Password":"parola d'ordine", 
+	    "Login": "Accedi" 
 	}
 }
 

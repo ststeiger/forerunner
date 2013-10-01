@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"hvetja",
 		"close":"loka"
+	},
+	"placeholders":{ 
+	    "Username":"User name", 
+	    "Password":"Password", 
+	    "Login": "Login" 
 	}
 }
 

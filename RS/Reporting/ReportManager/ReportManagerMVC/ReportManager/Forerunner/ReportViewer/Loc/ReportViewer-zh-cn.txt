@@ -97,6 +97,11 @@
 	"dialog":{
 	    "title":"提示",
 		"close":"关闭"
+	},
+	"placeholders":{ 
+	    "Username":"用户名称", 
+	    "Password":"密码", 
+	    "Login": "登入" 
 	}
 }
 

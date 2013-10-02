@@ -2576,8 +2576,8 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-            
-            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+
+           $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
@@ -2589,6 +2589,15 @@ $(function () {
             var bgLayer = new $("<div class='fr-render-bglayer'></div>");
             bgLayer.attr("style", style);
 
+            if (false) {
+                var watermark = new $("<div/>");
+                watermark.html("<p>Evaluation</p>");
+                var wstyle = "opacity:0.5;color: #d0d0d0;font-size: 200pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:0px; pointer-events: none;";
+                watermark.attr("style", wstyle);
+                me.element.append(watermark);
+            }
+
+            
             me.element.append(bgLayer);
         },
         writeError: function (errorData) {

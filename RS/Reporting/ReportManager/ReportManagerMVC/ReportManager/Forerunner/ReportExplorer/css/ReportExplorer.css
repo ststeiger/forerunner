@@ -1,7 +1,7 @@
 ﻿
 .fr-Explorer-background {
     
-    background: rgb(210,223,237);
+    background: #d5e1f2;
     /*
     background: rgb(141,158,165); 
     background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhkOWVhNSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNhOWMyZDciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
@@ -26,7 +26,7 @@
 .fr-explorer-item {
     display: inline-block;
     margin: 20px;
-    padding: 10px 30px 20px 20px;
+    padding: 28px 28px 28px 28px;
     cursor: pointer;
     width: 200px;
     height: 250px;
@@ -45,8 +45,8 @@
 }
 
 .fr-explorer-item-title {
-    text-align: center;    
-    font-size:  11pt;
+    text-align: left;    
+    font-size:  13pt;
     font-family:Helvetica Neue;
     color: #212729;
     font-weight:700;

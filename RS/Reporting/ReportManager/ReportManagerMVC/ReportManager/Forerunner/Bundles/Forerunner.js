@@ -428,7 +428,7 @@ $(function () {
                 // Enumerate the rules
                 for (var ruleIndex = 0; ruleIndex < rulesLength; ruleIndex++) {
                     var rule = rules[ruleIndex];
-
+                    /*jshint loopfunc: true */
                     // Check each rule and see if it matches the desired dynamic rule
                     $.each(dynamicRules, function (dynamicIndex, dynamicRule) {
                         var lowerSelector = dynamicRule.selector.toLowerCase();
@@ -445,6 +445,7 @@ $(function () {
                             }
                         }
                     });
+                    /*jshint loopfunc: false */
                 }
             }
         },
@@ -589,9 +590,11 @@ $(function () {
                 return $(window).height() > $(window).width();
             }
             // The 2 bit will be set for 90 and 180
+            /*jshint bitwise: false*/
             if (window.orientation & 2) {
                 return false;
             }
+            /*jshint bitwise: true*/
             return true;
         },
         /** @return {bool} Returns a boolean that indicates if the device is an iOS device */

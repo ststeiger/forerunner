@@ -485,7 +485,7 @@ $(function () {
         _getLanguages: function () {
             var returnValue = null;
             $.ajax({
-                url: forerunner.config.forerunnerAPIBase() + '/reportViewer/AcceptLanguage',
+                url: forerunner.config.forerunnerAPIBase() + "/reportViewer/AcceptLanguage",
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -543,7 +543,7 @@ $(function () {
             var error_callback = options.error;
             options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 error_callback(data);
             };
@@ -565,7 +565,7 @@ $(function () {
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
                 fail(data);

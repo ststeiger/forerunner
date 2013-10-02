@@ -59,7 +59,7 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-
+             
            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });

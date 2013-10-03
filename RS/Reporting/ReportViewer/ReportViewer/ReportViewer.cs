@@ -306,7 +306,7 @@ namespace Forerunner.SSRS.Viewer
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
-        public string GetParameterJson(string ReportPath)
+        public string GetParameterJson(string ReportPath, string paramList)
         {
             string historyID = null;
             string NewSession;
@@ -315,6 +315,12 @@ namespace Forerunner.SSRS.Viewer
             try
             {
                 rs.Credentials = GetCredentials();
+
+                if (paramList != null)
+                {
+                    ParameterValue[] values = JsonUtility.GetParameterValue(paramList);
+                    rs.SetExecutionParameters(values, "en-us");
+                }
                 execInfo = rs.LoadReport(ReportPath, historyID);
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 

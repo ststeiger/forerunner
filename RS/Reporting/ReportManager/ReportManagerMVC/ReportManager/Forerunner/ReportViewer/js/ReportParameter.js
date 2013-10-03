@@ -79,11 +79,21 @@ $(function () {
         },
     
         /**
+         * @function $.forerunner.reportParameter#updateParameterPanel
+         * @Update an existing parameter panel
+         * @param {String} data - original data get from server client
+         */
+        updateParameterPanel: function (data) {
+            this.removeParameter();
+            this.writeParameterPanel(data, null, null, true);
+        },
+
+        /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
          */
-        writeParameterPanel: function (data, rs, pageNum) {
+        writeParameterPanel: function (data, rs, pageNum, updateOnly) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -138,11 +148,16 @@ $(function () {
                 me._submitForm();
             });
 
-            if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
-                me._submitForm();
-            else if (me._paramCount === me._savedParamCount)
-                me._submitForm();
-            else {
+            if (updateOnly === undefined) {
+                if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
+                    me._submitForm();
+                else if (me._paramCount === me._savedParamCount)
+                    me._submitForm();
+                else {
+                    me._trigger(events.render);
+                    me.options.$reportViewer.removeLoadingIndicator();
+                }
+            } else {
                 me._trigger(events.render);
                 me.options.$reportViewer.removeLoadingIndicator();
             }

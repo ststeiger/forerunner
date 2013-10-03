@@ -79,12 +79,6 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetParametersJSON(string paramPath, string paramList)
-        {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetReportParameter(paramPath, paramList)), "text/JSON");
-        }
-
-        [HttpGet]
         public HttpResponseMessage GetUserParameters(string reportPath)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserParameters(reportPath)), "text/JSON");

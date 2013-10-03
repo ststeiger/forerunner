@@ -125,13 +125,12 @@ $(function () {
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
                     forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
+                        url: me.options.ReportManagerAPI + "/ParameterJSON?ReportPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
                         success: function (data) {
                             if (data.ParametersList) {
-                                $paramarea.reportParameter("removeParameter");
-                                $paramarea.reportParameter("writeParameterPanel", data);
+                                $paramarea.reportParameter("updateParameterPanel", data);
                             }
                         }
                     });

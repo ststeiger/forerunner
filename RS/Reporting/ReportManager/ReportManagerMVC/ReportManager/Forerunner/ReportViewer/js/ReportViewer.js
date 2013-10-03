@@ -253,19 +253,11 @@ $(function () {
                 me.$reportContainer.append(me.$reportAreaContainer);
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
                 me._touchNav();
-                me.pages[pageNum].$container.fadeIn();
                 me._removeDocMap();
             }
             else {
                 me.$reportAreaContainer.find(".Page").detach();
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
-
-                if (me.curPage !== null && me.curPage > pageNum) {
-                    me.pages[pageNum].$container.show();
-                } else {
-                    me.pages[pageNum].$container.show();
-                }
-
             }
                        
             me.curPage = pageNum;
@@ -550,6 +542,7 @@ $(function () {
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+
                     me.paramLoaded = true;
                 }
                 else {

@@ -1,79 +1,185 @@
 body {
-    background: rgb(141,158,165); /* Old browsers */
-    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
-    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzhkOWVhNSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNhOWMyZDciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-    background: -moz-linear-gradient(left, rgba(141,158,165,1) 0%, rgba(169,194,215,1) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(141,158,165,1)), color-stop(100%,rgba(169,194,215,1))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left, rgba(141,158,165,1) 0%,rgba(169,194,215,1) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, rgba(141,158,165,1) 0%,rgba(169,194,215,1) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, rgba(141,158,165,1) 0%,rgba(169,194,215,1) 100%); /* IE10+ */
-    background: linear-gradient(to right, rgba(141,158,165,1) 0%,rgba(169,194,215,1) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8d9ea5', endColorstr='#a9c2d7',GradientType=1 ); /* IE6-8 */
+  background: #d5e1f2;
 }
 
-.loginForm{
-    display: table; 
-    position: absolute; 
-    height: 100%; 
-    width:100%;
+.loginForm {
+  display: table;
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
+
 fieldset {
-    background: white;
-    width: 250px;
-    margin:0px auto 0px auto;
+  margin: 0px auto 0px auto;
+  background: white;
+  border: 1px solid #d7d7d7;
+  box-shadow: 0px 0px 20px #c6d1e1;
 }
 
-ol li 
-{
-    margin: 0px;
-    padding: 0px;
-    text-indent: -40px;    
+fieldset input {
+  border:1px solid #d8d7d7;
+  box-shadow: 0px 0px 10px #f3f3f3 inset;
+  color: #999999;
+  font-family: sans-serif;
 }
 
-.centeralign {
-    display:table;
-    margin:0px auto 0px auto;
-    padding:0px;
+.fieldsetsize {
+  width: 447px;
+  height: 323px;
 }
 
-.centeralign input
-{
-    width:150px;    
+.fieldcontainer {
+  margin: 50px 40px 30px 40px;
 }
 
-.checkbox input {
-    width:auto;
-    
+.logocontainer {
+  margin: 0px 0px 42px 5px;
 }
 
-.login{ 
-    width:250px;
-    border:0px;
-    margin-left: -40px;
-    display:block;
+.logosize {
+  /*width: 352px;*/
 }
 
-.rounded {
-    -webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px; background-color:#0A1366; color: white; padding: 0px 30px 0px 30px;
+.inputsize {
+  width: 357px;
+  height: 38px;
+  font-size: 13pt;
+  padding-left: 10px;
 }
+
+.usernamecontainer {
+  margin: 0px 0px 12px 0px;
+}
+
+.passwordcontainer {
+  margin: 0px 0px 20px 0px;
+}
+
+.logincontainer {
+  margin: 0px 0px 0px 68px;
+}
+
+.loginsize {
+  width: 230px;
+  height: 36px;
+  font: 15pt bold;
+}
+
+.login {
+  border:1px solid #546681;
+  box-shadow: none;
+  color: #ffffff;
+  font-family: sans-serif;
+  background: #4e70b0; /* Old browsers */
+  background: -moz-linear-gradient(top,  #4e70b0 0%, #5e96cf 0%, #4e70b0 100%, #5e96cf 100%, #5e96cf 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e70b0), color-stop(0%,#5e96cf), color-stop(100%,#4e70b0), color-stop(100%,#5e96cf), color-stop(100%,#5e96cf)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #4e70b0 0%,#5e96cf 0%,#4e70b0 100%,#5e96cf 100%,#5e96cf 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #4e70b0 0%,#5e96cf 0%,#4e70b0 100%,#5e96cf 100%,#5e96cf 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #4e70b0 0%,#5e96cf 0%,#4e70b0 100%,#5e96cf 100%,#5e96cf 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #4e70b0 0%,#5e96cf 0%,#4e70b0 100%,#5e96cf 100%,#5e96cf 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e70b0', endColorstr='#5e96cf',GradientType=0 ); /* IE6-9 */
+}
+
+.login:hover {
+  background: #4e70b0; /* Old browsers */
+  background: -moz-linear-gradient(top,  #4e70b0 0%, #5086be 0%, #31549a 100%, #5e96cf 100%, #5e96cf 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e70b0), color-stop(0%,#5086be), color-stop(100%,#31549a), color-stop(100%,#5e96cf), color-stop(100%,#5e96cf)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #4e70b0 0%,#5086be 0%,#31549a 100%,#5e96cf 100%,#5e96cf 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #4e70b0 0%,#5086be 0%,#31549a 100%,#5e96cf 100%,#5e96cf 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #4e70b0 0%,#5086be 0%,#31549a 100%,#5e96cf 100%,#5e96cf 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #4e70b0 0%,#5086be 0%,#31549a 100%,#5e96cf 100%,#5e96cf 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e70b0', endColorstr='#5e96cf',GradientType=0 ); /* IE6-9 */
+}
+
 /* The following sizes will be supported and are device agnostic */
 
-/* Small (E.g., for phones, potrait) */
+/* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  
+.fieldsetsize {
+  width: 259px;
+  height: 187px;
 }
 
-/* Medium  (E.g., for phones, landscape) */
-@media only screen and (min-width : 480px) and (max-width : 567px) {
-  
+.fieldcontainer {
+  margin: 29px 23px 17px 23px;
 }
 
-/* Large  (E.g., for larger phones, landscape) */
-@media only screen and (min-width : 568px) and (max-width : 767px) {
- 
+.logocontainer {
+  margin: 0px 0px 24px 3px;
 }
 
-/* Full  (I.e., width of greater than or equal to 768 devices) */
-@media only screen and (min-width : 768px) {
- 
+.logosize {
+  width: 204px;
+}
+
+.inputsize {
+  width: 207px;
+  height: 22px;
+  font-size: 8pt;
+  padding-left: 6px;
+}
+
+.usernamecontainer {
+  margin: 0px 0px 7px 0px;
+}
+
+.passwordcontainer {
+  margin: 0px 0px 12px 0px;
+}
+
+.logincontainer {
+  margin: 0px 0px 0px 39px;
+}
+
+.loginsize {
+  width: 133px;
+  height: 21px;
+  font: 9pt bold;
+}
+
+}
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+.fieldsetsize {
+  width: 259px;
+  height: 187px;
+}
+
+.fieldcontainer {
+  margin: 29px 23px 17px 23px;
+}
+
+.logocontainer {
+  margin: 0px 0px 24px 3px;
+}
+
+.logosize {
+  width: 204px;
+}
+
+.inputsize {
+  width: 207px;
+  height: 22px;
+  font-size: 8pt;
+  padding-left: 6px;
+}
+
+.usernamecontainer {
+  margin: 0px 0px 7px 0px;
+}
+
+.passwordcontainer {
+  margin: 0px 0px 12px 0px;
+}
+
+.logincontainer {
+  margin: 0px 0px 0px 39px;
+}
+
+.loginsize {
+  width: 133px;
+  height: 21px;
+  font: 9pt bold;
+}
 }

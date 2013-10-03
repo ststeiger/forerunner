@@ -486,7 +486,7 @@ $(function () {
         _getLanguages: function () {
             var returnValue = null;
             $.ajax({
-                url: forerunner.config.forerunnerAPIBase() + '/reportViewer/AcceptLanguage',
+                url: forerunner.config.forerunnerAPIBase() + "/reportViewer/AcceptLanguage",
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -544,7 +544,7 @@ $(function () {
             var error_callback = options.error;
             options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 error_callback(data);
             };
@@ -566,7 +566,7 @@ $(function () {
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + '/../Login/Login?ReturnUrl=' + document.URL;
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
                 fail(data);
@@ -615,6 +615,11 @@ $(function () {
         isFirefox: function () {
             var ua = navigator.userAgent;
             return ua.match(/(Firefox)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
+        isMSIE: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(MSIE)/);
         },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {

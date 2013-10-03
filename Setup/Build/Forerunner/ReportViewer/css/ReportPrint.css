@@ -3,14 +3,15 @@
     height:100%;
     left:0px;
     right:0px;
-    position:fixed;
+    position:absolute;
     z-index:5;
     display:none;
 }
 .fr-print-page{
-    position:fixed;
+    position:relative;
     left:0px;
     top:0px;
+    z-index:5;
     width:100%;
 }
 .fr-print-innerPage{

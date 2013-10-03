@@ -1,0 +1,13 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#System.Version version = null;
+string fileName = this.Host.ResolvePath("build.txt");
+using(System.IO.StreamReader reader = new System.IO.StreamReader(fileName))
+{
+    string rawVersion = reader.ReadToEnd().Trim();
+	version = new Version(rawVersion);
+}#>
+
+using System.Reflection;
+ 
+[assembly:AssemblyFileVersion("<#= version.ToString() #>")]

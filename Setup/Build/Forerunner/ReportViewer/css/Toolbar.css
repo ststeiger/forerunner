@@ -77,31 +77,31 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#304d84', end
 
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  .fr-toolbar-hidden-on-small {
+  .fr-toolbar .fr-toolbar-hidden-on-small {
     display: none;
   }
-  .fr-toolbar-reportpage-textbox {
+  .fr-toolbar .fr-toolbar-reportpage-textbox {
     margin-left:45px;
   }
 }
 
 /* Medium toolbar (E.g., for phones, landscape) */
 @media only screen and (min-width : 480px) and (max-width : 567px) {
-  .fr-toolbar-hidden-on-medium {
+  .fr-toolbar .fr-toolbar-hidden-on-medium {
     display: none;
   }
 }
 
 /* Large toolbar (E.g., for larger phones, landscape) */
 @media only screen and (min-width : 568px) and (max-width : 768px) {
-  .fr-toolbar-hidden-on-large {
+  .fr-toolbar .fr-toolbar-hidden-on-large {
     display: none;
   }
 }
 
 /* Full toolbar (I.e., width of greater than or equal to 768 devices) */
 @media only screen and (min-width : 769px) {
-  .fr-toolbar-menu-button {
+  .fr-toolbar .fr-toolbar-menu-button {
     display: none;
   }
 }

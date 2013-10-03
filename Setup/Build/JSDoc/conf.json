@@ -6,13 +6,15 @@
         "include": [
 		"../Forerunner/Common/js/",
         "../Forerunner/ReportExplorer/js/",
-        "../Forerunner/ReportViewer/js/"
+        "../Forerunner/ReportViewer/js/",
+		"readme.md"
 	],
         "exclude": [],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
-    "plugins": [],
+    "plugins": [
+	],
     "templates": {
         "cleverLinks": false,
         "monospaceLinks": false
@@ -21,7 +23,7 @@
         "encoding": "utf8",
         "destination": "./Docs/",
         "recurse": true,
-        "tutorials": "",
+        "tutorials": "./Tutorials",
         "query": "",
         "private": true,
         "lenient": true,

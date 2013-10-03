@@ -548,7 +548,7 @@ $(function () {
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
@@ -1085,7 +1085,7 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
 
@@ -2576,8 +2576,8 @@ $(function () {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-            
-            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+             
+           $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
@@ -2589,6 +2589,15 @@ $(function () {
             var bgLayer = new $("<div class='fr-render-bglayer'></div>");
             bgLayer.attr("style", style);
 
+            if (false) {
+                var watermark = new $("<div/>");
+                watermark.html("<p>Evaluation</p>");
+                var wstyle = "opacity:0.5;color: #d0d0d0;font-size: 200pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:0px; pointer-events: none;";
+                watermark.attr("style", wstyle);
+                me.element.append(watermark);
+            }
+
+            
             me.element.append(bgLayer);
         },
         writeError: function (errorData) {
@@ -3331,8 +3340,14 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  + "height:" + height + "mm;";
+            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
 
+            //MSIE Hack
+            if (forerunner.device.isMSIE() )
+                Style +=  "min-height:" + height + "mm;";
+            else
+                Style += "height:" + height + "mm;";
+            
             //Row and column span
             if (Obj.RowSpan !== undefined)
                 $Cell.attr("rowspan", Obj.RowSpan);

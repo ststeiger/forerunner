@@ -547,7 +547,7 @@ $(function () {
                 if (action.paramLoaded && action.savedParams) {
                     var $paramArea = me.options.paramArea;
                     $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                     me.paramLoaded = true;
@@ -1084,7 +1084,7 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
                     $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter('getNumOfVisibleParameters');
+                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
 

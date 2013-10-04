@@ -50,7 +50,7 @@
                     <a href="../demo.html">Demo</a>
                 </li>
                 <li>
-                    <a href="../support.html">Support</a>
+                    <a href="../SMForum">Support</a>
                 </li>
                 <li>
                     <a href="../about.html">About</a>
@@ -151,7 +151,9 @@
 <dd>
     
     <div class="description">
-        Updates the given style sheet filename based upon the dynamic rule. Note thatthis function assumes that the rule already exists in the css file and itcannot be used to create new rules.
+        Updates the given style sheet filename based upon the dynamic rule. Note that
+this function assumes that the rule already exists in the css file and it
+cannot be used to create new rules.
     </div>
     
     
@@ -195,7 +197,18 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code> var isTouchRule = {     selector: ".fr-toolbase-hide-if-not-touch",     properties: function () {         var pairs = { display: "none" };         if (forerunner.device.isTouch()) {             pairs.display = null;         }         return pairs;     } }; updateDynamicRules([isTouchRule]);</code></pre>
+    <pre class="prettyprint"><code> var isTouchRule = {
+     selector: ".fr-toolbase-hide-if-not-touch",
+     properties: function () {
+         var pairs = { display: "none" };
+         if (forerunner.device.isTouch()) {
+             pairs.display = null;
+         }
+         return pairs;
+     }
+ };
+
+ updateDynamicRules([isTouchRule]);</code></pre>
 
     
 </dd>
@@ -236,7 +249,7 @@
                     <li><a href="../product.html">Product</li>
       				<li><a href="./index.html">SDK Docs</li>
       				<li><a href="../demo.html">Demo</li>
-       				<li><a href="../support.html">Support</li>
+       				<li><a href="../SMForum">Support</li>
                     <li><a href="../about.html">About</li>
                     <li><a href="../contact.html">Contact</li>
                 </ul>

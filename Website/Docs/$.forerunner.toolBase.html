@@ -50,7 +50,7 @@
                     <a href="../demo.html">Demo</a>
                 </li>
                 <li>
-                    <a href="../support.html">Support</a>
+                    <a href="../SMForum">Support</a>
                 </li>
                 <li>
                     <a href="../about.html">About</a>
@@ -225,7 +225,13 @@
         
             <h3>Example</h3>
             
-    <pre class="prettyprint"><code>var widgets = <a href="forerunner.ssr.constants.widgets.html">forerunner.ssr.constants.widgets</a>;$.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, { options: {     $reportViewer: null,     toolClass: "fr-toolbar" },});</code></pre>
+    <pre class="prettyprint"><code>var widgets = <a href="forerunner.ssr.constants.widgets.html">forerunner.ssr.constants.widgets</a>;
+$.widget(widgets.getFullname(widgets.toolbar), $.forerunner.toolBase, {
+ options: {
+     $reportViewer: null,
+     toolClass: "fr-toolbar"
+ },
+});</code></pre>
 
         
     
@@ -409,7 +415,26 @@
     
         <h5>Example</h5>
         
-    <pre class="prettyprint"><code>var toolTypes = <a href="forerunner.ssr.constants.html#toolTypes">forerunner.ssr.constants.toolTypes</a>;var btnMenu = { toolType: toolTypes.button, selectorClass: "fr-toolbar-menu-button", imageClass: "fr-icons24x24-menu", events: {     click: function (e) {         e.data.me._trigger(events.menuClick, null, {});     } }};this.element.html("&lt;div class='" + me.options.toolClass + "'/>");this.addTools(1, true, [btnMenu]); Notes:     Any events property that is of type function, e.g., "click" above will be interpreted     as a event handler. The event, i.e., the name of the property will be bound to the button     when the button is enabled and removed when the button is disabled.</code></pre>
+    <pre class="prettyprint"><code>var toolTypes = <a href="forerunner.ssr.constants.html#toolTypes">forerunner.ssr.constants.toolTypes</a>;
+
+var btnMenu = {
+ toolType: toolTypes.button,
+ selectorClass: "fr-toolbar-menu-button",
+ imageClass: "fr-icons24x24-menu",
+ events: {
+     click: function (e) {
+         e.data.me._trigger(events.menuClick, null, {});
+     }
+ }
+};
+
+this.element.html("&lt;div class='" + me.options.toolClass + "'/>");
+this.addTools(1, true, [btnMenu]);
+
+ Notes:
+     Any events property that is of type function, e.g., "click" above will be interpreted
+     as a event handler. The event, i.e., the name of the property will be bound to the button
+     when the button is enabled and removed when the button is disabled.</code></pre>
 
     
 </dd>
@@ -1165,7 +1190,7 @@
                     <li><a href="../product.html">Product</li>
       				<li><a href="./index.html">SDK Docs</li>
       				<li><a href="../demo.html">Demo</li>
-       				<li><a href="../support.html">Support</li>
+       				<li><a href="../SMForum">Support</li>
                     <li><a href="../about.html">About</li>
                     <li><a href="../contact.html">Contact</li>
                 </ul>

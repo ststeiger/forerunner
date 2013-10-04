@@ -102,7 +102,7 @@ namespace ForerunnerWebService
             return "success";
         }
 
-        private void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity)
+        internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity)
         {
             string SQL = @"INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
                             SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,GETDATE()";

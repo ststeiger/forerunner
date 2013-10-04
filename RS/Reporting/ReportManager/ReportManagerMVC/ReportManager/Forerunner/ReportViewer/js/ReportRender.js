@@ -75,7 +75,8 @@ $(function () {
             if (false) {
                 var watermark = new $("<div/>");
                 watermark.html("<p>Evaluation</p>");
-                var wstyle = "opacity:0.5;color: #d0d0d0;font-size: 200pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:0px; pointer-events: none;";
+                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 200pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:0px; pointer-events: none;";
+                //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
                 watermark.attr("style", wstyle);
                 me.element.append(watermark);
             }
@@ -91,7 +92,7 @@ $(function () {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
                 var licenseError = new $("<div class='fr-render-error-license Page'>" +
                     "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thank you for using Forerunner Mobilizer, your license has expired or is invalid.<br/> " +
-                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='http://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
+                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='https://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
                     "</div></div>");
                 
                 me.element.html(licenseError);

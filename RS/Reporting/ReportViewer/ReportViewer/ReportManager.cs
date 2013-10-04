@@ -405,6 +405,19 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
+        public string GetReportParameter(string path, string paramList)
+        {
+            rs.Credentials = GetCredentials();
+
+            bool forRendering = true;
+            string historyID = null;
+            ParameterValue[] values = JsonUtility.GetCascadingParameterValue(paramList);
+            DataSourceCredentials[] credentials = null;
+            ReportParameter[] parameters;
+
+            parameters = rs.GetReportParameters(path, historyID, forRendering, values, credentials);
+            return JsonUtility.ConvertParamemterToJSON(parameters);
+        }
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;

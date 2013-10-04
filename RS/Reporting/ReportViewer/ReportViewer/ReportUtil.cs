@@ -103,22 +103,26 @@ namespace Forerunner
                 {
                     if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
-                        Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
                         string multipleValue = obj["Value"].ToString();
-                        pv.Name = obj["Parameter"].ToString();
-
+                        
                         if (multipleValue == "null") 
                         {
+                            Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
+                            pv.Name = obj["Parameter"].ToString();
                             pv.Value = GetDefaultValue(obj["Type"].ToString());
+                            list.Add(pv);
                         }
                         else
                         {
-                            foreach (string str in multipleValue.Split(','))
+                            string[] values = multipleValue.Split(',');
+                            foreach (string str in values)
                             {
+                                Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
+                                pv.Name = obj["Parameter"].ToString();
                                 pv.Value = str;
+                                list.Add(pv);
                             }
                         }
-                        list.Add(pv);
                     }
                     else
                     {

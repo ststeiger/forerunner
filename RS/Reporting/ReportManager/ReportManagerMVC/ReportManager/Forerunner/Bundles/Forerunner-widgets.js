@@ -4239,11 +4239,11 @@ $(function () {
             $(document).on("click", function (e) { me._checkExternalClick(e); });
 
 
-            $(':input', me.$params).each(
+            $(":input", me.$params).each(
                 function (index) {
                     var input = $(this);
-                    input.on('blur', function () { $(window).scrollTop(0); });
-                    input.on('focus', function () { $(window).scrollTop(0); });
+                    input.on("blur", function () { $(window).scrollTop(0); });
+                    input.on("focus", function () { $(window).scrollTop(0); });
                 }
             );
         },
@@ -5894,7 +5894,7 @@ $(function () {
 
                 $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
                     forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/ParameterJSON?ReportPath=" + data.reportPath + "&paramList=" + data.paramList,
+                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
                         dataType: "json",
                         async: false,
                         success: function (data) {

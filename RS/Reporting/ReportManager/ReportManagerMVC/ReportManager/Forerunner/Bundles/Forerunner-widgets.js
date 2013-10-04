@@ -48,6 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -245,7 +246,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
-            if (!me.$reportAreaContainer) {
+            if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
                 if (errorpage)
                     errorpage.detach();
@@ -538,12 +539,8 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    var $paramArea = me.options.paramArea;
-                    $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
-                    if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-
+                    me.refreshParameters(action.savedParams);
+                    me.loadReportWithNewParameters(action.savedParams);
                     me.paramLoaded = true;
                 }
                 else {
@@ -1092,6 +1089,21 @@ $(function () {
             }
             else {
                 me._loadPage(pageNum, false);
+            }
+        },
+        refreshParameters: function (paramList) {
+            var me = this;
+            if (paramList) {
+                forerunner.ajax.ajax({
+                    url: me.options.reportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.ParametersList) {
+                            me.options.paramArea.reportParameter("updateParameterPanel", data);
+                        }
+                    }
+                });
             }
         },
         _removeParameters: function () {
@@ -1859,7 +1871,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
+                if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
             });
@@ -4915,7 +4927,7 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me._trigger(events.loadCascadingParam, null, { reportPath: me.options.$reportViewer.options.reportPath, paramList: paramList });
+                //me.options.$reportViewer.refreshParameters(paramList);
             }
         },
         _disabledSubSequenceControl: function ($control) {
@@ -5891,19 +5903,6 @@ $(function () {
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
-
-                $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetParametersJSON?paramPath=" + data.reportPath + "&paramList=" + data.paramList,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParametersList) {
-                                $paramarea.reportParameter("updateParameterPanel", data);
-                            }
-                        }
-                    });
-                });
             }
 
             var $print = me.options.$print;

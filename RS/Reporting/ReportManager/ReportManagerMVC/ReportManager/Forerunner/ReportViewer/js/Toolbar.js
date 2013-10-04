@@ -44,7 +44,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
+                if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
             });

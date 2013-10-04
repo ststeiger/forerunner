@@ -47,6 +47,7 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -244,7 +245,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
-            if (!me.$reportAreaContainer) {
+            if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
                 if (errorpage)
                     errorpage.detach();
@@ -537,12 +538,8 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    var $paramArea = me.options.paramArea;
-                    $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
-                    if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-
+                    me.refreshParameters(action.savedParams);
+                    me.loadReportWithNewParameters(action.savedParams);
                     me.paramLoaded = true;
                 }
                 else {
@@ -1091,6 +1088,21 @@ $(function () {
             }
             else {
                 me._loadPage(pageNum, false);
+            }
+        },
+        refreshParameters: function (paramList) {
+            var me = this;
+            if (paramList) {
+                forerunner.ajax.ajax({
+                    url: me.options.reportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.ParametersList) {
+                            me.options.paramArea.reportParameter("updateParameterPanel", data);
+                        }
+                    }
+                });
             }
         },
         _removeParameters: function () {

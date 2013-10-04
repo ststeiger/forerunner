@@ -173,11 +173,11 @@ $(function () {
             $(document).on("click", function (e) { me._checkExternalClick(e); });
 
 
-            $(':input', me.$params).each(
+            $(":input", me.$params).each(
                 function (index) {
                     var input = $(this);
-                    input.on('blur', function () { $(window).scrollTop(0); });
-                    input.on('focus', function () { $(window).scrollTop(0); });
+                    input.on("blur", function () { $(window).scrollTop(0); });
+                    input.on("focus", function () { $(window).scrollTop(0); });
                 }
             );
         },
@@ -849,7 +849,7 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me._trigger(events.loadCascadingParam, null, { reportPath: me.options.$reportViewer.options.reportPath, paramList: paramList });
+                //me.options.$reportViewer.refreshParameters(paramList);
             }
         },
         _disabledSubSequenceControl: function ($control) {

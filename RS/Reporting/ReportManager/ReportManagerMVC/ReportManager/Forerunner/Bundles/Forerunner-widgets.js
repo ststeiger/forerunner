@@ -1091,6 +1091,12 @@ $(function () {
                 me._loadPage(pageNum, false);
             }
         },
+        /**
+         * Refresh the parameter using the given list
+         *
+         * @function $.forerunner.reportViewer#refreshParameters
+         * @param {string} The JSON string for the list of parameters.
+         */
         refreshParameters: function (paramList) {
             var me = this;
             if (paramList) {

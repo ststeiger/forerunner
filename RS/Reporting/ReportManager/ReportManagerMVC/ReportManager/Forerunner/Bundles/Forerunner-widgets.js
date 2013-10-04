@@ -4927,7 +4927,7 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                //me.options.$reportViewer.refreshParameters(paramList);
+                me.options.$reportViewer.refreshParameters(paramList);
             }
         },
         _disabledSubSequenceControl: function ($control) {

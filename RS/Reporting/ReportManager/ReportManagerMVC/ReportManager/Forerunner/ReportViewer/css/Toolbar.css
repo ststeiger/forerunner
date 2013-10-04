@@ -11,8 +11,8 @@ background: -ms-linear-gradient(top,  rgba(48,77,132,1) 0%,rgba(89,120,167,1) 0%
 background: linear-gradient(to bottom,  rgba(48,77,132,1) 0%,rgba(89,120,167,1) 0%); /* W3C */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#304d84', endColorstr='#5978a7',GradientType=0 ); /* IE6-8 */
 
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   width: 100%;
   height:38px;
   overflow: hidden;
@@ -33,17 +33,22 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#304d84', end
   background: linear-gradient(to bottom,  rgba(96,96,96,1) 0%,rgba(45,45,45,1) 22%,rgba(45,45,45,1) 59%,rgba(45,45,45,1) 74%,rgba(47,47,47,1) 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606060', endColorstr='#2f2f2f',GradientType=0 ); /* IE6-8 */
 }
+.fr-toolbar input[type=number]::-webkit-inner-spin-button,
+.fr-toolbar input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.fr-toolbar input {
+  height: 24px;
+}
 .fr-toolbar-reportpage-textbox {
   background-color: white;
-  min-width:10mm;
-  max-width:15mm;
+  width: 32px;
   text-align:right;
-  vertical-align: central;
 }
 .fr-toolbar-keyword-textbox {
   background-color: white;
-  min-width: 10mm;
-  max-width: 20mm;
+  width: 94px;
 }
 .fr-toolbar-pageOf-button {
   width: 15px;

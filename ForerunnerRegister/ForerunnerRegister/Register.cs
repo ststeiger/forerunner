@@ -23,6 +23,7 @@ namespace ForerunnerRegister
             public string LastName = "";
             public string CompanyName = "";
             public string ID = "";
+            public string LicenseID = "";
 
             public RegistrationData(Stream XMLData)
             {
@@ -38,6 +39,7 @@ namespace ForerunnerRegister
                 XML += "<FirstName>" + FirstName + "</FirstName>";
                 XML += "<LastName>" + LastName + "</LastName>";
                 XML += "<CompanyName>" + CompanyName + "</CompanyName>";
+                XML += "<LicenseID>" + LicenseID + "</LicenseID>";
                 XML += "</Registration>";
 
                 return XML;
@@ -105,6 +107,9 @@ namespace ForerunnerRegister
                         case "CompanyName":
                             CompanyName = XMLData.ReadElementContentAsString();
                             break;
+                        case "LicenseID":
+                            LicenseID = XMLData.ReadElementContentAsString();
+                            break;
                         default:
                             NotDone = false;
                             break;
@@ -138,13 +143,14 @@ namespace ForerunnerRegister
             SqlConnection SQLConn = DB.GetSQLConn();
             SqlDataReader SQLReader;
             Guid ID = Guid.NewGuid();
+            RegData.LicenseID = ForerunnerDB.NewLicenseID();
 
             string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
-                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3
+                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID
                             ELSE
-                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1
-                            SELECT DownloadID FROM TrialRegistration WHERE Email = @Email
+                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1, LicenseID =  @LicenseID WHERE Email = @Email
+                            SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
             SQLConn.Open();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
@@ -153,17 +159,21 @@ namespace ForerunnerRegister
             SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
             SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
             SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
+            SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
+            
 
             SQLReader = SQLComm.ExecuteReader();
             string DownloadID = null;
             while (SQLReader.Read())
             {
                 DownloadID = SQLReader.GetGuid(0).ToString();
+                RegData.LicenseID = SQLReader.GetString(1);
             }
             SQLReader.Close();
             SQLConn.Close();
 
             RegData.SetID(DownloadID);
+            new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100);
             SaveEmailTask(RegData);
             return DownloadID;
 
@@ -206,7 +216,7 @@ namespace ForerunnerRegister
                 Domain = "localhost";
 #endif
             RegistrationData RegData = new RegistrationData(XMLReg);
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, Domain, RegData.ID);
+            string NewMailBody = String.Format(MailBody, RegData.FirstName, Domain, RegData.ID, RegData.LicenseID);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

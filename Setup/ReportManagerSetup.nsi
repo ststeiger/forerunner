@@ -203,6 +203,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.min.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-widgets.min.js"
+  
+  SetOutPath "$INSTDIR\Forerunner\Controllers"
+  File "${LOCALROOT}\Forerunner\Controllers\ReportManagerController.cs"
+  File "${LOCALROOT}\Forerunner\Controllers\ReportViewerController.cs"
+  
   SetOutPath "$INSTDIR\Scripts\App"
   File "${LOCALROOT}\Scripts\App\router.js"
   SetOutPath "$INSTDIR\Scripts\Util"
@@ -425,6 +430,10 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\css\icons24x24.css"
   Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
+  
+  Delete "$INSTDIR\\Forerunner\Controllers\ReportManagerController.cs"
+  Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
+  
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
   Delete "$INSTDIR\bin\Forerunner.Json.dll"
@@ -488,6 +497,7 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Common\images"
   RMDir "$INSTDIR\Forerunner\Common"
   RMDir "$INSTDIR\Forerunner\Bundles"
+  RMDir "$INSTDIR\Forerunner\Controllers"
   RMDir "$INSTDIR\Forerunner"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"

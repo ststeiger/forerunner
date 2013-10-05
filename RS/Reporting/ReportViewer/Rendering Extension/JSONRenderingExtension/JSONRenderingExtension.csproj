@@ -96,6 +96,27 @@
     <Compile Include="JSONRenderer.cs" />
     <Compile Include="RenderingUtil.cs" />
     <Compile Include="ThumbnailRenderer.cs" />
+    <Compile Include="VersionTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>..\..\..\..\..\VersionTemplate.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\VersionTemplate.tt">
+      <Link>VersionTemplate.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VersionTemplate.cs</LastGenOutput>
+      <DependentUpon>..\..\..\..\..\build.txt</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\build.txt">
+        <Link>build.txt</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Forerunner.snk">
@@ -110,10 +131,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
+	   Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
+	  <Exec
+		  Command="&quot;$(ProgramFiles)\Common Files\Microsoft Shared\TextTemplating\11.0\TextTransform.exe&quot; -out VersionTemplate.cs ..\..\..\..\..\VersionTemplate.tt"
+		  Outputs="VersionTemplate.cs"
+		  />
   </Target>
   <Target Name="AfterBuild">
   </Target>
-  -->
 </Project>

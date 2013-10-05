@@ -538,8 +538,7 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    me.refreshParameters(action.savedParams);
-                    me.loadReportWithNewParameters(action.savedParams);
+                    me.refreshParameters(action.savedParams, true);
                     me.paramLoaded = true;
                 }
                 else {
@@ -1095,8 +1094,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
+         * @param {boolean} Submit form if the parameters are satisfied.
          */
-        refreshParameters: function (paramList) {
+        refreshParameters: function (paramList, submitForm) {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
@@ -1105,7 +1105,7 @@ $(function () {
                     async: false,
                     success: function (data) {
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
                         }
                     }
                 });

@@ -539,8 +539,7 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    me.refreshParameters(action.savedParams);
-                    me.loadReportWithNewParameters(action.savedParams);
+                    me.refreshParameters(action.savedParams, true);
                     me.paramLoaded = true;
                 }
                 else {
@@ -1096,8 +1095,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
+         * @param {boolean} Submit form if the parameters are satisfied.
          */
-        refreshParameters: function (paramList) {
+        refreshParameters: function (paramList, submitForm) {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
@@ -1106,7 +1106,7 @@ $(function () {
                     async: false,
                     success: function (data) {
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
                         }
                     }
                 });
@@ -4165,12 +4165,13 @@ $(function () {
     
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
-         * @Update an existing parameter panel
+         * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
+         * @param {boolean} submitForm - submit form when parameters are satisfied.
          */
-        updateParameterPanel: function (data) {
+        updateParameterPanel: function (data, submitForm) {
             this.removeParameter();
-            this.writeParameterPanel(data, null, null, true);
+            this.writeParameterPanel(data, null, null, submitForm);
         },
 
         /**
@@ -4178,7 +4179,7 @@ $(function () {
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
          */
-        writeParameterPanel: function (data, rs, pageNum, updateOnly) {
+        writeParameterPanel: function (data, rs, pageNum, submitForm) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -4233,7 +4234,7 @@ $(function () {
                 me._submitForm();
             });
 
-            if (updateOnly === undefined) {
+            if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                     me._submitForm();
                 else if (me._paramCount === me._savedParamCount)
@@ -4934,7 +4935,9 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me.options.$reportViewer.refreshParameters(paramList);
+                // Ask viewer to refresh parameter, but not automatically post back
+                // if all parameters are satisfied.
+                me.options.$reportViewer.refreshParameters(paramList, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {

@@ -1924,7 +1924,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -5848,7 +5848,7 @@ $(function () {
             var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
                 $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnFavorite]);
-                $toolbar.toolbar("addTools", 3, true, [tb.btnFav]);
+                $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 

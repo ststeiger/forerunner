@@ -57,7 +57,7 @@ $(function () {
             var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
                 $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnFavorite]);
-                $toolbar.toolbar("addTools", 3, true, [tb.btnFav]);
+                $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 

@@ -699,19 +699,6 @@ $(function () {
      */
     forerunner.ssr.tools.mergedButtons = {
         /** @member */
-        btnHome: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-home",
-            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
-            imageClass: "fr-icons24x24-home",
-            tooltip: locData.toolbar.home,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
         btnFav: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-update-fav",
@@ -721,6 +708,44 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
+                }
+            }
+        },
+        /** @member */
+        btnFavorite: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-button-favorite",
+            sharedClass: "fr-toolbar-hidden-on-small",
+            imageClass: "fr-icons24x24-favorite",
+            tooltip: locData.toolbar.favorites,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
+                }
+            }
+        },
+        /** @member */
+        btnRecent: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-button-recent",
+            imageClass: "fr-icons24x24-recent",
+            tooltip: locData.toolbar.recent,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
+                }
+            }
+        },
+        /** @member */
+        btnHome: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-button-home",
+            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
+            imageClass: "fr-icons24x24-home",
+            tooltip: locData.toolbar.home,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
                 }
             }
         },
@@ -746,19 +771,6 @@ $(function () {
                             }
                         );
                     }
-                }
-            }
-        },
-        /** @member */
-        btnFavorite: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-favorite",
-            sharedClass: "fr-toolbar-hidden-on-small",
-            imageClass: "fr-icons24x24-favorite",
-            tooltip: locData.toolbar.favorites,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
                 }
             }
         },

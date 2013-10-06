@@ -7,7 +7,7 @@
     <sourcefile name="BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
     <sourcefile name="PageNavOff.png" classname="fr-icons24x24-nav"></sourcefile>
     <sourcefile name="HomeOff.png" classname="fr-icons24x24-home"></sourcefile>
-    <sourcefile name="ParametersOff.png" classname="fr-icons24x24-paramarea"></sourcefile>
+    <sourcefile name="Parameters.png" classname="fr-icons24x24-paramarea"></sourcefile>
     <sourcefile name="DocMapOff.png" classname="fr-icons24x24-documentmap"></sourcefile>
     <sourcefile name="LastPageOff.png" classname="fr-icons24x24-lastpage"></sourcefile>
     <sourcefile name="ForwardPageOff.png" classname="fr-icons24x24-next"></sourcefile>
@@ -25,10 +25,10 @@
     <sourcefile name="ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
     <sourcefile name="PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
     <sourcefile name="Search.png" classname="fr-icons24x24-search"></sourcefile>
-    <sourcefile name="FavOff.png" classname="fr-icons24x24-favorite"></sourcefile>
+    <sourcefile name="favorites.png" classname="fr-icons24x24-favorite"></sourcefile>
     <sourcefile name="FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
     <sourcefile name="FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
     <sourcefile name="SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
-    <sourcefile name="RecentOff.png" classname="fr-icons24x24-recent"></sourcefile>
+    <sourcefile name="recent.png" classname="fr-icons24x24-recent"></sourcefile>
   </compositeimage>
 </iconfiles>

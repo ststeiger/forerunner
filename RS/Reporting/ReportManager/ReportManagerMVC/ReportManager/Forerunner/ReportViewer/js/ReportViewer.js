@@ -110,7 +110,7 @@ $(function () {
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            me._loadParameters(me.options.pageNum);
+            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -539,6 +539,7 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     me.refreshParameters(action.savedParams, true);
+
                     me.paramLoaded = true;
                 }
                 else {
@@ -1051,17 +1052,56 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
+            //if (me.options.paramArea === undefined || me.options.paramArea === null) return;
+            var savedParams = null;
+            forerunner.ajax.ajax({
+                url: me.options.reportManagerAPI + "/GetUserParameters?reportPath=" + me.options.reportPath,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.ParamsList !== undefined) {
+                        savedParams = data;
+                    }
+ 
+                }
+            });
+            if (savedParams === null) {
+                me._loadDefaultParameters(pageNum);
+            } else {
+                
+                if (me.options.paramArea) {
+                    var jsonString = me._paramsToString(savedParams.ParamsList);
+                    me.options.paramArea.reportParameter({ $reportViewer: this });
+                    me.refreshParameters(jsonString, true);
+                }
+            }
+        },
+        _paramsToString: function(a) {
+            var tempJson = "[";
+            for (i = 0; i < a.length; i++) {
+                if (i !== a.length - 1) {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
+                }
+                else {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"}";
+                }
+            }
+            tempJson += "]";
+            return "{\"ParamsList\":" + tempJson + "}";
+        },
+        _loadDefaultParameters: function (pageNum) {
+            var me = this;
             forerunner.ajax.getJSON(
-                me.options.reportViewerAPI + "/ParameterJSON/",
-                {ReportPath: me.options.reportPath},
-                function (data) {
-                   me._addLoadingIndicator();
-                   me._showParameters(pageNum, data);
-                },
-                function (data) {
-                   console.log("error");
-                   me.removeLoadingIndicator();
-                });
+                    me.options.reportViewerAPI + "/ParameterJSON/",
+                    { ReportPath: me.options.reportPath },
+                    function (data) {
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    },
+                    function (data) {
+                        console.log("error");
+                        me.removeLoadingIndicator();
+                    });
         },
         _showParameters: function (pageNum, data) {
             var me = this;
@@ -1072,7 +1112,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -1106,6 +1146,9 @@ $(function () {
                     success: function (data) {
                         if (data.ParametersList) {
                             me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
+                            me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                            if (me.$numOfVisibleParameters > 0)
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                         }
                     }
                 });

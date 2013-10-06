@@ -76,17 +76,6 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data);
-                        }
-                    });
-                });
             }
 
             // Create / render the menu pane
@@ -133,6 +122,8 @@ $(function () {
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
+
+            $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
         },
         setFavoriteState: function (path) {
             var me = this;

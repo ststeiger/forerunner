@@ -38,9 +38,6 @@ $(function () {
         _loadedForDefault: true,
         _reportDesignError: null,
 
-        _savedParamExist: false,
-        _savedParamList: null,
-        _savedParamCount: 0,
         _init: function () {
             var me = this;
             me.element.html(null);
@@ -86,23 +83,25 @@ $(function () {
          */
         updateParameterPanel: function (data, submitForm) {
             this.removeParameter();
-            this.writeParameterPanel(data, null, null, submitForm);
+            this.writeParameterPanel(data, null, submitForm);
         },
 
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
+         * @param {int} pageNum - current page num
+         * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
          */
-        writeParameterPanel: function (data, rs, pageNum, submitForm) {
+        writeParameterPanel: function (data, pageNum, submitForm) {
             var me = this;
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
             me._paramCount = parseInt(data.Count, 10);
 
-            me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
-            me._loadedForDefault = true && !me._savedParamExist;
+            me._defaultValueExist = data.DefaultValueExist;
+            me._loadedForDefault = true;
             me._render();
             me.$numVisibleParams = 0;
 
@@ -152,8 +151,6 @@ $(function () {
             if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                     me._submitForm();
-                else if (me._paramCount === me._savedParamCount)
-                    me._submitForm();
                 else {
                     me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
@@ -166,9 +163,6 @@ $(function () {
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
             pc.removeAttr("style");
-
-            me._savedParamExist = false;
-            me._savedParamCount = 0;
 
             me._setDatePicker();
             $(document).on("click", function (e) { me._checkExternalClick(e); });
@@ -197,16 +191,6 @@ $(function () {
                 me._trigger(events.submit);
             }
         },
-        overrideDefaultParams: function (overrideParams) {
-            var me = this;
-            me._savedParamList = {};
-            me._savedParamCount = 0;
-            me._savedParamExist = true;
-            $.each(overrideParams.ParamsList, function (index, savedParam) {
-                me._savedParamList[savedParam.Parameter] = savedParam.Value;
-                me._savedParamCount++;
-            });
-        },
         _setDatePicker: function () {
             var me = this;
 
@@ -217,11 +201,7 @@ $(function () {
         },
         _getPredefinedValue: function (param) {
             var me = this;
-            //if saved param exist then used it else user default value
-            if (me._savedParamExist) {
-                return me._savedParamList[param.Name];
-            }
-            else if (me._hasDefaultValue(param)) {
+            if (me._hasDefaultValue(param)) {
                 if (param.MultiValue === false)
                     return param.DefaultValues[0];
                 else

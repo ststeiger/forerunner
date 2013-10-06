@@ -50,6 +50,7 @@
 .fr-toolbar-keyword-textbox {
   width: 94px;
   padding-left: 4px;
+  padding-right: 24px;
 }
 .fr-toolbar-pageOf-button {
   width: 15px;
@@ -70,10 +71,21 @@
   line-height:36px;
   text-align:center;
 }
-.fr-toolbar-find-button, .fr-toolbar-findnext-button {
+..fr-toolbar-findnext-button {
   color: white;
   line-height:36px;
   text-align:center;  
+}
+.fr-toolbar-find-button {
+  position: absolute;
+  right: 0px;
+  top: 4px;
+}
+.fr-toolbar-search-icon {
+  height: 16px;
+  width: 16px;
+  background-image: url(../Images/search.png);
+  background-repeat: no-repeat;
 }
 .fr-button-favorite, .fr-button-recent, .fr-button-home, .fr-toolbar-paramarea-button {
     float:right;

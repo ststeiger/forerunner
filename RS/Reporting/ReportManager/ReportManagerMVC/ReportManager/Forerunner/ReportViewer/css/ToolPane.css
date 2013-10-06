@@ -19,6 +19,7 @@
   display:inline-block;
 }
 .fr-toolpane .fr-toolbase-groupcontainer {
+  position: relative;
   border-top-width:1px;
   border-top-style:groove;
   border-top-color: darkgray;

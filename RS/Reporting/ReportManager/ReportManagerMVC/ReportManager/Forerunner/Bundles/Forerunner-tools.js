@@ -204,7 +204,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-            imageClass: "fr-icons24x24-search",
+            imageClass: "fr-toolbar-search-icon",
             tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {

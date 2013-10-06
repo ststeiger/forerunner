@@ -205,6 +205,7 @@ $(function () {
             selectorClass: "fr-toolbar-find-button",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             imageClass: "fr-toolbar-search-icon",
+            toolState: false,
             tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {

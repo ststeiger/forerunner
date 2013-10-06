@@ -292,7 +292,11 @@ $(function () {
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
-                return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                var containerState = "fr-toolbase-state ";
+                if (toolInfo.toolState === false) {
+                    var containerState = "";
+                }
+                return "<div class='fr-toolbase-toolcontainer " + containerState + toolInfo.selectorClass + "'>" +
                             "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
                         "</div>";
             }

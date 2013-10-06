@@ -8,9 +8,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MobilizerConfigTool")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Forerunner Software")]
-[assembly: AssemblyProduct("MobilizerrConfigTool")]
-[assembly: AssemblyCopyright("Copyright © Forerunner Software 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,4 +30,3 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]

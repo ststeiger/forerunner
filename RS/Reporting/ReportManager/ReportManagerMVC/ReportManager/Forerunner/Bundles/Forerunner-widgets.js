@@ -111,7 +111,7 @@ $(function () {
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            me._loadParameters(me.options.pageNum);
+            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -539,8 +539,8 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    me.refreshParameters(action.savedParams);
-                    me.loadReportWithNewParameters(action.savedParams);
+                    me.refreshParameters(action.savedParams, true);
+
                     me.paramLoaded = true;
                 }
                 else {
@@ -1053,17 +1053,56 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
+            //if (me.options.paramArea === undefined || me.options.paramArea === null) return;
+            var savedParams = null;
+            forerunner.ajax.ajax({
+                url: me.options.reportManagerAPI + "/GetUserParameters?reportPath=" + me.options.reportPath,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.ParamsList !== undefined) {
+                        savedParams = data;
+                    }
+ 
+                }
+            });
+            if (savedParams === null) {
+                me._loadDefaultParameters(pageNum);
+            } else {
+                
+                if (me.options.paramArea) {
+                    var jsonString = me._paramsToString(savedParams.ParamsList);
+                    me.options.paramArea.reportParameter({ $reportViewer: this });
+                    me.refreshParameters(jsonString, true);
+                }
+            }
+        },
+        _paramsToString: function(a) {
+            var tempJson = "[";
+            for (i = 0; i < a.length; i++) {
+                if (i !== a.length - 1) {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
+                }
+                else {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"}";
+                }
+            }
+            tempJson += "]";
+            return "{\"ParamsList\":" + tempJson + "}";
+        },
+        _loadDefaultParameters: function (pageNum) {
+            var me = this;
             forerunner.ajax.getJSON(
-                me.options.reportViewerAPI + "/ParameterJSON/",
-                {ReportPath: me.options.reportPath},
-                function (data) {
-                   me._addLoadingIndicator();
-                   me._showParameters(pageNum, data);
-                },
-                function (data) {
-                   console.log("error");
-                   me.removeLoadingIndicator();
-                });
+                    me.options.reportViewerAPI + "/ParameterJSON/",
+                    { ReportPath: me.options.reportPath },
+                    function (data) {
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    },
+                    function (data) {
+                        console.log("error");
+                        me.removeLoadingIndicator();
+                    });
         },
         _showParameters: function (pageNum, data) {
             var me = this;
@@ -1074,7 +1113,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -1096,8 +1135,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
+         * @param {boolean} Submit form if the parameters are satisfied.
          */
-        refreshParameters: function (paramList) {
+        refreshParameters: function (paramList, submitForm) {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
@@ -1106,7 +1146,10 @@ $(function () {
                     async: false,
                     success: function (data) {
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
+                            me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                            if (me.$numOfVisibleParameters > 0)
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
                         }
                     }
                 });
@@ -4123,9 +4166,6 @@ $(function () {
         _loadedForDefault: true,
         _reportDesignError: null,
 
-        _savedParamExist: false,
-        _savedParamList: null,
-        _savedParamCount: 0,
         _init: function () {
             var me = this;
             me.element.html(null);
@@ -4165,28 +4205,31 @@ $(function () {
     
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
-         * @Update an existing parameter panel
+         * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
+         * @param {boolean} submitForm - submit form when parameters are satisfied.
          */
-        updateParameterPanel: function (data) {
+        updateParameterPanel: function (data, submitForm) {
             this.removeParameter();
-            this.writeParameterPanel(data, null, null, true);
+            this.writeParameterPanel(data, null, submitForm);
         },
 
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
+         * @param {int} pageNum - current page num
+         * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
          */
-        writeParameterPanel: function (data, rs, pageNum, updateOnly) {
+        writeParameterPanel: function (data, pageNum, submitForm) {
             var me = this;
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
             me._paramCount = parseInt(data.Count, 10);
 
-            me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
-            me._loadedForDefault = true && !me._savedParamExist;
+            me._defaultValueExist = data.DefaultValueExist;
+            me._loadedForDefault = true;
             me._render();
             me.$numVisibleParams = 0;
 
@@ -4233,10 +4276,8 @@ $(function () {
                 me._submitForm();
             });
 
-            if (updateOnly === undefined) {
+            if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
-                    me._submitForm();
-                else if (me._paramCount === me._savedParamCount)
                     me._submitForm();
                 else {
                     me._trigger(events.render);
@@ -4250,9 +4291,6 @@ $(function () {
             //jquery adds height, remove it
             var pc = me.element.find("." + paramContainerClass);
             pc.removeAttr("style");
-
-            me._savedParamExist = false;
-            me._savedParamCount = 0;
 
             me._setDatePicker();
             $(document).on("click", function (e) { me._checkExternalClick(e); });
@@ -4281,16 +4319,6 @@ $(function () {
                 me._trigger(events.submit);
             }
         },
-        overrideDefaultParams: function (overrideParams) {
-            var me = this;
-            me._savedParamList = {};
-            me._savedParamCount = 0;
-            me._savedParamExist = true;
-            $.each(overrideParams.ParamsList, function (index, savedParam) {
-                me._savedParamList[savedParam.Parameter] = savedParam.Value;
-                me._savedParamCount++;
-            });
-        },
         _setDatePicker: function () {
             var me = this;
 
@@ -4301,11 +4329,7 @@ $(function () {
         },
         _getPredefinedValue: function (param) {
             var me = this;
-            //if saved param exist then used it else user default value
-            if (me._savedParamExist) {
-                return me._savedParamList[param.Name];
-            }
-            else if (me._hasDefaultValue(param)) {
+            if (me._hasDefaultValue(param)) {
                 if (param.MultiValue === false)
                     return param.DefaultValues[0];
                 else
@@ -4934,7 +4958,9 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me.options.$reportViewer.refreshParameters(paramList);
+                // Ask viewer to refresh parameter, but not automatically post back
+                // if all parameters are satisfied.
+                me.options.$reportViewer.refreshParameters(paramList, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {
@@ -5864,17 +5890,6 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data);
-                        }
-                    });
-                });
             }
 
             // Create / render the menu pane
@@ -5921,6 +5936,8 @@ $(function () {
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
+
+            $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
         },
         setFavoriteState: function (path) {
             var me = this;

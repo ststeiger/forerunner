@@ -11,3 +11,7 @@ using(System.IO.StreamReader reader = new System.IO.StreamReader(fileName))
 using System.Reflection;
  
 [assembly:AssemblyFileVersion("<#= version.ToString() #>")]
+[assembly: AssemblyCompany("Forerunner Software")]
+[assembly: AssemblyProduct("Mobilizer")]
+[assembly: AssemblyCopyright("Copyright © Forerunner Software 2013")]
+

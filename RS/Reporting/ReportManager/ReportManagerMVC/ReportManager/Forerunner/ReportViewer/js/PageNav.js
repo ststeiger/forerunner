@@ -21,12 +21,17 @@ $(function () {
             var me = this;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
+                var $li = me.listItems[me.currentPageNum - 1];
+                $li.removeClass("fr-nav-selected");
+                $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
 
             me.currentPageNum = currentPageNum;
             me._ScrolltoPage();
-            me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
+
+            var $li = me.listItems[me.currentPageNum - 1];
+            $li.addClass("fr-nav-selected");
+            $li.find("img").addClass("fr-nav-page-thumb-selected");
         },
         _ScrolltoPage: function () {
             var me = this;
@@ -58,9 +63,7 @@ $(function () {
                 var $listItem = new $("<LI />");
                 $list.append($listItem);
                 me.listItems[i - 1] = $listItem;
-                var $caption = new $("<DIV />");
-                $caption.html("<h3 class='fr-report-centertext'>" + i.toString() + "</h3>");
-                $caption.addClass("fr-report-center");
+                var $caption = new $("<DIV class='fr-nav-centertext'>" + i.toString() + "</DIV>");
                 var $thumbnail = new $("<IMG />");
                 $thumbnail.addClass("fr-nav-page-thumb");
                 // Instead of stating the src, use data-original and add the lazy class so that

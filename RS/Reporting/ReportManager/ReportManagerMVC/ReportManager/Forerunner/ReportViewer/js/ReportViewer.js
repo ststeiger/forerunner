@@ -539,8 +539,6 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     me.refreshParameters(action.savedParams, true);
-
-                    me.paramLoaded = true;
                 }
                 else {
                     me._loadParameters(action.CurrentPage);
@@ -1078,7 +1076,7 @@ $(function () {
         },
         _paramsToString: function(a) {
             var tempJson = "[";
-            for (i = 0; i < a.length; i++) {
+            for (var i = 0; i < a.length; i++) {
                 if (i !== a.length - 1) {
                     tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
                 }
@@ -1149,6 +1147,7 @@ $(function () {
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            me.paramLoaded = true;
                         }
                     }
                 });

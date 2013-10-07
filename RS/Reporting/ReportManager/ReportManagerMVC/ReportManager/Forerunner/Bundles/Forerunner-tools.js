@@ -688,8 +688,23 @@ $(function () {
                     e.data.me.options.navigateTo("recent", null);
                 }
             }
+        },
+        /** @member */
+        btnSetup: {
+        toolType: toolTypes.button,
+        selectorClass: "fr-rm-button-setup",
+        imageClass: "fr-icons24x24-setup",
+        tooltip: locData.toolbar.setup,
+        events: {
+            click: function (e) {
+                // TODO
+                // Jason to implement
+                //
+                //e.data.me.options.navigateTo("recent", null);
+            }
         }
-    };
+    }
+};
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolbar

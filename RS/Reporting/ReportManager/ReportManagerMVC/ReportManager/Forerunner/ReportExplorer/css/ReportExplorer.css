@@ -136,7 +136,7 @@
 
 
 
-.fr-rm-button-home {
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup {
     float: right;
 }
 

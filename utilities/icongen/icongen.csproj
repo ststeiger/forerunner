@@ -75,6 +75,7 @@
     <Content Include="images\MHT.png" />
     <Content Include="images\PageNavOff.png" />
     <Content Include="images\Parameters.png" />
+    <Content Include="images\setup.png" />
     <Content Include="images\PDF.png" />
     <Content Include="images\PrintOff.png" />
     <Content Include="images\recent.png" />

@@ -30,5 +30,6 @@
     <sourcefile name="FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
     <sourcefile name="SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
     <sourcefile name="recent.png" classname="fr-icons24x24-recent"></sourcefile>
+    <sourcefile name="setup.png" classname="fr-icons24x24-setup"></sourcefile>
   </compositeimage>
 </iconfiles>

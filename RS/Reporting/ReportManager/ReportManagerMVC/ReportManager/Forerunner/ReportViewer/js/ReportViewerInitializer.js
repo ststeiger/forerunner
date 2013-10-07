@@ -56,8 +56,8 @@ $(function () {
 
             var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
-                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnFavorite]);
-                $toolbar.toolbar("addTools", 3, true, [tb.btnFav]);
+                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
+                $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
@@ -76,17 +76,6 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data);
-                        }
-                    });
-                });
             }
 
             // Create / render the menu pane
@@ -122,19 +111,6 @@ $(function () {
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
-
-                $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/ParameterJSON?ReportPath=" + data.reportPath + "&paramList=" + data.paramList,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParametersList) {
-                                $paramarea.reportParameter("updateParameterPanel", data);
-                            }
-                        }
-                    });
-                });
             }
 
             var $print = me.options.$print;
@@ -146,6 +122,8 @@ $(function () {
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
+
+            $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
         },
         setFavoriteState: function (path) {
             var me = this;

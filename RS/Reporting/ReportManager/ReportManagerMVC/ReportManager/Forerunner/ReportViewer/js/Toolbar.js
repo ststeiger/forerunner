@@ -44,7 +44,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
+                if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
             });
@@ -91,7 +91,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();

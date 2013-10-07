@@ -48,6 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
+            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -110,7 +111,7 @@ $(function () {
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            me._loadParameters(me.options.pageNum);
+            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -245,7 +246,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
-            if (!me.$reportAreaContainer) {
+            if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
                 if (errorpage)
                     errorpage.detach();
@@ -538,11 +539,7 @@ $(function () {
                 }
 
                 if (action.paramLoaded && action.savedParams) {
-                    var $paramArea = me.options.paramArea;
-                    $paramArea.reportParameter("refreshParameters", action.savedParams);
-                    me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
-                    if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    me.refreshParameters(action.savedParams, true);
 
                     me.paramLoaded = true;
                 }
@@ -1056,17 +1053,56 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum) {
             var me = this;
+            //if (me.options.paramArea === undefined || me.options.paramArea === null) return;
+            var savedParams = null;
+            forerunner.ajax.ajax({
+                url: me.options.reportManagerAPI + "/GetUserParameters?reportPath=" + me.options.reportPath,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.ParamsList !== undefined) {
+                        savedParams = data;
+                    }
+ 
+                }
+            });
+            if (savedParams === null) {
+                me._loadDefaultParameters(pageNum);
+            } else {
+                
+                if (me.options.paramArea) {
+                    var jsonString = me._paramsToString(savedParams.ParamsList);
+                    me.options.paramArea.reportParameter({ $reportViewer: this });
+                    me.refreshParameters(jsonString, true);
+                }
+            }
+        },
+        _paramsToString: function(a) {
+            var tempJson = "[";
+            for (i = 0; i < a.length; i++) {
+                if (i !== a.length - 1) {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
+                }
+                else {
+                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"}";
+                }
+            }
+            tempJson += "]";
+            return "{\"ParamsList\":" + tempJson + "}";
+        },
+        _loadDefaultParameters: function (pageNum) {
+            var me = this;
             forerunner.ajax.getJSON(
-                me.options.reportViewerAPI + "/ParameterJSON/",
-                {ReportPath: me.options.reportPath},
-                function (data) {
-                   me._addLoadingIndicator();
-                   me._showParameters(pageNum, data);
-                },
-                function (data) {
-                   console.log("error");
-                   me.removeLoadingIndicator();
-                });
+                    me.options.reportViewerAPI + "/ParameterJSON/",
+                    { ReportPath: me.options.reportPath },
+                    function (data) {
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    },
+                    function (data) {
+                        console.log("error");
+                        me.removeLoadingIndicator();
+                    });
         },
         _showParameters: function (pageNum, data) {
             var me = this;
@@ -1077,7 +1113,7 @@ $(function () {
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
                     $paramArea.reportParameter({ $reportViewer: this });
-                    $paramArea.reportParameter("writeParameterPanel", data, me, pageNum);
+                    $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -1092,6 +1128,31 @@ $(function () {
             }
             else {
                 me._loadPage(pageNum, false);
+            }
+        },
+        /**
+         * Refresh the parameter using the given list
+         *
+         * @function $.forerunner.reportViewer#refreshParameters
+         * @param {string} The JSON string for the list of parameters.
+         * @param {boolean} Submit form if the parameters are satisfied.
+         */
+        refreshParameters: function (paramList, submitForm) {
+            var me = this;
+            if (paramList) {
+                forerunner.ajax.ajax({
+                    url: me.options.reportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.ParametersList) {
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
+                            me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                            if (me.$numOfVisibleParameters > 0)
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        }
+                    }
+                });
             }
         },
         _removeParameters: function () {
@@ -1717,7 +1778,11 @@ $(function () {
         _getToolHtml: function (toolInfo) {
             var me = this;
             if (toolInfo.toolType === toolTypes.button) {
-                return "<div class='fr-toolbase-toolcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                var containerState = "fr-toolbase-state ";
+                if (toolInfo.toolState === false) {
+                    var containerState = "";
+                }
+                return "<div class='fr-toolbase-toolcontainer " + containerState + toolInfo.selectorClass + "'>" +
                             "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
@@ -1859,7 +1924,7 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
                 
-                if (data.paramLoaded === false || data.numOfVisibleParameters == 0)
+                if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
             });
@@ -1906,7 +1971,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tg.btnVCRGroup, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -2111,12 +2176,17 @@ $(function () {
             var me = this;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                me.listItems[me.currentPageNum - 1].removeClass("fr-nav-selected");
+                var $li = me.listItems[me.currentPageNum - 1];
+                $li.removeClass("fr-nav-selected");
+                $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
 
             me.currentPageNum = currentPageNum;
             me._ScrolltoPage();
-            me.listItems[me.currentPageNum - 1].addClass("fr-nav-selected");
+
+            var $li = me.listItems[me.currentPageNum - 1];
+            $li.addClass("fr-nav-selected");
+            $li.find("img").addClass("fr-nav-page-thumb-selected");
         },
         _ScrolltoPage: function () {
             var me = this;
@@ -2148,9 +2218,7 @@ $(function () {
                 var $listItem = new $("<LI />");
                 $list.append($listItem);
                 me.listItems[i - 1] = $listItem;
-                var $caption = new $("<DIV />");
-                $caption.html("<h3 class='fr-report-centertext'>" + i.toString() + "</h3>");
-                $caption.addClass("fr-report-center");
+                var $caption = new $("<DIV class='fr-nav-centertext'>" + i.toString() + "</DIV>");
                 var $thumbnail = new $("<IMG />");
                 $thumbnail.addClass("fr-nav-page-thumb");
                 // Instead of stating the src, use data-original and add the lazy class so that
@@ -2288,7 +2356,7 @@ $(function () {
             
             me.element.empty();
             me.element.append($("<div/>").addClass(me.options.toolClass));
-            me.addTools(1, true, [tb.btnBack, tb.btnHome, tb.btnFav, tb.btnRecent]);
+            me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
             me._initCallbacks();
         },
 
@@ -4105,9 +4173,6 @@ $(function () {
         _loadedForDefault: true,
         _reportDesignError: null,
 
-        _savedParamExist: false,
-        _savedParamList: null,
-        _savedParamCount: 0,
         _init: function () {
             var me = this;
             me.element.html(null);
@@ -4147,28 +4212,31 @@ $(function () {
     
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
-         * @Update an existing parameter panel
+         * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
+         * @param {boolean} submitForm - submit form when parameters are satisfied.
          */
-        updateParameterPanel: function (data) {
+        updateParameterPanel: function (data, submitForm) {
             this.removeParameter();
-            this.writeParameterPanel(data, null, null, true);
+            this.writeParameterPanel(data, null, submitForm);
         },
 
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
+         * @param {int} pageNum - current page num
+         * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
          */
-        writeParameterPanel: function (data, rs, pageNum, updateOnly) {
+        writeParameterPanel: function (data, pageNum, submitForm) {
             var me = this;
             if (me.$params === null) me._render();
 
             me.options.pageNum = pageNum;
             me._paramCount = parseInt(data.Count, 10);
 
-            me._defaultValueExist = data.DefaultValueExist && !me._savedParamExist;
-            me._loadedForDefault = true && !me._savedParamExist;
+            me._defaultValueExist = data.DefaultValueExist;
+            me._loadedForDefault = true;
             me._render();
             me.$numVisibleParams = 0;
 
@@ -4215,10 +4283,8 @@ $(function () {
                 me._submitForm();
             });
 
-            if (updateOnly === undefined) {
+            if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
-                    me._submitForm();
-                else if (me._paramCount === me._savedParamCount)
                     me._submitForm();
                 else {
                     me._trigger(events.render);
@@ -4233,18 +4299,15 @@ $(function () {
             var pc = me.element.find("." + paramContainerClass);
             pc.removeAttr("style");
 
-            me._savedParamExist = false;
-            me._savedParamCount = 0;
-
             me._setDatePicker();
             $(document).on("click", function (e) { me._checkExternalClick(e); });
 
 
-            $(':input', me.$params).each(
+            $(":input", me.$params).each(
                 function (index) {
                     var input = $(this);
-                    input.on('blur', function () { $(window).scrollTop(0); });
-                    input.on('focus', function () { $(window).scrollTop(0); });
+                    input.on("blur", function () { $(window).scrollTop(0); });
+                    input.on("focus", function () { $(window).scrollTop(0); });
                 }
             );
         },
@@ -4263,16 +4326,6 @@ $(function () {
                 me._trigger(events.submit);
             }
         },
-        overrideDefaultParams: function (overrideParams) {
-            var me = this;
-            me._savedParamList = {};
-            me._savedParamCount = 0;
-            me._savedParamExist = true;
-            $.each(overrideParams.ParamsList, function (index, savedParam) {
-                me._savedParamList[savedParam.Parameter] = savedParam.Value;
-                me._savedParamCount++;
-            });
-        },
         _setDatePicker: function () {
             var me = this;
 
@@ -4283,11 +4336,7 @@ $(function () {
         },
         _getPredefinedValue: function (param) {
             var me = this;
-            //if saved param exist then used it else user default value
-            if (me._savedParamExist) {
-                return me._savedParamList[param.Name];
-            }
-            else if (me._hasDefaultValue(param)) {
+            if (me._hasDefaultValue(param)) {
                 if (param.MultiValue === false)
                     return param.DefaultValues[0];
                 else
@@ -4916,7 +4965,9 @@ $(function () {
             //set false not to do form validate.
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
-                me._trigger(events.loadCascadingParam, null, { reportPath: me.options.$reportViewer.options.reportPath, paramList: paramList });
+                // Ask viewer to refresh parameter, but not automatically post back
+                // if all parameters are satisfied.
+                me.options.$reportViewer.refreshParameters(paramList, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {
@@ -5826,8 +5877,8 @@ $(function () {
 
             var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
-                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnFavorite]);
-                $toolbar.toolbar("addTools", 3, true, [tb.btnFav]);
+                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
+                $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
 
@@ -5846,17 +5897,6 @@ $(function () {
 
             if (me.options.isReportManager) {
                 $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
-                $viewer.on(events.reportViewerShowParamArea(), function (e, obj) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/GetUserParameters?reportPath=" + obj.reportPath,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParamsList)
-                                $paramarea.reportParameter("overrideDefaultParams", data);
-                        }
-                    });
-                });
             }
 
             // Create / render the menu pane
@@ -5892,19 +5932,6 @@ $(function () {
             if ($paramarea !== null) {
                 $paramarea.reportParameter({ $reportViewer: $viewer });
                 $viewer.reportViewer("option", "paramArea", $paramarea);
-
-                $paramarea.on(events.reportParameterLoadCascadingParam(), function (e, data) {
-                    forerunner.ajax.ajax({
-                        url: me.options.ReportManagerAPI + "/ParameterJSON?ReportPath=" + data.reportPath + "&paramList=" + data.paramList,
-                        dataType: "json",
-                        async: false,
-                        success: function (data) {
-                            if (data.ParametersList) {
-                                $paramarea.reportParameter("updateParameterPanel", data);
-                            }
-                        }
-                    });
-                });
             }
 
             var $print = me.options.$print;
@@ -5916,6 +5943,8 @@ $(function () {
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
+
+            $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
         },
         setFavoriteState: function (path) {
             var me = this;

@@ -66,7 +66,7 @@
     <Content Include="images\Excel.png" />
     <Content Include="images\ExportOff.png" />
     <Content Include="images\FavMinusOff.png" />
-    <Content Include="images\FavOff.png" />
+    <Content Include="images\favorites.png" />
     <Content Include="images\FavPlusOff.png" />
     <Content Include="images\FirstPageOff.png" />
     <Content Include="images\ForwardPageOff.png" />
@@ -74,11 +74,10 @@
     <Content Include="images\LastPageOff.png" />
     <Content Include="images\MHT.png" />
     <Content Include="images\PageNavOff.png" />
-    <Content Include="images\ParametersOff.png" />
-    <Content Include="images\ParametersOn.png" />
+    <Content Include="images\Parameters.png" />
     <Content Include="images\PDF.png" />
     <Content Include="images\PrintOff.png" />
-    <Content Include="images\RecentOff.png" />
+    <Content Include="images\recent.png" />
     <Content Include="images\Refresh.png" />
     <Content Include="images\SaveParameters.png" />
     <Content Include="images\Search.png" />

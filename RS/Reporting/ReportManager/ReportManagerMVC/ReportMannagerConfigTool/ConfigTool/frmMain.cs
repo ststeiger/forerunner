@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows.Forms;
+using ForerunnerLicense;
 
 namespace ReportMannagerConfigTool
 {
@@ -9,6 +10,7 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
+        private ClientLicense clientLic = new ClientLicense();
 
         public frmMain()
         {
@@ -20,6 +22,8 @@ namespace ReportMannagerConfigTool
 
                 LoadWebConfig();
                 SetReportManagerFolderPath();
+                clientLic.Load();
+                rtbCurLicense.Text = clientLic.GetLicenseString();
             }
             catch(Exception ex)
             {
@@ -262,7 +266,19 @@ namespace ReportMannagerConfigTool
 
         private void btnApplyLicense_Click(object sender, EventArgs e)
         {
-
+            if (txtNewKey.Text == "")
+            {
+                 MessageBox.Show("LicenseKey Required");
+                return;
+            }
+            try
+            {
+               rtbCurLicense.Text =  clientLic.Activate(txtNewKey.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)
@@ -275,6 +291,33 @@ namespace ReportMannagerConfigTool
         {
             frmProductInfo frm = new frmProductInfo();
             DialogResult result = frm.ShowDialog();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDeActivate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                clientLic.DeActivate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(clientLic.LicenseString);
         }
     }
 }

@@ -35,7 +35,7 @@
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
 ; Add registry key
-Page custom fun_ApplicationConfig_RunRegister
+;Page custom fun_ApplicationConfig_RunRegister
 
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Config\MobilizerConfigTool.exe"
@@ -51,7 +51,7 @@ Page custom fun_ApplicationConfig_RunRegister
 RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "ForerunnerMobilizerSetup.exe"
+OutFile "ForerunnerMobilizerV1Setup.exe"
 InstallDir "$PROGRAMFILES\Forerunner Mobilizer"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
@@ -431,7 +431,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons24x24.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   
-  Delete "$INSTDIR\\Forerunner\Controllers\ReportManagerController.cs"
+  Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
   Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"

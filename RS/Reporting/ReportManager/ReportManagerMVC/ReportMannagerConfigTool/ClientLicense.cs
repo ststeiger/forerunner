@@ -8,6 +8,8 @@ using System.Net;
 using System.IO;
 using System.Xml;
 using ForerunnerLicense;
+using System.Security.AccessControl;
+using System.Security.Principal;
 
 namespace ForerunnerLicense
 {
@@ -69,25 +71,38 @@ namespace ForerunnerLicense
             if (MobV1Key == null)
             {
                 RegistryKey forerunnerswKey ;
-                RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software, true);
-
-                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node, true);
+                RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software);
+          
+                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);
                 if (wow6432NodeKey == null)
-                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey, true);
+                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
                 else
-                    forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey, true);
+                    forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey);
 
                 if (forerunnerswKey == null)
                 {
                     if (wow6432NodeKey == null)
+                    {
+                        softwareKey = Registry.LocalMachine.OpenSubKey(software, true);
                         forerunnerswKey = softwareKey.CreateSubKey(forerunnerKey);
+                    }
                     else
+                    {
+                        wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node,true);
                         forerunnerswKey = wow6432NodeKey.CreateSubKey(forerunnerKey);
+                    }
                 }
                 
-                MobV1Key = forerunnerswKey.OpenSubKey(VersionKey, true);
+                MobV1Key = forerunnerswKey.OpenSubKey(VersionKey,true);
                 if (MobV1Key == null)
+                {
+                    //  Create key and set security so everyone can read and write it
+
                     MobV1Key = forerunnerswKey.CreateSubKey(VersionKey);
+                    RegistrySecurity rs = MobV1Key.GetAccessControl();
+                    rs.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), RegistryRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
+                    MobV1Key.SetAccessControl(rs);
+                }
             }
 
             var value = MobV1Key.GetValue(LicenseDataKey);

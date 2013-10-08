@@ -224,6 +224,9 @@ namespace Forerunner
                     message = e.Message.Substring(start, end - start);
 
                 w.WriteString(message);
+                w.WriteMember("DetailMessage");
+                w.WriteString(e.Message);
+
                 w.WriteMember("StackTrace");
                 w.WriteString(e.StackTrace);
 

@@ -2695,6 +2695,7 @@ $(function () {
                "<div class='fr-render-error-message'></div>" +
                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-DetailMessage'></div>" +
                "<div class='fr-render-error fr-render-error-type'></div>" +
                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
                "<div class='fr-render-error fr-render-error-source'></div>" +
@@ -2709,6 +2710,9 @@ $(function () {
 
                     $cell = me.element.find(".fr-render-error-details");
                     $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+
+                    $cell = me.element.find(".fr-render-error-DetailMessage");
+                    $cell.append("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.DetailMessage);
 
                     $cell = me.element.find(".fr-render-error-type");
                     $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);

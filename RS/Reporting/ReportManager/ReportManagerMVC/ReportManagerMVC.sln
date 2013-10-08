@@ -23,8 +23,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSONRenderingExtension", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportManagerConfigTool", "ReportMannagerConfigTool\ReportManagerConfigTool.csproj", "{9DB1DB48-5245-41ED-B4F8-706DB9352A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupUtil", "..\..\..\..\utilities\SetupUtil\SetupUtil\SetupUtil.csproj", "{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,12 +61,6 @@ Global
 		{9DB1DB48-5245-41ED-B4F8-706DB9352A25}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{9DB1DB48-5245-41ED-B4F8-706DB9352A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB1DB48-5245-41ED-B4F8-706DB9352A25}.Release|Any CPU.Build.0 = Release|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Publish|Any CPU.ActiveCfg = Release|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Publish|Any CPU.Build.0 = Release|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{99C4F978-90E5-4B44-B0EC-E9B8EDA64039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,8 +19,9 @@ fieldset {
 fieldset input {
   border:1px solid #d8d7d7;
   box-shadow: 0px 0px 10px #f3f3f3 inset;
-  color: #999999;
+  color: #444444;
   font-family: sans-serif;
+  font-weight: bold;
 }
 
 .fieldsetsize {

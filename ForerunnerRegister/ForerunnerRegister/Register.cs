@@ -216,7 +216,7 @@ namespace ForerunnerRegister
                 Domain = "localhost";
 #endif
             RegistrationData RegData = new RegistrationData(XMLReg);
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, Domain, RegData.ID, RegData.LicenseID);
+            string NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

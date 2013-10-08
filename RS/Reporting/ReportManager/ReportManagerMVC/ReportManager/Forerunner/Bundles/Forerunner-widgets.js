@@ -439,7 +439,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -629,7 +629,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -734,7 +734,7 @@ $(function () {
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
                             // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox("Cannot find the bookmark in the report");
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
                         }
                     }
                 },
@@ -2398,7 +2398,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -2572,7 +2572,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
                 }
             });
         },
@@ -3059,11 +3059,13 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -3121,7 +3123,7 @@ $(function () {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
                         $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
-                        $ParagraphItem = new $("<LI />");                        
+                        $ParagraphItem = new $("<LI />");
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
@@ -3155,10 +3157,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
                         }
                         else {
                             $TextRun.html("&nbsp");
@@ -3180,7 +3182,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    $ParagraphList.attr("style","width:100%;height:100%;");
+                    //$ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
@@ -4269,7 +4271,7 @@ $(function () {
             });
 
             if (me._reportDesignError !== null)
-                me._reportDesignError += "Please contact report administrator for help";
+                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -5000,7 +5002,7 @@ $(function () {
                 if (me._reportDesignError === null) {
                     me._reportDesignError = "";
                 }
-                me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
             }
             //}
         },
@@ -6010,7 +6012,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },
@@ -6034,7 +6036,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },

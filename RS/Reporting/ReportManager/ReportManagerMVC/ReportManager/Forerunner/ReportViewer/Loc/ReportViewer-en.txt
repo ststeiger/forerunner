@@ -4,7 +4,16 @@
         "completeFind": "The entire report has been searched",
         "keyNotFound": "Key not found",
         "sessionExpired": "Your session has expired",
-        "imageNotDisplay": "Cannot display image"
+        "imageNotDisplay": "Cannot display image",
+		"saveParamSuccess":"Saved",
+		"saveParamFailed":"Failed",
+		"catalogsLoadFailed":"Failed to load the catalogs from the server.  Please try again.",
+		"paramFieldEmpty":"parameter is missing a value",
+		"contactAdmin":"Please contact report administrator for help",
+		"favoriteFailed":"Failed",
+		"docmapShowFailed":"Failed",
+		"prepareActionFailed":"Failed",
+		"bookmarkNotFound":"Cannot find the bookmark in the report"
     },
     "errorTag": {
         "moreDetail": "Click for more detail",

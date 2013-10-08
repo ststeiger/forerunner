@@ -171,7 +171,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },
@@ -195,7 +195,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },

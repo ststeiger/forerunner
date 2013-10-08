@@ -4,7 +4,16 @@
         "completeFind": "L'ensemble du rapport a été recherché",
         "keyNotFound": "Clé introuvable",
         "sessionExpired": "Votre session a expiré",
-        "imageNotDisplay": "Impossible d'afficher l'image"
+        "imageNotDisplay": "Impossible d'afficher l'image",
+		"saveParamSuccess":"Sauvé",
+		"saveParamFailed":"Manqué",
+		"catalogsLoadFailed":"Impossible de charger les catalogues à partir du serveur. S'il vous plaît essayer de nouveau.",
+		"paramFieldEmpty":"paramètre n'est pas une valeur",
+		"contactAdmin":"S'il vous plaît contactez l'administrateur du rapport de l'aide",
+		"favoriteFailed":"Manqué",
+		"docmapShowFailed":"Manqué",
+		"prepareActionFailed":"Manqué",
+		"bookmarkNotFound":"Vous ne trouvez pas le favori dans le rapport"
     },
     "errorTag": {
         "moreDetail": "Cliquez pour plus de détails",

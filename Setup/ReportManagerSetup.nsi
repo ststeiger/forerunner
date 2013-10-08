@@ -35,7 +35,7 @@
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
 ; Add registry key
-Page custom fun_ApplicationConfig_RunRegister
+;Page custom fun_ApplicationConfig_RunRegister
 
 ; Finish page
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Config\MobilizerConfigTool.exe"
@@ -238,7 +238,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\SSRSExtension\Forerunner.RenderingExtensions.dll"
   File "${LOCALROOT}\SSRSExtension\Forerunner.Json.dll"
   SetOutPath "$INSTDIR\Config"
-  File "${LOCALROOT}\Register\SetupUtil.exe"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe.config"
   File "${LOCALROOT}\Config\Manual Activation.rtf"
@@ -437,7 +436,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   
-  Delete "$INSTDIR\\Forerunner\Controllers\ReportManagerController.cs"
+  Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
   Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
@@ -463,7 +462,6 @@ Section Uninstall
   Delete "$INSTDIR\bin\WebGrease.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.RenderingExtensions.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
-  Delete "$INSTDIR\Config\SetupUtil.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"

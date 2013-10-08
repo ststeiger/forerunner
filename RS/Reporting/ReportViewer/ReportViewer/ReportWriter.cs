@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Jayrock.Json;
+using ForerunnerLicense;
 
 namespace Forerunner.SSRS.JSONRender
 {
@@ -15,7 +16,7 @@ namespace Forerunner.SSRS.JSONRender
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
-        RPLReader RPL;
+        RPLReader RPL;        
 
         struct TempProperty
         {
@@ -233,9 +234,10 @@ namespace Forerunner.SSRS.JSONRender
 
         public string RPLToJSON(int NumPages)
         {
-#if !DEBUG
-            Forerunner.SSRS.Security.License.ThrowIfNotValid();
-#endif
+
+//#if !DEBUG           
+            ClientLicense.Validate();
+//#endif
             RPL.position = 0;
             w.WriteStartObject();
             w.WriteMember("RPLStamp");

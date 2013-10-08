@@ -182,7 +182,7 @@ namespace ForerunnerWebService
                 LicensesText += "</b> SKU: <b>";
                 LicensesText += SQLReader.GetString(1);
                 LicensesText += "</b> Quantity: <b>";
-                LicensesText += SQLReader.GetString(3);                
+                LicensesText += SQLReader.GetInt32(3).ToString();                
                 LicensesText += "</b> License Key: <b>";
                 LicensesText += SQLReader.GetString(0);
                 LicensesText += "</b><br>";

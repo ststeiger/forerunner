@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ForerunnerRegister;
 using ForerunnerWebService;
+using ForerunnerLicense;
 
 namespace RegisterWebService.Controllers
 {
@@ -18,7 +19,7 @@ namespace RegisterWebService.Controllers
         {
             string content = this.Request.Content.ReadAsStringAsync().Result;
 
-            string response = new License().ProcessRequest(content);
+            string response = new ServerLicense().ProcessRequest(content);
 
             return WebSerivceHelper.GetResponseFromString(response, "text/xml", this.Request.CreateResponse());
         }

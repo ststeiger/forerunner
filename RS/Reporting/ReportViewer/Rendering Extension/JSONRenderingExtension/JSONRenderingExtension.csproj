@@ -62,6 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\ClientLicense.cs">
+      <Link>ClientLicense.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\LicenseUtil.cs">
       <Link>LicenseUtil.cs</Link>
     </Compile>

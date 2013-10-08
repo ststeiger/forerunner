@@ -215,14 +215,21 @@ namespace Forerunner
                 w.WriteString(e.Source);
                 w.WriteMember("Message");
 
-                int start = e.Message.IndexOf(":")+1;
-                int end = e.Message.IndexOf("--->")-1;
-                string message;
-                if (start <= 0 || end <= 0)
-                    message = e.Message;                    
-                else
-                    message = e.Message.Substring(start, end - start);
+                string[] split = { "--->" };
+                string[] Messages = e.Message.Split(split,StringSplitOptions.None);
+                string message = "";
+                foreach (string mes in Messages)
+                {
+                    int start = mes.IndexOf(":") + 1;
+                    int end = mes.IndexOf("  at", start ) - 1;
 
+                    if (start <= 0)
+                        message += mes;
+                    else if (start > 0 && end > 0)
+                        message += mes.Substring(start, end - start);
+                    else
+                        message += mes.Substring(start);
+                }               
                 w.WriteString(message);
                 w.WriteMember("DetailMessage");
                 w.WriteString(e.Message);

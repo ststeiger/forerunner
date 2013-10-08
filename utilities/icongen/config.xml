@@ -2,34 +2,42 @@
 
 <iconfiles>
   <compositeimage name="icons24x24.png" cssname="icons24x24.css" classname="fr-icons24x24" relativeurlpath="../images" width="24" height="24" margin="5">
-    <sourcefile name="align_just_icon.png" classname="fr-icons24x24-menu"></sourcefile>
-    <sourcefile name="BackOff.png" classname="fr-icons24x24-back"></sourcefile>
-    <sourcefile name="BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
-    <sourcefile name="PageNavOff.png" classname="fr-icons24x24-nav"></sourcefile>
-    <sourcefile name="HomeOff.png" classname="fr-icons24x24-home"></sourcefile>
-    <sourcefile name="Parameters.png" classname="fr-icons24x24-paramarea"></sourcefile>
-    <sourcefile name="DocMapOff.png" classname="fr-icons24x24-documentmap"></sourcefile>
-    <sourcefile name="LastPageOff.png" classname="fr-icons24x24-lastpage"></sourcefile>
-    <sourcefile name="ForwardPageOff.png" classname="fr-icons24x24-next"></sourcefile>
-    <sourcefile name="BackPageOff.png" classname="fr-icons24x24-prev"></sourcefile>
-    <sourcefile name="Refresh.png" classname="fr-icons24x24-refresh"></sourcefile>
-    <sourcefile name="FirstPageOff.png" classname="fr-icons24x24-firstpage"></sourcefile>
-    <sourcefile name="ExportOff.png" classname="fr-icons24x24-export"></sourcefile>
-    <sourcefile name="CSV.png" classname="fr-icons24x24-exportCSV"></sourcefile>
-    <sourcefile name="Excel.png" classname="fr-icons24x24-exportExcel"></sourcefile>
-    <sourcefile name="MHT.png" classname="fr-icons24x24-exportMHT"></sourcefile>
-    <sourcefile name="PDF.png" classname="fr-icons24x24-exportPDF"></sourcefile>
-    <sourcefile name="TIF.png" classname="fr-icons24x24-exportTIFF"></sourcefile>
-    <sourcefile name="Word.png" classname="fr-icons24x24-exportWord"></sourcefile>
-    <sourcefile name="XML.png" classname="fr-icons24x24-exportXML"></sourcefile>
-    <sourcefile name="ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
-    <sourcefile name="PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
-    <sourcefile name="Search.png" classname="fr-icons24x24-search"></sourcefile>
-    <sourcefile name="favorites.png" classname="fr-icons24x24-favorite"></sourcefile>
-    <sourcefile name="FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
-    <sourcefile name="FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
-    <sourcefile name="SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
-    <sourcefile name="recent.png" classname="fr-icons24x24-recent"></sourcefile>
-    <sourcefile name="setup.png" classname="fr-icons24x24-setup"></sourcefile>
+    <sourcefile name="24x24icons\align_just_icon.png" classname="fr-icons24x24-menu"></sourcefile>
+    <sourcefile name="24x24icons\BackOff.png" classname="fr-icons24x24-back"></sourcefile>
+    <sourcefile name="24x24icons\BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
+    <sourcefile name="24x24icons\PageNavOff.png" classname="fr-icons24x24-nav"></sourcefile>
+    <sourcefile name="24x24icons\HomeOff.png" classname="fr-icons24x24-home"></sourcefile>
+    <sourcefile name="24x24icons\Parameters.png" classname="fr-icons24x24-paramarea"></sourcefile>
+    <sourcefile name="24x24icons\DocMapOff.png" classname="fr-icons24x24-documentmap"></sourcefile>
+    <sourcefile name="24x24icons\LastPageOff.png" classname="fr-icons24x24-lastpage"></sourcefile>
+    <sourcefile name="24x24icons\ForwardPageOff.png" classname="fr-icons24x24-next"></sourcefile>
+    <sourcefile name="24x24icons\BackPageOff.png" classname="fr-icons24x24-prev"></sourcefile>
+    <sourcefile name="24x24icons\Refresh.png" classname="fr-icons24x24-refresh"></sourcefile>
+    <sourcefile name="24x24icons\FirstPageOff.png" classname="fr-icons24x24-firstpage"></sourcefile>
+    <sourcefile name="24x24icons\ExportOff.png" classname="fr-icons24x24-export"></sourcefile>
+    <sourcefile name="24x24icons\CSV.png" classname="fr-icons24x24-exportCSV"></sourcefile>
+    <sourcefile name="24x24icons\Excel.png" classname="fr-icons24x24-exportExcel"></sourcefile>
+    <sourcefile name="24x24icons\MHT.png" classname="fr-icons24x24-exportMHT"></sourcefile>
+    <sourcefile name="24x24icons\PDF.png" classname="fr-icons24x24-exportPDF"></sourcefile>
+    <sourcefile name="24x24icons\TIF.png" classname="fr-icons24x24-exportTIFF"></sourcefile>
+    <sourcefile name="24x24icons\Word.png" classname="fr-icons24x24-exportWord"></sourcefile>
+    <sourcefile name="24x24icons\XML.png" classname="fr-icons24x24-exportXML"></sourcefile>
+    <sourcefile name="24x24icons\ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
+    <sourcefile name="24x24icons\PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
+    <sourcefile name="24x24icons\favorites.png" classname="fr-icons24x24-favorite"></sourcefile>
+    <sourcefile name="24x24icons\FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
+    <sourcefile name="24x24icons\FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
+    <sourcefile name="24x24icons\SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
+    <sourcefile name="24x24icons\recent.png" classname="fr-icons24x24-recent"></sourcefile>
+    <sourcefile name="24x24icons\setup.png" classname="fr-icons24x24-setup"></sourcefile>
+  </compositeimage>
+  <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
+    <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>
+    <sourcefile name="25x31icons\doc.png" classname="fr-icons25x31-exportWord"></sourcefile>
+    <sourcefile name="25x31icons\mhtml.png" classname="fr-icons25x31-exportMHT"></sourcefile>
+    <sourcefile name="25x31icons\pdf.png" classname="fr-icons25x31-exportPDF"></sourcefile>
+    <sourcefile name="25x31icons\tiff.png" classname="fr-icons25x31-exportTIFF"></sourcefile>
+    <sourcefile name="25x31icons\xls.png" classname="fr-icons25x31-exportExcel"></sourcefile>
+    <sourcefile name="25x31icons\xml.png" classname="fr-icons25x31-exportXML"></sourcefile>
   </compositeimage>
 </iconfiles>

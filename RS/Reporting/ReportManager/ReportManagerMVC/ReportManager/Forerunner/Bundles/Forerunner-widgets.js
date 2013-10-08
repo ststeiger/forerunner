@@ -1782,13 +1782,23 @@ $(function () {
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
+            var containerState = "fr-toolbase-state ";
+            if (toolInfo.toolState === false) {
+                containerState = "";
+            }
+            var iconClass = "fr-icons24x24";
+            if (toolInfo.iconClass) {
+                iconClass = toolInfo.iconClass;
+            }
+
+            var toolContainerClass = "fr-toolbase-toolcontainer";
+            if (toolInfo.toolContainerClass) {
+                toolContainerClass = toolInfo.toolContainerClass;
+            }
+
             if (toolInfo.toolType === toolTypes.button) {
-                var containerState = "fr-toolbase-state ";
-                if (toolInfo.toolState === false) {
-                    var containerState = "";
-                }
-                return "<div class='fr-toolbase-toolcontainer " + containerState + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
+                            "<div class='" + iconClass + " " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.input) {
@@ -1799,7 +1809,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='fr-toolbase-textcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -1810,10 +1820,8 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
                 var imageClass = "";
-                var iconClass = "fr-indent24x24";
                 if (toolInfo.imageClass) {
                     imageClass = toolInfo.imageClass;
-                    iconClass = "fr-icons24x24";
                 }
                 var indentation = "";
                 if (toolInfo.indent) {
@@ -1825,10 +1833,12 @@ $(function () {
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
                 }
-                var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                var html = "<div class='fr-toolbase-itemcontainer " + containerState + toolInfo.selectorClass + "'>" +
                             indentation +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
-                            text +
+                            "<div class='fr-toolbase-item-text-container'>" +
+                                "<div class='fr-toolbase-item-text'>" + text + "</div>" +
+                            "</div>" +
                             rightImageDiv +
                             "</div>";
                 return html;

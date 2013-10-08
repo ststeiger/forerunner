@@ -4,9 +4,6 @@ setlocal
 
 set basePath=%~dp0%
 
-set cssFilename=icons24x24.css
-set iconFilename=icons24x24.png
-
 set icongenExe=%basePath%bin\Debug\icongen.exe
 if exist %icongenExe% goto continue
 echo Error - You must build the Debug version of icongen before running this command file
@@ -29,10 +26,10 @@ if errorlevel 0 goto docopies
 exit /b 2
 
 :docopies
-echo Copying file: %cssFilename%
-copy %outPath%\%cssFilename% %copyCSSPath%\%cssFilename%
+echo Copying css files
+copy %outPath%\*.css %copyCSSPath%\
 echo.
 
-echo Copying file: %iconFilename%
-copy %outPath%\%iconFilename% %copyImagesPath%\%iconFilename%
+echo Copying composite png files
+copy %outPath%\*.png %copyImagesPath%\
 echo.

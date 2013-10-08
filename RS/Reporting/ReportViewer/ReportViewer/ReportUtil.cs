@@ -207,8 +207,12 @@ namespace Forerunner
             }
             else
             {
+
                 w.WriteMember("Type");
-                w.WriteString(e.GetType().ToString());
+                if (e.Message.Contains("ForerunnerLicense.LicenseException"))
+                    w.WriteString("LicenseException");
+                else
+                    w.WriteString(e.GetType().ToString());
                 w.WriteMember("TargetSite");
                 w.WriteString(e.TargetSite.ToString());
                 w.WriteMember("Source");
@@ -218,17 +222,23 @@ namespace Forerunner
                 string[] split = { "--->" };
                 string[] Messages = e.Message.Split(split,StringSplitOptions.None);
                 string message = "";
+                string lastMess = "";
+                string curMess = "";
                 foreach (string mes in Messages)
                 {
                     int start = mes.IndexOf(":") + 1;
                     int end = mes.IndexOf("  at", start ) - 1;
 
                     if (start <= 0)
-                        message += mes;
+                        curMess = mes;
                     else if (start > 0 && end > 0)
-                        message += mes.Substring(start, end - start);
+                        curMess = mes.Substring(start, end - start);
                     else
-                        message += mes.Substring(start);
+                        curMess = mes.Substring(start);
+                    
+                    if (curMess != lastMess)
+                        message += curMess;
+                    lastMess = curMess;
                 }               
                 w.WriteString(message);
                 w.WriteMember("DetailMessage");

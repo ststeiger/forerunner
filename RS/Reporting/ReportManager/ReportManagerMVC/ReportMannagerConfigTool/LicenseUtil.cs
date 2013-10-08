@@ -11,6 +11,37 @@ using System.Management;
 
 namespace ForerunnerLicense
 {
+    internal class LicenseException : ApplicationException
+    {
+        #region constants
+
+        internal const String failKey = "reason";
+
+        internal enum FailReason
+        {
+            Expired,
+            MachineMismatch,
+            NotActivated,
+            InvalidKey,
+            LicenseValidationError
+        };
+        #endregion constants
+
+        #region methods
+
+        internal static LicenseException Throw(LicenseException.FailReason reason,string message)
+        {
+            LicenseException e = new LicenseException(message);
+            e.Data.Add(LicenseException.failKey, reason);
+            throw e;
+        }
+
+        internal LicenseException() : base() { }
+        internal LicenseException(String msg) : base(msg) { }
+        internal LicenseException(String msg, Exception inner) : base(msg, inner) { }
+        #endregion  // methods
+    }
+
     internal static class LicenseUtil
     {
         private static string encryptPackage = @"<Encrypt><Key>{0}</Key><IV>{1}</IV><Value>{2}</Value></Encrypt>";
@@ -46,7 +77,7 @@ namespace ForerunnerLicense
 
             XMLReq.Read();
             if (XMLReq.Name != "Signed")
-                throw new Exception("Invalid Data");
+                LicenseException.Throw(LicenseException.FailReason.InvalidKey, "License is Not Signed");
             XMLReq.Read();
 
             while (!XMLReq.EOF)
@@ -69,7 +100,10 @@ namespace ForerunnerLicense
             if (rsa.VerifyData(dataBytes, CryptoConfig.MapNameToOID("SHA512"), signedBytes))
                 return Encoding.UTF8.GetString(dataBytes);
             else
-                throw new Exception("Invalid Signature");
+            {
+                LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Signature");
+                return null;
+            }
 
 
         }

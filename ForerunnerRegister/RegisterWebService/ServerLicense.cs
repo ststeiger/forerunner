@@ -273,7 +273,7 @@ namespace ForerunnerLicense
                 while (SQLReader.Read())
                 {
                     if (!SQLReader.IsDBNull(0))
-                        ld.MachineData = new MachineId(SQLReader.GetXmlReader(0));
+                        ld.MachineData = new MachineId(SQLReader.GetString(0));
                     if (!SQLReader.IsDBNull(1))
                         ld.LastActivation = SQLReader.GetDateTime(1);
                     ld.Quantity = SQLReader.GetInt32(2);
@@ -295,7 +295,7 @@ namespace ForerunnerLicense
                     if (ld.LicenseDuration < ts.TotalDays )
                         Response = String.Format(Response, "Fail", "200", "Subcription Expired");
                     else
-                        Response = String.Format(Response, "Success", "0", "");
+                        Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToString(),pkey));
                 }
             }
             catch 

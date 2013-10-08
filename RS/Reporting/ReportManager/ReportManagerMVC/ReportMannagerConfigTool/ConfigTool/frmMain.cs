@@ -10,7 +10,6 @@ namespace ReportMannagerConfigTool
     {
         private ConfigToolHelper configTool;
         private WinFormHelper winform;
-        private ClientLicense clientLic = new ClientLicense();
 
         public frmMain()
         {
@@ -22,8 +21,7 @@ namespace ReportMannagerConfigTool
 
                 LoadWebConfig();
                 SetReportManagerFolderPath();
-                clientLic.Load();
-                rtbCurLicense.Text = clientLic.GetLicenseString();
+                rtbCurLicense.Text = ClientLicense.GetLicenseString();
             }
             catch(Exception ex)
             {
@@ -273,7 +271,7 @@ namespace ReportMannagerConfigTool
             }
             try
             {
-               rtbCurLicense.Text =  clientLic.Activate(txtNewKey.Text);
+                rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
             }
             catch (Exception ex)
             {
@@ -307,7 +305,7 @@ namespace ReportMannagerConfigTool
         {
             try
             {
-                clientLic.DeActivate();
+                ClientLicense.DeActivate();
             }
             catch (Exception ex)
             {
@@ -317,7 +315,7 @@ namespace ReportMannagerConfigTool
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(clientLic.LicenseString);
+            Clipboard.SetText(ClientLicense.LicenseString);
         }
     }
 }

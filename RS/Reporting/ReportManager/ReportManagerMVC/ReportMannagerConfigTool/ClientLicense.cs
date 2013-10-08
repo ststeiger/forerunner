@@ -119,8 +119,8 @@ namespace ForerunnerLicense
         {
             if (MobV1Key != null)
             {
-                MobV1Key.DeleteValue(LicenseDataKey);
-                MobV1Key.DeleteValue(LicenseTimestampKey);                
+                MobV1Key.DeleteValue(LicenseDataKey,false);
+                MobV1Key.DeleteValue(LicenseTimestampKey, false);                
             }
             License = null;
             LicenseString = null;
@@ -133,7 +133,7 @@ namespace ForerunnerLicense
         public static string GetLicenseString()
         {
             if (License != null)
-                return License.LicenseKey;
+                return "License Key:\t\t" + License.LicenseKey + "\r\n" + "SKU:\t\t\t" + License.SKU + "\r\n" + "Number of Cores:\t" + License.Quantity.ToString() + "\r\n" + "Activation Date:\t\t" + License.FirstActivationDate.ToString();
             else
                 return "";
         }

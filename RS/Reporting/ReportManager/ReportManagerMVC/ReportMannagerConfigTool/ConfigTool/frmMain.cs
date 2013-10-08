@@ -316,7 +316,8 @@ namespace ReportMannagerConfigTool
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(ClientLicense.LicenseString);
+            if (ClientLicense.LicenseString !=null)
+                Clipboard.SetText(ClientLicense.LicenseString);
         }
     }
 }

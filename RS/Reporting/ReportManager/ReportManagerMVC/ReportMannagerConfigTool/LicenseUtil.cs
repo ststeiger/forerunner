@@ -23,7 +23,8 @@ namespace ForerunnerLicense
             MachineMismatch,
             NotActivated,
             InvalidKey,
-            LicenseValidationError
+            LicenseValidationError,
+            InsufficientCoreLicenses
         };
         #endregion constants
 
@@ -317,6 +318,7 @@ namespace ForerunnerLicense
         internal string biosId;
         internal string macId;
         internal string machineKey;
+        internal int numberOfCores;
 
         private string SerializeString = "<MachineData><MachineKey>{0}</MachineKey><MotherBoardId>{1}</MotherBoardId><HostName>{2}</HostName><BiosId>{3}</BiosId><MacId>{4}</MacId></MachineData>";
 
@@ -328,6 +330,7 @@ namespace ForerunnerLicense
             biosId = GetBIOSId();
             macId = GetMacId();
             machineKey = Guid.NewGuid().ToString();
+            numberOfCores = GetNumberOfCores();
         }
         internal MachineId(string MachineData)
         {
@@ -412,6 +415,15 @@ namespace ForerunnerLicense
                 return LicenseUtil.Encrypt(string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId),LicenseUtil.pubkey);
             else
                 return string.Format(SerializeString, machineKey, motherBoardId, hostName, biosId, macId);
+        }
+        private static int GetNumberOfCores()
+        {
+            int coreCount = 0;
+            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
+            {
+                coreCount += int.Parse(item["NumberOfCores"].ToString());
+            }
+            return coreCount;
         }
         private static String GetHostName()
         {

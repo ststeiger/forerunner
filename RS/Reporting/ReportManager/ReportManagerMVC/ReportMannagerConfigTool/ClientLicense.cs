@@ -31,7 +31,7 @@ namespace ForerunnerLicense
         static DateTime LastServerValidationTry;
         static DateTime LastInit;
         static int LastStatus=-1;
-        static MachineId ThisMachine = new MachineId();
+        internal static MachineId ThisMachine = new MachineId();
         static ClientLicense()
         {
             Init(false);
@@ -186,13 +186,13 @@ namespace ForerunnerLicense
 
             if (License == null)
                 LicenseException.Throw(LicenseException.FailReason.NotActivated, "No License Detected");
-            else
-            {
-                //Check Machine Key
-                if (IsMachineSame != 1)
-                    LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
 
-            }
+            //Check Machine Key
+            if (IsMachineSame != 1)
+                LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
+            
+            if (ThisMachine.numberOfCores > License.Quantity)
+                LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
             if (License.RequireValidation == 1)
             {                

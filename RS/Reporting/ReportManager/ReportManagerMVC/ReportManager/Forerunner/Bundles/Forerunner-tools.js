@@ -204,6 +204,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            iconClass: " ",
+            toolContainerClass: " ",
             imageClass: "fr-toolbar-search-icon",
             toolState: false,
             tooltip: locData.toolbar.find,
@@ -218,8 +220,10 @@ $(function () {
         btnExportXML: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportXML-id",
-            imageClass: "fr-icons24x24-exportXML",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportXML",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.xml,
             events: {
                 click: function (e) {
@@ -231,8 +235,10 @@ $(function () {
         btnExportCSV: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportCSV-id",
-            imageClass: "fr-icons24x24-exportCSV",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportCSV",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.csv,
             events: {
                 click: function (e) {
@@ -244,8 +250,10 @@ $(function () {
         btnExportPDF: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportPDF-id",
-            imageClass: "fr-icons24x24-exportPDF",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportPDF",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.pdf,
             events: {
                 click: function (e) {
@@ -257,8 +265,10 @@ $(function () {
         btnExportMHTML: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportMHTML-id",
-            imageClass: "fr-icons24x24-exportMHT",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportMHT",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.mhtml,
             events: {
                 click: function (e) {
@@ -270,8 +280,10 @@ $(function () {
         btnExportExcel: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportExcel-id",
-            imageClass: "fr-icons24x24-exportExcel",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportExcel",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.excel,
             events: {
                 click: function (e) {
@@ -283,8 +295,10 @@ $(function () {
         btnExportTiff: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportTiff-id",
-            imageClass: "fr-icons24x24-exportTIFF",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportTIFF",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.tiff,
             events: {
                 click: function (e) {
@@ -296,8 +310,10 @@ $(function () {
         btnExportWord: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-button-exportWord-id",
-            imageClass: "fr-icons24x24-exportWord",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportWord",
             sharedClass: "fr-toolbase-dropdown-item",
+            toolState: false,
             text: locData.exportType.word,
             events: {
                 click: function (e) {
@@ -780,10 +796,10 @@ $(function () {
                             parameters: parameterList,
                             },
                             function (data) {
-                            forerunner.dialog.showMessageBox("Saved");
+                                forerunner.dialog.showMessageBox(locData.messages.saveParamSuccess);
                             },
                             function () {
-                                forerunner.dialog.showMessageBox("Failed");
+                                forerunner.dialog.showMessageBox(locData.messages.saveParamFailed);
                             }
                         );
                     }

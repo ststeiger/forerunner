@@ -116,7 +116,7 @@ $(function () {
             });
 
             if (me._reportDesignError !== null)
-                me._reportDesignError += "Please contact report administrator for help";
+                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -847,7 +847,7 @@ $(function () {
                 if (me._reportDesignError === null) {
                     me._reportDesignError = "";
                 }
-                me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
             }
             //}
         },

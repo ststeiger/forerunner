@@ -4,7 +4,16 @@
         "completeFind": "Der gesamte Bericht wurde durchsucht",
         "keyNotFound": "Key nicht gefunden",
         "sessionExpired": "Ihre Sitzung ist abgelaufen",
-        "imageNotDisplay": "Bild kann nicht angezeigt werden"
+        "imageNotDisplay": "Bild kann nicht angezeigt werden",
+		"saveParamSuccess":"Gespeichert",
+		"saveParamFailed":"Gescheiterte",
+		"catalogsLoadFailed":"Konnte die Kataloge vom Server zu laden. Bitte versuchen Sie es erneut.",
+		"paramFieldEmpty":"Parameter fehlt Wert",
+		"contactAdmin":"Bitte kontaktieren Bericht Administrator um Hilfe",
+		"favoriteFailed":"Gescheiterte",
+		"docmapShowFailed":"Gescheiterte",
+		"prepareActionFailed":"Gescheiterte",
+		"bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht"
     },
     "errorTag": {
         "moreDetail": "Klicken Sie hier für mehr Details",

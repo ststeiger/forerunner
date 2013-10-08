@@ -4,7 +4,16 @@
         "completeFind": "全部报表查找完成",
         "keyNotFound": "没有查到该关键字",
         "sessionExpired": "会话过期",
-        "imageNotDisplay": "无法显示图片"
+        "imageNotDisplay": "无法显示图片",
+		"saveParamSuccess":"已保存",
+		"saveParamFailed":"失败",
+		"catalogsLoadFailed":"无法从服务器加载目录，请稍候再试.",
+		"paramFieldEmpty":"缺少参数值",
+		"contactAdmin":"请联系报表管理员寻求帮助",
+		"favoriteFailed":"失败",
+		"docmapShowFailed":"失败",
+		"prepareActionFailed":"失败",
+		"bookmarkNotFound":"在该报表中无法找到书签"
     },
     "errorTag": {
         "moreDetail": "点击查看更多信息",

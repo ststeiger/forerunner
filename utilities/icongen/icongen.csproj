@@ -81,7 +81,6 @@
     <Content Include="images\recent.png" />
     <Content Include="images\Refresh.png" />
     <Content Include="images\SaveParameters.png" />
-    <Content Include="images\Search.png" />
     <Content Include="images\TIF.png" />
     <Content Include="images\Word.png" />
     <Content Include="images\XML.png" />

@@ -439,7 +439,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -629,7 +629,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -734,7 +734,7 @@ $(function () {
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
                             // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox("Cannot find the bookmark in the report");
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
                         }
                     }
                 },
@@ -1782,13 +1782,23 @@ $(function () {
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
+            var containerState = "fr-toolbase-state ";
+            if (toolInfo.toolState === false) {
+                containerState = "";
+            }
+            var iconClass = "fr-icons24x24";
+            if (toolInfo.iconClass) {
+                iconClass = toolInfo.iconClass;
+            }
+
+            var toolContainerClass = "fr-toolbase-toolcontainer";
+            if (toolInfo.toolContainerClass) {
+                toolContainerClass = toolInfo.toolContainerClass;
+            }
+
             if (toolInfo.toolType === toolTypes.button) {
-                var containerState = "fr-toolbase-state ";
-                if (toolInfo.toolState === false) {
-                    var containerState = "";
-                }
-                return "<div class='fr-toolbase-toolcontainer " + containerState + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
+                            "<div class='" + iconClass + " " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.input) {
@@ -1799,7 +1809,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='fr-toolbase-textcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -1810,10 +1820,8 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
                 var imageClass = "";
-                var iconClass = "fr-indent24x24";
                 if (toolInfo.imageClass) {
                     imageClass = toolInfo.imageClass;
-                    iconClass = "fr-icons24x24";
                 }
                 var indentation = "";
                 if (toolInfo.indent) {
@@ -1825,10 +1833,12 @@ $(function () {
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
                 }
-                var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                var html = "<div class='fr-toolbase-itemcontainer " + containerState + toolInfo.selectorClass + "'>" +
                             indentation +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
-                            text +
+                            "<div class='fr-toolbase-item-text-container'>" +
+                                "<div class='fr-toolbase-item-text'>" + text + "</div>" +
+                            "</div>" +
                             rightImageDiv +
                             "</div>";
                 return html;
@@ -2385,7 +2395,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -2559,7 +2569,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
                 }
             });
         },
@@ -4256,7 +4266,7 @@ $(function () {
             });
 
             if (me._reportDesignError !== null)
-                me._reportDesignError += "Please contact report administrator for help";
+                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -4987,7 +4997,7 @@ $(function () {
                 if (me._reportDesignError === null) {
                     me._reportDesignError = "";
                 }
-                me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
             }
             //}
         },
@@ -5997,7 +6007,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },
@@ -6021,7 +6031,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },

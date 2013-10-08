@@ -4,7 +4,16 @@
         "completeFind": "レポート全体が検索されています",
         "keyNotFound": "キーが見つからない",
         "sessionExpired": "セッションが期限切れになった",
-        "imageNotDisplay": "画像を表示することができません"
+        "imageNotDisplay": "画像を表示することができません",
+		"saveParamSuccess":"保存",
+		"saveParamFailed":"失敗した",
+		"catalogsLoadFailed":"サーバーからのカタログのロードに失敗しました。もう一度やり直してください。",
+		"paramFieldEmpty":"パラメータには値がありません",
+		"contactAdmin":"ヘルプのレポート管理者に連絡してください",
+		"favoriteFailed":"失敗した",
+		"docmapShowFailed":"失敗した",
+		"prepareActionFailed":"失敗した",
+		"bookmarkNotFound":"レポートにブックマークを見つけることができません"
     },
     "errorTag": {
         "moreDetail": "詳細はクリック",

@@ -6,7 +6,6 @@
   border-radius: 2px;
   display:inline-block;
   text-align:center;
-  line-height:36px;
   color: white;
 }
 .fr-toolbase-textcontainer {
@@ -16,23 +15,28 @@
   margin:1px;
   display:inline-block;
   text-align:center;
-  line-height:36px;
   color: white;
 }
 .fr-toolbase-groupcontainer {
   position: relative;
   display:inline-block;
-  vertical-align: top;
-  line-height:36px;
 }
 .fr-toolbase-itemcontainer {
   border-top-width:1px;
   border-top-style:groove;
   border-top-color: darkgray;
   vertical-align: top;
-  line-height:36px;
   color: white;
   display:block;
+}
+.fr-toolbase-item-text-container {
+  margin: 5px;
+  display: inline-block;
+}
+.fr-toolbase-item-text {
+  height: 31px;
+  display: table-cell;
+  vertical-align: middle;
 }
 .fr-toolbase-disabled {
   opacity:0.3;
@@ -59,17 +63,16 @@
 .fr-toolbase-dropdown
 {
   padding:1px;
-  background-color:#FAFAFA;
+  background-color: #354468;
   border:1px solid darkgray;
 }
 .fr-toolbase-dropdown-item {
   display:block;
-  color:#3366CC;
-  text-align:left;
   border-top-width:1px;
-  border-top-style:groove;
-  border-top-color: darkgray;
-  line-height: 24px;
+  border-top-color: lightblue;
+  font-size: 13pt;
+  color: #ffffff;
+  text-align:left;
 }
 .fr-toolbase-state {
   background-color: transparent;
@@ -96,5 +99,8 @@
     background: -ms-linear-gradient(top,  #496b94 0%,#354469 100%); /* IE10+ */
     background: linear-gradient(to bottom,  #496b94 0%,#354469 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */
+  }
+  .fr-toolbase-dropdown-item:hover {
+    background-color: #316198;
   }
 }  /* @media */

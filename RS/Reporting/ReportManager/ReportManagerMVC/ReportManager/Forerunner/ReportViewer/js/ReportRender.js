@@ -463,11 +463,13 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -559,10 +561,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
                         }
                         else {
                             $TextRun.html("&nbsp");

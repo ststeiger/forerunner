@@ -438,7 +438,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -539,8 +539,6 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     me.refreshParameters(action.savedParams, true);
-
-                    me.paramLoaded = true;
                 }
                 else {
                     me._loadParameters(action.CurrentPage);
@@ -630,7 +628,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -731,7 +729,12 @@ $(function () {
                         me.lock = 0;
                     } else {
                         me.backupCurPage();
-                        me._loadPage(data.NewPage, false, bookmarkID);
+                        if (data.NewPage !== undefined && data.NewPage > 0) {
+                            me._loadPage(data.NewPage, false, bookmarkID);
+                        } else {
+                            // BUGBUG:  It looks like a lot of the error messages are not yet localized.
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
+                        }
                     }
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1078,7 +1081,7 @@ $(function () {
         },
         _paramsToString: function(a) {
             var tempJson = "[";
-            for (i = 0; i < a.length; i++) {
+            for (var i = 0; i < a.length; i++) {
                 if (i !== a.length - 1) {
                     tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
                 }
@@ -1149,6 +1152,7 @@ $(function () {
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            me.paramLoaded = true;
                         }
                     }
                 });
@@ -1361,8 +1365,9 @@ $(function () {
         _navToLink: function (elementID) {
             var me = this;
             var navTo = me.element.find("[name='" + elementID + "']")[0];
-
-            $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+            if (navTo !== undefined) {
+                $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+            }
         },
         _stopDefaultEvent: function (e) {
             //IE

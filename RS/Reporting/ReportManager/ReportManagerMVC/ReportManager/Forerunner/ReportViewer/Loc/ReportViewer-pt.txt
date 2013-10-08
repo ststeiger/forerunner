@@ -4,7 +4,16 @@
         "completeFind": "todo o relatório já foi revistado",
         "keyNotFound": "Chave não encontrada",
         "sessionExpired": "sua sessão expirou",
-        "imageNotDisplay": "Não é possível exibir a imagem"
+        "imageNotDisplay": "Não é possível exibir a imagem",
+		"saveParamSuccess":"Salvo",
+		"saveParamFailed":"Fracassado",
+		"catalogsLoadFailed":"Falha para carregar os catálogos do servidor. Por favor, tente novamente.",
+		"paramFieldEmpty":"parâmetro está faltando um valor",
+		"contactAdmin":"Por favor, contate o administrador relatório para obter ajuda",
+		"favoriteFailed":"Fracassado",
+		"docmapShowFailed":"Fracassado",
+		"prepareActionFailed":"Fracassado",
+		"bookmarkNotFound":"Não foi possível encontrar o marcador no relatório"
     },
     "errorTag": {
         "moreDetail": "Clique para obter mais detalhes",

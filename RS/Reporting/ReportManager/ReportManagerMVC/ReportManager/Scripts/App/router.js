@@ -58,7 +58,7 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 var encodedPath = String(path).replace(/\//g, "%2f");
                 var targetUrl = "#" + action + "/" + encodedPath;
-                g_App.router.navigate(targetUrl, { trigger: true, replace: false });
+                g_App.router.navigate(targetUrl, { trigger: !forerunner.device.isFirefox(), replace: false });
             }
         },
 

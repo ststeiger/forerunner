@@ -439,7 +439,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -540,8 +540,6 @@ $(function () {
 
                 if (action.paramLoaded && action.savedParams) {
                     me.refreshParameters(action.savedParams, true);
-
-                    me.paramLoaded = true;
                 }
                 else {
                     me._loadParameters(action.CurrentPage);
@@ -631,7 +629,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -732,7 +730,12 @@ $(function () {
                         me.lock = 0;
                     } else {
                         me.backupCurPage();
-                        me._loadPage(data.NewPage, false, bookmarkID);
+                        if (data.NewPage !== undefined && data.NewPage > 0) {
+                            me._loadPage(data.NewPage, false, bookmarkID);
+                        } else {
+                            // BUGBUG:  It looks like a lot of the error messages are not yet localized.
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
+                        }
                     }
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1079,7 +1082,7 @@ $(function () {
         },
         _paramsToString: function(a) {
             var tempJson = "[";
-            for (i = 0; i < a.length; i++) {
+            for (var i = 0; i < a.length; i++) {
                 if (i !== a.length - 1) {
                     tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
                 }
@@ -1150,6 +1153,7 @@ $(function () {
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            me.paramLoaded = true;
                         }
                     }
                 });
@@ -1362,8 +1366,9 @@ $(function () {
         _navToLink: function (elementID) {
             var me = this;
             var navTo = me.element.find("[name='" + elementID + "']")[0];
-
-            $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+            if (navTo !== undefined) {
+                $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+            }
         },
         _stopDefaultEvent: function (e) {
             //IE
@@ -1777,13 +1782,23 @@ $(function () {
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
+            var containerState = "fr-toolbase-state ";
+            if (toolInfo.toolState === false) {
+                containerState = "";
+            }
+            var iconClass = "fr-icons24x24";
+            if (toolInfo.iconClass) {
+                iconClass = toolInfo.iconClass;
+            }
+
+            var toolContainerClass = "fr-toolbase-toolcontainer";
+            if (toolInfo.toolContainerClass) {
+                toolContainerClass = toolInfo.toolContainerClass;
+            }
+
             if (toolInfo.toolType === toolTypes.button) {
-                var containerState = "fr-toolbase-state ";
-                if (toolInfo.toolState === false) {
-                    var containerState = "";
-                }
-                return "<div class='fr-toolbase-toolcontainer " + containerState + toolInfo.selectorClass + "'>" +
-                            "<div class='fr-icons24x24 " + toolInfo.imageClass + "' />" +
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
+                            "<div class='" + iconClass + " " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
             else if (toolInfo.toolType === toolTypes.input) {
@@ -1794,7 +1809,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='fr-toolbase-textcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -1805,10 +1820,8 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
                 var imageClass = "";
-                var iconClass = "fr-indent24x24";
                 if (toolInfo.imageClass) {
                     imageClass = toolInfo.imageClass;
-                    iconClass = "fr-icons24x24";
                 }
                 var indentation = "";
                 if (toolInfo.indent) {
@@ -1820,10 +1833,12 @@ $(function () {
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
                 }
-                var html = "<div class='fr-toolbase-itemcontainer fr-toolbase-state " + toolInfo.selectorClass + "'>" +
+                var html = "<div class='fr-toolbase-itemcontainer " + containerState + toolInfo.selectorClass + "'>" +
                             indentation +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
-                            text +
+                            "<div class='fr-toolbase-item-text-container'>" +
+                                "<div class='fr-toolbase-item-text'>" + text + "</div>" +
+                            "</div>" +
                             rightImageDiv +
                             "</div>";
                 return html;
@@ -2380,7 +2395,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -2554,7 +2569,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
                 }
             });
         },
@@ -3041,11 +3056,13 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -3137,10 +3154,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
                         }
                         else {
                             $TextRun.html("&nbsp");
@@ -4251,7 +4268,7 @@ $(function () {
             });
 
             if (me._reportDesignError !== null)
-                me._reportDesignError += "Please contact report administrator for help";
+                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -4982,7 +4999,7 @@ $(function () {
                 if (me._reportDesignError === null) {
                     me._reportDesignError = "";
                 }
-                me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
             }
             //}
         },
@@ -5992,7 +6009,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },
@@ -6016,7 +6033,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },

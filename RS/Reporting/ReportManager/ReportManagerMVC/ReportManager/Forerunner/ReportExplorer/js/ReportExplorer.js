@@ -8,7 +8,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -182,7 +182,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
                 }
             });
         },

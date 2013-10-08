@@ -4,7 +4,16 @@
         "completeFind": "Întreaga Raportul a fost căutat",
         "keyNotFound": "Cheia nu a fost găsit ",
         "sessionExpired": "Sesiunea a expirat",
-        "imageNotDisplay": "Nu se poate afișa imaginea"
+        "imageNotDisplay": "Nu se poate afișa imaginea",
+		"saveParamSuccess":"Salvate",
+		"saveParamFailed":"A eșuat",
+		"catalogsLoadFailed":"Nu a reușit să se încarce cataloagele de pe server. Vă rugăm să încercați din nou.",
+		"paramFieldEmpty":"parametru lipsește o valoare",
+		"contactAdmin":"Vă rugăm să contactați administratorul raport pentru ajutor",
+		"favoriteFailed":"A eșuat",
+		"docmapShowFailed":"A eșuat",
+		"prepareActionFailed":"A eșuat",
+		"bookmarkNotFound":"Nu pot găsi marcajul în raport"
     },
     "errorTag": {
         "moreDetail": "Click pentru mai multe detalii",

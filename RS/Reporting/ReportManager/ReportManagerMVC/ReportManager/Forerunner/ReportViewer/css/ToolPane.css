@@ -87,6 +87,7 @@
 .fr-item-find-composite-group {
   display: inline-block;
   position: relative;
+  padding-left: 12px;
 }
 .fr-item-find {
   position: absolute;

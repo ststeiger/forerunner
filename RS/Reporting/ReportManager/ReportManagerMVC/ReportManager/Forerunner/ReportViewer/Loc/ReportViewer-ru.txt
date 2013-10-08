@@ -4,7 +4,16 @@
         "completeFind": "Поиск завершён"
         "keyNotFound": "Ключевое слово не найдено",
         "sessionExpired": "Время вашей сессии истекло",
-        "imageNotDisplay": "Изображение недоступно"
+        "imageNotDisplay": "Изображение недоступно",
+		"saveParamSuccess":"Сохраненные",
+		"saveParamFailed":"Не удалось",
+		"catalogsLoadFailed":"Не удалось загрузить каталоги с сервера. Пожалуйста, попробуйте еще раз.",
+		"paramFieldEmpty":"параметр отсутствует значение",
+		"contactAdmin":"Пожалуйста, свяжитесь с отчета за помощью к администратору",
+		"favoriteFailed":"Не удалось",
+		"docmapShowFailed":"Не удалось",
+		"prepareActionFailed":"Не удалось",
+		"bookmarkNotFound":"Не можете найти закладку в докладе"
     },
     "errorTag": {
         "moreDetail": "Подробнее"

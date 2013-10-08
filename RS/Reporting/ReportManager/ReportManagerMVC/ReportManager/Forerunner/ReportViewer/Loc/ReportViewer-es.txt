@@ -4,7 +4,16 @@
         "completeFind": "El informe completo ha sido registrada",
         "keyNotFound": "La llave no se encuentra",
         "sessionExpired": "Su sesión ha expirado",
-        "imageNotDisplay": "No se puede mostrar la imagene"
+        "imageNotDisplay": "No se puede mostrar la imagene",
+		"saveParamSuccess":"Guardado",
+		"saveParamFailed":"fracasado",
+		"catalogsLoadFailed":"Error al cargar los catálogos del servidor. Por favor, inténtelo de nuevo.",
+		"paramFieldEmpty":"parámetro no se encuentra un valor",
+		"contactAdmin":"Póngase en contacto con administrador de informes para obtener ayuda",
+		"favoriteFailed":"fracasado",
+		"docmapShowFailed":"fracasado",
+		"prepareActionFailed":"fracasado",
+		"bookmarkNotFound":"¿No encuentra el marcador en el informe"
     },
     "errorTag": {
         "moreDetail": "Haga clic para obtener más detalles",

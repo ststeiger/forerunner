@@ -4,7 +4,16 @@
         "completeFind": "Hela rapporten har sökts igenom",
         "keyNotFound": "Tangenten hittades inte",
         "sessionExpired": "Din session har gått ut",
-        "imageNotDisplay": "Bilden kan inte visas"
+        "imageNotDisplay": "Bilden kan inte visas",
+		"saveParamSuccess":"Sparad",
+		"saveParamFailed":"Misslyckades",
+		"catalogsLoadFailed":"Misslyckades med att läsa katalogerna från servern. Vänligen försök igen.",
+		"paramFieldEmpty":"parameter saknas ett värde",
+		"contactAdmin":"Vänligen kontakta rapporten om hjälp",
+		"favoriteFailed":"Misslyckades",
+		"docmapShowFailed":"Misslyckades",
+		"prepareActionFailed":"Misslyckades",
+		"bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
     },
     "errorTag": {
         "moreDetail": "Klicka för mer information",

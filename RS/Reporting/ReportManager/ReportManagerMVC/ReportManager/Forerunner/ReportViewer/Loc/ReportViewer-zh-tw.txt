@@ -4,7 +4,16 @@
         "completeFind": "全個報告尋找完畢",
         "keyNotFound": "沒有尋找到關鍵字",
         "sessionExpired": "會話過期",
-        "imageNotDisplay": "無法顯示圖片"
+        "imageNotDisplay": "無法顯示圖片",
+		"saveParamSuccess":"已保存",
+		"saveParamFailed":"失敗",
+		"catalogsLoadFailed":"無法從服務器加載目錄，請稍後再試。",
+		"paramFieldEmpty":"缺少參數值",
+		"contactAdmin":"請聯繫報表管理員尋求幫助",
+		"favoriteFailed":"失敗",
+		"docmapShowFailed":"失敗",
+		"prepareActionFailed":"失敗",
+		"bookmarkNotFound":"在該報表中無法找到書籤"
     },
     "errorTag": {
         "moreDetail": "點擊查看更多訊息",

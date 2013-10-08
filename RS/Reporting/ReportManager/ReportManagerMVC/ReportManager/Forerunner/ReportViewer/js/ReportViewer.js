@@ -438,7 +438,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -628,7 +628,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -733,7 +733,7 @@ $(function () {
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
                             // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox("Cannot find the bookmark in the report");
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
                         }
                     }
                 },

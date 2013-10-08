@@ -439,7 +439,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -629,7 +629,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox("Fail"); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -734,7 +734,7 @@ $(function () {
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
                             // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox("Cannot find the bookmark in the report");
+                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
                         }
                     }
                 },
@@ -2385,7 +2385,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -2559,7 +2559,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox("Failed to load the catalogs from the server.  Please try again.");
+                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
                 }
             });
         },
@@ -4256,7 +4256,7 @@ $(function () {
             });
 
             if (me._reportDesignError !== null)
-                me._reportDesignError += "Please contact report administrator for help";
+                me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me._resetLabelWidth();
             me.resetValidateMessage();
@@ -4987,7 +4987,7 @@ $(function () {
                 if (me._reportDesignError === null) {
                     me._reportDesignError = "";
                 }
-                me._reportDesignError += "The '" + param.Name + "' parameter is missing a value </br>";
+                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
             }
             //}
         },
@@ -5997,7 +5997,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },
@@ -6021,7 +6021,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox("Failed");
+                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
                 }
             );
         },

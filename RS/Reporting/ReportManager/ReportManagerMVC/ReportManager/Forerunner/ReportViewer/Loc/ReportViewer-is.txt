@@ -4,7 +4,16 @@
         "completeFind": "Öllu skýrslu hefur verið leitað",
         "keyNotFound": "Lykill fannst ekki",
         "sessionExpired": "Seta þín hefur runnið",
-        "imageNotDisplay": "Má ekki birta mynd"
+        "imageNotDisplay": "Má ekki birta mynd",
+		"saveParamSuccess":"Saved",
+		"saveParamFailed":"Theip ar",
+		"catalogsLoadFailed":"Theip ar luchtú na catalóga ón bhfreastalaí. Bain triail as arís.",
+		"paramFieldEmpty":"Tá lúibín gan luach",
+		"contactAdmin":"Téigh i dteagmháil le riarthóir tuarascáil chun cabhair a fháil",
+		"favoriteFailed":"Theip ar",
+		"docmapShowFailed":"Theip ar",
+		"prepareActionFailed":"Theip ar",
+		"bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil"
     },
     "errorTag": {
         "moreDetail": "Smelltu fyrir frekari upplýsingar",

@@ -4,7 +4,16 @@
         "completeFind": "L'intero rapporto è stato cercato",
         "keyNotFound": "Chiave non trovata",
         "sessionExpired": "La sessione è scaduta",
-        "imageNotDisplay": "Impossibile visualizzare l'immagine"
+        "imageNotDisplay": "Impossibile visualizzare l'immagine",
+		"saveParamSuccess":"Salvato",
+		"saveParamFailed":"Impossibile",
+		"catalogsLoadFailed":"Impossibile caricare i cataloghi dal server. Riprova.",
+		"paramFieldEmpty":"parametro non è presente un valore",
+		"contactAdmin":"Si prega di contattare l'amministratore della relazione di aiuto",
+		"favoriteFailed":"Impossibile",
+		"docmapShowFailed":"Impossibile",
+		"prepareActionFailed":"Impossibile",
+		"bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione"
     },
     "errorTag": {
         "moreDetail": "Clicca per maggiori dettagli",

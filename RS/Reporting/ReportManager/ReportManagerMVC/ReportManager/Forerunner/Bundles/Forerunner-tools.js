@@ -780,10 +780,10 @@ $(function () {
                             parameters: parameterList,
                             },
                             function (data) {
-                            forerunner.dialog.showMessageBox("Saved");
+                                forerunner.dialog.showMessageBox(locData.messages.saveParamSuccess);
                             },
                             function () {
-                                forerunner.dialog.showMessageBox("Failed");
+                                forerunner.dialog.showMessageBox(locData.messages.saveParamFailed);
                             }
                         );
                     }

@@ -4,7 +4,16 @@
         "completeFind": "Tá an tuarascáil iomlán a chuardach",
         "keyNotFound": "Eochair gan aimsiú",
         "sessionExpired": "Tá do seisiún in éag",
-        "imageNotDisplay": "Ní féidir íomhá a thaispeáint"
+        "imageNotDisplay": "Ní féidir íomhá a thaispeáint",
+		"saveParamSuccess":"Salvo",
+		"saveParamFailed":"Fracasado",
+		"catalogsLoadFailed":"Falla para cargar os catálogos do servidor. Por favor, ténteo de novo.",
+		"paramFieldEmpty":"parámetro falta un valor",
+		"contactAdmin":"Por favor, contacta co administrador informe para obter axuda",
+		"favoriteFailed":"Fracasado",
+		"docmapShowFailed":"Fracasado",
+		"prepareActionFailed":"Fracasado",
+		"bookmarkNotFound":"Non devolveu o marcador no informe"
     },
     "errorTag": {
         "moreDetail": "Cliceáil chun níos mó sonraí",

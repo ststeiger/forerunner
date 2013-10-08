@@ -625,7 +625,9 @@ $(function () {
         itemFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-item-find",
-            imageClass: "fr-icons24x24-search",
+            iconClass: " ",
+            toolContainerClass: " ",
+            imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
             events: {
                 click: function (e) {

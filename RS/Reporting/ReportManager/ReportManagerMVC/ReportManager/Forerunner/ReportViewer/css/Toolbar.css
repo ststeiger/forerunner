@@ -71,11 +71,6 @@
   line-height:36px;
   text-align:center;
 }
-..fr-toolbar-findnext-button {
-  color: white;
-  line-height:36px;
-  text-align:center;  
-}
 .fr-toolbar-find-button {
   position: absolute;
   right: 4px;

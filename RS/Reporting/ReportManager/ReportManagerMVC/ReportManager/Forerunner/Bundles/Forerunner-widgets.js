@@ -1900,6 +1900,9 @@ $(function () {
 
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.toolbar = forerunner.ssr.tools.toolbar || {};
+forerunner.ssr.tools.groups = forerunner.ssr.tools.groups || {};
 
 $(function () {
     // Useful namespaces

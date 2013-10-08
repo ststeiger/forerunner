@@ -527,7 +527,7 @@ $(function () {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
                         $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
-                        $ParagraphItem = new $("<LI />");                        
+                        $ParagraphItem = new $("<LI />");
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
@@ -586,7 +586,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    $ParagraphList.attr("style","width:100%;height:100%;");
+                    //$ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }

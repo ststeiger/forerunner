@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Windows.Forms;
+using ForerunnerLicense;
 
 namespace ReportMannagerConfigTool
 {
@@ -20,6 +21,7 @@ namespace ReportMannagerConfigTool
 
                 LoadWebConfig();
                 SetReportManagerFolderPath();
+                rtbCurLicense.Text = ClientLicense.GetLicenseString();
             }
             catch(Exception ex)
             {
@@ -262,7 +264,19 @@ namespace ReportMannagerConfigTool
 
         private void btnApplyLicense_Click(object sender, EventArgs e)
         {
-
+            if (txtNewKey.Text == "")
+            {
+                 MessageBox.Show("LicenseKey Required");
+                return;
+            }
+            try
+            {
+                rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)
@@ -275,6 +289,35 @@ namespace ReportMannagerConfigTool
         {
             frmProductInfo frm = new frmProductInfo();
             DialogResult result = frm.ShowDialog();
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnDeActivate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ClientLicense.DeActivate();
+                rtbCurLicense.Text = "";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void btnCopy_Click(object sender, EventArgs e)
+        {
+            if (ClientLicense.LicenseString !=null)
+                Clipboard.SetText(ClientLicense.LicenseString);
         }
     }
 }

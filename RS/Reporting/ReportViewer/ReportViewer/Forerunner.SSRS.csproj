@@ -58,11 +58,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\ClientLicense.cs">
+      <Link>ClientLicense.cs</Link>
+    </Compile>
+    <Compile Include="..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\LicenseUtil.cs">
+      <Link>LicenseUtil.cs</Link>
+    </Compile>
     <Compile Include="AuthenticationMode.cs" />
     <Compile Include="CurrentUserImpersonator.cs" />
     <Compile Include="Impersonator.cs" />
-    <Compile Include="License.cs" />
-    <Compile Include="MachineId.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -84,8 +88,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportWriter.cs" />
     <Compile Include="ThreadContext.cs" />
-    <Compile Include="Thumbnail.cs" />
-    <Compile Include="TimeBomb.cs" />
+    <Compile Include="Thumbnail.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\Logging\Logger.cs" />
     <Compile Include="VersionTemplate.cs">
       <AutoGen>True</AutoGen>
@@ -133,17 +138,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\build.txt">
-        <Link>build.txt</Link>
+      <Link>build.txt</Link>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	   Other similar extension points exist, see Microsoft.Common.targets.-->
   <Target Name="BeforeBuild">
-	  <Exec
-		  Command="&quot;$(ProgramFiles)\Common Files\Microsoft Shared\TextTemplating\11.0\TextTransform.exe&quot; -out VersionTemplate.cs ..\..\..\..\VersionTemplate.tt"
-		  Outputs="VersionTemplate.cs"
-		  />
+    <Exec Command="&quot;$(ProgramFiles)\Common Files\Microsoft Shared\TextTemplating\11.0\TextTransform.exe&quot; -out VersionTemplate.cs ..\..\..\..\VersionTemplate.tt" Outputs="VersionTemplate.cs" />
   </Target>
   <Target Name="AfterBuild">
   </Target>

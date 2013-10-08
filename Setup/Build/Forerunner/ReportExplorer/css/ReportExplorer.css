@@ -45,7 +45,7 @@
 }
 
 .fr-explorer-item-title {
-    text-align: left;    
+    text-align: center;    
     font-size:  13pt;
     font-family:Helvetica Neue;
     color: #212729;
@@ -136,13 +136,11 @@
 
 
 
-.fr-rm-button-home {
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup {
     float: right;
 }
 
 .fr-rm-button-fav {
-    margin-left: 20px;
-    margin-right: 20px;
 }
 
 

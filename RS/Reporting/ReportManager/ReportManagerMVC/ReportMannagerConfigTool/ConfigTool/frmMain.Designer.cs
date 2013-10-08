@@ -70,12 +70,13 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabActivation = new System.Windows.Forms.TabPage();
-            this.txtMachineKey = new System.Windows.Forms.TextBox();
+            this.btnCopy = new System.Windows.Forms.Button();
+            this.btnDeActivate = new System.Windows.Forms.Button();
+            this.rtbCurLicense = new System.Windows.Forms.RichTextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnProductInfo = new System.Windows.Forms.Button();
             this.btnManualActivation = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
@@ -372,36 +373,43 @@
             // 
             // tabActivation
             // 
-            this.tabActivation.Controls.Add(this.txtMachineKey);
+            this.tabActivation.Controls.Add(this.btnCopy);
+            this.tabActivation.Controls.Add(this.btnDeActivate);
+            this.tabActivation.Controls.Add(this.rtbCurLicense);
             this.tabActivation.Controls.Add(this.label4);
-            this.tabActivation.Controls.Add(this.btnProductInfo);
             this.tabActivation.Controls.Add(this.btnManualActivation);
             this.tabActivation.Controls.Add(this.label3);
-            this.tabActivation.Controls.Add(this.textBox2);
+            this.tabActivation.Controls.Add(this.txtNewKey);
             this.tabActivation.Controls.Add(this.btnGetActivationKey);
             this.tabActivation.Controls.Add(this.btnActivate);
             resources.ApplyResources(this.tabActivation, "tabActivation");
             this.tabActivation.Name = "tabActivation";
             this.tabActivation.UseVisualStyleBackColor = true;
             // 
-            // txtMachineKey
+            // btnCopy
             // 
-            this.txtMachineKey.CausesValidation = false;
-            resources.ApplyResources(this.txtMachineKey, "txtMachineKey");
-            this.txtMachineKey.Name = "txtMachineKey";
-            this.txtMachineKey.ReadOnly = true;
+            resources.ApplyResources(this.btnCopy, "btnCopy");
+            this.btnCopy.Name = "btnCopy";
+            this.btnCopy.UseVisualStyleBackColor = true;
+            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            // 
+            // btnDeActivate
+            // 
+            resources.ApplyResources(this.btnDeActivate, "btnDeActivate");
+            this.btnDeActivate.Name = "btnDeActivate";
+            this.btnDeActivate.UseVisualStyleBackColor = true;
+            this.btnDeActivate.Click += new System.EventHandler(this.btnDeActivate_Click);
+            // 
+            // rtbCurLicense
+            // 
+            resources.ApplyResources(this.rtbCurLicense, "rtbCurLicense");
+            this.rtbCurLicense.Name = "rtbCurLicense";
+            this.rtbCurLicense.ReadOnly = true;
             // 
             // label4
             // 
             resources.ApplyResources(this.label4, "label4");
             this.label4.Name = "label4";
-            // 
-            // btnProductInfo
-            // 
-            resources.ApplyResources(this.btnProductInfo, "btnProductInfo");
-            this.btnProductInfo.Name = "btnProductInfo";
-            this.btnProductInfo.UseVisualStyleBackColor = true;
-            this.btnProductInfo.Click += new System.EventHandler(this.btnProductInfo_Click);
             // 
             // btnManualActivation
             // 
@@ -414,11 +422,12 @@
             // 
             resources.ApplyResources(this.label3, "label3");
             this.label3.Name = "label3";
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
-            // textBox2
+            // txtNewKey
             // 
-            resources.ApplyResources(this.textBox2, "textBox2");
-            this.textBox2.Name = "textBox2";
+            resources.ApplyResources(this.txtNewKey, "txtNewKey");
+            this.txtNewKey.Name = "txtNewKey";
             // 
             // btnGetActivationKey
             // 
@@ -506,10 +515,11 @@
         private System.Windows.Forms.Button btnGetActivationKey;
         private System.Windows.Forms.Button btnManualActivation;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button btnProductInfo;
-        private System.Windows.Forms.TextBox txtMachineKey;
+        private System.Windows.Forms.TextBox txtNewKey;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.RichTextBox rtbCurLicense;
+        private System.Windows.Forms.Button btnCopy;
+        private System.Windows.Forms.Button btnDeActivate;
     }
 }
 

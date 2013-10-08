@@ -332,7 +332,7 @@ $(function () {
                     }
                 }
             }
-            return this._virtualRootBase;
+            return this._virtualRootBase ===  null ? "" : this._virtualRootBase;
         },
         /**
          * Top level folder for the forerunner SDK files. Used to construct the path to the localization files.

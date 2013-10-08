@@ -22,6 +22,7 @@
 }
 .fr-toolpane .fr-toolbase-item-text {
   height: 24px;
+  padding-left: 7px;
   display: table-cell;
   vertical-align: middle;
   font-size: 13pt;
@@ -71,7 +72,7 @@
   height: 22px;
   background-color: white;
   border: 1px solid #424242;
-  box-shadow: 0px 0px 10px #545454 inset;
+  box-shadow: 0px 0px 7px #545454 inset;
 }
 .fr-item-textbox-reportpage {
   width: 32px;

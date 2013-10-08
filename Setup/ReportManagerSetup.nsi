@@ -51,7 +51,7 @@
 RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "ForerunnerMobilizerV1Setup.exe"
+OutFile "ForerunnerMobilizerSetup.exe"
 InstallDir "$PROGRAMFILES\Forerunner Mobilizer"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show

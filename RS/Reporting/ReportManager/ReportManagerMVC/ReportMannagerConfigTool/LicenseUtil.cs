@@ -287,6 +287,9 @@ namespace ForerunnerLicense
                     case "ActivationDate":
                         FirstActivationDate = DateTime.Parse(XMLReq.ReadElementContentAsString());
                         break;
+                    case "LastActivationDate":
+                        LastActivation = DateTime.Parse(XMLReq.ReadElementContentAsString());
+                        break;
                     case "IsSubscription":
                         IsSubscription = XMLReq.ReadElementContentAsInt();
                         break;

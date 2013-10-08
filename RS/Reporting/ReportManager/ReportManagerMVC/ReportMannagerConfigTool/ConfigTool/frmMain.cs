@@ -306,6 +306,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 ClientLicense.DeActivate();
+                rtbCurLicense.Text = "";
             }
             catch (Exception ex)
             {

@@ -1782,19 +1782,12 @@ $(function () {
         },
         _getToolHtml: function (toolInfo) {
             var me = this;
-            var containerState = "fr-toolbase-state ";
-            if (toolInfo.toolState === false) {
-                containerState = "";
-            }
-            var iconClass = "fr-icons24x24";
-            if (toolInfo.iconClass) {
-                iconClass = toolInfo.iconClass;
-            }
 
-            var toolContainerClass = "fr-toolbase-toolcontainer";
-            if (toolInfo.toolContainerClass) {
-                toolContainerClass = toolInfo.toolContainerClass;
-            }
+            // Get class string options
+            var containerState = me._getClassValue(toolInfo.toolState, "fr-toolbase-state ");
+            var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
+            var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
+            var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
 
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
@@ -1844,8 +1837,18 @@ $(function () {
                 return html;
             }
             else if (toolInfo.toolType === toolTypes.toolGroup) {
-                return "<div class='fr-toolbase-groupcontainer " + toolInfo.selectorClass + "'></div>";
+                return "<div class='" + groupContainerClass + " " + toolInfo.selectorClass + "'></div>";
             }
+        },
+        _getClassValue: function (textValue, defaultValue) {
+            var returnText = defaultValue;
+            if (typeof (textValue) !== "undefined") {
+                returnText = "";
+                if (textValue !== false && textValue !== null) {
+                    returnText = textValue;
+                }
+            }
+            return returnText;
         },
         _getText: function (toolInfo) {
             var text;
@@ -2334,6 +2337,8 @@ var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorerToolbar || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;

@@ -204,8 +204,8 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-find-button",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-            iconClass: " ",
-            toolContainerClass: " ",
+            iconClass: null,
+            toolContainerClass: null,
             imageClass: "fr-toolbar-search-icon",
             toolState: false,
             tooltip: locData.toolbar.find,
@@ -626,8 +626,9 @@ $(function () {
         itemFind: {
             toolType: toolTypes.button,
             selectorClass: "fr-item-find",
-            iconClass: " ",
-            toolContainerClass: " ",
+            iconClass: null,
+            toolContainerClass: null,
+            toolState: false,
             imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
             events: {
@@ -916,9 +917,10 @@ $(function () {
                     tp.itemExportWord]
         },
         /** @member */
-        itemFindGroup: {
+        itemFindCompositeGroup: {
             toolType: toolTypes.toolGroup,
-            selectorClass: "fr-item-findgroup",
+            selectorClass: "fr-item-find-composite-group",
+            groupContainerClass: null,
             tools: [tp.itemKeyword,
                     tp.itemFind]
         },
@@ -927,5 +929,13 @@ $(function () {
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
+
+    /** @member */
+    tg.itemFindGroup = {
+        toolType: toolTypes.toolGroup,
+        selectorClass: "fr-item-findgroup",
+        tools: [tg.itemFindCompositeGroup]
+    };
+
 });
 

@@ -207,7 +207,7 @@ $(function () {
             iconClass: null,
             toolContainerClass: null,
             imageClass: "fr-toolbar-search-icon",
-            toolState: false,
+            toolStateClass: null,
             tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
@@ -223,7 +223,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.xml,
             events: {
                 click: function (e) {
@@ -238,7 +238,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportCSV",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.csv,
             events: {
                 click: function (e) {
@@ -253,7 +253,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportPDF",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.pdf,
             events: {
                 click: function (e) {
@@ -268,7 +268,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {
                 click: function (e) {
@@ -283,7 +283,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportExcel",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.excel,
             events: {
                 click: function (e) {
@@ -298,7 +298,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportTIFF",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.tiff,
             events: {
                 click: function (e) {
@@ -313,7 +313,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportWord",
             sharedClass: "fr-toolbase-dropdown-item",
-            toolState: false,
+            toolStateClass: null,
             text: locData.exportType.word,
             events: {
                 click: function (e) {
@@ -505,6 +505,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.xml,
             events: {
                 click: function (e) {
@@ -520,6 +521,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportCSV",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.csv,
             events: {
                 click: function (e) {
@@ -535,6 +537,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportPDF",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.pdf,
             events: {
                 click: function (e) {
@@ -550,6 +553,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {
                 click: function (e) {
@@ -565,6 +569,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportExcel",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.excel,
             events: {
                 click: function (e) {
@@ -580,6 +585,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportTIFF",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.tiff,
             events: {
                 click: function (e) {
@@ -595,6 +601,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportWord",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
             text: locData.exportType.word,
             events: {
                 click: function (e) {
@@ -642,7 +649,7 @@ $(function () {
             selectorClass: "fr-item-find",
             iconClass: null,
             toolContainerClass: null,
-            toolState: false,
+            toolStateClass: null,
             imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
             events: {

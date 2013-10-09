@@ -2703,8 +2703,7 @@ $(function () {
                     $cell.html(errorTag.licenseErrorTitle);
                     $cell = me.element.find(".fr-render-error-license-content");
                     $cell.html(errorTag.licenseErrorContent);
-                }
-                
+                }                
 
             }
             else {

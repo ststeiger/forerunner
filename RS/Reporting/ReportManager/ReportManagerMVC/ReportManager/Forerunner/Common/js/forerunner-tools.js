@@ -648,7 +648,7 @@ $(function () {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
                     e.data.$reportViewer.reportViewer("find", value);
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+                    //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                 }
             }
         },   
@@ -763,7 +763,6 @@ $(function () {
         btnFavorite: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
-            sharedClass: "fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-favorite",
             tooltip: locData.toolbar.favorites,
             events: {
@@ -776,6 +775,7 @@ $(function () {
         btnRecent: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-recent",
+            sharedClass: "fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
             events: {
@@ -788,7 +788,7 @@ $(function () {
         btnHome: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-home",
-            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
+            sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-home",
             tooltip: locData.toolbar.home,
             events: {

@@ -98,8 +98,8 @@ namespace ForerunnerLicense
 
         private string GetActivatePackage(LicenseData ld)
         {
-            string value = "<License><SKU>{0}</SKU><Quantity>{1}</Quantity>{2}<LicenseKey>{3}</LicenseKey><RequireValidation>{4}</RequireValidation><ActivationDate>{5}</ActivationDate><LicenseDuration>{6}</LicenseDuration></License>";
-            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate, ld.LicenseDuration), pkey);
+            string value = "<License><SKU>{0}</SKU><Quantity>{1}</Quantity>{2}<LicenseKey>{3}</LicenseKey><RequireValidation>{4}</RequireValidation><ActivationDate>{5}</ActivationDate><LicenseDuration>{6}</LicenseDuration><IsTrial>{7}</IsTrial></License>";
+            return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate, ld.LicenseDuration,ld.IsTrial), pkey);
         }
 
         private string ProcessActivate()
@@ -155,7 +155,7 @@ namespace ForerunnerLicense
                    NewLD.MachineData = NewMachineData;
                     if (NewLD.FirstActivationDate == DateTime.MinValue)
                         NewLD.FirstActivationDate = DateTime.Now;
-                   if (OldLD == null || OldLD.IsTrial == 1)
+                   if (OldLD.SKU == null )
                    {
                        Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
                        success = true;
@@ -170,7 +170,7 @@ namespace ForerunnerLicense
                    }
                    else
                    {
-                       Response = String.Format(Response, "Fail", "106", "Invalid License Combination");
+                       Response = String.Format(Response, "Fail", "106", "Invalid License Combination, De-Activate before Activation");
                        success = false;
                    }
                }

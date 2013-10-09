@@ -179,13 +179,13 @@ namespace ForerunnerWebService
             {
                 LicensesText += "Product: <b>";
                 LicensesText += SQLReader.GetString(2);
-                LicensesText += "</b> SKU: <b>";
+                LicensesText += "</b><br/> SKU: <b>";
                 LicensesText += SQLReader.GetString(1);
-                LicensesText += "</b> Quantity: <b>";
-                LicensesText += SQLReader.GetInt32(3).ToString();                
-                LicensesText += "</b> License Key: <b>";
+                LicensesText += "</b><br/> Quantity: <b>";
+                LicensesText += SQLReader.GetInt32(3).ToString();
+                LicensesText += "</b><br/> License Key: <b>";
                 LicensesText += SQLReader.GetString(0);
-                LicensesText += "</b><br>";
+                LicensesText += "</b><br/>";
             }
             SQLReader.Close();
             SQLConn.Close();

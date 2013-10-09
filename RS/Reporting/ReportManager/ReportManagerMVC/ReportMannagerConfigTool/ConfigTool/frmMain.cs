@@ -25,7 +25,10 @@ namespace ReportMannagerConfigTool
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
+                }
             }
         }
 
@@ -70,7 +73,7 @@ namespace ReportMannagerConfigTool
             //    winform.showWarning(string.Format(StaticMessages.portNotFree,txtPort.Text.Trim()));
             //    return;
             //}
-
+            Cursor.Current = Cursors.WaitCursor;
             try
             {
                 string bindingAddress = string.Empty;
@@ -113,8 +116,10 @@ namespace ReportMannagerConfigTool
             }
             catch (Exception ex)
             {
+                Cursor.Current = Cursors.Default;
                 winform.showWarning("Error:" + ex.Message);
             }
+            Cursor.Current = Cursors.WaitCursor;
         }
 
         //open the site by default browser
@@ -149,6 +154,7 @@ namespace ReportMannagerConfigTool
             if (!winform.isTextBoxNotEmpty(tabPage2))
                 return;
 
+            Cursor.Current = Cursors.WaitCursor;
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = winform.getTextBoxValue(txtServerName);
             builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
@@ -163,6 +169,8 @@ namespace ReportMannagerConfigTool
 
             builder.Password = winform.getTextBoxValue(txtPWD);
 
+            Cursor.Current = Cursors.Default;
+
             string result = configTool.tryConnectDB(builder.ConnectionString);
             if (result.Equals("True"))
                 winform.showMessage(StaticMessages.connectDBSuccess);
@@ -172,10 +180,12 @@ namespace ReportMannagerConfigTool
 
         private void btnApply_Click(object sender, EventArgs e)
         {
+            
             if (!winform.isTextBoxNotEmpty(tabPage2))
                 return;
             try
             {
+                Cursor.Current = Cursors.WaitCursor;
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
@@ -185,8 +195,10 @@ namespace ReportMannagerConfigTool
             }
             catch
             {
+                Cursor.Current = Cursors.Default;
                 winform.showWarning(StaticMessages.updateError);
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void rdoSQL_CheckedChanged(object sender, EventArgs e)
@@ -266,17 +278,26 @@ namespace ReportMannagerConfigTool
         {
             if (txtNewKey.Text == "")
             {
-                 MessageBox.Show("LicenseKey Required");
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "LicenseKey Required", "Forerunner Software Mobilizer");
+                }
                 return;
             }
+            Cursor.Current = Cursors.WaitCursor;
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)
@@ -303,6 +324,7 @@ namespace ReportMannagerConfigTool
 
         private void btnDeActivate_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             try
             {
                 ClientLicense.DeActivate();
@@ -310,7 +332,11 @@ namespace ReportMannagerConfigTool
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
+                }
             }
         }
 
@@ -318,6 +344,27 @@ namespace ReportMannagerConfigTool
         {
             if (ClientLicense.LicenseString !=null)
                 Clipboard.SetText(ClientLicense.LicenseString);
+        }
+
+        private void btnValidate_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                ClientLicense.Validate();
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "License Verified", "Forerunner Software Mobilizer");
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
         }
     }
 }

@@ -171,6 +171,7 @@ namespace ForerunnerLicense
                 LicenseString = resp.Response;
                 License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 SaveLicense();
+                MachineCheck(true);
                 return GetLicenseString();
             }
             else

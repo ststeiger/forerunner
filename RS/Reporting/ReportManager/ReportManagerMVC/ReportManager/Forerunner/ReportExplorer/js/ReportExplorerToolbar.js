@@ -7,6 +7,8 @@ var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorerToolbar || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;

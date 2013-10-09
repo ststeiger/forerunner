@@ -463,11 +463,13 @@ $(function () {
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    $TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -525,7 +527,7 @@ $(function () {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
                         $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
-                        $ParagraphItem = new $("<LI />");                        
+                        $ParagraphItem = new $("<LI />");
                     }
                     else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
@@ -559,10 +561,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.html(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
                         }
                         else {
                             $TextRun.html("&nbsp");
@@ -584,7 +586,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    $ParagraphList.attr("style","width:100%;height:100%;");
+                    //$ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }

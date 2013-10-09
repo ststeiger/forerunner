@@ -119,12 +119,12 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ParameterJSON(string ReportPath, string paramList = null)
+        public HttpResponseMessage ParameterJSON(string ReportPath)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(ReportPath), paramList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(ReportPath)));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

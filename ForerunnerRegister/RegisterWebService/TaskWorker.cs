@@ -20,11 +20,6 @@ namespace ForerunnerWebService
         private static string MailSendAccount = ConfigurationManager.AppSettings["MailSendAccount"];
         private static string MailSendPassword = ConfigurationManager.AppSettings["MailSendPassword"];
         
-
-       
-       
-
-        
         public void DoWork()
         {
             ForerunnerDB DB = new ForerunnerDB();

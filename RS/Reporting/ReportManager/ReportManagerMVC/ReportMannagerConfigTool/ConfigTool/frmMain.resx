@@ -1143,41 +1143,98 @@
   <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="txtMachineKey.Location" type="System.Drawing.Point, System.Drawing">
-    <value>91, 124</value>
+  <data name="btnCopy.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="txtMachineKey.Size" type="System.Drawing.Size, System.Drawing">
-    <value>349, 20</value>
+  <data name="btnCopy.Location" type="System.Drawing.Point, System.Drawing">
+    <value>337, 107</value>
   </data>
-  <data name="txtMachineKey.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+  <data name="btnCopy.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 22</value>
   </data>
-  <data name="&gt;&gt;txtMachineKey.Name" xml:space="preserve">
-    <value>txtMachineKey</value>
+  <data name="btnCopy.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
   </data>
-  <data name="&gt;&gt;txtMachineKey.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="btnCopy.Text" xml:space="preserve">
+    <value>Copy to Clipboard</value>
   </data>
-  <data name="&gt;&gt;txtMachineKey.Parent" xml:space="preserve">
+  <data name="&gt;&gt;btnCopy.Name" xml:space="preserve">
+    <value>btnCopy</value>
+  </data>
+  <data name="&gt;&gt;btnCopy.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnCopy.Parent" xml:space="preserve">
     <value>tabActivation</value>
   </data>
-  <data name="&gt;&gt;txtMachineKey.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;btnCopy.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="btnDeActivate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>337, 79</value>
+  </data>
+  <data name="btnDeActivate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>103, 22</value>
+  </data>
+  <data name="btnDeActivate.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="btnDeActivate.Text" xml:space="preserve">
+    <value>De-Activate</value>
+  </data>
+  <data name="&gt;&gt;btnDeActivate.Name" xml:space="preserve">
+    <value>btnDeActivate</value>
+  </data>
+  <data name="&gt;&gt;btnDeActivate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnDeActivate.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnDeActivate.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="rtbCurLicense.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 10pt</value>
+  </data>
+  <data name="rtbCurLicense.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 79</value>
+  </data>
+  <data name="rtbCurLicense.Size" type="System.Drawing.Size, System.Drawing">
+    <value>324, 84</value>
+  </data>
+  <data name="rtbCurLicense.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="rtbCurLicense.Text" xml:space="preserve">
+    <value />
+  </data>
+  <data name="&gt;&gt;rtbCurLicense.Name" xml:space="preserve">
+    <value>rtbCurLicense</value>
+  </data>
+  <data name="&gt;&gt;rtbCurLicense.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RichTextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rtbCurLicense.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;rtbCurLicense.ZOrder" xml:space="preserve">
+    <value>2</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 131</value>
+    <value>4, 63</value>
   </data>
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 13</value>
+    <value>81, 13</value>
   </data>
   <data name="label4.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
+    <value>15</value>
   </data>
   <data name="label4.Text" xml:space="preserve">
-    <value>Machine Key:</value>
+    <value>Current License</value>
   </data>
   <data name="&gt;&gt;label4.Name" xml:space="preserve">
     <value>label4</value>
@@ -1189,34 +1246,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="btnProductInfo.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="btnProductInfo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>266, 201</value>
-  </data>
-  <data name="btnProductInfo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 22</value>
-  </data>
-  <data name="btnProductInfo.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="btnProductInfo.Text" xml:space="preserve">
-    <value>Product Info</value>
-  </data>
-  <data name="&gt;&gt;btnProductInfo.Name" xml:space="preserve">
-    <value>btnProductInfo</value>
-  </data>
-  <data name="&gt;&gt;btnProductInfo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btnProductInfo.Parent" xml:space="preserve">
-    <value>tabActivation</value>
-  </data>
-  <data name="&gt;&gt;btnProductInfo.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="btnManualActivation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1243,22 +1273,22 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnManualActivation.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 7</value>
+    <value>4, 7</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>78, 13</value>
+    <value>68, 13</value>
   </data>
   <data name="label3.TabIndex" type="System.Int32, mscorlib">
     <value>11</value>
   </data>
   <data name="label3.Text" xml:space="preserve">
-    <value>Activation Key:</value>
+    <value>License Key:</value>
   </data>
   <data name="&gt;&gt;label3.Name" xml:space="preserve">
     <value>label3</value>
@@ -1270,31 +1300,31 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
-  <data name="textBox2.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="txtNewKey.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 23</value>
   </data>
-  <data name="textBox2.Multiline" type="System.Boolean, mscorlib">
+  <data name="txtNewKey.Multiline" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="textBox2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>433, 85</value>
+  <data name="txtNewKey.Size" type="System.Drawing.Size, System.Drawing">
+    <value>105, 21</value>
   </data>
-  <data name="textBox2.TabIndex" type="System.Int32, mscorlib">
+  <data name="txtNewKey.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
   </data>
-  <data name="&gt;&gt;textBox2.Name" xml:space="preserve">
-    <value>textBox2</value>
+  <data name="&gt;&gt;txtNewKey.Name" xml:space="preserve">
+    <value>txtNewKey</value>
   </data>
-  <data name="&gt;&gt;textBox2.Type" xml:space="preserve">
+  <data name="&gt;&gt;txtNewKey.Type" xml:space="preserve">
     <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;textBox2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;txtNewKey.Parent" xml:space="preserve">
     <value>tabActivation</value>
   </data>
-  <data name="&gt;&gt;textBox2.ZOrder" xml:space="preserve">
-    <value>5</value>
+  <data name="&gt;&gt;txtNewKey.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
   <data name="btnGetActivationKey.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1309,7 +1339,7 @@
     <value>9</value>
   </data>
   <data name="btnGetActivationKey.Text" xml:space="preserve">
-    <value>Get Activation Key</value>
+    <value>Get License Key</value>
   </data>
   <data name="&gt;&gt;btnGetActivationKey.Name" xml:space="preserve">
     <value>btnGetActivationKey</value>
@@ -1321,13 +1351,13 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnGetActivationKey.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="btnActivate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="btnActivate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>356, 201</value>
+    <value>118, 23</value>
   </data>
   <data name="btnActivate.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 22</value>
@@ -1348,7 +1378,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>
@@ -1399,9 +1429,6 @@
     <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">

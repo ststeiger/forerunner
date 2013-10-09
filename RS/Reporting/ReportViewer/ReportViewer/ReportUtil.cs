@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using Jayrock.Json;
 using Forerunner.SSRS.Execution;
+using ForerunnerLicense;
 
 namespace Forerunner
 {
@@ -195,12 +196,12 @@ namespace Forerunner
             w.WriteMember("Exception");
             w.WriteStartObject();
 
-            if(e is Forerunner.SSRS.Security.LicenseException)
+            if(e is LicenseException)
             {
                 w.WriteMember("Type");
                 w.WriteString("LicenseException");
                 w.WriteMember("Reason");
-                w.WriteString(e.Data[Forerunner.SSRS.Security.LicenseException.failKey].ToString());
+                w.WriteString(e.Data[LicenseException.failKey].ToString());
                 w.WriteMember("Message");
                 w.WriteString(e.Message);
             }

@@ -2649,7 +2649,7 @@ $(function () {
         _create: function () {
             
         },
-
+         
         render: function (reportObj) {
             var me = this;
             var reportDiv = me.element;

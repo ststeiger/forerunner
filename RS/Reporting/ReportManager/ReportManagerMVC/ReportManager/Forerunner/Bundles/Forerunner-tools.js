@@ -500,10 +500,12 @@ $(function () {
         /** @member */
         itemExportXML: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportXML",
-            text: locData.exportType.xml,
             selectorClass: "fr-item-exportXML",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportXML",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.xml,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.xml);
@@ -513,10 +515,12 @@ $(function () {
         /** @member */
         itemExportCSV: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportCSV",
-            text: locData.exportType.csv,
             selectorClass: "fr-item-exportCSV",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportCSV",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.csv,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.csv);
@@ -526,10 +530,12 @@ $(function () {
         /** @member */
         itemExportPDF: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportPDF",
-            text: locData.exportType.pdf,
             selectorClass: "fr-item-exportPDF",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportPDF",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.pdf,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.pdf);
@@ -539,10 +545,12 @@ $(function () {
         /** @member */
         itemExportMHTML: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportMHT",
-            text: locData.exportType.mhtml,
             selectorClass: "fr-item-exportMHTML",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportMHT",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.mhtml,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.mhtml);
@@ -552,10 +560,12 @@ $(function () {
         /** @member */
         itemExportExcel: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportExcel",
-            text: locData.exportType.excel,
             selectorClass: "fr-item-exportExcel",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportExcel",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.excel,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.excel);
@@ -565,10 +575,12 @@ $(function () {
         /** @member */
         itemExportTiff: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportTIFF",
-            text: locData.exportType.tiff,
             selectorClass: "fr-item-exportTiff",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportTIFF",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.tiff,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.tiff);
@@ -578,10 +590,12 @@ $(function () {
         /** @member */
         itemExportWord: {
             toolType: toolTypes.containerItem,
-            imageClass: "fr-icons24x24-exportWord",
-            text: locData.exportType.word,
             selectorClass: "fr-item-exportWord",
-            indent: 1,
+            itemContainerClass: "fr-toolpane-dropdown-itemcontainer",
+            iconClass: "fr-icons25x31",
+            imageClass: "fr-icons25x31-exportWord",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.exportType.word,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("exportReport", exportType.word);
@@ -908,6 +922,7 @@ $(function () {
             toolType: toolTypes.toolGroup,
             visible: false,
             selectorClass: "fr-item-export-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
             tools: [tp.itemExportXML,
                     tp.itemExportCSV,
                     tp.itemExportPDF,

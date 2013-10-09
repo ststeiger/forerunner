@@ -1788,6 +1788,9 @@ $(function () {
             var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
             var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
             var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
+            var itemContainerClass = me._getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
+            var itemTextContainerClass = me._getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
+            var itemTextClass = me._getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
 
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
@@ -1812,25 +1815,16 @@ $(function () {
                 if (toolInfo.text) {
                     text = me._getText(toolInfo);
                 }
-                var imageClass = "";
-                if (toolInfo.imageClass) {
-                    imageClass = toolInfo.imageClass;
-                }
-                var indentation = "";
-                if (toolInfo.indent) {
-                    for (var i = 0; i < toolInfo.indent; i++) {
-                        indentation = indentation + "<div class='fr-indent24x24'></div>";
-                    }
-                }
+
+                var imageClass = me._getClassValue(toolInfo.imageClass, "");
                 var rightImageDiv = "";
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
                 }
-                var html = "<div class='fr-toolbase-itemcontainer " + containerState + toolInfo.selectorClass + "'>" +
-                            indentation +
+                var html = "<div class='" + itemContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
-                            "<div class='fr-toolbase-item-text-container'>" +
-                                "<div class='fr-toolbase-item-text'>" + text + "</div>" +
+                            "<div class='" + itemTextContainerClass + "'>" +
+                                "<div class='" + itemTextClass + "'>" + text + "</div>" +
                             "</div>" +
                             rightImageDiv +
                             "</div>";

@@ -46,12 +46,6 @@
   /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */
   display: none;
 }
-.fr-indent24x24 {
-  width:24px;
-  height:24px;
-  margin:5px;
-  display:inline-block;
-}
 .fr-toolbase-rightimage {
   float:right;
 }

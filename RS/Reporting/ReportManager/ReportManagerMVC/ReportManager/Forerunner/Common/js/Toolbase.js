@@ -293,7 +293,7 @@ $(function () {
             var me = this;
 
             // Get class string options
-            var containerState = me._getClassValue(toolInfo.toolState, "fr-toolbase-state ");
+            var toolStateClass = me._getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
             var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
             var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
             var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
@@ -302,7 +302,7 @@ $(function () {
             var itemTextClass = me._getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
 
             if (toolInfo.toolType === toolTypes.button) {
-                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
+                return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" +
                             "<div class='" + iconClass + " " + toolInfo.imageClass + "' />" +
                         "</div>";
             }
@@ -314,7 +314,7 @@ $(function () {
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
             else if (toolInfo.toolType === toolTypes.textButton) {
-                return "<div class='" + toolContainerClass + " " + containerState + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
+                return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
             else if (toolInfo.toolType === toolTypes.plainText) {
                 return "<span class='" + toolInfo.selectorClass + "'> " + me._getText(toolInfo) + "</span>";
@@ -330,7 +330,7 @@ $(function () {
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
                 }
-                var html = "<div class='" + itemContainerClass + " " + containerState + toolInfo.selectorClass + "'>" +
+                var html = "<div class='" + itemContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" +
                             "<div class='" + iconClass + " " + imageClass + "'></div>" +
                             "<div class='" + itemTextContainerClass + "'>" +
                                 "<div class='" + itemTextClass + "'>" + text + "</div>" +

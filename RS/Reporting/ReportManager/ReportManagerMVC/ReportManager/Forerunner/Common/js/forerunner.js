@@ -246,6 +246,11 @@ $(function () {
             reportParameterSubmit: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.submit).toLowerCase(); },
 
             /** @constant */
+            cancel: "cancel",
+            /** widget + event, lowercase */
+            reportParameterCancel: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.cancel).toLowerCase(); },
+
+            /** @constant */
             showPane: "showPane",
             /** widget + event, lowercase */
             reportViewerShowPane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showPane).toLowerCase(); },

@@ -85,7 +85,8 @@
         "isTrue": "True",
         "isFalse": "bréagach",
         "required": "Riachtanach",
-        "viewReport": "Féach Tuarascáil"
+        "viewReport": "Féach Tuarascáil",
+		"cancel": "cancel"
     },
 	"validateError": {
 	"required": "Riachtanach",

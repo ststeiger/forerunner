@@ -85,7 +85,8 @@
         "isTrue": "是",
         "isFalse": "否",
         "required": "必填",
-        "viewReport": "加载报表"
+        "viewReport": "加载报表",
+		"cancel": "cancel"
     },
 	"validateError": {
 		"required": "必填",

@@ -145,6 +145,7 @@ $(function () {
             $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
                 me.$container.css("overflow", "hidden");

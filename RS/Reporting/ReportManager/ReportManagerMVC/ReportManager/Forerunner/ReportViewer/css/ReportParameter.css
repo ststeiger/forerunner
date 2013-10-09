@@ -25,6 +25,9 @@
     padding:4px;
     border:solid 1px #1F98C7;
 }
+.fr-param-item-container {
+  margin-bottom: 5px;
+}
 .fr-param-label
 {
     margin:4px;
@@ -46,6 +49,12 @@
 .fr-param-select{
     width:180px;
 }
+.fr-param-submit-container {
+  display: inline-block;
+}
+.fr-param-cancel-container {
+  display: inline-block;
+}
 .fr-param-viewreport{
     width: 144px;
     height: 39px;
@@ -65,6 +74,17 @@
     background: -ms-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* IE10+ */
     background: linear-gradient(to bottom,  #5e96cf 0%,#4e70b0 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */
+}
+.fr-param-cancel{
+    width: 72px;
+    height: 39px;
+    margin-left: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13pt;
+    font-family: sans-serif;
+    color: #ffffff;
+    background-color: transparent;
 }
 .fr-param-enable
 {

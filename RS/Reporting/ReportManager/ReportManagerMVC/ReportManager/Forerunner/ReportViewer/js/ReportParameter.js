@@ -195,7 +195,7 @@ $(function () {
             var me = this;
 
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.gif");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
             });
         },

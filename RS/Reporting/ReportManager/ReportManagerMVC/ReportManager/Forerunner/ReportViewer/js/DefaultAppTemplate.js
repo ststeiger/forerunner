@@ -201,7 +201,9 @@ $(function () {
                 me.ResetSize();
 
                 me._updateTopDiv(me);
+                me.setBackgroundLayout();
             });
+
             if (!me.options.isFullScreen && !isTouch) {
                 $(window).on('scroll', function () {
                     me._updateTopDiv(me);
@@ -365,24 +367,8 @@ $(function () {
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                var reportArea = $('.fr-report-areacontainer');
-
-                if (me.options.isFullScreen) {
-                    $('.fr-render-bglayer').css('position', 'fixed').css('top', 38)
-                       .css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
-                       .css('width', Math.max(reportArea.width(), document.documentElement.clientWidth));
-                } else {
-                    var height = reportArea.height() - 38;
-                    var width = reportArea.width();
-                    if (reportArea.height() > document.documentElement.clientHeight - 38)
-                        height = document.documentElement.clientHeight - 38;
-                    if (reportArea.width() > document.documentElement.clientWidth)
-                        width = document.documentElement.clientWidth;
-                    $('.fr-render-bglayer').css('position', 'absolute').css('top', 38)
-                        .css('height', height).css('width', width);
-                }
+                me.setBackgroundLayout();
             });
-
 
             //  Just in case it is hidden
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
@@ -500,6 +486,38 @@ $(function () {
             } else {
                 this.showSlideoutPane(isLeftPane);
             }
+        },
+        setBackgroundLayout: function () {
+            var reportArea = $('.fr-report-areacontainer');
+            var documentHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+            var documentWidth = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
+
+            if (reportArea.height() > (documentHeight - 38) // 38 is toolbar height
+                    || reportArea.width() > documentWidth) {
+                
+                $(".fr-render-bglayer").css("position", "absolute").
+                    css("height", Math.max(reportArea.height(), (documentHeight - 38)))
+                    .css("width", Math.max(reportArea.width(), documentWidth));
+            }
+            else {
+                $(".fr-render-bglayer").css("position", "absolute")
+                    .css("height", (documentHeight - 38)).css("width", documentWidth);
+            }
+            
+            //if (me.options.isFullScreen) {
+            //    $('.fr-render-bglayer').css('position', 'fixed').css('top', 38)
+            //       .css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
+            //       .css('width', Math.max(reportArea.width(), document.documentElement.clientWidth));
+            //} else {
+            //    var height = reportArea.height() - 38;
+            //    var width = reportArea.width();
+            //    if (reportArea.height() > document.documentElement.clientHeight - 38)
+            //        height = document.documentElement.clientHeight - 38;
+            //    if (reportArea.width() > document.documentElement.clientWidth)
+            //        width = document.documentElement.clientWidth;
+            //    $('.fr-render-bglayer').css('position', 'absolute').css('top', 38)
+            //        .css('height', height).css('width', width);
+            //}
         },
 
         _selectedItemPath: null,

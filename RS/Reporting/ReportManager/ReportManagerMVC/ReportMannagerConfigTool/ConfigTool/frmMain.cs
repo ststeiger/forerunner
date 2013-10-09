@@ -288,6 +288,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
+                Validate();
             }
             catch (Exception ex)
             {
@@ -348,6 +349,11 @@ namespace ReportMannagerConfigTool
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
+            Validate();
+        }
+
+        private void Validate()
+        {
             Cursor.Current = Cursors.WaitCursor;
             try
             {
@@ -366,5 +372,6 @@ namespace ReportMannagerConfigTool
                 }
             }
         }
+
     }
 }

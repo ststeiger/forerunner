@@ -170,7 +170,7 @@ namespace ForerunnerLicense
                    }
                    else
                    {
-                       Response = String.Format(Response, "Fail", "106", "Invalid License Combination");
+                       Response = String.Format(Response, "Fail", "106", "Invalid License Combination, De-Activate before Activation");
                        success = false;
                    }
                }

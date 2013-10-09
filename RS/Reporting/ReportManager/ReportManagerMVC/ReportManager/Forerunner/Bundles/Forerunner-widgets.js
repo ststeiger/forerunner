@@ -2680,6 +2680,7 @@ $(function () {
         writeError: function (errorData) {
             var me = this;
             var errorTag = me.options.reportViewer.locData.errorTag;
+            var $cell;
 
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
@@ -2690,11 +2691,8 @@ $(function () {
                     "<div class='fr-render-error-license-content'></div>" +
                     "</div></div>"));
                 if (me.options.reportViewer) {
-                    var $cell;
-
                     $cell = me.element.find(".fr-render-error-license-title");
                     $cell.html(errorTag.licenseErrorTitle);
-
                     $cell = me.element.find(".fr-render-error-license-content");
                     $cell.html(errorTag.licenseErrorContent);
                 }
@@ -2714,8 +2712,6 @@ $(function () {
                "</div></div>"));
 
                 if (me.options.reportViewer) {
-                    var $cell;
-
                     $cell = me.element.find(".fr-render-error");
                     $cell.hide();
 

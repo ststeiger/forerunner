@@ -2337,6 +2337,7 @@ forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorer
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var tb = forerunner.ssr.tools.reportExplorerToolbar;
+    var btnActiveClass = "fr-toolbase-persistent-active-state";
 
     /**
      * Toolbar widget used by the Report Explorer
@@ -2354,6 +2355,20 @@ $(function () {
         options: {
             navigateTo: null,
             toolClass: "fr-toolbar"
+        },
+        setFolderBtnActive: function (selectorClass) {
+            var me = this;
+            me._clearFolderBtnState();
+            if (selectorClass) {
+                var $btn = me.element.find("." + selectorClass);
+                $btn.addClass(btnActiveClass);
+            }
+        },
+        _clearFolderBtnState: function () {
+            var me = this;
+            $.each(me.folderBtns, function (index, $btn) {
+                $btn.removeClass(btnActiveClass);
+            });
         },
         _initCallbacks: function () {
             var me = this;
@@ -2375,6 +2390,12 @@ $(function () {
             me.element.append($("<div/>").addClass(me.options.toolClass));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
             me._initCallbacks();
+
+            // Hold onto the folder buttons for later
+            var $btnHome = me.element.find("." + tb.btnHome.selectorClass);
+            var $btnRecent = me.element.find("." + tb.btnRecent.selectorClass);
+            var $btnFav = me.element.find("." + tb.btnFav.selectorClass);
+            me.folderBtns = [$btnHome, $btnRecent, $btnFav];
         },
 
         _destroy: function () {
@@ -6214,9 +6235,17 @@ $(function () {
 
 var forerunner = forerunner || {};
 forerunner.ssr = forerunner.ssr || {};
+forerunner.ssr.tools = forerunner.ssr.tools || {};
+forerunner.ssr.tools.reportExplorerToolbar = forerunner.ssr.tools.reportExplorerToolbar || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
+    var rtb = forerunner.ssr.tools.reportExplorerToolbar;
+    var viewToBtnMap = {
+        catalog: rtb.btnHome.selectorClass,
+        favorites: rtb.btnFav.selectorClass,
+        recent: rtb.btnRecent.selectorClass,
+    };
 
     /**
      * Widget used to explore available reports and launch the Report Viewer
@@ -6276,6 +6305,7 @@ $(function () {
             });            
             var $toolbar = layout.$mainheadersection;
             $toolbar.reportExplorerToolbar({ navigateTo: me.options.navigateTo });
+            $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
             layout.$rightheader.height(layout.$topdiv.height());
             layout.$leftheader.height(layout.$topdiv.height());

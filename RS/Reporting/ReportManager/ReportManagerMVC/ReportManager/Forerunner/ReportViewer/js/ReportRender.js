@@ -87,21 +87,30 @@ $(function () {
         writeError: function (errorData) {
             var me = this;
             var errorTag = me.options.reportViewer.locData.errorTag;
+            var $cell;
 
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
-                var licenseError = new $("<div class='fr-render-error-license Page'>" +
-                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thank you for using Forerunner Mobilizer, your license has expired or is invalid.<br/> " +
-                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='https://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
-                    "</div></div>");
-                
-                me.element.html(licenseError);
+                me.element.html($("<div class='Page' >" +
+                    "<div class='fr-render-error-license Page'>" +
+                    "<div class='fr-render-error-license-container'>"+
+                    "<div class='fr-render-error-license-title'></div><br/>" +
+                    "<div class='fr-render-error-license-content'></div>" +
+                    "</div></div>"));
+                if (me.options.reportViewer) {
+                    $cell = me.element.find(".fr-render-error-license-title");
+                    $cell.html(errorTag.licenseErrorTitle);
+                    $cell = me.element.find(".fr-render-error-license-content");
+                    $cell.html(errorTag.licenseErrorContent);
+                }                
+
             }
             else {
                 me.element.html($("<div class='Page' >" +
-               "<div class='fr-render-error-message'></div>" +
+               "<div class='fr-render-error-message'></div></br>" +
                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-DetailMessage'></div>" +
                "<div class='fr-render-error fr-render-error-type'></div>" +
                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
                "<div class='fr-render-error fr-render-error-source'></div>" +
@@ -109,13 +118,14 @@ $(function () {
                "</div></div>"));
 
                 if (me.options.reportViewer) {
-                    var $cell;
-
                     $cell = me.element.find(".fr-render-error");
                     $cell.hide();
 
                     $cell = me.element.find(".fr-render-error-details");
                     $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+
+                    $cell = me.element.find(".fr-render-error-DetailMessage");
+                    $cell.append("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.DetailMessage);
 
                     $cell = me.element.find(".fr-render-error-type");
                     $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
@@ -127,7 +137,7 @@ $(function () {
                     $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
 
                     $cell = me.element.find(".fr-render-error-message");
-                    $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+                    $cell.html(errorData.Exception.Message);
 
                     $cell = me.element.find(".fr-render-error-stacktrace");
                     $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);

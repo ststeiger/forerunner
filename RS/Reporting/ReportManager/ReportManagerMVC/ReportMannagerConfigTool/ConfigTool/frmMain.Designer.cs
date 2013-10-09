@@ -79,6 +79,7 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
+            this.btnValidate = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
@@ -373,6 +374,7 @@
             // 
             // tabActivation
             // 
+            this.tabActivation.Controls.Add(this.btnValidate);
             this.tabActivation.Controls.Add(this.btnCopy);
             this.tabActivation.Controls.Add(this.btnDeActivate);
             this.tabActivation.Controls.Add(this.rtbCurLicense);
@@ -442,6 +444,13 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
+            // 
+            // btnValidate
+            // 
+            resources.ApplyResources(this.btnValidate, "btnValidate");
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.UseVisualStyleBackColor = true;
+            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
             // 
             // frmMain
             // 
@@ -520,6 +529,7 @@
         private System.Windows.Forms.RichTextBox rtbCurLicense;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnDeActivate;
+        private System.Windows.Forms.Button btnValidate;
     }
 }
 

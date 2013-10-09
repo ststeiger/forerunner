@@ -22,7 +22,9 @@
         "targetSite": "targetSite",
         "source": "Source",
         "message": "Message",
-        "stackTrace": "StackTrace"
+        "stackTrace": "StackTrace",
+		"licenseErrorTitle": "Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+		"licenseErrorContent": "Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
     },
     "exportType": {
         "xml": "XML file with report data",

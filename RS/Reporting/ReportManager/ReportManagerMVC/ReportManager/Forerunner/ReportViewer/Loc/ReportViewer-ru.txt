@@ -85,7 +85,8 @@
         "isTrue": "Верно",
         "isFalse": "Неверно",
         "required": "Необходимый"
-        "viewReport": "Показать отчет"
+        "viewReport": "Показать отчет",
+		"cancel": "cancel"
     },
 	"validateError": {
 		"required": "Необходимый"

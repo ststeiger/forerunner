@@ -85,7 +85,8 @@
         "isTrue": "Vero",
         "isFalse": "Falso",
         "required": "Richiesto",
-        "viewReport": "Visualizza report"
+        "viewReport": "Visualizza report",
+		"cancel": "cancel"
     },
 	"validateError": {
 	"required": "Richiesto",

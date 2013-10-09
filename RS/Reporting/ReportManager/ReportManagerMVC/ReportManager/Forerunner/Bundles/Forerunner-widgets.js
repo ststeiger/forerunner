@@ -4216,9 +4216,14 @@ $(function () {
             var $params = new $("<div class=" + paramContainerClass + ">" +
                 "<form class='fr-param-form' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
-                   "<div class='fr-param-submit-container'>" +
-                      "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
-                   "</div>" +
+                   "<div>" +
+                       "<div class='fr-param-submit-container'>" +
+                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
+                       "</div>" +
+                       "<div class='fr-param-cancel-container'>" +
+                          "<input type='button' class='fr-param-cancel' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
+                       "</div>" +
+                    "</div>" +
                 "</form>" +
                 "<div style='height:65px;'/>" +
                 "</div>");
@@ -4311,6 +4316,9 @@ $(function () {
             $(".fr-param-viewreport", me.$params).on("click", function () {
                 me._submitForm();
             });
+            $(".fr-param-cancel", me.$params).on("click", function () {
+                me._cancelForm();
+            });
 
             if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
@@ -4354,6 +4362,11 @@ $(function () {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList);
                 me._trigger(events.submit);
             }
+        },
+        _cancelForm: function () {
+            var me = this;
+            me._closeAllDropdown();
+            me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
             var me = this;
@@ -5487,6 +5500,7 @@ $(function () {
             $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
                 me.$container.css("overflow", "hidden");

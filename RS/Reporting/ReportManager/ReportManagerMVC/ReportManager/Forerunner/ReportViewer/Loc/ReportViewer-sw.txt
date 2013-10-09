@@ -85,7 +85,8 @@
         "isTrue": "Sant",
         "isFalse": "Falskt",
         "required": "krävs",
-        "viewReport": "Visa rapport"
+        "viewReport": "Visa rapport",
+		"cancel": "cancel"
     },
 	"validateError": {
 	"required": "krävs",

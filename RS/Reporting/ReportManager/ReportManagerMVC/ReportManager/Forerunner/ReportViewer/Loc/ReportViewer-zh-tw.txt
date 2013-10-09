@@ -85,7 +85,8 @@
         "isTrue": "是",
         "isFalse": "否",
         "required": "必填",
-        "viewReport": "加載報告"
+        "viewReport": "加載報告",
+		"cancel": "cancel"
     },
 	"validateError": {
 		"required": "必填",

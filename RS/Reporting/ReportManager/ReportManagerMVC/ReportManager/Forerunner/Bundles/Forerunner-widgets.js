@@ -295,7 +295,6 @@ $(function () {
         allowZoom: function (isEnabled) {
             var me = this;
 
-
             if (isEnabled === true){
                 forerunner.device.allowZoom(true);
                 me.allowSwipe(false);
@@ -322,10 +321,19 @@ $(function () {
         _touchNav: function () {
             // Touch Events
             var me = this;
-            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
+            
+            $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release doubletap",
                 function (ev) {
                     if (!ev.gesture) return;
                     switch (ev.type) {
+                        case "doubletap":
+                            var zoomLevel = forerunner.device.zoomLevel();
+                            alert(zoomLevel);
+                            var allowZoom = forerunner.device.isAllowZoom();
+                            alert(allowZoom);
+                            alert(forerunner.device.isChrome());
+                            alert($("head meta[name=viewport]")[0].content);
+                            break;
                         // Hide the header on touch
                         case "touch":
                             me._hideTableHeaders();                            
@@ -1977,6 +1985,14 @@ $(function () {
                 }
             });
 
+            var listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind];
+            }
             // Hook up the toolbar element events
             me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
                                tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
@@ -1992,7 +2008,13 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+            }
+            me.addTools(1, true, listOfButtons);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -2126,7 +2148,14 @@ $(function () {
             $toolpane = new $("<div />");
             $toolpane.addClass(me.options.toolClass);
             $(me.element).append($toolpane);
-            me.addTools(1, true, [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap,tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup]);
+
+            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            }
+            me.addTools(1, true, listOfItems);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -5591,19 +5620,21 @@ $(function () {
                 //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
                 //to fill the full width
                 if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
-                    me.$topdiv.fadeOut(10).fadeIn(10);
+                    me.$topdiv.css("width", "100%");
+                    me.$topdiv.css("width", "device-width");
                 }
                 me.wasZoomed = true;
                 return;
             }
 
             if (!me.isZoomed() && me.wasZoomed) {
-                if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
-                    me.$topdiv.fadeOut(10).fadeIn(10);
-                }
                 var $viewer = $('.fr-layout-reportviewer', me.$container);
                 $viewer.reportViewer('allowZoom', false);
                 me.wasZoomed = false;
+                if (forerunner.device.isAndroid()) {
+                    me.$topdiv.css("width", "100%");
+                    me.$topdiv.fadeOut(10).fadeIn(10);
+                }
             }
         },
         wasZoomed: false,
@@ -5786,6 +5817,8 @@ $(function () {
                 me.$mainheadersection.toolbar('showAllTools');
             }
             me.$pagesection.removeClass('fr-layout-pagesection-noscroll');
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
+                me.$pagesection.addClass('fr-layout-android');
             me.$container.removeClass('fr-layout-container-noscroll');
 
             // Make sure the scroll position is restored after the call to hideAddressBar

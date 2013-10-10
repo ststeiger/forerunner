@@ -253,19 +253,21 @@ $(function () {
                 //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
                 //to fill the full width
                 if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
-                    me.$topdiv.fadeOut(10).fadeIn(10);
+                    me.$topdiv.css("width", "100%");
+                    me.$topdiv.css("width", "device-width");
                 }
                 me.wasZoomed = true;
                 return;
             }
 
             if (!me.isZoomed() && me.wasZoomed) {
-                if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
-                    me.$topdiv.fadeOut(10).fadeIn(10);
-                }
                 var $viewer = $('.fr-layout-reportviewer', me.$container);
                 $viewer.reportViewer('allowZoom', false);
                 me.wasZoomed = false;
+                if (forerunner.device.isAndroid()) {
+                    me.$topdiv.css("width", "100%");
+                    me.$topdiv.fadeOut(10).fadeIn(10);
+                }
             }
         },
         wasZoomed: false,
@@ -448,6 +450,8 @@ $(function () {
                 me.$mainheadersection.toolbar('showAllTools');
             }
             me.$pagesection.removeClass('fr-layout-pagesection-noscroll');
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
+                me.$pagesection.addClass('fr-layout-android');
             me.$container.removeClass('fr-layout-container-noscroll');
 
             // Make sure the scroll position is restored after the call to hideAddressBar

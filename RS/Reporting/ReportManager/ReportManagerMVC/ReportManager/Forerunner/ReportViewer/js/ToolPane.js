@@ -83,7 +83,14 @@ $(function () {
             $toolpane = new $("<div />");
             $toolpane.addClass(me.options.toolClass);
             $(me.element).append($toolpane);
-            me.addTools(1, true, [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap,tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup]);
+
+            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            }
+            me.addTools(1, true, listOfItems);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.

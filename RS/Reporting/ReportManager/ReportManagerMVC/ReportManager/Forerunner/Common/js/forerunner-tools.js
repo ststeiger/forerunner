@@ -444,6 +444,12 @@ $(function () {
                         e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
                         return false;
                     }
+                },
+                blur: function (e) {
+                    $(window).scrollTop(0);
+                },
+                focus: function (e) {
+                    $(window).scrollTop(0);
                 }
             }
         },
@@ -639,6 +645,12 @@ $(function () {
                         e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                         return false;
                     }
+                },
+                blur: function (e) {
+                    $(window).scrollTop(0);
+                },
+                focus: function (e) {
+                    $(window).scrollTop(0);
                 }
             }
         },

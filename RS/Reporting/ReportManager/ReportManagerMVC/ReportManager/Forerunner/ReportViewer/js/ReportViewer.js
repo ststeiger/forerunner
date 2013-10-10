@@ -306,17 +306,17 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
-        _allowSwipeState : false,
 
+        _allowSwipe: true,
         allowSwipe: function(isEnabled){
             var me = this;
-            $(me.element).data("swipeEnabled", isEnabled);
-            /*
-            if (isEnabled === true)
-                $(me.element).swipe("enable");
-            else
-                $(me.element).swipe("disable");
-            */
+            me._allowSwipe = isEnabled;
+        },
+        _navToPage: function (newPageNum) {
+            var me = this;
+            if (me._allowSwipe === true) {
+                me.navToPage(newPageNum);
+            }
         },
         _touchNav: function () {
             // Touch Events
@@ -334,9 +334,6 @@ $(function () {
                             // If it is scrolling, we will let scrollstop handle that.
                    
                         case "release":
-                            if ($(me.element).data("swipeEnabled") === false)
-                                break;
-
                             var swipeNav = false;                            
                             if (ev.gesture.touches.length > 1) {                                
                                 swipeNav = true;
@@ -344,13 +341,13 @@ $(function () {
 
                             if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage + 1);
+                                me._navToPage(me.curPage + 1);
                                 break;
                             }
 
                             if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage - 1);
+                                me._navToPage(me.curPage - 1);
                                 break;
                             }
                             

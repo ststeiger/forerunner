@@ -307,17 +307,17 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
-        _allowSwipeState : false,
 
+        _allowSwipe: true,
         allowSwipe: function(isEnabled){
             var me = this;
-            $(me.element).data("swipeEnabled", isEnabled);
-            /*
-            if (isEnabled === true)
-                $(me.element).swipe("enable");
-            else
-                $(me.element).swipe("disable");
-            */
+            me._allowSwipe = isEnabled;
+        },
+        _navToPage: function (newPageNum) {
+            var me = this;
+            if (me._allowSwipe === true) {
+                me.navToPage(newPageNum);
+            }
         },
         _touchNav: function () {
             // Touch Events
@@ -335,9 +335,6 @@ $(function () {
                             // If it is scrolling, we will let scrollstop handle that.
                    
                         case "release":
-                            if ($(me.element).data("swipeEnabled") === false)
-                                break;
-
                             var swipeNav = false;                            
                             if (ev.gesture.touches.length > 1) {                                
                                 swipeNav = true;
@@ -345,13 +342,13 @@ $(function () {
 
                             if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage + 1);
+                                me._navToPage(me.curPage + 1);
                                 break;
                             }
 
                             if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage - 1);
+                                me._navToPage(me.curPage - 1);
                                 break;
                             }
                             
@@ -5580,19 +5577,19 @@ $(function () {
                     $(me.$container).on('scrollstop', function () {
                         me._updateTopDiv(me);
                     });
-                } 
-
-                $(me.$container).on('touchmove', function (e) {
-                    if (me.$container.hasClass('fr-layout-container-noscroll')) {
-
-                        var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                            || me._containElement(e.target, 'fr-layout-rightpane');
-
-                        if (!isScrollable)
-                            e.preventDefault();
-                    }
-                });
+                }  
             }
+
+            $(me.$container).on('touchmove', function (e) {
+                if (me.$container.hasClass('fr-layout-container-noscroll')) {
+
+                    var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
+                        || me._containElement(e.target, 'fr-layout-rightpane');
+
+                    if (!isScrollable)
+                        e.preventDefault();
+                }
+            });
 
             $(window).resize(function () {
                 me.ResetSize();
@@ -5722,6 +5719,7 @@ $(function () {
             me.$rightpane.css({ height: heightValues.max });
             me.$mainviewport.css({ height: '100%' });
             $('.fr-param-container', me.$container).css({ height: '100%' });
+            $('.fr-toolpane', me.$container).css({ height: '100%' });
         },
 
         bindViewerEvents: function () {
@@ -5841,13 +5839,21 @@ $(function () {
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
             if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
-                me.$viewer.reportViewer('triggerEvent', events.reportViewerHidePane());
+                if (!forerunner.device.isAllowZoom()) {
+                    me.$viewer.reportViewer('allowSwipe', true);
+                }
+                me.$viewer.reportViewer('triggerEvent', events.hidePane);
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
             me.$container.addClass('fr-layout-container-noscroll');
-            forerunner.device.allowZoom(false);
+            if (me.$viewer !== undefined) {
+                me.$viewer.reportViewer('allowZoom', false);
+                me.$viewer.reportViewer('allowSwipe', false);
+            } else {
+                forerunner.device.allowZoom(false);
+            }
             me.$container.resize();
 
             var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
@@ -5861,13 +5867,17 @@ $(function () {
                     slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideLeftShow(delay);                    
                 } else {
-                    //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
                     slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideRightShow(delay);
                 }
                 
                 topdiv.addClass(className, delay);
-                forerunner.device.allowZoom(false);
+                if (me.$viewer !== undefined) {
+                    me.$viewer.reportViewer('allowZoom', false);
+                    me.$viewer.reportViewer('allowSwipe', false);
+                } else {
+                    forerunner.device.allowZoom(false);
+                }
                 me.$mainheadersection.toolbar('hideAllTools');
             }
             me.$pagesection.addClass('fr-layout-pagesection-noscroll');
@@ -5876,7 +5886,7 @@ $(function () {
             me.hideAddressBar();
 
             if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
-                me.$viewer.reportViewer('triggerEvent', events.reportViewerShowPane());
+                me.$viewer.reportViewer('triggerEvent', events.showPane);
             }
         },
         toggleSlideoutPane: function (isLeftPane) {

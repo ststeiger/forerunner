@@ -130,12 +130,6 @@ $(function () {
                 },
                 click: function (e) {
                     e.target.select();
-                },
-                blur: function (e) {
-                    $(window).scrollTop(0);
-                },
-                focus: function (e) {
-                    $(window).scrollTop(0);
                 }
             }
         },
@@ -202,12 +196,6 @@ $(function () {
                         e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                         return false;
                     }
-                },
-                blur: function (e) {
-                    $(window).scrollTop(0);
-                },
-                focus: function (e) {
-                    $(window).scrollTop(0);
                 }
             }
         },

@@ -306,18 +306,23 @@ namespace Forerunner.SSRS.Viewer
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
-        public string GetParameterJson(string ReportPath)
+        public string GetParameterJson(string ReportPath, string paramList)
         {
             string historyID = null;
             string NewSession;
-            ExecutionInfo execInfo = new ExecutionInfo();
-
+            ExecutionInfo execInfo = null;
+            // BUGBUG:: This can be made more optimized if we can use an existing session id.
+            // Need to add the plumbing there.
             try
             {
                 rs.Credentials = GetCredentials();
+                ParameterValue[] values = paramList == null ? null : JsonUtility.GetParameterValue(paramList);
 
                 execInfo = rs.LoadReport(ReportPath, historyID);
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
+                if (paramList != null)
+                    execInfo = rs.SetExecutionParameters(values, null);
+
 
                 if (rs.GetExecutionInfo().Parameters.Length != 0)
                 {

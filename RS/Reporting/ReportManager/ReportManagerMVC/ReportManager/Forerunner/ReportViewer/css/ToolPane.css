@@ -19,7 +19,8 @@
 }
 
 .fr-toolpane-dropdown-group-container {
-  background-color: #d5e1f2;
+
+  background-color: #354468;
 }
 
 .fr-toolpane-dropdown-itemcontainer {
@@ -52,7 +53,7 @@
   display: table-cell;
   vertical-align: middle;
   font-size: 13pt;
-  color: #456191;
+  color: #ffffff;
 }
 
 .fr-toolpane .fr-toolbase-toolcontainer {

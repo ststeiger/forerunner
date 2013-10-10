@@ -238,6 +238,13 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples_Release\BottomNav.html" />
+    <Content Include="Samples_Release\FullPage.html" />
+    <Content Include="Samples_Release\Dashboard.html" />
+    <Content Include="Samples_Release\FullPageFloatingToolbar.html" />
+    <Content Include="Samples_Release\SideNav.html" />
+    <Content Include="Samples_Release\TopNav.html" />
+    <Content Include="Samples_Release\TopNav2.html" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />

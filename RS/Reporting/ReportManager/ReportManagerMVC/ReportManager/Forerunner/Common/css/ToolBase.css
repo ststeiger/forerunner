@@ -57,7 +57,7 @@
 .fr-toolbase-dropdown
 {
   padding:1px;
-  background-color: #354468;
+  background-color: #d5e1f2;
   border:1px solid darkgray;
 }
 .fr-toolbase-dropdown-item {
@@ -65,7 +65,7 @@
   border-top-width:1px;
   border-top-color: lightblue;
   font-size: 13pt;
-  color: #ffffff;
+  color: #456191;
   text-align:left;
 }
 .fr-toolbase-state {

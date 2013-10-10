@@ -25,8 +25,18 @@
     padding:4px;
     border:solid 1px #1F98C7;
 }
+.fr-param-dropdown-textbox
+{
+    width:150px;
+    padding-right:24px;
+}
 .fr-param-item-container {
   margin-bottom: 5px;
+}
+.fr-param-element-container
+{
+    display: inline-block;
+    position: relative;
 }
 .fr-param-label
 {
@@ -122,6 +132,19 @@
 .fr-param-dropdown-input
 {
     margin-bottom:0px;
+}
+.fr-param-dropdown-icon
+{
+    height: 18px;
+    width: 18px;
+    background-image: url(../Images/OpenDropDown.png);
+    background-repeat: no-repeat;
+}
+.fr-param-dropdown-iconcontainer
+{
+    position:absolute;
+    right:8px;
+    top:8px
 }
 .fr-param-dropdown-textarea{
     width: 95%;

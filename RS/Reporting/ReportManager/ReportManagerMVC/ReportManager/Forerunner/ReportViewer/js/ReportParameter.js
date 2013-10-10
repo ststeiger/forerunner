@@ -445,13 +445,12 @@ $(function () {
         _writeDropDownWithCheckBox: function (param, dependenceDisable) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<div style='display:inline-block;'/>");
+            var $control = new $("<div class='fr-param-element-container'/>");
 
             var $multipleCheckBox = new $("<Input type='text' class='fr-param-client fr-param-dropdown-textbox fr-paramname-" + param.Name
                 + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img class='fr-param-dropdown-img fr-paramname-" + param.Name + "-img' alt='Open DropDown List' src='"
-                + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' />");
+            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleCheckBox);
@@ -536,13 +535,12 @@ $(function () {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
-            var $control = new $("<div style='display:inline-block;'/>");
+            var $control = new $("<div class='fr-param-element-container'/>");
 
             var $multipleTextArea = new $("<Input type='text' name='" + param.Name + "' class='fr-param fr-param-dropdown-textbox fr-paramname-" + param.Name
                 + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
 
-            var $openDropDown = new $("<Img class='fr-param-dropdown-img fr-paramname-" + param.Name + "-img' alt='Open DropDown List' src='" +
-                forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' />");
+            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleTextArea);
@@ -626,16 +624,18 @@ $(function () {
                 var $multipleControl = $(".fr-paramname-" + param.Name, me.$params);
                 var positionTop = $multipleControl.offset().top;
 
+                $multipleControl.parent().css("z-index", 1);
+
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    //popup at above, 10 is margin and border width
-                    $dropDown.css("top", positionTop - $container.offset().top - $dropDown.height() - 10);
+                    //popup at above, 4 is margin top
+                    $dropDown.css("top", (($dropDown.height() +10) * -1) + 4);
                 }
-                else {//popup at bottom
-                    $dropDown.css("top", positionTop - $container.offset().top + $multipleControl.height() + 10);
+                else {//popup at bottom, 15 is margin + padding + border
+                    $dropDown.css("top", $multipleControl.height() + 15);
                 }
 
                 if ($dropDown.is(":hidden")) {
-                    $dropDown.width($multipleControl.width()).addClass("fr-param-dropdown-show").show(10);
+                    $dropDown.width($multipleControl.width() + 20).addClass("fr-param-dropdown-show").show(10);
                 }
                 else {
                     me._closeDropDownPanel(param);
@@ -644,8 +644,11 @@ $(function () {
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            me._setMultipleInputValues(param);
+            me._setMultipleInputValues(param);            
             $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params).removeClass("fr-param-dropdown-show").hide();
+
+            //for dropdown textbox do focus->blur->focus to re-validate, also reset its parent container's z-index property
+            $(".fr-paramname-" + param.Name, me.$params).focus().blur().parent().css("z-index", "inherit");
         },
         _closeAllDropdown: function () {
             var me = this;
@@ -662,6 +665,7 @@ $(function () {
                 !$target.hasClass("fr-param-dropdown") &&
                 !$target.hasClass("fr-param-dropdown-label") &&
                 !$target.hasClass("fr-param-dropdown-checkbox") &&
+                !$target.hasClass("fr-param-dropdown-icon") &&
                 !$target.hasClass("fr-param-dropdown-textarea")) {
                 me._closeAllDropdown();
             }
@@ -677,15 +681,15 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
@@ -698,7 +702,7 @@ $(function () {
                     }
                 });
                 for (var radioName in radioList) {
-                    a.push({ name: radioName, ismultiple: "", type: "Boolean", value: radioList[radioName] });
+                    a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                 }
                 //combobox - multiple values
                 //var tempCb = "";
@@ -729,17 +733,9 @@ $(function () {
 
                 //Combined to JSON String, format as below
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
-                var tempJson = "[";
-                for (i = 0; i < a.length; i++) {
-                    if (i !== a.length - 1) {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"},";
-                    }
-                    else {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"}";
-                    }
-                }
-                tempJson += "]";
-                return "{\"ParamsList\":" + tempJson + "}";
+
+                var paramsObject = { "ParamsList": a };
+                return JSON.stringify(paramsObject);
             } else {
                 return null;
             }

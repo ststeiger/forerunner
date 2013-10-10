@@ -349,10 +349,10 @@ namespace ReportMannagerConfigTool
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
-            Validate();
+            ValidateLicense();
         }
 
-        private void Validate()
+        private void ValidateLicense()
         {
             Cursor.Current = Cursors.WaitCursor;
             try

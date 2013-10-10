@@ -57,6 +57,18 @@ $(function () {
                 me.enableAllTools();
             });
 
+            me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                if (data.paramSubmit === false) {
+                    me.disableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
+                               tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
+                me.enableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
+                           tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
                 if (data.open) {
                     me.disableAllTools();

@@ -46,7 +46,6 @@ $(function () {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
-                
                 if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
@@ -58,6 +57,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
+                if (data.paramSubmit === false) {
+                    me.disableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
+                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
+                me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
+                           tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {

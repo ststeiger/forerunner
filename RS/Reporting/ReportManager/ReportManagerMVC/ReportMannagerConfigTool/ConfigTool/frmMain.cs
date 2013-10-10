@@ -25,10 +25,7 @@ namespace ReportMannagerConfigTool
             }
             catch(Exception ex)
             {
-                using (new CenterWinDialog(this))
-                {
-                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
-                }
+                MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
             }
         }
 

@@ -48,7 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewer: null,
-            responsive: false,
+            responsive: true,
         },
         // Constructor
         _create: function () {
@@ -596,7 +596,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    //$ParagraphList.attr("style","width:100%;height:100%;");
+                    $ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }

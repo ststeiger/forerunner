@@ -189,6 +189,10 @@ div.fr-layout-pagesection-noscroll {
   overflow: hidden;
 }
 
+div.fr-layout-android {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
 div.fr-layout-position-absolute {
   position: absolute;
 }

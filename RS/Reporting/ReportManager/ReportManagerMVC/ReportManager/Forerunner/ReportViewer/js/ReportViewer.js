@@ -80,6 +80,7 @@ $(function () {
             me.$loadingIndicator = new $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
             me.floatingHeaders = [];
             me.paramLoaded = false;
+            me.paramSubmit = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.loadLock = 0;
@@ -1118,7 +1119,7 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath, paramSubmit: me.paramSubmit });
 
                     me.paramLoaded = true;
                 }
@@ -1151,7 +1152,7 @@ $(function () {
                             me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
-                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath, paramSubmit: me.paramSubmit });
                             me.paramLoaded = true;
                         }
                     }
@@ -1165,7 +1166,10 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
+                    me.paramSubmit = false;
                 }
+                if (me.$numOfVisibleParameters && me.$numOfVisibleParameters !== 0)
+                    me.$numOfVisibleParameters = null;
             }
         },
         _resetViewer: function(isSameReport){
@@ -1176,6 +1180,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport)
                 me.paramLoaded = false;
+            me.paramSubmit = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1211,7 +1216,10 @@ $(function () {
         loadReportWithNewParameters: function (paramList) {
             var me = this;
            
-            me._resetViewer(true);            
+            me._resetViewer(true);
+            me.paramSubmit = true;
+            me._trigger(events.paramSubmit);
+
             me._loadPage(1, false, null, paramList, true);
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {

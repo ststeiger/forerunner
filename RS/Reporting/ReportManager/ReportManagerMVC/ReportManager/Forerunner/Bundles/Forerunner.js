@@ -222,6 +222,11 @@ $(function () {
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
             /** @constant */
+            paramSubmit: "paramsubmit",
+            /** widget + event, lowercase */
+            reportViewerParamSubmit: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.paramSubmit).toLowerCase(); },
+
+            /** @constant */
             loadCascadingParam: "loadcascadingparam",
             /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
@@ -628,6 +633,16 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
+        isMSIEAndTouch :function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(MSIE)/) !== null && ua.match(/(Touch)/) !== null;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is a Windows Phone */
+        isWindowsPhone : function() {
+            var ua = navigator.userAgent;
+            return ua.match(/(Windows Phone)/) !== null
+        },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
             if (window.navigator.standalone) {
@@ -645,13 +660,22 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is an Android device */
         isAndroid: function () {
             var ua = navigator.userAgent;
-            return ua.match(/Android/);
+            return ua.match(/(Android)/) !== null;
         },
+
+        /** @return {bool} Returns a boolean that indicates if it is a Chrome browser */
+        isChrome : function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(Chrome)/) !== null;
+        },
+
+        _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
          * @param {bool} flag - true = scale enabled (max = 10.0)
          */
         allowZoom: function (flag) {
+            _allowZoomFlag = flag;
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
@@ -659,6 +683,14 @@ $(function () {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=0' />");
             }
+        },
+
+        /** 
+         * Gets whether the view port allows zooming
+         * @return {bool} flag - True if the view port allow zooming.
+         */
+        isAllowZoom : function() {
+            return _allowZoomFlag;
         },
       
         /** @return {float} Returns the zoom level, (document / window) width */

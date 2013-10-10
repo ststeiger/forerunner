@@ -681,15 +681,15 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
@@ -702,7 +702,7 @@ $(function () {
                     }
                 });
                 for (var radioName in radioList) {
-                    a.push({ name: radioName, ismultiple: "", type: "Boolean", value: radioList[radioName] });
+                    a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                 }
                 //combobox - multiple values
                 //var tempCb = "";
@@ -733,17 +733,9 @@ $(function () {
 
                 //Combined to JSON String, format as below
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
-                var tempJson = "[";
-                for (i = 0; i < a.length; i++) {
-                    if (i !== a.length - 1) {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"},";
-                    }
-                    else {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"}";
-                    }
-                }
-                tempJson += "]";
-                return "{\"ParamsList\":" + tempJson + "}";
+
+                var paramsObject = { "ParamsList": a };
+                return JSON.stringify(paramsObject);
             } else {
                 return null;
             }

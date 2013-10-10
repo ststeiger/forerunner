@@ -1064,7 +1064,7 @@ $(function () {
 
             if (savedParams || savedParamFromHistory) {
                 if (me.options.paramArea) {
-                    var jsonString = savedParams ? me._paramsToString(savedParams.ParamsList) : savedParamFromHistory;
+                    var jsonString = savedParams ? me._paramsToString(savedParams) : savedParamFromHistory;
                     me.options.paramArea.reportParameter({ $reportViewer: this });
                     me.refreshParameters(jsonString, true);
                 }
@@ -1072,18 +1072,8 @@ $(function () {
                 me._loadDefaultParameters(pageNum);
             }
         },
-        _paramsToString: function(a) {
-            var tempJson = "[";
-            for (var i = 0; i < a.length; i++) {
-                if (i !== a.length - 1) {
-                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
-                }
-                else {
-                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"}";
-                }
-            }
-            tempJson += "]";
-            return "{\"ParamsList\":" + tempJson + "}";
+        _paramsToString: function (a) {
+            return JSON.stringify(a);
         },
         _loadDefaultParameters: function (pageNum) {
             var me = this;

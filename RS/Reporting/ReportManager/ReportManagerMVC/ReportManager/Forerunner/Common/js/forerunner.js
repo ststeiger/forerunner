@@ -640,7 +640,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is a Windows Phone */
         isWindowsPhone : function() {
             var ua = navigator.userAgent;
-            return ua.match(/(Windows Phone)/) !== null
+            return ua.match(/(Windows Phone)/) !== null;
         },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
@@ -674,7 +674,7 @@ $(function () {
          * @param {bool} flag - true = scale enabled (max = 10.0)
          */
         allowZoom: function (flag) {
-            _allowZoomFlag = flag;
+            this._allowZoomFlag = flag;
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
@@ -689,7 +689,7 @@ $(function () {
          * @return {bool} flag - True if the view port allow zooming.
          */
         isAllowZoom : function() {
-            return _allowZoomFlag;
+            return this._allowZoomFlag;
         },
       
         /** @return {float} Returns the zoom level, (document / window) width */

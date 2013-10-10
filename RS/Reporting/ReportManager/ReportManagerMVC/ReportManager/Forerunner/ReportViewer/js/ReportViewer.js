@@ -1141,7 +1141,7 @@ $(function () {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&paramList=" + paramList,
                     dataType: "json",
                     async: false,
                     success: function (data) {

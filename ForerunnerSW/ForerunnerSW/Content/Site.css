@@ -8,7 +8,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 
 .rounded {-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
 
-.header{ width:100%;margin-top:30px;}
+.header{ width:100%;margin-top:20px;padding-bottom:30px;}
 .logo {display:block;float:left; margin-left:50px; margin-right:30px;width:400px; }
 .logo img{width:100%;}
 .navbar {display:inline-block; float:right; margin-right:150px;}
@@ -41,7 +41,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 .DemoPageButtonRight{display:inline;float:right;text-align:center;}
 .DemoPageButtonLeft{display:inline;float:left;text-align:center;}
 
-.ContactButton{background-color:#009cde;width:300px;padding:5px;font-size:16px;}
+.ContactButton{background-color:#009cde;width:230px;padding:5px;font-size:16px;}
 .ContactButton a{color:white;}
 
 .MobilizerBanner{background-color:#009cde;width:100%;}
@@ -71,6 +71,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 
    .navbar {display:inline-block;float:left; }
    .footerbar {display:inline-block;float:left; }
+   
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}
    .ForerunnerTDLeft{ float:none;}
@@ -83,7 +84,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 @media only screen and (min-width: 510px) and (max-width: 629px) {
 
    .navbar {display:inline-block;float:left; }
-   .footerbar {display:inline-block;float:left;} 
+   .footerbar {display:inline-block;float:left;}    
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}
    .ForerunnerTDLeft{ float:none;}
@@ -100,9 +101,11 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
    .ForerunnerTD50{width:100%;}
    .ForerunnerTDLeft{ float:none;}
    .MobilizerDetailContent{line-height:22px;padding-right:0px;padding-bottom:10px;margin-left:40px;}
-   .logo {display:block;float:left; margin-left:50px; margin-right:30px;width:300px; }
+   .logo {display:block;float:left; margin-left:50px; margin-right:30px;width:200px; }
    .DemoPageButtonRight{display:block;float:left;text-align:center;margin-top:25px;margin-left:100px;}
    .DemoPageButtonLeft{display:block;float:left;text-align:center;margin-left:100px;}
    .DemoPageButtonSpacer{clear:both;}
+
+   .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;display:inline-block;float:left;}
     
 }

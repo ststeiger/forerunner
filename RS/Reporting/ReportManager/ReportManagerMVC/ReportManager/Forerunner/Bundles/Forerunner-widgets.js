@@ -81,6 +81,7 @@ $(function () {
             me.$loadingIndicator = new $("<div class='fr-report-loading-indicator' ></div>").text(me.locData.messages.loading);
             me.floatingHeaders = [];
             me.paramLoaded = false;
+            me.paramSubmit = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.loadLock = 0;
@@ -1119,7 +1120,7 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath, paramSubmit: me.paramSubmit });
 
                     me.paramLoaded = true;
                 }
@@ -1152,7 +1153,7 @@ $(function () {
                             me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
-                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath, paramSubmit: me.paramSubmit });
                             me.paramLoaded = true;
                         }
                     }
@@ -1166,7 +1167,10 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
+                    me.paramSubmit = false;
                 }
+                if (me.$numOfVisibleParameters && me.$numOfVisibleParameters !== 0)
+                    me.$numOfVisibleParameters = null;
             }
         },
         _resetViewer: function(isSameReport){
@@ -1177,6 +1181,7 @@ $(function () {
             me.floatingHeaders = [];
             if (!isSameReport)
                 me.paramLoaded = false;
+            me.paramSubmit = false;
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1212,7 +1217,10 @@ $(function () {
         loadReportWithNewParameters: function (paramList) {
             var me = this;
            
-            me._resetViewer(true);            
+            me._resetViewer(true);
+            me.paramSubmit = true;
+            me._trigger(events.paramSubmit);
+
             me._loadPage(1, false, null, paramList, true);
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1938,7 +1946,6 @@ $(function () {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
-                
                 if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
@@ -1950,6 +1957,15 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
+                if (data.paramSubmit === false) {
+                    me.disableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
+                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
+                me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
+                           tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -2106,6 +2122,18 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
                 me.enableAllTools();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
+                if (data.paramSubmit === false) {
+                    me.disableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
+                               tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
+                me.enableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
+                           tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {

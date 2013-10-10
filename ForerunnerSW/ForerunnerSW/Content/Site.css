@@ -1,5 +1,5 @@
 ﻿
-
+*{ -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
 table {	border-collapse: collapse;	border-spacing: 0;}
 a { text-decoration: none;}
 a:hover {text-decoration:none; cursor:pointer;}
@@ -9,7 +9,8 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 .rounded {-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
 
 .header{ width:100%;margin-top:30px;}
-.logo {display:block;float:left; margin-left:50px; margin-right:30px;  }
+.logo {display:block;float:left; margin-left:50px; margin-right:30px;width:400px; }
+.logo img{width:100%;}
 .navbar {display:inline-block; float:right; margin-right:150px;}
 .navbar a{color: gray;padding:10px;}
 .navitem{line-height: 30px;display:inline-block; }
@@ -28,14 +29,17 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 
 .ForerunnerHeaderColor{color:#009cde;}
 .ForerunnerPageTitle{font-size:50px;font-weight:bold;color:#009cde;padding-bottom:50px;}
-.ForerunnerPage{margin:50px;}
+.ForerunnerPage{margin-left:50px;margin-right:50px;}
 .ForerunnerPageContent{font-size:16px;line-height:35px}
 
 .ForerunnerBottomBanner{background-color:lightgray;width:100%;}
 .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
 
-.DownloadButton{background-color:orange;width:200px;line-height:22px;padding:5px;font-size:16px;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
+.DownloadButton{background-color:orange;width:250px;line-height:22px;padding:5px;font-size:16px;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
 .DownloadButton a{color:white;}
+
+.DemoPageButtonRight{display:inline;float:right;text-align:center;}
+.DemoPageButtonLeft{display:inline;float:left;text-align:center;}
 
 .ContactButton{background-color:#009cde;width:300px;padding:5px;font-size:16px;}
 .ContactButton a{color:white;}
@@ -58,7 +62,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
  
     .navbar {display:block;float:left;}
     .footerbar {display:block; float:left;}
-
+   
 }
 
 
@@ -72,6 +76,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
    .ForerunnerTDLeft{ float:none;}
    .MobilizerDetailContent{line-height:22px;padding-right:0px;padding-bottom:10px;margin-left:40px;}
 
+   
 }
 
 /* 4.3 - Mobile Landscape */
@@ -84,12 +89,20 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
    .ForerunnerTDLeft{ float:none;}
    .MobilizerDetailContent{line-height:22px;padding-right:0px;padding-bottom:10px;margin-left:40px;}
 
+   .DemoPageButtonRight{display:block;float:left;text-align:center;margin-top:25px;margin-left:150px;}
+   .DemoPageButtonLeft{display:block;float:left;text-align:center;margin-left:150px;}
+   .DemoPageButtonSpacer{clear:both;}
 
 }
 /* 4.4 - Mobile Portrait */
 @media only screen and (max-width: 509px) {
-     .ForerunnerTD{ display:inline-block;}
-     .ForerunnerTD50{width:100%;}
-     .ForerunnerTDLeft{ float:none;}
-     .MobilizerDetailContent{line-height:22px;padding-right:0px;padding-bottom:10px;margin-left:40px;}
+   .ForerunnerTD{ display:inline-block;}
+   .ForerunnerTD50{width:100%;}
+   .ForerunnerTDLeft{ float:none;}
+   .MobilizerDetailContent{line-height:22px;padding-right:0px;padding-bottom:10px;margin-left:40px;}
+   .logo {display:block;float:left; margin-left:50px; margin-right:30px;width:300px; }
+   .DemoPageButtonRight{display:block;float:left;text-align:center;margin-top:25px;margin-left:100px;}
+   .DemoPageButtonLeft{display:block;float:left;text-align:center;margin-left:100px;}
+   .DemoPageButtonSpacer{clear:both;}
+    
 }

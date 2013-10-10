@@ -85,7 +85,8 @@
         "isTrue": "True",
         "isFalse": "False",
         "required": "krafist",
-        "viewReport": "Skoða skýrslu"
+        "viewReport": "Skoða skýrslu",
+		"cancel": "cancel"
     },
 	"validateError": {
 	"required": "krafist",

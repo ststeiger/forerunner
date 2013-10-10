@@ -85,7 +85,8 @@
         "isTrue": "Adevărat",
         "isFalse": "False",
         "required": "Necesare",
-        "viewReport": "Vizualizare raport"
+        "viewReport": "Vizualizare raport",
+		"cancel": "cancel"
     },
 	"validateError": {
 	"required": "Necesare",

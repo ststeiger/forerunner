@@ -240,6 +240,12 @@ namespace Forerunner.SSRS.JSONRender
 //#endif
             RPL.position = 0;
             w.WriteStartObject();
+            
+            w.WriteMember("SKU");
+            w.WriteString(ClientLicense.License.SKU);
+            w.WriteMember("Trial");
+            w.WriteNumber(ClientLicense.License.IsTrial);
+
             w.WriteMember("RPLStamp");
             w.WriteString(RPL.ReadString());
             w.WriteMember("NumPages");

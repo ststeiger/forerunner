@@ -4,7 +4,7 @@
 !define PRODUCT_NAME "Forerunner Mobilizer for SQL Server Reporting Services"
 !define PRODUCT_VERSION "1.0"
 !define PRODUCT_PUBLISHER "Forerunner Software"
-!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\ForerunnerMobilizer"
+!define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV1"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -52,7 +52,7 @@ RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerMobilizerSetup.exe"
-InstallDir "$PROGRAMFILES\Forerunner Mobilizer"
+InstallDir "$PROGRAMFILES\Forerunner\MobilizerV1"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -176,7 +176,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Images\calendar.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\calendar.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
@@ -376,7 +376,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\SortAccending.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\search.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\SortDecending.gif"
-  Delete "$INSTDIR\Forerunner\ReportViewer\Images\calendar.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\calendar.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"

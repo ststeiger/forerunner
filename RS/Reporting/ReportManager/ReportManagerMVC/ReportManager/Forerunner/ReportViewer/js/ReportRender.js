@@ -54,7 +54,7 @@ $(function () {
         _create: function () {
             
         },
-
+         
         render: function (reportObj) {
             var me = this;
             var reportDiv = me.element;
@@ -63,19 +63,19 @@ $(function () {
            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
-            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle);
+           me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, reportObj);
         },
-        _addPageStyle: function (reportViewer, pageStyle) {
+        _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
 
             var style = me._getStyle(reportViewer, pageStyle);
             var bgLayer = new $("<div class='fr-render-bglayer'></div>");
             bgLayer.attr("style", style);
 
-            if (false) {
+            if (reportObj.ReportContainer.Trial ===1) {
                 var watermark = new $("<div/>");
                 watermark.html("<p>Evaluation</p>");
-                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 200pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:0px; pointer-events: none;";
+                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:40px; pointer-events: none;";
                 //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
                 watermark.attr("style", wstyle);
                 me.element.append(watermark);
@@ -87,21 +87,30 @@ $(function () {
         writeError: function (errorData) {
             var me = this;
             var errorTag = me.options.reportViewer.locData.errorTag;
+            var $cell;
 
             if (errorData.Exception.Type === "LicenseException") {
                 //Reason: Expired,MachineMismatch,TimeBombMissing,SetupError
-                var licenseError = new $("<div class='fr-render-error-license Page'>" +
-                    "<div class='fr-render-error-license-container'><h3 class='fr-render-error-license-title'>Thank you for using Forerunner Mobilizer, your license has expired or is invalid.<br/> " +
-                    "Please activate Mobilizer via the Mobilizer configuration or visit <a class='fr-render-error-license-link' href='https://www.forerunnersw.com'>www.ForerunerSW.com</a> for support.</h3>" +
-                    "</div></div>");
-                
-                me.element.html(licenseError);
+                me.element.html($("<div class='Page' >" +
+                    "<div class='fr-render-error-license Page'>" +
+                    "<div class='fr-render-error-license-container'>"+
+                    "<div class='fr-render-error-license-title'></div><br/>" +
+                    "<div class='fr-render-error-license-content'></div>" +
+                    "</div></div>"));
+                if (me.options.reportViewer) {
+                    $cell = me.element.find(".fr-render-error-license-title");
+                    $cell.html(errorTag.licenseErrorTitle);
+                    $cell = me.element.find(".fr-render-error-license-content");
+                    $cell.html(errorTag.licenseErrorContent);
+                }                
+
             }
             else {
                 me.element.html($("<div class='Page' >" +
-               "<div class='fr-render-error-message'></div>" +
+               "<div class='fr-render-error-message'></div></br>" +
                "<div class='fr-render-error-details'>" + errorTag.moreDetail + "</div>" +
                "<div class='fr-render-error'><h3>" + errorTag.serverError + "</h3>" +
+               "<div class='fr-render-error fr-render-error-DetailMessage'></div>" +
                "<div class='fr-render-error fr-render-error-type'></div>" +
                "<div class='fr-render-error fr-render-error-targetsite'></div>" +
                "<div class='fr-render-error fr-render-error-source'></div>" +
@@ -109,13 +118,14 @@ $(function () {
                "</div></div>"));
 
                 if (me.options.reportViewer) {
-                    var $cell;
-
                     $cell = me.element.find(".fr-render-error");
                     $cell.hide();
 
                     $cell = me.element.find(".fr-render-error-details");
                     $cell.on("click", { $Detail: me.element.find(".fr-render-error") }, function (e) { e.data.$Detail.show(); $(e.target).hide(); });
+
+                    $cell = me.element.find(".fr-render-error-DetailMessage");
+                    $cell.append("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.DetailMessage);
 
                     $cell = me.element.find(".fr-render-error-type");
                     $cell.append("<h4>" + errorTag.type + ":</h4>" + errorData.Exception.Type);
@@ -127,7 +137,7 @@ $(function () {
                     $cell.html("<h4>" + errorTag.source + ":</h4>" + errorData.Exception.Source);
 
                     $cell = me.element.find(".fr-render-error-message");
-                    $cell.html("<h4>" + errorTag.message + ":</h4>" + errorData.Exception.Message);
+                    $cell.html(errorData.Exception.Message);
 
                     $cell = me.element.find(".fr-render-error-stacktrace");
                     $cell.html("<h4>" + errorTag.stackTrace + ":</h4>" + errorData.Exception.StackTrace);

@@ -85,7 +85,8 @@
         "isTrue": "真",
         "isFalse": "僻",
         "required": "必修",
-        "viewReport": "レポートの表示"
+        "viewReport": "レポートの表示",
+		"cancel": "cancel"
     },
 	"validateError": {
 		"required": "必修",

@@ -212,7 +212,7 @@
     <Content Include="Forerunner\ReportViewer\css\ReportViewerEZ.css" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
-    <Content Include="Forerunner\ReportViewer\images\calendar.gif" />
+    <Content Include="Forerunner\ReportViewer\images\calendar.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />

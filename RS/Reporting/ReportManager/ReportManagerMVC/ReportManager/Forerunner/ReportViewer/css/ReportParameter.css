@@ -25,6 +25,9 @@
     padding:4px;
     border:solid 1px #1F98C7;
 }
+.fr-param-item-container {
+  margin-bottom: 5px;
+}
 .fr-param-label
 {
     margin:4px;
@@ -36,7 +39,7 @@
 }
 .fr-param-radio-label
 {
-    color:black;
+    color: #ffffff;
 }
 .fr-param-checkbox{
     margin-left:5px;
@@ -46,15 +49,42 @@
 .fr-param-select{
     width:180px;
 }
+.fr-param-submit-container {
+  display: inline-block;
+}
+.fr-param-cancel-container {
+  display: inline-block;
+}
 .fr-param-viewreport{
-    margin:4px 4px 8px 10px;
-    padding:8px;
-    text-align:center;
-    background-color:#d3dce0;
-    border:1px solid #1F98C7;
-    cursor:pointer;
-    font-weight:600;
-    font-size:14px;
+    width: 144px;
+    height: 39px;
+    margin-left: 10px;
+    text-align: center;
+    border: 1px solid #8c9eba;
+    cursor: pointer;
+    font-size: 13pt;
+    font-family: sans-serif;
+    color: #ffffff;
+
+    background: #5e96cf; /* Old browsers */
+    background: -moz-linear-gradient(top,  #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #5e96cf 0%,#4e70b0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */
+}
+.fr-param-cancel{
+    width: 72px;
+    height: 39px;
+    margin-left: 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13pt;
+    font-family: sans-serif;
+    color: #ffffff;
+    background-color: transparent;
 }
 .fr-param-enable
 {
@@ -102,12 +132,17 @@
 .fr-param-checkbox-container
 {
    display:inline-block;
+   width:176px;
    margin:2px 4px;
    padding:1px;
-   border:solid 1px;
-   border-color:#1F98C7;
-   background-color:white;
-   width:176px;
+}
+.ui-datepicker-trigger {
+   vertical-align: middle;
+   margin-bottom: 4px;
+}
+.fr-param-dropdown-img {
+   vertical-align: middle;
+   margin-bottom: 4px;
 }
 .fr-param-error
 {

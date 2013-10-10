@@ -141,10 +141,10 @@ $(function () {
             me.element.html("<div class='fr-report-explorer'>" +
                                 "</div>");
             me._renderPCView(catalogItems);
-            //if (me.$selectedItem) {
-            //    $(window).scrollTop(me.$selectedItem.offset().top - 50);  //This is a hack for now
-            //    $(window).scrollLeft(me.$selectedItem.offset().left - 20);  //This is a hack for now
-            //}
+            if (me.$selectedItem) {
+                setTimeout($(window).scrollTop(me.$selectedItem.offset().top - 50), 100);  //This is a hack for now
+                setTimeout($(window).scrollLeft(me.$selectedItem.offset().left - 20), 100);  //This is a hack for now
+            }
             //me._initscrollposition();
         },
         _setSelectionFromScroll: function () {

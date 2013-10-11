@@ -95,6 +95,7 @@ $(function () {
             me.savedLeft = 0;
             me.origionalReportPath = "";
             me._setPageCallback = null;
+            me.renderError = false;
   
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -261,7 +262,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -273,7 +274,7 @@ $(function () {
                 me._setPageCallback = null;
             }
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone);
+            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -768,7 +769,7 @@ $(function () {
                 function (data) {
                     me.backupCurPage(true);
                     if (data.Exception) {
-                        me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
+                        me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
                         me.removeLoadingIndicator();
                     }
                     else {
@@ -1093,8 +1094,7 @@ $(function () {
                 }
             }
             else if (data.Exception) {
-                me.$reportContainer.reportRender({ reportViewer: this });
-                me.$reportContainer.reportRender("writeError", data);
+                me._renderPageError(me.$reportContainer, data);
                 me.removeLoadingIndicator();
             }
             else {
@@ -1281,8 +1281,15 @@ $(function () {
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
-                me.pages[pageNum].$container.reportRender("writeError", me.pages[pageNum].reportObj);
+                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+
             me.pages[pageNum].isRendered = true;
+        },
+        _renderPageError: function ($container, errorData) {
+            var me = this;
+
+            me.renderError = true;
+            $container.reportRender("writeError", errorData);
         },
                 
         _sessionPing: function () {

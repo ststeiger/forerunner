@@ -66,7 +66,7 @@ $(function () {
             layout.$mainsection.show();
             layout.$docmapsection.hide();
             layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "/ReportManager",
+                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
                 view: view,

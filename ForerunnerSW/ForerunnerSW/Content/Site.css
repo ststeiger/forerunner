@@ -3,7 +3,8 @@
 table {	border-collapse: collapse;	border-spacing: 0;}
 a { text-decoration: none;}
 a:hover {text-decoration:none; cursor:pointer;}
-body {font-size: .85em;font-family: "Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif"; color: #333333; background-color: #fff; line-height: 22px; margin:0;padding:0;}
+img {border:none}
+body {font-size: .85em;font-family:  Helvetica, Arial, sans-serif; color: #333333; background-color: #fff; line-height: 22px; margin:0;padding:0;}
 input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padding:5px;}
 .Rounded {-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
 .Center{ display:table;margin: 0 auto;}
@@ -12,7 +13,7 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 .ForerunnerPort{width:100%;}
 .ForerunnerPage{width:984px;}
 .ForerunnerPageTitle{font-size:50px;color:#1ba0da;padding-top:50px;margin-bottom:15px;line-height:40px}
-.ForerunnerPageSubTitle{font-size:18px;margin-bottom:20px;}
+.ForerunnerPageSubTitle{font-size:18px;margin-bottom:20px;line-height:30px;}
 .ForerunnerPageContent{font-size:14px;}
 
 .ForerunnerTD{ display:table-cell;vertical-align:top}
@@ -23,8 +24,8 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
 
 .FooterContent{float:left;padding-top:20px;padding-right:10px;}
 .Navbar {display:inline-block; margin-left:50px;}
-.Navbar a{color: gray;padding:10px;}
-.Navbar ul{-webkit-padding-start: 0px;list-style:none;}
+.Navbar a{color: gray;padding:8px;}
+.Navbar ul{-webkit-padding-start: 0px;-moz-padding-start: 0px;-ms-padding-start: 0px;list-style:none;padding:0;list-style-type:none;}
 .Navitem{line-height: 30px;float:right; }
 .Navitem a:hover{color:white;background-color:black;}
 

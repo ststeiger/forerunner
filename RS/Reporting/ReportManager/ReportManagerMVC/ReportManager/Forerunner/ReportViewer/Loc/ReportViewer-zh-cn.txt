@@ -71,18 +71,18 @@
 		"print": "打印"
     },
 	"print":{
-	    "title": "打印页面设置",
-		"pageHeight": "页面高度",
-		"pageWidth": "页面宽度",
-		"marginTop": "上边距",
-		"marginBottom": "下边距",
-		"marginLeft": "左边距",
-		"marginRight": "右边距",
+	    "title": "打印报表",
+		"pageHeight": "高度",
+		"pageWidth": "宽度",
+		"marginTop": "上",
+		"marginBottom": "下",
+		"marginLeft": "左",
+		"marginRight": "右",
 		"print": "打印",
 		"cancel": "取消",
 		"unit": "mm",
-		"margin": "Magins",
-		"pageLayoutOptions": "Page layout options"
+		"margin": "边距",
+		"pageLayoutOptions": "页面设置"
 	},
 	"paramPane": {
         "nullField": "空值",

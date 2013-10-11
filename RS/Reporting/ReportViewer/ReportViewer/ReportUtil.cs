@@ -63,13 +63,23 @@ namespace Forerunner
                 {
                     if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
-                        JsonArray multipleValues = obj["Value"] as JsonArray;
-                        foreach (String value in multipleValues)
+                        if (obj["Value"] == null)
                         {
                             ParameterValue pv = new ParameterValue();
                             pv.Name = obj["Parameter"].ToString();
-                            pv.Value = value;
+                            pv.Value = GetDefaultValue(obj["Type"].ToString());
                             list.Add(pv);
+                        } 
+                        else 
+                        {
+                            JsonArray multipleValues = obj["Value"] as JsonArray;
+                            foreach (String value in multipleValues)
+                            {
+                                ParameterValue pv = new ParameterValue();
+                                pv.Name = obj["Parameter"].ToString();
+                                pv.Value = value;
+                                list.Add(pv);
+                            }
                         }
                     }
                     else

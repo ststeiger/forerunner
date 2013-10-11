@@ -78,7 +78,9 @@
 		"marginRight": "право граница",
 		"print": "печатать",
 		"cancel": "отменить",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "Ноль",

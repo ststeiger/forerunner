@@ -18,6 +18,21 @@
   display: block;
 }
 
+.fr-toolpane-dropdown-group-container {
+
+  background-color: #354468;
+}
+
+.fr-toolpane-dropdown-itemcontainer {
+  border-top-width: 1px;
+  border-top-style: groove;
+  border-top-color: lightblue;
+  padding: 11px;
+  vertical-align: top;
+  color: white;
+  display: block;
+}
+
 .fr-toolpane .fr-toolbase-item-text-container {
   margin: 5px;
   display: inline-block;
@@ -25,6 +40,15 @@
 
 .fr-toolpane .fr-toolbase-item-text {
   height: 24px;
+  padding-left: 7px;
+  display: table-cell;
+  vertical-align: middle;
+  font-size: 13pt;
+  color: #ffffff;
+}
+
+.fr-toolpane-dropdown-item-text {
+  height: 31px;
   padding-left: 7px;
   display: table-cell;
   vertical-align: middle;
@@ -123,6 +147,13 @@
   border-bottom-style: groove;
   border-bottom-color: lightblue;
 }
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+  .fr-toolpane-dropdown-itemcontainer:hover {
+    background-color: #bdcadd;
+  }
+}  /* @media */
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {

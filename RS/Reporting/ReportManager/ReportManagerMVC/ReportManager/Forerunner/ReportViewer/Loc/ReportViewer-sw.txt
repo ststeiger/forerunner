@@ -78,7 +78,9 @@
 		"marginRight": "marginal höger",
 		"print": "skriva ut",
 		"cancel": "avbryta",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "Noll",

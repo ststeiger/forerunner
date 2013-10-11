@@ -71,16 +71,18 @@
 		"print": "Print"
     },
 	"print":{
-	    "title": "Print Page Layout Option",
-		"pageHeight": "PageHeight",
-		"pageWidth": "PageWidth",
-		"marginTop": "MarginTop",
-		"marginBottom": "MarginBottom",
-		"marginLeft": "MarginLeft",
-		"marginRight": "MarginRight",
+	    "title": "Print Report",
+		"pageHeight": "Height",
+		"pageWidth": "Width",
+		"marginTop": "Top",
+		"marginBottom": "Bottom",
+		"marginLeft": "Left",
+		"marginRight": "Right",
 		"print": "Print",
 		"cancel": "Cancel",
-		"unit": "in"
+		"unit": "in",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "Null",

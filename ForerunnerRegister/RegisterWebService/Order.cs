@@ -102,13 +102,18 @@ namespace ForerunnerWebService
             return "success";
         }
 
-        internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity)
+        internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity,string LicenseID = null)
         {
             string SQL = @"INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
                             SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,GETDATE()";
 
             ForerunnerDB DB = new ForerunnerDB();
-            string ID = ForerunnerDB.NewLicenseID();
+            string ID;
+
+            if (LicenseID == null)
+                ID = ForerunnerDB.NewLicenseID();
+            else
+                ID = LicenseID;
 
             SqlConnection SQLConn = DB.GetSQLConn();
             SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);

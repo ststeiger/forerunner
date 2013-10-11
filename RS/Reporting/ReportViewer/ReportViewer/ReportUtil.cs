@@ -85,58 +85,6 @@ namespace Forerunner
             }
         }
 
-        internal static Forerunner.SSRS.Management.ParameterValue[] GetCascadingParameterValue(string parameterList)
-        {
-            if (parameterList == "null")
-                return null;
-
-            List<Forerunner.SSRS.Management.ParameterValue> list = new List<Forerunner.SSRS.Management.ParameterValue>();
-
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(parameterList)))
-            {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
-
-                JsonArray parameterArray = jsonObj["ParamsList"] as JsonArray;
-
-                foreach (JsonObject obj in parameterArray)
-                {
-                    if (obj["IsMultiple"].ToString().ToLower() == "true")
-                    {
-                        string multipleValue = obj["Value"].ToString();
-                        
-                        if (multipleValue == "null") 
-                        {
-                            Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
-                            pv.Name = obj["Parameter"].ToString();
-                            pv.Value = GetDefaultValue(obj["Type"].ToString());
-                            list.Add(pv);
-                        }
-                        else
-                        {
-                            string[] values = multipleValue.Split(',');
-                            foreach (string str in values)
-                            {
-                                Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
-                                pv.Name = obj["Parameter"].ToString();
-                                pv.Value = str;
-                                list.Add(pv);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
-                        pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? GetDefaultValue(obj["Type"].ToString()) : obj["Value"].ToString();
-                        list.Add(pv);
-                    }
-                }
-
-                return list.ToArray();
-            }
-        }
-
         private static string GetDefaultValue(string type)
         {
             string value = string.Empty;

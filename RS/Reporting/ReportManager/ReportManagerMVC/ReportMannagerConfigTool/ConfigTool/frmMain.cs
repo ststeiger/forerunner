@@ -285,7 +285,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
-                Validate();
+                ValidateLicense();
             }
             catch (Exception ex)
             {

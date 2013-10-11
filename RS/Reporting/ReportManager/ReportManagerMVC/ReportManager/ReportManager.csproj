@@ -245,7 +245,7 @@
     <Content Include="Samples_Release\BottomNav.html" />
     <Content Include="Samples_Release\FullPage.html" />
     <Content Include="Samples_Release\Dashboard.html" />
-    <Content Include="Samples_Release\FullPageFloatingToolbar.html" />
+    <Content Include="Samples_Release\FullPageStaticToolbar.html" />
     <Content Include="Samples_Release\SideNav.html" />
     <Content Include="Samples_Release\TopNav.html" />
     <Content Include="Samples_Release\TopNav2.html" />

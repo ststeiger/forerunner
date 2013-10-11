@@ -1,6 +1,6 @@
 ﻿
 function ReSizeFooter() {
-    var footer = $(".footer");
+    var footer = $(".Footer");
     if ($(window).height() > footer.offset().top && $(window).scrollTop() === 0) {
         footer.height($(window).height() - footer.offset().top);
     }

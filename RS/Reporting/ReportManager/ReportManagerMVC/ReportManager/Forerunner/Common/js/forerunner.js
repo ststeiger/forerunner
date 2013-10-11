@@ -369,7 +369,7 @@ $(function () {
 
             // Enumerate the rules
             $.each(rules, function (rulesIndex, rule) {
-                if (rule.styleSheet) {
+                if (rule.styleSheet && rule.styleSheet.href) {
                     if (rule.styleSheet.href.match(new RegExp(name, "i"))) {
                         returnSheet = rule.styleSheet;
                         return false;
@@ -389,7 +389,7 @@ $(function () {
 
             // Find the toolbase.css style sheet
             $.each(document.styleSheets, function (sheetsIndex, sheet) {
-                if (sheet.href.match(new RegExp(name, "i"))) {
+                if (sheet.href && sheet.href.match(new RegExp(name, "i"))) {
                     returnSheet = sheet;
                     return false;
                 }

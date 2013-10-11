@@ -4764,7 +4764,7 @@ $(function () {
 
             if (predefinedValue) {
                 $multipleCheckBox.val(keys.substr(0, keys.length - 1));
-                $hiddenCheckBox.val(values.substr(0, values.length - 1));
+                $hiddenCheckBox.val(JSON.stringify(predefinedValue));
             }
 
             $control.append($multipleCheckBox).append($hiddenCheckBox).append($openDropDown).append($dropDownContainer);

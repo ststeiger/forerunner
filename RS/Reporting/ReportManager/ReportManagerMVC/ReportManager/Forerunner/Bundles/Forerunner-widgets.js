@@ -4481,7 +4481,7 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
             $control.attr("AllowBlank", param.AllowBlank);
-            if (param.Nullable === false) {
+            if (param.Nullable === false && param.AllowBlank === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required);
             }
             $control.attr("ErrorMessage", param.ErrorMessage);

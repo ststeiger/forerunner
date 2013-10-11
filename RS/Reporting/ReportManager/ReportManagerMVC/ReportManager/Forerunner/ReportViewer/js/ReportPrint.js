@@ -43,7 +43,7 @@ $(function () {
                 "<div class='fr-print-innerPage fr-print-layout'>" +
                     "<div class='fr-print-header'>" +
                         "<div class='fr-print-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-printreport'>" +
+                            "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
                             "</div>" +
                         "</div>" +
                         "<div class='fr-print-title-container'>" +

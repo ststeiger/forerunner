@@ -47,7 +47,6 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,

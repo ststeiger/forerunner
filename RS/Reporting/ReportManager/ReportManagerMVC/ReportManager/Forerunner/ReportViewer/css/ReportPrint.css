@@ -57,21 +57,31 @@
 }
 
 .fr-print-print-icon-container {
-  margin: 4px 17px 0 11px;
-  display: block;
+  height: 100%;
+  margin: 0 17px 0 11px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.fr-print-align-middle {
+  vertical-align: middle;
 }
 
 .fr-print-title-container {
-  margin-top: 10px;
-  display: block;
+  height: 100%;
+  vertical-align: top;
+  display: inline-block;
 }
 
 .fr-print-title {
+  height: 45px;
+  vertical-align: middle;
+  display: table-cell;
 }
 
 .fr-print-cancel-container {
   margin-top: 12px;
-  display: block;
+  display: inline-block;
   position: absolute;
   top: 0;
   right: 22px;

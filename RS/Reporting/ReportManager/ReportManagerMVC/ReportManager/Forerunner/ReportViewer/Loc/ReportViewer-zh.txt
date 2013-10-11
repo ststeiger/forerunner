@@ -78,7 +78,9 @@
 		"marginRight": "右边距",
 		"print": "打印",
 		"cancel": "取消",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "空值",

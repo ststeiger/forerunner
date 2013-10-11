@@ -5210,35 +5210,86 @@ $(function () {
 
             me.element.html("");
 
-            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage fr-print-layout'><div class='fr-print-title'>" +
-               locData.title + "</div><form class='fr-print-form'>" +
-               "<fidleset><div><label class='fr-print-label'>" + locData.pageHeight+":</label>" +
-               "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._unitConvert(pageLayout.PageHeight) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-               "<div><label class='fr-print-label'>" + locData.pageWidth + ":</label>" +
-               "<input class='fr-print-text' name='PageWidth' type='text' value=" + me._unitConvert(pageLayout.PageWidth) + " />" +
-               "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginTop + ":</label>" +
-                "<input class='fr-print-text' name='MarginTop' type='text' value=" + me._unitConvert(pageLayout.MarginTop) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginBottom + ":</label>" +
-                "<input class='fr-print-text' name='MarginBottom' type='text' value=" + me._unitConvert(pageLayout.MarginBottom) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginLeft + ":</label>" +
-               "<input class='fr-print-text' name='MarginLeft' type='text' value=" + me._unitConvert(pageLayout.MarginLeft) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginRight + ":</label>" +
-               "<input class='fr-print-text' name='MarginRight' type='text' value=" + me._unitConvert(pageLayout.MarginRight) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div class='fr-print-button-group'><input class='fr-print-button fr-print-cancel fr-rounded' name='Cancel' type='button' value='" + locData.cancel + "' />" +
-               "<input class='fr-print-button fr-print-submit fr-rounded' name='submit' type='button' value='" + locData.print + "' /></div>" +
-               "</fidleset></form></div></div>");
+            var $printForm = new $(
+            "<div class='fr-print-page'>" +
+                // Header
+                "<div class='fr-print-innerPage fr-print-layout'>" +
+                    "<div class='fr-print-header'>" +
+                        "<div class='fr-print-print-icon-container'>" +
+                            "<div class='fr-icons24x24 fr-icons24x24-printreport'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-print-title-container'>" +
+                            "<div class='fr-print-title'>" +
+                                locData.title +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-print-cancel-container'>" +
+                            "<input type='button' class='fr-print-cancel' value='" + locData.cancel + "'/>" +
+                        "</div>" +
+                    "</div>" +
+                    // form
+                    "<form class='fr-print-form'>" +
+                        "<div class='fr-print-options-label'>" +
+                            "<div>" +
+                                locData.pageLayoutOptions +
+                            "</div>" +
+                        "</div>" +
+                        // Height / Width
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.pageHeight + "</label>" +
+                                "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.pageWidth + "</label>" +
+                                "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                        "</div>" +
+                        // Orientation
+                        "<div class='fr-print-orientation-container'>" +
+                            "<div class='fr-print-portrait'></div>" +
+                            "<div class='fr-print-landscape'></div>" +
+                        "</div>" +
+                        "<div class='fr-print-margins-label'>" +
+                            locData.margin +
+                        "</div>" +
+                        // Top / Bottom
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginTop + "</label>" +
+                                "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginBottom + "</label>" +
+                                "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                        "</div>" +
+                        // Left / Right
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginLeft + "</label>" +
+                                "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginRight + "</label>" +
+                                "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "</div>" +
+                                "<div class='fr-print-submit-container'>" +
+                                    "<div class='fr-print-submit-inner'>" +
+                                    "<input name='submit' type='button' class='fr-print-submit' value='" + locData.print + "'/>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>" +
+                "</div>" +
+            "</div>");
 
             //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
 
@@ -5263,6 +5314,74 @@ $(function () {
             me.element.find(".fr-print-cancel").on("click", function (e) {
                 me.options.$reportViewer.showPrint();
             });
+
+            me.$pageWidth = me.element.find("[name=PageWidth]");
+            me.$pageHeight = me.element.find("[name=PageHeight]");
+
+            me.$pageWidth.on("change", function (e) {
+                me._setOrientationIconState.call(me);
+            });
+
+            me.$pageHeight.on("change", function (e) {
+                me._setOrientationIconState.call(me);
+            });
+
+            me.$printPortrait = me.element.find(".fr-print-portrait");
+            me.$printLandscape = me.element.find(".fr-print-landscape");
+
+            me.$printPortrait.on("click", function (e) {
+                if (!me._isPortrait()) {
+                    me._swapWidthHeight();
+                }
+            });
+
+            me.$printLandscape.on("click", function (e) {
+                if (me._isPortrait()) {
+                    me._swapWidthHeight();
+                }
+            });
+
+            me._setOrientationIconState();
+        },
+        _isPortrait: function () {
+            var me = this;
+            if (Number(me.$pageWidth.val()) > Number(me.$pageHeight.val())) {
+                return false;
+            }
+            return true;
+        },
+        _swapWidthHeight: function () {
+            var me = this;
+
+            var width = me.$pageWidth.val();
+            me.$pageWidth.val(me.$pageHeight.val());
+            me.$pageHeight.val(width);
+
+            me._setOrientationIconState();
+        },
+        _setOrientationIconState: function () {
+            var me = this;
+
+            if (Number(me.$pageWidth.val()) > Number(me.$pageHeight.val())) {
+                // Landscape
+                me.$printLandscape.removeClass("fr-core-cursorpointer");
+                me.$printLandscape.removeClass("fr-print-landscape-icon");
+                me.$printLandscape.addClass("fr-print-landscape-icon-active");
+                
+                me.$printPortrait.removeClass("fr-print-portrait-icon-active");
+                me.$printPortrait.addClass("fr-core-cursorpointer");
+                me.$printPortrait.addClass("fr-print-portrait-icon");
+            }
+            else {
+                // Portrait
+                me.$printLandscape.addClass("fr-core-cursorpointer");
+                me.$printLandscape.removeClass("fr-print-landscape-icon-active");
+                me.$printLandscape.addClass("fr-print-landscape-icon");
+
+                me.$printPortrait.removeClass("fr-print-portrait-icon");
+                me.$printPortrait.removeClass("fr-core-cursorpointer");
+                me.$printPortrait.addClass("fr-print-portrait-icon-active");
+            }
         },
         /**
        * @function $.forerunner.reportPrint#togglePrintPane

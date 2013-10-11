@@ -213,6 +213,10 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_portrait.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_portrait_1.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />

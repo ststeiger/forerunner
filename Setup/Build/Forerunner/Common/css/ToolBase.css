@@ -46,12 +46,6 @@
   /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */
   display: none;
 }
-.fr-indent24x24 {
-  width:24px;
-  height:24px;
-  margin:5px;
-  display:inline-block;
-}
 .fr-toolbase-rightimage {
   float:right;
 }
@@ -63,7 +57,7 @@
 .fr-toolbase-dropdown
 {
   padding:1px;
-  background-color: #354468;
+  background-color: #d5e1f2;
   border:1px solid darkgray;
 }
 .fr-toolbase-dropdown-item {
@@ -71,11 +65,21 @@
   border-top-width:1px;
   border-top-color: lightblue;
   font-size: 13pt;
-  color: #ffffff;
+  color: #456191;
   text-align:left;
 }
 .fr-toolbase-state {
   background-color: transparent;
+}
+.fr-toolbase-persistent-active-state {
+    background: #496b94; /* Old browsers */
+    background: -moz-linear-gradient(top,  #496b94 0%, #354469 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #496b94 0%,#354469 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #496b94 0%,#354469 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #496b94 0%,#354469 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */
 }
 
 /* Desktops and laptops ----------- */

@@ -96,8 +96,13 @@ namespace ForerunnerLicense
                 MobV1Key = forerunnerswKey.OpenSubKey(VersionKey,true);
                 if (MobV1Key == null)
                 {
-                    //  Create key and set security so everyone can read and write it
+                    //Handle the beta case where forerunner key exists
+                    if (wow6432NodeKey == null)
+                        forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey,true);
+                    else
+                        forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey,true);
 
+                    //  Create key and set security so everyone can read and write it                    
                     MobV1Key = forerunnerswKey.CreateSubKey(VersionKey);
                     RegistrySecurity rs = MobV1Key.GetAccessControl();
                     rs.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), RegistryRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));

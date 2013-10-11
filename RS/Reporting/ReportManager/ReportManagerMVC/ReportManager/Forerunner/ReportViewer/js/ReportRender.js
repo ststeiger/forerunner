@@ -48,7 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewer: null,
-            responsive: true,
+            responsive: false,
         },
         // Constructor
         _create: function () {

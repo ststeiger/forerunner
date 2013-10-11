@@ -5,7 +5,7 @@ setlocal
 
 set _basepath=%~dp0
 set _JSDocPath=%_basepath%..\..\..\..\..\..\build\tools\JSDoc3\
-set _WebsitePath=%_basepath%..\..\..\..\..\..\Website\
+set _WebsitePath=%_basepath%..\..\..\..\..\..\ForerunnerSW\ForerunnerSW\
 set path=%path%;%_JSDocPath%
 
 rd /s /q %_basepath%Docs 2> nul

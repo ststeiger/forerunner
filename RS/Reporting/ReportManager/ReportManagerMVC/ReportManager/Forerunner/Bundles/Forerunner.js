@@ -330,7 +330,12 @@ $(function () {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
                     var script = scripts[i];
-                    var endsWith = this._endsWith(script.src, "/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js");
+                    var endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner.min.js");
+                    if (endsWith !== -1) {
+                        this._virtualRootBase = script.src.substring(0, endsWith);
+                        break;
+                    }
+                    endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner.js");
                     if (endsWith !== -1) {
                         this._virtualRootBase = script.src.substring(0, endsWith);
                         break;

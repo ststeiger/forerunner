@@ -78,7 +78,9 @@
 		"marginRight": "marginea dreapta",
 		"print": "imprima",
 		"cancel": "anula",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "Null",

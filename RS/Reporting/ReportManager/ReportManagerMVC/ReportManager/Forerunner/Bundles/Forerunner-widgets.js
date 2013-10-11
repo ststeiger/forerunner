@@ -4409,7 +4409,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent) {
             var me = this;
-            var $lable = new $("<div class='fr-param-label'>" + param.Name + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Name + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
@@ -4451,7 +4451,7 @@ $(function () {
             }
 
             $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
-            $parent.append($lable).append($container);
+            $parent.append($label).append($container);
 
             return $parent;
         },
@@ -4626,15 +4626,44 @@ $(function () {
 
             return $control;
         },
+        _createInput : function(param, type, readonly, listOfClasses) {
+            var $input = new $("<Input />");
+            $input.attr("type", type);
+            $input.attr("name", param.Name);
+            $input.attr("ismultiple", param.MultiValue);
+            $input.attr("datatype", param.Type);
+            if (readonly) {
+                $input.attr("readonly", true);
+            }
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $input.addClass(listOfClasses[i]);
+            }
+            return $input;
+        },
+        _createDiv : function(listOfClasses) {
+            var $div = new $("<div />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $div.addClass(listOfClasses[i]);
+            }
+            return $div;
+        },
+        _createLabel: function (listOfClasses) {
+            var $label = new $("<label />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $label.addClass(listOfClasses[i]);
+            }
+            return $label;
+        },
         _writeDropDownWithCheckBox: function (param, dependenceDisable) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<div class='fr-param-element-container'/>");
+            var $control = me._createDiv(["fr-param-element-container"]);
 
-            var $multipleCheckBox = new $("<Input type='text' class='fr-param-client fr-param-dropdown-textbox fr-paramname-" + param.Name
-                + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
 
-            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
+            $openDropDown.append($dropdownicon);
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleCheckBox);
@@ -4643,12 +4672,13 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $multipleCheckBox);
-            var $hiddenCheckBox = new $("<Input class='fr-param fr-paramname-" + param.Name + "-hidden' name='" + param.Name + "' type='hidden' ismultiple='"
-                + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name + "-hidden"]);
+           
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-paramname-" + param.Name + "-dropdown-container' value='" + param.Name + "' />");
+            var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-paramname-" + param.Name + "-dropdown-container"]);
+            $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
             param.ValidValues.push({ Key: "Select All", Value: "Select All" });
@@ -4672,8 +4702,8 @@ $(function () {
                 var $col = new $("<TD/>");
 
                 var $span = new $("<Span />");
-                var $checkbox = new $("<input type='checkbox' class='fr-param-dropdown-checkbox fr-paramname-" + param.Name + "-dropdown-cb'"
-                    + " id='" + param.Name + "_DropDown_" + value + "' value='" + value + "' />");
+                var $checkbox = me._createInput(param, "checkbox", false, ["fr-param-dropdown-checkbox", "fr-paramname-" + param.Name + "-dropdown-cb"]);
+                $checkbox.attr("value", value);
 
                 if (predefinedValue && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
@@ -4696,7 +4726,10 @@ $(function () {
                     }
                 });
 
-                var $label = new $("<label for='" + param.Name + "_DropDown_" + value + "' class='fr-param-dropdown-label fr-paramname-" + param.Name + "-dropdown-" + value + "-lable" + "' />");
+                var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);
+                $label.attr("for", param.Name + "_DropDown_" + i.toString());
+                $label.attr("value", value);
+
                 $label.html(key);
 
                 $span.append($checkbox).append($label);
@@ -4719,12 +4752,12 @@ $(function () {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
-            var $control = new $("<div class='fr-param-element-container'/>");
+            var $control = me._createDiv(["fr-param-element-container"]);
 
-            var $multipleTextArea = new $("<Input type='text' name='" + param.Name + "' class='fr-param fr-param-dropdown-textbox fr-paramname-" + param.Name
-                + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
-
-            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
+            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
+            $openDropDown.append($dropdownicon);
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleTextArea);
@@ -4735,13 +4768,15 @@ $(function () {
             $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-paramname-" + param.Name + "-dropdown-container' value='" + param.Name + "' />");
+            var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-paramname-" + param.Name + "-dropdown-container"]);
+            $dropDownContainer.attr("value", param.Name);
 
             var $textarea = new $("<textarea class='fr-param-dropdown-textarea fr-paramname-" + param.Name + "-dropdown-textArea' />");
 
             if (predefinedValue) {
                 $textarea.val(me._getTextAreaValue(predefinedValue, true));
                 $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+                $multipleTextArea.attr("jsonValues", JSON.stringify(predefinedValue));
             }
 
             $dropDownContainer.append($textarea);
@@ -4771,27 +4806,29 @@ $(function () {
 
             if (target.hasClass("fr-param-client")) {
                 var showValue = "";
-                var hiddenValue = "";
+                var hiddenValue = [];
 
-                $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
+                $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + this.value + "-lable", me.$params).html() + ",";
-                        hiddenValue += this.value + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        hiddenValue.push( this.value );
                     }
                 });
 
                 newValue = showValue.substr(0, showValue.length - 1);
                 $(".fr-paramname-" + param.Name, me.$params).val(newValue);
-                $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(hiddenValue.substr(0, hiddenValue.length - 1));
+                $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(JSON.stringify(hiddenValue));
             }
             else {
                 newValue = $(".fr-paramname-" + param.Name + "-dropdown-textArea", me.$params).val();
+                var listOfValues = newValue.split("\n");
                 newValue = newValue.replace(/\n+/g, ",");
-
+                
                 if (newValue.charAt(newValue.length - 1) === ",") {
                     newValue = newValue.substr(0, newValue.length - 1);
                 }
                 target.val(newValue);
+                target.attr("jsonValues", JSON.stringify(listOfValues));
             }
 
             if (oldValue !== newValue)
@@ -4865,11 +4902,20 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    if ($(this).attr("ismultiple") === "false") {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    } else {
+                        var jsonValues = $(this).attr("jsonValues");
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    if ($(this).attr("ismultiple") === "false") {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    } else {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                    }
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
@@ -5205,35 +5251,86 @@ $(function () {
 
             me.element.html("");
 
-            var $printForm = new $("<div class='fr-print-page'><div class='fr-print-innerPage fr-print-layout'><div class='fr-print-title'>" +
-               locData.title + "</div><form class='fr-print-form'>" +
-               "<fidleset><div><label class='fr-print-label'>" + locData.pageHeight+":</label>" +
-               "<input class='fr-print-text' name='PageHeight' type='text' value=" + me._unitConvert(pageLayout.PageHeight) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-               "<div><label class='fr-print-label'>" + locData.pageWidth + ":</label>" +
-               "<input class='fr-print-text' name='PageWidth' type='text' value=" + me._unitConvert(pageLayout.PageWidth) + " />" +
-               "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginTop + ":</label>" +
-                "<input class='fr-print-text' name='MarginTop' type='text' value=" + me._unitConvert(pageLayout.MarginTop) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginBottom + ":</label>" +
-                "<input class='fr-print-text' name='MarginBottom' type='text' value=" + me._unitConvert(pageLayout.MarginBottom) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginLeft + ":</label>" +
-               "<input class='fr-print-text' name='MarginLeft' type='text' value=" + me._unitConvert(pageLayout.MarginLeft) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div><label class='fr-print-label'>" + locData.marginRight + ":</label>" +
-               "<input class='fr-print-text' name='MarginRight' type='text' value=" + me._unitConvert(pageLayout.MarginRight) + " />" +
-                "<label class='fr-print-unit-label'>" + unit + "</label></div>" +
-
-                "<div class='fr-print-button-group'><input class='fr-print-button fr-print-cancel fr-rounded' name='Cancel' type='button' value='" + locData.cancel + "' />" +
-               "<input class='fr-print-button fr-print-submit fr-rounded' name='submit' type='button' value='" + locData.print + "' /></div>" +
-               "</fidleset></form></div></div>");
+            var $printForm = new $(
+            "<div class='fr-print-page'>" +
+                // Header
+                "<div class='fr-print-innerPage fr-print-layout'>" +
+                    "<div class='fr-print-header'>" +
+                        "<div class='fr-print-print-icon-container'>" +
+                            "<div class='fr-icons24x24 fr-icons24x24-printreport'>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-print-title-container'>" +
+                            "<div class='fr-print-title'>" +
+                                locData.title +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-print-cancel-container'>" +
+                            "<input type='button' class='fr-print-cancel' value='" + locData.cancel + "'/>" +
+                        "</div>" +
+                    "</div>" +
+                    // form
+                    "<form class='fr-print-form'>" +
+                        "<div class='fr-print-options-label'>" +
+                            "<div>" +
+                                locData.pageLayoutOptions +
+                            "</div>" +
+                        "</div>" +
+                        // Height / Width
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.pageHeight + "</label>" +
+                                "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.pageWidth + "</label>" +
+                                "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                        "</div>" +
+                        // Orientation
+                        "<div class='fr-print-orientation-container'>" +
+                            "<div class='fr-print-portrait'></div>" +
+                            "<div class='fr-print-landscape'></div>" +
+                        "</div>" +
+                        "<div class='fr-print-margins-label'>" +
+                            locData.margin +
+                        "</div>" +
+                        // Top / Bottom
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginTop + "</label>" +
+                                "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginBottom + "</label>" +
+                                "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                        "</div>" +
+                        // Left / Right
+                        "<div class='fr-print-settings-pair-container'>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginLeft + "</label>" +
+                                "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "<div class='fr-print-setting'>" +
+                                "<label class='fr-print-label'>" + locData.marginRight + "</label>" +
+                                "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
+                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                            "</div>" +
+                            "</div>" +
+                                "<div class='fr-print-submit-container'>" +
+                                    "<div class='fr-print-submit-inner'>" +
+                                    "<input name='submit' type='button' class='fr-print-submit' value='" + locData.print + "'/>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>" +
+                "</div>" +
+            "</div>");
 
             //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
 
@@ -5258,6 +5355,74 @@ $(function () {
             me.element.find(".fr-print-cancel").on("click", function (e) {
                 me.options.$reportViewer.showPrint();
             });
+
+            me.$pageWidth = me.element.find("[name=PageWidth]");
+            me.$pageHeight = me.element.find("[name=PageHeight]");
+
+            me.$pageWidth.on("change", function (e) {
+                me._setOrientationIconState.call(me);
+            });
+
+            me.$pageHeight.on("change", function (e) {
+                me._setOrientationIconState.call(me);
+            });
+
+            me.$printPortrait = me.element.find(".fr-print-portrait");
+            me.$printLandscape = me.element.find(".fr-print-landscape");
+
+            me.$printPortrait.on("click", function (e) {
+                if (!me._isPortrait()) {
+                    me._swapWidthHeight();
+                }
+            });
+
+            me.$printLandscape.on("click", function (e) {
+                if (me._isPortrait()) {
+                    me._swapWidthHeight();
+                }
+            });
+
+            me._setOrientationIconState();
+        },
+        _isPortrait: function () {
+            var me = this;
+            if (Number(me.$pageWidth.val()) > Number(me.$pageHeight.val())) {
+                return false;
+            }
+            return true;
+        },
+        _swapWidthHeight: function () {
+            var me = this;
+
+            var width = me.$pageWidth.val();
+            me.$pageWidth.val(me.$pageHeight.val());
+            me.$pageHeight.val(width);
+
+            me._setOrientationIconState();
+        },
+        _setOrientationIconState: function () {
+            var me = this;
+
+            if (Number(me.$pageWidth.val()) > Number(me.$pageHeight.val())) {
+                // Landscape
+                me.$printLandscape.removeClass("fr-core-cursorpointer");
+                me.$printLandscape.removeClass("fr-print-landscape-icon");
+                me.$printLandscape.addClass("fr-print-landscape-icon-active");
+                
+                me.$printPortrait.removeClass("fr-print-portrait-icon-active");
+                me.$printPortrait.addClass("fr-core-cursorpointer");
+                me.$printPortrait.addClass("fr-print-portrait-icon");
+            }
+            else {
+                // Portrait
+                me.$printLandscape.addClass("fr-core-cursorpointer");
+                me.$printLandscape.removeClass("fr-print-landscape-icon-active");
+                me.$printLandscape.addClass("fr-print-landscape-icon");
+
+                me.$printPortrait.removeClass("fr-print-portrait-icon");
+                me.$printPortrait.removeClass("fr-core-cursorpointer");
+                me.$printPortrait.addClass("fr-print-portrait-icon-active");
+            }
         },
         /**
        * @function $.forerunner.reportPrint#togglePrintPane

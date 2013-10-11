@@ -78,7 +78,9 @@
 		"marginRight": "margine destro",
 		"print": "Stampa",
 		"cancel": "annullare",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Magins",
+		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {
         "nullField": "Zero",

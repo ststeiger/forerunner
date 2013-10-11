@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Forerunner Software</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+
+ 	<link href="/content/site.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- Header ================================================== -->
+    <div class="ForerunnerPort Header" style="">
+        <div class="ForerunnerPage Center" style="">
+            <table class="" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="ForerunnerTDLeft ForerunnerLogo">
+                                <img style="" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
+                            </div>
+                        </td>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="Navbar ">
+                                <ul>
+                                    <li class="Navitem"><a href="/home/contact">Contact</a></li>
+                                    <li class="Navitem"><a href="/home/about">About</a></li>
+                                    <li class="Navitem"><a href="/SMForum">Support</a></li>
+                                    <li class="Navitem"><a href="/home/demo">Demo</a></li>
+                                    <li class="Navitem"><a href="/Docs/index.html">SDK Docs</a></li>
+                                    <li class="Navitem"><a href="http://shop.forerunnersw.com">Store</a></li>
+                                    <li class="Navitem"><a href="/Home">Home</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+
+    <!-- Header ================================================== -->
+
+   
+<div class="ForerunnerPort" style="">
+    <div class="ForerunnerPage Center" style="">
+		<div id="main">
+			<h1 class="page-title">Namespace: reportExplorerEZ</h1>
+			 
+
+
+
+<section>
+    
+<header>
+    <h2>
+        <span class="ancestors"><a href="$.html">$</a><a href="$.forerunner.html">.forerunner</a>.</span>
+    
+    reportExplorerEZ
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description">Widget used to explore available reports and launch the Report Viewer</div>
+        
+        
+        
+<dl class="details">
+    
+        
+        <h5 class="subsection-title">Properties:</h5>
+        
+        <dl>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The options for reportExplorerEZ
+                <h6>Properties</h6>
+
+<table class="props">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>navigateTo</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Callback function used to navigate to a selected report</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>historyBack</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Callback function used to go back in browsing history.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table></dl>
+        
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        ReportExplorer/js/ReportExplorerEZ.js, line 20
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+            <h3>Example</h3>
+            
+    <pre class="prettyprint"><code>$("#reportExplorerEZId").reportExplorerEZ({ navigateTo: me.navigateTo, historyBack: me.historyBack});</code></pre>
+
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <h4 class="name" id="transitionToReportManager"><span class="type-signature"></span>transitionToReportManager<span class="signature">(path, view)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Transition to ReportManager view.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The explorer path to display.  Null for favorites and recent views.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>view</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The view to display.  Valid values are null, favorites and recent.  Null is simply the report manager.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        ReportExplorer/js/ReportExplorerEZ.js, line 39
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="transitionToReportView"><span class="type-signature"></span>transitionToReportView<span class="signature">(path)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Transition to ReportViewer view
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">The report path to display.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        ReportExplorer/js/ReportExplorerEZ.js, line 89
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+		</div>
+
+		<nav>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-GettingStarted.html">GettingStarted</a></li></ul>
+		</nav>
+
+<	/div>
+</div>
+
+    <!-- Footer ================================================== -->
+    <div class="ForerunnerPort Footer" style="">
+        <div class="ForerunnerPage Center" style="">
+            <table class="" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="ForerunnerTDLeft FooterLeft">
+                                <div class="FooterContent ">� 2013 Forerunner Software</div>
+                                <div class="FooterContent ">855-367-3511 (855-FORE511) </div>
+                            </div>
+                        </td>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="Navbar ">
+                                <ul>
+                                    <li class="Navitem"><a href="/home/contact">Contact</a></li>
+                                    <li class="Navitem"><a href="/home/about">About</a></li>
+                                    <li class="Navitem"><a href="/SMForum">Support</a></li>
+                                    <li class="Navitem"><a href="/home/demo">Demo</a></li>
+                                    <li class="Navitem"><a href="/Docs/index.html">SDK Docs</a></li>
+                                    <li class="Navitem"><a href="http://shop.forerunnersw.com">Store</a></li>
+                                    <li class="Navitem"><a href="/Home">Home</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Footer ================================================== -->
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

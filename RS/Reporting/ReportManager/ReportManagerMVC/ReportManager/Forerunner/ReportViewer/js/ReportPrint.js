@@ -133,7 +133,7 @@ $(function () {
             me.element.find(".fr-print-submit").on("click", function (e) {
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
-                    me.options.$reportViewer.printReport(me._generatePrintProperty());
+                    me.options.$reportViewer.printReport(printPropertyList);
                     me.options.$reportViewer.showPrint();
                 }
             });
@@ -270,17 +270,8 @@ $(function () {
                     a.push({ key: this.name, value: me._generateUnitConvert(this.value) });
                 });
 
-                var tempJson = "[";
-                for (var i = 0; i < a.length; i++) {
-                    if (i !== a.length - 1) {
-                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"},";
-                    }
-                    else {
-                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"}";
-                    }
-                }
-                tempJson += "]";
-                return "{\"PrintPropertyList\":" + tempJson + "}";
+                var printObject = { "PrintPropertyList": a };
+                return JSON.stringify(printObject);
             }
             else {
                 return null;

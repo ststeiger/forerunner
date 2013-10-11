@@ -96,6 +96,7 @@ $(function () {
             me.savedLeft = 0;
             me.origionalReportPath = "";
             me._setPageCallback = null;
+            me.renderError = false;
   
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -262,7 +263,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -274,7 +275,7 @@ $(function () {
                 me._setPageCallback = null;
             }
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone);
+            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -769,7 +770,7 @@ $(function () {
                 function (data) {
                     me.backupCurPage(true);
                     if (data.Exception) {
-                        me.$reportAreaContainer.find(".Page").reportRender("writeError", data);
+                        me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
                         me.removeLoadingIndicator();
                     }
                     else {
@@ -1094,8 +1095,7 @@ $(function () {
                 }
             }
             else if (data.Exception) {
-                me.$reportContainer.reportRender({ reportViewer: this });
-                me.$reportContainer.reportRender("writeError", data);
+                me._renderPageError(me.$reportContainer, data);
                 me.removeLoadingIndicator();
             }
             else {
@@ -1282,8 +1282,15 @@ $(function () {
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
-                me.pages[pageNum].$container.reportRender("writeError", me.pages[pageNum].reportObj);
+                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+
             me.pages[pageNum].isRendered = true;
+        },
+        _renderPageError: function ($container, errorData) {
+            var me = this;
+
+            me.renderError = true;
+            $container.reportRender("writeError", errorData);
         },
                 
         _sessionPing: function () {
@@ -1904,13 +1911,20 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-                me._updateBtnStates(data.newPageNum, maxNumPages);
-                if (data.numOfVisibleParameters === 0)
-                    me.disableTools([tb.btnParamarea]);
-               
+
+                if (data.renderError === true) {
+                    me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnRefresh]);
+                }
+                else {
+                    me.enableTools(me._viewerButtons());
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
+
+                    if (data.numOfVisibleParameters === 0)
+                        me.disableTools([tb.btnParamarea]);
+                }
             });
 
             me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
@@ -1940,18 +1954,10 @@ $(function () {
                 }
             });
 
-            var listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom];
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind];
-            }
             // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
-                               tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom]);
+            //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+            //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
+            //me.enableTools([tb.btnMenu, tb.btnReportBack]);
         },
         _init: function () {
             var me = this;
@@ -1963,17 +1969,22 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
+           
+            me.addTools(1, false, me._viewerButtons());
+            me.addTools(1, false, [tb.btnParamarea]);
+            if (me.options.$reportViewer) {
+                me._initCallbacks();
+            }
+        },
+        _viewerButtons: function () {
             var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
             }
-            me.addTools(1, true, listOfButtons);
-            me.addTools(1, false, [tb.btnParamarea]);
-            if (me.options.$reportViewer) {
-                me._initCallbacks();
-            }
+
+            return listOfButtons;
         },
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
@@ -2057,10 +2068,17 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-                me._updateItemStates(data.newPageNum, maxNumPages);
+
+                if (data.renderError === true) {
+                    me.enableTools([tp.itemReportBack, tp.itemRefresh]);
+                }
+                else {
+                    me.enableTools(me._viewerItems());
+                    me._updateItemStates(data.newPageNum, maxNumPages);
+                }
                 
             });
 
@@ -2088,8 +2106,8 @@ $(function () {
             });
 
             // Hook up the toolbar element events
-            me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
-                            tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
+            //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
+            //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
         },
         _init: function () {
             var me = this;
@@ -2104,13 +2122,8 @@ $(function () {
             $toolpane.addClass(me.options.toolClass);
             $(me.element).append($toolpane);
 
-            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
-            }
-            me.addTools(1, true, listOfItems);
+          
+            me.addTools(1, false, me._viewerItems());
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -2120,6 +2133,16 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+        },
+        _viewerItems: function () {
+            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            }
+
+            return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;
@@ -5347,7 +5370,7 @@ $(function () {
             me.element.find(".fr-print-submit").on("click", function (e) {
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
-                    me.options.$reportViewer.printReport(me._generatePrintProperty());
+                    me.options.$reportViewer.printReport(printPropertyList);
                     me.options.$reportViewer.showPrint();
                 }
             });
@@ -5484,17 +5507,8 @@ $(function () {
                     a.push({ key: this.name, value: me._generateUnitConvert(this.value) });
                 });
 
-                var tempJson = "[";
-                for (var i = 0; i < a.length; i++) {
-                    if (i !== a.length - 1) {
-                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"},";
-                    }
-                    else {
-                        tempJson += "{\"key\":\"" + a[i].key + "\",\"value\":\"" + a[i].value + "\"}";
-                    }
-                }
-                tempJson += "]";
-                return "{\"PrintPropertyList\":" + tempJson + "}";
+                var printObject = { "PrintPropertyList": a };
+                return JSON.stringify(printObject);
             }
             else {
                 return null;

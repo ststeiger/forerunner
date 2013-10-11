@@ -140,7 +140,8 @@ function template_html_above()
 	echo '
 	<link rel="help" href="', $scripturl, '?action=help" />
 	<link rel="search" href="', $scripturl, '?action=search" />
-	<link rel="contents" href="', $scripturl, '" />';
+	<link rel="contents" href="', $scripturl, '" />
+  <link href="/content/site.css" rel="stylesheet"/>';
 
 	// If RSS feeds are enabled, advertise the presence of one.
 	if (!empty($modSettings['xmlnews_enable']) && (!empty($modSettings['allow_guestAccess']) || $context['user']['is_logged']))
@@ -168,6 +169,44 @@ function template_html_above()
 
 function template_body_above()
 {
+
+
+// Forerunner Header
+	echo '
+<div class="ForerunnerPort Header" style="background-color:white;">
+        <div class="ForerunnerPage Center" style="">
+            <table class="" style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="ForerunnerTDLeft ForerunnerLogo">
+                                <img style="" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
+                            </div>
+                        </td>
+                        <td class="ForerunnerTD ForerunnerTD50" style="">
+                            <div class="Navbar ">
+                                <ul>
+                                    <li class="Navitem"><a href="/home/contact">Contact</a></li>
+                                    <li class="Navitem"><a href="/home/about">About</a></li>
+                                    <li class="Navitem"><a href="/SMForum">Support</a></li>
+                                    <li class="Navitem"><a href="/home/demo">Demo</a></li>
+                                    <li class="Navitem"><a href="/Docs/index.html">SDK Docs</a></li>
+                                    <li class="Navitem"><a href="http://shop.forerunnersw.com">Store</a></li>
+                                    <li class="Navitem"><a href="/Home">Home</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+    <div class="ForerunnerPort" style="">
+    <div class="ForerunnerPage Center" style="">';
+
+
+
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
 
 	echo !empty($settings['forum_width']) ? '
@@ -350,6 +389,13 @@ function template_body_below()
 	echo '
 	</div></div>', !empty($settings['forum_width']) ? '
 </div>' : '';
+
+
+// End Forerunner Style
+echo '
+</div>
+</div>';
+
 }
 
 function template_html_below()

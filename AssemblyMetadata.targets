@@ -1,0 +1,27 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+      <TextTransformExe>$(ProgramFiles)\Common Files\microsoft shared\TextTemplating\11.0\texttransform.exe</TextTransformExe>
+      <BuildVersionFile>$(MSBuildThisFileDirectory)build.txt</BuildVersionFile>
+      <CoreCompileDependsOn>$(CoreCompileDependsOn);GenerateAssemblyMetadataCompile</CoreCompileDependsOn>
+      <CoreCleanDependsOn>$(CoreCleanDependsOn);CleanAssemblyMetadata</CoreCleanDependsOn>
+  </PropertyGroup>
+  <Target
+      Name="CleanAssemblyMetadata">
+      <Delete Files="$(IntermediateOutputPath)VersionTemplate.cs" />
+  </Target>
+  <Target 
+      Name="GenerateAssemblyMetadata"
+      Inputs="$(BuildVersionFile)" 
+      Outputs="$(IntermediateOutputPath)VersionTemplate.cs">
+    <Exec 
+        Command="&quot;$(TextTransformExe)&quot; -out $(IntermediateOutputPath)VersionTemplate.cs -a &quot;!!BuildVersionFile!$(BuildVersionFile)&quot; &quot;$(MSBuildThisFileDirectory)VersionTemplate.tt&quot;" 
+        Outputs="$(IntermediateOutputPath)VersionTemplate.cs" />
+  </Target>
+  <Target 
+      Name="GenerateAssemblyMetadataCompile" 
+      DependsOnTargets="GenerateAssemblyMetadata">
+      <ItemGroup>
+          <Compile Include="$(IntermediateOutputPath)VersionTemplate.cs" />
+      </ItemGroup>
+  </Target>
+</Project>

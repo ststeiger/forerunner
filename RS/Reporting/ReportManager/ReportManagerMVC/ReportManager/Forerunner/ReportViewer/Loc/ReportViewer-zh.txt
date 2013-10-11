@@ -22,7 +22,9 @@
         "targetSite": "目标站点",
         "source": "源",
         "message": "消息",
-        "stackTrace": "堆栈跟踪"
+        "stackTrace": "堆栈跟踪",
+		"licenseErrorTitle": "感谢您使用Forerunner公司的Mobilizer软件，您的授权许可出现了一些问题。",
+		"licenseErrorContent": "请联系您的系统管理员。如果您是管理员请使用Mobilizer附带的配置工具验证您的授权许可。"
     },
     "exportType": {
         "xml": "XML 数据报表",

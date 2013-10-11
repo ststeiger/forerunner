@@ -63,13 +63,24 @@ namespace Forerunner
                 {
                     if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
-                        string temp = obj["Value"].ToString();
-                        foreach (string str in temp.Split(','))
+                        if (obj["Value"] == null)
                         {
                             ParameterValue pv = new ParameterValue();
                             pv.Name = obj["Parameter"].ToString();
-                            pv.Value = str;
+                            pv.Value = GetDefaultValue(obj["Type"].ToString());
                             list.Add(pv);
+                        }
+                        else
+                        {
+                            string multipleValue = obj["Value"].ToString();
+                            string[] values = multipleValue.Split(',');
+                            foreach (string str in values)
+                            {
+                                ParameterValue pv = new ParameterValue();
+                                pv.Name = obj["Parameter"].ToString();
+                                pv.Value = str;
+                                list.Add(pv);
+                            }
                         }
 
                     }
@@ -77,7 +88,7 @@ namespace Forerunner
                     {
                         ParameterValue pv = new ParameterValue();
                         pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
+                        pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
                         list.Add(pv);
                     }
                 }

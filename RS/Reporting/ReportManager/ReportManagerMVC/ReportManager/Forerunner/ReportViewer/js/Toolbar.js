@@ -46,7 +46,6 @@ $(function () {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
-                
                 if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
@@ -79,6 +78,14 @@ $(function () {
                 }
             });
 
+            var listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind];
+            }
             // Hook up the toolbar element events
             me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
                                tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
@@ -94,7 +101,13 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+            }
+            me.addTools(1, true, listOfButtons);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();

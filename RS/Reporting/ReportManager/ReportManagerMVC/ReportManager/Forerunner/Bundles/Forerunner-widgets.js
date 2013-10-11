@@ -48,7 +48,6 @@ $(function () {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
-            reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             reportPath: null,
             pageNum: 1,
             pingInterval: 300000,
@@ -307,17 +306,17 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
-        _allowSwipeState : false,
 
+        _allowSwipe: true,
         allowSwipe: function(isEnabled){
             var me = this;
-            $(me.element).data("swipeEnabled", isEnabled);
-            /*
-            if (isEnabled === true)
-                $(me.element).swipe("enable");
-            else
-                $(me.element).swipe("disable");
-            */
+            me._allowSwipe = isEnabled;
+        },
+        _navToPage: function (newPageNum) {
+            var me = this;
+            if (me._allowSwipe === true) {
+                me.navToPage(newPageNum);
+            }
         },
         _touchNav: function () {
             // Touch Events
@@ -335,9 +334,6 @@ $(function () {
                             // If it is scrolling, we will let scrollstop handle that.
                    
                         case "release":
-                            if ($(me.element).data("swipeEnabled") === false)
-                                break;
-
                             var swipeNav = false;                            
                             if (ev.gesture.touches.length > 1) {                                
                                 swipeNav = true;
@@ -345,13 +341,13 @@ $(function () {
 
                             if ((ev.gesture.direction === "left" || ev.gesture.direction === "up") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage + 1);
+                                me._navToPage(me.curPage + 1);
                                 break;
                             }
 
                             if ((ev.gesture.direction === "right" || ev.gesture.direction === "down") && swipeNav) {
                                 ev.gesture.preventDefault();
-                                me.navToPage(me.curPage - 1);
+                                me._navToPage(me.curPage - 1);
                                 break;
                             }
                             
@@ -538,12 +534,7 @@ $(function () {
                     me.flushCache();
                 }
 
-                if (action.paramLoaded && action.savedParams) {
-                    me.refreshParameters(action.savedParams, true);
-                }
-                else {
-                    me._loadParameters(action.CurrentPage);
-                }
+                me._loadParameters(action.CurrentPage, action.savedParams);
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -1054,44 +1045,22 @@ $(function () {
         },
        
         //Page Loading
-        _loadParameters: function (pageNum) {
+        _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            //if (me.options.paramArea === undefined || me.options.paramArea === null) return;
-            var savedParams = null;
-            forerunner.ajax.ajax({
-                url: me.options.reportManagerAPI + "/GetUserParameters?reportPath=" + me.options.reportPath,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.ParamsList !== undefined) {
-                        savedParams = data;
-                    }
- 
-                }
-            });
-            if (savedParams === null) {
-                me._loadDefaultParameters(pageNum);
-            } else {
-                
+            var savedParams = savedParamFromHistory ? savedParamFromHistory :
+                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
+            
+            if (savedParams) {
                 if (me.options.paramArea) {
-                    var jsonString = me._paramsToString(savedParams.ParamsList);
                     me.options.paramArea.reportParameter({ $reportViewer: this });
-                    me.refreshParameters(jsonString, true);
+                    me.refreshParameters(savedParams, true);
                 }
+            } else {
+                me._loadDefaultParameters(pageNum);
             }
         },
-        _paramsToString: function(a) {
-            var tempJson = "[";
-            for (var i = 0; i < a.length; i++) {
-                if (i !== a.length - 1) {
-                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"},";
-                }
-                else {
-                    tempJson += "{\"Parameter\":\"" + a[i].Parameter + "\",\"IsMultiple\":\"" + a[i].IsMultiple + "\",\"Type\":\"" + a[i].Type + "\",\"Value\":\"" + a[i].Value + "\"}";
-                }
-            }
-            tempJson += "]";
-            return "{\"ParamsList\":" + tempJson + "}";
+        _paramsToString: function (a) {
+            return JSON.stringify(a);
         },
         _loadDefaultParameters: function (pageNum) {
             var me = this;
@@ -1119,7 +1088,7 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath});
 
                     me.paramLoaded = true;
                 }
@@ -1144,7 +1113,7 @@ $(function () {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportManagerAPI + "/GetParametersJSON?paramPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&paramList=" + paramList,
                     dataType: "json",
                     async: false,
                     success: function (data) {
@@ -1166,6 +1135,7 @@ $(function () {
                 if ($paramArea) {
                     $paramArea.reportParameter("removeParameter");
                     me.paramLoaded = false;
+                    me.$numOfVisibleParameters = 0;
                 }
             }
         },
@@ -1212,7 +1182,7 @@ $(function () {
         loadReportWithNewParameters: function (paramList) {
             var me = this;
            
-            me._resetViewer(true);            
+            me._resetViewer(true);
             me._loadPage(1, false, null, paramList, true);
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
@@ -1938,7 +1908,6 @@ $(function () {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
                 me._updateBtnStates(data.newPageNum, maxNumPages);
-                
                 if (data.numOfVisibleParameters === 0)
                     me.disableTools([tb.btnParamarea]);
                
@@ -1971,6 +1940,14 @@ $(function () {
                 }
             });
 
+            var listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind];
+            }
             // Hook up the toolbar element events
             me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
                                tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
@@ -1986,7 +1963,13 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
-            me.addTools(1, true, [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint]);
+            var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+            }
+            me.addTools(1, true, listOfButtons);
             me.addTools(1, false, [tb.btnParamarea]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
@@ -2120,7 +2103,14 @@ $(function () {
             $toolpane = new $("<div />");
             $toolpane.addClass(me.options.toolClass);
             $(me.element).append($toolpane);
-            me.addTools(1, true, [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap,tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup]);
+
+            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            }
+            me.addTools(1, true, listOfItems);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -2949,7 +2939,8 @@ $(function () {
                 if (curRI.OrgRight > viewerWidth) {
                     curRI.Left = 0;
 
-                    for (var i = 0; i < Measurements.length; i++) {
+                    //Measurements.length
+                    for (var i = 0; i < Index; i++) {
                         var bottom = Measurements[i].Top + Measurements[i].Height;
                         var right = Measurements[i].Left + Measurements[i].Width;
 
@@ -2963,13 +2954,17 @@ $(function () {
                             topMove = true;
                         }
                         //Below
-                        if ( (Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && (layout.ReportItems[i].Left < Obj.Width)) {
-                            curRI.IndexAbove = i;
-                            curRI.TopDelta = 1;
-                            if (i === layout.LowestIndex)
-                                layout.LowestIndex = Index;
-                            bottompMove = true;
-                            anyMove = true;
+                        //&& (layout.ReportItems[i].Left < Obj.Width)
+                        if ((Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom)) {
+                            //Not below if there is another one lower
+                            if (curRI.IndexAbove === null || layout.ReportItems[curRI.IndexAbove].OrgBottom < layout.ReportItems[i].OrgBottom) {
+                                curRI.IndexAbove = i;
+                                curRI.TopDelta = 1;
+                                if (i === layout.LowestIndex)
+                                    layout.LowestIndex = Index;
+                                bottompMove = true;
+                                anyMove = true;
+                            }
                         }
 
                         
@@ -2978,11 +2973,15 @@ $(function () {
 
                 if ( anyMove || (Index === Measurements.length - 1)) {
                     for (var j = 0; j < curRI.Index ; j++) {
+                        // if I have the same index above and I did not move but you did more then I have to move down
                         if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
                             curRI.IndexAbove = j;
+                        // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
+                            //if my index above is the same as yours then move me down
                             if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
+                            // else if your origional index above is my new index above then you move down
                             else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove)
                                 layout.ReportItems[j].IndexAbove = curRI.Index;
                         }
@@ -3212,7 +3211,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    //$ParagraphList.attr("style","width:100%;height:100%;");
+                    $ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
@@ -4630,13 +4629,12 @@ $(function () {
         _writeDropDownWithCheckBox: function (param, dependenceDisable) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<div style='display:inline-block;'/>");
+            var $control = new $("<div class='fr-param-element-container'/>");
 
             var $multipleCheckBox = new $("<Input type='text' class='fr-param-client fr-param-dropdown-textbox fr-paramname-" + param.Name
                 + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
 
-            var $openDropDown = new $("<Img class='fr-param-dropdown-img fr-paramname-" + param.Name + "-img' alt='Open DropDown List' src='"
-                + forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' />");
+            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleCheckBox);
@@ -4721,13 +4719,12 @@ $(function () {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
-            var $control = new $("<div style='display:inline-block;'/>");
+            var $control = new $("<div class='fr-param-element-container'/>");
 
             var $multipleTextArea = new $("<Input type='text' name='" + param.Name + "' class='fr-param fr-param-dropdown-textbox fr-paramname-" + param.Name
                 + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
 
-            var $openDropDown = new $("<Img class='fr-param-dropdown-img fr-paramname-" + param.Name + "-img' alt='Open DropDown List' src='" +
-                forerunner.config.forerunnerFolder() + "/ReportViewer/images/OpenDropDown.png' />");
+            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleTextArea);
@@ -4811,16 +4808,18 @@ $(function () {
                 var $multipleControl = $(".fr-paramname-" + param.Name, me.$params);
                 var positionTop = $multipleControl.offset().top;
 
+                $multipleControl.parent().css("z-index", 1);
+
                 if ($container.height() - positionTop - $multipleControl.height() < $dropDown.height()) {
-                    //popup at above, 10 is margin and border width
-                    $dropDown.css("top", positionTop - $container.offset().top - $dropDown.height() - 10);
+                    //popup at above, 4 is margin top
+                    $dropDown.css("top", (($dropDown.height() +10) * -1) + 4);
                 }
-                else {//popup at bottom
-                    $dropDown.css("top", positionTop - $container.offset().top + $multipleControl.height() + 10);
+                else {//popup at bottom, 15 is margin + padding + border
+                    $dropDown.css("top", $multipleControl.height() + 15);
                 }
 
                 if ($dropDown.is(":hidden")) {
-                    $dropDown.width($multipleControl.width()).addClass("fr-param-dropdown-show").show(10);
+                    $dropDown.width($multipleControl.width() + 20).addClass("fr-param-dropdown-show").show(10);
                 }
                 else {
                     me._closeDropDownPanel(param);
@@ -4829,8 +4828,11 @@ $(function () {
         },
         _closeDropDownPanel: function (param) {
             var me = this;
-            me._setMultipleInputValues(param);
+            me._setMultipleInputValues(param);            
             $(".fr-paramname-" + param.Name + "-dropdown-container", me.$params).removeClass("fr-param-dropdown-show").hide();
+
+            //for dropdown textbox do focus->blur->focus to re-validate, also reset its parent container's z-index property
+            $(".fr-paramname-" + param.Name, me.$params).focus().blur().parent().css("z-index", "inherit");
         },
         _closeAllDropdown: function () {
             var me = this;
@@ -4847,6 +4849,7 @@ $(function () {
                 !$target.hasClass("fr-param-dropdown") &&
                 !$target.hasClass("fr-param-dropdown-label") &&
                 !$target.hasClass("fr-param-dropdown-checkbox") &&
+                !$target.hasClass("fr-param-dropdown-icon") &&
                 !$target.hasClass("fr-param-dropdown-textarea")) {
                 me._closeAllDropdown();
             }
@@ -4862,15 +4865,15 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
-                    a.push({ name: this.name, ismultiple: $(this).attr("ismultiple"), type: $(this).attr("datatype"), value: me._isParamNullable(this) });
+                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
@@ -4883,7 +4886,7 @@ $(function () {
                     }
                 });
                 for (var radioName in radioList) {
-                    a.push({ name: radioName, ismultiple: "", type: "Boolean", value: radioList[radioName] });
+                    a.push({ Parameter: radioName, IsMultiple: "", Type: "Boolean", Value: radioList[radioName] });
                 }
                 //combobox - multiple values
                 //var tempCb = "";
@@ -4914,17 +4917,9 @@ $(function () {
 
                 //Combined to JSON String, format as below
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
-                var tempJson = "[";
-                for (i = 0; i < a.length; i++) {
-                    if (i !== a.length - 1) {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"},";
-                    }
-                    else {
-                        tempJson += "{\"Parameter\":\"" + a[i].name + "\",\"IsMultiple\":\"" + a[i].ismultiple + "\",\"Type\":\"" + a[i].type + "\",\"Value\":\"" + a[i].value + "\"}";
-                    }
-                }
-                tempJson += "]";
-                return "{\"ParamsList\":" + tempJson + "}";
+
+                var paramsObject = { "ParamsList": a };
+                return JSON.stringify(paramsObject);
             } else {
                 return null;
             }
@@ -5524,79 +5519,79 @@ $(function () {
         render: function () {
             var me = this;
             var $container = me.options.$container;
-            $container.addClass('fr-layout-container');
+            $container.addClass("fr-layout-container");
             me.$container = $container;
-            var $leftpane = new $('<div />');
-            $leftpane.addClass('fr-layout-leftpane');
+            var $leftpane = new $("<div />");
+            $leftpane.addClass("fr-layout-leftpane");
             me.$leftpane = $leftpane;
-            var $leftheader = new $('<div />');
-            $leftheader.addClass('fr-layout-leftheader');
+            var $leftheader = new $("<div />");
+            $leftheader.addClass("fr-layout-leftheader");
             me.$leftheader = $leftheader;
-            var $leftheaderspacer = new $('<div />');
-            $leftheaderspacer.addClass('fr-layout-leftheaderspacer');
+            var $leftheaderspacer = new $("<div />");
+            $leftheaderspacer.addClass("fr-layout-leftheaderspacer");
             me.$leftheaderspacer = $leftheaderspacer;
-            var $leftpanecontent = new $('<div />');
-            $leftpanecontent.addClass('fr-layout-leftpanecontent');
+            var $leftpanecontent = new $("<div />");
+            $leftpanecontent.addClass("fr-layout-leftpanecontent");
             me.$leftpanecontent = $leftpanecontent;
             $leftpane.append($leftheader);
             $leftpane.append($leftheaderspacer);
             $leftpane.append($leftpanecontent);
             $container.append($leftpane);
             //main view port
-            var $mainviewport = new $('<div />');
-            $mainviewport.addClass('fr-layout-mainviewport');
+            var $mainviewport = new $("<div />");
+            $mainviewport.addClass("fr-layout-mainviewport");
             me.$mainviewport = $mainviewport;
             $container.append($mainviewport);
             //print section
-            me.$printsection = new $('<div />');
-            me.$printsection.addClass('fr-layout-printsection');
-            me.$printsection.addClass('fr-dialog');
+            me.$printsection = new $("<div />");
+            me.$printsection.addClass("fr-layout-printsection");
+            me.$printsection.addClass("fr-dialog");
             $mainviewport.append(me.$printsection);
             //top div
-            var $topdiv = new $('<div />');
-            $topdiv.addClass('fr-layout-topdiv');
+            var $topdiv = new $("<div />");
+            $topdiv.addClass("fr-layout-topdiv");
             me.$topdiv = $topdiv;
             $mainviewport.append($topdiv);
-            var $mainheadersection = new $('<div />');
-            $mainheadersection.addClass('fr-layout-mainheadersection');
+            var $mainheadersection = new $("<div />");
+            $mainheadersection.addClass("fr-layout-mainheadersection");
             me.$mainheadersection = $mainheadersection;
             $topdiv.append($mainheadersection);
-            var $topdivspacer = new $('<div />');
-            $topdivspacer.addClass('fr-layout-topdivspacer');
+            var $topdivspacer = new $("<div />");
+            $topdivspacer.addClass("fr-layout-topdivspacer");
             me.$topdivspacer = $topdivspacer;
             $mainviewport.append($topdivspacer);
             // Page section
-            var $pagesection = new $('<div />');
-            $pagesection.addClass('fr-layout-pagesection');
+            var $pagesection = new $("<div />");
+            $pagesection.addClass("fr-layout-pagesection");
             me.$pagesection = $pagesection;
             $mainviewport.append($pagesection);
-            me.$mainsection = new $('<div />');
-            me.$mainsection.addClass('fr-layout-mainsection');
+            me.$mainsection = new $("<div />");
+            me.$mainsection.addClass("fr-layout-mainsection");
             me.$pagesection.append(me.$mainsection);
-            me.$docmapsection = new $('<div />');
-            me.$docmapsection.addClass('fr-layout-docmapsection');
+            me.$docmapsection = new $("<div />");
+            me.$docmapsection.addClass("fr-layout-docmapsection");
             me.$pagesection.append(me.$docmapsection);
             //bottom div
-            var $bottomdiv = new $('<div />');
-            $bottomdiv.addClass('fr-layout-bottomdiv');
+            var $bottomdiv = new $("<div />");
+            $bottomdiv.addClass("fr-layout-bottomdiv");
             me.$bottomdiv = $bottomdiv;
             $mainviewport.append($bottomdiv);
-            var $bottomdivspacer = new $('<div />');
-            $bottomdivspacer.addClass('fr-layout-bottomdivspacer');
+            var $bottomdivspacer = new $("<div />");
+            $bottomdivspacer.addClass("fr-layout-bottomdivspacer");
             me.$bottomdivspacer = $bottomdivspacer;
             $mainviewport.append($bottomdivspacer);
             //right pane
-            var $rightpane = new $('<div />');
-            $rightpane.addClass('fr-layout-rightpane');
+            var $rightpane = new $("<div />");
+            $rightpane.addClass("fr-layout-rightpane");
             me.$rightpane = $rightpane;
-            var $rightheader = new $('<div />');
-            $rightheader.addClass('fr-layout-rightheader');
+            var $rightheader = new $("<div />");
+            $rightheader.addClass("fr-layout-rightheader");
             me.$rightheader = $rightheader;
-            var $rightheaderspacer = new $('<div />');
-            $rightheaderspacer.addClass('fr-layout-rightheaderspacer');
+            var $rightheaderspacer = new $("<div />");
+            $rightheaderspacer.addClass("fr-layout-rightheaderspacer");
             me.$rightheaderspacer = $rightheaderspacer;
-            var $rightpanecontent = new $('<div />');
-            $rightpanecontent.addClass('fr-layout-rightpanecontent');
+            var $rightpanecontent = new $("<div />");
+            $rightpanecontent.addClass("fr-layout-rightpanecontent");
             me.$rightpanecontent = $rightpanecontent;
             $rightpane.append($rightheader);
             $rightpane.append($rightheaderspacer);
@@ -5618,29 +5613,29 @@ $(function () {
 
         _makePositionAbsolute: function () {
             var me = this;
-            me.$topdiv.addClass('fr-layout-position-absolute');
-            me.$leftheader.addClass('fr-layout-position-absolute');
-            me.$rightheader.addClass('fr-layout-position-absolute');
-            me.$leftpane.addClass('fr-layout-position-absolute');
-            me.$rightpane.addClass('fr-layout-position-absolute');
-            me.$leftpanecontent.addClass('fr-layout-position-absolute');
-            me.$rightpanecontent.addClass('fr-layout-position-absolute');
+            me.$topdiv.addClass("fr-layout-position-absolute");
+            me.$leftheader.addClass("fr-layout-position-absolute");
+            me.$rightheader.addClass("fr-layout-position-absolute");
+            me.$leftpane.addClass("fr-layout-position-absolute");
+            me.$rightpane.addClass("fr-layout-position-absolute");
+            me.$leftpanecontent.addClass("fr-layout-position-absolute");
+            me.$rightpanecontent.addClass("fr-layout-position-absolute");
         },
 
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $mainheadersection = $('.fr-layout-mainheadersection', me.$container);
+            var $mainheadersection = $(".fr-layout-mainheadersection", me.$container);
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
-            $('.fr-layout-leftheader', me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
+            $(".fr-layout-leftheader", me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
-            $('.fr-layout-rightheader', me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
-            $('.fr-layout-leftpanecontent', me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
-            $('.fr-layout-rightpanecontent', me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-rightheader", me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
                 me.$container.css("overflow", "hidden");
@@ -5656,41 +5651,41 @@ $(function () {
             if (!me.options.isFullScreen) {
                 // For touch device, update the header only on scrollstop.
                 if (isTouch) {
-                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on('touch release',
+                    $(me.$container).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 22, drag_max_touches: 2 }).on("touch release",
                     function (ev) {
                         if (!ev.gesture) return;
                         switch (ev.type) {
                             // Hide the header on touch
-                            case 'touch':
-                                if (me._containElement(ev.target, 'fr-layout-topdiv') || me.$container.hasClass('fr-layout-container-noscroll'))
+                            case "touch":
+                                if (me._containElement(ev.target, "fr-layout-topdiv") || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
                                 me.$topdiv.hide();
                                 break;
-                                // Use the swipe and drag events because the swipeleft and swiperight doesn't seem to fire
+                                // Use the swipe and drag events because the swipeleft and swiperight doesn"t seem to fire
 
-                            case 'release':
+                            case "release":
                                 if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0) {
                                     me._updateTopDiv(me);
                                 }
                                 break;
                         }
                     });
-                    $(me.$container).on('scrollstop', function () {
+                    $(me.$container).on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
-                } 
-
-                $(me.$container).on('touchmove', function (e) {
-                    if (me.$container.hasClass('fr-layout-container-noscroll')) {
-
-                        var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                            || me._containElement(e.target, 'fr-layout-rightpane');
-
-                        if (!isScrollable)
-                            e.preventDefault();
-                    }
-                });
+                }  
             }
+
+            $(me.$container).on('touchmove', function (e) {
+                if (me.$container.hasClass('fr-layout-container-noscroll')) {
+
+                    var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
+                        || me._containElement(e.target, 'fr-layout-rightpane');
+
+                    if (!isScrollable)
+                        e.preventDefault();
+                }
+            });
 
             $(window).resize(function () {
                 me.ResetSize();
@@ -5700,10 +5695,10 @@ $(function () {
             });
 
             if (!me.options.isFullScreen && !isTouch) {
-                $(window).on('scroll', function () {
+                $(window).on("scroll", function () {
                     me._updateTopDiv(me);
                 });
-                me.$container.on('scroll', function () {
+                me.$container.on("scroll", function () {
                     me._updateTopDiv(me);
                 });
             }
@@ -5715,7 +5710,7 @@ $(function () {
                 isContained = true;
             } else {
                 var parent = element.parentElement;
-                while (parent !== undefined && parent != null) {
+                while (parent !== undefined && parent !== null) {
                     if ($(parent).hasClass(className)) {
                         isContained = true;
                         break;
@@ -5731,13 +5726,13 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
-            if (me.$leftpane.is(':visible')) {
-                me.$leftpane.css('top', me.$container.scrollTop());
-            } else if (me.$rightpane.is(':visible')) {
-                me.$rightpane.css('top', me.$container.scrollTop());
+            if (me.$leftpane.is(":visible")) {
+                me.$leftpane.css("top", me.$container.scrollTop());
+            } else if (me.$rightpane.is(":visible")) {
+                me.$rightpane.css("top", me.$container.scrollTop());
             }
-            me.$topdiv.css('top', me.$container.scrollTop());
-            me.$topdiv.css('left', me.$container.scrollLeft());
+            me.$topdiv.css("top", me.$container.scrollTop());
+            me.$topdiv.css("left", me.$container.scrollLeft());
             if (!me.isZoomed()) {
                 me.$topdiv.show();
             }
@@ -5750,20 +5745,22 @@ $(function () {
             if (me.isZoomed() && !me.wasZoomed) {
                 //fadeout->fadeIn toolbar immediately to make android browser re-calculate toolbar layout
                 //to fill the full width
-                if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
-                    me.$topdiv.fadeOut(10).fadeIn(10);
+                if (forerunner.device.isAndroid() && me.$topdiv.is(":visible")) {
+                    me.$topdiv.css("width", "100%");
+                    me.$topdiv.css("width", "device-width");
                 }
                 me.wasZoomed = true;
                 return;
             }
 
             if (!me.isZoomed() && me.wasZoomed) {
-                if (forerunner.device.isAndroid() && me.$topdiv.is(':visible')) {
+                var $viewer = $(".fr-layout-reportviewer", me.$container);
+                $viewer.reportViewer("allowZoom", false);
+                me.wasZoomed = false;
+                if (forerunner.device.isAndroid()) {
+                    me.$topdiv.css("width", "100%");
                     me.$topdiv.fadeOut(10).fadeIn(10);
                 }
-                var $viewer = $('.fr-layout-reportviewer', me.$container);
-                $viewer.reportViewer('allowZoom', false);
-                me.wasZoomed = false;
             }
         },
         wasZoomed: false,
@@ -5810,21 +5807,22 @@ $(function () {
             // properly even when the report has not been loaded due to paramters not being
             // entered or is very small
             if (forerunner.device.isiPhone()) {
-                $('body').css({ minHeight: heightValues.max });
+                $("body").css({ minHeight: heightValues.max });
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
             me.$leftpane.css({ height: heightValues.max });
             me.$rightpane.css({ height: heightValues.max });
-            me.$mainviewport.css({ height: '100%' });
-            $('.fr-param-container', me.$container).css({ height: '100%' });
+            me.$mainviewport.css({ height: "100%" });
+            $(".fr-param-container", me.$container).css({ height: "100%" });
+            $('.fr-toolpane', me.$container).css({ height: '100%' });
         },
 
         bindViewerEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
 
-            var $viewer = $('.fr-layout-reportviewer', me.$container);
+            var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
             $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
@@ -5843,21 +5841,21 @@ $(function () {
 
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
-                me.$container.addClass('fr-docmap-background');
+                me.$container.addClass("fr-docmap-background");
             });
 
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
-                me.$container.removeClass('fr-docmap-background');
+                me.$container.removeClass("fr-docmap-background");
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
                 if (data.isEnabled === true) {
                     me.$topdiv.hide();
-                    $viewer.reportViewer('option', 'toolbarHeight', 0);
+                    $viewer.reportViewer("option", "toolbarHeight", 0);
                 }
                 else {
                     me.$topdiv.show();
-                    $viewer.reportViewer('option', 'toolbarHeight', me.$topdiv.outerHeight());
+                    $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
                 }
             });
 
@@ -5872,7 +5870,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
-                me.$pagesection.on('scrollstop', function () { me._updateTopDiv(me); });
+                me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
         },
         getScrollPosition: function() {
@@ -5915,68 +5913,80 @@ $(function () {
         },
         hideSlideoutPane: function (isLeftPane) {
             var me = this;
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
             var mainViewPort = me.$mainviewport;
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            if (slideoutPane.is(':visible')) {
+            if (slideoutPane.is(":visible")) {
                 if (isLeftPane) {
                     slideoutPane.slideLeftHide(delay * 0.5);
                 } else {
                     slideoutPane.slideRightHide(delay * 0.5);
                 }
                 topdiv.removeClass(className, delay);
-                me.$mainheadersection.toolbar('showAllTools');
+                me.$mainheadersection.toolbar("showAllTools");
             }
-            me.$pagesection.removeClass('fr-layout-pagesection-noscroll');
-            me.$container.removeClass('fr-layout-container-noscroll');
+            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
+                me.$pagesection.addClass('fr-layout-android');
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
-            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
-                me.$viewer.reportViewer('triggerEvent', events.reportViewerHidePane());
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                if (!forerunner.device.isAllowZoom()) {
+                    me.$viewer.reportViewer('allowSwipe', true);
+                }
+                me.$viewer.reportViewer('triggerEvent', events.hidePane);
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
-            me.$container.addClass('fr-layout-container-noscroll');
-            forerunner.device.allowZoom(false);
+            me.$container.addClass("fr-layout-container-noscroll");
+            if (me.$viewer !== undefined) {
+                me.$viewer.reportViewer('allowZoom', false);
+                me.$viewer.reportViewer('allowSwipe', false);
+            } else {
+                forerunner.device.allowZoom(false);
+            }
             me.$container.resize();
 
-            var className = isLeftPane ? 'fr-layout-mainViewPortShiftedRight' : 'fr-layout-mainViewPortShiftedLeft';
+            var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
             var mainViewPort = me.$mainviewport;
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
             var topdiv = me.$topdiv;
             var delay = Number(200);
-            if (!slideoutPane.is(':visible')) {
+            if (!slideoutPane.is(":visible")) {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
                     slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideLeftShow(delay);                    
                 } else {
-                    //$('.fr-param-container', me.$container).css({ height: slideoutPane.height() + 100 });
                     slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideRightShow(delay);
                 }
                 
                 topdiv.addClass(className, delay);
-                forerunner.device.allowZoom(false);
-                me.$mainheadersection.toolbar('hideAllTools');
+                if (me.$viewer !== undefined) {
+                    me.$viewer.reportViewer('allowZoom', false);
+                    me.$viewer.reportViewer('allowSwipe', false);
+                } else {
+                    forerunner.device.allowZoom(false);
+                }
             }
-            me.$pagesection.addClass('fr-layout-pagesection-noscroll');
+            me.$pagesection.addClass("fr-layout-pagesection-noscroll");
             
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
 
-            if (me.$viewer !== undefined && me.$viewer.is(':visible')) {
-                me.$viewer.reportViewer('triggerEvent', events.reportViewerShowPane());
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
+                me.$viewer.reportViewer('triggerEvent', events.showPane);
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
             var me = this;
             var slideoutPane = isLeftPane ? me.$leftpane : me.$rightpane;
-            if (slideoutPane.is(':visible')) {
+            if (slideoutPane.is(":visible")) {
                 this.hideSlideoutPane(isLeftPane);
             } else {
                 this.showSlideoutPane(isLeftPane);
@@ -6070,6 +6080,7 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
+                loadParamsCallback: me.getSavedParameters
             });
 
             // Create / render the toolbar
@@ -6244,6 +6255,21 @@ $(function () {
                 }
             }
         },
+        getSavedParameters: function (reportPath) {
+            var savedParams;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.ParamsList !== undefined) {
+                        savedParams = data;
+                    }
+                }
+            });
+            return savedParams ? JSON.stringify(savedParams) : null;
+        }
     };
 });  // $(function ()
 
@@ -6415,7 +6441,7 @@ $(function () {
             layout.$mainsection.show();
             layout.$docmapsection.hide();
             layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "/ReportManager",
+                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
                 view: view,

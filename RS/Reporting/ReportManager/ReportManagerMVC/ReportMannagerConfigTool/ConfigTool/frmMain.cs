@@ -25,10 +25,7 @@ namespace ReportMannagerConfigTool
             }
             catch(Exception ex)
             {
-                using (new CenterWinDialog(this))
-                {
-                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
-                }
+                MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
             }
         }
 
@@ -349,10 +346,10 @@ namespace ReportMannagerConfigTool
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
-            Validate();
+            ValidateLicense();
         }
 
-        private void Validate()
+        private void ValidateLicense()
         {
             Cursor.Current = Cursors.WaitCursor;
             try

@@ -77,12 +77,16 @@ input{-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padd
     .ForerunnerPage{width:490px;}
    
     .ForerunnerTD{ display:inline-block;}
-   .ForerunnerTD50{width:100%;}
+    .ForerunnerTD50{width:100%;}
+
+    .DemoPageButtonRight{display:block;float:left;text-align:center;}
+    .DemoPageButtonLeft{display:block;float:left;text-align:center;}
+
 }
 /* 4.4 - Mobile Portrait */
 @media only screen and (max-width: 509px) {
     .ForerunnerPort{padding-right:0px;padding-left:0px;width:100%;}
-    .ForerunnerPage{width:509px;}
+    .ForerunnerPage{width:400px;}
 
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}

@@ -63,15 +63,14 @@ namespace Forerunner
                 {
                     if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
-                        string temp = obj["Value"].ToString();
-                        foreach (string str in temp.Split(','))
+                        JsonArray multipleValues = obj["Value"] as JsonArray;
+                        foreach (String value in multipleValues)
                         {
                             ParameterValue pv = new ParameterValue();
                             pv.Name = obj["Parameter"].ToString();
-                            pv.Value = str;
+                            pv.Value = value;
                             list.Add(pv);
                         }
-
                     }
                     else
                     {

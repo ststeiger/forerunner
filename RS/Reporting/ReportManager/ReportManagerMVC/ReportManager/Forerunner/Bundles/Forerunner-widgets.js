@@ -4400,7 +4400,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent) {
             var me = this;
-            var $lable = new $("<div class='fr-param-label'>" + param.Name + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Name + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
@@ -4442,7 +4442,7 @@ $(function () {
             }
 
             $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
-            $parent.append($lable).append($container);
+            $parent.append($label).append($container);
 
             return $parent;
         },
@@ -4617,15 +4617,44 @@ $(function () {
 
             return $control;
         },
+        _createInput : function(param, type, readonly, listOfClasses) {
+            var $input = new $("<Input />");
+            $input.attr("type", type);
+            $input.attr("name", param.Name);
+            $input.attr("ismultiple", param.MultiValue);
+            $input.attr("datatype", param.Type);
+            if (readonly) {
+                $input.attr("readonly", true);
+            }
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $input.addClass(listOfClasses[i]);
+            }
+            return $input;
+        },
+        _createDiv : function(listOfClasses) {
+            var $div = new $("<div />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $div.addClass(listOfClasses[i]);
+            }
+            return $div;
+        },
+        _createLabel: function (listOfClasses) {
+            var $label = new $("<label />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $label.addClass(listOfClasses[i]);
+            }
+            return $label;
+        },
         _writeDropDownWithCheckBox: function (param, dependenceDisable) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
-            var $control = new $("<div class='fr-param-element-container'/>");
+            var $control = me._createDiv(["fr-param-element-container"]);
 
-            var $multipleCheckBox = new $("<Input type='text' class='fr-param-client fr-param-dropdown-textbox fr-paramname-" + param.Name
-                + "' name='" + param.Name + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
 
-            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
+            $openDropDown.append($dropdownicon);
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleCheckBox);
@@ -4634,12 +4663,13 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $multipleCheckBox);
-            var $hiddenCheckBox = new $("<Input class='fr-param fr-paramname-" + param.Name + "-hidden' name='" + param.Name + "' type='hidden' ismultiple='"
-                + param.MultiValue + "' datatype='" + param.Type + "'/>");
+            var $hiddenCheckBox = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name + "-hidden"]);
+           
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
             $multipleCheckBox.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-paramname-" + param.Name + "-dropdown-container' value='" + param.Name + "' />");
+            var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-paramname-" + param.Name + "-dropdown-container"]);
+            $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
             param.ValidValues.push({ Key: "Select All", Value: "Select All" });
@@ -4663,8 +4693,8 @@ $(function () {
                 var $col = new $("<TD/>");
 
                 var $span = new $("<Span />");
-                var $checkbox = new $("<input type='checkbox' class='fr-param-dropdown-checkbox fr-paramname-" + param.Name + "-dropdown-cb'"
-                    + " id='" + param.Name + "_DropDown_" + value + "' value='" + value + "' />");
+                var $checkbox = me._createInput(param, "checkbox", false, ["fr-param-dropdown-checkbox", "fr-paramname-" + param.Name + "-dropdown-cb"]);
+                $checkbox.attr("value", value);
 
                 if (predefinedValue && me._contains(predefinedValue, value)) {
                     $checkbox.attr("checked", "true");
@@ -4687,7 +4717,10 @@ $(function () {
                     }
                 });
 
-                var $label = new $("<label for='" + param.Name + "_DropDown_" + value + "' class='fr-param-dropdown-label fr-paramname-" + param.Name + "-dropdown-" + value + "-lable" + "' />");
+                var $label = me._createLabel(["fr-param-dropdown-label", "fr-paramname-" + param.Name + "-dropdown-" + i.toString() + "-label"]);
+                $label.attr("for", param.Name + "_DropDown_" + i.toString());
+                $label.attr("value", value);
+
                 $label.html(key);
 
                 $span.append($checkbox).append($label);
@@ -4710,12 +4743,12 @@ $(function () {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
-            var $control = new $("<div class='fr-param-element-container'/>");
+            var $control = me._createDiv(["fr-param-element-container"]);
 
-            var $multipleTextArea = new $("<Input type='text' name='" + param.Name + "' class='fr-param fr-param-dropdown-textbox fr-paramname-" + param.Name
-                + "' readonly='true' ismultiple='" + param.MultiValue + "' datatype='" + param.Type + "' />");
-
-            var $openDropDown = new $("<div class='fr-param-dropdown-iconcontainer fr-core-cursorpointer'><div class='fr-param-dropdown-icon'></div></div>");
+            var $multipleTextArea = me._createInput(param, "text", true, ["fr-param", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
+            $openDropDown.append($dropdownicon);
 
             if (dependenceDisable) {
                 me._disabledSubSequenceControl($multipleTextArea);
@@ -4726,13 +4759,15 @@ $(function () {
             $multipleTextArea.on("click", function () { me._popupDropDownPanel(param); });
             $openDropDown.on("click", function () { me._popupDropDownPanel(param); });
 
-            var $dropDownContainer = new $("<div class='fr-param-dropdown fr-paramname-" + param.Name + "-dropdown-container' value='" + param.Name + "' />");
+            var $dropDownContainer = me._createDiv(["fr-param-dropdown", "fr-paramname-" + param.Name + "-dropdown-container"]);
+            $dropDownContainer.attr("value", param.Name);
 
             var $textarea = new $("<textarea class='fr-param-dropdown-textarea fr-paramname-" + param.Name + "-dropdown-textArea' />");
 
             if (predefinedValue) {
                 $textarea.val(me._getTextAreaValue(predefinedValue, true));
                 $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+                $multipleTextArea.attr("jsonValues", JSON.stringify(predefinedValue));
             }
 
             $dropDownContainer.append($textarea);
@@ -4762,27 +4797,29 @@ $(function () {
 
             if (target.hasClass("fr-param-client")) {
                 var showValue = "";
-                var hiddenValue = "";
+                var hiddenValue = [];
 
-                $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function () {
+                $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + this.value + "-lable", me.$params).html() + ",";
-                        hiddenValue += this.value + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        hiddenValue.push( this.value );
                     }
                 });
 
                 newValue = showValue.substr(0, showValue.length - 1);
                 $(".fr-paramname-" + param.Name, me.$params).val(newValue);
-                $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(hiddenValue.substr(0, hiddenValue.length - 1));
+                $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(JSON.stringify(hiddenValue));
             }
             else {
                 newValue = $(".fr-paramname-" + param.Name + "-dropdown-textArea", me.$params).val();
+                var listOfValues = newValue.split("\n");
                 newValue = newValue.replace(/\n+/g, ",");
-
+                
                 if (newValue.charAt(newValue.length - 1) === ",") {
                     newValue = newValue.substr(0, newValue.length - 1);
                 }
                 target.val(newValue);
+                target.attr("jsonValues", JSON.stringify(listOfValues));
             }
 
             if (oldValue !== newValue)
@@ -4856,11 +4893,20 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    if ($(this).attr("ismultiple") === "false") {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    } else {
+                        var jsonValues = $(this).attr("jsonValues");
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    if ($(this).attr("ismultiple") === "false") {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    } else {
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                    }
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {

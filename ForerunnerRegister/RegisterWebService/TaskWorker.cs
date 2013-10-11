@@ -31,63 +31,71 @@ namespace ForerunnerWebService
 
 
             string SQL = @"
-BEGIN TRANSACTION
-DECLARE @TaskID uniqueidentifier
-SELECT TOP 1 @TaskID = TaskID FROM WorkerTasks WHERE TaskStatus = 1 ORDER BY TaskCreated DESC
-UPDATE WorkerTasks SET TaskStatus = 2 WHERE TaskID = @TaskID
-SELECT TaskID ,TaskType,TaskData  , TaskStatus ,TaskAttempts FROM WorkerTasks WHERE TaskID = @TaskID
-COMMIT TRANSACTION          
-";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                            BEGIN TRANSACTION
+                            DECLARE @TaskID uniqueidentifier
+                            SELECT TOP 1 @TaskID = TaskID FROM WorkerTasks WHERE TaskStatus = 1 ORDER BY TaskCreated DESC
+                            UPDATE WorkerTasks SET TaskStatus = 2 WHERE TaskID = @TaskID
+                            SELECT TaskID ,TaskType,TaskData  , TaskStatus ,TaskAttempts FROM WorkerTasks WHERE TaskID = @TaskID
+                            COMMIT TRANSACTION          
+                            ";
 
-            string TaskType;
-            SQLReader = SQLComm.ExecuteReader();
-            while (SQLReader.Read())
+            try
             {
-                TaskType = SQLReader.GetString(1);
-                TaskID = SQLReader.GetGuid(0);
-                if (TaskType == "SendRegistrationEmail")
-                {
-                    Register Reg = new Register();
-                    StatusMessage = Reg.SendRegisterMail(SQLReader.GetXmlReader(2),this);
-                }
-                if (TaskType == "NewShopifyOrder")
-                {
-                    Order Or = new Order();
-                    StatusMessage = Or.ProcessShopifyOrder(SQLReader.GetXmlReader(2));
-                }
-               
-                if (TaskType == "SendLicenseEmail")
-                {
-                    Order Or = new Order();
-                    StatusMessage = Or.SendLicenseMail(SQLReader.GetXmlReader(2),this);
-                }
-
-                if (StatusMessage == "success")
-                    TaskStatus = 3;
-                else
-                    TaskStatus = 1;
-
-            }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            if (TaskStatus != 0)
-            {
-                //Save Status
-                SQL = @"
-    IF ((SELECT TaskAttempts+1 FROM WorkerTasks WHERE TaskID = @TaskID) > 10)
-       UPDATE WorkerTasks SET TaskStatus = 4  WHERE TaskID = @TaskID
-    ELSE
-        UPDATE WorkerTasks SET TaskMessage = @StatusMessage,TaskStatus = @Status,TaskAttempts = TaskAttempts+1  WHERE TaskID = @TaskID
-    ";
                 SQLConn.Open();
-                SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.Parameters.AddWithValue("@TaskID", TaskID);
-                SQLComm.Parameters.AddWithValue("@StatusMessage", StatusMessage);
-                SQLComm.Parameters.AddWithValue("@Status", TaskStatus);
-                SQLComm.ExecuteNonQuery();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+
+                string TaskType;
+                SQLReader = SQLComm.ExecuteReader();
+                while (SQLReader.Read())
+                {
+                    TaskType = SQLReader.GetString(1);
+                    TaskID = SQLReader.GetGuid(0);
+                    if (TaskType == "SendRegistrationEmail")
+                    {
+                        Register Reg = new Register();
+                        StatusMessage = Reg.SendRegisterMail(SQLReader.GetXmlReader(2), this);
+                    }
+                    if (TaskType == "NewShopifyOrder")
+                    {
+                        Order Or = new Order();
+                        StatusMessage = Or.ProcessShopifyOrder(SQLReader.GetXmlReader(2));
+                    }
+
+                    if (TaskType == "SendLicenseEmail")
+                    {
+                        Order Or = new Order();
+                        StatusMessage = Or.SendLicenseMail(SQLReader.GetXmlReader(2), this);
+                    }
+
+                    if (StatusMessage == "success")
+                        TaskStatus = 3;
+                    else
+                        TaskStatus = 1;
+
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+
+                if (TaskStatus != 0)
+                {
+                    //Save Status
+                    SQL = @"
+                            IF ((SELECT TaskAttempts+1 FROM WorkerTasks WHERE TaskID = @TaskID) > 10)
+                               UPDATE WorkerTasks SET TaskStatus = 4  WHERE TaskID = @TaskID
+                            ELSE
+                                UPDATE WorkerTasks SET TaskMessage = @StatusMessage,TaskStatus = @Status,TaskAttempts = TaskAttempts+1  WHERE TaskID = @TaskID
+                            ";
+                    SQLConn.Open();
+                    SQLComm = new SqlCommand(SQL, SQLConn);
+                    SQLComm.Parameters.AddWithValue("@TaskID", TaskID);
+                    SQLComm.Parameters.AddWithValue("@StatusMessage", StatusMessage);
+                    SQLComm.Parameters.AddWithValue("@Status", TaskStatus);
+                    SQLComm.ExecuteNonQuery();
+                    SQLConn.Close();
+                }
+            }
+            catch
+            {
                 SQLConn.Close();
             }
 

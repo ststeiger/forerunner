@@ -1047,26 +1047,13 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var savedParams = null;
-            if (savedParamFromHistory === null || savedParamFromHistory === undefined) {
-                forerunner.ajax.ajax({
-                    url: me.options.reportManagerAPI + "/GetUserParameters?reportPath=" + me.options.reportPath,
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        if (data.ParamsList !== undefined) {
-                            savedParams = data;
-                        }
-
-                    }
-                });
-            }
-
-            if (savedParams || savedParamFromHistory) {
+            var savedParams = savedParamFromHistory ? savedParamFromHistory :
+                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
+            
+            if (savedParams) {
                 if (me.options.paramArea) {
-                    var jsonString = savedParams ? me._paramsToString(savedParams) : savedParamFromHistory;
                     me.options.paramArea.reportParameter({ $reportViewer: this });
-                    me.refreshParameters(jsonString, true);
+                    me.refreshParameters(savedParams, true);
                 }
             } else {
                 me._loadDefaultParameters(pageNum);

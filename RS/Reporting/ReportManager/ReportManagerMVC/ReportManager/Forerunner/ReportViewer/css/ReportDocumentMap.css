@@ -15,7 +15,7 @@
     vertical-align:top;
     height:100%;
     display:inline-block;
-    border-right: 1px groove darkgray;
+    border-right: 1px groove lightblue;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .fr-docmap-item
@@ -30,7 +30,6 @@
 .fr-docmap-item-root
 {
     text-indent:8px;    
-    border-left:1px solid white;
 }
 .fr-docmap-parent-container
 {
@@ -43,17 +42,12 @@
     font-size: 11pt;
     white-space:nowrap;
     overflow-x:hidden;
-
-    background-color: #616975;
-    background-image: -webkit-linear-gradient(top, rgb(114, 122, 134), rgb(80, 88, 100));
-    -webkit-box-shadow: inset 0px 1px 0px 0px #878e98;
-    box-shadow: inset 0px 1px 0px 0px #878e98;
-    -webkit-text-shadow: 0px 1px 0px rgba(0,0,0,.5);
-    text-shadow: 0px 1px 0px rgba(0,0,0,.5);
+    background-color: #354468;
+    border-top: 1px solid lightblue;
 }
 .fr-docmap-item-container
 {
-    border-top: 1px solid #efeff0;
+    border-top: 1px solid lightblue;
     vertical-align: top;
     line-height: 24px;
     text-indent:4px;
@@ -69,8 +63,7 @@
 .fr-docmap-item-highlight
 {
     color:#fff;
-    background-color:#35afe3;
-    background-image:-webkit-linear-gradient(top, rgb(69, 199, 235), rgb(38, 152, 219));
+    background-color:#316198;
 }
 .fr-docmap-indent
 {

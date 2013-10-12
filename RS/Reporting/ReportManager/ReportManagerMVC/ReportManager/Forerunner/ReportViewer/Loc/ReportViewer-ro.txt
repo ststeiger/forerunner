@@ -79,7 +79,7 @@
 		"print": "imprima",
 		"cancel": "anula",
 		"unit": "mm",
-		"margin": "Margins",,
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

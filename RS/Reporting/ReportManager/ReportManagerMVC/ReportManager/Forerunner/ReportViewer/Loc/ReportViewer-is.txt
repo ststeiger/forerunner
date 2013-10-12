@@ -79,7 +79,7 @@
 		"print": "Prenta",
 		"cancel": "hætta",
 		"unit": "mm",
-		"margin": "Margins",,
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

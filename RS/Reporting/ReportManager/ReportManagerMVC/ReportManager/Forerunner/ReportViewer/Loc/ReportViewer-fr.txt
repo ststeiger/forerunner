@@ -80,7 +80,7 @@
 		"print": "Imprimer",
 		"cancel": "résilier",
 		"unit": "mm",
-		"margin": "Margins",,
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

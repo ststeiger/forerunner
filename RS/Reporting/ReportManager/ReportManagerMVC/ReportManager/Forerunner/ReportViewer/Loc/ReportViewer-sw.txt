@@ -79,7 +79,7 @@
 		"print": "skriva ut",
 		"cancel": "avbryta",
 		"unit": "mm",
-		"margin": "Margins",,
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

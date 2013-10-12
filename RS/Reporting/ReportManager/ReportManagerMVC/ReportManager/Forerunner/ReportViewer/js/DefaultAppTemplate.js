@@ -148,12 +148,14 @@ $(function () {
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
+                //me.$viewer.reportViewer("allowZoom", true);
                 me.$container.css("overflow", "hidden");
                 me.$container.scrollTop(0).scrollLeft(0);
                 window.scrollTo(0, 0);
             });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintHidePrint(), function () {
+                //me.$viewer.reportViewer("allowZoom", false);
                 me.$container.css("overflow", "auto");
             });
 

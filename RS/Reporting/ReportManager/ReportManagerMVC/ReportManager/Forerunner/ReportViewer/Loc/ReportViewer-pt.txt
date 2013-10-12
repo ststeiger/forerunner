@@ -79,7 +79,7 @@
 		"print": "imprimir",
 		"cancel": "cancelar",
 		"unit": "mm",
-		"margin": "Magins",
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

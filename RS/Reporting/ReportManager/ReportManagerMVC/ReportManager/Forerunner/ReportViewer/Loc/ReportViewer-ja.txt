@@ -79,7 +79,7 @@
 		"print": "印刷",
 		"cancel": "キャンセル",
 		"unit": "mm",
-		"margin": "Magins",
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

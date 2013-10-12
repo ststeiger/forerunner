@@ -33,13 +33,16 @@ namespace ForerunnerWebService
             string ProductName = null;
             int Quantity = 0;
             TaskWorker Task = new TaskWorker();
+            string LastNode = "";
 
             XMLOrder.Read();
             if (XMLOrder.Name != "order")
                 return "Not an Order";
+            XMLOrder.Read();
 
-            while (XMLOrder.Read())
+            while (!XMLOrder.EOF)
             {
+                LastNode = XMLOrder.Name;
                 switch (XMLOrder.Name)
                 {                   
                     case "email":
@@ -49,19 +52,26 @@ namespace ForerunnerWebService
                         OrderNumber = XMLOrder.ReadElementContentAsString();
                         break;
                     default:
-                        while (XMLOrder.NodeType != XmlNodeType.EndElement)
+                        //skip empty 
+                        if (XMLOrder.IsEmptyElement)
                         {
                             XMLOrder.Read();
+                            break;
                         }
+                        //Skip all other elements
+                        while ((XMLOrder.Name == LastNode && XMLOrder.NodeType == XmlNodeType.EndElement) != true)
+                            XMLOrder.Read();
+                        XMLOrder.Read();                        
                         break;
-                    case "line-items":
-                        while (XMLOrder.Read())
+                  case "line-items":
+                        XMLOrder.Read();                        
+                        while (!XMLOrder.EOF)
                         {
                             if (XMLOrder.Name != "line-item")
-                                break;
+                                break;                        
                             SKU = null;
                             Quantity = 0;
-                            while (XMLOrder.Read())
+                            while (!XMLOrder.EOF)
                             {
                                 switch (XMLOrder.Name)
                                 {
@@ -76,9 +86,9 @@ namespace ForerunnerWebService
                                         break;
                                 }
                                 if (XMLOrder.NodeType == XmlNodeType.EndElement && XMLOrder.Name == "line-item")
-                                {
+                                {                             
                                     if (Quantity != 0 && Email != null && SKU != null)
-                                    {
+                                    {                                        
                                         GroupID = Guid.NewGuid().ToString();
                                         WriteLicense(GroupID, SKU,ProductName, Quantity);
                                         WriteLicense(GroupID, SKU + "-Dev",ProductName, Quantity);
@@ -89,8 +99,18 @@ namespace ForerunnerWebService
                                     else
                                         return "Invalid Order";
                                 }
+                                while (!XMLOrder.IsEmptyElement && XMLOrder.NodeType != XmlNodeType.EndElement)
+                                {
+                                    XMLOrder.Read();
+                                }
+                                XMLOrder.Read();
 
                             }
+                            while (!XMLOrder.IsEmptyElement && XMLOrder.NodeType != XmlNodeType.EndElement)
+                            {
+                                XMLOrder.Read();
+                            }
+                            XMLOrder.Read();
                         }
                         break;
                    

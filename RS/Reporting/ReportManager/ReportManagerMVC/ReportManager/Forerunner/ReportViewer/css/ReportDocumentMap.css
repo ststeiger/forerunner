@@ -12,6 +12,7 @@
     display:inline-block;
     border-right: 1px groove lightblue;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: rgba(53, 68, 104, .75);
 }
 .fr-docmap-item
 {

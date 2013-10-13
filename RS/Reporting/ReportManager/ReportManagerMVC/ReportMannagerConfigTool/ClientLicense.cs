@@ -27,6 +27,7 @@ namespace ForerunnerLicense
 
         internal static LicenseData License = null;
         internal static string requestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData></LicenseRequest>";
+        internal static string MergerequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey><MergeKey>{2}</MergeKey></LicenseRequest>";
         static RegistryKey MobV1Key = null;
         static int IsMachineSame = -1;
         static DateTime LastServerValidation;
@@ -158,7 +159,25 @@ namespace ForerunnerLicense
                 return "";
         }
 
+        public static string Merge(string MergeKey)
+        {
+            ServerResponse resp;
 
+            if (License == null)
+                throw new Exception("License Required");
+            string LicenseKey = License.LicenseKey;
+
+            string request = string.Format(MergerequestString, "Merge",LicenseKey, MergeKey);
+            resp = Post(request);
+            if (resp.StatusCode == 0)
+            {
+                DeActivate();
+                return Activate(LicenseKey);
+            }
+            else
+                throw new Exception(resp.Response);
+            
+        }
         public static string Activate(string LicenceKey)
         {
             MachineId mid;

@@ -370,5 +370,42 @@ namespace ReportMannagerConfigTool
             }
         }
 
+        private void btnMerge_Click(object sender, EventArgs e)
+        {
+            DialogResult dr;
+
+            if (txtNewKey.Text == "")
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "LicenseKey Required", "Forerunner Software Mobilizer");
+                }
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                using (new CenterWinDialog(this))
+                {
+                    dr = MessageBox.Show("Are you sure you wish to merge this License, this process is irreversible?", "Forerunner Software Mobilizer", MessageBoxButtons.YesNo);
+                }
+                if (dr == DialogResult.Yes)
+                {
+                    rtbCurLicense.Text = ClientLicense.Merge(txtNewKey.Text);
+                    ValidateLicense();
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
+            Cursor.Current = Cursors.Default;
+           
+        }
+
     }
 }

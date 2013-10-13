@@ -573,6 +573,7 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
+                me._unmask();
             }
             else {
                 me.pageNavOpen = true;
@@ -582,6 +583,7 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
+                me._mask().show();
             }
 
             if (me.options.pageNavArea){

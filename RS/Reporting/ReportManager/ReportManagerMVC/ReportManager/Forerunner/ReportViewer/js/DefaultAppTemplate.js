@@ -353,11 +353,9 @@ $(function () {
 
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
-                me.$container.addClass("fr-docmap-background");
             });
 
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
-                me.$container.removeClass("fr-docmap-background");
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {

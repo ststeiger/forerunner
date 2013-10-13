@@ -83,7 +83,6 @@ $(function () {
             layout.$leftheaderspacer.height(layout.$topdiv.height());
 
             layout._selectedItemPath=path0; //me._selectedItemPath = path0;
-            me.element.removeClass("fr-docmap-background");
             me.element.addClass("fr-Explorer-background");
         },
         /**

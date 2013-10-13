@@ -410,11 +410,27 @@ $(function () {
                 }
             }
         },
+        _mask: function () {
+            var me = this;
+            var $mask = me.element.find(".fr-mask");
+
+            if ($mask.length === 0) {
+                $mask = $("<div class='fr-mask'></div>");
+                $mask.height(me.element.height());
+                me.element.append($mask);
+            }
+            return me.element;
+        },
+        _unmask: function () {
+            var me = this;
+            me.element.find(".fr-mask").remove();
+            return;
+        },
         _hideDocMap: function() {
             var me = this;
             var docMap = me.options.docMapArea;
             docMap.hide();
-            me.element.show();
+            me._unmask();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
@@ -441,7 +457,7 @@ $(function () {
 
             me.savedLeft = $(window).scrollLeft();
             me.savedTop = $(window).scrollTop();
-            me.element.hide();
+            me._mask().show();
             docMap.slideUpShow();
             setTimeout(function () { window.scrollTo(0, 0); }, 500);
             

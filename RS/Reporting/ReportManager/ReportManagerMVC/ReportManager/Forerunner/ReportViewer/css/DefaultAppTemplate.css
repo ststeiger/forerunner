@@ -178,6 +178,7 @@
 
 
 div.fr-layout-pagesection {
+  position: relative;
   display:block;
   width:auto;
   height:auto;

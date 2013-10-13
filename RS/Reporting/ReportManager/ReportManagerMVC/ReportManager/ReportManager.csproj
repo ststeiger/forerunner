@@ -147,8 +147,8 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CSS\Login.css" />
-    <Content Include="CSS\ReportManager.css" />
+    <Content Include="Forerunner\Common\css\Login.css" />
+    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -277,7 +277,7 @@
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />
     <Content Include="Scripts\Util\collection_view.js" />
-    <Content Include="Scripts\Util\json2.js" />
+    <Content Include="Forerunner\Lib\Misc\js\json2.js" />
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
     <Content Include="Scripts\Util\underscore.js" />

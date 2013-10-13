@@ -5698,12 +5698,14 @@ $(function () {
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
+                //me.$viewer.reportViewer("allowZoom", true);
                 me.$container.css("overflow", "hidden");
                 me.$container.scrollTop(0).scrollLeft(0);
                 window.scrollTo(0, 0);
             });
 
             $(".fr-layout-printsection", me.$container).on(events.reportPrintHidePrint(), function () {
+                //me.$viewer.reportViewer("allowZoom", false);
                 me.$container.css("overflow", "auto");
             });
 
@@ -6020,13 +6022,15 @@ $(function () {
                 slideoutPane.css({ height: Math.max($(window).height(), mainViewPort.height()) });
                 if (isLeftPane) {
                     slideoutPane.css({ top: me.$container.scrollTop()});
-                    slideoutPane.slideLeftShow(delay);                    
+                    slideoutPane.slideLeftShow(delay);
                 } else {
                     slideoutPane.css({ top: me.$container.scrollTop()});
                     slideoutPane.slideRightShow(delay);
                 }
                 
                 topdiv.addClass(className, delay);
+                me.$mainheadersection.toolbar("hideAllTools");
+
                 if (me.$viewer !== undefined) {
                     me.$viewer.reportViewer('allowZoom', false);
                     me.$viewer.reportViewer('allowSwipe', false);
@@ -6034,6 +6038,7 @@ $(function () {
                     forerunner.device.allowZoom(false);
                 }
             }
+
             me.$pagesection.addClass("fr-layout-pagesection-noscroll");
             
             // Make sure the address bar is not showing when a side out pane is showing

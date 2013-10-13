@@ -81,7 +81,7 @@
 		"print": "Print",
 		"cancel": "Cancel",
 		"unit": "in",
-		"margin": "Magins",
+		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
 	"paramPane": {

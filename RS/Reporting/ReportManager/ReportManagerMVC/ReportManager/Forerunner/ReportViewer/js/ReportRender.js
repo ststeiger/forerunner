@@ -48,7 +48,7 @@ $(function () {
         // Default options
         options: {
             reportViewer: null,
-            responsive: false,
+            responsive: true,
         },
         // Constructor
         _create: function () {
@@ -334,12 +334,13 @@ $(function () {
                     curRI.Left = 0;
 
                     //Measurements.length
-                    for (var i = 0; i < Index; i++) {
+                    for (var i = 0; i < Measurements.length; i++) {
                         var bottom = Measurements[i].Top + Measurements[i].Height;
                         var right = Measurements[i].Left + Measurements[i].Width;
 
                         //Above
-                        if (!topMove && (Index !== i) && (Obj.Top < Measurements[i].Top) && (curRI.OrgBottom > Measurements[i].Top) && (layout.ReportItems[i].Left < Obj.Width)) {
+                        //&& (layout.ReportItems[i].Left < Obj.Width)
+                        if (!topMove && (Index !== i) && (Obj.Top < Measurements[i].Top) && (curRI.OrgBottom > Measurements[i].Top) ) {
                             layout.ReportItems[i].IndexAbove = Index;
                             layout.ReportItems[i].TopDelta = 1;
                             if (Index === layout.LowestIndex)
@@ -349,7 +350,7 @@ $(function () {
                         }
                         //Below
                         //&& (layout.ReportItems[i].Left < Obj.Width)
-                        if ((Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom)) {
+                        if ((Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && Index > i ) {
                             //Not below if there is another one lower
                             if (curRI.IndexAbove === null || layout.ReportItems[curRI.IndexAbove].OrgBottom < layout.ReportItems[i].OrgBottom) {
                                 curRI.IndexAbove = i;
@@ -376,9 +377,12 @@ $(function () {
                             if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
                             // else if your origional index above is my new index above then you move down
-                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove)
-                                layout.ReportItems[j].IndexAbove = curRI.Index;
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index)
+                                layout.ReportItems[j].IndexAbove = curRI.Index;                        
                         }
+                        // If we now overlap move me down
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left <= layout.ReportItems[j].Left + Measurements[j].Width)
+                            curRI.IndexAbove = layout.ReportItems[j].Index;
                     }
                 }
                 

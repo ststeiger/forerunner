@@ -1706,6 +1706,10 @@ $(function () {
             });
 
         },
+        freezeEnableDisable: function (freeze) {
+            var me = this;
+            me.frozen = freeze;
+        },
         /**
          * Enable the given tools
          * @function $.forerunner.toolBase#enableTools
@@ -1713,6 +1717,11 @@ $(function () {
          */
         enableTools: function (tools) {
             var me = this;
+
+            if (me.frozen === true) {
+                return;
+            }
+
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = me.element.find("." + toolInfo.selectorClass);
                 $toolEl.removeClass("fr-toolbase-disabled");
@@ -1733,6 +1742,11 @@ $(function () {
          */
         disableTools: function (tools) {
             var me = this;
+
+            if (me.frozen === true) {
+                return;
+            }
+
             $.each(tools, function (index, toolInfo) {
                 var $toolEl = me.element.find("." + toolInfo.selectorClass);
                 $toolEl.addClass("fr-toolbase-disabled");
@@ -1966,8 +1980,10 @@ $(function () {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tb.btnNav, tb.btnMenu]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });
@@ -2117,8 +2133,10 @@ $(function () {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tp.itemNav]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });

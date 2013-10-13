@@ -79,8 +79,10 @@ $(function () {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tb.btnNav, tb.btnMenu]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });

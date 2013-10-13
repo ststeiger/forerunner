@@ -68,8 +68,10 @@ $(function () {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tp.itemNav]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });

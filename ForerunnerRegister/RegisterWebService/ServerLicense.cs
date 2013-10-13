@@ -18,6 +18,7 @@ namespace ForerunnerLicense
     {
         string Response = "<LicenseResponse><Status>{0}</Status><StatusCode>{1}</StatusCode><Value>{2}</Value></LicenseResponse>";
         public string NewLicenseKey = null;
+        public string MergeKey = null;
         internal MachineId NewMachineData = null;
         public string Action = null;
         public int Status = 0;
@@ -55,6 +56,9 @@ namespace ForerunnerLicense
                         case "LicenseData":
                             UnPackLicenseData(XMLReq.ReadInnerXml());
                             break;
+                        case "MergeKey":
+                            MergeKey = XMLReq.ReadElementContentAsString();
+                            break;
                     }                    
                 }
                 else
@@ -91,6 +95,8 @@ namespace ForerunnerLicense
                     return ProcessValidate();
                 case "DeActivate":
                     return ProcessDeActivate();
+                case "Merge":
+                    return ProcessMerge();
             }
 
             return String.Format(Response, "Fail", "2", "Invalid License Request");
@@ -100,6 +106,32 @@ namespace ForerunnerLicense
         {
             string value = "<License><SKU>{0}</SKU><Quantity>{1}</Quantity>{2}<LicenseKey>{3}</LicenseKey><RequireValidation>{4}</RequireValidation><ActivationDate>{5}</ActivationDate><LicenseDuration>{6}</LicenseDuration><IsTrial>{7}</IsTrial></License>";
             return LicenseUtil.Sign(string.Format(value, ld.SKU, ld.Quantity, ld.MachineData.Serialize(false), ld.LicenseKey, ld.RequireValidation, ld.FirstActivationDate, ld.LicenseDuration,ld.IsTrial), pkey);
+        }
+
+        private string ProcessMerge()
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+
+            string SQL = @"UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
+                        DELETE License Where LicenseID = @MergeKey
+                        ";
+            try
+            {
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
+                SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                Response = String.Format(Response, "Success", "0", "Licenses Merged");
+            }
+            catch
+            {
+                SQLConn.Close();
+                Response = String.Format(Response, "Fail", "3", "Server Error");
+            }
+            return Response;
         }
 
         private string ProcessActivate()

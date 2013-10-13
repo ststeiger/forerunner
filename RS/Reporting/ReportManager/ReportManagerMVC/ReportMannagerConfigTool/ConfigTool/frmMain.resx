@@ -1143,6 +1143,33 @@
   <data name="&gt;&gt;tabPage1.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="btnMerge.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="btnMerge.Location" type="System.Drawing.Point, System.Drawing">
+    <value>208, 23</value>
+  </data>
+  <data name="btnMerge.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
+  </data>
+  <data name="btnMerge.TabIndex" type="System.Int32, mscorlib">
+    <value>22</value>
+  </data>
+  <data name="btnMerge.Text" xml:space="preserve">
+    <value>Merge</value>
+  </data>
+  <data name="&gt;&gt;btnMerge.Name" xml:space="preserve">
+    <value>btnMerge</value>
+  </data>
+  <data name="&gt;&gt;btnMerge.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btnMerge.Parent" xml:space="preserve">
+    <value>tabActivation</value>
+  </data>
+  <data name="&gt;&gt;btnMerge.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="btnValidate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1168,7 +1195,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnValidate.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="btnCopy.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1195,7 +1222,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnCopy.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="btnDeActivate.Location" type="System.Drawing.Point, System.Drawing">
     <value>337, 107</value>
@@ -1219,7 +1246,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnDeActivate.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="rtbCurLicense.Font" type="System.Drawing.Font, System.Drawing">
     <value>Microsoft Sans Serif, 10pt</value>
@@ -1246,7 +1273,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;rtbCurLicense.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1273,7 +1300,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label4.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="btnManualActivation.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1300,7 +1327,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnManualActivation.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1327,7 +1354,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="txtNewKey.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 23</value>
@@ -1351,7 +1378,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;txtNewKey.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="btnGetActivationKey.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1378,7 +1405,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnGetActivationKey.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="btnActivate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -1405,7 +1432,7 @@
     <value>tabActivation</value>
   </data>
   <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="tabActivation.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 22</value>

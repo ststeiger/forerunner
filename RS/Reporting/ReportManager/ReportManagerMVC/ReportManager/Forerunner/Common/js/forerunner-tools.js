@@ -782,6 +782,7 @@ $(function () {
         btnFavorite: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
+            sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-favorite",
             tooltip: locData.toolbar.favorites,
             events: {
@@ -794,7 +795,7 @@ $(function () {
         btnRecent: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-recent",
-            sharedClass: "fr-toolbar-hidden-on-small",
+            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
             events: {

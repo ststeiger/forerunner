@@ -256,10 +256,11 @@ $(function () {
             me.$selectedItem = null;
             me._fetch(me.options.view, me.options.path);
 
-            // Setup the default user settings
             me.userSettings = {
                 responsiveUI: false
             };
+            me.getUserSettings(true);
+
             var $usersettingssection = me.options.$usersettingssection;
             if ($usersettingssection !== null) {
                 $usersettingssection.userSettings({

@@ -60,7 +60,7 @@ $(function () {
                     "<form class='fr-us-form'>" +
                         "<div class='fr-us-setting-container'>" +
                             "<label class='fr-us-label'>" + locData.ResponsiveUI + "</label>" +
-                            "<input class='fr-us-checkbox'  name='ResponsiveUI' type='checkbox' value='" + false + "'/>" +
+                            "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
                         "</div>" +
                         "<div class='fr-us-submit-container'>" +
                             "<div class='fr-us-submit-inner'>" +
@@ -73,7 +73,7 @@ $(function () {
             me.element.append($theForm);
 
             me.element.find(".fr-us-submit").on("click", function (e) {
-                me.options.$reportExplorer.reportExplorer("saveSettings");
+                me._saveSettings();
                 me.closeDialog();
             });
 
@@ -82,15 +82,30 @@ $(function () {
             });
 
         },
+        _getSettings: function () {
+            var me = this;
+            me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+            me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            var responsiveUI = me.settings.responsiveUI;
+            me.$resposiveUI.prop("checked", responsiveUI);
+        },
+        _saveSettings: function () {
+            var me = this;
+            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+
+            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+        },
         /**
          * @function $.forerunner.userSettings#openDialog
          */
         openDialog: function () {
             var me = this;
 
+            me._getSettings();
+
             me.element.mask().show();
             me.element.show();
-            me._trigger(events.showUserSettings);
+            me._trigger(events.showDialog);
         },
         /**
          * @function $.forerunner.userSettings#clodeDialog
@@ -100,7 +115,7 @@ $(function () {
 
             me.element.unmask().hide();
             me.element.hide();
-            me._trigger(events.hidePrint);
+            me._trigger(events.hideDialog);
         }
     }); //$.widget
 });

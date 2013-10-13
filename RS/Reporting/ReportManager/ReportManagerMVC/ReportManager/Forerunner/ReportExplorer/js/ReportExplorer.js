@@ -41,8 +41,59 @@ $(function () {
             navigateTo: null,
             $usersettingssection: null
         },
-        saveSettings: function() {
+        /**
+         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * @function $.forerunner.reportExplorer#saveUserSettings
+         *
+         * @param {Object} settings - Settings object
+         */
+        saveUserSettings: function (settings) {
+            var me = this;
 
+            var stringified = JSON.stringify(settings);
+
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        },
+        /**
+         * Get the user settings.
+         * @function $.forerunner.reportExplorer#getUserSettings
+         *
+         * @param {bool} forceLoadFromServer - if true, always load from the server
+         */
+        getUserSettings: function (forceLoadFromServer) {
+            var me = this;
+
+            if (forceLoadFromServer !== true && me.userSettings) {
+                return me.userSettings;
+            }
+
+            var settings;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    settings = data;
+                }
+            });
+
+            if (settings) {
+                me.userSettings = settings;
+            }
+
+            return me.userSettings;
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -205,7 +256,10 @@ $(function () {
             me.$selectedItem = null;
             me._fetch(me.options.view, me.options.path);
 
-
+            // Setup the default user settings
+            me.userSettings = {
+                responsiveUI: false
+            };
             var $usersettingssection = me.options.$usersettingssection;
             if ($usersettingssection !== null) {
                 $usersettingssection.userSettings({

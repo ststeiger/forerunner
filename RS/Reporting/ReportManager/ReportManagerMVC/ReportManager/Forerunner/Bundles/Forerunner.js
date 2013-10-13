@@ -262,6 +262,17 @@ $(function () {
             hidePane: "hidePane",
             /** widget + event, lowercase */
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
+
+            /** @constant */
+            showDialog: "showDialog",
+            /** widget + event, lowercase */
+            userSettingsShowDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.showDialog).toLowerCase(); },
+
+            /** @constant */
+            hideDialog: "hideDialog",
+            /** widget + event, lowercase */
+            userSettingsHideDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.hideDialog).toLowerCase(); },
+
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

@@ -2500,8 +2500,59 @@ $(function () {
             navigateTo: null,
             $usersettingssection: null
         },
-        saveSettings: function() {
+        /**
+         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * @function $.forerunner.reportExplorer#saveUserSettings
+         *
+         * @param {Object} settings - Settings object
+         */
+        saveUserSettings: function (settings) {
+            var me = this;
 
+            var stringified = JSON.stringify(settings);
+
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+
+        },
+        /**
+         * Get the user settings.
+         * @function $.forerunner.reportExplorer#getUserSettings
+         *
+         * @param {bool} forceLoadFromServer - if true, always load from the server
+         */
+        getUserSettings: function (forceLoadFromServer) {
+            var me = this;
+
+            if (forceLoadFromServer !== true && me.userSettings) {
+                return me.userSettings;
+            }
+
+            var settings;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    settings = data;
+                }
+            });
+
+            if (settings) {
+                me.userSettings = settings;
+            }
+
+            return me.userSettings;
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -2664,7 +2715,10 @@ $(function () {
             me.$selectedItem = null;
             me._fetch(me.options.view, me.options.path);
 
-
+            // Setup the default user settings
+            me.userSettings = {
+                responsiveUI: false
+            };
             var $usersettingssection = me.options.$usersettingssection;
             if ($usersettingssection !== null) {
                 $usersettingssection.userSettings({
@@ -2740,7 +2794,7 @@ $(function () {
                     "<form class='fr-us-form'>" +
                         "<div class='fr-us-setting-container'>" +
                             "<label class='fr-us-label'>" + locData.ResponsiveUI + "</label>" +
-                            "<input class='fr-us-checkbox'  name='ResponsiveUI' type='checkbox' value='" + false + "'/>" +
+                            "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
                         "</div>" +
                         "<div class='fr-us-submit-container'>" +
                             "<div class='fr-us-submit-inner'>" +
@@ -2753,7 +2807,7 @@ $(function () {
             me.element.append($theForm);
 
             me.element.find(".fr-us-submit").on("click", function (e) {
-                me.options.$reportExplorer.reportExplorer("saveSettings");
+                me._saveSettings();
                 me.closeDialog();
             });
 
@@ -2762,15 +2816,30 @@ $(function () {
             });
 
         },
+        _getSettings: function () {
+            var me = this;
+            me.settings = me.options.$reportExplorer.reportExplorer("getUserSettings", true);
+            me.$resposiveUI = me.element.find(".fr-us-responsive-ui-id");
+            var responsiveUI = me.settings.responsiveUI;
+            me.$resposiveUI.prop("checked", responsiveUI);
+        },
+        _saveSettings: function () {
+            var me = this;
+            me.settings.responsiveUI = me.$resposiveUI.prop("checked");
+
+            me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+        },
         /**
          * @function $.forerunner.userSettings#openDialog
          */
         openDialog: function () {
             var me = this;
 
+            me._getSettings();
+
             me.element.mask().show();
             me.element.show();
-            me._trigger(events.showUserSettings);
+            me._trigger(events.showDialog);
         },
         /**
          * @function $.forerunner.userSettings#clodeDialog
@@ -2780,7 +2849,7 @@ $(function () {
 
             me.element.unmask().hide();
             me.element.hide();
-            me._trigger(events.hidePrint);
+            me._trigger(events.hideDialog);
         }
     }); //$.widget
 });

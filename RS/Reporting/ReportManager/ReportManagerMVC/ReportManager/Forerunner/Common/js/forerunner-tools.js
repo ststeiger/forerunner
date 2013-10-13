@@ -700,6 +700,7 @@ $(function () {
             tooltip: locData.toolbar.home,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
                 }
             }
@@ -712,6 +713,7 @@ $(function () {
             tooltip: locData.toolbar.back,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("back", null);
                 }
             }
@@ -724,6 +726,7 @@ $(function () {
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("favorites", null);
                 }
             }
@@ -736,6 +739,7 @@ $(function () {
             tooltip: locData.toolbar.recent,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("recent", null);
                 }
             }

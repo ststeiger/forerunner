@@ -57,6 +57,11 @@ $(function () {
             me.$printsection.addClass("fr-layout-printsection");
             me.$printsection.addClass("fr-dialog");
             $mainviewport.append(me.$printsection);
+            //user settings section
+            me.$usersettingssection = new $("<div />");
+            me.$usersettingssection.addClass("fr-us-layout-section");
+            me.$usersettingssection.addClass("fr-dialog");
+            $mainviewport.append(me.$usersettingssection);
             //top div
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv");

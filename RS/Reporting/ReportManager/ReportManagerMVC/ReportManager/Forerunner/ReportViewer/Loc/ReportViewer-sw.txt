@@ -66,7 +66,8 @@
         "refresh": "Uppdatera",
 	"reportPage": "Sida",
 	"zoom": "Aktivera Zoom",
-	"print": "Skriv ut"
+	"print": "Skriv ut",
+	"userSettings": "Settings"
     },
 	"print":{
 	    "title": "Skriv Option Sidlayout",
@@ -81,6 +82,12 @@
 		"unit": "mm",
 		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "Noll",

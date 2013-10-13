@@ -66,7 +66,8 @@
         "refresh": "Athnuaigh",
 	"reportPage": "leathanach",
 	"zoom": "Cumasaigh Zoom",
-	"print": "Priontáil"
+	"print": "Priontáil",
+	"userSettings": "Settings"
     },
 	"print":{
 	    "title": "Imprimir páxina de opción de esquema",
@@ -81,6 +82,12 @@
 		"unit": "mm",
 		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "Null",

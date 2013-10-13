@@ -126,6 +126,8 @@ $(function () {
             toolPane: "toolPane",
             /** @constant */
             reportPrint: "reportPrint",
+            /** @constant */
+            userSettings: "userSettings",
 
             /** @constant */
             namespace: "forerunner",

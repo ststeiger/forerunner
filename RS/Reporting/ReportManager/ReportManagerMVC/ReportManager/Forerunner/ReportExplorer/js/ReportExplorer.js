@@ -38,7 +38,11 @@ $(function () {
             view: null,
             selectedItemPath: null,
             $scrollBarOwner: null,
-            navigateTo: null
+            navigateTo: null,
+            $usersettingssection: null
+        },
+        saveSettings: function() {
+
         },
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
@@ -200,6 +204,17 @@ $(function () {
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
             me._fetch(me.options.view, me.options.path);
+
+
+            var $usersettingssection = me.options.$usersettingssection;
+            if ($usersettingssection !== null) {
+                $usersettingssection.userSettings({
+                    $reportExplorer: me.element,
+                    locData: locData
+                });
+            }
+
+
         }
     });  // $.widget
 });  // function()

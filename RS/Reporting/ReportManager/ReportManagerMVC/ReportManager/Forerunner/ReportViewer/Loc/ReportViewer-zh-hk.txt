@@ -68,7 +68,8 @@
         "refresh": "刷新",
 		"reportPage": "頁面",
 		"zoom": "允許縮放",
-		"print": "打印"
+		"print": "打印",
+		"userSettings": "Settings"
     },
 	"print":{
 	    "title": "打印報表",
@@ -83,6 +84,12 @@
 		"unit": "mm",
 		"margin": "邊距",
 		"pageLayoutOptions": "頁面設置"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "空值",

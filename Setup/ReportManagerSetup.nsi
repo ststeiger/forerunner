@@ -136,6 +136,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\images"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\Report-icon.png"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\report_ear_selected.png"
@@ -404,7 +406,9 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\folder.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\folder_selected.png"
 
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\UserSettings.css"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"

@@ -750,13 +750,10 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-setup",
         imageClass: "fr-icons24x24-setup",
-        tooltip: locData.toolbar.setup,
+        tooltip: locData.toolbar.userSettings,
         events: {
             click: function (e) {
-                // TODO
-                // Jason to implement
-                //
-                //e.data.me.options.navigateTo("recent", null);
+                e.data.me.options.$usersettingssection.userSettings("openDialog");
             }
         }
     }

@@ -71,10 +71,14 @@ $(function () {
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,
-                navigateTo: me.options.navigateTo
+                navigateTo: me.options.navigateTo,
+                $usersettingssection: layout.$usersettingssection
             });            
             var $toolbar = layout.$mainheadersection;
-            $toolbar.reportExplorerToolbar({ navigateTo: me.options.navigateTo });
+            $toolbar.reportExplorerToolbar({
+                navigateTo: me.options.navigateTo,
+                $usersettingssection: layout.$usersettingssection
+        });
             $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
             layout.$rightheader.height(layout.$topdiv.height());

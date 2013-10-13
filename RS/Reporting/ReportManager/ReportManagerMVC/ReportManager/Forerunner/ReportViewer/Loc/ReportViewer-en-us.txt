@@ -68,7 +68,8 @@
         "refresh": "Refresh",
 		"reportPage": "Page",
 		"zoom": "Enable Zoom",
-		"print": "Print"
+		"print": "Print",
+		"userSettings": "Settings"
     },
 	"print":{
 	    "title": "Print Report",
@@ -83,6 +84,12 @@
 		"unit": "in",
 		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "Null",

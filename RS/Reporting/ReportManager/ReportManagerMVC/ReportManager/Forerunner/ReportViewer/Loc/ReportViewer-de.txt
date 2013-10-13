@@ -82,6 +82,12 @@
 		"margin": "Margins",
 		"pageLayoutOptions": "Page layout options"
 	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
+	},
 	"paramPane": {
         "nullField": "Null",
         "isTrue": "Wahr",

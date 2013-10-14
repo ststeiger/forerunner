@@ -1085,8 +1085,13 @@ $(function () {
             var me = this;
             forerunner.ajax.getJSON(
                     me.options.reportViewerAPI + "/ParameterJSON/",
-                    { ReportPath: me.options.reportPath },
+                    {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.getSessionID()
+                    },
                     function (data) {
+                        if (data.SessionID)
+                            me.sessionID = data.SessionID;
                         me._addLoadingIndicator();
                         me._showParameters(pageNum, data);
                     },
@@ -1131,10 +1136,13 @@ $(function () {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&paramList=" + paramList,
+                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&SessionID=" + me.getSessionID() + "&paramList=" + paramList,
                     dataType: "json",
                     async: false,
                     success: function (data) {
+                        if (data.SessionID)
+                            me.sessionID = data.SessionID;
+
                         if (data.ParametersList) {
                             me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
@@ -1174,6 +1182,7 @@ $(function () {
             me.togglePageNum = 0;
             me.findKeyword = null;
             me.origionalReportPath = "";
+            me.renderError = false;
         },
         /**
          * Load the given report
@@ -1308,6 +1317,7 @@ $(function () {
             var me = this;
 
             me.renderError = true;
+            $container.reportRender({ reportViewer: me });
             $container.reportRender("writeError", errorData);
         },
                 

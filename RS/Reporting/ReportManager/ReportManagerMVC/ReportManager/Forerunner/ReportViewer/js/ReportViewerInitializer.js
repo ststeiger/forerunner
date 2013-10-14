@@ -28,7 +28,8 @@ $(function () {
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
-            isReportManager: false
+            isReportManager: false,
+            userSettings: null
         };
 
         // Merge options with the default settings
@@ -48,7 +49,8 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: me.getSavedParameters
+                loadParamsCallback: me.getSavedParameters,
+                userSettings: me.options.userSettings
             });
 
             // Create / render the toolbar

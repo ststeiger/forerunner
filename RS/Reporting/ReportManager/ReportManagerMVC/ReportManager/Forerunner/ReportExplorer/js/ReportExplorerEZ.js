@@ -65,7 +65,7 @@ $(function () {
             layout.$mainsection.html(null);
             layout.$mainsection.show();
             layout.$docmapsection.hide();
-            layout.$mainsection.reportExplorer({
+            me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
@@ -104,6 +104,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 isReportManager: true,
+                userSettings: me.$reportExplorer ? me.$reportExplorer.reportExplorer("getUserSettings") : null
             });
 
             me.element.addClass("fr-Explorer-background");

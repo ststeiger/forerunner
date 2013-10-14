@@ -54,7 +54,8 @@ $(function () {
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-            printArea:null,
+            printArea: null,
+            userSettings: null
         },
 
         _destroy: function () {
@@ -112,6 +113,13 @@ $(function () {
             me._addLoadingIndicator();
             //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
+        },
+        /**
+         * @function $.forerunner.reportViewer#getUserSettings
+         * @return {Object} Current user settings
+         */
+        getUserSettings: function () {
+            return me.options.userSettings;
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -1259,7 +1267,11 @@ $(function () {
             //Error, need to handle this better
             if (!data) return;
 
-            $report.reportRender({ reportViewer: me });
+            var responsiveUI = false;
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                responsiveUI = true;
+            }
+            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);

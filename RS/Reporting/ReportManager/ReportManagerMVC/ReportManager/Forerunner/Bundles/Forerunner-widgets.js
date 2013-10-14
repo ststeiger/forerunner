@@ -55,7 +55,8 @@ $(function () {
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-            printArea:null,
+            printArea: null,
+            userSettings: null
         },
 
         _destroy: function () {
@@ -113,6 +114,13 @@ $(function () {
             me._addLoadingIndicator();
             //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
+        },
+        /**
+         * @function $.forerunner.reportViewer#getUserSettings
+         * @return {Object} Current user settings
+         */
+        getUserSettings: function () {
+            return me.options.userSettings;
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -1260,7 +1268,11 @@ $(function () {
             //Error, need to handle this better
             if (!data) return;
 
-            $report.reportRender({ reportViewer: me });
+            var responsiveUI = false;
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                responsiveUI = true;
+            }
+            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -6360,7 +6372,8 @@ $(function () {
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
-            isReportManager: false
+            isReportManager: false,
+            userSettings: null
         };
 
         // Merge options with the default settings
@@ -6380,7 +6393,8 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: me.getSavedParameters
+                loadParamsCallback: me.getSavedParameters,
+                userSettings: me.options.userSettings
             });
 
             // Create / render the toolbar
@@ -6610,7 +6624,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
-            isFullScreen: true
+            isFullScreen: true,
+            userSettings: null
         },
         _render: function () {
             var me = this;
@@ -6646,7 +6661,8 @@ $(function () {
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
                 navigateTo: me.options.navigateTo,
-                isReportManager: me.options.isReportManager
+                isReportManager: me.options.isReportManager,
+                userSettings: me.options.userSettings
             });
 
             initializer.render();
@@ -6740,7 +6756,7 @@ $(function () {
             layout.$mainsection.html(null);
             layout.$mainsection.show();
             layout.$docmapsection.hide();
-            layout.$mainsection.reportExplorer({
+            me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
@@ -6779,6 +6795,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 isReportManager: true,
+                userSettings: me.$reportExplorer ? me.$reportExplorer.reportExplorer("getUserSettings") : null
             });
 
             me.element.addClass("fr-Explorer-background");

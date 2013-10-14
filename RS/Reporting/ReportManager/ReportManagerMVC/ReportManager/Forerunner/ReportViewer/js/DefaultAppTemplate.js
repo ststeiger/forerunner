@@ -443,6 +443,8 @@ $(function () {
                 me.$mainheadersection.toolbar("showAllTools");
             }
             me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            me.$container.removeClass("fr-layout-container-noscroll");
+
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
                 me.$pagesection.addClass('fr-layout-android');
 
@@ -457,7 +459,7 @@ $(function () {
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
-            me.$container.addClass("fr-layout-container-noscroll");
+            
             if (me.$viewer !== undefined) {
                 me.$viewer.reportViewer('allowZoom', false);
                 me.$viewer.reportViewer('allowSwipe', false);
@@ -492,6 +494,7 @@ $(function () {
                 }
             }
 
+            me.$container.addClass("fr-layout-container-noscroll");
             me.$pagesection.addClass("fr-layout-pagesection-noscroll");
             
             // Make sure the address bar is not showing when a side out pane is showing

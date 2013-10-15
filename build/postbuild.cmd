@@ -18,6 +18,11 @@ if not exist "%BUILD_RELEASE%\Setup" (
 	mkdir "%BUILD_RELEASE%\Setup"
 )
 
+copy %~dp0..\build.txt "%BUILD_RELEASE%\build.txt"
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
 echo Copying Files for Setup... >> %POSTBUILD_LOG%
 call %~dp0..\RS\Reporting\CopyFiles.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
 if ERRORLEVEL 1 (

@@ -79,7 +79,9 @@ $(function () {
 
             $viewer.on("reportviewerback", function (e, data) {
                 layout._selectedItemPath = data.path;
-                me.options.historyBack();
+                if (me.options.historyBack) {
+                    me.options.historyBack();
+                }
             });
 
             me.DefaultAppTemplate.bindViewerEvents();

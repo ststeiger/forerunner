@@ -7,6 +7,11 @@
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV1"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
+!define COPYRIGHT "Copyright © Forerunner Software 2013"
+!define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
+!define VI_PRODUCT_NAME "Mobilizer"
+!define COMPANY_NAME "Forerunner Software"
+!define /file BUILD_VERSION ..\build.txt
 
 ; LOCAL ADDRESS DEFINE
 !define LOCALROOT ".\build"
@@ -49,6 +54,28 @@
 ; MUI end ------
 
 RequestExecutionLevel admin
+
+!ifdef DESCRIPTION
+    VIAddVersionKey FileDescription "${DESCRIPTION}"
+!endif
+
+!ifdef COPYRIGHT
+    VIAddVersionKey LegalCopyright "${COPYRIGHT}"
+!endif
+
+!ifdef COMPANY_NAME
+    VIAddVersionKey CompanyName "${COMPANY_NAME}"
+!endif
+
+!ifdef VI_PRODUCT_NAME
+    VIAddVersionKey ProductName "${VI_PRODUCT_NAME}"
+!endif
+
+!ifdef BUILD_VERSION
+    VIAddVersionKey FileVersion "${BUILD_VERSION}"
+    VIAddVersionKey ProductVersion "${BUILD_VERSION}"
+    VIProductVersion "${BUILD_VERSION}"
+!endif
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerMobilizerSetup.exe"

@@ -1080,7 +1080,7 @@ $(function () {
             if (savedParams) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({ $reportViewer: this });
-                    me.refreshParameters(savedParams, true);
+                    me.refreshParameters(savedParams, true, pageNum);
                 }
             } else {
                 me._loadDefaultParameters(pageNum);
@@ -1139,8 +1139,9 @@ $(function () {
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
          * @param {boolean} Submit form if the parameters are satisfied.
+         * @param {int} The page to load.
          */
-        refreshParameters: function (paramList, submitForm) {
+        refreshParameters: function (paramList, submitForm, pageNum) {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
@@ -1152,7 +1153,7 @@ $(function () {
                             me.sessionID = data.SessionID;
 
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -1213,12 +1214,16 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#loadReportWithNewParameters
          * @param {Object} paramList - Paramter list object
+         * @param {int} pageNum - The page to load
          */
-        loadReportWithNewParameters: function (paramList) {
+        loadReportWithNewParameters: function (paramList, pageNum) {
             var me = this;
            
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList, true);
+            if (!pageNum) {
+                pageNum = 1;
+            }
+            me._loadPage(pageNum, false, null, paramList, true);
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;
@@ -4541,15 +4546,16 @@ $(function () {
             return 0;
         },
     
+        _parameterDefinitions : {},
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
          * @param {boolean} submitForm - submit form when parameters are satisfied.
          */
-        updateParameterPanel: function (data, submitForm) {
+        updateParameterPanel: function (data, submitForm, pageNum) {
             this.removeParameter();
-            this.writeParameterPanel(data, null, submitForm);
+            this.writeParameterPanel(data, pageNum, submitForm);
         },
 
         /**
@@ -4573,8 +4579,9 @@ $(function () {
 
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
+                me._parameterDefinitions[param.Name] = param;
                 if (param.Prompt !== "") {
-                    $eleBorder.append(me._writeParamControl(param, new $("<div />")));
+                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }
                 else
@@ -4611,7 +4618,7 @@ $(function () {
                 }
             });
             $(".fr-param-viewreport", me.$params).on("click", function () {
-                me._submitForm();
+                me._submitForm(pageNum);
             });
             $(".fr-param-cancel", me.$params).on("click", function () {
                 me._cancelForm();
@@ -4619,7 +4626,7 @@ $(function () {
 
             if (submitForm !== false) {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
-                    me._submitForm();
+                    me._submitForm(pageNum);
                 else {
                     me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
@@ -4645,7 +4652,10 @@ $(function () {
                 }
             );
         },
-        _submitForm: function () {
+
+        _submittedParamList: null,
+
+        _submitForm: function (pageNum) {
             var me = this;
             me._closeAllDropdown();
 
@@ -4656,13 +4666,23 @@ $(function () {
 
             var paramList = me.getParamsList();
             if (paramList) {
-                me.options.$reportViewer.loadReportWithNewParameters(paramList);
+                me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum);
+                me._submittedParamList = paramList;
                 me._trigger(events.submit);
+            }
+        },
+        _revertParameters: function () {
+            var me = this;
+            if (me._submittedParamList !== null) {
+
             }
         },
         _cancelForm: function () {
             var me = this;
             me._closeAllDropdown();
+            if (me.getParamsList() !== me._submittedParamList) {
+                me._revertParameters();
+            }
             me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
@@ -4684,7 +4704,7 @@ $(function () {
 
             return null;
         },
-        _writeParamControl: function (param, $parent) {
+        _writeParamControl: function (param, $parent, pageNum) {
             var me = this;
             var $label = new $("<div class='fr-param-label'>" + param.Name + "</div>");
             var bindingEnter = true;
@@ -4708,21 +4728,21 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
-                    $element = me._writeDropDownControl(param, dependenceDisable);
+                    $element = me._writeDropDownControl(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
-                    $element = me._writeRadioButton(param, dependenceDisable);
+                    $element = me._writeRadioButton(param, dependenceDisable, pageNum);
                 }
                 else { // Textbox
-                    $element = me._writeTextArea(param, dependenceDisable);
+                    $element = me._writeTextArea(param, dependenceDisable, pageNum);
                 }
             }
 
             if ($element !== undefined && bindingEnter) {
                 $element.on("keydown", function (e) {
                     if (e.keyCode === 13) {
-                        me._submitForm();
+                        me._submitForm(pageNum);
                     } // Enter
                 });
             }
@@ -4776,7 +4796,7 @@ $(function () {
             else
                 return null;
         },
-        _writeRadioButton: function (param, dependenceDisable) {
+        _writeRadioButton: function (param, dependenceDisable, pageNum) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             var paramPane = me.options.$reportViewer.locData.paramPane;
@@ -4803,7 +4823,7 @@ $(function () {
                     }
 
                     if (me._paramCount === 1)
-                        $radioItem.on("click", function () { me._submitForm(); });
+                        $radioItem.on("click", function () { me._submitForm(pageNum); });
                 }
                 var $label = new $("<label class='fr-param-radio-label' for='" + param.Name + "_radio" + "_" + radioValues[i].value + "'>" + radioValues[i].display + "</label>");
 
@@ -4813,7 +4833,7 @@ $(function () {
 
             return $control;
         },
-        _writeTextArea: function (param, dependenceDisable) {
+        _writeTextArea: function (param, dependenceDisable, pageNum) {
             var me = this;
             var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
@@ -4839,7 +4859,7 @@ $(function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
                             if (me._paramCount === 1)
-                                me._submitForm();
+                                me._submitForm(pageNum);
                         },
                         beforeShow: function () {
                             $control.attr("disabled", true);
@@ -4868,7 +4888,7 @@ $(function () {
 
             return $control;
         },
-        _writeDropDownControl: function (param, dependenceDisable) {
+        _writeDropDownControl: function (param, dependenceDisable, pageNum) {
             var me = this;
             var canLoad = false;
             var predefinedValue = me._getPredefinedValue(param);
@@ -4898,7 +4918,7 @@ $(function () {
             if (!canLoad) me._loadedForDefault = false;
 
             if (me._paramCount === 1) {
-                $control.on("change", function () { me._submitForm(); });
+                $control.on("change", function () { me._submitForm(pageNum); });
             }
 
             return $control;
@@ -5297,6 +5317,7 @@ $(function () {
             me._formInit = false;
             me.$params = null;
             $("." + paramContainerClass, me.element).detach();
+            me._parameterDefinitions = {};
         },
         _getDefaultHTMLTable: function () {
             var $newObj = $("<Table cellspacing='0' cellpadding='0'/>");

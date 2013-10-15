@@ -215,6 +215,10 @@ namespace Forerunner.SSRS.Manager
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
                             END
+                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
+                            BEGIN	                            	                            
+                                CREATE TABLE ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
+                            END
 
                           /*  Version update Code */
                            /*
@@ -290,7 +294,7 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string SaveUserParamaters(string path,string parameters)
+        public string SaveUserParamaters(string path, string parameters)
         {
             Impersonator impersonator = null;
             try
@@ -351,13 +355,84 @@ namespace Forerunner.SSRS.Manager
 
                 while (SQLReader.Read())
                 {
-                    savedParams = SQLReader.GetString(0);                   
+                    savedParams = SQLReader.GetString(0);
                 }
                 SQLReader.Close();
                 SQLConn.Close();
 
                 //Need to try catch and return error
                 return savedParams == "" ? "{}" : savedParams;
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
+        }
+        public string SaveUserSettings(string settings)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                            SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                            IF NOT EXISTS (SELECT * FROM ForerunnerUserSettings WHERE UserID = @UID)
+	                            INSERT ForerunnerUserSettings (UserID, Settings) SELECT @UID, @Params
+                            ELSE
+                                UPDATE ForerunnerUserSettings SET Settings = @Params WHERE UserID = @UID
+                            ";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Params", settings);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Status");
+                w.WriteString("Success");
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
+        }
+
+        public string GetUserSettings()
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @" DECLARE @UID uniqueidentifier
+                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
+                                SELECT Settings FROM ForerunnerUserSettings WHERE UserID = @UID";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SqlDataReader SQLReader;
+                SQLReader = SQLComm.ExecuteReader();
+                string settings = string.Empty;
+
+                while (SQLReader.Read())
+                {
+                    settings = SQLReader.GetString(0);
+                }
+                SQLReader.Close();
+                SQLConn.Close();
+
+                //Need to try catch and return error
+                return settings == "" ? "{}" : settings;
             }
             finally
             {
@@ -405,19 +480,6 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public string GetReportParameter(string path, string paramList)
-        {
-            rs.Credentials = GetCredentials();
-
-            bool forRendering = true;
-            string historyID = null;
-            ParameterValue[] values = JsonUtility.GetCascadingParameterValue(paramList);
-            DataSourceCredentials[] credentials = null;
-            ReportParameter[] parameters;
-
-            parameters = rs.GetReportParameters(path, historyID, forRendering, values, credentials);
-            return JsonUtility.ConvertParamemterToJSON(parameters);
-        }
         public CatalogItem[] GetFavorites()
         {
             Impersonator impersonator = null;

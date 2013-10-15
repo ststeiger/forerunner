@@ -28,7 +28,8 @@ $(function () {
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
-            isReportManager: false
+            isReportManager: false,
+            userSettings: null
         };
 
         // Merge options with the default settings
@@ -48,6 +49,8 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
+                loadParamsCallback: me.getSavedParameters,
+                userSettings: me.options.userSettings
             });
 
             // Create / render the toolbar
@@ -222,5 +225,20 @@ $(function () {
                 }
             }
         },
+        getSavedParameters: function (reportPath) {
+            var savedParams;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.ParamsList !== undefined) {
+                        savedParams = data;
+                    }
+                }
+            });
+            return savedParams ? JSON.stringify(savedParams) : null;
+        }
     };
 });  // $(function ()

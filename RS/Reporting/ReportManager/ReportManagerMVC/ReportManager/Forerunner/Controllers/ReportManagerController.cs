@@ -78,12 +78,6 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().IsFavorite(path)), "text/JSON");
         }
 
-         [HttpGet]
-        public HttpResponseMessage GetParametersJSON(string paramPath, string paramList)
-        {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetReportParameter(paramPath, paramList)), "text/JSON");
-        }
-
         [HttpGet]
         public HttpResponseMessage GetUserParameters(string reportPath)
         {
@@ -92,7 +86,18 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage SaveUserParameters(string reportPath, string parameters)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath,parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath, parameters)), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserSettings()
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserSettings()), "text/JSON");
+        }
+        [HttpGet]
+        public HttpResponseMessage SaveUserSettings(string settings)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserSettings(settings)), "text/JSON");
         }
 
 

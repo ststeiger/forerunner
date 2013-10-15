@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <base href=".."/>
+    <title></title>
+    <link href="/Forerunner/Common/css/reportmanager.css" rel="stylesheet"/>
+    <link href="/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.core.min.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+</head>
+<body>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/json2.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner-tools.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner-widgets.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script> 
+  <script>
+      $(document).ready(function () {
+          $('#Test').reportViewerEZ({
+              DefaultAppTemplate: null,
+              path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+              navigateTo: null,
+              historyBack: null,
+              isReportManager: false,
+              isFullScreen: false
+          });
+      });
+  </script>
+  <header style="height:100px;background:blue;display:block;">Html5 header</header>
+  <div id="Test" />
+</body>
+</html>

@@ -66,7 +66,8 @@
         "refresh": "Atualizar",
 	"reportPage": "Página de vídeo",
 	"zoom": "Ativar Zoom",
-	"print": "Impressão"
+	"print": "Impressão",
+	"userSettings": "Settings"
     },
 	"print":{
 	    "title": "Imprimir página de opção de layout",
@@ -78,7 +79,15 @@
 		"marginRight": "margem Direita",
 		"print": "imprimir",
 		"cancel": "cancelar",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "Margins",
+		"pageLayoutOptions": "Page layout options"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "Nulo",

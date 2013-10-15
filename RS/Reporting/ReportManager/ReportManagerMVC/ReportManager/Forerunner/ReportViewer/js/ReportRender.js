@@ -333,12 +333,14 @@ $(function () {
                 if (curRI.OrgRight > viewerWidth) {
                     curRI.Left = 0;
 
+                    //Measurements.length
                     for (var i = 0; i < Measurements.length; i++) {
                         var bottom = Measurements[i].Top + Measurements[i].Height;
                         var right = Measurements[i].Left + Measurements[i].Width;
 
                         //Above
-                        if (!topMove && (Index !== i) && (Obj.Top < Measurements[i].Top) && (curRI.OrgBottom > Measurements[i].Top) && (layout.ReportItems[i].Left < Obj.Width)) {
+                        //&& (layout.ReportItems[i].Left < Obj.Width)
+                        if (!topMove && (Index !== i) && (Obj.Top < Measurements[i].Top) && (curRI.OrgBottom > Measurements[i].Top) ) {
                             layout.ReportItems[i].IndexAbove = Index;
                             layout.ReportItems[i].TopDelta = 1;
                             if (Index === layout.LowestIndex)
@@ -347,13 +349,17 @@ $(function () {
                             topMove = true;
                         }
                         //Below
-                        if ( (Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && (layout.ReportItems[i].Left < Obj.Width)) {
-                            curRI.IndexAbove = i;
-                            curRI.TopDelta = 1;
-                            if (i === layout.LowestIndex)
-                                layout.LowestIndex = Index;
-                            bottompMove = true;
-                            anyMove = true;
+                        //&& (layout.ReportItems[i].Left < Obj.Width)
+                        if ((Index !== i) && (Obj.Top >= Measurements[i].Top) && (Obj.Top < bottom) && Index > i ) {
+                            //Not below if there is another one lower
+                            if (curRI.IndexAbove === null || layout.ReportItems[curRI.IndexAbove].OrgBottom < layout.ReportItems[i].OrgBottom) {
+                                curRI.IndexAbove = i;
+                                curRI.TopDelta = 1;
+                                if (i === layout.LowestIndex)
+                                    layout.LowestIndex = Index;
+                                bottompMove = true;
+                                anyMove = true;
+                            }
                         }
 
                         
@@ -362,14 +368,21 @@ $(function () {
 
                 if ( anyMove || (Index === Measurements.length - 1)) {
                     for (var j = 0; j < curRI.Index ; j++) {
+                        // if I have the same index above and I did not move but you did more then I have to move down
                         if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.OrgRight <= viewerWidth && layout.ReportItems[j].OrgRight > viewerWidth)
                             curRI.IndexAbove = j;
+                        // if you moved or I moved
                         if (layout.ReportItems[j].OrgRight > viewerWidth || curRI.OrgRight > viewerWidth) {
+                            //if my index above is the same as yours then move me down
                             if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove)
                                 curRI.IndexAbove = layout.ReportItems[j].Index;
-                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove)
-                                layout.ReportItems[j].IndexAbove = curRI.Index;
+                            // else if your origional index above is my new index above then you move down
+                            else if (layout.ReportItems[j].OrgIndexAbove === curRI.IndexAbove && j > curRI.Index)
+                                layout.ReportItems[j].IndexAbove = curRI.Index;                        
                         }
+                        // If we now overlap move me down
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left <= layout.ReportItems[j].Left + Measurements[j].Width)
+                            curRI.IndexAbove = layout.ReportItems[j].Index;
                     }
                 }
                 
@@ -596,7 +609,7 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    //$ParagraphList.attr("style","width:100%;height:100%;");
+                    $ParagraphList.attr("style","width:100%;height:100%;");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }

@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <base href=".."/>
+    <title></title>
+    <link href="/Forerunner/Common/css/reportmanager.css" rel="stylesheet"/>
+    <link href="/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery-ui.min.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.core.min.css" rel="stylesheet"/>
+    <link href="/Forerunner/Lib/jQuery/css/jquery.ui.datepicker.min.css" rel="stylesheet"/>
+</head>
+<body>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/json2.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner-tools.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Bundles/forerunner-widgets.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+  <script type="text/javascript" src="Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.custom.min.js"></script>
+  <script>
+      $(document).ready(function () {
+          $('#pane1').reportViewerEZ({
+              path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+              isFullScreen: false
+          });
+          $('#pane2').reportViewerEZ({
+              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+              isFullScreen: false
+          });
+      });
+  </script>
+    <h1>This is a bunch of HTML</h1>
+    <table>
+        <tr>
+            <td>
+                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
+            </td>
+            <td>
+                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
+            </td>
+        </tr>
+     </table>
+</body>
+</html>

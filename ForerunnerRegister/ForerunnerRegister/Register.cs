@@ -173,7 +173,7 @@ namespace ForerunnerRegister
             SQLConn.Close();
 
             RegData.SetID(DownloadID);
-            new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100);
+            new Order().WriteLicense(DownloadID, "MobTrial", "Mobilizer Trial", 100, RegData.LicenseID);
             SaveEmailTask(RegData);
             return DownloadID;
 

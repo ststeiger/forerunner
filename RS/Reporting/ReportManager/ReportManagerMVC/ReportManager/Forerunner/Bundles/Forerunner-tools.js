@@ -445,6 +445,12 @@ $(function () {
                         e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-textbox-reportpage"]);
                         return false;
                     }
+                },
+                blur: function (e) {
+                    $(window).scrollTop(0);
+                },
+                focus: function (e) {
+                    $(window).scrollTop(0);
                 }
             }
         },
@@ -640,6 +646,12 @@ $(function () {
                         e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                         return false;
                     }
+                },
+                blur: function (e) {
+                    $(window).scrollTop(0);
+                },
+                focus: function (e) {
+                    $(window).scrollTop(0);
                 }
             }
         },
@@ -689,6 +701,7 @@ $(function () {
             tooltip: locData.toolbar.home,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("home", null);
                 }
             }
@@ -701,6 +714,7 @@ $(function () {
             tooltip: locData.toolbar.back,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("back", null);
                 }
             }
@@ -713,6 +727,7 @@ $(function () {
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("favorites", null);
                 }
             }
@@ -725,6 +740,7 @@ $(function () {
             tooltip: locData.toolbar.recent,
             events: {
                 click: function (e) {
+                    e.data.me.freezeEnableDisable(false);
                     e.data.me.options.navigateTo("recent", null);
                 }
             }
@@ -734,13 +750,10 @@ $(function () {
         toolType: toolTypes.button,
         selectorClass: "fr-rm-button-setup",
         imageClass: "fr-icons24x24-setup",
-        tooltip: locData.toolbar.setup,
+        tooltip: locData.toolbar.userSettings,
         events: {
             click: function (e) {
-                // TODO
-                // Jason to implement
-                //
-                //e.data.me.options.navigateTo("recent", null);
+                e.data.me.options.$usersettingssection.userSettings("openDialog");
             }
         }
     }
@@ -771,6 +784,7 @@ $(function () {
         btnFavorite: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
+            sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-favorite",
             tooltip: locData.toolbar.favorites,
             events: {
@@ -783,7 +797,7 @@ $(function () {
         btnRecent: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-recent",
-            sharedClass: "fr-toolbar-hidden-on-small",
+            sharedClass: "fr-toolbase-no-disable-id fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-recent",
             tooltip: locData.toolbar.recent,
             events: {

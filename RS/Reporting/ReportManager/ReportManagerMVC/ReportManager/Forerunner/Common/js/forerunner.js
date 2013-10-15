@@ -125,6 +125,8 @@ $(function () {
             toolPane: "toolPane",
             /** @constant */
             reportPrint: "reportPrint",
+            /** @constant */
+            userSettings: "userSettings",
 
             /** @constant */
             namespace: "forerunner",
@@ -221,11 +223,6 @@ $(function () {
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
             /** @constant */
-            paramSubmit: "paramsubmit",
-            /** widget + event, lowercase */
-            reportViewerParamSubmit: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.paramSubmit).toLowerCase(); },
-
-            /** @constant */
             loadCascadingParam: "loadcascadingparam",
             /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
@@ -264,6 +261,17 @@ $(function () {
             hidePane: "hidePane",
             /** widget + event, lowercase */
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
+
+            /** @constant */
+            showDialog: "showDialog",
+            /** widget + event, lowercase */
+            userSettingsShowDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.showDialog).toLowerCase(); },
+
+            /** @constant */
+            hideDialog: "hideDialog",
+            /** widget + event, lowercase */
+            userSettingsHideDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.hideDialog).toLowerCase(); },
+
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -334,7 +342,12 @@ $(function () {
                 var scripts = document.getElementsByTagName("script");
                 for (var i = 0; i < scripts.length; i++) {
                     var script = scripts[i];
-                    var endsWith = this._endsWith(script.src, "/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js");
+                    var endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner.min.js");
+                    if (endsWith !== -1) {
+                        this._virtualRootBase = script.src.substring(0, endsWith);
+                        break;
+                    }
+                    endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner.js");
                     if (endsWith !== -1) {
                         this._virtualRootBase = script.src.substring(0, endsWith);
                         break;
@@ -374,7 +387,7 @@ $(function () {
 
             // Enumerate the rules
             $.each(rules, function (rulesIndex, rule) {
-                if (rule.styleSheet) {
+                if (rule.styleSheet && rule.styleSheet.href) {
                     if (rule.styleSheet.href.match(new RegExp(name, "i"))) {
                         returnSheet = rule.styleSheet;
                         return false;
@@ -394,7 +407,7 @@ $(function () {
 
             // Find the toolbase.css style sheet
             $.each(document.styleSheets, function (sheetsIndex, sheet) {
-                if (sheet.href.match(new RegExp(name, "i"))) {
+                if (sheet.href && sheet.href.match(new RegExp(name, "i"))) {
                     returnSheet = sheet;
                     return false;
                 }
@@ -640,7 +653,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is a Windows Phone */
         isWindowsPhone : function() {
             var ua = navigator.userAgent;
-            return ua.match(/(Windows Phone)/) !== null
+            return ua.match(/(Windows Phone)/) !== null;
         },
         /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
@@ -674,7 +687,7 @@ $(function () {
          * @param {bool} flag - true = scale enabled (max = 10.0)
          */
         allowZoom: function (flag) {
-            _allowZoomFlag = flag;
+            this._allowZoomFlag = flag;
             if (flag === true) {
                 $("head meta[name=viewport]").remove();
                 $("head").prepend("'<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=10.0, minimum-scale=0, user-scalable=1' />");
@@ -689,7 +702,7 @@ $(function () {
          * @return {bool} flag - True if the view port allow zooming.
          */
         isAllowZoom : function() {
-            return _allowZoomFlag;
+            return this._allowZoomFlag;
         },
       
         /** @return {float} Returns the zoom level, (document / window) width */

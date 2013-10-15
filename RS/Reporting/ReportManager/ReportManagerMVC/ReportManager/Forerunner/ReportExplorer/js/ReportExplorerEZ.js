@@ -65,16 +65,20 @@ $(function () {
             layout.$mainsection.html(null);
             layout.$mainsection.show();
             layout.$docmapsection.hide();
-            layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "/ReportManager",
+            me.$reportExplorer = layout.$mainsection.reportExplorer({
+                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
                 forerunnerPath: forerunner.config.forerunnerFolder() ,
                 path: path,
                 view: view,
                 selectedItemPath: currentSelectedPath,
-                navigateTo: me.options.navigateTo
+                navigateTo: me.options.navigateTo,
+                $usersettingssection: layout.$usersettingssection
             });            
             var $toolbar = layout.$mainheadersection;
-            $toolbar.reportExplorerToolbar({ navigateTo: me.options.navigateTo });
+            $toolbar.reportExplorerToolbar({
+                navigateTo: me.options.navigateTo,
+                $usersettingssection: layout.$usersettingssection
+        });
             $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
             layout.$rightheader.height(layout.$topdiv.height());
@@ -83,7 +87,6 @@ $(function () {
             layout.$leftheaderspacer.height(layout.$topdiv.height());
 
             layout._selectedItemPath=path0; //me._selectedItemPath = path0;
-            me.element.removeClass("fr-docmap-background");
             me.element.addClass("fr-Explorer-background");
         },
         /**
@@ -101,6 +104,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 isReportManager: true,
+                userSettings: me.$reportExplorer ? me.$reportExplorer.reportExplorer("getUserSettings") : null
             });
 
             me.element.addClass("fr-Explorer-background");

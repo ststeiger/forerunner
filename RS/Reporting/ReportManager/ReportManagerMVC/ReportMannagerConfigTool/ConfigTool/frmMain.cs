@@ -25,10 +25,7 @@ namespace ReportMannagerConfigTool
             }
             catch(Exception ex)
             {
-                using (new CenterWinDialog(this))
-                {
-                    MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
-                }
+                MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
             }
         }
 
@@ -288,7 +285,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
-                Validate();
+                ValidateLicense();
             }
             catch (Exception ex)
             {
@@ -349,10 +346,10 @@ namespace ReportMannagerConfigTool
 
         private void btnValidate_Click(object sender, EventArgs e)
         {
-            Validate();
+            ValidateLicense();
         }
 
-        private void Validate()
+        private void ValidateLicense()
         {
             Cursor.Current = Cursors.WaitCursor;
             try
@@ -371,6 +368,43 @@ namespace ReportMannagerConfigTool
                     MessageBox.Show(this, ex.Message, "Forerunner Software Mobilizer");
                 }
             }
+        }
+
+        private void btnMerge_Click(object sender, EventArgs e)
+        {
+            DialogResult dr;
+
+            if (txtNewKey.Text == "")
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "LicenseKey Required", "Forerunner Software Mobilizer");
+                }
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                using (new CenterWinDialog(this))
+                {
+                    dr = MessageBox.Show("Are you sure you wish to merge this License, this process is irreversible?", "Forerunner Software Mobilizer", MessageBoxButtons.YesNo);
+                }
+                if (dr == DialogResult.Yes)
+                {
+                    rtbCurLicense.Text = ClientLicense.Merge(txtNewKey.Text);
+                    ValidateLicense();
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
+            Cursor.Current = Cursors.Default;
+           
         }
 
     }

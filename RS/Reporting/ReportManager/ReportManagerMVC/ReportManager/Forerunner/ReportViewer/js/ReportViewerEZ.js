@@ -34,7 +34,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
-            isFullScreen: true
+            isFullScreen: true,
+            userSettings: null
         },
         _render: function () {
             var me = this;
@@ -70,7 +71,8 @@ $(function () {
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
                 navigateTo: me.options.navigateTo,
-                isReportManager: me.options.isReportManager
+                isReportManager: me.options.isReportManager,
+                userSettings: me.options.userSettings
             });
 
             initializer.render();

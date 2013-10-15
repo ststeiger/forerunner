@@ -22,7 +22,9 @@
         "targetSite": "目标站点",
         "source": "源",
         "message": "消息",
-        "stackTrace": "堆栈跟踪"
+        "stackTrace": "堆栈跟踪",
+		"licenseErrorTitle": "感谢您使用Forerunner公司的Mobilizer软件，您的授权许可出现了一些问题。",
+		"licenseErrorContent": "请联系您的系统管理员。如果您是管理员请使用Mobilizer附带的配置工具验证您的授权许可。"
     },
     "exportType": {
         "xml": "XML 数据报表",
@@ -66,19 +68,28 @@
         "refresh": "刷新",
 		"reportPage": "页面",
 		"zoom": "允许缩放",
-		"print": "打印"
+		"print": "打印",
+		"userSettings": "Settings"
     },
 	"print":{
-	    "title": "打印页面设置",
-		"pageHeight": "页面高度",
-		"pageWidth": "页面宽度",
-		"marginTop": "上边距",
-		"marginBottom": "下边距",
-		"marginLeft": "左边距",
-		"marginRight": "右边距",
+	    "title": "打印报表",
+		"pageHeight": "高度",
+		"pageWidth": "宽度",
+		"marginTop": "上",
+		"marginBottom": "下",
+		"marginLeft": "左",
+		"marginRight": "右",
 		"print": "打印",
 		"cancel": "取消",
-		"unit": "mm"
+		"unit": "mm",
+		"margin": "边距",
+		"pageLayoutOptions": "页面设置"
+	},
+	"userSettings": {
+	    "title": "User Settings",
+		"submit": "Ok",
+		"cancel": "Cancel",
+		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
         "nullField": "空值",

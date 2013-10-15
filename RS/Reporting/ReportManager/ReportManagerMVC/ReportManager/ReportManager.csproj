@@ -147,8 +147,6 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="CSS\Login.css" />
-    <Content Include="CSS\ReportManager.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -167,6 +165,8 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Forerunner\Common\css\Login.css" />
+    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
@@ -189,6 +189,8 @@
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
+    <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
+    <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\Report-icon.png" />
@@ -198,6 +200,7 @@
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
+    <Content Include="Forerunner\ReportExplorer\js\UserSettings.js" />
     <Content Include="Forerunner\ReportViewer\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />
@@ -208,6 +211,10 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_portrait.png" />
+    <Content Include="Forerunner\ReportViewer\images\print_portrait_1.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />
@@ -238,6 +245,13 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples_Release\BottomNav.html" />
+    <Content Include="Samples_Release\FullPage.html" />
+    <Content Include="Samples_Release\Dashboard.html" />
+    <Content Include="Samples_Release\FullPageStaticToolbar.html" />
+    <Content Include="Samples_Release\SideNav.html" />
+    <Content Include="Samples_Release\TopNav.html" />
+    <Content Include="Samples_Release\TopNav2.html" />
     <Content Include="Scripts\App\router.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
     <Content Include="Forerunner\Common\js\Toolbase.js" />
@@ -266,7 +280,7 @@
     <Content Include="Scripts\Util\backbone.js" />
     <Content Include="Scripts\Util\backbone_ui.js" />
     <Content Include="Scripts\Util\collection_view.js" />
-    <Content Include="Scripts\Util\json2.js" />
+    <Content Include="Forerunner\Lib\Misc\js\json2.js" />
     <Content Include="Scripts\Util\laconic.js" />
     <Content Include="Scripts\Util\modernizr-2.5.3.js" />
     <Content Include="Scripts\Util\underscore.js" />

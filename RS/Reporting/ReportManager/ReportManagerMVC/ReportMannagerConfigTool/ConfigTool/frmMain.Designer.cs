@@ -70,6 +70,7 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabActivation = new System.Windows.Forms.TabPage();
+            this.btnValidate = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnDeActivate = new System.Windows.Forms.Button();
             this.rtbCurLicense = new System.Windows.Forms.RichTextBox();
@@ -79,7 +80,7 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
-            this.btnValidate = new System.Windows.Forms.Button();
+            this.btnMerge = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
@@ -374,6 +375,7 @@
             // 
             // tabActivation
             // 
+            this.tabActivation.Controls.Add(this.btnMerge);
             this.tabActivation.Controls.Add(this.btnValidate);
             this.tabActivation.Controls.Add(this.btnCopy);
             this.tabActivation.Controls.Add(this.btnDeActivate);
@@ -387,6 +389,13 @@
             resources.ApplyResources(this.tabActivation, "tabActivation");
             this.tabActivation.Name = "tabActivation";
             this.tabActivation.UseVisualStyleBackColor = true;
+            // 
+            // btnValidate
+            // 
+            resources.ApplyResources(this.btnValidate, "btnValidate");
+            this.btnValidate.Name = "btnValidate";
+            this.btnValidate.UseVisualStyleBackColor = true;
+            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
             // 
             // btnCopy
             // 
@@ -445,12 +454,12 @@
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
             // 
-            // btnValidate
+            // btnMerge
             // 
-            resources.ApplyResources(this.btnValidate, "btnValidate");
-            this.btnValidate.Name = "btnValidate";
-            this.btnValidate.UseVisualStyleBackColor = true;
-            this.btnValidate.Click += new System.EventHandler(this.btnValidate_Click);
+            resources.ApplyResources(this.btnMerge, "btnMerge");
+            this.btnMerge.Name = "btnMerge";
+            this.btnMerge.UseVisualStyleBackColor = true;
+            this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
             // 
             // frmMain
             // 
@@ -530,6 +539,7 @@
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnDeActivate;
         private System.Windows.Forms.Button btnValidate;
+        private System.Windows.Forms.Button btnMerge;
     }
 }
 

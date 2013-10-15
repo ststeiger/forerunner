@@ -63,73 +63,30 @@ namespace Forerunner
                 {
                     if (obj["IsMultiple"].ToString().ToLower() == "true")
                     {
-                        string temp = obj["Value"].ToString();
-                        foreach (string str in temp.Split(','))
+                        if (obj["Value"] == null)
                         {
                             ParameterValue pv = new ParameterValue();
                             pv.Name = obj["Parameter"].ToString();
-                            pv.Value = str;
-                            list.Add(pv);
-                        }
-
-                    }
-                    else
-                    {
-                        ParameterValue pv = new ParameterValue();
-                        pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? null : obj["Value"].ToString();
-                        list.Add(pv);
-                    }
-                }
-
-                return list.ToArray();
-            }
-        }
-
-        internal static Forerunner.SSRS.Management.ParameterValue[] GetCascadingParameterValue(string parameterList)
-        {
-            if (parameterList == "null")
-                return null;
-
-            List<Forerunner.SSRS.Management.ParameterValue> list = new List<Forerunner.SSRS.Management.ParameterValue>();
-
-            using (JsonTextReader reader = new JsonTextReader(new StringReader(parameterList)))
-            {
-                JsonObject jsonObj = new JsonObject();
-                jsonObj.Import(reader);
-
-                JsonArray parameterArray = jsonObj["ParamsList"] as JsonArray;
-
-                foreach (JsonObject obj in parameterArray)
-                {
-                    if (obj["IsMultiple"].ToString().ToLower() == "true")
-                    {
-                        string multipleValue = obj["Value"].ToString();
-                        
-                        if (multipleValue == "null") 
-                        {
-                            Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
-                            pv.Name = obj["Parameter"].ToString();
                             pv.Value = GetDefaultValue(obj["Type"].ToString());
                             list.Add(pv);
-                        }
-                        else
+                        } 
+                        else 
                         {
-                            string[] values = multipleValue.Split(',');
-                            foreach (string str in values)
+                            JsonArray multipleValues = obj["Value"] as JsonArray;
+                            foreach (String value in multipleValues)
                             {
-                                Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
+                                ParameterValue pv = new ParameterValue();
                                 pv.Name = obj["Parameter"].ToString();
-                                pv.Value = str;
+                                pv.Value = value;
                                 list.Add(pv);
                             }
                         }
                     }
                     else
                     {
-                        Forerunner.SSRS.Management.ParameterValue pv = new Forerunner.SSRS.Management.ParameterValue();
+                        ParameterValue pv = new ParameterValue();
                         pv.Name = obj["Parameter"].ToString();
-                        pv.Value = obj["Value"].ToString().ToLower() == "null" ? GetDefaultValue(obj["Type"].ToString()) : obj["Value"].ToString();
+                        pv.Value = obj["Value"] == null ? null : obj["Value"].ToString();
                         list.Add(pv);
                     }
                 }
@@ -331,103 +288,6 @@ namespace Forerunner
                 {
                     w.WriteStartArray();
                     foreach (ValidValue item in parameter.ValidValues)
-                    {
-                        w.WriteStartObject();
-                        w.WriteMember("Key");
-                        w.WriteString(item.Label);
-                        w.WriteMember("Value");
-                        w.WriteString(item.Value);
-                        w.WriteEndObject();
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-                w.WriteEndObject();
-            }
-            w.WriteEndArray();
-
-            w.WriteMember("DefaultValueExist");
-            if (DefaultExist)
-                w.WriteBoolean(true);
-            else
-                w.WriteBoolean(false);
-
-            w.WriteMember("DefaultValueCount");
-            w.WriteNumber(DefaultValueCount);
-
-            w.WriteEndObject();
-
-            return w.ToString();
-        }
-
-        public static string ConvertParamemterToJSON(Forerunner.SSRS.Management.ReportParameter[] parametersList)
-        {
-            JsonWriter w = new JsonTextWriter();
-            bool DefaultExist = false;
-            int DefaultValueCount = 0;
-            w.WriteStartObject();
-
-            w.WriteMember("Type");
-            w.WriteString("Parameters");
-            w.WriteMember("Count");
-            w.WriteString(parametersList.Length.ToString());
-            w.WriteMember("ParametersList");
-            w.WriteStartArray();
-            foreach (Forerunner.SSRS.Management.ReportParameter parameter in parametersList)
-            {
-                w.WriteStartObject();
-                foreach (PropertyInfo proInfo in parameter.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-                {
-                    if (!proInfo.PropertyType.IsArray)
-                    {
-                        w.WriteMember(proInfo.Name);
-                        Object obj = proInfo.GetValue(parameter, null);
-
-                        if (obj == null)
-                            w.WriteString("");
-                        else if (obj.GetType().ToString().Contains("Boolean"))
-                            w.WriteBoolean(bool.Parse(obj.ToString()));
-                        else
-                            w.WriteString(proInfo.GetValue(parameter, null).ToString());
-                    }
-                }
-
-                w.WriteMember("DefaultValues");
-                if (parameter.DefaultValues != null)
-                {
-                    DefaultExist = true;
-                    DefaultValueCount++;
-
-                    w.WriteStartArray();
-                    foreach (string item in parameter.DefaultValues)
-                    {
-                        w.WriteString(item);
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-
-
-                w.WriteMember("Dependencies");
-                if (parameter.Dependencies != null)
-                {
-                    w.WriteStartArray();
-                    foreach (string item in parameter.Dependencies)
-                    {
-                        w.WriteString(item);
-                    }
-                    w.WriteEndArray();
-                }
-                else
-                    w.WriteString("");
-
-                w.WriteMember("ValidValues");
-                if (parameter.ValidValues != null)
-                {
-                    w.WriteStartArray();
-                    foreach (Forerunner.SSRS.Management.ValidValue item in parameter.ValidValues)
                     {
                         w.WriteStartObject();
                         w.WriteMember("Key");

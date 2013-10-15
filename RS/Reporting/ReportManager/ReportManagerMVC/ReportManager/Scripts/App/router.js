@@ -41,7 +41,6 @@ var ApplicationRouter = Backbone.Router.extend({
         _transitionToReportManager: function (path, view) {
             forerunner.device.allowZoom(false);
             $("body").reportExplorerEZ("transitionToReportManager", path, view);
-            $("html").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");
         },
 
@@ -65,14 +64,6 @@ var ApplicationRouter = Backbone.Router.extend({
         transitionToReportViewer: function (path) {
             $("body").reportExplorerEZ("transitionToReportViewer", path);
             $("html").removeClass("fr-Explorer-background");
-
-            var events = forerunner.ssr.constants.events;
-            $(".fr-layout-reportviewer").on(events.reportViewerShowDocMap(), function (e, data) {
-                $("html").addClass("fr-docmap-background");
-            });
-            $(".fr-layout-reportviewer").on(events.reportViewerHideDocMap(), function (e, data) {
-                $("html").removeClass("fr-docmap-background");
-            });
         },
        
         toolbarHeight : function() {

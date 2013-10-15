@@ -25,10 +25,6 @@ ul.fr-nav-container {
   overflow-x: scroll;
   list-style-type: square;
   -webkit-overflow-scrolling: touch;
-  border-top-width: 8px;
-  border-bottom-width: 8px;
-  border-top-style: double;
-  border-top-color: black;
 }
 
 .fr-nav-item {

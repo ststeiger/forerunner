@@ -37,10 +37,17 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-                me._updateItemStates(data.newPageNum, maxNumPages);
+
+                if (data.renderError === true) {
+                    me.enableTools([tp.itemReportBack, tp.itemRefresh]);
+                }
+                else {
+                    me.enableTools(me._viewerItems());
+                    me._updateItemStates(data.newPageNum, maxNumPages);
+                }
                 
             });
 
@@ -57,31 +64,21 @@ $(function () {
                 me.enableAllTools();
             });
 
-            me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
-                if (data.paramSubmit === false) {
-                    me.disableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
-                               tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
-                }
-            });
-
-            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
-                me.enableTools([tp.itemNav, tp.itemRefresh, tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemReportPage,
-                           tp.itemLastPage, tp.itemDocumentMap, tp.itemFind, tp.itemKeyword, tp.itemZoom, tp.itemPrint, tp.itemExport]);
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowNav(), function (e, data) {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tp.itemNav]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });
 
             // Hook up the toolbar element events
-            me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
-                            tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
+            //me.enableTools([tp.itemFirstPage, tp.itemPrev, tp.itemNext, tp.itemLastPage, tp.itemNav,
+            //                tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemFind]);
         },
         _init: function () {
             var me = this;
@@ -96,13 +93,8 @@ $(function () {
             $toolpane.addClass(me.options.toolClass);
             $(me.element).append($toolpane);
 
-            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
-            }
-            me.addTools(1, true, listOfItems);
+          
+            me.addTools(1, false, me._viewerItems());
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -112,6 +104,16 @@ $(function () {
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
+        },
+        _viewerItems: function () {
+            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
+            // We don't zoom in default android browser and Windows 8 always zoom anyways.
+            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            }
+
+            return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;

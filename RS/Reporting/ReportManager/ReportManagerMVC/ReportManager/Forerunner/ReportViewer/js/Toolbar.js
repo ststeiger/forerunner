@@ -42,13 +42,20 @@ $(function () {
             var me = this;
 
             // Hook up any / all custom events that the report viewer may trigger
-            me.options.$reportViewer.on(events.reportViewerChangePage(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-                me._updateBtnStates(data.newPageNum, maxNumPages);
-                if (data.numOfVisibleParameters === 0)
-                    me.disableTools([tb.btnParamarea]);
-               
+
+                if (data.renderError === true) {
+                    me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnRefresh]);
+                }
+                else {
+                    me.enableTools(me._viewerButtons());
+                    me._updateBtnStates(data.newPageNum, maxNumPages);
+
+                    if (data.numOfVisibleParameters === 0)
+                        me.disableTools([tb.btnParamarea]);
+                }
             });
 
             me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
@@ -57,15 +64,6 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
-                if (data.paramSubmit === false) {
-                    me.disableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
-                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
-                }
-            });
-
-            me.options.$reportViewer.on(events.reportViewerParamSubmit(), function (e, data) {
-                me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext, tb.btnReportPage,
-                           tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnKeyword, tb.btnZoom, tb.btnPrint, tg.btnExportDropdown]);
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -81,24 +79,18 @@ $(function () {
                 if (data.open) {
                     me.disableAllTools();
                     me.enableTools([tb.btnNav, tb.btnMenu]);
+                    me.freezeEnableDisable(true);
                 }
                 else {
+                    me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
             });
 
-            var listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom];
-            // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
-            // We don't zoom in default android browser and Windows 8 always zoom anyways.
-            if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnReportBack, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                                 tb.btnLastPage, tb.btnDocumentMap, tb.btnFind];
-            }
             // Hook up the toolbar element events
-            me.enableTools([tb.btnMenu, tb.btnNav, tb.btnReportBack,
-                               tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
-                               tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom]);
+            //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
+            //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
+            //me.enableTools([tb.btnMenu, tb.btnReportBack]);
         },
         _init: function () {
             var me = this;
@@ -110,17 +102,22 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + "'/>");
+           
+            me.addTools(1, false, me._viewerButtons());
+            me.addTools(1, false, [tb.btnParamarea]);
+            if (me.options.$reportViewer) {
+                me._initCallbacks();
+            }
+        },
+        _viewerButtons: function () {
             var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
             }
-            me.addTools(1, true, listOfButtons);
-            me.addTools(1, false, [tb.btnParamarea]);
-            if (me.options.$reportViewer) {
-                me._initCallbacks();
-            }
+
+            return listOfButtons;
         },
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;

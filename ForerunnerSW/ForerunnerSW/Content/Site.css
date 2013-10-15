@@ -1,0 +1,94 @@
+﻿
+*{ -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+table {	border-collapse: collapse;	border-spacing: 0;}
+a { text-decoration: none;}
+a:hover {text-decoration:none; cursor:pointer;}
+img {border:none}
+body {font-size: .85em;font-family:  Helvetica, Arial, sans-serif; color: #333333; background-color: #fff; line-height: 22px; margin:0;padding:0;}
+input{-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;padding:5px;}
+.Rounded {-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;}
+.Center{ display:table;margin: 0 auto;}
+.InlineBlock{display:inline-block;}
+
+.ForerunnerPort{width:100%;}
+.ForerunnerPage{width:984px;}
+.ForerunnerPageTitle{font-size:50px;color:#1ba0da;padding-top:50px;margin-bottom:15px;line-height:40px}
+.ForerunnerPageSubTitle{font-size:18px;margin-bottom:20px;line-height:30px;}
+.ForerunnerPageContent{font-size:14px;}
+
+.ForerunnerTD{ display:table-cell;vertical-align:top}
+.ForerunnerTD50{width:50%;}
+
+.Header{ width:100%;margin-top:20px;padding-bottom:30px;}
+.Footer{background-color:#333333;width:100%;color:white;min-height:100px;}
+
+.FooterContent{float:left;padding-top:20px;padding-right:10px;}
+.Navbar {display:inline-block; margin-left:50px;}
+.Navbar a{color: gray;padding:8px;}
+.Navbar ul{-webkit-padding-start: 0px;-moz-padding-start: 0px;-ms-padding-start: 0px;list-style:none;padding:0;list-style-type:none;}
+.Navitem{line-height: 30px;float:right; }
+.Navitem a:hover{color:white;background-color:black;}
+
+.ForerunnerImage { width:100%; }
+
+.ContactButton{background-color:#1ba0da;width:300px;height:40px;font-size:18px;color:white;margin-bottom:25px;display:block;vertical-align:middle;}
+.ContactButton:hover{background-color:#0a87bd;}
+.ContactButtonText{margin:10px;float:left;}
+.ContactButtonImg{margin:7px;float:left;}
+.ContactButtonArrow{margin-top:10px;margin-right:5px;float:right;}
+
+.ForerunnerBottomBanner{background-color:#EAEAEA;}
+.ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
+
+.DownloadButton{background-color:#ff9900;color:white;width:200px;height:36px;display:block;padding-top:7px;text-align:center;font-size:14px;}
+.DownloadButton:hover{background-color:#f38c06}
+
+.DemoPageButtonRight{display:inline;float:right;text-align:center;}
+.DemoPageButtonLeft{display:inline;float:left;text-align:center;}
+
+.ForerunnerHeaderColor{color:#1ba0da;}
+
+.MobilizerBanner{background-color:#009cde;color:white;}
+.MobilizerBannerHeader{font-size:60px;padding-top:20px;padding-bottom:10px;line-height:50px;}
+.MobilizerBannerSubHeader{font-size:16px;font-weight:bold;}
+.MobilizerBannerContent{font-size:14px;}
+.MobilizerBannerImage{background:url(img/background_checkers.png);background-repeat:repeat;}
+.MobilizerDetailHeader{color:#1ba0da;font-size:20px;}
+.MobilizerDetailContent{padding-bottom:20px;}
+
+
+/* 4.1 - Desktop Slim */
+@media only screen and (min-width: 768px) and (max-width: 1026px) {
+ 
+    .ForerunnerPage{width:728px;}
+    
+}
+
+
+/* 4.2 - Tablet Landscape */
+@media only screen and (min-width: 600px) and (max-width: 797px) {
+   .ForerunnerPort{padding-right:10px;padding-left:10px;width:100%;}
+   .ForerunnerPage{width:580px;}
+   
+}
+
+/* 4.3 - Mobile Landscape */
+@media only screen and (min-width: 510px) and (max-width: 629px) {
+    .ForerunnerPort{padding-right:10px;padding-left:10px;width:100%;}
+    .ForerunnerPage{width:490px;}
+   
+    .ForerunnerTD{ display:inline-block;}
+    .ForerunnerTD50{width:100%;}
+
+    .DemoPageButtonRight{display:block;float:left;text-align:center;}
+    .DemoPageButtonLeft{display:block;float:left;text-align:center;}
+
+}
+/* 4.4 - Mobile Portrait */
+@media only screen and (max-width: 509px) {
+    .ForerunnerPort{padding-right:0px;padding-left:0px;width:100%;}
+    .ForerunnerPage{width:400px;}
+
+   .ForerunnerTD{ display:inline-block;}
+   .ForerunnerTD50{width:100%;}
+}

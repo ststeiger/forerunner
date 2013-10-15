@@ -1079,7 +1079,7 @@ $(function () {
             if (savedParams) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({ $reportViewer: this });
-                    me.refreshParameters(savedParams, true);
+                    me.refreshParameters(savedParams, true, pageNum);
                 }
             } else {
                 me._loadDefaultParameters(pageNum);
@@ -1138,8 +1138,9 @@ $(function () {
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
          * @param {boolean} Submit form if the parameters are satisfied.
+         * @param {int} The page to load.
          */
-        refreshParameters: function (paramList, submitForm) {
+        refreshParameters: function (paramList, submitForm, pageNum) {
             var me = this;
             if (paramList) {
                 forerunner.ajax.ajax({
@@ -1151,7 +1152,7 @@ $(function () {
                             me.sessionID = data.SessionID;
 
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                             if (me.$numOfVisibleParameters > 0)
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -1212,12 +1213,16 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#loadReportWithNewParameters
          * @param {Object} paramList - Paramter list object
+         * @param {int} pageNum - The page to load
          */
-        loadReportWithNewParameters: function (paramList) {
+        loadReportWithNewParameters: function (paramList, pageNum) {
             var me = this;
            
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList, true);
+            if (!pageNum) {
+                pageNum = 1;
+            }
+            me._loadPage(pageNum, false, null, paramList, true);
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;

@@ -75,7 +75,7 @@ $(function () {
             if (reportObj.ReportContainer.Trial ===1) {
                 var watermark = new $("<div/>");
                 watermark.html("<p>Evaluation</p>");
-                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 10000;left:0px;top:40px; pointer-events: none;";
+                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: -1;left:0px;top:40px; pointer-events: none;";
                 //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
                 watermark.attr("style", wstyle);
                 me.element.append(watermark);

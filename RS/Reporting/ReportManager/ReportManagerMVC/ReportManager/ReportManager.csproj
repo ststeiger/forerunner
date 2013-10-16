@@ -147,6 +147,8 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Forerunner\Common\css\Login.css" />
+    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -165,8 +167,6 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
-    <Content Include="Forerunner\Common\css\Login.css" />
-    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
@@ -188,8 +188,8 @@
     <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
-    <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
+    <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />

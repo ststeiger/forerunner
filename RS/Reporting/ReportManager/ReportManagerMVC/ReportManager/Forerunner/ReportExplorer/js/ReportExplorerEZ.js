@@ -50,7 +50,7 @@ $(function () {
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
             forerunner.device.allowZoom(false);
-            forerunner.dialog.closeModalDialog();
+            forerunner.dialog.closeAllModalDialogs();
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
           

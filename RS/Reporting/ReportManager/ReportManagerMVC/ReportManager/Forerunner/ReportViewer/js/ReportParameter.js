@@ -80,7 +80,8 @@ $(function () {
             return 0;
         },
     
-        _parameterDefinitions : {},
+        _parameterDefinitions: {},
+        _hasPostedBackWithoutSubmitForm : false,
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
@@ -89,6 +90,7 @@ $(function () {
          */
         updateParameterPanel: function (data, submitForm, pageNum) {
             this.removeParameter();
+            this._hasPostedBackWithoutSubmitForm = true;
             this.writeParameterPanel(data, pageNum, submitForm);
         },
 
@@ -204,10 +206,16 @@ $(function () {
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }
+            me._hasPostedBackWithoutSubmitForm = false;
         },
         _revertParameters: function () {
             var me = this;
             if (me._submittedParamsList !== null) {
+                if (me._hasPostedBackWithoutSubmitForm) {
+                    me.refreshParameters(me._submittedParamsList);
+                    me._hasPostedBackWithoutSubmitForm = false;
+                    return;
+                }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
                 for (var i = 0; i < list.length; i++) {

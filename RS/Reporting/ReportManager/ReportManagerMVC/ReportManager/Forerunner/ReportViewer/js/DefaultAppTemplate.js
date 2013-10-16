@@ -152,16 +152,20 @@ $(function () {
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
-            $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
+            me.$container.on(events.showModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", true);
-                me.$container.css("overflow", "hidden");
-                me.$container.scrollTop(0).scrollLeft(0);
-                window.scrollTo(0, 0);
+                me.$container.css("overflow", "hidden").mask();
+                //this field is to remove the conflict of restore scroll invoke list
+                //made by left pane and modal dialog.
+                me.scrollLock = true;
+                me.scrollToPosition({ left: 0, top: 0, innerLeft: 0, innerTop: 0 });
             });
 
-            $(".fr-layout-printsection", me.$container).on(events.reportPrintHidePrint(), function () {
+            me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
-                me.$container.css("overflow", "auto");
+                me.$container.css("overflow", "auto").unmask();
+                me.scrollLock = false;
+                me.restoreScroll();
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -388,23 +392,34 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
         },
-        getScrollPosition: function() {
+        getScrollPosition: function () {
+            var me = this;
             var position = {};
             position.left = $(window).scrollLeft();
             position.top = $(window).scrollTop();
+            position.innerLeft = me.$container.scrollLeft();
+            position.innerTop = me.$container.scrollTop();
             return position;
         },
         scrollToPosition: function (position) {
             var me = this;
-            me.savePosition = me.getScrollPosition();
+            if (!me.savePosition)
+                me.savePosition = me.getScrollPosition();
             $(window).scrollLeft(position.left);
             $(window).scrollTop(position.top);
+
+            if (position.innerLeft !== undefined)
+                me.$container.scrollLeft(position.innerLeft);
+            if (position.innerTop !== undefined)
+                me.$container.scrollTop(position.innerTop);
         },
         restoreScrollPosition: function () {
             var me = this;
-            if (me.savePosition) {
+            if (me.savePosition && !me.scrollLock) {
                 $(window).scrollLeft(me.savePosition.left);
                 $(window).scrollTop(me.savePosition.top);
+                me.$container.scrollLeft(me.savePosition.innerLeft);
+                me.$container.scrollTop(me.savePosition.innerTop);
                 me.savePosition = null;
             }
         },

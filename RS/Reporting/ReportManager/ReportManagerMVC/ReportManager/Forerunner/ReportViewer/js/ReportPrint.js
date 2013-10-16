@@ -219,21 +219,17 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                //forerunner.dialog.insertMaskLayer(function () {
-                //    me.element.show();
-                //});
-                me.element.mask().show();
+                forerunner.dialog.showModalDialog(me.element, function () {
+                    me.element.show();
+                });
                 me._printOpen = true;
-                me._trigger(events.showPrint);
             }
                 //To close print pane
             else {
-                //forerunner.dialog.removeMaskLayer(function () {
-                //    me.element.hide();
-                //});
-                me.element.unmask().hide();
+                forerunner.dialog.closeModalDialog(me.element, function () {
+                    me.element.hide();
+                });
                 me._printOpen = false;
-                me._trigger(events.hidePrint);
             }
         },
         /**

@@ -73,10 +73,8 @@ jQuery.fn.extend({
         var $mask = $(this).find(".fr-mask");
 
         if ($mask.length === 0) {
-            var page = $(this).siblings(".fr-layout-pagesection");
-
             $mask = $("<div class='fr-mask'></div>");
-            $mask.height(page.height() + 38);
+            $mask.height($(this).height() + 38);
             $(this).append($mask);
         }
         return $(this);
@@ -208,16 +206,6 @@ $(function () {
             reportViewerHideDocMap: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hideDocMap).toLowerCase(); },
 
             /** @constant */
-            showModalDialog: "showModalDialog",
-            /** widget + event, lowercase */
-            reportViewerShowModalDialog: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showModalDialog).toLowerCase(); },
-
-            /** @constant */
-            closeModalDialog: "closeModalDialog",
-            /** widget + event, lowercase */
-            reportViewerCloseModalDialog: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.closeModalDialog).toLowerCase(); },
-
-            /** @constant */
             showParamArea: "showparamarea",
             /** widget + event, lowercase */
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
@@ -226,16 +214,6 @@ $(function () {
             loadCascadingParam: "loadcascadingparam",
             /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
-
-            /** @constant */
-            showPrint: "showprint",
-            /** widget + event, lowercase */
-            reportPrintShowPrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.showPrint).toLowerCase(); },
-
-            /** @constant */
-            hidePrint: "hideprint",
-            /** widget + event, lowercase */
-            reportPrintHidePrint: function () { return (forerunner.ssr.constants.widgets.reportPrint + this.hidePrint).toLowerCase(); },
 
             /** @constant */
             render: "render",
@@ -263,15 +241,10 @@ $(function () {
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
 
             /** @constant */
-            showDialog: "showDialog",
-            /** widget + event, lowercase */
-            userSettingsShowDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.showDialog).toLowerCase(); },
+            showModalDialog: "showModalDialog",
 
             /** @constant */
-            hideDialog: "hideDialog",
-            /** widget + event, lowercase */
-            userSettingsHideDliaog: function () { return (forerunner.ssr.constants.widgets.userSettings + this.hideDialog).toLowerCase(); },
-
+            closeModalDialog: "closeModalDialog",
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -740,53 +713,41 @@ $(function () {
     */
     forerunner.dialog = {
         /**
-       * Append a mask with 50% opacity layer to the body
+       * Show a modal dialog
        *
-       * @function $.forerunner.reportViewer#insertMaskLayer
-       * @param {function} showModal - Callback function after insert, open specific modal dialog
+       * @function $.forerunner.reportViewer#showModalDialog
+       * @param {function} $container - Modal dialog container
+       * @param {function} showModal - Callback function to show a specific modal dialog
        */
-        insertMaskLayer: function (showModal) {
-            var $mask = $(".fr-mask");
-            if ($mask.length === 0) {
-                $mask = $("<div class='fr-mask'></div>");
-                $mask.appendTo($("body"));                
-            }
+        showModalDialog: function ($container, showModal) {
+            $container.trigger(forerunner.ssr.constants.events.showModalDialog);
 
-            $mask.show("fast", function () {
-                $(this).fadeTo("fast", 0.5, function () {
-                    $("body").eq(0).css("overflow", "hidden");
-                    if (showModal && typeof (showModal) === "function") {
-                        showModal();
-                    }
-                });
-            });
+            if (showModal && typeof (showModal) === "function") {
+                setTimeout(function () { showModal() }, 50);
+            }
         },
         /**
-        * Remove exist mask layer from the body
+        * Close a modal dialog
         *
-        * @function $.forerunner.reportViewer#removeMaskLayer
-        * @param {function} closeModal - Callback function after removed, close specific modal dialog
+        * @function $.forerunner.reportViewer#closeModalDialog
+        * @param {function} $container - Modal dialog container
+        * @param {function} closeModal - Callback function to remove a specific modal dialog
         */
-        removeMaskLayer: function (closeModal) {
-            var $mask = $(".fr-mask");
-            if ($mask.length !== 0) {
-                if (closeModal && typeof (closeModal) === "function") {
-                    closeModal();
-                }
-                $mask.hide("fast", function () {
-                    $("body").eq(0).css("overflow", "auto");
-                    $(this).remove();
-                });
+        closeModalDialog: function ($container, closeModal) {
+            $container.trigger(forerunner.ssr.constants.events.closeModalDialog);
+
+            if (closeModal && typeof (closeModal) === "function") {
+                setTimeout(function () { closeModal() }, 50);
             }
         },
         /**
         * close all opened modal dialogs with classname 'fr-dialog'
         *
-        * @function $.forerunner.reportViewer#closeModalDialog
+        * @function $.forerunner.reportViewer#closeAllModalDialogs
         */
-        closeModalDialog: function () {
+        closeAllModalDialogs: function () {
             var me = this;
-            me.removeMaskLayer(null);
+            $(".fr-mask").remove();
             $(".fr-dialog").hide();
         },
         /**
@@ -796,11 +757,11 @@ $(function () {
         */
         showMessageBox: function (msg) {
             var me = this;
-
-            if ($(".fr-messagebox").length === 0) {
+            var $messageBox = $(".fr-messagebox");
+            if ($messageBox.length === 0) {
                 var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-                var $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
+                $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
                     "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>" + locData.dialog.title + "</span></div>" +
                     "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
                     "<div class='fr-messagebox-buttongroup'>" +
@@ -810,14 +771,14 @@ $(function () {
                 $("body").append($messageBox);
 
                 $(".fr-messagebox-close").on("click", function () {
-                    forerunner.dialog.removeMaskLayer(function () {
+                    forerunner.dialog.closeModalDialog($messageBox, function () {
                         $(".fr-messagebox-msg").val();
                         $messageBox.hide();
                     });
                 });
             }
 
-            me.insertMaskLayer(function () {
+            me.showModalDialog($messageBox, function () {
                 $(".fr-messagebox-msg").html(msg);
                 $(".fr-messagebox").show();
             });

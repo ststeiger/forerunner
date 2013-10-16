@@ -18,7 +18,7 @@ for /F "tokens=1-4 delims=." %%i in (%~dp0\..\build.txt) do (
 	set BUILD_REVISION=%%l
 )
 
-set /A BUILD_REVISION+=1
+set /A BUILD_BUILD+=1
 set BUILD_RELEASE=%DROP_ROOT%\%BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%
 mkdir %BUILD_RELEASE%
 set BUILD_LOG=%BUILD_RELEASE%\build.log

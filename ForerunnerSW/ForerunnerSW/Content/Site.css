@@ -40,6 +40,7 @@ input{-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;padd
 .ForerunnerBottomBanner{background-color:#EAEAEA;}
 .ForerunnerBottomBannerContent{line-height:22px;font-size:16px;}
 
+.DownloadFormInput{height:35px;width:410px;border:1px solid #b8b8b8;margin-bottom:25px;}
 .DownloadButton{background-color:#ff9900;color:white;width:200px;height:36px;display:block;padding-top:7px;text-align:center;font-size:14px;}
 .DownloadButton:hover{background-color:#f38c06}
 
@@ -91,4 +92,5 @@ input{-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;padd
 
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}
+   .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}
 }

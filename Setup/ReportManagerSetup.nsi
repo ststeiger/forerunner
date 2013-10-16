@@ -9,7 +9,7 @@
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 !define COPYRIGHT "Copyright © Forerunner Software 2013"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
-!define VI_PRODUCT_NAME "Mobilizer"
+!define VI_PRODUCT_NAME "Mobilizer 1.0"
 !define COMPANY_NAME "Forerunner Software"
 !define /file BUILD_VERSION ..\build.txt
 

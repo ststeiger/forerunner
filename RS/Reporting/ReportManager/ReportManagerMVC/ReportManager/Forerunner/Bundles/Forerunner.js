@@ -565,15 +565,15 @@ $(function () {
         * @member
         */
         ajax: function (options) {
-            var error_callback = options.error;
+            var errorCallback = options.error;
                 options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
-                if (error_callback !== undefined)
-                    error_callback(data);
+                if (errorCallback)
+                    errorCallback(data);
             };
-            $.ajax(options);
+            return $.ajax(options);
         },
         /**
         * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
@@ -585,16 +585,18 @@ $(function () {
         * @member
         */
         getJSON: function (url, options, done, fail) {
-            $.getJSON(url, options)
+            return $.getJSON(url, options)
             .done(function (data) {
-                done(data);
+                if (done)
+                    done(data);
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
-                fail(data);
+                if (fail)
+                    fail(data);
             });
         },
     };

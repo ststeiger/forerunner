@@ -120,7 +120,7 @@ $(function () {
          * @return {Object} Current user settings
          */
         getUserSettings: function () {
-            return me.options.userSettings;
+            return this.options.userSettings;
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -384,6 +384,7 @@ $(function () {
 
             me.sessionID = "";
             me.lock = 1;
+            me._revertUnsubmittedParameters();
 
             if (me.paramLoaded === true) {                
                 paramList = me.options.paramArea.reportParameter("getParamsList");
@@ -401,7 +402,7 @@ $(function () {
             var me = this;
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
-
+            me._revertUnsubmittedParameters();
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
@@ -444,6 +445,7 @@ $(function () {
         },
         _showDocMap: function () {
             var me = this;
+            me._revertUnsubmittedParameters();
             var docMap = me.options.docMapArea;
             docMap.reportDocumentMap({ $reportViewer: me });
 
@@ -572,6 +574,7 @@ $(function () {
          */
         showNav: function () {
             var me = this;
+            me._revertUnsubmittedParameters();
             if (me.pageNavOpen) {
                 me.pageNavOpen = false;
                 document.body.parentNode.style.overflow = "scroll";
@@ -668,17 +671,32 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
+            var loadPageFirst = me._revertUnsubmittedParameters();
 
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
                 newDir = sortDirection.asc;
 
+            if (loadPageFirst) {
+                var getReportJSON = me._callGetReportJSON();
+                getReportJSON.done(
+                    function () {
+                        me._callSort(id, newDir);
+                    }
+                );
+            } else {
+                me._callSort(id, newDir);
+            }
+        },
+
+        _callSort: function (id, newDir) {
+            var me = this;
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
                 {
-                SessionID: me.sessionID,
-                SortItem: id,
-                Direction: newDir
+                    SessionID: me.sessionID,
+                    SortItem: id,
+                    Direction: newDir
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
@@ -688,6 +706,24 @@ $(function () {
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
+            );
+        },
+        
+        _callGetReportJSON: function () {
+            var me = this;
+            var paramList = null;
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                paramList = $paramArea.reportParameter("getParamsList", true);
+            }
+            return forerunner.ajax.getJSON(me.options.reportViewerAPI + "/ReportJSON/",
+                {
+                    ReportPath: me.options.reportPath,
+                    SessionID: me.sessionID,
+                    PageNumber: me.getCurPage(),
+                    ParameterList: paramList
+                }
             );
         },
         /**
@@ -703,13 +739,30 @@ $(function () {
             me.lock = 1;
 
             me._addLoadingIndicator();
+            var loadPageFirst = me._revertUnsubmittedParameters();
             me._prepareAction();
+
+            if (loadPageFirst) {
+                var getReportJSON = me._callGetReportJSON();
+                getReportJSON.done(
+                    function () {
+                        me._callToggle(toggleID);
+                    }
+                );
+            } else {
+                me._callToggle(toggleID);
+            }
+        },
+
+        
+        _callToggle : function(toggleID) {
+            var me = this;
 
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
-                NavType: navigateType.toggle,
-                SessionID: me.sessionID,
-                UniqueID: toggleID
+                    NavType: navigateType.toggle,
+                    SessionID: me.sessionID,
+                    UniqueID: toggleID
                 },
                 function (data) {
                     if (data.Result === true) {
@@ -720,8 +773,19 @@ $(function () {
                         me._loadPage(me.curPage, false);
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function () {
+                    console.log("error"); me.removeLoadingIndicator();
+                }
             );
+        },
+
+        _revertUnsubmittedParameters: function () {
+            var me = this;
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                return $paramArea.reportParameter("revertParameters");
+            }
         },
         /**
          * Navigate to the given bookmark
@@ -734,7 +798,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-
+            me._revertUnsubmittedParameters();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -785,7 +849,7 @@ $(function () {
                 return;
             me.lock = 1;
             me._addLoadingIndicator();
-
+            me._revertUnsubmittedParameters();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -830,7 +894,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-
+            me._revertUnsubmittedParameters();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.docMap,
@@ -891,7 +955,7 @@ $(function () {
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
             if (keyword === "") return;
-
+            me._revertUnsubmittedParameters();
             //input new keyword
             if (!me.findKeyword || me.findKeyword !== keyword) {
                 me.resetFind();
@@ -1038,6 +1102,7 @@ $(function () {
          */
         exportReport: function (exportType) {
             var me = this;
+            me._revertUnsubmittedParameters();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },       
@@ -1060,6 +1125,7 @@ $(function () {
         */
         printReport: function (printPropertyList) {
             var me = this;
+            me._revertUnsubmittedParameters();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
@@ -1139,10 +1205,14 @@ $(function () {
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
          * @param {boolean} Submit form if the parameters are satisfied.
-         * @param {int} The page to load.
+         * @param {int} The page to load.  Specify -1 to load the current page.
+         * @param {boolean} Whether to trigger show parameter area event if there are visible parameters.
          */
-        refreshParameters: function (paramList, submitForm, pageNum) {
+        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
             var me = this;
+            if (pageNum === -1) {
+                pageNum = me.getCurPage();
+            }
             if (paramList) {
                 forerunner.ajax.ajax({
                     url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&SessionID=" + me.getSessionID() + "&paramList=" + paramList,
@@ -1153,10 +1223,11 @@ $(function () {
                             me.sessionID = data.SessionID;
 
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum, renderParamArea);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                            if (me.$numOfVisibleParameters > 0)
+                            if (me.$numOfVisibleParameters > 0) { 
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            }
                             me.paramLoaded = true;
                         }
                     }
@@ -4553,11 +4624,12 @@ $(function () {
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
          * @param {boolean} submitForm - submit form when parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        updateParameterPanel: function (data, submitForm, pageNum) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
             this._hasPostedBackWithoutSubmitForm = true;
-            this.writeParameterPanel(data, pageNum, submitForm);
+            this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
         /**
@@ -4566,8 +4638,9 @@ $(function () {
          * @param {String} data - original data get from server client
          * @param {int} pageNum - current page num
          * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        writeParameterPanel: function (data, pageNum, submitForm) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -4630,11 +4703,13 @@ $(function () {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
-                    me._trigger(events.render);
+                    if (renderParamArea !== false)
+                        me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
                 }
             } else {
-                me._trigger(events.render);
+                if (renderParamArea !== false)
+                    me._trigger(events.render);
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
@@ -4674,16 +4749,25 @@ $(function () {
             }
             me._hasPostedBackWithoutSubmitForm = false;
         },
-        _revertParameters: function () {
+        /**
+         * @function $.forerunner.reportParameter#revertParameters
+         * @Revert any unsubmitted parameters.  Called in two scenario:  when cancelling out from parameter area or 
+         *  before submitting an action when the set of parameters for the session does not match the loaded report.
+         */
+        revertParameters: function () {
             var me = this;
+            if (me.getParamsList() === me._submittedParamsList) {
+                return false;
+            }
             if (me._submittedParamsList !== null) {
                 if (me._hasPostedBackWithoutSubmitForm) {
                     me.refreshParameters(me._submittedParamsList);
                     me._hasPostedBackWithoutSubmitForm = false;
-                    return;
+                    return true;
                 }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
+                var $control;
                 for (var i = 0; i < list.length; i++) {
                     var savedParam = list[i];
                     var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
@@ -4694,7 +4778,7 @@ $(function () {
                             me._setMultipleInputValues(paramDefinition);
                         } else {
                             $control = $(".fr-paramname-" + paramDefinition.Name);
-                            $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
                             $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
                             $control.val(me._getTextAreaValue(savedParam.Value, false));
                             $control.attr("jsonValues", JSON.stringify(savedParam.Value));
@@ -4711,13 +4795,13 @@ $(function () {
                     }
                 }
             }
+
+            return false;
         },
         _cancelForm: function () {
             var me = this;
             me._closeAllDropdown();
-            if (me.getParamsList() !== me._submittedParamsList) {
-                me._revertParameters();
-            }
+            me.revertParameters();
             me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
@@ -5434,7 +5518,7 @@ $(function () {
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
-                me.options.$reportViewer.refreshParameters(paramList, false);
+                me.options.$reportViewer.refreshParameters(paramList, false, -1, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {

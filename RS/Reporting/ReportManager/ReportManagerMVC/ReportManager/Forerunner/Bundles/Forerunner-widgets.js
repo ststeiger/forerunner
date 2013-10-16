@@ -671,14 +671,14 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            var loadPageFirst = me._revertUnsubmittedParameters();
+            me._revertUnsubmittedParameters();
 
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
                 newDir = sortDirection.asc;
 
-            if (loadPageFirst) {
+            if (!me._isReportContextValid) {
                 var getReportJSON = me._callGetReportJSON();
                 getReportJSON.done(
                     function () {
@@ -709,6 +709,10 @@ $(function () {
             );
         },
         
+        _isReportContextValid: true,
+        invalidateReportContext : function() {
+            this._isReportContextValid = false;
+        },
         _callGetReportJSON: function () {
             var me = this;
             var paramList = null;
@@ -723,6 +727,9 @@ $(function () {
                     SessionID: me.sessionID,
                     PageNumber: me.getCurPage(),
                     ParameterList: paramList
+                },
+                function (data) {
+                    me._isReportContextValid = true;
                 }
             );
         },
@@ -739,10 +746,10 @@ $(function () {
             me.lock = 1;
 
             me._addLoadingIndicator();
-            var loadPageFirst = me._revertUnsubmittedParameters();
+            me._revertUnsubmittedParameters();
             me._prepareAction();
 
-            if (loadPageFirst) {
+            if (!me._isReportContextValid) {
                 var getReportJSON = me._callGetReportJSON();
                 getReportJSON.done(
                     function () {
@@ -4756,13 +4763,14 @@ $(function () {
         revertParameters: function () {
             var me = this;
             if (me.getParamsList() === me._submittedParamsList) {
-                return false;
+                return;
             }
             if (me._submittedParamsList !== null) {
                 if (me._hasPostedBackWithoutSubmitForm) {
                     me.refreshParameters(me._submittedParamsList);
                     me._hasPostedBackWithoutSubmitForm = false;
-                    return true;
+
+                    me.options.$reportViewer.invalidateReportContext();
                 }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
@@ -4794,8 +4802,6 @@ $(function () {
                     }
                 }
             }
-
-            return false;
         },
         _cancelForm: function () {
             var me = this;

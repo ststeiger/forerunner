@@ -220,13 +220,14 @@ $(function () {
         revertParameters: function () {
             var me = this;
             if (me.getParamsList() === me._submittedParamsList) {
-                return false;
+                return;
             }
             if (me._submittedParamsList !== null) {
                 if (me._hasPostedBackWithoutSubmitForm) {
                     me.refreshParameters(me._submittedParamsList);
                     me._hasPostedBackWithoutSubmitForm = false;
-                    return true;
+
+                    me.options.$reportViewer.invalidateReportContext();
                 }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
@@ -258,8 +259,6 @@ $(function () {
                     }
                 }
             }
-
-            return false;
         },
         _cancelForm: function () {
             var me = this;

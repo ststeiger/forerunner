@@ -474,14 +474,13 @@ $(function () {
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
-            
+
             if (me.$viewer !== undefined) {
                 me.$viewer.reportViewer('allowZoom', false);
                 me.$viewer.reportViewer('allowSwipe', false);
             } else {
                 forerunner.device.allowZoom(false);
             }
-            me.$container.resize();
 
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
             var mainViewPort = me.$mainviewport;
@@ -514,6 +513,7 @@ $(function () {
             
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
+            me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer('triggerEvent', events.showPane);

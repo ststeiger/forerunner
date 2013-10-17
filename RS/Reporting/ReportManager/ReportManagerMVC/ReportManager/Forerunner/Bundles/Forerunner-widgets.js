@@ -98,8 +98,8 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
-            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
-  
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
@@ -107,9 +107,6 @@ $(function () {
             } else {
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
-
-            //Log in screen if needed
-
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
@@ -656,12 +653,13 @@ $(function () {
                 });
             }
         },
-        _updateSortState: function (id, direction) {
+        _updateSortState: function (id, direction, clear) {
             var me = this;
-            me.reportStates.sortStates.clear();
-            me.reportStates.sortStates.add(id, direction);
+            if (clear !== false)
+                me.reportStates.sortStates = [];
+            me.reportStates.sortStates.push({ id: id, direction: direction });
         },
-        _getSortResult: function (id, direction) {
+        _getSortResult: function (id, direction, clear) {
             var me = this;
             return forerunner.ajax.ajax({
                 dataType: "json",
@@ -669,7 +667,8 @@ $(function () {
                 data: {
                     SessionID: me.sessionID,
                     SortItem: id,
-                    Direction: direction
+                    Direction: direction,
+                    ClearExistingSort: clear
                 },
                 async: false,
             });
@@ -678,10 +677,10 @@ $(function () {
         _replaySortStates: function () {
             var me = this;
             // Must synchronously replay one-by-one
-            var keys = me.reportStates.sortStates.keys();
-            for (var i = 0; i < keys.length; i++) {
-                var value = me.reportStates.sortStates.get(keys[i]);
-                me._getSortResult(keys[i], value);
+            var list = me.reportStates.sortStates;
+            for (var i = 0; i < list.length; i++) {
+                // Only clear it for the first item
+                me._getSortResult(list[i].id, list[i].direction, i === 0);
             }
         },
         /**
@@ -689,10 +688,11 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#sort
          * @param {String} direction - sort direction
-         * @param {String} id - Session ID
+         * @param {String} id - sort item id
+         * @param {Boolean} clear - clear existing sort flag
          * @see forerunner.ssr.constants
          */
-        sort: function (direction, id) {
+        sort: function (direction, id, clear) {
             //Go the other dirction from current
             var me = this;
             var newDir;
@@ -708,17 +708,18 @@ $(function () {
             else
                 newDir = sortDirection.asc;
 
-            me._callSort(id, newDir);
+            me._callSort(id, newDir, clear);
         },
 
-        _callSort: function (id, newDir) {
+        _callSort: function (id, newDir, clear) {
             var me = this;
             me._updateSortState(id, newDir);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
                 {
                     SessionID: me.sessionID,
                     SortItem: id,
-                    Direction: newDir
+                    Direction: newDir,
+                    ClearExistingSort: clear
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
@@ -1330,7 +1331,7 @@ $(function () {
             me.findKeyword = null;
             me.origionalReportPath = "";
             me.renderError = false;
-            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
         },
         /**
          * Load the given report
@@ -3074,7 +3075,6 @@ $(function () {
         },
         // Constructor
         _create: function () {
-            
         },
          
         render: function (reportObj) {
@@ -3484,7 +3484,7 @@ $(function () {
                 else
                     $Sort.attr("class", "fr-render-sort-unsorted");
 
-                $Sort.on("click", { Viewer:  RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID); });
+                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction, Clear: !me.shiftKeyDown }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID, !e.shiftKey); });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);

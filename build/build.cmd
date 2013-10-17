@@ -49,7 +49,7 @@ if ERRORLEVEL 1 (
 	goto :InitError
 )
 
-echo %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% > %~dp0\..\build.txt
+echo %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%> %~dp0\..\build.txt
 git commit %~dp0\..\build.txt -n -m "Official Build" >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :InitError

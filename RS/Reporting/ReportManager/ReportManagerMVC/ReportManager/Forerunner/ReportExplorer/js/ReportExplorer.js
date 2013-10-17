@@ -197,8 +197,8 @@ $(function () {
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
-                setTimeout($(window).scrollTop(me.$selectedItem.offset().top - 50), 100);  //This is a hack for now
-                setTimeout($(window).scrollLeft(me.$selectedItem.offset().left - 20), 100);  //This is a hack for now
+                setTimeout(function () { $(window).scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
+                setTimeout(function () { $(window).scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
             }
             //me._initscrollposition();
         },

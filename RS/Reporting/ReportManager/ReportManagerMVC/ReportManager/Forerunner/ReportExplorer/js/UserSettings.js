@@ -102,10 +102,9 @@ $(function () {
             var me = this;
 
             me._getSettings();
-
-            me.element.mask().show();
-            me.element.show();
-            me._trigger(events.showDialog);
+            forerunner.dialog.showModalDialog(me.element, function () {
+                me.element.show();
+            });
         },
         /**
          * @function $.forerunner.userSettings#clodeDialog
@@ -113,9 +112,9 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            me.element.unmask().hide();
-            me.element.hide();
-            me._trigger(events.hideDialog);
+            forerunner.dialog.closeModalDialog(me.element, function () {
+                me.element.hide();
+            });
         }
     }); //$.widget
 });

@@ -98,6 +98,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
   
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -120,7 +121,7 @@ $(function () {
          * @return {Object} Current user settings
          */
         getUserSettings: function () {
-            return me.options.userSettings;
+            return this.options.userSettings;
         },
         /**
          * @function $.forerunner.reportViewer#getCurPage
@@ -339,7 +340,7 @@ $(function () {
                             me._hideTableHeaders();                            
                             break;
 
-                         // Show the header on release only if this is not scrolling.
+                            // Show the header on release only if this is not scrolling.
                             // If it is scrolling, we will let scrollstop handle that.
                    
                         case "release":
@@ -361,7 +362,7 @@ $(function () {
                             }
                             
 
-                           if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
+                            if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
@@ -384,6 +385,7 @@ $(function () {
 
             me.sessionID = "";
             me.lock = 1;
+            me._revertUnsubmittedParameters();
 
             if (me.paramLoaded === true) {                
                 paramList = me.options.paramArea.reportParameter("getParamsList");
@@ -401,7 +403,7 @@ $(function () {
             var me = this;
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
-
+            me._resetContextIfInvalid();
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
@@ -444,6 +446,7 @@ $(function () {
         },
         _showDocMap: function () {
             var me = this;
+            me._resetContextIfInvalid();
             var docMap = me.options.docMapArea;
             docMap.reportDocumentMap({ $reportViewer: me });
 
@@ -555,6 +558,7 @@ $(function () {
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                me.reportStates = action.reportStates;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
@@ -572,6 +576,7 @@ $(function () {
          */
         showNav: function () {
             var me = this;
+            me._resetContextIfInvalid();
             if (me.pageNavOpen) {
                 me.pageNavOpen = false;
                 document.body.parentNode.style.overflow = "scroll";
@@ -651,6 +656,34 @@ $(function () {
                 });
             }
         },
+        _updateSortState: function (id, direction) {
+            var me = this;
+            me.reportStates.sortStates.clear();
+            me.reportStates.sortStates.add(id, direction);
+        },
+        _getSortResult: function (id, direction) {
+            var me = this;
+            return forerunner.ajax.ajax({
+                dataType: "json",
+                url: me.options.reportViewerAPI + "/SortReport/",
+                data: {
+                    SessionID: me.sessionID,
+                    SortItem: id,
+                    Direction: direction
+                },
+                async: false,
+            });
+        },
+
+        _replaySortStates: function () {
+            var me = this;
+            // Must synchronously replay one-by-one
+            var keys = me.reportStates.sortStates.keys();
+            for (var i = 0; i < keys.length; i++) {
+                var value = me.reportStates.sortStates.get(keys[i]);
+                me._getSortResult(keys[i], value);
+            }
+        },
         /**
          * Sorts the current report
          *
@@ -668,17 +701,24 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
+            me._resetContextIfInvalid();
 
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
                 newDir = sortDirection.asc;
 
+            me._callSort(id, newDir);
+        },
+
+        _callSort: function (id, newDir) {
+            var me = this;
+            me._updateSortState(id, newDir);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
                 {
-                SessionID: me.sessionID,
-                SortItem: id,
-                Direction: newDir
+                    SessionID: me.sessionID,
+                    SortItem: id,
+                    Direction: newDir
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
@@ -689,6 +729,66 @@ $(function () {
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
             );
+        },
+        
+        _isReportContextValid: true,
+        invalidateReportContext : function() {
+            this._isReportContextValid = false;
+        },
+        _callGetReportJSON: function () {
+            var me = this;
+            var paramList = null;
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                paramList = $paramArea.reportParameter("getParamsList", true);
+            }
+            forerunner.ajax.ajax(
+                {
+                    dataType: "json",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    data: {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.sessionID,
+                        PageNumber: me.getCurPage(),
+                        ParameterList: paramList
+                    },
+                    success: function (data) {
+                        me._isReportContextValid = true;
+                    },
+                    async: false
+                });
+        },
+        _updateToggleState: function (toggleID) {
+            var me = this;
+            if (me.reportStates.toggleStates.has(toggleID)) {
+                me.reportStates.toggleStates.remove(toggleID);
+            } else {
+                me.reportStates.toggleStates.add(toggleID);
+            }
+        },
+
+        _getToggleResult: function (toggleID) {
+            var me = this;
+            return forerunner.ajax.ajax({
+                dataType: "json",
+                url : me.options.reportViewerAPI + "/NavigateTo/",
+                data: {
+                    NavType: navigateType.toggle,
+                    SessionID: me.sessionID,
+                    UniqueID: toggleID
+                },
+                async: false,
+            });
+        },
+        
+        _replayToggleStates : function() {
+            var me = this;
+            // Must synchronously replay one-by-one
+            var keys = me.reportStates.toggleStates.keys();
+            for (var i = 0; i < keys.length; i++) {
+                me._getToggleResult(keys[i]);
+            }
         },
         /**
          * Sorts the current report
@@ -703,13 +803,21 @@ $(function () {
             me.lock = 1;
 
             me._addLoadingIndicator();
+            me._resetContextIfInvalid();
             me._prepareAction();
+            
+            me._callToggle(toggleID);
+        },
 
+        
+        _callToggle : function(toggleID) {
+            var me = this;
+            me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
-                NavType: navigateType.toggle,
-                SessionID: me.sessionID,
-                UniqueID: toggleID
+                    NavType: navigateType.toggle,
+                    SessionID: me.sessionID,
+                    UniqueID: toggleID
                 },
                 function (data) {
                     if (data.Result === true) {
@@ -720,8 +828,31 @@ $(function () {
                         me._loadPage(me.curPage, false);
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function () {
+                    console.log("error"); me.removeLoadingIndicator();
+                }
             );
+        },
+
+        _resetContextIfInvalid: function () {
+            var me = this;
+            me._revertUnsubmittedParameters();
+            if (!me._isReportContextValid) {
+                me._callGetReportJSON();
+                // Replay sort states
+                me._replaySortStates();
+                // Replay toggle states
+                me._replayToggleStates();
+            }
+        },
+
+        _revertUnsubmittedParameters: function () {
+            var me = this;
+            if (me.paramLoaded) {
+                var $paramArea = me.options.paramArea;
+                //get current parameter list without validate
+                return $paramArea.reportParameter("revertParameters");
+            }
         },
         /**
          * Navigate to the given bookmark
@@ -734,7 +865,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-
+            me._resetContextIfInvalid();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -785,7 +916,7 @@ $(function () {
                 return;
             me.lock = 1;
             me._addLoadingIndicator();
-
+            me._resetContextIfInvalid();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -830,7 +961,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-
+            me._resetContextIfInvalid();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.docMap,
@@ -872,7 +1003,7 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
             });
         },
         _setScrollLocation: function (top, left) {
@@ -891,7 +1022,7 @@ $(function () {
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
             if (keyword === "") return;
-
+            me._resetContextIfInvalid();
             //input new keyword
             if (!me.findKeyword || me.findKeyword !== keyword) {
                 me.resetFind();
@@ -1038,6 +1169,7 @@ $(function () {
          */
         exportReport: function (exportType) {
             var me = this;
+            me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },       
@@ -1060,6 +1192,7 @@ $(function () {
         */
         printReport: function (printPropertyList) {
             var me = this;
+            me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
@@ -1139,10 +1272,14 @@ $(function () {
          * @function $.forerunner.reportViewer#refreshParameters
          * @param {string} The JSON string for the list of parameters.
          * @param {boolean} Submit form if the parameters are satisfied.
-         * @param {int} The page to load.
+         * @param {int} The page to load.  Specify -1 to load the current page.
+         * @param {boolean} Whether to trigger show parameter area event if there are visible parameters.
          */
-        refreshParameters: function (paramList, submitForm, pageNum) {
+        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
             var me = this;
+            if (pageNum === -1) {
+                pageNum = me.getCurPage();
+            }
             if (paramList) {
                 forerunner.ajax.ajax({
                     url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&SessionID=" + me.getSessionID() + "&paramList=" + paramList,
@@ -1153,10 +1290,11 @@ $(function () {
                             me.sessionID = data.SessionID;
 
                         if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum);
+                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum, renderParamArea);
                             me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                            if (me.$numOfVisibleParameters > 0)
+                            if (me.$numOfVisibleParameters > 0) { 
                                 me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            }
                             me.paramLoaded = true;
                         }
                     }
@@ -1192,6 +1330,7 @@ $(function () {
             me.findKeyword = null;
             me.origionalReportPath = "";
             me.renderError = false;
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
         },
         /**
          * Load the given report
@@ -2683,8 +2822,8 @@ $(function () {
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
-                setTimeout($(window).scrollTop(me.$selectedItem.offset().top - 50), 100);  //This is a hack for now
-                setTimeout($(window).scrollLeft(me.$selectedItem.offset().left - 20), 100);  //This is a hack for now
+                setTimeout(function () { $(window).scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
+                setTimeout(function () { $(window).scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
             }
             //me._initscrollposition();
         },
@@ -2864,10 +3003,9 @@ $(function () {
             var me = this;
 
             me._getSettings();
-
-            me.element.mask().show();
-            me.element.show();
-            me._trigger(events.showDialog);
+            forerunner.dialog.showModalDialog(me.element, function () {
+                me.element.show();
+            });
         },
         /**
          * @function $.forerunner.userSettings#clodeDialog
@@ -2875,9 +3013,9 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            me.element.unmask().hide();
-            me.element.hide();
-            me._trigger(events.hideDialog);
+            forerunner.dialog.closeModalDialog(me.element, function () {
+                me.element.hide();
+            });
         }
     }); //$.widget
 });
@@ -4546,16 +4684,19 @@ $(function () {
             return 0;
         },
     
-        _parameterDefinitions : {},
+        _parameterDefinitions: {},
+        _hasPostedBackWithoutSubmitForm : false,
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
          * @param {boolean} submitForm - submit form when parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        updateParameterPanel: function (data, submitForm, pageNum) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
-            this.writeParameterPanel(data, pageNum, submitForm);
+            this._hasPostedBackWithoutSubmitForm = true;
+            this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
         /**
@@ -4564,8 +4705,9 @@ $(function () {
          * @param {String} data - original data get from server client
          * @param {int} pageNum - current page num
          * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        writeParameterPanel: function (data, pageNum, submitForm) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -4628,11 +4770,13 @@ $(function () {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
-                    me._trigger(events.render);
+                    if (renderParamArea !== false)
+                        me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
                 }
             } else {
-                me._trigger(events.render);
+                if (renderParamArea !== false)
+                    me._trigger(events.render);
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
@@ -4670,12 +4814,28 @@ $(function () {
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }
+            me._hasPostedBackWithoutSubmitForm = false;
         },
-        _revertParameters: function () {
+        /**
+         * @function $.forerunner.reportParameter#revertParameters
+         * @Revert any unsubmitted parameters.  Called in two scenario:  when cancelling out from parameter area or 
+         *  before submitting an action when the set of parameters for the session does not match the loaded report.
+         */
+        revertParameters: function () {
             var me = this;
+            if (me.getParamsList() === me._submittedParamsList) {
+                return;
+            }
             if (me._submittedParamsList !== null) {
+                if (me._hasPostedBackWithoutSubmitForm) {
+                    me.refreshParameters(me._submittedParamsList);
+                    me._hasPostedBackWithoutSubmitForm = false;
+
+                    me.options.$reportViewer.invalidateReportContext();
+                }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
+                var $control;
                 for (var i = 0; i < list.length; i++) {
                     var savedParam = list[i];
                     var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
@@ -4686,7 +4846,7 @@ $(function () {
                             me._setMultipleInputValues(paramDefinition);
                         } else {
                             $control = $(".fr-paramname-" + paramDefinition.Name);
-                            $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
                             $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
                             $control.val(me._getTextAreaValue(savedParam.Value, false));
                             $control.attr("jsonValues", JSON.stringify(savedParam.Value));
@@ -4707,9 +4867,7 @@ $(function () {
         _cancelForm: function () {
             var me = this;
             me._closeAllDropdown();
-            if (me.getParamsList() !== me._submittedParamsList) {
-                me._revertParameters();
-            }
+            me.revertParameters();
             me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
@@ -5426,7 +5584,7 @@ $(function () {
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
-                me.options.$reportViewer.refreshParameters(paramList, false);
+                me.options.$reportViewer.refreshParameters(paramList, false, -1, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {
@@ -5788,21 +5946,17 @@ $(function () {
 
             //To open print pane
             if (!me._printOpen) {
-                //forerunner.dialog.insertMaskLayer(function () {
-                //    me.element.show();
-                //});
-                me.element.mask().show();
+                forerunner.dialog.showModalDialog(me.element, function () {
+                    me.element.show();
+                });
                 me._printOpen = true;
-                me._trigger(events.showPrint);
             }
                 //To close print pane
             else {
-                //forerunner.dialog.removeMaskLayer(function () {
-                //    me.element.hide();
-                //});
-                me.element.unmask().hide();
+                forerunner.dialog.closeModalDialog(me.element, function () {
+                    me.element.hide();
+                });
                 me._printOpen = false;
-                me._trigger(events.hidePrint);
             }
         },
         /**
@@ -6034,16 +6188,20 @@ $(function () {
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
 
-            $(".fr-layout-printsection", me.$container).on(events.reportPrintShowPrint(), function () {
+            me.$container.on(events.showModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", true);
-                me.$container.css("overflow", "hidden");
-                me.$container.scrollTop(0).scrollLeft(0);
-                window.scrollTo(0, 0);
+                me.$container.css("overflow", "hidden").mask();
+                //this field is to remove the conflict of restore scroll invoke list
+                //made by left pane and modal dialog.
+                me.scrollLock = true;
+                me.scrollToPosition({ left: 0, top: 0, innerLeft: 0, innerTop: 0 });
             });
 
-            $(".fr-layout-printsection", me.$container).on(events.reportPrintHidePrint(), function () {
+            me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
-                me.$container.css("overflow", "auto");
+                me.$container.css("overflow", "auto").unmask();
+                me.scrollLock = false;
+                me.restoreScroll();
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -6270,23 +6428,34 @@ $(function () {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
         },
-        getScrollPosition: function() {
+        getScrollPosition: function () {
+            var me = this;
             var position = {};
             position.left = $(window).scrollLeft();
             position.top = $(window).scrollTop();
+            position.innerLeft = me.$container.scrollLeft();
+            position.innerTop = me.$container.scrollTop();
             return position;
         },
         scrollToPosition: function (position) {
             var me = this;
-            me.savePosition = me.getScrollPosition();
+            if (!me.savePosition)
+                me.savePosition = me.getScrollPosition();
             $(window).scrollLeft(position.left);
             $(window).scrollTop(position.top);
+
+            if (position.innerLeft !== undefined)
+                me.$container.scrollLeft(position.innerLeft);
+            if (position.innerTop !== undefined)
+                me.$container.scrollTop(position.innerTop);
         },
         restoreScrollPosition: function () {
             var me = this;
-            if (me.savePosition) {
+            if (me.savePosition && !me.scrollLock) {
                 $(window).scrollLeft(me.savePosition.left);
                 $(window).scrollTop(me.savePosition.top);
+                me.$container.scrollLeft(me.savePosition.innerLeft);
+                me.$container.scrollTop(me.savePosition.innerTop);
                 me.savePosition = null;
             }
         },
@@ -6834,7 +7003,7 @@ $(function () {
             layout.hideSlideoutPane(true);
             layout.hideSlideoutPane(false);
             forerunner.device.allowZoom(false);
-            forerunner.dialog.closeModalDialog();
+            forerunner.dialog.closeAllModalDialogs();
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
           

@@ -80,16 +80,19 @@ $(function () {
             return 0;
         },
     
-        _parameterDefinitions : {},
+        _parameterDefinitions: {},
+        _hasPostedBackWithoutSubmitForm : false,
         /**
          * @function $.forerunner.reportParameter#updateParameterPanel
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
          * @param {boolean} submitForm - submit form when parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        updateParameterPanel: function (data, submitForm, pageNum) {
+        updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
-            this.writeParameterPanel(data, pageNum, submitForm);
+            this._hasPostedBackWithoutSubmitForm = true;
+            this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
         /**
@@ -98,8 +101,9 @@ $(function () {
          * @param {String} data - original data get from server client
          * @param {int} pageNum - current page num
          * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
+         * @param {boolean} Whether to make parameter area visible.
          */
-        writeParameterPanel: function (data, pageNum, submitForm) {
+        writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;
             if (me.$params === null) me._render();
 
@@ -162,11 +166,13 @@ $(function () {
                 if (me._paramCount === data.DefaultValueCount && me._loadedForDefault)
                     me._submitForm(pageNum);
                 else {
-                    me._trigger(events.render);
+                    if (renderParamArea !== false)
+                        me._trigger(events.render);
                     me.options.$reportViewer.removeLoadingIndicator();
                 }
             } else {
-                me._trigger(events.render);
+                if (renderParamArea !== false)
+                    me._trigger(events.render);
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
@@ -204,12 +210,28 @@ $(function () {
                 me._submittedParamsList = paramList;
                 me._trigger(events.submit);
             }
+            me._hasPostedBackWithoutSubmitForm = false;
         },
-        _revertParameters: function () {
+        /**
+         * @function $.forerunner.reportParameter#revertParameters
+         * @Revert any unsubmitted parameters.  Called in two scenario:  when cancelling out from parameter area or 
+         *  before submitting an action when the set of parameters for the session does not match the loaded report.
+         */
+        revertParameters: function () {
             var me = this;
+            if (me.getParamsList() === me._submittedParamsList) {
+                return;
+            }
             if (me._submittedParamsList !== null) {
+                if (me._hasPostedBackWithoutSubmitForm) {
+                    me.refreshParameters(me._submittedParamsList);
+                    me._hasPostedBackWithoutSubmitForm = false;
+
+                    me.options.$reportViewer.invalidateReportContext();
+                }
                 var submittedParameters = JSON.parse(me._submittedParamsList);
                 var list = submittedParameters.ParamsList;
+                var $control;
                 for (var i = 0; i < list.length; i++) {
                     var savedParam = list[i];
                     var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
@@ -220,7 +242,7 @@ $(function () {
                             me._setMultipleInputValues(paramDefinition);
                         } else {
                             $control = $(".fr-paramname-" + paramDefinition.Name);
-                            $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
                             $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
                             $control.val(me._getTextAreaValue(savedParam.Value, false));
                             $control.attr("jsonValues", JSON.stringify(savedParam.Value));
@@ -241,9 +263,7 @@ $(function () {
         _cancelForm: function () {
             var me = this;
             me._closeAllDropdown();
-            if (me.getParamsList() !== me._submittedParamsList) {
-                me._revertParameters();
-            }
+            me.revertParameters();
             me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
@@ -960,7 +980,7 @@ $(function () {
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
                 // if all parameters are satisfied.
-                me.options.$reportViewer.refreshParameters(paramList, false);
+                me.options.$reportViewer.refreshParameters(paramList, false, -1, false);
             }
         },
         _disabledSubSequenceControl: function ($control) {

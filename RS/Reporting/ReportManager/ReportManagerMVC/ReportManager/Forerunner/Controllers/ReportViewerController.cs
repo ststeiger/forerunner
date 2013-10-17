@@ -153,13 +153,13 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction)
+        public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort = true)
         {
 
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().SortReport(SessionID, SortItem, Direction));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().SortReport(SessionID, SortItem, Direction, ClearExistingSort));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

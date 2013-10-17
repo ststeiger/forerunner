@@ -350,7 +350,7 @@ namespace Forerunner.SSRS.Viewer
         /// <summary>
         /// Sort data by special column field and sort direction
         /// </summary>
-        public string SortReport(string SessionID, string SortItem, string Direction)
+        public string SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort)
         {
             try
             {
@@ -374,7 +374,7 @@ namespace Forerunner.SSRS.Viewer
                         SortDirection = SortDirectionEnum.None;
                         break;
                 }
-                int newPage = rs.Sort(SortItem, SortDirection, true, out ReportItem, out NumPages);
+                int newPage = rs.Sort(SortItem, SortDirection, ClearExistingSort, out ReportItem, out NumPages);
                 JsonWriter w = new JsonTextWriter();
                 w.WriteStartObject();
                 w.WriteMember("NewPage");

@@ -9,4 +9,6 @@ set PROJECT_NAME=Forerunner
 set HOME=%HOMEDRIVE%%HOMEPATH%
 set SPSITE=https://forerunnersw.sharepoint.com
 set SPRELEASE=/Shared Documents/Build
+set CODESIGN_KEYDIR=%~dp0..\Key
+set CODESIGN_KEYFILE=ForerunnerCert.pfx
 call %~dp0%COMPUTERNAME%.cmd

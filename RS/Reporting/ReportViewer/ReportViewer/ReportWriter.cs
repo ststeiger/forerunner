@@ -1107,6 +1107,9 @@ namespace Forerunner.SSRS.JSONRender
                 case 0x05:
                     retval = "PageFooter";
                     break;
+                case 0x14:
+                    retval = "BodyArea";
+                    break;
             }
             //Set back
             RPL.position = CurrIndex;

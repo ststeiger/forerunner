@@ -98,6 +98,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
   
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -339,7 +340,7 @@ $(function () {
                             me._hideTableHeaders();                            
                             break;
 
-                         // Show the header on release only if this is not scrolling.
+                            // Show the header on release only if this is not scrolling.
                             // If it is scrolling, we will let scrollstop handle that.
                    
                         case "release":
@@ -361,7 +362,7 @@ $(function () {
                             }
                             
 
-                           if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
+                            if (ev.gesture.velocityX === 0 && ev.gesture.velocityY === 0)
                                 me._updateTableHeaders(me);
                             break;
                     }
@@ -402,7 +403,7 @@ $(function () {
             var me = this;
             if (newPageNum === me.curPage || me.lock === 1)
                 return;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
@@ -445,7 +446,7 @@ $(function () {
         },
         _showDocMap: function () {
             var me = this;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             var docMap = me.options.docMapArea;
             docMap.reportDocumentMap({ $reportViewer: me });
 
@@ -557,6 +558,7 @@ $(function () {
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
+                me.reportStates = action.reportStates;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
@@ -574,7 +576,7 @@ $(function () {
          */
         showNav: function () {
             var me = this;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             if (me.pageNavOpen) {
                 me.pageNavOpen = false;
                 document.body.parentNode.style.overflow = "scroll";
@@ -654,6 +656,37 @@ $(function () {
                 });
             }
         },
+        _updateSortState: function (id, direction) {
+            var me = this;
+            if (me.reportStates.sortStates.has(id)) {
+                me.reportStates.sortStates.remove(id);
+            } else {
+                me.reportStates.sortStates.add(id, direction);
+            }
+        },
+        _getSortResult: function (id, direction) {
+            var me = this;
+            return forerunner.ajax.ajax({
+                dataType: "json",
+                url: me.options.reportViewerAPI + "/SortReport/",
+                data: {
+                    SessionID: me.sessionID,
+                    SortItem: id,
+                    Direction: direction
+                },
+                async: false,
+            });
+        },
+
+        _replaySortStates: function () {
+            var me = this;
+            // Must synchronously replay one-by-one
+            var keys = me.reportStates.sortStates.keys();
+            for (var i = 0; i < keys.length; i++) {
+                var value = me.reportStates.sortStates.get(keys[i]);
+                me._getSortResult(keys[i], value);
+            }
+        },
         /**
          * Sorts the current report
          *
@@ -671,27 +704,19 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
 
             if (direction === sortDirection.asc)
                 newDir = sortDirection.desc;
             else
                 newDir = sortDirection.asc;
 
-            if (!me._isReportContextValid) {
-                var getReportJSON = me._callGetReportJSON();
-                getReportJSON.done(
-                    function () {
-                        me._callSort(id, newDir);
-                    }
-                );
-            } else {
-                me._callSort(id, newDir);
-            }
+            me._callSort(id, newDir);
         },
 
         _callSort: function (id, newDir) {
             var me = this;
+            me._updateSortState(id, newDir);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
                 {
                     SessionID: me.sessionID,
@@ -721,17 +746,52 @@ $(function () {
                 //get current parameter list without validate
                 paramList = $paramArea.reportParameter("getParamsList", true);
             }
-            return forerunner.ajax.getJSON(me.options.reportViewerAPI + "/ReportJSON/",
+            forerunner.ajax.ajax(
                 {
-                    ReportPath: me.options.reportPath,
+                    dataType: "json",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    data: {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.sessionID,
+                        PageNumber: me.getCurPage(),
+                        ParameterList: paramList
+                    },
+                    success: function (data) {
+                        me._isReportContextValid = true;
+                    },
+                    async: false
+                });
+        },
+        _updateToggleState: function (toggleID) {
+            var me = this;
+            if (me.reportStates.toggleStates.has(toggleID)) {
+                me.reportStates.toggleStates.remove(toggleID);
+            } else {
+                me.reportStates.toggleStates.add(toggleID);
+            }
+        },
+
+        _getToggleResult: function (toggleID) {
+            var me = this;
+            return forerunner.ajax.ajax({
+                dataType: "json",
+                url : me.options.reportViewerAPI + "/NavigateTo/",
+                data: {
+                    NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    PageNumber: me.getCurPage(),
-                    ParameterList: paramList
+                    UniqueID: toggleID
                 },
-                function (data) {
-                    me._isReportContextValid = true;
-                }
-            );
+                async: false,
+            });
+        },
+        
+        _replayToggleStates : function() {
+            var me = this;
+            // Must synchronously replay one-by-one
+            var keys = me.reportStates.toggleStates.keys();
+            for (var i = 0; i < keys.length; i++) {
+                me._getToggleResult(keys[i]);
+            }
         },
         /**
          * Sorts the current report
@@ -746,25 +806,16 @@ $(function () {
             me.lock = 1;
 
             me._addLoadingIndicator();
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             me._prepareAction();
-
-            if (!me._isReportContextValid) {
-                var getReportJSON = me._callGetReportJSON();
-                getReportJSON.done(
-                    function () {
-                        me._callToggle(toggleID);
-                    }
-                );
-            } else {
-                me._callToggle(toggleID);
-            }
+            
+            me._callToggle(toggleID);
         },
 
         
         _callToggle : function(toggleID) {
             var me = this;
-
+            me._updateToggleState(toggleID);
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.toggle,
@@ -786,6 +837,18 @@ $(function () {
             );
         },
 
+        _resetContextIfInvalid: function () {
+            var me = this;
+            me._revertUnsubmittedParameters();
+            if (!me._isReportContextValid) {
+                me._callGetReportJSON();
+                // Replay sort states
+                me._replaySortStates();
+                // Replay toggle states
+                me._replayToggleStates();
+            }
+        },
+
         _revertUnsubmittedParameters: function () {
             var me = this;
             if (me.paramLoaded) {
@@ -805,7 +868,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -856,7 +919,7 @@ $(function () {
                 return;
             me.lock = 1;
             me._addLoadingIndicator();
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             me._prepareAction();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
@@ -901,7 +964,7 @@ $(function () {
             if (me.lock === 1)
                 return;
             me.lock = 1;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
                 {
                     NavType: navigateType.docMap,
@@ -943,7 +1006,7 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
             });
         },
         _setScrollLocation: function (top, left) {
@@ -962,7 +1025,7 @@ $(function () {
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
             if (keyword === "") return;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             //input new keyword
             if (!me.findKeyword || me.findKeyword !== keyword) {
                 me.resetFind();
@@ -1109,7 +1172,7 @@ $(function () {
          */
         exportReport: function (exportType) {
             var me = this;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
             window.open(url);
         },       
@@ -1132,7 +1195,7 @@ $(function () {
         */
         printReport: function (printPropertyList) {
             var me = this;
-            me._revertUnsubmittedParameters();
+            me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
@@ -1270,6 +1333,7 @@ $(function () {
             me.findKeyword = null;
             me.origionalReportPath = "";
             me.renderError = false;
+            me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: new forerunner.ssr.map() };
         },
         /**
          * Load the given report

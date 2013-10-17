@@ -657,11 +657,8 @@ $(function () {
         },
         _updateSortState: function (id, direction) {
             var me = this;
-            if (me.reportStates.sortStates.has(id)) {
-                me.reportStates.sortStates.remove(id);
-            } else {
-                me.reportStates.sortStates.add(id, direction);
-            }
+            me.reportStates.sortStates.clear();
+            me.reportStates.sortStates.add(id, direction);
         },
         _getSortResult: function (id, direction) {
             var me = this;

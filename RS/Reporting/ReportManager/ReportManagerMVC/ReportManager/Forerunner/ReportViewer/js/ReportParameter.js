@@ -184,11 +184,11 @@ $(function () {
             $(document).on("click", function (e) { me._checkExternalClick(e); });
 
 
-            $(":input", me.$params).each(
+            $(":text", me.$params).each(
                 function (index) {
-                    var input = $(this);
-                    input.on("blur", function () { $(window).scrollTop(0); });
-                    input.on("focus", function () { $(window).scrollTop(0); });
+                    var textinput = $(this);
+                    textinput.on("blur", function () { me.options.$reportViewer.onInputBlur(); });
+                    textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
                 }
             );
         },

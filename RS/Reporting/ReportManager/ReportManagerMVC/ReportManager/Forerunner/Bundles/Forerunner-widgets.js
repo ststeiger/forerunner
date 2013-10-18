@@ -56,7 +56,9 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             printArea: null,
-            userSettings: null
+            userSettings: null,
+            onInputBlur: null,
+            onInputFocus: null
         },
 
         _destroy: function () {
@@ -312,6 +314,18 @@ $(function () {
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
+        },
+
+        onInputBlur: function () {
+            var me = this;
+            if (me.options.onInputBlur)
+                me.options.onInputBlur();
+        },
+
+        onInputFocus: function () {
+            var me = this;
+            if (me.options.onInputFocus)
+                me.options.onInputFocus();
         },
 
         _allowSwipe: true,
@@ -4868,11 +4882,11 @@ $(function () {
             $(document).on("click", function (e) { me._checkExternalClick(e); });
 
 
-            $(":input", me.$params).each(
+            $(":text", me.$params).each(
                 function (index) {
-                    var input = $(this);
-                    input.on("blur", function () { $(window).scrollTop(0); });
-                    input.on("focus", function () { $(window).scrollTop(0); });
+                    var textinput = $(this);
+                    textinput.on("blur", function () { me.options.$reportViewer.onInputBlur(); });
+                    textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
                 }
             );
         },
@@ -6253,6 +6267,17 @@ $(function () {
             me.$rightpanecontent.addClass("fr-layout-position-absolute");
         },
 
+        _makePositionFixed: function () {
+            var me = this;
+            me.$topdiv.removeClass("fr-layout-position-absolute");
+            me.$leftheader.removeClass("fr-layout-position-absolute");
+            me.$rightheader.removeClass("fr-layout-position-absolute");
+            me.$leftpane.removeClass("fr-layout-position-absolute");
+            me.$rightpane.removeClass("fr-layout-position-absolute");
+            me.$leftpanecontent.removeClass("fr-layout-position-absolute");
+            me.$rightpanecontent.removeClass("fr-layout-position-absolute");
+        },
+
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -6502,11 +6527,27 @@ $(function () {
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
                 me.$pagesection.show();
             });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
+
+            var onInputFocus = function () {
+                me._makePositionAbsolute();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            var onInputBlur = function () {
+                me._makePositionFixed();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
         },
         getScrollPosition: function () {
             var me = this;

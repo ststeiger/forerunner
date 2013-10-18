@@ -137,6 +137,17 @@ $(function () {
             me.$rightpanecontent.addClass("fr-layout-position-absolute");
         },
 
+        _makePositionFixed: function () {
+            var me = this;
+            me.$topdiv.removeClass("fr-layout-position-absolute");
+            me.$leftheader.removeClass("fr-layout-position-absolute");
+            me.$rightheader.removeClass("fr-layout-position-absolute");
+            me.$leftpane.removeClass("fr-layout-position-absolute");
+            me.$rightpane.removeClass("fr-layout-position-absolute");
+            me.$leftpanecontent.removeClass("fr-layout-position-absolute");
+            me.$rightpanecontent.removeClass("fr-layout-position-absolute");
+        },
+
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -386,11 +397,27 @@ $(function () {
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
                 me.$pagesection.show();
             });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
+
+            var onInputFocus = function () {
+                me._makePositionAbsolute();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            var onInputBlur = function () {
+                me._makePositionFixed();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
         },
         getScrollPosition: function () {
             var me = this;

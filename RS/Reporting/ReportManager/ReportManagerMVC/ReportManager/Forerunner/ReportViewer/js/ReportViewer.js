@@ -55,7 +55,9 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             printArea: null,
-            userSettings: null
+            userSettings: null,
+            onInputBlur: null,
+            onInputFocus: null
         },
 
         _destroy: function () {
@@ -311,6 +313,18 @@ $(function () {
             }
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
+        },
+
+        onInputBlur: function () {
+            var me = this;
+            if (me.options.onInputBlur)
+                me.options.onInputBlur();
+        },
+
+        onInputFocus: function () {
+            var me = this;
+            if (me.options.onInputFocus)
+                me.options.onInputFocus();
         },
 
         _allowSwipe: true,

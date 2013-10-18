@@ -232,7 +232,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-pt.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ro.txt"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
-  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sw.txt"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
   
   
   SetOutPath "$INSTDIR\Forerunner\Bundles"
@@ -390,7 +390,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-pt.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-ro.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-ru.txt"
-  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-sw.txt"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Loc\ReportViewer-sv.txt"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\ajax-loader1.gif"

@@ -5990,6 +5990,14 @@ $(function () {
             });
 
             me._setOrientationIconState();
+
+            $(":text", me.element).each(
+                function (index) {
+                    var textinput = $(this);
+                    textinput.on("blur", function () { me.options.$reportViewer.onInputBlur(); });
+                    textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
+                }
+            );
         },
         _isPortrait: function () {
             var me = this;

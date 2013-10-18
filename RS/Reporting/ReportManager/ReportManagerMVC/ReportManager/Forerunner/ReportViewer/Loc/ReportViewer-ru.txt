@@ -1,7 +1,7 @@
 ﻿{
     "messages": {
         "loading": "загрузка...",
-        "completeFind": "Поиск завершён"
+        "completeFind": "Поиск завершён",
         "keyNotFound": "Ключевое слово не найдено",
         "sessionExpired": "Время вашей сессии истекло",
         "imageNotDisplay": "Изображение недоступно",
@@ -16,11 +16,11 @@
 		"bookmarkNotFound":"Не можете найти закладку в докладе"
     },
     "errorTag": {
-        "moreDetail": "Подробнее"
+        "moreDetail": "Подробнее",
         "serverError": "Ошибка сервера",
-        "type": "Тип"
+        "type": "Тип",
         "targetSite": "Целевой сайт",
-        "source": "Исxоднай код"
+        "source": "Исxоднай код",
         "message": "Сообщение",
         "stackTrace": "Трассировка стека"
     },
@@ -93,13 +93,13 @@
         "nullField": "Ноль",
         "isTrue": "Верно",
         "isFalse": "Неверно",
-        "required": "Необходимый"
+        "required": "Необходимый",
         "viewReport": "Показать отчет",
 		"cancel": "cancel"
     },
 	"validateError": {
-		"required": "Необходимый"
-		"remote": "Удаленный" 
+		"required": "Необходимый",
+		"remote": "Удаленный",
 		"email": "Неверный email",
 		"url": "Неверный URL",
 		"date": "Неверные данные",

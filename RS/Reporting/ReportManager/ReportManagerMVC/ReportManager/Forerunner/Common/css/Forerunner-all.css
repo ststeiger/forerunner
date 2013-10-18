@@ -5,5 +5,6 @@
 @import "./icons25x31.css";
 @import "./MessageBox.css";
 @import "./ReportManager.css";
+@import "./DefaultAppTemplate.css";
 @import "../../ReportExplorer/css/ReportExplorer-all.css";
 @import "../../ReportViewer/css/ReportViewer-all.css";

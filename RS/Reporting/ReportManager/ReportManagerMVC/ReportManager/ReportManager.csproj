@@ -203,7 +203,7 @@
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
     <Content Include="Forerunner\ReportExplorer\js\UserSettings.js" />
-    <Content Include="Forerunner\ReportViewer\css\DefaultAppTemplate.css" />
+    <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportPrint.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportViewer-all.css" />
     <Content Include="Forerunner\Common\css\ToolBase.css" />
@@ -219,7 +219,7 @@
     <Content Include="Forerunner\ReportViewer\images\print_portrait_1.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
-    <Content Include="Forerunner\ReportViewer\js\DefaultAppTemplate.js" />
+    <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

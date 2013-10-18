@@ -765,7 +765,7 @@ $(function () {
         tooltip: locData.toolbar.userSettings,
         events: {
             click: function (e) {
-                e.data.me.options.$usersettingssection.userSettings("openDialog");
+                forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
             }
         }
     }

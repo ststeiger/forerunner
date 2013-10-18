@@ -6535,13 +6535,15 @@ $(function () {
             }
 
             var onInputFocus = function () {
-                me._makePositionAbsolute();
+                if (me.options.isFullScreen)
+                    me._makePositionAbsolute();
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };
 
             var onInputBlur = function () {
-                me._makePositionFixed();
+                if (me.options.isFullScreen)
+                    me._makePositionFixed();
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };

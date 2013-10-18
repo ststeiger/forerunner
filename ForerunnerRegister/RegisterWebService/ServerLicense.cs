@@ -327,7 +327,7 @@ namespace ForerunnerLicense
                     if (ld.LicenseDuration < ts.TotalDays )
                         Response = String.Format(Response, "Fail", "200", "Subcription Expired");
                     else
-                        Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToString(),pkey));
+                        Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToUniversalTime().Ticks.ToString(),pkey));
                 }
             }
             catch 

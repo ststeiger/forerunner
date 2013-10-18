@@ -130,7 +130,14 @@ namespace ForerunnerLicense
             value = MobV1Key.GetValue(LicenseTimestampKey);
             if (value != null && !forceCheck)
             {
-                LastServerValidation = DateTime.Parse(LicenseUtil.Verify( MobV1Key.GetValue(LicenseTimestampKey).ToString(), LicenseUtil.pubkey));
+                try
+                {
+                    LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(MobV1Key.GetValue(LicenseTimestampKey).ToString(), LicenseUtil.pubkey)), DateTimeKind.Utc);
+                }
+                catch
+                {
+                    MobV1Key.DeleteValue(LicenseTimestampKey);
+                }
             }
             
 
@@ -238,7 +245,7 @@ namespace ForerunnerLicense
             {                
                 TimeSpan LastTry = DateTime.Now - LastServerValidationTry;
                 
-                TimeSpan LastSucess = DateTime.Now - LastServerValidation;
+                TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
                 if (LastSucess.TotalDays > 1)
                 {
                     resp.StatusCode = LastStatus;
@@ -276,7 +283,7 @@ namespace ForerunnerLicense
                     }
                     else
                     {
-                        LastServerValidation = DateTime.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey));
+                        LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)),DateTimeKind.Utc);
                         MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
                     }
                 }

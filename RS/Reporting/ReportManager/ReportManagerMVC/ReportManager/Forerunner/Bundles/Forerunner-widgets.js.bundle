@@ -3,6 +3,7 @@
   <!--The order of the <file> elements determines the order of them when bundled.-->
   <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
   <file>/Forerunner/Common/js/Toolbase.js</file>
+  <file>/Forerunner/Common/js/MessageBox.js</file>
   <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
   <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
   <file>/Forerunner/ReportViewer/js/PageNav.js</file>

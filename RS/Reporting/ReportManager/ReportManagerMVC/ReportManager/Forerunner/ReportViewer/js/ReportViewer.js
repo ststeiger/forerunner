@@ -419,10 +419,10 @@ $(function () {
         },
         _mask: function () {
             var me = this;
-            var $mask = me.element.find(".fr-mask");
+            var $mask = me.element.find(".fr-core-mask");
 
             if ($mask.length === 0) {
-                $mask = $("<div class='fr-mask'></div>");
+                $mask = $("<div class='fr-core-mask'></div>");
                 $mask.height(me.element.height());
                 me.element.append($mask);
             }
@@ -430,7 +430,7 @@ $(function () {
         },
         _unmask: function () {
             var me = this;
-            me.element.find(".fr-mask").remove();
+            me.element.find(".fr-core-mask").remove();
             return;
         },
         _hideDocMap: function() {

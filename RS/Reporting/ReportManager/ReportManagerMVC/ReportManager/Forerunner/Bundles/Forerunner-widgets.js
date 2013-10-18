@@ -420,10 +420,10 @@ $(function () {
         },
         _mask: function () {
             var me = this;
-            var $mask = me.element.find(".fr-mask");
+            var $mask = me.element.find(".fr-core-mask");
 
             if ($mask.length === 0) {
-                $mask = $("<div class='fr-mask'></div>");
+                $mask = $("<div class='fr-core-mask'></div>");
                 $mask.height(me.element.height());
                 me.element.append($mask);
             }
@@ -431,7 +431,7 @@ $(function () {
         },
         _unmask: function () {
             var me = this;
-            me.element.find(".fr-mask").remove();
+            me.element.find(".fr-core-mask").remove();
             return;
         },
         _hideDocMap: function() {
@@ -2065,6 +2065,81 @@ $(function () {
     });  // $widget
 });  // function()
 
+///#source 1 1 /Forerunner/Common/js/MessageBox.js
+/**
+ * @file Contains the messgae box widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+
+    /**
+     * Widget used display the message box dialog
+     *
+     * @namespace $.forerunner.messageBox
+     * @prop {object} options - The options for Message Box
+     * @prop {String} options.msg - The messgae to display
+     * @example
+     * $("#messageBoxId").messageBox({
+        msg: "Display this text"
+     * });
+     */
+    $.widget(widgets.getFullname(widgets.messageBox), {
+        options: {
+        },
+        _create: function () {
+            
+        },
+        _init: function () {
+            var me = this;
+
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            $messageBox = new $("<div class='fr-messagebox-innerpage fr-core-dialog-layout'>" +
+                "<div class='fr-messagebox-header fr-core-dialog-header'><div class='fr-messagebox-title'>" + locData.dialog.title + "</div></div>" +
+                "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
+                "<div class='fr-messagebox-buttongroup'>" +
+                "<input class='fr-messagebox-button fr-messagebox-close fr-core-dialog-button' name='close' type='button' value='" + locData.dialog.close + "' />" +
+                "</div>");
+
+            me.element.append($messageBox);
+
+            me.element.find(".fr-messagebox-close").on("click", function () {
+                me.closeDialog();
+            });
+        },
+        /**
+         * @function $.forerunner.messageBox#openDialog
+         */
+        openDialog: function (msg) {
+            var me = this;
+
+            forerunner.dialog.showModalDialog(me.element, function () {
+                $(".fr-messagebox-msg").html(msg);
+                me.element.show();
+            });
+        },
+        /**
+         * @function $.forerunner.messageBox#closeDialog
+         */
+        closeDialog: function () {
+            var me = this;
+
+            forerunner.dialog.closeModalDialog(me.element, function () {
+                $(".fr-messagebox-msg").val();
+                me.element.hide();
+            });
+        }
+
+    }); //$.widget
+}); // $(function ()
 ///#source 1 1 /Forerunner/ReportViewer/js/Toolbar.js
 /**
  * @file Contains the toolbar widget.
@@ -2943,8 +3018,8 @@ $(function () {
             var $theForm = new $(
             "<div class='fr-us-page'>" +
                 // Header
-                "<div class='fr-us-innerPage fr-us-layout'>" +
-                    "<div class='fr-us-header'>" +
+                "<div class='fr-us-innerPage fr-us-layout fr-core-dialog-layout'>" +
+                    "<div class='fr-us-header fr-core-dialog-header'>" +
                         "<div class='fr-us-print-icon-container'>" +
                             "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
                             "</div>" +
@@ -2966,7 +3041,7 @@ $(function () {
                         "</div>" +
                         "<div class='fr-us-submit-container'>" +
                             "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit' value='" + locData.submit + "'/>" +
+                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + locData.submit + "'/>" +
                         "</div>" +
                     "</form>" +
                 "</div>" +
@@ -3009,7 +3084,7 @@ $(function () {
             });
         },
         /**
-         * @function $.forerunner.userSettings#clodeDialog
+         * @function $.forerunner.userSettings#closeDialog
          */
         closeDialog: function () {
             var me = this;

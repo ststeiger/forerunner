@@ -70,17 +70,17 @@ jQuery.fn.extend({
         });
     },
     mask: function () {
-        var $mask = $(this).find(".fr-mask");
+        var $mask = $(this).find(".fr-core-mask");
 
         if ($mask.length === 0) {
-            $mask = $("<div class='fr-mask'></div>");
+            $mask = $("<div class='fr-core-mask'></div>");
             $mask.height($(this).height() + 38);
             $(this).append($mask);
         }
         return $(this);
     },
     unmask: function () {
-        $(this).find(".fr-mask").remove();
+        $(this).find(".fr-core-mask").remove();
         return $(this);
     }
 });
@@ -125,6 +125,8 @@ $(function () {
             reportPrint: "reportPrint",
             /** @constant */
             userSettings: "userSettings",
+            /** @constant */
+            messageBox: "messageBox",
 
             /** @constant */
             namespace: "forerunner",
@@ -749,7 +751,7 @@ $(function () {
         */
         closeAllModalDialogs: function () {
             var me = this;
-            $(".fr-mask").remove();
+            $(".fr-core-mask").remove();
             $(".fr-dialog").hide();
         },
         /**
@@ -758,33 +760,14 @@ $(function () {
         * @member
         */
         showMessageBox: function (msg) {
-            var me = this;
-            var $messageBox = $(".fr-messagebox");
-            if ($messageBox.length === 0) {
-                var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-
-                $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
-                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>" + locData.dialog.title + "</span></div>" +
-                    "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
-                    "<div class='fr-messagebox-buttongroup'>" +
-                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='" + locData.dialog.close + "' />" +
-                    "</div></div>");
-
-                $("body").append($messageBox);
-
-                $(".fr-messagebox-close").on("click", function () {
-                    forerunner.dialog.closeModalDialog($messageBox, function () {
-                        $(".fr-messagebox-msg").val();
-                        $messageBox.hide();
-                    });
-                });
+            var $msgBox = $(".fr-messagebox");
+            if ($msgBox.length === 0) {
+                $msgBox = $("<div class='fr-dialog fr-messagebox'/>");
+                $msgBox.messageBox({});
+                $("body").append($msgBox);
             }
-
-            me.showModalDialog($messageBox, function () {
-                $(".fr-messagebox-msg").html(msg);
-                $(".fr-messagebox").show();
-            });
-        },
+            $msgBox.messageBox("openDialog", msg);
+        }
     };
 
     forerunner.ssr.map = function(initialData) {

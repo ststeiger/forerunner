@@ -1,0 +1,70 @@
+.fr-messagebox {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  z-index: 10;
+  display: none;
+}
+
+.fr-messagebox-innerpage {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+}
+
+.fr-messagebox-header {
+}
+
+.fr-messagebox-title {
+  height: 48px;
+  vertical-align: middle;
+  padding-left: 8px;
+  display: table-cell;
+}
+
+.fr-messagebox-content {
+  padding: 25px 0 30px 8px;
+}
+
+.fr-messagebox-msg {
+  width: 100%;
+  height: 100%;
+  display: block;
+
+  font-size: 13pt;
+  color: #666666;
+}
+
+.fr-messagebox-buttongroup {
+  text-align: center;
+}
+
+.fr-messagebox-button {
+  margin: 0 auto 10px auto;
+  width: 76px;
+}
+
+/* Small toolbar (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-messagebox-innerpage {
+    width: 260px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    background-color: white;
+  }
+}
+
+/* Medium toolbar (E.g., for phones, landscape) */
+@media only screen and (min-width : 480px) and (max-width : 567px) {
+  .fr-messagebox-innerpage {
+    width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    background-color: white;
+  }
+}

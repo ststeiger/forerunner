@@ -137,6 +137,17 @@ $(function () {
             me.$rightpanecontent.addClass("fr-layout-position-absolute");
         },
 
+        _makePositionFixed: function () {
+            var me = this;
+            me.$topdiv.removeClass("fr-layout-position-absolute");
+            me.$leftheader.removeClass("fr-layout-position-absolute");
+            me.$rightheader.removeClass("fr-layout-position-absolute");
+            me.$leftpane.removeClass("fr-layout-position-absolute");
+            me.$rightpane.removeClass("fr-layout-position-absolute");
+            me.$leftpanecontent.removeClass("fr-layout-position-absolute");
+            me.$rightpanecontent.removeClass("fr-layout-position-absolute");
+        },
+
         bindEvents: function () {
             var me = this;
             var events = forerunner.ssr.constants.events;
@@ -386,11 +397,29 @@ $(function () {
             $viewer.on(events.reportViewerChangePage(), function (e, data) {
                 me.$pagesection.show();
             });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
                 me.$pagesection.on("scrollstop", function () { me._updateTopDiv(me); });
             }
+
+            var onInputFocus = function () {
+                if (me.options.isFullScreen)
+                    me._makePositionAbsolute();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            var onInputBlur = function () {
+                if (me.options.isFullScreen)
+                    me._makePositionFixed();
+                $(window).scrollTop(0);
+                $(window).scrollLeft(0);
+            };
+
+            $viewer.reportViewer("option", "onInputFocus", onInputFocus);
+            $viewer.reportViewer("option", "onInputBlur", onInputBlur);
         },
         getScrollPosition: function () {
             var me = this;
@@ -474,14 +503,13 @@ $(function () {
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
-            
+
             if (me.$viewer !== undefined) {
                 me.$viewer.reportViewer('allowZoom', false);
                 me.$viewer.reportViewer('allowSwipe', false);
             } else {
                 forerunner.device.allowZoom(false);
             }
-            me.$container.resize();
 
             var className = isLeftPane ? "fr-layout-mainViewPortShiftedRight" : "fr-layout-mainViewPortShiftedLeft";
             var mainViewPort = me.$mainviewport;
@@ -514,6 +542,7 @@ $(function () {
             
             // Make sure the address bar is not showing when a side out pane is showing
             me.hideAddressBar();
+            me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer('triggerEvent', events.showPane);

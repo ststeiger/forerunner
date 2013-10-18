@@ -147,6 +147,7 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Forerunner\Common\css\MessageBox.css" />
     <Content Include="Forerunner\Common\css\Login.css" />
     <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
@@ -175,6 +176,7 @@
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
     <Content Include="Forerunner\Common\js\forerunner-tools.js" />
+    <Content Include="Forerunner\Common\js\MessageBox.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.custom.min.js" />

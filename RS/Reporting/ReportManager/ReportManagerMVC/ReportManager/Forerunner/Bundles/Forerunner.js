@@ -71,17 +71,17 @@ jQuery.fn.extend({
         });
     },
     mask: function () {
-        var $mask = $(this).find(".fr-mask");
+        var $mask = $(this).find(".fr-core-mask");
 
         if ($mask.length === 0) {
-            $mask = $("<div class='fr-mask'></div>");
+            $mask = $("<div class='fr-core-mask'></div>");
             $mask.height($(this).height() + 38);
             $(this).append($mask);
         }
         return $(this);
     },
     unmask: function () {
-        $(this).find(".fr-mask").remove();
+        $(this).find(".fr-core-mask").remove();
         return $(this);
     }
 });
@@ -126,6 +126,8 @@ $(function () {
             reportPrint: "reportPrint",
             /** @constant */
             userSettings: "userSettings",
+            /** @constant */
+            messageBox: "messageBox",
 
             /** @constant */
             namespace: "forerunner",
@@ -240,6 +242,16 @@ $(function () {
             hidePane: "hidePane",
             /** widget + event, lowercase */
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
+
+            /** @constant */
+            inputBlur: "inputBlur",
+            /** widget + event, lowercase */
+            reportViewerInputBlur: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputBlur).toLowerCase(); },
+
+            /** @constant */
+            inputFocus: "inputFocus",
+            /** widget + event, lowercase */
+            reportViewerInputFocus: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputFocus).toLowerCase(); },
 
             /** @constant */
             showModalDialog: "showModalDialog",
@@ -538,15 +550,15 @@ $(function () {
         * @member
         */
         ajax: function (options) {
-            var error_callback = options.error;
+            var errorCallback = options.error;
                 options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
-                if (error_callback !== undefined)
-                    error_callback(data);
+                if (errorCallback)
+                    errorCallback(data);
             };
-            $.ajax(options);
+            return $.ajax(options);
         },
         /**
         * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
@@ -558,16 +570,18 @@ $(function () {
         * @member
         */
         getJSON: function (url, options, done, fail) {
-            $.getJSON(url, options)
+            return $.getJSON(url, options)
             .done(function (data) {
-                done(data);
+                if (done)
+                    done(data);
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
                     window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
-                fail(data);
+                if (fail)
+                    fail(data);
             });
         },
     };
@@ -724,7 +738,7 @@ $(function () {
             $container.trigger(forerunner.ssr.constants.events.showModalDialog);
 
             if (showModal && typeof (showModal) === "function") {
-                setTimeout(function () { showModal() }, 50);
+                setTimeout(function () { showModal(); }, 50);
             }
         },
         /**
@@ -738,7 +752,7 @@ $(function () {
             $container.trigger(forerunner.ssr.constants.events.closeModalDialog);
 
             if (closeModal && typeof (closeModal) === "function") {
-                setTimeout(function () { closeModal() }, 50);
+                setTimeout(function () { closeModal(); }, 50);
             }
         },
         /**
@@ -748,7 +762,7 @@ $(function () {
         */
         closeAllModalDialogs: function () {
             var me = this;
-            $(".fr-mask").remove();
+            $(".fr-core-mask").remove();
             $(".fr-dialog").hide();
         },
         /**
@@ -757,35 +771,70 @@ $(function () {
         * @member
         */
         showMessageBox: function (msg) {
-            var me = this;
-            var $messageBox = $(".fr-messagebox");
-            if ($messageBox.length === 0) {
-                var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-
-                $messageBox = new $("<div class='fr-dialog fr-messagebox'><div class='fr-messagebox-innerpage'>" +
-                    "<div class='fr-messagebox-header'><span class='fr-messagebox-title'>" + locData.dialog.title + "</span></div>" +
-                    "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
-                    "<div class='fr-messagebox-buttongroup'>" +
-                    "<input class='fr-messagebox-button fr-messagebox-close' name='close' type='button' value='" + locData.dialog.close + "' />" +
-                    "</div></div>");
-
-                $("body").append($messageBox);
-
-                $(".fr-messagebox-close").on("click", function () {
-                    forerunner.dialog.closeModalDialog($messageBox, function () {
-                        $(".fr-messagebox-msg").val();
-                        $messageBox.hide();
-                    });
-                });
+            var $msgBox = $(".fr-messagebox");
+            if ($msgBox.length === 0) {
+                $msgBox = $("<div class='fr-dialog fr-messagebox'/>");
+                $msgBox.messageBox({});
+                $("body").append($msgBox);
             }
-
-            me.showModalDialog($messageBox, function () {
-                $(".fr-messagebox-msg").html(msg);
-                $(".fr-messagebox").show();
-            });
-        },
+            $msgBox.messageBox("openDialog", msg);
+        }
     };
 
+    forerunner.ssr.map = function(initialData) {
+        // can pass initial data for the set in an object
+        this.data = initialData || {};
+    };
+
+    forerunner.ssr.map.prototype = {
+        add: function (key, val) {
+            if (typeof key === "object") {
+                for (var index in key) {
+                    if (key.hasOwnProperty(index)) {
+                        this.add(index, key[index]);
+                    }
+                }
+            } else {
+                this.data[key] = val;
+            }
+        },
+        get: function (key) {
+            return this.data[key];
+        },
+        remove: function (key) {
+            // can be one or more args
+            // each arg can be a string key or an array of string keys
+            var item;
+            for (var j = 0; j < arguments.length; j++) {
+                item = arguments[j];
+                if (typeof key === "string") {
+                    delete this.data[item];
+                } else if (item.length) {
+                    // must be an array of keys
+                    for (var i = 0; i < item.length; i++) {
+                        delete this.data[item[i]];
+                    }
+                }
+            }
+        },
+        has: function (key) {
+            return Object.prototype.hasOwnProperty.call(this.data, key);
+        },
+        isEmpty: function () {
+            for (var key in this.data) {
+                if (this.has(key)) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        keys: function () {
+            return Object.keys(this.data);
+        },
+        clear: function () {
+            this.data = {};
+        }
+    };
     $(document).ready(function () {
         // Update all dynamic styles
         var isTouchRule = {
@@ -800,6 +849,5 @@ $(function () {
         };
         forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
     });
-    
 });
 

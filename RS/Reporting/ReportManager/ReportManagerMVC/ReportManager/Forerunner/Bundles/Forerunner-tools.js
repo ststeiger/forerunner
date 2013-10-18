@@ -130,6 +130,12 @@ $(function () {
                 },
                 click: function (e) {
                     e.target.select();
+                },
+                blur: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputBlur");
+                },
+                focus: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputFocus");
                 }
             }
         },
@@ -196,6 +202,12 @@ $(function () {
                         e.data.$reportViewer.reportViewer("find", $.trim(this.value));
                         return false;
                     }
+                },
+                blur: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputBlur");
+                },
+                focus: function (e) {
+                    e.data.$reportViewer.reportViewer("onInputFocus");
                 }
             }
         },
@@ -447,10 +459,10 @@ $(function () {
                     }
                 },
                 blur: function (e) {
-                    $(window).scrollTop(0);
+                    e.data.$reportViewer.reportViewer("onInputBlur");
                 },
                 focus: function (e) {
-                    $(window).scrollTop(0);
+                    e.data.$reportViewer.reportViewer("onInputFocus");
                 }
             }
         },
@@ -648,10 +660,10 @@ $(function () {
                     }
                 },
                 blur: function (e) {
-                    $(window).scrollTop(0);
+                    e.data.$reportViewer.reportViewer("onInputBlur");
                 },
                 focus: function (e) {
-                    $(window).scrollTop(0);
+                    e.data.$reportViewer.reportViewer("onInputFocus");
                 }
             }
         },

@@ -52,7 +52,6 @@ $(function () {
         },
         // Constructor
         _create: function () {
-            
         },
          
         render: function (reportObj) {
@@ -148,11 +147,12 @@ $(function () {
             var me = this;
             var $newObj = me._getDefaultHTMLTable();
             var $sec = $("<TR/>");
-            var loc = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+            var loc;
 
             //Need to determine Header and footer Index
             var headerIndex;
             var footerIndex;
+            var bodyIndex;
 
             var sectionMeasurement;
             if (RIContext.CurrObj.Measurement)
@@ -165,7 +165,11 @@ $(function () {
                     headerIndex = i;
                 if (sectionMeasurement.Measurements[i].Type === "PageFooter")
                     footerIndex = i;
+                if (sectionMeasurement.Measurements[i].Type === "BodyArea")
+                    bodyIndex = i;
             }
+
+            loc = bodyIndex >= 0 ? me._getMeasurmentsObj(RIContext.CurrObj, bodyIndex) : me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
           
             //Page Header
             if (RIContext.CurrObj.PageHeader)
@@ -462,7 +466,7 @@ $(function () {
                 else
                     $Sort.attr("class", "fr-render-sort-unsorted");
 
-                $Sort.on("click", { Viewer:  RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID); });
+                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction, Clear: !me.shiftKeyDown }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID, !e.shiftKey); });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);

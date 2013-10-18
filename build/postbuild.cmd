@@ -43,6 +43,13 @@ if ERRORLEVEL 1 (
 )
 
 type %BUILD_RELEASE%\NSIS.log >> %POSTBUILD_LOG%
+
+echo Code Signing Setup Packages... >> %POSTBUILD_LOG%
+%~dp0sign.cmd %BUILD_RELEASE%\Setup\ForerunnerMobilizerSetup.exe >> %POSTBUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
 echo PostBuild SUCCEEDED. >> %BUILD_LOG%
 type %POSTBUILD_LOG% >> %BUILD_LOG%
 exit /b 0

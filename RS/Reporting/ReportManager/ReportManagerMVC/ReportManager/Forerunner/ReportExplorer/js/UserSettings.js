@@ -41,8 +41,8 @@ $(function () {
             var $theForm = new $(
             "<div class='fr-us-page'>" +
                 // Header
-                "<div class='fr-us-innerPage fr-us-layout'>" +
-                    "<div class='fr-us-header'>" +
+                "<div class='fr-us-innerPage fr-us-layout fr-core-dialog-layout'>" +
+                    "<div class='fr-us-header fr-core-dialog-header'>" +
                         "<div class='fr-us-print-icon-container'>" +
                             "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
                             "</div>" +
@@ -64,7 +64,7 @@ $(function () {
                         "</div>" +
                         "<div class='fr-us-submit-container'>" +
                             "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit' value='" + locData.submit + "'/>" +
+                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + locData.submit + "'/>" +
                         "</div>" +
                     "</form>" +
                 "</div>" +
@@ -107,7 +107,7 @@ $(function () {
             });
         },
         /**
-         * @function $.forerunner.userSettings#clodeDialog
+         * @function $.forerunner.userSettings#closeDialog
          */
         closeDialog: function () {
             var me = this;

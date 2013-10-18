@@ -243,16 +243,6 @@ $(function () {
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
 
             /** @constant */
-            inputBlur: "inputBlur",
-            /** widget + event, lowercase */
-            reportViewerInputBlur: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputBlur).toLowerCase(); },
-
-            /** @constant */
-            inputFocus: "inputFocus",
-            /** widget + event, lowercase */
-            reportViewerInputFocus: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputFocus).toLowerCase(); },
-
-            /** @constant */
             showModalDialog: "showModalDialog",
 
             /** @constant */

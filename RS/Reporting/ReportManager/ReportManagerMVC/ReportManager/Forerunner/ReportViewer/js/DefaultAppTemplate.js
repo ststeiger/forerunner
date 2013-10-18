@@ -165,6 +165,9 @@ $(function () {
 
             me.$container.on(events.showModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", true);
+                me.$container.addClass("fr-layout-container-noscroll");
+                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                me.showModal = true;
                 me.$container.css("overflow", "hidden").mask();
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
@@ -174,6 +177,9 @@ $(function () {
 
             me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
+                me.showModal = false;
+                me.$container.removeClass("fr-layout-container-noscroll");
+                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 me.$container.css("overflow", "auto").unmask();
                 me.scrollLock = false;
                 me.restoreScroll();
@@ -486,8 +492,10 @@ $(function () {
                 topdiv.removeClass(className, delay);
                 me.$mainheadersection.toolbar("showAllTools");
             }
-            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-            me.$container.removeClass("fr-layout-container-noscroll");
+            if (me.showModal !== true) {
+                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                me.$container.removeClass("fr-layout-container-noscroll");
+            }
 
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
                 me.$pagesection.addClass('fr-layout-android');

@@ -40,8 +40,8 @@ $(function () {
             var $printForm = new $(
             "<div class='fr-print-page'>" +
                 // Header
-                "<div class='fr-print-innerPage fr-print-layout'>" +
-                    "<div class='fr-print-header'>" +
+                "<div class='fr-print-innerPage fr-print-layout fr-core-dialog-layout'>" +
+                    "<div class='fr-print-header fr-core-dialog-header'>" +
                         "<div class='fr-print-print-icon-container'>" +
                             "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
                             "</div>" +
@@ -111,7 +111,7 @@ $(function () {
                             "</div>" +
                                 "<div class='fr-print-submit-container'>" +
                                     "<div class='fr-print-submit-inner'>" +
-                                    "<input name='submit' type='button' class='fr-print-submit' value='" + locData.print + "'/>" +
+                                    "<input name='submit' type='button' class='fr-print-submit fr-core-dialog-button' value='" + locData.print + "'/>" +
                             "</div>" +
                         "</div>" +
                     "</form>" +

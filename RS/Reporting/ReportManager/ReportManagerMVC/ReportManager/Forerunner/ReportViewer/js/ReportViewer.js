@@ -54,10 +54,10 @@ $(function () {
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
-            printArea: null,
             userSettings: null,
             onInputBlur: null,
-            onInputFocus: null
+            onInputFocus: null,
+            $appContainer: null
         },
 
         _destroy: function () {
@@ -473,7 +473,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.docmapShowFailed); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -662,7 +662,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.locData.messages.prepareActionFailed); }
+                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -897,7 +897,7 @@ $(function () {
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
                             // BUGBUG:  It looks like a lot of the error messages are not yet localized.
-                            forerunner.dialog.showMessageBox(me.locData.messages.bookmarkNotFound);
+                            forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.bookmarkNotFound);
                         }
                     }
                 },
@@ -1055,7 +1055,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
                     return;
                 }
 
@@ -1088,9 +1088,9 @@ $(function () {
                             }
                             else {
                                 if (me.finding === true)
-                                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
                                 else
-                                    forerunner.dialog.showMessageBox(me.locData.messages.keyNotFound);
+                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.keyNotFound);
                                 me.resetFind();
                             }
                         }
@@ -1117,7 +1117,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
                     me.resetFind();
                     return;
                 }
@@ -1129,7 +1129,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
                         me.resetFind();
                     }
                     else {
@@ -1137,7 +1137,7 @@ $(function () {
                     }
                 }
                 else {
-                    forerunner.dialog.showMessageBox(me.locData.messages.completeFind);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
                     me.resetFind();
                 }
             }
@@ -1194,9 +1194,7 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            var printArea = me.options.printArea;
-
-            printArea.reportPrint("togglePrintPane");
+            forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
         },
         /**
         * print current reprot in custom PDF format
@@ -1210,12 +1208,10 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
-        _setPrint:function(pageLayout){
+        _setPrint: function (pageLayout) {
             var me = this;
-            var printArea = me.options.printArea;
-
-            printArea.reportPrint({ $reportViewer: this });
-            printArea.reportPrint("setPrint", pageLayout);
+            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            $dlg.reportPrint("setPrint", pageLayout);
         },
        
         //Page Loading
@@ -1226,7 +1222,10 @@ $(function () {
             
             if (savedParams) {
                 if (me.options.paramArea) {
-                    me.options.paramArea.reportParameter({ $reportViewer: this });
+                    me.options.paramArea.reportParameter({
+                        $reportViewer: this,
+                        $appContainer: me.options.$appContainer
+                    });
                     me.refreshParameters(savedParams, true, pageNum);
                 }
             } else {

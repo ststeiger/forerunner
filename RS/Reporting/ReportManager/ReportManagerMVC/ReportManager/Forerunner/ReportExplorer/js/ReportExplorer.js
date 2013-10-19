@@ -39,7 +39,7 @@ $(function () {
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null,
-            $usersettingssection: null
+            $appContainer: null
         },
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -237,7 +237,7 @@ $(function () {
                 },
                 error: function (data) {
                     console.log(data);
-                    forerunner.dialog.showMessageBox(locData.messages.catalogsLoadFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.catalogsLoadFailed);
                 }
             });
         },
@@ -261,15 +261,15 @@ $(function () {
             };
             me.getUserSettings(true);
 
-            var $usersettingssection = me.options.$usersettingssection;
-            if ($usersettingssection !== null) {
-                $usersettingssection.userSettings({
-                    $reportExplorer: me.element,
-                    locData: locData
+            var $dlg = me.options.$appContainer.find(".fr-us-layout-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-dialog fr-us-layout-section'/>");
+                $dlg.userSettings({
+                    $appContainer: me.options.$appContainer,
+                    $reportExplorer: me.element
                 });
+                me.options.$appContainer.append($dlg);
             }
-
-
         }
     });  // $.widget
 });  // function()

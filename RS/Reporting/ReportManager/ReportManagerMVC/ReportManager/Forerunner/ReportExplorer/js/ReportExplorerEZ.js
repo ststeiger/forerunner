@@ -72,12 +72,12 @@ $(function () {
                 view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
-                $usersettingssection: layout.$usersettingssection
+                $appContainer: layout.$container
             });            
             var $toolbar = layout.$mainheadersection;
             $toolbar.reportExplorerToolbar({
                 navigateTo: me.options.navigateTo,
-                $usersettingssection: layout.$usersettingssection
+                $appContainer: layout.$container
         });
             $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 

@@ -6780,7 +6780,7 @@ $(function () {
 
             // Create / render the toolbar
             var $toolbar = me.options.$toolbar;
-            $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this });
+            $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
 
             var tb = forerunner.ssr.tools.mergedButtons;
             if (me.options.isReportManager) {
@@ -6794,12 +6794,12 @@ $(function () {
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide" });
+                $lefttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
-                $righttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide" });
+                $righttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
             }
 
             if (me.options.isReportManager) {
@@ -6808,7 +6808,7 @@ $(function () {
 
             // Create / render the menu pane
             var tp = forerunner.ssr.tools.mergedItems;
-            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this });
+            var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
 

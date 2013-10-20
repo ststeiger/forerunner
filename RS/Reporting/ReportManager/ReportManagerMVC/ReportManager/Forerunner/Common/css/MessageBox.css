@@ -9,10 +9,12 @@
 }
 
 .fr-messagebox-innerpage {
-  width: 400px;
+  min-width: 200px;
+  max-width: 400px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 50px;
+  display: table;
 }
 
 .fr-messagebox-header {
@@ -26,7 +28,7 @@
 }
 
 .fr-messagebox-content {
-  padding: 25px 0 30px 8px;
+  padding: 25px 8px 30px 8px;
 }
 
 .fr-messagebox-msg {
@@ -35,7 +37,7 @@
   display: block;
 
   font-size: 13pt;
-  color: #666666;
+  color: #444444;
 }
 
 .fr-messagebox-buttongroup {
@@ -50,7 +52,8 @@
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-messagebox-innerpage {
-    width: 260px;
+    min-width: 200px;
+    max-width: 260px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
@@ -61,7 +64,8 @@
 /* Medium toolbar (E.g., for phones, landscape) */
 @media only screen and (min-width : 480px) and (max-width : 567px) {
   .fr-messagebox-innerpage {
-    width: 320px;
+    min-width: 200px;
+    max-width: 320px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;

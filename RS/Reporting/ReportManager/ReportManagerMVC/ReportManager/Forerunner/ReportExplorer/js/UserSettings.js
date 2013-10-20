@@ -33,7 +33,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            var locData = me.options.locData.userSettings;
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var userSettings = locData.userSettings;
             var unit = locData.unit;
 
             me.element.html("");
@@ -49,22 +50,22 @@ $(function () {
                         "</div>" +
                         "<div class='fr-us-title-container'>" +
                             "<div class='fr-us-title'>" +
-                                locData.title +
+                                userSettings.title +
                             "</div>" +
                         "</div>" +
                         "<div class='fr-us-cancel-container'>" +
-                            "<input type='button' class='fr-us-cancel' value='" + locData.cancel + "'/>" +
+                            "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
                         "</div>" +
                     "</div>" +
                     // form
                     "<form class='fr-us-form'>" +
                         "<div class='fr-us-setting-container'>" +
-                            "<label class='fr-us-label'>" + locData.ResponsiveUI + "</label>" +
+                            "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                             "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
                         "</div>" +
                         "<div class='fr-us-submit-container'>" +
                             "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + locData.submit + "'/>" +
+                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
                         "</div>" +
                     "</form>" +
                 "</div>" +
@@ -102,8 +103,8 @@ $(function () {
             var me = this;
 
             me._getSettings();
-            forerunner.dialog.showModalDialog(me.element, function () {
-                me.element.show();
+            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "inline-block");
             });
         },
         /**
@@ -112,8 +113,8 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            forerunner.dialog.closeModalDialog(me.element, function () {
-                me.element.hide();
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "");
             });
         }
     }); //$.widget

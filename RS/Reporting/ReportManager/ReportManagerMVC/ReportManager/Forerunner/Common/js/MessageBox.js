@@ -55,7 +55,7 @@ $(function () {
 
             forerunner.dialog.showModalDialog(me.element, function () {
                 $(".fr-messagebox-msg").html(msg);
-                me.element.show();
+                me.element.css("display", "inline-block");
             });
         },
         /**
@@ -66,7 +66,7 @@ $(function () {
 
             forerunner.dialog.closeModalDialog(me.element, function () {
                 $(".fr-messagebox-msg").val();
-                me.element.hide();
+                me.element.css("display", "");
             });
         }
 

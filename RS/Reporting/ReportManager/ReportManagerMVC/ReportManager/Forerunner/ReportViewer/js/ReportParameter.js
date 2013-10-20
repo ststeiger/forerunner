@@ -29,6 +29,7 @@ $(function () {
         options: {
             $reportViewer: null,
             pageNum: null,
+            $appContainer: null
         },
 
         $params: null,
@@ -200,7 +201,7 @@ $(function () {
             me._closeAllDropdown();
 
             if (me._reportDesignError !== null) {
-                forerunner.dialog.showMessageBox(me._reportDesignError);
+                forerunner.dialog.showMessageBox(me.options.$appContainer, me._reportDesignError);
                 return;
             }
 

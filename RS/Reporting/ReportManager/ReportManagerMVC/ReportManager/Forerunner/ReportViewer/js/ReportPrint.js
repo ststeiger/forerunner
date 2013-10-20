@@ -16,24 +16,24 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
+            $appContainer: null
         },
         _create: function () {
             
         },
         _init: function () {
             var me = this;
-            this._printOpen = false;
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
         },
-        _printOpen: false,
         /**
-       * @function $.forerunner.reportPrint#setPrint
-       * @Generate print pane html code and append to the dom tree
-       * @param {String} pageLayout - default loaded page layout data from RPL
-       */
+         * @function $.forerunner.reportPrint#setPrint
+         * @Generate print pane html code and append to the dom tree
+         * @param {String} pageLayout - default loaded page layout data from RPL
+         */
         setPrint: function (pageLayout) {
             var me = this;
-            var locData = me.options.$reportViewer.locData.print;
-            var unit = locData.unit;
+            var print = me.locData.print;
+            var unit = print.unit;
 
             me.element.html("");
 
@@ -48,29 +48,29 @@ $(function () {
                         "</div>" +
                         "<div class='fr-print-title-container'>" +
                             "<div class='fr-print-title'>" +
-                                locData.title +
+                                print.title +
                             "</div>" +
                         "</div>" +
                         "<div class='fr-print-cancel-container'>" +
-                            "<input type='button' class='fr-print-cancel' value='" + locData.cancel + "'/>" +
+                            "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
                         "</div>" +
                     "</div>" +
                     // form
                     "<form class='fr-print-form'>" +
                         "<div class='fr-print-options-label'>" +
                             "<div>" +
-                                locData.pageLayoutOptions +
+                                print.pageLayoutOptions +
                             "</div>" +
                         "</div>" +
                         // Height / Width
                         "<div class='fr-print-settings-pair-container'>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.pageHeight + "</label>" +
+                                "<label class='fr-print-label'>" + print.pageHeight + "</label>" +
                                 "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.pageWidth + "</label>" +
+                                "<label class='fr-print-label'>" + print.pageWidth + "</label>" +
                                 "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
@@ -81,17 +81,17 @@ $(function () {
                             "<div class='fr-print-landscape'></div>" +
                         "</div>" +
                         "<div class='fr-print-margins-label'>" +
-                            locData.margin +
+                            print.margin +
                         "</div>" +
                         // Top / Bottom
                         "<div class='fr-print-settings-pair-container'>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.marginTop + "</label>" +
+                                "<label class='fr-print-label'>" + print.marginTop + "</label>" +
                                 "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.marginBottom + "</label>" +
+                                "<label class='fr-print-label'>" + print.marginBottom + "</label>" +
                                 "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
@@ -99,19 +99,19 @@ $(function () {
                         // Left / Right
                         "<div class='fr-print-settings-pair-container'>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.marginLeft + "</label>" +
+                                "<label class='fr-print-label'>" + print.marginLeft + "</label>" +
                                 "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
                             "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + locData.marginRight + "</label>" +
+                                "<label class='fr-print-label'>" + print.marginRight + "</label>" +
                                 "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
                                 "<label class='fr-print-unit-label'>" + unit + "</label>" +
                             "</div>" +
                             "</div>" +
                                 "<div class='fr-print-submit-container'>" +
                                     "<div class='fr-print-submit-inner'>" +
-                                    "<input name='submit' type='button' class='fr-print-submit fr-core-dialog-button' value='" + locData.print + "'/>" +
+                                    "<input name='submit' type='button' class='fr-print-submit fr-core-dialog-button' value='" + print.print + "'/>" +
                             "</div>" +
                         "</div>" +
                     "</form>" +
@@ -139,7 +139,7 @@ $(function () {
             });
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
-                me.options.$reportViewer.showPrint();
+                me.closeDialog();
             });
 
             me.$pageWidth = me.element.find("[name=PageWidth]");
@@ -169,6 +169,14 @@ $(function () {
             });
 
             me._setOrientationIconState();
+
+            $(":text", me.element).each(
+                function (index) {
+                    var textinput = $(this);
+                    textinput.on("blur", function () { me.options.$reportViewer.onInputBlur(); });
+                    textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
+                }
+            );
         },
         _isPortrait: function () {
             var me = this;
@@ -211,36 +219,22 @@ $(function () {
             }
         },
         /**
-       * @function $.forerunner.reportPrint#togglePrintPane
-       * @Open or close print pane.
-       */
-        togglePrintPane: function () {
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
             var me = this;
-
-            //To open print pane
-            if (!me._printOpen) {
-                forerunner.dialog.showModalDialog(me.element, function () {
-                    me.element.show();
-                });
-                me._printOpen = true;
-            }
-                //To close print pane
-            else {
-                forerunner.dialog.closeModalDialog(me.element, function () {
-                    me.element.hide();
-                });
-                me._printOpen = false;
-            }
+            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "inline-block");
+            });
         },
         /**
-       * @function $.forerunner.reportDocumentMap#closePrintPane
-       * @close print pane, happened when page switch.
-       */
-        closePrintPane: function () {
+         * @function $.forerunner.userSettings#openDialog
+         */
+        closeDialog: function () {
             var me = this;
-            if (me._printOpen === true) {
-                me.togglePrintPane();
-            }
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "");
+            });
         },
         _validateForm: function (form) {
             form.validate({
@@ -275,7 +269,7 @@ $(function () {
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = me.options.$reportViewer.locData.validateError;
+            var error = me.locData.validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -287,7 +281,7 @@ $(function () {
         _unitConvert: function (milimeter) {
             var me = this;
             //if inch is the country's culture unit then convert milimeter to inch
-            if (me.options.$reportViewer.locData.print.unit === "in") {
+            if (me.locData.print.unit === "in") {
                 return Math.round(milimeter / 25.4 * 100) / 100;
             }
             else {
@@ -297,7 +291,7 @@ $(function () {
         //if inch is the country's culture unit then the source should be inch, otherwise it should be mm (RPL Default).
         _generateUnitConvert: function (source) {
             var me = this;
-            if (me.options.$reportViewer.locData.print.unit === "mm") {
+            if (me.locData.print.unit === "mm") {
                 return Math.round(source / 25.4 * 100) / 100;
             }
             else {

@@ -22,14 +22,14 @@ $(function () {
             $lefttoolbar: null,
             $righttoolbar: null,
             $docMap: null,
-            $print:null,
             ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
             ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
             isReportManager: false,
-            userSettings: null
+            userSettings: null,
+            $appContainer: null
         };
 
         // Merge options with the default settings
@@ -50,7 +50,8 @@ $(function () {
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
                 loadParamsCallback: me.getSavedParameters,
-                userSettings: me.options.userSettings
+                userSettings: me.options.userSettings,
+                $appContainer: me.options.$appContainer
             });
 
             // Create / render the toolbar
@@ -116,10 +117,14 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
-            var $print = me.options.$print;
-            if ($print !== null) {
-                $print.reportPrint({ $reportViewer: $viewer });
-                $viewer.reportViewer("option", "printArea", $print);
+            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-dialog fr-layout-printsection'/>");
+                $dlg.reportPrint({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: $viewer
+                });
+                me.options.$appContainer.append($dlg);
             }
 
             if (me.options.isReportManager) {
@@ -174,7 +179,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
                 }
             );
         },
@@ -198,7 +203,7 @@ $(function () {
                     me.updateFavoriteState.call(me, action === "add");
                 },
                 function () {
-                    forerunner.dialog.showMessageBox(locData.messages.favoriteFailed);
+                    forerunner.dialog.showMessageBox(me.options.$appContainer, locData.messages.favoriteFailed);
                 }
             );
         },

@@ -244,16 +244,6 @@ $(function () {
             reportViewerHidePane: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.hidePane).toLowerCase(); },
 
             /** @constant */
-            inputBlur: "inputBlur",
-            /** widget + event, lowercase */
-            reportViewerInputBlur: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputBlur).toLowerCase(); },
-
-            /** @constant */
-            inputFocus: "inputFocus",
-            /** widget + event, lowercase */
-            reportViewerInputFocus: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.inputFocus).toLowerCase(); },
-
-            /** @constant */
             showModalDialog: "showModalDialog",
 
             /** @constant */
@@ -730,12 +720,12 @@ $(function () {
         /**
        * Show a modal dialog
        *
-       * @function $.forerunner.reportViewer#showModalDialog
-       * @param {function} $container - Modal dialog container
+       * @function forerunner.dialog#showModalDialog
+       * @param {function} $appContainer - Modal dialog container
        * @param {function} showModal - Callback function to show a specific modal dialog
        */
-        showModalDialog: function ($container, showModal) {
-            $container.trigger(forerunner.ssr.constants.events.showModalDialog);
+        showModalDialog: function ($appContainer, showModal) {
+            $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
             if (showModal && typeof (showModal) === "function") {
                 setTimeout(function () { showModal(); }, 50);
@@ -744,12 +734,12 @@ $(function () {
         /**
         * Close a modal dialog
         *
-        * @function $.forerunner.reportViewer#closeModalDialog
-        * @param {function} $container - Modal dialog container
+        * @function forerunner.dialog#closeModalDialog
+        * @param {function} $appContainer - Modal dialog container
         * @param {function} closeModal - Callback function to remove a specific modal dialog
         */
-        closeModalDialog: function ($container, closeModal) {
-            $container.trigger(forerunner.ssr.constants.events.closeModalDialog);
+        closeModalDialog: function ($appContainer, closeModal) {
+            $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
 
             if (closeModal && typeof (closeModal) === "function") {
                 setTimeout(function () { closeModal(); }, 50);
@@ -758,7 +748,7 @@ $(function () {
         /**
         * close all opened modal dialogs with classname 'fr-dialog'
         *
-        * @function $.forerunner.reportViewer#closeAllModalDialogs
+        * @function forerunner.dialog#closeAllModalDialogs
         */
         closeAllModalDialogs: function () {
             var me = this;
@@ -768,16 +758,47 @@ $(function () {
         /**
         * Show message box by modal dialog
         *
-        * @member
+        * @function forerunner.dialog#showMessageBox
+        * @param {function} $appContainer - Modal dialog container
         */
-        showMessageBox: function (msg) {
-            var $msgBox = $(".fr-messagebox");
+        showMessageBox: function ($appContainer, msg) {
+            var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
                 $msgBox = $("<div class='fr-dialog fr-messagebox'/>");
                 $msgBox.messageBox({});
-                $("body").append($msgBox);
+                $appContainer.append($msgBox);
             }
             $msgBox.messageBox("openDialog", msg);
+        },
+        /**
+        * Show the report print, modal dialog
+        *
+        * @function forerunner.dialog#showReportPrintDialog
+        * @param {function} $appContainer - Modal dialog container
+        */
+        showReportPrintDialog: function ($appContainer) {
+            var $dlg = $appContainer.find(".fr-layout-printsection");
+            if ($dlg.length > 0) {
+                $dlg.reportPrint("openDialog");
+            }
+            else {
+                console.log("Error - unable show the report print dialog, '.fr-layout-printsection' not found ");
+            }
+        },
+        /**
+        * Show the report print, modal dialog
+        *
+        * @function forerunner.dialog#showReportPrintDialog
+        * @param {function} $appContainer - Modal dialog container
+        */
+        showUserSettingsDialog: function ($appContainer) {
+            var $dlg = $appContainer.find(".fr-us-layout-section");
+            if ($dlg.length > 0) {
+                $dlg.userSettings("openDialog");
+            }
+            else {
+                console.log("Error - unable show the user settings dialog, '.fr-us-layout-section' not found ");
+            }
         }
     };
 

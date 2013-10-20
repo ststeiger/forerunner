@@ -788,7 +788,7 @@ $(function () {
         /**
         * Show the report print, modal dialog
         *
-        * @function forerunner.dialog#showReportPrintDialog
+        * @function forerunner.dialog#showUserSettingsDialog
         * @param {function} $appContainer - Modal dialog container
         */
         showUserSettingsDialog: function ($appContainer) {

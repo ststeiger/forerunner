@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"Carregando...",
     "completeFind":"todo o relatório já foi revistado",
@@ -23,8 +23,8 @@
     "source":"Fonte",
     "message":"Mensagem",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Obrigado por utilizar o Forerunner Software mobilizador, não parece ser um problema com a sua licença.",
+    "licenseErrorContent":"Por favor, contate o administrador do sistema. Se você é o administrador verifique sua licença na ferramenta de configuração mobilizador."
   },
   "exportType":{
     "xml":"Arquivo XML com dados do relatório",
@@ -105,7 +105,7 @@
     "email":"E-mail inválido",
     "url":"URL inválido",
     "date":"Data inválida",
-    "dateISO":"Data inválida",
+    "dateISO":"Data inválida (yyyy-mm-dd)",
     "number":"Número inválido",
     "digits":"Somente dígitos",
     "maxlength":"Não mais de {0} caracteres",

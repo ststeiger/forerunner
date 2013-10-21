@@ -155,20 +155,24 @@ namespace ReportMannagerConfigTool
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
             builder.DataSource = winform.getTextBoxValue(txtServerName);
             builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
-            if (rdoDomain.Checked)
+            if (!rdoDomain.Checked)
             {
-                builder.UserID = winform.getTextBoxValue(txtDomain) + "\\" + winform.getTextBoxValue(txtUser);
+                builder.UserID = winform.getTextBoxValue(txtUser);
+                builder.Password = winform.getTextBoxValue(txtPWD);
             }
             else
             {
-                builder.UserID = winform.getTextBoxValue(txtUser);
+                builder.IntegratedSecurity = true;
             }
 
-            builder.Password = winform.getTextBoxValue(txtPWD);
-
             Cursor.Current = Cursors.Default;
+            string result;
 
-            string result = configTool.tryConnectDB(builder.ConnectionString);
+            if (rdoDomain.Checked)
+                result = configTool.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
+            else
+                result = configTool.tryConnectDB(builder.ConnectionString);        
+    
             if (result.Equals("True"))
                 winform.showMessage(StaticMessages.connectDBSuccess);
             else

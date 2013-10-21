@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"Luchtú...",
     "completeFind":"Tá an tuarascáil iomlán a chuardach",
@@ -23,8 +23,8 @@
     "source":"Foinse",
     "message":"teachtaireacht",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Go raibh maith agat as úsáid a bhaint as Réamhtheachtaire Bhreandáin Uí Eithir Bogearraí Mobilizer, is cosúil go mbeadh fadhb le do cheadúnas.",
+    "licenseErrorContent":"Téigh i dteagmháil le riarthóir do chórais. Má tá tú ag an riarthóir do thoil fhíorú do cheadúnas san uirlis cumraíochta Mobilizer."
   },
   "exportType":{
     "xml":"Comhad XML le sonraí tuarascáil",
@@ -77,7 +77,7 @@
     "pageWidth":"leithead",
     "marginTop":"Barr",
     "marginBottom":"bun",
-    "marginLeft":"Cl�",
+    "marginLeft":"Clé",
     "marginRight":"ceart",
     "print":"imprimir",
     "cancel":"cancelar",
@@ -86,10 +86,10 @@
     "pageLayoutOptions":"Leathanach roghanna leagan amach"
   },
   "userSettings":{
-    "title":"Socruithe �s�ideoir",
+    "title":"Socruithe Úsáideoir",
     "submit":"Ok",
     "cancel":"Cancelar",
-    "ResponsiveUI":"Chomh�adain sofhreagrach"
+    "ResponsiveUI":"Chomhéadain sofhreagrach"
   },
   "paramPane":{
     "nullField":"Null",

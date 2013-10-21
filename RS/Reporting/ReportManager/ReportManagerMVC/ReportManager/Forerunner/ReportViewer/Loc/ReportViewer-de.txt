@@ -72,22 +72,22 @@
   },
   "print":{
     "title":"Drucken Seitenlayout Option",
-    "pageHeight":"SeiteHÃ¶he",
-    "pageWidth":"Seitenbreite",
-    "marginTop":"MargeTop",
-    "marginBottom":"MargeBottom",
-    "marginLeft":"MargeLinks",
-    "marginRight":"Margerichtig",
+		"pageHeight": "Höhe",
+		"pageWidth": "Breite",
+		"marginTop": "Oberteil",
+		"marginBottom": "Unterseite",
+		"marginLeft": "Links",
+		"marginRight": "Richtig",
     "print":"drucken",
     "cancel":"stornieren",
-    "unit":"mm",
+		"unit": "in",
     "margin":"Margins",
-    "pageLayoutOptions":"Page layout options"
+		"pageLayoutOptions": "Seitenlayoutoptionen"
   },
   "userSettings":{
-    "title":"User Settings",
+	    "title": "Benutzereinstellungen",
     "submit":"Ok",
-    "cancel":"Cancel",
+		"cancel": "Stornieren",
     "ResponsiveUI":"Responsive UI"
   },
   "paramPane":{

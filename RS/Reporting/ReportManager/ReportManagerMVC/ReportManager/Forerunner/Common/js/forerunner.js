@@ -738,11 +738,11 @@ $(function () {
         * @param {function} closeModal - Callback function to remove a specific modal dialog
         */
         closeModalDialog: function ($appContainer, closeModal) {
-            $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
-
             if (closeModal && typeof (closeModal) === "function") {
                 setTimeout(function () { closeModal(); }, 50);
             }
+
+            $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
         * close all opened modal dialogs with classname 'fr-dialog'

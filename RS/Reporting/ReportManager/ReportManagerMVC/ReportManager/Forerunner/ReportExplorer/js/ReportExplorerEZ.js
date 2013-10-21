@@ -54,7 +54,7 @@ $(function () {
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
           
-            layout.$mainviewport.css({ width: "100%", height: "100%"});
+            //layout.$mainviewport.css({ width: "100%", height: "100%"});
 
             if (!path) 
                 path = "/";

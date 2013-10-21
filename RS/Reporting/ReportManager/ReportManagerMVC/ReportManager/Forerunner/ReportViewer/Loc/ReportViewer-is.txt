@@ -71,23 +71,23 @@
   },
   "print":{
     "title":"Prenta Page Layout Valkostur",
-    "pageHeight":"Page HÃ¦Ã°",
-    "pageWidth":"Page Width",
-    "marginTop":"spÃ¡ssÃ­a Top",
-    "marginBottom":"spÃ¡ssÃ­a Bottom",
-    "marginLeft":"spÃ¡ssÃ­a vinstri",
-    "marginRight":"spÃ¡ssÃ­a HÃ¦gri",
+		"pageHeight": "Hæð",
+		"pageWidth": "breidd",
+		"marginTop": "Top",
+		"marginBottom": "Bottom",
+		"marginLeft": "vinstri",
+		"marginRight": "Hægri",
     "print":"Prenta",
     "cancel":"hÃ¦tta",
-    "unit":"mm",
-    "margin":"Margins",
-    "pageLayoutOptions":"Page layout options"
+		"unit": "í",
+		"margin": "framlegð",
+		"pageLayoutOptions": "Útlit síðunnar"
   },
   "userSettings":{
-    "title":"User Settings",
+	    "title": "notandi Stillingar",
     "submit":"Ok",
-    "cancel":"Cancel",
-    "ResponsiveUI":"Responsive UI"
+		"cancel": "hætta",
+		"ResponsiveUI": "móttækilegur HÍ"
   },
   "paramPane":{
     "nullField":"Zero",
@@ -95,7 +95,7 @@
     "isFalse":"False",
     "required":"krafist",
     "viewReport":"SkoÃ°a skÃ½rslu",
-    "cancel":"cancel"
+		"cancel": "hætta"
   },
   "validateError":{
     "required":"krafist",
@@ -118,8 +118,8 @@
     "close":"loka"
   },
   "placeholders":{
-    "Username":"User name",
-    "Password":"Password",
-    "Login":"Login"
+	    "Username":"notandanafn", 
+	    "Password":"lykilorð", 
+	    "Login": "Innskráning" 
   }
 }

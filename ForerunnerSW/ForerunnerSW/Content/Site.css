@@ -5,8 +5,8 @@ a { text-decoration: none;}
 a:hover {text-decoration:none; cursor:pointer;}
 img {border:none}
 body {font-size: .85em;font-family:  Helvetica, Arial, sans-serif; color: #333333; background-color: #fff; line-height: 22px; margin:0;padding:0;}
-input{-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;padding:5px;}
-.Rounded {-webkit-border-radius: 1px;-moz-border-radius: 1px;border-radius: 1px;}
+input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padding:5px;}
+.Rounded {-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 .Center{ display:table;margin: 0 auto;}
 .InlineBlock{display:inline-block;}
 

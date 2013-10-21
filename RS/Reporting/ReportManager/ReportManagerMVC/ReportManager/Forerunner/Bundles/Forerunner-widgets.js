@@ -2318,7 +2318,7 @@ $(function () {
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
                 me.scrollLock = true;
-                me.scrollToPosition({ left: 0, top: 0, innerLeft: 0, innerTop: 0 });
+                me.scrollToPosition(me.getOriginalPosition());
             });
 
             me.$container.on(events.closeModalDialog, function () {
@@ -2364,7 +2364,7 @@ $(function () {
                 if (me.$container.hasClass('fr-layout-container-noscroll')) {
 
                     var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                        || me._containElement(e.target, 'fr-layout-rightpane');
+                        || me._containElement(e.target, 'fr-layout-rightpane') || me._containElement(e.target, 'fr-print-form');
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -2497,7 +2497,7 @@ $(function () {
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
             me.$leftpane.css({ height: heightValues.max });
             me.$rightpane.css({ height: heightValues.max });
-            me.$mainviewport.css({ height: "100%" });
+            //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
         },
@@ -2559,6 +2559,7 @@ $(function () {
             var onInputFocus = function () {
                 if (me.options.isFullScreen)
                     me._makePositionAbsolute();
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };
@@ -2566,6 +2567,7 @@ $(function () {
             var onInputBlur = function () {
                 if (me.options.isFullScreen)
                     me._makePositionFixed();
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };
@@ -2582,16 +2584,21 @@ $(function () {
             position.innerTop = me.$container.scrollTop();
             return position;
         },
+        getOriginalPosition: function () {
+            var me = this;
+            return { left: me.$container.offset().left > 100 ? me.$container.offset().left : 0, top: 0, innerLeft: 0, innerTop: 0 };
+        },
         scrollToPosition: function (position) {
             var me = this;
             if (!me.savePosition)
                 me.savePosition = me.getScrollPosition();
-            $(window).scrollLeft(position.left);
-            $(window).scrollTop(position.top);
-
-            if (position.innerLeft !== undefined)
+            if (position.left !== null)
+                $(window).scrollLeft(position.left);
+            if (position.top !== null)
+                $(window).scrollTop(position.top);
+            if (position.innerLeft !== null)
                 me.$container.scrollLeft(position.innerLeft);
-            if (position.innerTop !== undefined)
+            if (position.innerTop !== null)
                 me.$container.scrollTop(position.innerTop);
         },
         restoreScrollPosition: function () {
@@ -2604,13 +2611,16 @@ $(function () {
                 me.savePosition = null;
             }
         },
-        hideAddressBar: function () {
+        hideAddressBar: function (isLeftPane) {
             var me = this;
+            var containerPosition = me.getOriginalPosition();
+            if (!isLeftPane) containerPosition.left = null;
+
             if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition( {left: 0, top: 1} ); }, 50);
+                setTimeout(function () { me.scrollToPosition(containerPosition); }, 50);
             }
             else {
-                setTimeout(function () { me.scrollToPosition( { left: 0, top: 1 } ); }, 0);
+                setTimeout(function () { me.scrollToPosition(containerPosition); }, 0);
             }
         },
         restoreScroll: function () {
@@ -2695,7 +2705,7 @@ $(function () {
             me.$pagesection.addClass("fr-layout-pagesection-noscroll");
             
             // Make sure the address bar is not showing when a side out pane is showing
-            me.hideAddressBar();
+            me.hideAddressBar(isLeftPane);
             me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
@@ -2712,36 +2722,20 @@ $(function () {
             }
         },
         setBackgroundLayout: function () {
-            var reportArea = $('.fr-report-areacontainer');
-            var documentHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
-            var documentWidth = Math.max(document.body.clientWidth, document.documentElement.clientWidth);
-
-            if (reportArea.height() > (documentHeight - 38) // 38 is toolbar height
-                    || reportArea.width() > documentWidth) {
-                
-                $(".fr-render-bglayer").css("position", "absolute").
-                    css("height", Math.max(reportArea.height(), (documentHeight - 38)))
-                    .css("width", Math.max(reportArea.width(), documentWidth));
+            var me = this;
+            var reportArea = $('.fr-report-areacontainer', me.$container);
+            var containerHeight = me.$container.height();
+            var containerWidth = me.$container.width();
+            
+            if (reportArea.height() > (containerHeight - 38) || reportArea.width() > containerWidth) {// 38 is toolbar height
+                $(".fr-render-bglayer", me.$container).css("position", "absolute").
+                    css("height", Math.max(reportArea.height(), (containerHeight - 38)))
+                    .css("width", Math.max(reportArea.width(), containerWidth));
             }
             else {
-                $(".fr-render-bglayer").css("position", "absolute")
-                    .css("height", (documentHeight - 38)).css("width", documentWidth);
+                $(".fr-render-bglayer", me.$container).css("position", "absolute")
+                    .css("height", (containerHeight - 38)).css("width", containerWidth);
             }
-            
-            //if (me.options.isFullScreen) {
-            //    $('.fr-render-bglayer').css('position', 'fixed').css('top', 38)
-            //       .css('height', Math.max(reportArea.height(), document.documentElement.clientHeight - 38))
-            //       .css('width', Math.max(reportArea.width(), document.documentElement.clientWidth));
-            //} else {
-            //    var height = reportArea.height() - 38;
-            //    var width = reportArea.width();
-            //    if (reportArea.height() > document.documentElement.clientHeight - 38)
-            //        height = document.documentElement.clientHeight - 38;
-            //    if (reportArea.width() > document.documentElement.clientWidth)
-            //        width = document.documentElement.clientWidth;
-            //    $('.fr-render-bglayer').css('position', 'absolute').css('top', 38)
-            //        .css('height', height).css('width', width);
-            //}
         },
 
         _selectedItemPath: null,
@@ -7027,7 +7021,7 @@ $(function () {
                 path = "/";
             }
 
-            layout.$mainviewport.css({ width: "100%", height: "100%" });
+            //layout.$mainviewport.css({ width: "100%", height: "100%" });
             layout.$mainsection.html(null);
             var $viewer = new $("<DIV />");
             $viewer.addClass("fr-layout-reportviewer");
@@ -7132,7 +7126,7 @@ $(function () {
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
           
-            layout.$mainviewport.css({ width: "100%", height: "100%"});
+            //layout.$mainviewport.css({ width: "100%", height: "100%"});
 
             if (!path) 
                 path = "/";

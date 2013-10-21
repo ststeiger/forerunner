@@ -69,27 +69,27 @@
     "reportPage":"Страница Отчета",
     "zoom":"Enable Zoom",
     "print":"Напечатать",
-    "userSettings":"Settings"
+		"userSettings": "?????"
   },
   "print":{
     "title":"Возможность печати макета страницы",
-    "pageHeight":"Страница Высота",
-    "pageWidth":"Ширина страницы",
-    "marginTop":"Верхняя граница",
-    "marginBottom":"Нижняя граница",
-    "marginLeft":"Слева граница",
-    "marginRight":"право граница",
+		"pageHeight": "??????",
+		"pageWidth": "??????",
+		"marginTop": "???????",
+		"marginBottom": "??????",
+		"marginLeft": "???????",
+		"marginRight": "?????",
     "print":"печатать",
     "cancel":"отменить",
-    "unit":"mm",
-    "margin":"Margins",
-    "pageLayoutOptions":"Page layout options"
+		"unit": "B",
+		"margin": "????",
+		"pageLayoutOptions": "????????? ?????? ????????"
   },
   "userSettings":{
-    "title":"User Settings",
-    "submit":"Ok",
-    "cancel":"Cancel",
-    "ResponsiveUI":"Responsive UI"
+	    "title": "????????? ????????????",
+		"submit": "?????????",
+		"cancel": "????????",
+		"ResponsiveUI": "?????????? ?????????"
   },
   "paramPane":{
     "nullField":"Ноль",
@@ -97,7 +97,7 @@
     "isFalse":"Неверно",
     "required":"Необходимый",
     "viewReport":"Показать отчет",
-    "cancel":"cancel"
+		"cancel": "????????"
   },
   "validateError":{
     "required":"Необходимый",

@@ -69,27 +69,27 @@
     "reportPage":"ページ",
     "zoom":"ズームを有効にする",
     "print":"刷り出す",
-    "userSettings":"Settings"
+		"userSettings": "??"
   },
   "print":{
     "title":"ページレイアウトオプションを印刷",
-    "pageHeight":"ページの高さ",
-    "pageWidth":"ページ幅",
-    "marginTop":"マージントップ",
-    "marginBottom":"マージンボトム",
-    "marginLeft":"マージンは左",
-    "marginRight":"マージン右",
+		"pageHeight": "??",
+		"pageWidth": "?",
+		"marginTop": "???",
+		"marginBottom": "???",
+		"marginLeft": "?",
+		"marginRight": "?",
     "print":"印刷",
     "cancel":"キャンセル",
-    "unit":"mm",
-    "margin":"Margins",
-    "pageLayoutOptions":"Page layout options"
+		"unit": "?",
+		"margin": "????",
+		"pageLayoutOptions": "?????????????"
   },
   "userSettings":{
-    "title":"User Settings",
-    "submit":"Ok",
-    "cancel":"Cancel",
-    "ResponsiveUI":"Responsive UI"
+	    "title": "??????",
+		"submit": "????",
+		"cancel": "?????",
+		"ResponsiveUI": "??????UI"
   },
   "paramPane":{
     "nullField":"ゼロ",
@@ -97,7 +97,7 @@
     "isFalse":"僻",
     "required":"必修",
     "viewReport":"レポートの表示",
-    "cancel":"cancel"
+		"cancel": "?????"
   },
   "validateError":{
     "required":"必修",

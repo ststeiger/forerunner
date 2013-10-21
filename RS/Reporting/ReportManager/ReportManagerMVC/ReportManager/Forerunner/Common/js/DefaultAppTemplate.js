@@ -162,7 +162,7 @@ $(function () {
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
                 me.scrollLock = true;
-                me.scrollToPosition({ left: 0, top: 0, innerLeft: 0, innerTop: 0 });
+                me.scrollToPosition(me.getOriginalPosition());
             });
 
             me.$container.on(events.closeModalDialog, function () {
@@ -208,7 +208,7 @@ $(function () {
                 if (me.$container.hasClass('fr-layout-container-noscroll')) {
 
                     var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                        || me._containElement(e.target, 'fr-layout-rightpane');
+                        || me._containElement(e.target, 'fr-layout-rightpane') || me._containElement(e.target, 'fr-print-form');
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -403,6 +403,7 @@ $(function () {
             var onInputFocus = function () {
                 if (me.options.isFullScreen)
                     me._makePositionAbsolute();
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };
@@ -410,6 +411,7 @@ $(function () {
             var onInputBlur = function () {
                 if (me.options.isFullScreen)
                     me._makePositionFixed();
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
             };
@@ -426,16 +428,21 @@ $(function () {
             position.innerTop = me.$container.scrollTop();
             return position;
         },
+        getOriginalPosition: function () {
+            var me = this;
+            return { left: me.$container.offset().left > 100 ? me.$container.offset().left : 0, top: 0, innerLeft: 0, innerTop: 0 };
+        },
         scrollToPosition: function (position) {
             var me = this;
             if (!me.savePosition)
                 me.savePosition = me.getScrollPosition();
-            $(window).scrollLeft(position.left);
-            $(window).scrollTop(position.top);
-
-            if (position.innerLeft !== undefined)
+            if (position.left !== null)
+                $(window).scrollLeft(position.left);
+            if (position.top !== null)
+                $(window).scrollTop(position.top);
+            if (position.innerLeft !== null)
                 me.$container.scrollLeft(position.innerLeft);
-            if (position.innerTop !== undefined)
+            if (position.innerTop !== null)
                 me.$container.scrollTop(position.innerTop);
         },
         restoreScrollPosition: function () {
@@ -448,13 +455,16 @@ $(function () {
                 me.savePosition = null;
             }
         },
-        hideAddressBar: function () {
+        hideAddressBar: function (isLeftPane) {
             var me = this;
+            var containerPosition = me.getOriginalPosition();
+            if (!isLeftPane) containerPosition.left = null;
+
             if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition( {left: 0, top: 1} ); }, 50);
+                setTimeout(function () { me.scrollToPosition(containerPosition); }, 50);
             }
             else {
-                setTimeout(function () { me.scrollToPosition( { left: 0, top: 1 } ); }, 0);
+                setTimeout(function () { me.scrollToPosition(containerPosition); }, 0);
             }
         },
         restoreScroll: function () {
@@ -539,7 +549,7 @@ $(function () {
             me.$pagesection.addClass("fr-layout-pagesection-noscroll");
             
             // Make sure the address bar is not showing when a side out pane is showing
-            me.hideAddressBar();
+            me.hideAddressBar(isLeftPane);
             me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {

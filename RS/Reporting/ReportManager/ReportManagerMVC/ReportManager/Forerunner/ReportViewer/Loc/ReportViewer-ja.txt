@@ -1,127 +1,127 @@
-﻿{
-    "messages": {
-        "loading": "積載...",
-        "completeFind": "レポート全体が検索されています",
-        "keyNotFound": "キーが見つからない",
-        "sessionExpired": "セッションが期限切れになった",
-        "imageNotDisplay": "画像を表示することができません",
-		"saveParamSuccess":"保存",
-		"saveParamFailed":"失敗した",
-		"catalogsLoadFailed":"サーバーからのカタログのロードに失敗しました。もう一度やり直してください。",
-		"paramFieldEmpty":"パラメータには値がありません",
-		"contactAdmin":"ヘルプのレポート管理者に連絡してください",
-		"favoriteFailed":"失敗した",
-		"docmapShowFailed":"失敗した",
-		"prepareActionFailed":"失敗した",
-		"bookmarkNotFound":"レポートにブックマークを見つけることができません"
-    },
-    "errorTag": {
-        "moreDetail": "詳細はクリック",
-        "serverError": "例外は、サーバからスロー",
-        "type": "タイプ",
-        "targetSite": "標的部位",
-        "source": "劈頭",
-        "message": "言付け",
-        "stackTrace": "StackTraceは"
-    },
-    "exportType": {
-        "xml": "XML レポートデータを持つファイル",
-        "csv": "CSV (カンマ区切り)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (ウェブアーカイブ)",
-        "excel": "Excel",
-        "tiff": "TIFF ファイル",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "の",
-        "home": "原産地",
-        "navigation": "ナビゲーション",
-        "favorites": "お気に入り",
-        "back": "裏面",
-        "refresh": "リフレッシュ",
-        "docMap": "ドキュメントマップ",
-        "find": "見つける",
-        "next": "次",
-		"zoom": "ズームを有効にする",
-		"print": "刷る"
-    },
-	"toolbar": {
-        "back": "裏面",
-        "docMap": "ドキュメントマップ",
-        "exportMenu": "輸出する",
-        "favorites": "お気に入り",
-        "find": "見附る",
-        "firstPage": "最初",
-        "home": "自宅",
-		"keyword": "キーワード",
-		"lastPage": "最後の人",
-		"menu": "メニュー",
-        "navigation": "ナビゲーション",
-        "next": "明くる",
-        "pageOf": "の",
-		"paramarea": "パラメータ",
-		"previousPage": "前件",
-		"recent": "最近",
-        "refresh": "リフレッシュ",
-		"reportPage": "ページ",
-		"zoom": "ズームを有効にする",
-		"print": "刷り出す",
-		"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "ページレイアウトオプションを印刷",
-		"pageHeight": "ページの高さ",
-		"pageWidth": "ページ幅",
-		"marginTop": "マージントップ",
-		"marginBottom": "マージンボトム",
-		"marginLeft": "マージンは左",
-		"marginRight": "マージン右",
-		"print": "印刷",
-		"cancel": "キャンセル",
-		"unit": "mm",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
-	},
-	"userSettings": {
-	    "title": "User Settings",
-		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
-	},
-	"paramPane": {
-        "nullField": "ゼロ",
-        "isTrue": "真",
-        "isFalse": "僻",
-        "required": "必修",
-        "viewReport": "レポートの表示",
-		"cancel": "cancel"
-    },
-	"validateError": {
-		"required": "必修",
-		"remote": "このフィールドを修正してください",
-		"email": "無効な電子メール",
-		"url": "病弱な URL",
-		"date": "無効な日付",
-		"dateISO": "無効な日付",
-		"number": "無効な数値",
-		"digits": "数字だけ",
-		"maxlength": "{0}文字以上のものない",
-		"minlength": "少なくとも{0}文字で",
-		"rangelength": "{0}と{1}文字の長さの値を入力します",
-		"range": "{0}との間の値を入力して{1}",
-		"max": "以下{0}に等しい値を入力してください",
-		"min": "以上{0}に等しい値を入力します"
-	},
-	"dialog":{
-	    "title":"プロンプト",
-		"close":"閉じる"
-	},
-	"placeholders":{ 
-	    "Username":"ユーザー名", 
-	    "Password":"パスワード", 
-	    "Login": "ログイン" 
-	}
+{
+  "messages":{
+    "loading":"積載...",
+    "completeFind":"レポート全体が検索されています",
+    "keyNotFound":"キーが見つからない",
+    "sessionExpired":"セッションが期限切れになった",
+    "imageNotDisplay":"画像を表示することができません",
+    "saveParamSuccess":"保存",
+    "saveParamFailed":"失敗した",
+    "catalogsLoadFailed":"サーバーからのカタログのロードに失敗しました。もう一度やり直してください。",
+    "paramFieldEmpty":"パラメータには値がありません",
+    "contactAdmin":"ヘルプのレポート管理者に連絡してください",
+    "favoriteFailed":"失敗した",
+    "docmapShowFailed":"失敗した",
+    "prepareActionFailed":"失敗した",
+    "bookmarkNotFound":"レポートにブックマークを見つけることができません"
+  },
+  "errorTag":{
+    "moreDetail":"詳細はクリック",
+    "serverError":"例外は、サーバからスロー",
+    "type":"タイプ",
+    "targetSite":"標的部位",
+    "source":"劈頭",
+    "message":"言付け",
+    "stackTrace":"StackTraceは",
+    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+  },
+  "exportType":{
+    "xml":"XML レポートデータを持つファイル",
+    "csv":"CSV (カンマ区切り)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (ウェブアーカイブ)",
+    "excel":"Excel",
+    "tiff":"TIFF ファイル",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"の",
+    "home":"原産地",
+    "navigation":"ナビゲーション",
+    "favorites":"お気に入り",
+    "back":"裏面",
+    "refresh":"リフレッシュ",
+    "docMap":"ドキュメントマップ",
+    "find":"見つける",
+    "next":"次",
+    "zoom":"ズームを有効にする",
+    "print":"刷る"
+  },
+  "toolbar":{
+    "back":"裏面",
+    "docMap":"ドキュメントマップ",
+    "exportMenu":"輸出する",
+    "favorites":"お気に入り",
+    "find":"見附る",
+    "firstPage":"最初",
+    "home":"自宅",
+    "keyword":"キーワード",
+    "lastPage":"最後の人",
+    "menu":"メニュー",
+    "navigation":"ナビゲーション",
+    "next":"明くる",
+    "pageOf":"の",
+    "paramarea":"パラメータ",
+    "previousPage":"前件",
+    "recent":"最近",
+    "refresh":"リフレッシュ",
+    "reportPage":"ページ",
+    "zoom":"ズームを有効にする",
+    "print":"刷り出す",
+    "userSettings":"Settings"
+  },
+  "print":{
+    "title":"ページレイアウトオプションを印刷",
+    "pageHeight":"ページの高さ",
+    "pageWidth":"ページ幅",
+    "marginTop":"マージントップ",
+    "marginBottom":"マージンボトム",
+    "marginLeft":"マージンは左",
+    "marginRight":"マージン右",
+    "print":"印刷",
+    "cancel":"キャンセル",
+    "unit":"mm",
+    "margin":"Margins",
+    "pageLayoutOptions":"Page layout options"
+  },
+  "userSettings":{
+    "title":"User Settings",
+    "submit":"Ok",
+    "cancel":"Cancel",
+    "ResponsiveUI":"Responsive UI"
+  },
+  "paramPane":{
+    "nullField":"ゼロ",
+    "isTrue":"真",
+    "isFalse":"僻",
+    "required":"必修",
+    "viewReport":"レポートの表示",
+    "cancel":"cancel"
+  },
+  "validateError":{
+    "required":"必修",
+    "remote":"このフィールドを修正してください",
+    "email":"無効な電子メール",
+    "url":"病弱な URL",
+    "date":"無効な日付",
+    "dateISO":"無効な日付",
+    "number":"無効な数値",
+    "digits":"数字だけ",
+    "maxlength":"{0}文字以上のものない",
+    "minlength":"少なくとも{0}文字で",
+    "rangelength":"{0}と{1}文字の長さの値を入力します",
+    "range":"{0}との間の値を入力して{1}",
+    "max":"以下{0}に等しい値を入力してください",
+    "min":"以上{0}に等しい値を入力します"
+  },
+  "dialog":{
+    "title":"プロンプト",
+    "close":"閉じる"
+  },
+  "placeholders":{
+    "Username":"ユーザー名",
+    "Password":"パスワード",
+    "Login":"ログイン"
+  }
 }
-
-        

@@ -1,127 +1,127 @@
-﻿{
-    "messages": {
-        "loading": "Laddar...",
-        "completeFind": "Hela rapporten har sökts igenom",
-        "keyNotFound": "Tangenten hittades inte",
-        "sessionExpired": "Din session har gått ut",
-        "imageNotDisplay": "Bilden kan inte visas",
-		"saveParamSuccess":"Sparad",
-		"saveParamFailed":"Misslyckades",
-		"catalogsLoadFailed":"Misslyckades med att läsa katalogerna från servern. Vänligen försök igen.",
-		"paramFieldEmpty":"parameter saknas ett värde",
-		"contactAdmin":"Vänligen kontakta rapporten om hjälp",
-		"favoriteFailed":"Misslyckades",
-		"docmapShowFailed":"Misslyckades",
-		"prepareActionFailed":"Misslyckades",
-		"bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
-    },
-    "errorTag": {
-        "moreDetail": "Klicka för mer information",
-        "serverError": "Undantag kastat från servern",
-        "type": "Stilsort",
-        "targetSite": "targetSite",
-        "source": "källa",
-        "message": "meddelande",
-        "stackTrace": "StackTrace"
-    },
-    "exportType": {
-        "xml": "XML fil med rapportdata",
-        "csv": "CSV (kommaseparerad)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (webbarkiv)",
-        "excel": "Excel",
-        "tiff": "TIFF fil",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "Av",
-        "home": "Hem",
-        "navigation": "Navigering",
-        "favorites": "favoriter",
-        "back": "bakåt",
-        "refresh": "Uppdatera",
-        "docMap": "Dokumentkarta",
-        "find": "Hitta",
-        "next": "nästa",
-	"zoom": "Aktivera Zoom",
-	"print": "Skriv ut"
-    },
-	"toolbar": {
-        "back": "bakåt",
-        "docMap": "Dokumentkarta",
-        "exportMenu": "Export",
-        "favorites": "favoriter",
-        "find": "hitta",
-        "firstPage": "Först",
-        "home": "Hem",
-	"keyword": "Nyckelord",
-	"lastPage": "Sista",
-	"menu": "Meny",
-        "navigation": "Navigering",
-        "next": "Nästa",
-        "pageOf": "av",
-	"paramarea": "Parametrar",
-	"previousPage": "Föregående",
-	"recent": "senast",
-        "refresh": "Uppdatera",
-	"reportPage": "Sida",
-	"zoom": "Aktivera Zoom",
-	"print": "Skriv ut",
-	"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "Skriv Option Sidlayout",
-		"pageHeight": "Sidan Höjd",
-		"pageWidth": "sidan Bredd",
-		"marginTop": "marginal Top",
-		"marginBottom": "marginal Botten",
-		"marginLeft": "marginal Vänster",
-		"marginRight": "marginal höger",
-		"print": "skriva ut",
-		"cancel": "avbryta",
-		"unit": "mm",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
-	},
-	"userSettings": {
-	    "title": "User Settings",
-		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
-	},
-	"paramPane": {
-        "nullField": "Noll",
-        "isTrue": "Sant",
-        "isFalse": "Falskt",
-        "required": "krävs",
-        "viewReport": "Visa rapport",
-		"cancel": "cancel"
-    },
-	"validateError": {
-	"required": "krävs",
-	"remote": "Vänligen fixa detta f!ält",
-	"email": "Ogiltigt e-mail",
-	"url": "Ogiltigt URL",
-	"date": "Ogiltigt Datum",
-	"dateISO": "Ogiltigt Datum",
-	"number": "Ogiltigt Antal",
-	"digits": "Endast siffror",
-	"maxlength": "Inte mer än {0} tecken",
-	"minlength": "Minst {0} tecken",
-	"rangelength": "Ange ett värde mellan {0} och {1} tecken långa",
-	"range": "Ange ett värde mellan {0} och {1}",
-	"max": "Ange ett värde mindre än eller lika med {0}",
-	"min": "Ange ett värde som är större än eller lika med {0}"
-	},
-	"dialog":{
-	    "title":"föranleda",
-		"close":"nära"
-	},
-	"placeholders":{ 
-	    "Username":"User name", 
-	    "Password":"Password", 
-	    "Login": "Login" 
-	}
+{
+  "messages":{
+    "loading":"Laddar...",
+    "completeFind":"Hela rapporten har sökts igenom",
+    "keyNotFound":"Tangenten hittades inte",
+    "sessionExpired":"Din session har gått ut",
+    "imageNotDisplay":"Bilden kan inte visas",
+    "saveParamSuccess":"Sparad",
+    "saveParamFailed":"Misslyckades",
+    "catalogsLoadFailed":"Misslyckades med att läsa katalogerna från servern. Vänligen försök igen.",
+    "paramFieldEmpty":"parameter saknas ett värde",
+    "contactAdmin":"Vänligen kontakta rapporten om hjälp",
+    "favoriteFailed":"Misslyckades",
+    "docmapShowFailed":"Misslyckades",
+    "prepareActionFailed":"Misslyckades",
+    "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
+  },
+  "errorTag":{
+    "moreDetail":"Klicka för mer information",
+    "serverError":"Undantag kastat från servern",
+    "type":"Stilsort",
+    "targetSite":"targetSite",
+    "source":"källa",
+    "message":"meddelande",
+    "stackTrace":"StackTrace",
+    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+  },
+  "exportType":{
+    "xml":"XML fil med rapportdata",
+    "csv":"CSV (kommaseparerad)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (webbarkiv)",
+    "excel":"Excel",
+    "tiff":"TIFF fil",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"Av",
+    "home":"Hem",
+    "navigation":"Navigering",
+    "favorites":"favoriter",
+    "back":"bakåt",
+    "refresh":"Uppdatera",
+    "docMap":"Dokumentkarta",
+    "find":"Hitta",
+    "next":"nästa",
+    "zoom":"Aktivera Zoom",
+    "print":"Skriv ut"
+  },
+  "toolbar":{
+    "back":"bakåt",
+    "docMap":"Dokumentkarta",
+    "exportMenu":"Export",
+    "favorites":"favoriter",
+    "find":"hitta",
+    "firstPage":"Först",
+    "home":"Hem",
+    "keyword":"Nyckelord",
+    "lastPage":"Sista",
+    "menu":"Meny",
+    "navigation":"Navigering",
+    "next":"Nästa",
+    "pageOf":"av",
+    "paramarea":"Parametrar",
+    "previousPage":"Föregående",
+    "recent":"senast",
+    "refresh":"Uppdatera",
+    "reportPage":"Sida",
+    "zoom":"Aktivera Zoom",
+    "print":"Skriv ut",
+    "userSettings":"Settings"
+  },
+  "print":{
+    "title":"Skriv Option Sidlayout",
+    "pageHeight":"Sidan Höjd",
+    "pageWidth":"sidan Bredd",
+    "marginTop":"marginal Top",
+    "marginBottom":"marginal Botten",
+    "marginLeft":"marginal Vänster",
+    "marginRight":"marginal höger",
+    "print":"skriva ut",
+    "cancel":"avbryta",
+    "unit":"mm",
+    "margin":"Margins",
+    "pageLayoutOptions":"Page layout options"
+  },
+  "userSettings":{
+    "title":"User Settings",
+    "submit":"Ok",
+    "cancel":"Cancel",
+    "ResponsiveUI":"Responsive UI"
+  },
+  "paramPane":{
+    "nullField":"Noll",
+    "isTrue":"Sant",
+    "isFalse":"Falskt",
+    "required":"krävs",
+    "viewReport":"Visa rapport",
+    "cancel":"cancel"
+  },
+  "validateError":{
+    "required":"krävs",
+    "remote":"Vänligen fixa detta f!ält",
+    "email":"Ogiltigt e-mail",
+    "url":"Ogiltigt URL",
+    "date":"Ogiltigt Datum",
+    "dateISO":"Ogiltigt Datum",
+    "number":"Ogiltigt Antal",
+    "digits":"Endast siffror",
+    "maxlength":"Inte mer än {0} tecken",
+    "minlength":"Minst {0} tecken",
+    "rangelength":"Ange ett värde mellan {0} och {1} tecken långa",
+    "range":"Ange ett värde mellan {0} och {1}",
+    "max":"Ange ett värde mindre än eller lika med {0}",
+    "min":"Ange ett värde som är större än eller lika med {0}"
+  },
+  "dialog":{
+    "title":"föranleda",
+    "close":"nära"
+  },
+  "placeholders":{
+    "Username":"User name",
+    "Password":"Password",
+    "Login":"Login"
+  }
 }
-
-        

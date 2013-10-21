@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"加載中...",
     "completeFind":"全個報告尋找完畢",
@@ -36,7 +36,7 @@
     "word":"Word"
   },
   "toolPane":{
-    "pageOf":"of",
+    "pageOf":"\/",
     "home":"主頁",
     "navigation":"導航",
     "favorites":"收藏",
@@ -61,7 +61,7 @@
     "menu":"項目單",
     "navigation":"導航",
     "next":"下一個",
-    "pageOf":"of",
+    "pageOf":"\/",
     "paramarea":"參數",
     "previousPage":"前一頁",
     "recent":"最近",

@@ -73,23 +73,23 @@
   },
   "print":{
     "title":"Imprimir pÃ¡gina de opÃ§Ã£o de layout",
-		"pageHeight": "Altura",
-		"pageWidth": "Largura",
-		"marginTop": "superior",
-		"marginBottom": "inferior",
-		"marginLeft": "Esquerda",
-		"marginRight": "Direita",
+    "pageHeight":"Altura",
+    "pageWidth":"Largura",
+    "marginTop":"superior",
+    "marginBottom":"inferior",
+    "marginLeft":"Esquerda",
+    "marginRight":"Direita",
     "print":"imprimir",
     "cancel":"cancelar",
-		"unit": "em",
-		"margin": "margens",
-		"pageLayoutOptions": "Opções de layout de página"
+    "unit":"em",
+    "margin":"margens",
+    "pageLayoutOptions":"Opï¿½ï¿½es de layout de pï¿½gina"
   },
   "userSettings":{
-	    "title": "Configurações do Usuário",
+    "title":"Configuraï¿½ï¿½es do Usuï¿½rio",
     "submit":"Ok",
-		"cancel": "cancelar",
-		"ResponsiveUI": "UI Responsive"
+    "cancel":"cancelar",
+    "ResponsiveUI":"UI Responsive"
   },
   "paramPane":{
     "nullField":"Nulo",
@@ -97,7 +97,7 @@
     "isFalse":"Falso",
     "required":"NecessÃ¡rio",
     "viewReport":"Exibir relatÃ³rio",
-		"cancel": "cancelar"
+    "cancel":"cancelar"
   },
   "validateError":{
     "required":"NecessÃ¡rio",

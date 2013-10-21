@@ -74,23 +74,23 @@
   },
   "print":{
     "title":"Imprimer option de mise en",
-		"pageHeight": "Hauteur",
-		"pageWidth": "Largeur",
-		"marginTop": "Haut",
-		"marginBottom": "inférieur",
-		"marginLeft": "gauche",
-		"marginRight": "droite",
+    "pageHeight":"Hauteur",
+    "pageWidth":"Largeur",
+    "marginTop":"Haut",
+    "marginBottom":"infï¿½rieur",
+    "marginLeft":"gauche",
+    "marginRight":"droite",
     "print":"Imprimer",
     "cancel":"rÃ©silier",
-		"unit": "à",
-		"margin": "marges",
-		"pageLayoutOptions": "Les options de mise"
+    "unit":"ï¿½",
+    "margin":"marges",
+    "pageLayoutOptions":"Les options de mise"
   },
   "userSettings":{
-	    "title": "Paramètres de l'utilisateur",
+    "title":"Paramï¿½tres de l\u0027utilisateur",
     "submit":"Ok",
-		"cancel": "résilier",
-		"ResponsiveUI": "interface utilisateur réactive"
+    "cancel":"rï¿½silier",
+    "ResponsiveUI":"interface utilisateur rï¿½active"
   },
   "paramPane":{
     "nullField":"ZÃ©ro",
@@ -98,7 +98,7 @@
     "isFalse":"Faux",
     "required":"Voulu",
     "viewReport":"Voir le Rapport",
-		"cancel": "résilier"
+    "cancel":"rï¿½silier"
   },
   "validateError":{
     "required":"DemandÃ©",

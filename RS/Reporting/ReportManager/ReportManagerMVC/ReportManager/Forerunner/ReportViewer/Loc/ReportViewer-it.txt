@@ -73,23 +73,23 @@
   },
   "print":{
     "title":"Stampa Pagina opzione di layout",
-		"pageHeight": "Altezza",
-		"pageWidth": "Larghezza",
-		"marginTop": "alto",
-		"marginBottom": "inferiore",
-		"marginLeft": "sinistro",
-		"marginRight": "destro",
+    "pageHeight":"Altezza",
+    "pageWidth":"Larghezza",
+    "marginTop":"alto",
+    "marginBottom":"inferiore",
+    "marginLeft":"sinistro",
+    "marginRight":"destro",
     "print":"Stampa",
     "cancel":"annullare",
-		"unit": "in",
-		"margin": "margini",
-		"pageLayoutOptions": "Opzioni layout pagina"
+    "unit":"in",
+    "margin":"margini",
+    "pageLayoutOptions":"Opzioni layout pagina"
   },
   "userSettings":{
-	    "title": "Impostazioni utente",
+    "title":"Impostazioni utente",
     "submit":"Ok",
-		"cancel": "cancellare",
-		"ResponsiveUI": "UI Responsive"
+    "cancel":"cancellare",
+    "ResponsiveUI":"UI Responsive"
   },
   "paramPane":{
     "nullField":"Zero",
@@ -97,7 +97,7 @@
     "isFalse":"Falso",
     "required":"Richiesto",
     "viewReport":"Visualizza report",
-		"cancel": "cancellare"
+    "cancel":"cancellare"
   },
   "validateError":{
     "required":"Richiesto",

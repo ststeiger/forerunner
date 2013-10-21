@@ -73,23 +73,23 @@
   },
   "print":{
     "title":"OpÈ›iunea Print Page Layout",
-		"pageHeight": "proportie",
-		"pageWidth": "orizontal",
-		"marginTop": "de sus",
-		"marginBottom": "baza",
-		"marginLeft": "la stânga",
-		"marginRight": "corect",
+    "pageHeight":"proportie",
+    "pageWidth":"orizontal",
+    "marginTop":"de sus",
+    "marginBottom":"baza",
+    "marginLeft":"la stï¿½nga",
+    "marginRight":"corect",
     "print":"imprima",
     "cancel":"anula",
-		"unit": "în",
-		"margin": "Margini",
-		"pageLayoutOptions": "Op?iuni Macheta Pagina"
+    "unit":"ï¿½n",
+    "margin":"Margini",
+    "pageLayoutOptions":"Op?iuni Macheta Pagina"
   },
   "userSettings":{
-	    "title": "Setari utilizator",
-		"submit": "bine",
-		"cancel": "anula",
-		"ResponsiveUI": "UI receptiv"
+    "title":"Setari utilizator",
+    "submit":"bine",
+    "cancel":"anula",
+    "ResponsiveUI":"UI receptiv"
   },
   "paramPane":{
     "nullField":"Null",
@@ -120,8 +120,8 @@
     "close":"Ã®nchide"
   },
   "placeholders":{
-	    "Username":"nume utilizator", 
-	    "Password":"parola", 
+    "Username":"nume utilizator",
+    "Password":"parola",
     "Login":"Login"
   }
 }

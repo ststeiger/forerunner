@@ -73,23 +73,23 @@
   },
   "print":{
     "title":"Imprimir pÃ¡xina de opciÃ³n de esquema",
-		"pageHeight": "Alto",
-		"pageWidth": "leithead",
-		"marginTop": "Barr",
-		"marginBottom": "bun",
-		"marginLeft": "Clé",
-		"marginRight": "ceart",
+    "pageHeight":"Alto",
+    "pageWidth":"leithead",
+    "marginTop":"Barr",
+    "marginBottom":"bun",
+    "marginLeft":"Clï¿½",
+    "marginRight":"ceart",
     "print":"imprimir",
     "cancel":"cancelar",
-		"unit": "i",
-		"margin": "Imill",
-		"pageLayoutOptions": "Leathanach roghanna leagan amach"
+    "unit":"i",
+    "margin":"Imill",
+    "pageLayoutOptions":"Leathanach roghanna leagan amach"
   },
   "userSettings":{
-	    "title": "Socruithe Úsáideoir",
+    "title":"Socruithe ï¿½sï¿½ideoir",
     "submit":"Ok",
-		"cancel": "Cancelar",
-		"ResponsiveUI": "Chomhéadain sofhreagrach"
+    "cancel":"Cancelar",
+    "ResponsiveUI":"Chomhï¿½adain sofhreagrach"
   },
   "paramPane":{
     "nullField":"Null",
@@ -97,7 +97,7 @@
     "isFalse":"brÃ©agach",
     "required":"Riachtanach",
     "viewReport":"FÃ©ach TuarascÃ¡il",
-		"cancel": "cancelar"
+    "cancel":"cancelar"
   },
   "validateError":{
     "required":"Riachtanach",

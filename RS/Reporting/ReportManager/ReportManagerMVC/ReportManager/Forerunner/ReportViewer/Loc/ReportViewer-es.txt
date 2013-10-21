@@ -73,23 +73,23 @@
   },
   "print":{
     "title":"Imprima opciÃ³n DiseÃ±o de pÃ¡gina",
-		"pageHeight": "talla",
-		"pageWidth": "anchura",
-		"marginTop": "más alto",
-		"marginBottom": "inferior",
-		"marginLeft": "Izquierda",
-		"marginRight": "Derecha",
+    "pageHeight":"talla",
+    "pageWidth":"anchura",
+    "marginTop":"mï¿½s alto",
+    "marginBottom":"inferior",
+    "marginLeft":"Izquierda",
+    "marginRight":"Derecha",
     "print":"imprimir",
     "cancel":"cancelar",
-		"unit": "en",
-		"margin": "margen",
-		"pageLayoutOptions": "Opciones de diseño de página"
+    "unit":"en",
+    "margin":"margen",
+    "pageLayoutOptions":"Opciones de diseï¿½o de pï¿½gina"
   },
   "userSettings":{
-	    "title": "Ajustes del usuario",
+    "title":"Ajustes del usuario",
     "submit":"Ok",
-		"cancel": "Cancelar",
-		"ResponsiveUI": "UI Responsive"
+    "cancel":"Cancelar",
+    "ResponsiveUI":"UI Responsive"
   },
   "paramPane":{
     "nullField":"cero",

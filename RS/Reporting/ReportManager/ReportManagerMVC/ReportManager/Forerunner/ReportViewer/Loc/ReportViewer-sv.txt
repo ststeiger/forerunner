@@ -69,27 +69,27 @@
     "reportPage":"Sida",
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
-	"userSettings": "Inställningar"
+    "userSettings":"Instï¿½llningar"
   },
   "print":{
     "title":"Skriv Option Sidlayout",
-		"pageHeight": "Höjd",
-		"pageWidth": "Bredd",
-		"marginTop": "Topp",
-		"marginBottom": "Botten",
-		"marginLeft": "Vänster",
-		"marginRight": "höger",
+    "pageHeight":"Hï¿½jd",
+    "pageWidth":"Bredd",
+    "marginTop":"Topp",
+    "marginBottom":"Botten",
+    "marginLeft":"Vï¿½nster",
+    "marginRight":"hï¿½ger",
     "print":"skriva ut",
     "cancel":"avbryta",
-		"unit": "i",
-		"margin": "marginaler",
-		"pageLayoutOptions": "Sidlayout"
+    "unit":"i",
+    "margin":"marginaler",
+    "pageLayoutOptions":"Sidlayout"
   },
   "userSettings":{
-	    "title": "Användarinställningar",
+    "title":"Anvï¿½ndarinstï¿½llningar",
     "submit":"Ok",
-		"cancel": "avboka",
-		"ResponsiveUI": "lyhörd UI"
+    "cancel":"avboka",
+    "ResponsiveUI":"lyhï¿½rd UI"
   },
   "paramPane":{
     "nullField":"Noll",
@@ -97,7 +97,7 @@
     "isFalse":"Falskt",
     "required":"krÃ¤vs",
     "viewReport":"Visa rapport",
-		"cancel": "avbryta"
+    "cancel":"avbryta"
   },
   "validateError":{
     "required":"krÃ¤vs",
@@ -120,8 +120,8 @@
     "close":"nÃ¤ra"
   },
   "placeholders":{
-	    "Username":"Användarnamn", 
-	    "Password":"Lösenord", 
-	    "Login": "Inloggning" 
+    "Username":"Anvï¿½ndarnamn",
+    "Password":"Lï¿½senord",
+    "Login":"Inloggning"
   }
 }

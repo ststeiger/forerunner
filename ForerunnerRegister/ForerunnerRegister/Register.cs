@@ -24,6 +24,7 @@ namespace ForerunnerRegister
             public string CompanyName = "";
             public string ID = "";
             public string LicenseID = "";
+            public string PhoneNumber = "";
 
             public RegistrationData(Stream XMLData)
             {
@@ -39,11 +40,17 @@ namespace ForerunnerRegister
                 XML += "<FirstName>" + FirstName + "</FirstName>";
                 XML += "<LastName>" + LastName + "</LastName>";
                 XML += "<CompanyName>" + CompanyName + "</CompanyName>";
+                XML += "<PhoneNumber>" + PhoneNumber + "</PhoneNumber>";
                 XML += "<LicenseID>" + LicenseID + "</LicenseID>";
                 XML += "</Registration>";
 
                 return XML;
             }
+            public RegistrationData()
+            {
+                this.ID = Guid.NewGuid().ToString();
+            }
+            
             public void SetID(string ID)
             {
                 this.ID = ID;
@@ -76,6 +83,9 @@ namespace ForerunnerRegister
                         case "companyname":
                             CompanyName = HttpUtility.UrlDecode(parts[++i]);
                             break;
+                        case "phonenumber":
+                            PhoneNumber = HttpUtility.UrlDecode(parts[++i]);
+                            break;
                     }
                 }
             }
@@ -107,6 +117,9 @@ namespace ForerunnerRegister
                         case "CompanyName":
                             CompanyName = XMLData.ReadElementContentAsString();
                             break;
+                        case "PhoneNumber":
+                            PhoneNumber = XMLData.ReadElementContentAsString();
+                            break;
                         case "LicenseID":
                             LicenseID = XMLData.ReadElementContentAsString();
                             break;
@@ -137,7 +150,7 @@ namespace ForerunnerRegister
         {
             return RegisterDownload(new RegistrationData(XMLValue));
         }
-        private string RegisterDownload(RegistrationData RegData)
+        internal string RegisterDownload(RegistrationData RegData)
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
@@ -147,7 +160,7 @@ namespace ForerunnerRegister
 
             string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
-                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID
+                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber
                             ELSE
                                 UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1, LicenseID =  @LicenseID WHERE Email = @Email
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
@@ -159,6 +172,7 @@ namespace ForerunnerRegister
             SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
             SQLComm.Parameters.AddWithValue("@LastName", RegData.LastName);
             SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
+            SQLComm.Parameters.AddWithValue("@PhoneNumber", RegData.PhoneNumber);
             SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
             
 

@@ -67,27 +67,27 @@
 	"reportPage": "Sida",
 	"zoom": "Aktivera Zoom",
 	"print": "Skriv ut",
-	"userSettings": "Settings"
+	"userSettings": "Inställningar"
     },
 	"print":{
 	    "title": "Skriv Option Sidlayout",
-		"pageHeight": "Sidan Höjd",
-		"pageWidth": "sidan Bredd",
-		"marginTop": "marginal Top",
-		"marginBottom": "marginal Botten",
-		"marginLeft": "marginal Vänster",
-		"marginRight": "marginal höger",
+		"pageHeight": "Höjd",
+		"pageWidth": "Bredd",
+		"marginTop": "Topp",
+		"marginBottom": "Botten",
+		"marginLeft": "Vänster",
+		"marginRight": "höger",
 		"print": "skriva ut",
 		"cancel": "avbryta",
-		"unit": "mm",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
+		"unit": "i",
+		"margin": "marginaler",
+		"pageLayoutOptions": "Sidlayout"
 	},
 	"userSettings": {
-	    "title": "User Settings",
+	    "title": "Användarinställningar",
 		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
+		"cancel": "avboka",
+		"ResponsiveUI": "lyhörd UI"
 	},
 	"paramPane": {
         "nullField": "Noll",
@@ -95,7 +95,7 @@
         "isFalse": "Falskt",
         "required": "krävs",
         "viewReport": "Visa rapport",
-		"cancel": "cancel"
+		"cancel": "avbryta"
     },
 	"validateError": {
 	"required": "krävs",
@@ -118,9 +118,9 @@
 		"close":"nära"
 	},
 	"placeholders":{ 
-	    "Username":"User name", 
-	    "Password":"Password", 
-	    "Login": "Login" 
+	    "Username":"Användarnamn", 
+	    "Password":"Lösenord", 
+	    "Login": "Inloggning" 
 	}
 }
 

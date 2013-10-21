@@ -71,23 +71,23 @@
     },
 	"print":{
 	    "title": "Imprimir páxina de opción de esquema",
-		"pageHeight": "páxina Alto",
-		"pageWidth": "ancho da Páxina",
-		"marginTop": "marxe superior",
-		"marginBottom": "marxe inferior",
-		"marginLeft": "marxe esquerda",
-		"marginRight": "marxe dereito",
+		"pageHeight": "Alto",
+		"pageWidth": "leithead",
+		"marginTop": "Barr",
+		"marginBottom": "bun",
+		"marginLeft": "Clé",
+		"marginRight": "ceart",
 		"print": "imprimir",
 		"cancel": "cancelar",
-		"unit": "mm",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
+		"unit": "i",
+		"margin": "Imill",
+		"pageLayoutOptions": "Leathanach roghanna leagan amach"
 	},
 	"userSettings": {
-	    "title": "User Settings",
+	    "title": "Socruithe Úsáideoir",
 		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
+		"cancel": "Cancelar",
+		"ResponsiveUI": "Chomhéadain sofhreagrach"
 	},
 	"paramPane": {
         "nullField": "Null",
@@ -95,7 +95,7 @@
         "isFalse": "bréagach",
         "required": "Riachtanach",
         "viewReport": "Féach Tuarascáil",
-		"cancel": "cancel"
+		"cancel": "cancelar"
     },
 	"validateError": {
 	"required": "Riachtanach",

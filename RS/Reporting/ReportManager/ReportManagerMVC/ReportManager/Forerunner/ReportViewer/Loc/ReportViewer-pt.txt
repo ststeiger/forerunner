@@ -71,23 +71,23 @@
     },
 	"print":{
 	    "title": "Imprimir página de opção de layout",
-		"pageHeight": "página Altura",
-		"pageWidth": "Largura da Página",
-		"marginTop": "margem superior",
-		"marginBottom": "margem inferior",
-		"marginLeft": "margem Esquerda",
-		"marginRight": "margem Direita",
+		"pageHeight": "Altura",
+		"pageWidth": "Largura",
+		"marginTop": "superior",
+		"marginBottom": "inferior",
+		"marginLeft": "Esquerda",
+		"marginRight": "Direita",
 		"print": "imprimir",
 		"cancel": "cancelar",
-		"unit": "mm",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
+		"unit": "em",
+		"margin": "margens",
+		"pageLayoutOptions": "Opções de layout de página"
 	},
 	"userSettings": {
-	    "title": "User Settings",
+	    "title": "Configurações do Usuário",
 		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
+		"cancel": "cancelar",
+		"ResponsiveUI": "UI Responsive"
 	},
 	"paramPane": {
         "nullField": "Nulo",
@@ -95,7 +95,7 @@
         "isFalse": "Falso",
         "required": "Necessário",
         "viewReport": "Exibir relatório",
-		"cancel": "cancel"
+		"cancel": "cancelar"
     },
 	"validateError": {
 	"required": "Necessário",

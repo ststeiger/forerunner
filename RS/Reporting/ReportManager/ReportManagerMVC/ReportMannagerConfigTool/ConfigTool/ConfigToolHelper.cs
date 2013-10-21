@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using Microsoft.Win32;
+using Forerunner.Security;
 
 namespace ReportMannagerConfigTool
 {
@@ -69,6 +70,35 @@ namespace ReportMannagerConfigTool
             IPHostEntry IpEntry = Dns.GetHostEntry(Dns.GetHostName());
             return IpEntry.AddressList.First(a => a.AddressFamily == AddressFamily.InterNetwork).ToString();
         }
+        
+        /// <summary>
+        /// Verify whether program can connect database with given connection string.
+        /// </summary>
+        /// <param name="connectionString">given connection string</param>
+        /// <returns>wheter can connect</returns>
+        public string tryConnectDBIntegrated(string connectionString,String UserName, string Domain, string Password)
+        {
+            SqlConnection conn = new SqlConnection(connectionString);
+            Impersonator impersonator = new Impersonator(UserName, Domain, Password);
+            impersonator.Impersonate();            
+            try
+            {
+                conn.Open();
+            }
+            catch (Exception error)
+            {
+                return error.Message;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+                if (impersonator != null)
+                    impersonator.Undo();
+            }
+
+            return "True";
+        }     
 
         /// <summary>
         /// Verify whether program can connect database with given connection string.

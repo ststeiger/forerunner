@@ -65,6 +65,9 @@
     <Compile Include="..\..\..\ReportViewer\ReportViewer\Encryption.cs">
       <Link>ConfigTool\Encryption.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\ReportViewer\ReportViewer\Impersonator.cs">
+      <Link>Impersonator.cs</Link>
+    </Compile>
     <Compile Include="ClientLicense.cs" />
     <Compile Include="ConfigTool\ConfigToolHelper.cs" />
     <Compile Include="ConfigTool\frmMain.cs">

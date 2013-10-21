@@ -133,8 +133,8 @@ $(function () {
             me.element.find(".fr-print-submit").on("click", function (e) {
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
-                    me.options.$reportViewer.printReport(printPropertyList);
-                    me.options.$reportViewer.showPrint();
+                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                    me.closeDialog();
                 }
             });
 
@@ -173,8 +173,12 @@ $(function () {
             $(":text", me.element).each(
                 function (index) {
                     var textinput = $(this);
-                    textinput.on("blur", function () { me.options.$reportViewer.onInputBlur(); });
-                    textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
+                    textinput.on("blur", function () {
+                        me.options.$reportViewer.reportViewer("onInputBlur");
+                    });
+                    textinput.on("focus", function () {
+                        me.options.$reportViewer.reportViewer("onInputFocus");
+                    });
                 }
             );
         },

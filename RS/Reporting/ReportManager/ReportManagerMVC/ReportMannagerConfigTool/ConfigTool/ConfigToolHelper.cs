@@ -80,9 +80,10 @@ namespace ReportMannagerConfigTool
         {
             SqlConnection conn = new SqlConnection(connectionString);
             Impersonator impersonator = new Impersonator(UserName, Domain, Password);
-            impersonator.Impersonate();            
+                        
             try
             {
+                impersonator.Impersonate();
                 conn.Open();
             }
             catch (Exception error)

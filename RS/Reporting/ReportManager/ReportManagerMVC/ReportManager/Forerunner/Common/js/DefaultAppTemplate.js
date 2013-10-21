@@ -341,7 +341,7 @@ $(function () {
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
             me.$leftpane.css({ height: heightValues.max });
             me.$rightpane.css({ height: heightValues.max });
-            me.$mainviewport.css({ height: "100%" });
+            //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
         },

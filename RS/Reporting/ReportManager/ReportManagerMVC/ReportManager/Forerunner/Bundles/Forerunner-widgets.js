@@ -2497,7 +2497,7 @@ $(function () {
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
             me.$leftpane.css({ height: heightValues.max });
             me.$rightpane.css({ height: heightValues.max });
-            me.$mainviewport.css({ height: "100%" });
+            //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
         },
@@ -7037,7 +7037,7 @@ $(function () {
                 path = "/";
             }
 
-            layout.$mainviewport.css({ width: "100%", height: "100%" });
+            //layout.$mainviewport.css({ width: "100%", height: "100%" });
             layout.$mainsection.html(null);
             var $viewer = new $("<DIV />");
             $viewer.addClass("fr-layout-reportviewer");
@@ -7142,7 +7142,7 @@ $(function () {
             layout.$bottomdivspacer.hide();
             layout.$bottomdiv.hide();
           
-            layout.$mainviewport.css({ width: "100%", height: "100%"});
+            //layout.$mainviewport.css({ width: "100%", height: "100%"});
 
             if (!path) 
                 path = "/";

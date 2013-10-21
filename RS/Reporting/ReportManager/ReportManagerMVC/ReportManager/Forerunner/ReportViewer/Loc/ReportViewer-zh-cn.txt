@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"加载中...",
     "completeFind":"全部报表查找完成",
@@ -36,7 +36,7 @@
     "word":"Word"
   },
   "toolPane":{
-    "pageOf":"of",
+    "pageOf":"\/",
     "home":"主页",
     "navigation":"导航",
     "favorites":"收藏",
@@ -61,7 +61,7 @@
     "menu":"菜单",
     "navigation":"导航",
     "next":"下一个",
-    "pageOf":"of",
+    "pageOf":"\/",
     "paramarea":"参数",
     "previousPage":"前一页",
     "recent":"最近",

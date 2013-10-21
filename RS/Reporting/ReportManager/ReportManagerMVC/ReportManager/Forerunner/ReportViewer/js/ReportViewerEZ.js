@@ -52,7 +52,7 @@ $(function () {
                 path = "/";
             }
 
-            layout.$mainviewport.css({ width: "100%", height: "100%" });
+            //layout.$mainviewport.css({ width: "100%", height: "100%" });
             layout.$mainsection.html(null);
             var $viewer = new $("<DIV />");
             $viewer.addClass("fr-layout-reportviewer");

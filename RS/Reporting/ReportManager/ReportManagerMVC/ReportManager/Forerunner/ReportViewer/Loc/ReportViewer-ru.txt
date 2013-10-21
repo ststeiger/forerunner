@@ -1,127 +1,127 @@
-﻿{
-    "messages": {
-        "loading": "загрузка...",
-        "completeFind": "Поиск завершён",
-        "keyNotFound": "Ключевое слово не найдено",
-        "sessionExpired": "Время вашей сессии истекло",
-        "imageNotDisplay": "Изображение недоступно",
-		"saveParamSuccess":"Сохраненные",
-		"saveParamFailed":"Не удалось",
-		"catalogsLoadFailed":"Не удалось загрузить каталоги с сервера. Пожалуйста, попробуйте еще раз.",
-		"paramFieldEmpty":"параметр отсутствует значение",
-		"contactAdmin":"Пожалуйста, свяжитесь с отчета за помощью к администратору",
-		"favoriteFailed":"Не удалось",
-		"docmapShowFailed":"Не удалось",
-		"prepareActionFailed":"Не удалось",
-		"bookmarkNotFound":"Не можете найти закладку в докладе"
-    },
-    "errorTag": {
-        "moreDetail": "Подробнее",
-        "serverError": "Ошибка сервера",
-        "type": "Тип",
-        "targetSite": "Целевой сайт",
-        "source": "Исxоднай код",
-        "message": "Сообщение",
-        "stackTrace": "Трассировка стека"
-    },
-    "exportType": {
-        "xml": "XML файл с данными отчета",
-        "csv": "CSV (запятая)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (веб-архив)",
-        "excel": "Excel",
-        "tiff": "TIFF файл",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "из",
-        "home": "Домой",
-        "navigation": "Навигация",
-        "favorites": "Закладки",
-        "back": "Назад",
-        "refresh": "Регенерировать",
-        "docMap": "Схема документа",
-        "find": "Поиск",
-        "next": "Следующий",
-		"zoom": "Enable Zoom",
-		"print": "Напечатать"
-    },
-	"toolbar": {
-        "back": "Назад",
-        "docMap": "Схема документа",
-        "exportMenu": "Экспорт",
-        "favorites": "Закладки",
-        "find": "Поиск",
-        "firstPage": "Первая страница",
-        "home": "Домой",
-		"keyword": "Ключевое слово",
-		"lastPage": "Последняя страница",
-		"menu": "Меню",
-        "navigation": "Навигация",
-        "next": "Следующий",
-        "pageOf": "из",
-		"paramarea": "Параметры",
-		"previousPage": "Предидущая страница",
-		"recent": "Последний",
-        "refresh": "Регенерировать",
-		"reportPage": "Страница Отчета",
-		"zoom": "Enable Zoom",
-		"print": "Напечатать",
-		"userSettings": "заход"
-    },
-	"print":{
-	    "title": "Возможность печати макета страницы",
-		"pageHeight": "высота",
-		"pageWidth": "ширина",
-		"marginTop": "верхний",
-		"marginBottom": "нижний",
-		"marginLeft": "оставил",
-		"marginRight": "право",
-		"print": "печатать",
-		"cancel": "отменить",
-		"unit": "B",
-		"margin": "край",
-		"pageLayoutOptions": "Параметры макета страницы"
-	},
-	"userSettings": {
-	    "title": "Настройки пользователя",
-		"submit": "одобрение",
-		"cancel": "отменить",
-		"ResponsiveUI": "Отзывчивый интерфейс"
-	},
-	"paramPane": {
-        "nullField": "Ноль",
-        "isTrue": "Верно",
-        "isFalse": "Неверно",
-        "required": "Необходимый",
-        "viewReport": "Показать отчет",
-		"cancel": "отменить"
-    },
-	"validateError": {
-		"required": "Необходимый",
-		"remote": "Удаленный",
-		"email": "Неверный email",
-		"url": "Неверный URL",
-		"date": "Неверные данные",
-		"dateISO": "неверная дата",
-		"number": "Неверный номер",
-		"digits": "Только цифры",
-		"maxlength": "Не больше, чем {0} символов",
-		"minlength": "По крайней мере {0} символов",
-		"rangelength": "Введите значение от {0} и {1} символов",
-		"range": "Введите значение от {0} и {1}",
-		"max": "Введите значение меньше или равно {0}",
-		"min": "Введите значение больше или равно {0}"
-	},
-	"dialog":{
-	    "title":"побуждать",
-		"close":"близко"
-	},
-	"placeholders":{ 
-	    "Username":"Имя пользователя", 
-	    "Password":"пароль", 
-	    "Login": "Войти" 
-	}
+{
+  "messages":{
+    "loading":"загрузка...",
+    "completeFind":"Поиск завершён",
+    "keyNotFound":"Ключевое слово не найдено",
+    "sessionExpired":"Время вашей сессии истекло",
+    "imageNotDisplay":"Изображение недоступно",
+    "saveParamSuccess":"Сохраненные",
+    "saveParamFailed":"Не удалось",
+    "catalogsLoadFailed":"Не удалось загрузить каталоги с сервера. Пожалуйста, попробуйте еще раз.",
+    "paramFieldEmpty":"параметр отсутствует значение",
+    "contactAdmin":"Пожалуйста, свяжитесь с отчета за помощью к администратору",
+    "favoriteFailed":"Не удалось",
+    "docmapShowFailed":"Не удалось",
+    "prepareActionFailed":"Не удалось",
+    "bookmarkNotFound":"Не можете найти закладку в докладе"
+  },
+  "errorTag":{
+    "moreDetail":"Подробнее",
+    "serverError":"Ошибка сервера",
+    "type":"Тип",
+    "targetSite":"Целевой сайт",
+    "source":"Исxоднай код",
+    "message":"Сообщение",
+    "stackTrace":"Трассировка стека",
+    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+  },
+  "exportType":{
+    "xml":"XML файл с данными отчета",
+    "csv":"CSV (запятая)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (веб-архив)",
+    "excel":"Excel",
+    "tiff":"TIFF файл",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"из",
+    "home":"Домой",
+    "navigation":"Навигация",
+    "favorites":"Закладки",
+    "back":"Назад",
+    "refresh":"Регенерировать",
+    "docMap":"Схема документа",
+    "find":"Поиск",
+    "next":"Следующий",
+    "zoom":"Enable Zoom",
+    "print":"Напечатать"
+  },
+  "toolbar":{
+    "back":"Назад",
+    "docMap":"Схема документа",
+    "exportMenu":"Экспорт",
+    "favorites":"Закладки",
+    "find":"Поиск",
+    "firstPage":"Первая страница",
+    "home":"Домой",
+    "keyword":"Ключевое слово",
+    "lastPage":"Последняя страница",
+    "menu":"Меню",
+    "navigation":"Навигация",
+    "next":"Следующий",
+    "pageOf":"из",
+    "paramarea":"Параметры",
+    "previousPage":"Предидущая страница",
+    "recent":"Последний",
+    "refresh":"Регенерировать",
+    "reportPage":"Страница Отчета",
+    "zoom":"Enable Zoom",
+    "print":"Напечатать",
+    "userSettings":"?????"
+  },
+  "print":{
+    "title":"Возможность печати макета страницы",
+    "pageHeight":"??????",
+    "pageWidth":"??????",
+    "marginTop":"???????",
+    "marginBottom":"??????",
+    "marginLeft":"???????",
+    "marginRight":"?????",
+    "print":"печатать",
+    "cancel":"отменить",
+    "unit":"B",
+    "margin":"????",
+    "pageLayoutOptions":"????????? ?????? ????????"
+  },
+  "userSettings":{
+    "title":"????????? ????????????",
+    "submit":"?????????",
+    "cancel":"????????",
+    "ResponsiveUI":"?????????? ?????????"
+  },
+  "paramPane":{
+    "nullField":"Ноль",
+    "isTrue":"Верно",
+    "isFalse":"Неверно",
+    "required":"Необходимый",
+    "viewReport":"Показать отчет",
+    "cancel":"????????"
+  },
+  "validateError":{
+    "required":"Необходимый",
+    "remote":"Удаленный",
+    "email":"Неверный email",
+    "url":"Неверный URL",
+    "date":"Неверные данные",
+    "dateISO":"неверная дата",
+    "number":"Неверный номер",
+    "digits":"Только цифры",
+    "maxlength":"Не больше, чем {0} символов",
+    "minlength":"По крайней мере {0} символов",
+    "rangelength":"Введите значение от {0} и {1} символов",
+    "range":"Введите значение от {0} и {1}",
+    "max":"Введите значение меньше или равно {0}",
+    "min":"Введите значение больше или равно {0}"
+  },
+  "dialog":{
+    "title":"побуждать",
+    "close":"близко"
+  },
+  "placeholders":{
+    "Username":"Имя пользователя",
+    "Password":"пароль",
+    "Login":"Войти"
+  }
 }
-
-        

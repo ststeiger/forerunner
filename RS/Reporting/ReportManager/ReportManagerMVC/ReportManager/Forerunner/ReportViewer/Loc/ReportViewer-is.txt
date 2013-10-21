@@ -1,127 +1,125 @@
-﻿{
-    "messages": {
-        "loading": "Hleðsla...",
-        "completeFind": "Öllu skýrslu hefur verið leitað",
-        "keyNotFound": "Lykill fannst ekki",
-        "sessionExpired": "Seta þín hefur runnið",
-        "imageNotDisplay": "Má ekki birta mynd",
-		"saveParamSuccess":"Saved",
-		"saveParamFailed":"Theip ar",
-		"catalogsLoadFailed":"Theip ar luchtú na catalóga ón bhfreastalaí. Bain triail as arís.",
-		"paramFieldEmpty":"Tá lúibín gan luach",
-		"contactAdmin":"Téigh i dteagmháil le riarthóir tuarascáil chun cabhair a fháil",
-		"favoriteFailed":"Theip ar",
-		"docmapShowFailed":"Theip ar",
-		"prepareActionFailed":"Theip ar",
-		"bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil"
-    },
-    "errorTag": {
-        "moreDetail": "Smelltu fyrir frekari upplýsingar",
-        "serverError": "Undantekning kastað frá miðlara",
-        "type": "tegund",
-        "targetSite": "targetSite",
-        "source": "Heimild",
-        "message": "Skilaboð",
-        "stackTrace": "StackTrace"
-    },
-    "exportType": {
-        "xml": "XML skrá með gögn skýrslunnar",
-        "csv": "CSV (komma afmörkuð)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (vefur skjalasafn)",
-        "excel": "Excel",
-        "tiff": "TIFF skrá",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "af",
-        "home": "Forsíða",
-        "navigation": "Navigation",
-        "favorites": "eftirlæti",
-        "back": "Til baka",
-        "refresh": "Uppfæra",
-        "docMap": "Document Map",
-        "find": "finna",
-        "next": "Næsta",
-	"zoom": "Virkja Zoom",
-	"print": "Prenta"
-    },
-	"toolbar": {
-        "back": "Til baka",
-        "docMap": "Document Map",
-        "exportMenu": "útflutningur",
-        "favorites": "eftirlæti",
-        "find": "finna",
-        "firstPage": "First",
-        "home": "Forsíða",
-	"keyword": "leitarorð",
-	"lastPage": "síðast",
-	"menu": "Valmynd",
-        "navigation": "Navigation",
-        "next": "Næsta",
-        "pageOf": "af",
-	"paramarea": "breytur",
-	"previousPage": "Fyrri",
-	"recent": "Nýleg",
-        "refresh": "Uppfæra",
-	"reportPage": "Page",
-	"zoom": "Virkja Zoom",
-	"print": "Prenta",
-	"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "Prenta Page Layout Valkostur",
-		"pageHeight": "Hæð",
-		"pageWidth": "breidd",
-		"marginTop": "Top",
-		"marginBottom": "Bottom",
-		"marginLeft": "vinstri",
-		"marginRight": "Hægri",
-		"print": "Prenta",
-		"cancel": "hætta",
-		"unit": "í",
-		"margin": "framlegð",
-		"pageLayoutOptions": "Útlit síðunnar"
-	},
-	"userSettings": {
-	    "title": "notandi Stillingar",
-		"submit": "Ok",
-		"cancel": "hætta",
-		"ResponsiveUI": "móttækilegur HÍ"
-	},
-	"paramPane": {
-        "nullField": "Zero",
-        "isTrue": "True",
-        "isFalse": "False",
-        "required": "krafist",
-        "viewReport": "Skoða skýrslu",
-		"cancel": "hætta"
-    },
-	"validateError": {
-	"required": "krafist",
-	"remote": "Vinsamlegast lagaðu þetta svæði",
-	"email": "Ógilt netfang",
-	"url": "ógild URL",
-	"date": "ógild dagsetning",
-	"dateISO": "ógild dagsetning",
-	"number": "Ógilt númer",
-	"digits": "Tölustafir Aðeins",
-	"maxlength": "Ekki meira en {0} stafir",
-	"minlength": "Minnsta kosti {0} charaters",
-	"rangelength": "Sláðu inn gildið á milli {0} og {1} charaters löng",
-	"range": "Sláðu inn gildið á milli {0} og {1}",
-	"max": "Sláðu inn gildið minna en eða jafnt og {0}",
-	"min": "Sláðu inn gildið stærra en eða jafnt og {0}"
-	},
-	"dialog":{
-	    "title":"hvetja",
-		"close":"loka"
-	},
-	"placeholders":{ 
-	    "Username":"notandanafn", 
-	    "Password":"lykilorð", 
-	    "Login": "Innskráning" 
-	}
+{
+  "messages":{
+    "loading":"Hleðsla...",
+    "completeFind":"Öllu skýrslu hefur verið leitað",
+    "keyNotFound":"Lykill fannst ekki",
+    "sessionExpired":"Seta þín hefur runnið",
+    "imageNotDisplay":"Má ekki birta mynd",
+    "saveParamSuccess":"Saved",
+    "saveParamFailed":"Theip ar",
+    "catalogsLoadFailed":"Theip ar luchtú na catalóga ón bhfreastalaí. Bain triail as arís.",
+    "paramFieldEmpty":"Tá lúibín gan luach",
+    "contactAdmin":"Téigh i dteagmháil le riarthóir tuarascáil chun cabhair a fháil",
+    "favoriteFailed":"Theip ar",
+    "docmapShowFailed":"Theip ar",
+    "prepareActionFailed":"Theip ar",
+    "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil"
+  },
+  "errorTag":{
+    "moreDetail":"Smelltu fyrir frekari upplýsingar",
+    "serverError":"Undantekning kastað frá miðlara",
+    "type":"tegund",
+    "targetSite":"targetSite",
+    "source":"Heimild",
+    "message":"Skilaboð",
+    "stackTrace":"StackTrace"
+  },
+  "exportType":{
+    "xml":"XML skrá með gögn skýrslunnar",
+    "csv":"CSV (komma afmörkuð)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (vefur skjalasafn)",
+    "excel":"Excel",
+    "tiff":"TIFF skrá",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"af",
+    "home":"Forsíða",
+    "navigation":"Navigation",
+    "favorites":"eftirlæti",
+    "back":"Til baka",
+    "refresh":"Uppfæra",
+    "docMap":"Document Map",
+    "find":"finna",
+    "next":"Næsta",
+    "zoom":"Virkja Zoom",
+    "print":"Prenta"
+  },
+  "toolbar":{
+    "back":"Til baka",
+    "docMap":"Document Map",
+    "exportMenu":"útflutningur",
+    "favorites":"eftirlæti",
+    "find":"finna",
+    "firstPage":"First",
+    "home":"Forsíða",
+    "keyword":"leitarorð",
+    "lastPage":"síðast",
+    "menu":"Valmynd",
+    "navigation":"Navigation",
+    "next":"Næsta",
+    "pageOf":"af",
+    "paramarea":"breytur",
+    "previousPage":"Fyrri",
+    "recent":"Nýleg",
+    "refresh":"Uppfæra",
+    "reportPage":"Page",
+    "zoom":"Virkja Zoom",
+    "print":"Prenta",
+    "userSettings":"Settings"
+  },
+  "print":{
+    "title":"Prenta Page Layout Valkostur",
+    "pageHeight":"H��",
+    "pageWidth":"breidd",
+    "marginTop":"Top",
+    "marginBottom":"Bottom",
+    "marginLeft":"vinstri",
+    "marginRight":"H�gri",
+    "print":"Prenta",
+    "cancel":"hætta",
+    "unit":"�",
+    "margin":"framleg�",
+    "pageLayoutOptions":"�tlit s��unnar"
+  },
+  "userSettings":{
+    "title":"notandi Stillingar",
+    "submit":"Ok",
+    "cancel":"h�tta",
+    "ResponsiveUI":"m�tt�kilegur H�"
+  },
+  "paramPane":{
+    "nullField":"Zero",
+    "isTrue":"True",
+    "isFalse":"False",
+    "required":"krafist",
+    "viewReport":"Skoða skýrslu",
+    "cancel":"h�tta"
+  },
+  "validateError":{
+    "required":"krafist",
+    "remote":"Vinsamlegast lagaðu þetta svæði",
+    "email":"Ógilt netfang",
+    "url":"ógild URL",
+    "date":"ógild dagsetning",
+    "dateISO":"ógild dagsetning",
+    "number":"Ógilt númer",
+    "digits":"Tölustafir Aðeins",
+    "maxlength":"Ekki meira en {0} stafir",
+    "minlength":"Minnsta kosti {0} charaters",
+    "rangelength":"Sláðu inn gildið á milli {0} og {1} charaters löng",
+    "range":"Sláðu inn gildið á milli {0} og {1}",
+    "max":"Sláðu inn gildið minna en eða jafnt og {0}",
+    "min":"Sláðu inn gildið stærra en eða jafnt og {0}"
+  },
+  "dialog":{
+    "title":"hvetja",
+    "close":"loka"
+  },
+  "placeholders":{
+    "Username":"notandanafn",
+    "Password":"lykilor�",
+    "Login":"Innskr�ning"
+  }
 }
-
-        

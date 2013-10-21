@@ -1,129 +1,127 @@
 ﻿{
-  "messages": {
-        "loading": "加載中...",
-        "completeFind": "全個報告尋找完畢",
-        "keyNotFound": "沒有尋找到關鍵字",
-        "sessionExpired": "會話過期",
-        "imageNotDisplay": "無法顯示圖片",
-		"saveParamSuccess":"已保存",
-		"saveParamFailed":"失敗",
-		"catalogsLoadFailed":"無法從服務器加載目錄，請稍後再試。",
-		"paramFieldEmpty":"缺少參數值",
-		"contactAdmin":"請聯繫報表管理員尋求幫助",
-		"favoriteFailed":"失敗",
-		"docmapShowFailed":"失敗",
-		"prepareActionFailed":"失敗",
-		"bookmarkNotFound":"在該報表中無法找到書籤"
-    },
-    "errorTag": {
-        "moreDetail": "點擊查看更多訊息",
-        "serverError": "伺服器端拋出異常",
-        "type": "類型",
-        "targetSite": "目標站點",
-        "source": "源",
-        "message": "消息",
-        "stackTrace": "堆棧跟蹤",
-		"licenseErrorTitle": "感謝您使用Forerunner公司的Mobilizer軟件，您的授權許可出現了一些問題。",
-		"licenseErrorContent": "請聯繫您的系統管理員。如果您是管理員請使用Mobilizer附帶的配置工具驗證您的授權許可。"
-    },
-    "exportType": {
-        "xml": "XML 數據報表",
-        "csv": "CSV (以逗號分隔)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (web文檔)",
-        "excel": "Excel",
-        "tiff": "TIFF文件",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "of",
-        "home": "主頁",
-        "navigation": "導航",
-        "favorites": "收藏",
-        "back": "返回",
-        "refresh": "刷新",
-        "docMap": "站點地圖",
-        "find": "尋找",
-        "next": "下一個",
-		"zoom": "允許縮放",
-		"print": "打印"
-    },
-	"toolbar": {
-        "back": "返回",
-        "docMap": "站點地圖",
-        "exportMenu": "輸出",
-        "favorites": "收藏",
-        "find": "尋找",
-        "firstPage": "首頁",
-        "home": "主頁",
-		"keyword": "關鍵字",
-		"lastPage": "末頁",
-		"menu": "項目單",
-        "navigation": "導航",
-        "next": "下一個",
-        "pageOf": "of",
-		"paramarea": "參數",
-		"previousPage": "前一頁",
-		"recent": "最近",
-        "refresh": "刷新",
-		"reportPage": "頁面",
-		"zoom": "允許縮放",
-		"print": "打印",
-		"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "打印報表",
-		"pageHeight": "高度",
-		"pageWidth": "寬度",
-		"marginTop": "上",
-		"marginBottom": "下",
-		"marginLeft": "左",
-		"marginRight": "右",
-		"print": "打印",
-		"cancel": "取消",
-		"unit": "mm",
-		"margin": "邊距",
-		"pageLayoutOptions": "頁面設置"
-	},
-	"userSettings": {
-	    "title": "User Settings",
-		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
-	},
-	"paramPane": {
-        "nullField": "空值",
-        "isTrue": "是",
-        "isFalse": "否",
-        "required": "必填",
-        "viewReport": "加載報告",
-		"cancel": "cancel"
-    },
-	"validateError": {
-		"required": "必填",
-		"remote": "請修復該字段",
-		"email": "電郵錯誤",
-		"url": "URL錯誤",
-		"date": "日期錯誤",
-		"dateISO": "日期錯誤",
-		"number": "數字錯誤",
-		"digits": "只允許數字",
-		"maxlength": "最多{0}個字",
-		"minlength": "最少{0}個字",
-		"rangelength": "輸入介於{0}和{1}個字",
-		"range": "輸入介於 {0}的{1} 值",
-		"max": "輸入小於等於{0}的數",
-		"min": "輸入大於等於{0}的數"
-	},
-	"dialog":{
-	    "title":"提示",
-		"close":"關閉"
-	},
-	"placeholders":{
-	    "Username":"用戶名稱",
-	    "Password":"密碼",
-            "Login": "登入"
-	}
+  "messages":{
+    "loading":"加載中...",
+    "completeFind":"全個報告尋找完畢",
+    "keyNotFound":"沒有尋找到關鍵字",
+    "sessionExpired":"會話過期",
+    "imageNotDisplay":"無法顯示圖片",
+    "saveParamSuccess":"已保存",
+    "saveParamFailed":"失敗",
+    "catalogsLoadFailed":"無法從服務器加載目錄，請稍後再試。",
+    "paramFieldEmpty":"缺少參數值",
+    "contactAdmin":"請聯繫報表管理員尋求幫助",
+    "favoriteFailed":"失敗",
+    "docmapShowFailed":"失敗",
+    "prepareActionFailed":"失敗",
+    "bookmarkNotFound":"在該報表中無法找到書籤"
+  },
+  "errorTag":{
+    "moreDetail":"點擊查看更多訊息",
+    "serverError":"伺服器端拋出異常",
+    "type":"類型",
+    "targetSite":"目標站點",
+    "source":"源",
+    "message":"消息",
+    "stackTrace":"堆棧跟蹤",
+    "licenseErrorTitle":"感謝您使用Forerunner公司的Mobilizer軟件，您的授權許可出現了一些問題。",
+    "licenseErrorContent":"請聯繫您的系統管理員。如果您是管理員請使用Mobilizer附帶的配置工具驗證您的授權許可。"
+  },
+  "exportType":{
+    "xml":"XML 數據報表",
+    "csv":"CSV (以逗號分隔)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (web文檔)",
+    "excel":"Excel",
+    "tiff":"TIFF文件",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"\/",
+    "home":"主頁",
+    "navigation":"導航",
+    "favorites":"收藏",
+    "back":"返回",
+    "refresh":"刷新",
+    "docMap":"站點地圖",
+    "find":"尋找",
+    "next":"下一個",
+    "zoom":"允許縮放",
+    "print":"打印"
+  },
+  "toolbar":{
+    "back":"返回",
+    "docMap":"站點地圖",
+    "exportMenu":"輸出",
+    "favorites":"收藏",
+    "find":"尋找",
+    "firstPage":"首頁",
+    "home":"主頁",
+    "keyword":"關鍵字",
+    "lastPage":"末頁",
+    "menu":"項目單",
+    "navigation":"導航",
+    "next":"下一個",
+    "pageOf":"\/",
+    "paramarea":"參數",
+    "previousPage":"前一頁",
+    "recent":"最近",
+    "refresh":"刷新",
+    "reportPage":"頁面",
+    "zoom":"允許縮放",
+    "print":"打印",
+    "userSettings":"Settings"
+  },
+  "print":{
+    "title":"打印報表",
+    "pageHeight":"高度",
+    "pageWidth":"寬度",
+    "marginTop":"上",
+    "marginBottom":"下",
+    "marginLeft":"左",
+    "marginRight":"右",
+    "print":"打印",
+    "cancel":"取消",
+    "unit":"mm",
+    "margin":"邊距",
+    "pageLayoutOptions":"頁面設置"
+  },
+  "userSettings":{
+    "title":"User Settings",
+    "submit":"Ok",
+    "cancel":"Cancel",
+    "ResponsiveUI":"Responsive UI"
+  },
+  "paramPane":{
+    "nullField":"空值",
+    "isTrue":"是",
+    "isFalse":"否",
+    "required":"必填",
+    "viewReport":"加載報告",
+    "cancel":"cancel"
+  },
+  "validateError":{
+    "required":"必填",
+    "remote":"請修復該字段",
+    "email":"電郵錯誤",
+    "url":"URL錯誤",
+    "date":"日期錯誤",
+    "dateISO":"日期錯誤",
+    "number":"數字錯誤",
+    "digits":"只允許數字",
+    "maxlength":"最多{0}個字",
+    "minlength":"最少{0}個字",
+    "rangelength":"輸入介於{0}和{1}個字",
+    "range":"輸入介於 {0}的{1} 值",
+    "max":"輸入小於等於{0}的數",
+    "min":"輸入大於等於{0}的數"
+  },
+  "dialog":{
+    "title":"提示",
+    "close":"關閉"
+  },
+  "placeholders":{
+    "Username":"用戶名稱",
+    "Password":"密碼",
+    "Login":"登入"
+  }
 }
-
-        

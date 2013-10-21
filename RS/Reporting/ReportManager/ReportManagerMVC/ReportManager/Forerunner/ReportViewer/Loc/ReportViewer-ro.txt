@@ -1,127 +1,127 @@
-﻿{
-    "messages": {
-        "loading": "Se încarcă...",
-        "completeFind": "Întreaga Raportul a fost căutat",
-        "keyNotFound": "Cheia nu a fost găsit ",
-        "sessionExpired": "Sesiunea a expirat",
-        "imageNotDisplay": "Nu se poate afișa imaginea",
-		"saveParamSuccess":"Salvate",
-		"saveParamFailed":"A eșuat",
-		"catalogsLoadFailed":"Nu a reușit să se încarce cataloagele de pe server. Vă rugăm să încercați din nou.",
-		"paramFieldEmpty":"parametru lipsește o valoare",
-		"contactAdmin":"Vă rugăm să contactați administratorul raport pentru ajutor",
-		"favoriteFailed":"A eșuat",
-		"docmapShowFailed":"A eșuat",
-		"prepareActionFailed":"A eșuat",
-		"bookmarkNotFound":"Nu pot găsi marcajul în raport"
-    },
-    "errorTag": {
-        "moreDetail": "Click pentru mai multe detalii",
-        "serverError": "Excepție aruncat de la server",
-        "type": "Type",
-        "targetSite": "targetSite",
-        "source": "Sursa",
-        "message": "Message",
-        "stackTrace": "StackTrace"
-    },
-    "exportType": {
-        "xml": "fișierul XML cu datele de raport",
-        "csv": "CSV (delimitat prin virgulă)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (arhiva web)",
-        "excel": "Excel",
-        "tiff": "Fişier TIFF",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "a",
-        "home": "Acasă",
-        "navigation": "Navigare",
-        "favorites": "Favorite",
-        "back": "Înapoi",
-        "refresh": "Refresh",
-        "docMap": "Planul documentului",
-        "find": "Găseşte",
-        "next": "Înainte",
-	"zoom": "Permite Zoom",
-	"print": "Print"
-    },
-	"toolbar": {
-        "back": "Înapoi",
-        "docMap": "Planul documentului",
-        "exportMenu": "Export",
-        "favorites": "Favorite",
-        "find": "Găseşte",
-        "firstPage": "primul",
-        "home": "Acasă",
-	"keyword": "Cuvinte cheie",
-	"lastPage": "Ultima",
-	"menu": "Meniu",
-        "navigation": "Navigare",
-        "next": "Înainte",
-        "pageOf": "a",
-	"paramarea": "Parametri",
-	"previousPage": "Anterior",
-	"recent": "Recente",
-        "refresh": "Refresh",
-	"reportPage": "Pagina",
-	"zoom": "Permite Zoom",
-	"print": "Print",
-	"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "Opțiunea Print Page Layout",
-		"pageHeight": "proporţie",
-		"pageWidth": "orizontal",
-		"marginTop": "de sus",
-		"marginBottom": "bază",
-		"marginLeft": "la stânga",
-		"marginRight": "corect",
-		"print": "imprima",
-		"cancel": "anula",
-		"unit": "în",
-		"margin": "Margini",
-		"pageLayoutOptions": "Opțiuni Machetă Pagină"
-	},
-	"userSettings": {
-	    "title": "Setări utilizator",
-		"submit": "bine",
-		"cancel": "anula",
-		"ResponsiveUI": "UI receptiv"
-	},
-	"paramPane": {
-        "nullField": "Null",
-        "isTrue": "Adevărat",
-        "isFalse": "False",
-        "required": "Necesare",
-        "viewReport": "Vizualizare raport",
-		"cancel": "cancel"
-    },
-	"validateError": {
-	"required": "Necesare",
-	"remote": "Vă rugăm să rezolvaţi acest câmp",
-	"email": "E-mail nevalidă",
-	"url": "E-mail nevalidă",
-	"date": "Data invalid",
-	"dateISO": "Data invalid",
-	"number": "Număr Invalid",
-	"digits": "Doar cifre",
-	"maxlength": "Nu mai mult de { 0 } caractere",
-	"minlength": "cel puţin {0} caractere",
-	"rangelength": "Introduceti o valoare între {0} și {1} caractere lung",
-	"range": "Introduceti o valoare între {0} şi {1}",
-	"max": "Introduceti o valoare mai mică decât sau egală cu a {0}",
-	"min": "Introduceti o valoare mai mare sau egal cu {0}"
-	},
-	"dialog":{
-	    "title":"prompt",
-		"close":"închide"
-	},
-	"placeholders":{ 
-	    "Username":"nume utilizator", 
-	    "Password":"parolă", 
-	    "Login": "Login" 
-	}
+{
+  "messages":{
+    "loading":"Se încarcă...",
+    "completeFind":"Întreaga Raportul a fost căutat",
+    "keyNotFound":"Cheia nu a fost găsit ",
+    "sessionExpired":"Sesiunea a expirat",
+    "imageNotDisplay":"Nu se poate afișa imaginea",
+    "saveParamSuccess":"Salvate",
+    "saveParamFailed":"A eșuat",
+    "catalogsLoadFailed":"Nu a reușit să se încarce cataloagele de pe server. Vă rugăm să încercați din nou.",
+    "paramFieldEmpty":"parametru lipsește o valoare",
+    "contactAdmin":"Vă rugăm să contactați administratorul raport pentru ajutor",
+    "favoriteFailed":"A eșuat",
+    "docmapShowFailed":"A eșuat",
+    "prepareActionFailed":"A eșuat",
+    "bookmarkNotFound":"Nu pot găsi marcajul în raport"
+  },
+  "errorTag":{
+    "moreDetail":"Click pentru mai multe detalii",
+    "serverError":"Excepție aruncat de la server",
+    "type":"Type",
+    "targetSite":"targetSite",
+    "source":"Sursa",
+    "message":"Message",
+    "stackTrace":"StackTrace",
+    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+  },
+  "exportType":{
+    "xml":"fișierul XML cu datele de raport",
+    "csv":"CSV (delimitat prin virgulă)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (arhiva web)",
+    "excel":"Excel",
+    "tiff":"Fişier TIFF",
+    "word":"Word"
+  },
+  "toolPane":{
+    "pageOf":"a",
+    "home":"Acasă",
+    "navigation":"Navigare",
+    "favorites":"Favorite",
+    "back":"Înapoi",
+    "refresh":"Refresh",
+    "docMap":"Planul documentului",
+    "find":"Găseşte",
+    "next":"Înainte",
+    "zoom":"Permite Zoom",
+    "print":"Print"
+  },
+  "toolbar":{
+    "back":"Înapoi",
+    "docMap":"Planul documentului",
+    "exportMenu":"Export",
+    "favorites":"Favorite",
+    "find":"Găseşte",
+    "firstPage":"primul",
+    "home":"Acasă",
+    "keyword":"Cuvinte cheie",
+    "lastPage":"Ultima",
+    "menu":"Meniu",
+    "navigation":"Navigare",
+    "next":"Înainte",
+    "pageOf":"a",
+    "paramarea":"Parametri",
+    "previousPage":"Anterior",
+    "recent":"Recente",
+    "refresh":"Refresh",
+    "reportPage":"Pagina",
+    "zoom":"Permite Zoom",
+    "print":"Print",
+    "userSettings":"Settings"
+  },
+  "print":{
+    "title":"Opțiunea Print Page Layout",
+    "pageHeight":"proportie",
+    "pageWidth":"orizontal",
+    "marginTop":"de sus",
+    "marginBottom":"baza",
+    "marginLeft":"la st�nga",
+    "marginRight":"corect",
+    "print":"imprima",
+    "cancel":"anula",
+    "unit":"�n",
+    "margin":"Margini",
+    "pageLayoutOptions":"Op?iuni Macheta Pagina"
+  },
+  "userSettings":{
+    "title":"Setari utilizator",
+    "submit":"bine",
+    "cancel":"anula",
+    "ResponsiveUI":"UI receptiv"
+  },
+  "paramPane":{
+    "nullField":"Null",
+    "isTrue":"Adevărat",
+    "isFalse":"False",
+    "required":"Necesare",
+    "viewReport":"Vizualizare raport",
+    "cancel":"cancel"
+  },
+  "validateError":{
+    "required":"Necesare",
+    "remote":"Vă rugăm să rezolvaţi acest câmp",
+    "email":"E-mail nevalidă",
+    "url":"E-mail nevalidă",
+    "date":"Data invalid",
+    "dateISO":"Data invalid",
+    "number":"Număr Invalid",
+    "digits":"Doar cifre",
+    "maxlength":"Nu mai mult de { 0 } caractere",
+    "minlength":"cel puţin {0} caractere",
+    "rangelength":"Introduceti o valoare între {0} și {1} caractere lung",
+    "range":"Introduceti o valoare între {0} şi {1}",
+    "max":"Introduceti o valoare mai mică decât sau egală cu a {0}",
+    "min":"Introduceti o valoare mai mare sau egal cu {0}"
+  },
+  "dialog":{
+    "title":"prompt",
+    "close":"închide"
+  },
+  "placeholders":{
+    "Username":"nume utilizator",
+    "Password":"parola",
+    "Login":"Login"
+  }
 }
-
-        

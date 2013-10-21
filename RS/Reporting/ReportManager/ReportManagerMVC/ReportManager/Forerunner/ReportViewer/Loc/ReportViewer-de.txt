@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"Laden...",
     "completeFind":"Der gesamte Bericht wurde durchsucht",
@@ -23,8 +23,8 @@
     "source":"Ursprung",
     "message":"Information",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Vielen Dank für Ihr Forerunner Software Mobilizer, scheint es ein Problem mit Ihrer Lizenz.",
+    "licenseErrorContent":"Bitte kontaktieren Sie Ihren Systemadministrator. Wenn Sie der Administrator überprüfen Sie bitte Ihre Lizenz in der Mobilizer Konfigurationstool."
   },
   "exportType":{
     "xml":"XML-Datei mit Daten",
@@ -72,14 +72,14 @@
   },
   "print":{
     "title":"Drucken Seitenlayout Option",
-    "pageHeight":"H�he",
+    "pageHeight":"Höhe",
     "pageWidth":"Breite",
     "marginTop":"Oberteil",
     "marginBottom":"Unterseite",
     "marginLeft":"Links",
     "marginRight":"Richtig",
-    "print":"drucken",
-    "cancel":"stornieren",
+    "print":"Drucken",
+    "cancel":"Stornieren",
     "unit":"in",
     "margin":"Margins",
     "pageLayoutOptions":"Seitenlayoutoptionen"
@@ -96,7 +96,7 @@
     "isFalse":"Falsch",
     "required":"Erforderlich",
     "viewReport":"Bericht anzeigen",
-    "cancel":"cancel"
+    "cancel":"stornieren"
   },
   "validateError":{
     "required":"Erforderlich",

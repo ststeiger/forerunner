@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"Laddar...",
     "completeFind":"Hela rapporten har sökts igenom",
@@ -23,8 +23,8 @@
     "source":"källa",
     "message":"meddelande",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Tack för att du använder Forerunner Software Mobilizer, tycks det finnas ett problem med ditt körkort.",
+    "licenseErrorContent":"Vänligen kontakta systemadministratören. Om du är administratör vänligen verifiera din licens i Mobilizer konfigurationsverktyg."
   },
   "exportType":{
     "xml":"XML fil med rapportdata",
@@ -69,16 +69,16 @@
     "reportPage":"Sida",
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
-    "userSettings":"Inst�llningar"
+    "userSettings":"Inställningar"
   },
   "print":{
     "title":"Skriv Option Sidlayout",
-    "pageHeight":"H�jd",
+    "pageHeight":"Höjd",
     "pageWidth":"Bredd",
     "marginTop":"Topp",
     "marginBottom":"Botten",
-    "marginLeft":"V�nster",
-    "marginRight":"h�ger",
+    "marginLeft":"Vänster",
+    "marginRight":"höger",
     "print":"skriva ut",
     "cancel":"avbryta",
     "unit":"i",
@@ -86,10 +86,10 @@
     "pageLayoutOptions":"Sidlayout"
   },
   "userSettings":{
-    "title":"Anv�ndarinst�llningar",
+    "title":"Användarinställningar",
     "submit":"Ok",
     "cancel":"avboka",
-    "ResponsiveUI":"lyh�rd UI"
+    "ResponsiveUI":"Lyhörd UI"
   },
   "paramPane":{
     "nullField":"Noll",
@@ -120,8 +120,8 @@
     "close":"nära"
   },
   "placeholders":{
-    "Username":"Anv�ndarnamn",
-    "Password":"L�senord",
+    "Username":"användarnamn",
+    "Password":"lösenord",
     "Login":"Inloggning"
   }
 }

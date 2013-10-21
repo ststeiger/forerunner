@@ -1,4 +1,4 @@
-{
+﻿{
   "messages":{
     "loading":"Hleðsla...",
     "completeFind":"Öllu skýrslu hefur verið leitað",
@@ -22,7 +22,9 @@
     "targetSite":"targetSite",
     "source":"Heimild",
     "message":"Skilaboð",
-    "stackTrace":"StackTrace"
+    "stackTrace":"StackTrace",
+    "licenseErrorTitle": "Þakka þér fyrir að nota Forerunner Hugbúnaður Mobilizer, það virðist vera málið með leyfi þínu.",
+    "licenseErrorContent": "Vinsamlegast hafðu samband við kerfisstjóra. Ef þú ert stjórnandi vinsamlegast staðfesta leyfi þitt í Mobilizer stillingar tól."
   },
   "exportType":{
     "xml":"XML skrá með gögn skýrslunnar",
@@ -71,7 +73,7 @@
   },
   "print":{
     "title":"Prenta Page Layout Valkostur",
-    "pageHeight":"H��",
+    "pageHeight":"Hæð",
     "pageWidth":"breidd",
     "marginTop":"Top",
     "marginBottom":"Bottom",
@@ -79,15 +81,15 @@
     "marginRight":"H�gri",
     "print":"Prenta",
     "cancel":"hætta",
-    "unit":"�",
-    "margin":"framleg�",
-    "pageLayoutOptions":"�tlit s��unnar"
+    "unit":"í",
+    "margin":"framlegð",
+    "pageLayoutOptions":"Útlit síðunnar"
   },
   "userSettings":{
     "title":"notandi Stillingar",
     "submit":"Ok",
-    "cancel":"h�tta",
-    "ResponsiveUI":"m�tt�kilegur H�"
+    "cancel":"hætta",
+    "ResponsiveUI":"móttækilegur HÍ"
   },
   "paramPane":{
     "nullField":"Zero",
@@ -95,14 +97,14 @@
     "isFalse":"False",
     "required":"krafist",
     "viewReport":"Skoða skýrslu",
-    "cancel":"h�tta"
+    "cancel":"hætta"
   },
   "validateError":{
     "required":"krafist",
     "remote":"Vinsamlegast lagaðu þetta svæði",
     "email":"Ógilt netfang",
     "url":"ógild URL",
-    "date":"ógild dagsetning",
+    "date":"ógild dagsetning (yyyy-mm-dd)",
     "dateISO":"ógild dagsetning",
     "number":"Ógilt númer",
     "digits":"Tölustafir Aðeins",
@@ -119,7 +121,7 @@
   },
   "placeholders":{
     "Username":"notandanafn",
-    "Password":"lykilor�",
-    "Login":"Innskr�ning"
+    "Password":"lykilorð",
+    "Login":"Innskráning"
   }
 }

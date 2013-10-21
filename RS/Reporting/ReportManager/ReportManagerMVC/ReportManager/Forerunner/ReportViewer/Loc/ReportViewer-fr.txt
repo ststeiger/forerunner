@@ -1,15 +1,15 @@
-{
+﻿{
   "messages":{
     "loading":"Chargement...",
-    "completeFind":"L\u0027ensemble du rapport a été recherché",
+    "completeFind":"L'ensemble du rapport a été recherché",
     "keyNotFound":"Clé introuvable",
     "sessionExpired":"Votre session a expiré",
-    "imageNotDisplay":"Impossible d\u0027afficher l\u0027image",
+    "imageNotDisplay":"Impossible d'afficher l'image",
     "saveParamSuccess":"Sauvé",
     "saveParamFailed":"Manqué",
-    "catalogsLoadFailed":"Impossible de charger les catalogues à partir du serveur. S\u0027il vous plaît essayer de nouveau.",
-    "paramFieldEmpty":"paramètre n\u0027est pas une valeur",
-    "contactAdmin":"S\u0027il vous plaît contactez l\u0027administrateur du rapport de l\u0027aide",
+    "catalogsLoadFailed":"Impossible de charger les catalogues à partir du serveur. S'il vous plaît essayer de nouveau.",
+    "paramFieldEmpty":"paramètre n'est pas une valeur",
+    "contactAdmin":"S'il vous plaît contactez l'administrateur du rapport de l'aide",
     "favoriteFailed":"Manqué",
     "docmapShowFailed":"Manqué",
     "prepareActionFailed":"Manqué",
@@ -23,8 +23,8 @@
     "source":"Origine",
     "message":"Un message",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Merci d'utiliser Forerunner Software Mobilizer, il semble y avoir un problème avec votre licence.",
+    "licenseErrorContent":"S'il vous plaît contacter votre administrateur système. Si vous êtes l'administrateur s'il vous plaît vérifier votre licence dans l'outil de configuration Mobilizer."
   },
   "exportType":{
     "xml":"XML fichier avec les données du rapport",
@@ -77,7 +77,7 @@
     "pageHeight":"Hauteur",
     "pageWidth":"Largeur",
     "marginTop":"Haut",
-    "marginBottom":"inf�rieur",
+    "marginBottom":"inférieur",
     "marginLeft":"gauche",
     "marginRight":"droite",
     "print":"Imprimer",
@@ -87,10 +87,10 @@
     "pageLayoutOptions":"Les options de mise"
   },
   "userSettings":{
-    "title":"Param�tres de l\u0027utilisateur",
+    "title":"Paramètres de l'utilisateur",
     "submit":"Ok",
-    "cancel":"r�silier",
-    "ResponsiveUI":"interface utilisateur r�active"
+    "cancel":"résilier",
+    "ResponsiveUI":"Interface utilisateur réactive"
   },
   "paramPane":{
     "nullField":"Zéro",
@@ -98,15 +98,15 @@
     "isFalse":"Faux",
     "required":"Voulu",
     "viewReport":"Voir le Rapport",
-    "cancel":"r�silier"
+    "cancel":"résilier"
   },
   "validateError":{
     "required":"Demandé",
-    "remote":"S\u0027il vous plaît corriger ce domaine",
+    "remote":"S'il vous plaît corriger ce domaine",
     "email":"Email Invalide",
     "url":"URL Invalide",
-    "date":"Nombre non valide",
-    "dateISO":"Date Invalide",
+    "date":"date invalide",
+    "dateISO":"Invalid Date (yyyy-mm-dd)",
     "number":"Nombre non valide",
     "digits":"Seuls les chiffres",
     "maxlength":"Pas plus que {0} caractères",
@@ -121,7 +121,7 @@
     "close":"proche"
   },
   "placeholders":{
-    "Username":"Nom d\u0027utilisateur",
+    "Username":"Nom d'utilisateur",
     "Password":"mot de passe",
     "Login":"Connexion"
   }

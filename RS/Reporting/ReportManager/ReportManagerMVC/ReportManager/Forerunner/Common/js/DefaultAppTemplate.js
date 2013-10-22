@@ -170,7 +170,7 @@ $(function () {
                 me.showModal = false;
                 me.$container.removeClass("fr-layout-container-noscroll");
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                me.$container.css("overflow", "auto").unmask();
+                me.$container.css("overflow", "").unmask();
                 me.scrollLock = false;
                 me.restoreScroll();
             });
@@ -369,9 +369,11 @@ $(function () {
 
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.scrollToPosition(me.getOriginalPosition());
             });
 
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.restoreScrollPosition();
             });
 
             $viewer.on(events.reportViewerallowZoom(), function (e, data) {
@@ -581,7 +583,17 @@ $(function () {
                     .css("height", (containerHeight - 38)).css("width", containerWidth);
             }
         },
+        cleanUp: function () {
+            var me = this;
 
+            me.hideSlideoutPane(true);
+            me.hideSlideoutPane(false);
+            me.$bottomdiv.hide();
+            me.$bottomdivspacer.hide();
+            //make sure container can scrollable when click phycial back button 
+            //when modal dialog show up which disable scroll and not restore.
+            me.$container.css("overflow", "");
+        },
         _selectedItemPath: null,
     };
 });  // $(function ()

@@ -47,12 +47,9 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            layout.hideSlideoutPane(true);
-            layout.hideSlideoutPane(false);
             forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs();
-            layout.$bottomdivspacer.hide();
-            layout.$bottomdiv.hide();
+            layout.cleanUp();
           
             //layout.$mainviewport.css({ width: "100%", height: "100%"});
 

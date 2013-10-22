@@ -2,6 +2,7 @@
   width: 100%;
   height: 350px;
   bottom: 0px;
+  z-index:3;
 
   background: #9bb4d5; /* Old browsers */
   background: -moz-linear-gradient(top, #9bb4d5 0%, #8fa6cb 100%); /* FF3.6+ */

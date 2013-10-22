@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"積載...",
     "completeFind":"レポート全体が検索されています",
     "keyNotFound":"キーが見つからない",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"失敗した",
     "bookmarkNotFound":"レポートにブックマークを見つけることができません"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"詳細はクリック",
     "serverError":"例外は、サーバからスロー",
     "type":"タイプ",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"フォアソフトウェアMobilizerはを使用していただき、ありがとうございます、あなたのライセンスに問題があるように表示されます。",
     "licenseErrorContent":"あなたのシステム管理者に連絡してください。あなたがいる場合は管理者がMobilizerは設定ツールで、ライセンスを確認してください。"
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML レポートデータを持つファイル",
     "csv":"CSV (カンマ区切り)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF ファイル",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"の",
     "home":"原産地",
     "navigation":"ナビゲーション",
@@ -48,7 +48,7 @@
     "zoom":"ズームを有効にする",
     "print":"刷る"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"裏面",
     "docMap":"ドキュメントマップ",
     "exportMenu":"輸出する",
@@ -69,9 +69,10 @@
     "reportPage":"ページ",
     "zoom":"ズームを有効にする",
     "print":"刷り出す",
-    "userSettings":"設定"
+    "userSettings":"設定",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"ページレイアウトオプションを印刷",
     "pageHeight":"縦",
     "pageWidth":"幅",
@@ -85,13 +86,13 @@
     "margin":"端",
     "pageLayoutOptions":"ページレイアウトオプション"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"ユーザー設定",
     "submit":"OK",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"ゼロ",
     "isTrue":"真",
     "isFalse":"僻",
@@ -99,7 +100,7 @@
     "viewReport":"レポートの表示",
     "cancel":"キャンセル"
   },
-  "validateError":{
+  "validateError": {
     "required":"必修",
     "remote":"このフィールドを修正してください",
     "email":"無効な電子メール",
@@ -115,11 +116,11 @@
     "max":"以下{0}に等しい値を入力してください",
     "min":"以上{0}に等しい値を入力します"
   },
-  "dialog":{
+  "dialog": {
     "title":"プロンプト",
     "close":"閉じる"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"ユーザー名",
     "Password":"パスワード",
     "Login":"ログイン"

@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"Laddar...",
     "completeFind":"Hela rapporten har sökts igenom",
     "keyNotFound":"Tangenten hittades inte",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Misslyckades",
     "bookmarkNotFound":"Kan inte hitta bokmärket i rapporten"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Klicka för mer information",
     "serverError":"Undantag kastat från servern",
     "type":"Stilsort",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Tack för att du använder Forerunner Software Mobilizer, tycks det finnas ett problem med ditt körkort.",
     "licenseErrorContent":"Vänligen kontakta systemadministratören. Om du är administratör vänligen verifiera din licens i Mobilizer konfigurationsverktyg."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML fil med rapportdata",
     "csv":"CSV (kommaseparerad)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF fil",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"Av",
     "home":"Hem",
     "navigation":"Navigering",
@@ -48,7 +48,7 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"bakåt",
     "docMap":"Dokumentkarta",
     "exportMenu":"Export",
@@ -69,9 +69,10 @@
     "reportPage":"Sida",
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
-    "userSettings":"Inställningar"
+    "userSettings":"Inställningar",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Skriv Option Sidlayout",
     "pageHeight":"Höjd",
     "pageWidth":"Bredd",
@@ -85,13 +86,13 @@
     "margin":"marginaler",
     "pageLayoutOptions":"Sidlayout"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Användarinställningar",
     "submit":"Ok",
     "cancel":"avboka",
     "ResponsiveUI":"Lyhörd UI"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Noll",
     "isTrue":"Sant",
     "isFalse":"Falskt",
@@ -99,7 +100,7 @@
     "viewReport":"Visa rapport",
     "cancel":"avbryta"
   },
-  "validateError":{
+  "validateError": {
     "required":"krävs",
     "remote":"Vänligen fixa detta f!ält",
     "email":"Ogiltigt e-mail",
@@ -115,11 +116,11 @@
     "max":"Ange ett värde mindre än eller lika med {0}",
     "min":"Ange ett värde som är större än eller lika med {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"föranleda",
     "close":"nära"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"användarnamn",
     "Password":"lösenord",
     "Login":"Inloggning"

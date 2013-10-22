@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"Se încarcă...",
     "completeFind":"Întreaga Raportul a fost căutat",
     "keyNotFound":"Cheia nu a fost găsit ",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"A eșuat",
     "bookmarkNotFound":"Nu pot găsi marcajul în raport"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
     "serverError":"Excepție aruncat de la server",
     "type":"Type",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Vă mulțumim pentru ajutorul Forerunner Software mobilizator, se pare că există o problemă cu licența.",
     "licenseErrorContent":"Vă rugăm să contactați administratorul de sistem. Dacă sunteți administratorul vă rugăm să verificați de licență în instrument de configurare mobilizator."
   },
-  "exportType":{
+  "exportType": {
     "xml":"fișierul XML cu datele de raport",
     "csv":"CSV (delimitat prin virgulă)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"Fişier TIFF",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"a",
     "home":"Acasă",
     "navigation":"Navigare",
@@ -48,7 +48,7 @@
     "zoom":"Permite Zoom",
     "print":"Print"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"Înapoi",
     "docMap":"Planul documentului",
     "exportMenu":"Export",
@@ -69,9 +69,10 @@
     "reportPage":"Pagina",
     "zoom":"Permite Zoom",
     "print":"Print",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Opțiunea Print Page Layout",
     "pageHeight":"proportie",
     "pageWidth":"orizontal",
@@ -85,13 +86,13 @@
     "margin":"Margini",
     "pageLayoutOptions":"Opțiunile de punere în pagină"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Setari utilizator",
     "submit":"bine",
     "cancel":"anula",
     "ResponsiveUI":"UI receptiv"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Null",
     "isTrue":"Adevărat",
     "isFalse":"False",
@@ -99,7 +100,7 @@
     "viewReport":"Vizualizare raport",
     "cancel":"cancel"
   },
-  "validateError":{
+  "validateError": {
     "required":"Necesare",
     "remote":"Vă rugăm să rezolvaţi acest câmp",
     "email":"E-mail nevalidă",
@@ -115,11 +116,11 @@
     "max":"Introduceti o valoare mai mică decât sau egală cu a {0}",
     "min":"Introduceti o valoare mai mare sau egal cu {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"prompt",
     "close":"închide"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"nume utilizator",
     "Password":"parola",
     "Login":"Login"

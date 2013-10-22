@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"Carregando...",
     "completeFind":"todo o relatório já foi revistado",
     "keyNotFound":"Chave não encontrada",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Fracassado",
     "bookmarkNotFound":"Não foi possível encontrar o marcador no relatório"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Clique para obter mais detalhes",
     "serverError":"Exceção Descartado do servidor",
     "type":"Tipo",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Obrigado por utilizar o Forerunner Software mobilizador, não parece ser um problema com a sua licença.",
     "licenseErrorContent":"Por favor, contate o administrador do sistema. Se você é o administrador verifique sua licença na ferramenta de configuração mobilizador."
   },
-  "exportType":{
+  "exportType": {
     "xml":"Arquivo XML com dados do relatório",
     "csv":"CSV (delimitado por vírgula)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"Arquivo TIFF",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"de",
     "home":"Em casa",
     "navigation":"Navegação",
@@ -48,7 +48,7 @@
     "zoom":"Ativar Zoom",
     "print":"Impressão"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"Volta",
     "docMap":"Mapa do documento",
     "exportMenu":"Exportar",
@@ -69,9 +69,10 @@
     "reportPage":"Página de vídeo",
     "zoom":"Ativar Zoom",
     "print":"Impressão",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Imprimir página de opção de layout",
     "pageHeight":"Altura",
     "pageWidth":"Largura",
@@ -85,13 +86,13 @@
     "margin":"margens",
     "pageLayoutOptions":"Op��es de layout de p�gina"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Configura��es do Usu�rio",
     "submit":"Ok",
     "cancel":"cancelar",
     "ResponsiveUI":"UI Responsive"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Nulo",
     "isTrue":"Verdade",
     "isFalse":"Falso",
@@ -99,7 +100,7 @@
     "viewReport":"Exibir relatório",
     "cancel":"cancelar"
   },
-  "validateError":{
+  "validateError": {
     "required":"Necessário",
     "remote":"Por favor corrigir este campo",
     "email":"E-mail inválido",
@@ -115,11 +116,11 @@
     "max":"Insira um valor menor ou igual a {0}",
     "min":"Insira um valor maior ou igual a {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"incitar",
     "close":"fechar"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"Usuário",
     "Password":"senha",
     "Login":"login"

@@ -8,11 +8,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ReportManagerUnitTest
 {
+    public enum ProcessResult
+    {
+        UpToDate = 0,
+        Changed = 1,
+        NeedsTranslation = 2,
+    }
+
     public class Section : Dictionary<String, String>
     {
-        public bool Process(Section section, String sectionName, bool skipTranslationCheck)
+        public ProcessResult Process(Section section, String sectionName, bool skipTranslationCheck)
         {
-            bool changed = false;
+            ProcessResult result = ProcessResult.UpToDate;
 
             foreach (KeyValuePair<String, String> pair in this)
             {
@@ -20,18 +27,18 @@ namespace ReportManagerUnitTest
                 {
                     Console.WriteLine("  Missing value - section: {0}, property: {1}", sectionName, pair.Key);
                     section.Add(pair.Key, pair.Value);
-                    changed = true;
+                    result |= ProcessResult.Changed;
                 }
 
                 if (!skipTranslationCheck &&
                     String.Compare(section[pair.Key], this[pair.Key], true) == 0)
                 {
                     Console.WriteLine("  Value needs translation - section: {0}, property: {1}", sectionName, pair.Key);
-                    changed = true;
+                    result |= ProcessResult.NeedsTranslation;
                 }
             }
 
-            return changed;
+            return result;
         }
     }
 
@@ -65,9 +72,9 @@ namespace ReportManagerUnitTest
             }
         }
 
-        public bool Process(LocFile locFile, bool skipTranslationCheck)
+        public ProcessResult Process(LocFile locFile, bool skipTranslationCheck)
         {
-            bool changed = false;
+            ProcessResult result = ProcessResult.UpToDate;
 
             foreach (KeyValuePair<String, Section> pair in this)
             {
@@ -75,13 +82,14 @@ namespace ReportManagerUnitTest
                 {
                     Console.WriteLine("  Missing section: {0}", pair.Key);
                     locFile.Add(pair.Key, pair.Value);
-                    changed = true;
+                    result |= ProcessResult.Changed;
                 }
 
-                changed = changed || pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck);
+                ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck);
+                result |= processResult;
             }
 
-            return changed;
+            return result;
         }
     }
 
@@ -126,8 +134,8 @@ namespace ReportManagerUnitTest
 
                 LocFile locFile = new LocFile();
                 locFile.Load(fileInfo.FullName);
-                bool changed = masterLocFile.Process(locFile, isEnglish(fileInfo.Name));
-                if (!changed)
+                ProcessResult result = masterLocFile.Process(locFile, isEnglish(fileInfo.Name));
+                if ((result & ProcessResult.Changed) == 0)
                 {
                     Console.WriteLine("  File up to date, no changes");
                 }
@@ -141,7 +149,7 @@ namespace ReportManagerUnitTest
                     {
                         jsonString = "{\n  " + jsonString.Substring(1);
                     }
-                    jsonString = jsonString.Replace("\":{\"", "\":{\n    \"");
+                    jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
                     jsonString = jsonString.Replace("\",\"", "\",\n    \"");
                     jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
                     jsonString = jsonString.Replace("}}", "\n  }\n}\n");

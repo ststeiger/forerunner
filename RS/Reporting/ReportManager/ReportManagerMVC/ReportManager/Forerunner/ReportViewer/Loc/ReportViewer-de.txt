@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"Laden...",
     "completeFind":"Der gesamte Bericht wurde durchsucht",
     "keyNotFound":"Key nicht gefunden",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Gescheiterte",
     "bookmarkNotFound":"Können Sie nicht das Lesezeichen im Bericht"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Klicken Sie hier für mehr Details",
     "serverError":"Ausnahme vom Server geworfen",
     "type":"Type",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Vielen Dank für Ihr Forerunner Software Mobilizer, scheint es ein Problem mit Ihrer Lizenz.",
     "licenseErrorContent":"Bitte kontaktieren Sie Ihren Systemadministrator. Wenn Sie der Administrator überprüfen Sie bitte Ihre Lizenz in der Mobilizer Konfigurationstool."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML-Datei mit Daten",
     "csv":"CSV (Komma getrennt)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF Datei",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"von",
     "home":"Haus",
     "navigation":"Steuerung",
@@ -48,7 +48,7 @@
     "zoom":"Zoomen",
     "print":"Drucken"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"Zurück",
     "docMap":"Document Map",
     "exportMenu":"Export",
@@ -68,9 +68,11 @@
     "refresh":"Dieses Seite neu laden",
     "reportPage":"Seite",
     "zoom":"Aktivieren Zoomen",
-    "print":"Drucken"
+    "print":"Drucken",
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Drucken Seitenlayout Option",
     "pageHeight":"Höhe",
     "pageWidth":"Breite",
@@ -84,13 +86,13 @@
     "margin":"Margins",
     "pageLayoutOptions":"Seitenlayoutoptionen"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Benutzereinstellungen",
     "submit":"Ok",
     "cancel":"Stornieren",
     "ResponsiveUI":"Responsive UI"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Null",
     "isTrue":"Wahr",
     "isFalse":"Falsch",
@@ -98,7 +100,7 @@
     "viewReport":"Bericht anzeigen",
     "cancel":"stornieren"
   },
-  "validateError":{
+  "validateError": {
     "required":"Erforderlich",
     "remote":"Bitte korrigieren Sie dieses Feld",
     "email":"Ungültige E-Mail",
@@ -114,11 +116,11 @@
     "max":"Geben Sie einen Wert kleiner oder gleich {0}",
     "min":"Geben Sie einen Wert größer oder gleich {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"Eingabeaufforderung",
     "close":"schließen"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"Benutzername",
     "Password":"Kennwort",
     "Login":"Anmelden"

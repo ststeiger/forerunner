@@ -3772,24 +3772,48 @@ $(function () {
             var bgLayer = new $("<div class='fr-render-bglayer'></div>");
             bgLayer.attr("style", style);
 
-            if (reportObj.ReportContainer.Trial ===1) {
-                var watermark = new $("<svg/>");
-                var text = new $("<text/>");
-                text.text("Evaluation");
-                text.attr("pointer-events", "none");
-                watermark.append(text);
-                //watermark.html("<p>Evaluation</p>");
-                var wstyle = "opacity:0.25;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
-                //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
-                watermark.attr("style", wstyle);
-                watermark.attr("pointer-events", "none");
-                watermark.attr("xmlns", "http://www.w3.org/2000/svg");
-                me.element.append(watermark);
+            if (reportObj.ReportContainer.Trial ===1) {                
+                me.element.append(me._getWatermark());
             }
 
             
             me.element.append(bgLayer);
         },
+        _getWatermark: function () {
+
+            var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("pointer-events", "none");
+
+
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
+            //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
+            svg.setAttribute("style", wstyle);
+
+            /*
+            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("width", "187");
+            rect.setAttribute("height", "234");
+            rect.setAttribute("fill", "#fff");
+            rect.setAttribute("stroke", "#000");
+            rect.setAttribute("stroke-width", "2");
+            rect.setAttribute("rx", "7");
+            */
+
+            var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", "10");
+            text.setAttribute("y", "160");
+            text.setAttribute("fill", "#000");
+            text.textContent = "E" + "val" + "ua" + "tion";
+
+            //svg.appendChild(rect);
+            svg.appendChild(text);
+
+            return svg;
+        },
+
         writeError: function (errorData) {
             var me = this;
             var errorTag = me.options.reportViewer.locData.errorTag;

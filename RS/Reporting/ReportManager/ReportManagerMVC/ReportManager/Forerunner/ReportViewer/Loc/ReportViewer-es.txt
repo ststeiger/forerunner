@@ -60,7 +60,7 @@
     "lastPage":"Último",
     "menu":"Menú",
     "navigation":"Navegación",
-    "next":"Ddespués",
+    "next":"Después",
     "pageOf":"de",
     "Parmeters":"Parámetros",
     "previousPage":"Página anterior",
@@ -85,7 +85,7 @@
     "cancel":"cancelar",
     "unit":"en",
     "margin":"margen",
-    "pageLayoutOptions":"Opciones de dise�o de p�gina"
+    "pageLayoutOptions":"opciones de diseño de página"
   },
   "userSettings": {
     "title":"Ajustes del usuario",

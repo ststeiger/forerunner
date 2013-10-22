@@ -1,129 +1,128 @@
 ﻿{
-    "messages": {
-        "loading": "Loading...",
-		"completeFind": "The entire report has been searched",
-		"keyNotFound": "Key not found",
-		"sessionExpired": "Your session has expired",
-		"imageNotDisplay": "Cannot display image",
-		"saveParamSuccess":"Saved",
-		"saveParamFailed":"Failed",
-		"catalogsLoadFailed":"Failed to load the catalogs from the server.  Please try again.",
-		"paramFieldEmpty":"parameter is missing a value",
-		"contactAdmin":"Please contact report administrator for help",
-		"favoriteFailed":"Failed",
-		"docmapShowFailed":"Failed",
-		"prepareActionFailed":"Failed",
-		"bookmarkNotFound":"Cannot find the bookmark in the report"
-    },
-    "errorTag": {
-        "moreDetail": "Click for more detail",
-        "serverError": "Exception thrown from server",
-        "type": "Type",
-        "targetSite": "targetSite",
-        "source": "Source",
-        "message": "Message",
-        "stackTrace": "StackTrace",
-		"licenseErrorTitle": "Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-		"licenseErrorContent": "Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
-    },
-    "exportType": {
-        "xml": "XML file with report data",
-        "csv": "CSV (comma delimited)",
-        "pdf": "PDF",
-        "mhtml": "MHTML (web archive)",
-        "excel": "Excel",
-        "tiff": "TIFF file",
-        "word": "Word"
-    },
-	"toolPane": {
-        "pageOf": "of",
-        "home": "Home",
-        "navigation": "Navigation",
-        "favorites": "Favorites",
-        "back": "Back",
-        "refresh": "Refresh",
-        "docMap": "Document Map",
-        "find": "Find",
-        "next": "Next",
-		"zoom": "Enable Zoom",
-		"print": "Print"
-    },
-	"toolbar": {
-        "back": "Back",
-        "docMap": "Document Map",
-        "exportMenu": "Export",
-        "favorites": "Favorites",
-        "find": "Find",
-        "firstPage": "First",
-        "home": "Home",
-		"keyword": "Keyword",
-		"lastPage": "Last",
-		"menu": "Menu",
-        "navigation": "Navigation",
-        "next": "Next",
-        "pageOf": "of",
-		"paramarea": "Parmeters",
-		"previousPage": "Previous",
-		"recent": "Recent",
-        "refresh": "Refresh",
-		"reportPage": "Page",
-		"zoom": "Enable Zoom",
-		"print": "Print",
-		"userSettings": "Settings"
-    },
-	"print":{
-	    "title": "Print Report",
-		"pageHeight": "Height",
-		"pageWidth": "Width",
-		"marginTop": "Top",
-		"marginBottom": "Bottom",
-		"marginLeft": "Left",
-		"marginRight": "Right",
-		"print": "Print",
-		"cancel": "Cancel",
-		"unit": "in",
-		"margin": "Margins",
-		"pageLayoutOptions": "Page layout options"
-	},
-	"userSettings": {
-	    "title": "User Settings",
-		"submit": "Ok",
-		"cancel": "Cancel",
-		"ResponsiveUI": "Responsive UI"
-	},
-	"paramPane": {
-        "nullField": "Null",
-        "isTrue": "True",
-        "isFalse": "False",
-        "required": "Required",
-        "viewReport": "View Report",
-		"cancel": "cancel"
-    },
-	"validateError": {
-		"required": "Required",
-		"remote": "Please fix this field",
-		"email": "Invalid email",
-		"url": "Invalid URL",
-		"date": "Invalid Date",
-		"dateISO": "Invalid Date (yyyy-mm-dd)",
-		"number": "Invalid Number",
-		"digits": "Digits Only",
-		"maxlength": "No more than {0} characters",
-		"minlength": "At least {0} charaters",
-		"rangelength": "Enter a value between {0} and {1} charaters long",
-		"range": "Enter a value between {0} and {1}",
-		"max": "Enter a value less than or equal to {0}",
-		"min": "Enter a value greater than or equal to {0}"
-	},
-	"dialog":{
-	    "title":"Prompt",
-		"close":"Close"
-	},
-	"placeholders":{ 
-	    "Username":"User name", 
-	    "Password":"Password", 
-	    "Login": "Login" 
-	}
+  "messages": {
+    "loading":"Loading...",
+    "completeFind":"The entire report has been searched",
+    "keyNotFound":"Key not found",
+    "sessionExpired":"Your session has expired",
+    "imageNotDisplay":"Cannot display image",
+    "saveParamSuccess":"Saved",
+    "saveParamFailed":"Failed",
+    "catalogsLoadFailed":"Failed to load the catalogs from the server.  Please try again.",
+    "paramFieldEmpty":"parameter is missing a value",
+    "contactAdmin":"Please contact report administrator for help",
+    "favoriteFailed":"Failed",
+    "docmapShowFailed":"Failed",
+    "prepareActionFailed":"Failed",
+    "bookmarkNotFound":"Cannot find the bookmark in the report"
+  },
+  "errorTag": {
+    "moreDetail":"Click for more detail",
+    "serverError":"Exception thrown from server",
+    "type":"Type",
+    "targetSite":"targetSite",
+    "source":"Source",
+    "message":"Message",
+    "stackTrace":"StackTrace",
+    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
+    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+  },
+  "exportType": {
+    "xml":"XML file with report data",
+    "csv":"CSV (comma delimited)",
+    "pdf":"PDF",
+    "mhtml":"MHTML (web archive)",
+    "excel":"Excel",
+    "tiff":"TIFF file",
+    "word":"Word"
+  },
+  "toolPane": {
+    "pageOf":"of",
+    "home":"Home",
+    "navigation":"Navigation",
+    "favorites":"Favorites",
+    "back":"Back",
+    "refresh":"Refresh",
+    "docMap":"Document Map",
+    "find":"Find",
+    "next":"Next",
+    "zoom":"Enable Zoom",
+    "print":"Print"
+  },
+  "toolbar": {
+    "back":"Back",
+    "docMap":"Document Map",
+    "exportMenu":"Export",
+    "favorites":"Favorites",
+    "find":"Find",
+    "firstPage":"First",
+    "home":"Home",
+    "keyword":"Keyword",
+    "lastPage":"Last",
+    "menu":"Menu",
+    "navigation":"Navigation",
+    "next":"Next",
+    "pageOf":"of",
+    "paramarea":"Parmeters",
+    "previousPage":"Previous",
+    "recent":"Recent",
+    "refresh":"Refresh",
+    "reportPage":"Page",
+    "zoom":"Enable Zoom",
+    "print":"Print",
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
+  },
+  "print": {
+    "title":"Print Report",
+    "pageHeight":"Height",
+    "pageWidth":"Width",
+    "marginTop":"Top",
+    "marginBottom":"Bottom",
+    "marginLeft":"Left",
+    "marginRight":"Right",
+    "print":"Print",
+    "cancel":"Cancel",
+    "unit":"in",
+    "margin":"Margins",
+    "pageLayoutOptions":"Page layout options"
+  },
+  "userSettings": {
+    "title":"User Settings",
+    "submit":"Ok",
+    "cancel":"Cancel",
+    "ResponsiveUI":"Responsive UI"
+  },
+  "paramPane": {
+    "nullField":"Null",
+    "isTrue":"True",
+    "isFalse":"False",
+    "required":"Required",
+    "viewReport":"View Report",
+    "cancel":"cancel"
+  },
+  "validateError": {
+    "required":"Required",
+    "remote":"Please fix this field",
+    "email":"Invalid email",
+    "url":"Invalid URL",
+    "date":"Invalid Date",
+    "dateISO":"Invalid Date (yyyy-mm-dd)",
+    "number":"Invalid Number",
+    "digits":"Digits Only",
+    "maxlength":"No more than {0} characters",
+    "minlength":"At least {0} charaters",
+    "rangelength":"Enter a value between {0} and {1} charaters long",
+    "range":"Enter a value between {0} and {1}",
+    "max":"Enter a value less than or equal to {0}",
+    "min":"Enter a value greater than or equal to {0}"
+  },
+  "dialog": {
+    "title":"Prompt",
+    "close":"Close"
+  },
+  "placeholders": {
+    "Username":"User name",
+    "Password":"Password",
+    "Login":"Login"
+  }
 }
-
-        

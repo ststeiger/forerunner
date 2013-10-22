@@ -1,5 +1,5 @@
 ﻿{
-  "messages":{
+  "messages": {
     "loading":"Cargando...",
     "completeFind":"El informe completo ha sido registrada",
     "keyNotFound":"La llave no se encuentra",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"fracasado",
     "bookmarkNotFound":"¿No encuentra el marcador en el informe"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Haga clic para obtener más detalles",
     "serverError":"Excepción lanzada desde un servidor",
     "type":"Tipo",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Gracias por utilizar Forerunner Software Movilizador, parece que hay un problema con su licencia.",
     "licenseErrorContent":"Por favor, póngase en contacto con el administrador del sistema. Si usted es el administrador, por favor verificar su licencia de la herramienta de configuración Movilizador."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML archivo con los datos del informe",
     "csv":"CSV (delimitado por comas)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF expediente",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"de",
     "home":"Casa",
     "navigation":"Navegación",
@@ -48,7 +48,7 @@
     "zoom":"Habilitar zoom",
     "print":"Imprimir"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"de vuelta",
     "docMap":"Mapa del documento",
     "exportMenu":"Exportador",
@@ -69,9 +69,11 @@
     "reportPage":"Página",
     "zoom":"Habilitar Zoom",
     "print":"Imprimir",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "paramarea":"Parmeters",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Imprima opción Diseño de página",
     "pageHeight":"talla",
     "pageWidth":"anchura",
@@ -85,13 +87,13 @@
     "margin":"margen",
     "pageLayoutOptions":"Opciones de dise�o de p�gina"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Ajustes del usuario",
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"cero",
     "isTrue":"verdadero",
     "isFalse":"Falso",
@@ -99,7 +101,7 @@
     "viewReport":"Ver Informe",
     "cancel":"cancel"
   },
-  "validateError":{
+  "validateError": {
     "required":"necesario",
     "remote":"Por favor, corrija este campo",
     "email":"email inválido",
@@ -115,11 +117,11 @@
     "max":"Introduzca un valor menor o igual a {0}",
     "min":"Introduzca un valor mayor o igual a {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"pronto",
     "close":"cerrar"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"nombre de usuario",
     "Password":"contraseña",
     "Login":"login"

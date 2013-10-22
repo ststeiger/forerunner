@@ -314,15 +314,18 @@ namespace Forerunner.SSRS.Viewer
             // BUGBUG:: This can be made more optimized if we can use an existing session id.
             // Need to add the plumbing there. - added by baotong - 2013-10-14
 
-            ExecutionHeader execHeader = new ExecutionHeader();
-            rs.ExecutionHeaderValue = execHeader;
+            
             try
             {
                 rs.Credentials = GetCredentials();
                 ParameterValue[] values = paramList == null ? null : JsonUtility.GetParameterValue(paramList);
 
                 if (SessionID != "" && SessionID != null)
+                {
+                    ExecutionHeader execHeader = new ExecutionHeader();
+                    rs.ExecutionHeaderValue = execHeader;
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                }
                 else
                     execInfo = rs.LoadReport(ReportPath, historyID);
 

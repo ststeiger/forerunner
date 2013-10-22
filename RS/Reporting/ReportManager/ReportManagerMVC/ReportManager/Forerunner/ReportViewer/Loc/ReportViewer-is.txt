@@ -1,5 +1,5 @@
 ﻿{
-  "messages":{
+  "messages": {
     "loading":"Hleðsla...",
     "completeFind":"Öllu skýrslu hefur verið leitað",
     "keyNotFound":"Lykill fannst ekki",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Theip ar",
     "bookmarkNotFound":"Ní féidir teacht ar an leabharmharc sa tuarascáil"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Smelltu fyrir frekari upplýsingar",
     "serverError":"Undantekning kastað frá miðlara",
     "type":"tegund",
@@ -23,10 +23,10 @@
     "source":"Heimild",
     "message":"Skilaboð",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle": "Þakka þér fyrir að nota Forerunner Hugbúnaður Mobilizer, það virðist vera málið með leyfi þínu.",
-    "licenseErrorContent": "Vinsamlegast hafðu samband við kerfisstjóra. Ef þú ert stjórnandi vinsamlegast staðfesta leyfi þitt í Mobilizer stillingar tól."
+    "licenseErrorTitle":"Þakka þér fyrir að nota Forerunner Hugbúnaður Mobilizer, það virðist vera málið með leyfi þínu.",
+    "licenseErrorContent":"Vinsamlegast hafðu samband við kerfisstjóra. Ef þú ert stjórnandi vinsamlegast staðfesta leyfi þitt í Mobilizer stillingar tól."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML skrá með gögn skýrslunnar",
     "csv":"CSV (komma afmörkuð)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF skrá",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"af",
     "home":"Forsíða",
     "navigation":"Navigation",
@@ -48,7 +48,7 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"Til baka",
     "docMap":"Document Map",
     "exportMenu":"útflutningur",
@@ -69,9 +69,10 @@
     "reportPage":"Page",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Prenta Page Layout Valkostur",
     "pageHeight":"Hæð",
     "pageWidth":"breidd",
@@ -85,13 +86,13 @@
     "margin":"framlegð",
     "pageLayoutOptions":"Útlit síðunnar"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"notandi Stillingar",
     "submit":"Ok",
     "cancel":"hætta",
     "ResponsiveUI":"móttækilegur HÍ"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Zero",
     "isTrue":"True",
     "isFalse":"False",
@@ -99,7 +100,7 @@
     "viewReport":"Skoða skýrslu",
     "cancel":"hætta"
   },
-  "validateError":{
+  "validateError": {
     "required":"krafist",
     "remote":"Vinsamlegast lagaðu þetta svæði",
     "email":"Ógilt netfang",
@@ -115,11 +116,11 @@
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
     "min":"Sláðu inn gildið stærra en eða jafnt og {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"hvetja",
     "close":"loka"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"notandanafn",
     "Password":"lykilorð",
     "Login":"Innskráning"

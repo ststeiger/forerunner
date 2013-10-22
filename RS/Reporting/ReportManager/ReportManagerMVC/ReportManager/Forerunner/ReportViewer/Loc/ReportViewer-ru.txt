@@ -1,5 +1,5 @@
 ﻿{
-  "messages":{
+  "messages": {
     "loading":"загрузка...",
     "completeFind":"Поиск завершён",
     "keyNotFound":"Ключевое слово не найдено",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Не удалось",
     "bookmarkNotFound":"Не можете найти закладку в докладе"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Подробнее",
     "serverError":"Ошибка сервера",
     "type":"Тип",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Благодарим вас за использование программного обеспечения Mobilizer Предтечи, кажется, есть проблема с лицензией.",
     "licenseErrorContent":"Пожалуйста, обратитесь к системному администратору. Если вы являетесь администратором необходимо убедиться в наличии лицензии в инструменте конфигурации Mobilizer."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML файл с данными отчета",
     "csv":"CSV (запятая)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF файл",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"из",
     "home":"Домой",
     "navigation":"Навигация",
@@ -48,7 +48,7 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"Назад",
     "docMap":"Схема документа",
     "exportMenu":"Экспорт",
@@ -69,9 +69,10 @@
     "reportPage":"Страница Отчета",
     "zoom":"Enable Zoom",
     "print":"Напечатать",
-    "userSettings":"окружение"
+    "userSettings":"окружение",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Печать отчета",
     "pageHeight":"вышина",
     "pageWidth":"расстояние",
@@ -85,13 +86,13 @@
     "margin":"край",
     "pageLayoutOptions":"Параметры макета страницы"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Настройки пользователя",
     "submit":"Оклахома",
     "cancel":"отменить",
     "ResponsiveUI":"Отзывчивый интерфейс"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Ноль",
     "isTrue":"Верно",
     "isFalse":"Неверно",
@@ -99,7 +100,7 @@
     "viewReport":"Показать отчет",
     "cancel":"отменить"
   },
-  "validateError":{
+  "validateError": {
     "required":"Необходимый",
     "remote":"Удаленный",
     "email":"Неверный email",
@@ -115,11 +116,11 @@
     "max":"Введите значение меньше или равно {0}",
     "min":"Введите значение больше или равно {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"побуждать",
     "close":"близко"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"Имя пользователя",
     "Password":"пароль",
     "Login":"Войти"

@@ -77,7 +77,7 @@
     "title":"Imprima opción Diseño de página",
     "pageHeight":"talla",
     "pageWidth":"anchura",
-    "marginTop":"m�s alto",
+    "marginTop":"alto",
     "marginBottom":"inferior",
     "marginLeft":"Izquierda",
     "marginRight":"Derecha",

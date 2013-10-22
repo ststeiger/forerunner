@@ -3500,31 +3500,11 @@ $(function () {
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
-                setTimeout(function () { $(window).scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
-                setTimeout(function () { $(window).scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
             }
-            //me._initscrollposition();
         },
-        _setSelectionFromScroll: function () {
-            var me = this;
-            var position = me.$explorer.scrollTop();
-            var closest = 0;
-            var lastDistance = 0;
-            var closestDistance = Math.abs(position - me.rmListItems[0].position().top);
-            for (var i = 1; i < me.rmListItems.length; i++) {
-                var distance = Math.abs(position - me.rmListItems[i].position().top);
-                if (distance < closestDistance) {
-                    closest = i;
-                    closestDistance = distance;
-                } else if (lastDistance !== 0 && distance > lastDistance) {
-                    // If closetst is no longer 0 and we are no longer approaching the closest break
-                    break;
-                }
-                lastDistance = distance;
-            }
-            me.selectedItem = closest;
-        },
-
+      
         _fetch: function (view,path) {
             var me = this;
             forerunner.ajax.ajax({

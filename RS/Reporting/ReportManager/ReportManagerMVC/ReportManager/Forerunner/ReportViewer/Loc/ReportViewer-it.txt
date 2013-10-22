@@ -1,15 +1,15 @@
-{
+﻿{
   "messages":{
     "loading":"caricamento...",
-    "completeFind":"L\u0027intero rapporto è stato cercato",
+    "completeFind":"L'intero rapporto è stato cercato",
     "keyNotFound":"Chiave non trovata",
     "sessionExpired":"La sessione è scaduta",
-    "imageNotDisplay":"Impossibile visualizzare l\u0027immagine",
+    "imageNotDisplay":"Impossibile visualizzare l'immagine",
     "saveParamSuccess":"Salvato",
     "saveParamFailed":"Impossibile",
     "catalogsLoadFailed":"Impossibile caricare i cataloghi dal server. Riprova.",
     "paramFieldEmpty":"parametro non è presente un valore",
-    "contactAdmin":"Si prega di contattare l\u0027amministratore della relazione di aiuto",
+    "contactAdmin":"Si prega di contattare l'amministratore della relazione di aiuto",
     "favoriteFailed":"Impossibile",
     "docmapShowFailed":"Impossibile",
     "prepareActionFailed":"Impossibile",
@@ -23,8 +23,8 @@
     "source":"origine",
     "message":"comunicazione",
     "stackTrace":"StackTrace",
-    "licenseErrorTitle":"Thank you for using Forerunner Software Mobilizer, there appears to be an issue with your license.",
-    "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
+    "licenseErrorTitle":"Grazie di utilizzare Forerunner Software Mobilizer voi, sembra che vi sia un problema con la licenza.",
+    "licenseErrorContent":"Si prega di contattare l'amministratore di sistema. Se si è l'amministratore preghiamo verificare la licenza nello strumento di configurazione Mobilizer."
   },
   "exportType":{
     "xml":"XML file con i dati del rapporto",
@@ -105,7 +105,7 @@
     "email":"Mail non valido",
     "url":"URL non valido",
     "date":"Data non valida",
-    "dateISO":"Data non valida",
+    "dateISO":"Data non valida (yyyy-mm-dd)",
     "number":"Numero non valido",
     "digits":"Solo cifre",
     "maxlength":"Non più di {0} caratteri",
@@ -116,7 +116,7 @@
     "min":"Immettere un valore maggiore o uguale a {0}"
   },
   "dialog":{
-    "title":"chiederà",
+    "title":"promt",
     "close":"chiudere"
   },
   "placeholders":{

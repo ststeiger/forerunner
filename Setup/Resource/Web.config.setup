@@ -24,8 +24,7 @@
     <add key="Forerunner.ReportServerDB" value="ReportServer" />
     <add key="Forerunner.ReportServerDBUser" value="" />
     <add key="Forerunner.ReportServerDBPWD" value="" />
-    <add key="Forerunner.ReportServerDBDomain" value="" />
-    <add key="Forerunner.ReportServerDBAccountType" value="SQLAccount"/>
+    <add key="Forerunner.ReportServerDBDomain" value="" />  
   </appSettings>
   <!--
     For a description of web.config changes for .NET 4.5 see http://go.microsoft.com/fwlink/?LinkId=235367.

@@ -69,9 +69,9 @@
     "reportPage":"Página",
     "zoom":"Habilitar Zoom",
     "print":"Imprimir",
-    "userSettings":"Settings",
-    "paramarea":"Parmeters",
-    "saveParam":"Save Parameters"
+    "userSettings":"fraguado",
+    "paramarea":"Parámetros",
+    "saveParam":"Guardar parámetros"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -99,7 +99,7 @@
     "isFalse":"Falso",
     "required":"Necesario",
     "viewReport":"Ver Informe",
-    "cancel":"cancel"
+    "cancel":"Cancelar"
   },
   "validateError": {
     "required":"necesario",

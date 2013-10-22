@@ -70,7 +70,7 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать",
     "userSettings":"окружение",
-    "saveParam":"Save Parameters"
+    "saveParam":"Сохранить параметры"
   },
   "print": {
     "title":"Печать отчета",

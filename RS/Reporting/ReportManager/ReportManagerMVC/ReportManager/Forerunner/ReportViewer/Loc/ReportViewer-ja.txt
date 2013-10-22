@@ -70,7 +70,7 @@
     "zoom":"ズームを有効にする",
     "print":"刷り出す",
     "userSettings":"設定",
-    "saveParam":"Save Parameters"
+    "saveParam":"パラメータを保存"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

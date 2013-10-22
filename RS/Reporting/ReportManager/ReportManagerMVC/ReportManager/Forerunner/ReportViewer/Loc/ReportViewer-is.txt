@@ -69,8 +69,8 @@
     "reportPage":"Page",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"Stillingar",
+    "saveParam":"Vista Breytur"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",
@@ -79,7 +79,7 @@
     "marginTop":"Top",
     "marginBottom":"Bottom",
     "marginLeft":"vinstri",
-    "marginRight":"H�gri",
+    "marginRight":"hægri",
     "print":"Prenta",
     "cancel":"hætta",
     "unit":"í",

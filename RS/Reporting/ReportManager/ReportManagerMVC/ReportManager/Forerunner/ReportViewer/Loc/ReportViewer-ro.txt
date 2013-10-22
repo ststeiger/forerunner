@@ -68,12 +68,12 @@
     "refresh":"Refresh",
     "reportPage":"Pagina",
     "zoom":"Permite Zoom",
-    "print":"Print",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "print":"imprima",
+    "userSettings":"Setări",
+    "saveParam":"Salvare Parametrii"
   },
   "print": {
-    "title":"Opțiunea Print Page Layout",
+    "title":"imprima raportul",
     "pageHeight":"proportie",
     "pageWidth":"orizontal",
     "marginTop":"de sus",

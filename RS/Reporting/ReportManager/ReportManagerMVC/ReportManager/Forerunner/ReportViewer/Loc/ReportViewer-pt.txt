@@ -69,8 +69,8 @@
     "reportPage":"Página de vídeo",
     "zoom":"Ativar Zoom",
     "print":"Impressão",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"configurações",
+    "saveParam":"Salvar Parâmetros"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -84,10 +84,10 @@
     "cancel":"cancelar",
     "unit":"em",
     "margin":"margens",
-    "pageLayoutOptions":"Op��es de layout de p�gina"
+    "pageLayoutOptions":"Página Opções de layout"
   },
   "userSettings": {
-    "title":"Configura��es do Usu�rio",
+    "title":"Configurações do Usuário",
     "submit":"Ok",
     "cancel":"cancelar",
     "ResponsiveUI":"UI Responsive"

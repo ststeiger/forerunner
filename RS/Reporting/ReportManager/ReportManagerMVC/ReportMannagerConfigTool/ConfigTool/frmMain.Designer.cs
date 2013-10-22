@@ -70,6 +70,7 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabActivation = new System.Windows.Forms.TabPage();
+            this.btnMerge = new System.Windows.Forms.Button();
             this.btnValidate = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnDeActivate = new System.Windows.Forms.Button();
@@ -80,7 +81,6 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
-            this.btnMerge = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
@@ -390,6 +390,13 @@
             this.tabActivation.Name = "tabActivation";
             this.tabActivation.UseVisualStyleBackColor = true;
             // 
+            // btnMerge
+            // 
+            resources.ApplyResources(this.btnMerge, "btnMerge");
+            this.btnMerge.Name = "btnMerge";
+            this.btnMerge.UseVisualStyleBackColor = true;
+            this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
+            // 
             // btnValidate
             // 
             resources.ApplyResources(this.btnValidate, "btnValidate");
@@ -453,13 +460,6 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
-            // 
-            // btnMerge
-            // 
-            resources.ApplyResources(this.btnMerge, "btnMerge");
-            this.btnMerge.Name = "btnMerge";
-            this.btnMerge.UseVisualStyleBackColor = true;
-            this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
             // 
             // frmMain
             // 

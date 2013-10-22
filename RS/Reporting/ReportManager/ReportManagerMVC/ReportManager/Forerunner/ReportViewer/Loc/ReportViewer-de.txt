@@ -82,7 +82,7 @@
     "marginRight":"Richtig",
     "print":"Drucken",
     "cancel":"Stornieren",
-    "unit":"in",
+    "unit":"mm",
     "margin":"Margins",
     "pageLayoutOptions":"Seitenlayoutoptionen"
   },

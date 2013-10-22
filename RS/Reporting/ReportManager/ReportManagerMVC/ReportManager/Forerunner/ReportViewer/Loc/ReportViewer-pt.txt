@@ -82,7 +82,7 @@
     "marginRight":"Direita",
     "print":"imprimir",
     "cancel":"cancelar",
-    "unit":"em",
+    "unit":"mm",
     "margin":"margens",
     "pageLayoutOptions":"Página Opções de layout"
   },

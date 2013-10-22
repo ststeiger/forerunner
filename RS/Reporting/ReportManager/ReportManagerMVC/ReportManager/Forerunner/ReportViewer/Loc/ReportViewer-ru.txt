@@ -82,7 +82,7 @@
     "marginRight":"правый",
     "print":"печатать",
     "cancel":"отменить",
-    "unit":"B",
+    "unit":"mm",
     "margin":"край",
     "pageLayoutOptions":"Параметры макета страницы"
   },

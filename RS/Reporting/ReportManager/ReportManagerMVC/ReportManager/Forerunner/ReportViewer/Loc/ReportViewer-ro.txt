@@ -82,7 +82,7 @@
     "marginRight":"corect",
     "print":"imprima",
     "cancel":"anula",
-    "unit":"în",
+    "unit":"mm",
     "margin":"Margini",
     "pageLayoutOptions":"Opțiunile de punere în pagină"
   },

@@ -82,7 +82,7 @@
     "marginRight":"höger",
     "print":"skriva ut",
     "cancel":"avbryta",
-    "unit":"i",
+    "unit":"mm",
     "margin":"marginaler",
     "pageLayoutOptions":"Sidlayout"
   },

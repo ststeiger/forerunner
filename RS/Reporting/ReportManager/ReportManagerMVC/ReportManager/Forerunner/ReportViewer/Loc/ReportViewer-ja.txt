@@ -82,7 +82,7 @@
     "marginRight":"右",
     "print":"印刷",
     "cancel":"キャンセル",
-    "unit":"で",
+    "unit":"mm",
     "margin":"端",
     "pageLayoutOptions":"ページレイアウトオプション"
   },

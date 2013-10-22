@@ -82,7 +82,7 @@
     "marginRight":"ceart",
     "print":"imprimir",
     "cancel":"cancelar",
-    "unit":"i",
+    "unit":"mm",
     "margin":"Imill",
     "pageLayoutOptions":"Leathanach roghanna leagan amach"
   },

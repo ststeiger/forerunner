@@ -82,7 +82,7 @@
     "marginRight":"hægri",
     "print":"Prenta",
     "cancel":"hætta",
-    "unit":"í",
+    "unit":"mm",
     "margin":"framlegð",
     "pageLayoutOptions":"Útlit síðunnar"
   },

@@ -20,7 +20,7 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"]);
+        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"].ToLower());
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];

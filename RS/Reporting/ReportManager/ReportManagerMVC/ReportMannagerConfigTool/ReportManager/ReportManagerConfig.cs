@@ -21,7 +21,7 @@ namespace ReportMannagerConfigTool
         private static string reportServerDBDomain = ConfigurationManager.AppSettings["ReportServerDBDomain"];
         private static string reportServerDBUser = ConfigurationManager.AppSettings["ReportServerDBUser"];
         private static string reportServerDBPWD = ConfigurationManager.AppSettings["ReportServerDBPWD"];
-        private static string reportServerDBAccountType = ConfigurationManager.AppSettings["ReportServerDBAccountType"];
+        private static string reportServerDBUseIntegrated = ConfigurationManager.AppSettings["UseIntegratedSecurityForSQL"];
 
         private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
         private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
@@ -260,7 +260,7 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
         public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, 
-            string reportserverdbuser, string reportserverdbpwd, string dblogininfo)
+            string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated)
         {
             GetAppSettingNode(xmlDoc, reportServerWSUrl).SetAppSettingValue(wsurl);
 
@@ -274,8 +274,7 @@ namespace ReportMannagerConfigTool
 
             GetAppSettingNode(xmlDoc, reportServerDBPWD).SetAppSettingValue(reportserverdbpwd);
 
-            GetAppSettingNode(xmlDoc, reportServerDBAccountType).SetAppSettingValue(dblogininfo);
-
+            GetAppSettingNode(xmlDoc, reportServerDBUseIntegrated).SetAppSettingValue(SQLIntegrated.ToString());
             //GetAuthNode(doc).SetAuthMode(authtype, doc);
 
             xmlDoc.Save(filePath);
@@ -295,7 +294,7 @@ namespace ReportMannagerConfigTool
             result.Add("UserDomain", GetAppSettingNode(xmlDoc, reportServerDBDomain).GetAppSettingValue());
             result.Add("User", GetAppSettingNode(xmlDoc, reportServerDBUser).GetAppSettingValue());
             result.Add("Password", GetAppSettingNode(xmlDoc, reportServerDBPWD).GetAppSettingValue());
-            result.Add("DBAccountType", GetAppSettingNode(xmlDoc, reportServerDBAccountType).GetAppSettingValue());
+            result.Add("SQLIntegrated", GetAppSettingNode(xmlDoc, reportServerDBUseIntegrated).GetAppSettingValue());
             result.Add("AuthType", GetAuthNode().GetAuthMode());
 
             return result;

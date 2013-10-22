@@ -137,7 +137,10 @@ namespace ReportMannagerConfigTool
             winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
             winform.setTextBoxValue(txtUser, existConfig["User"]);
             winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
-            winform.setSelectRdoValue(gbDBLoginInfo, existConfig["DBAccountType"]);
+            if (existConfig["SQLIntegrated"].ToLower() == "true")
+                rdoDomain.Checked = true;
+            else
+                rdoSQL.Checked = true;
             winform.setSelectRdoValue(gbAuthType, existConfig["AuthType"]);
         }
 
@@ -186,11 +189,12 @@ namespace ReportMannagerConfigTool
                 return;
             try
             {
+
                 Cursor.Current = Cursors.WaitCursor;
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    winform.getSelectRdoValue(gbDBLoginInfo));
+                    rdoDomain.Checked ? true: false);
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

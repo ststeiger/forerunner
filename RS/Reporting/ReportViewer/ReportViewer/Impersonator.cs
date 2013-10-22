@@ -51,7 +51,7 @@ namespace Forerunner.Security
         {
             var handle = IntPtr.Zero;
 
-            const int LOGON32_LOGON_NETWORK = 3;
+            //const int LOGON32_LOGON_NETWORK = 3;
             const int LOGON32_LOGON_NETWORK_CLEARTEXT = 8;
             const int LOGON32_PROVIDER_DEFAULT = 0;
             const int SecurityImpersonation = 2;

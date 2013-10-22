@@ -1,21 +1,21 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"caricamento...",
-    "completeFind":"L'intero rapporto è stato cercato",
+    "completeFind":"L\u0027intero rapporto è stato cercato",
     "keyNotFound":"Chiave non trovata",
     "sessionExpired":"La sessione è scaduta",
-    "imageNotDisplay":"Impossibile visualizzare l'immagine",
+    "imageNotDisplay":"Impossibile visualizzare l\u0027immagine",
     "saveParamSuccess":"Salvato",
     "saveParamFailed":"Impossibile",
     "catalogsLoadFailed":"Impossibile caricare i cataloghi dal server. Riprova.",
     "paramFieldEmpty":"parametro non è presente un valore",
-    "contactAdmin":"Si prega di contattare l'amministratore della relazione di aiuto",
+    "contactAdmin":"Si prega di contattare l\u0027amministratore della relazione di aiuto",
     "favoriteFailed":"Impossibile",
     "docmapShowFailed":"Impossibile",
     "prepareActionFailed":"Impossibile",
     "bookmarkNotFound":"Non riesci a trovare il segnalibro nella relazione"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Clicca per maggiori dettagli",
     "serverError":"Eccezione generata dal server",
     "type":"dattilografare",
@@ -24,9 +24,9 @@
     "message":"comunicazione",
     "stackTrace":"StackTrace",
     "licenseErrorTitle":"Grazie di utilizzare Forerunner Software Mobilizer voi, sembra che vi sia un problema con la licenza.",
-    "licenseErrorContent":"Si prega di contattare l'amministratore di sistema. Se si è l'amministratore preghiamo verificare la licenza nello strumento di configurazione Mobilizer."
+    "licenseErrorContent":"Si prega di contattare l\u0027amministratore di sistema. Se si è l\u0027amministratore preghiamo verificare la licenza nello strumento di configurazione Mobilizer."
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML file con i dati del rapporto",
     "csv":"CSV (delimitato da virgola)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"TIFF file",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"di",
     "home":"Casa",
     "navigation":"navigazione",
@@ -48,7 +48,7 @@
     "zoom":"Abilita Zoom",
     "print":"stampare"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"indietro",
     "docMap":"Mappa documento",
     "exportMenu":"Esportazione",
@@ -69,9 +69,10 @@
     "reportPage":"Pagina",
     "zoom":"Abilita Zoom",
     "print":"Stampare",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Stampa Pagina opzione di layout",
     "pageHeight":"Altezza",
     "pageWidth":"Larghezza",
@@ -85,13 +86,13 @@
     "margin":"margini",
     "pageLayoutOptions":"Opzioni layout pagina"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Impostazioni utente",
     "submit":"Ok",
     "cancel":"cancellare",
     "ResponsiveUI":"UI Responsive"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Zero",
     "isTrue":"Vero",
     "isFalse":"Falso",
@@ -99,7 +100,7 @@
     "viewReport":"Visualizza report",
     "cancel":"cancellare"
   },
-  "validateError":{
+  "validateError": {
     "required":"Richiesto",
     "remote":"Si prega di correggere questo campo",
     "email":"Mail non valido",
@@ -115,11 +116,11 @@
     "max":"Immettere un valore inferiore o uguale a {0}",
     "min":"Immettere un valore maggiore o uguale a {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"promt",
     "close":"chiudere"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"nome utente",
     "Password":"parola d\u0027ordine",
     "Login":"Accedi"

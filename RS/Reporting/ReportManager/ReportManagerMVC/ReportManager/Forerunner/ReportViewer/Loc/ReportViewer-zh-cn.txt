@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"加载中...",
     "completeFind":"全部报表查找完成",
     "keyNotFound":"没有查到该关键字",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"失败",
     "bookmarkNotFound":"在该报表中无法找到书签"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"点击查看更多信息",
     "serverError":"服务器端抛出异常",
     "type":"类型",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"感谢您使用Forerunner公司的Mobilizer软件，您的授权许可出现了一些问题。",
     "licenseErrorContent":"请联系您的系统管理员。如果您是管理员请使用Mobilizer附带的配置工具验证您的授权许可。"
   },
-  "exportType":{
+  "exportType": {
     "xml":"XML 数据报表",
     "csv":"CSV (以逗号分隔)",
     "pdf":"PDF",
@@ -35,8 +35,8 @@
     "tiff":"TIFF文件",
     "word":"Word"
   },
-  "toolPane":{
-    "pageOf":"\/",
+  "toolPane": {
+    "pageOf":"/",
     "home":"主页",
     "navigation":"导航",
     "favorites":"收藏",
@@ -48,7 +48,7 @@
     "zoom":"允许缩放",
     "print":"打印"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"返回",
     "docMap":"站点地图",
     "exportMenu":"导出",
@@ -61,7 +61,7 @@
     "menu":"菜单",
     "navigation":"导航",
     "next":"下一个",
-    "pageOf":"\/",
+    "pageOf":"/",
     "paramarea":"参数",
     "previousPage":"前一页",
     "recent":"最近",
@@ -69,9 +69,10 @@
     "reportPage":"页面",
     "zoom":"允许缩放",
     "print":"打印",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"打印报表",
     "pageHeight":"高度",
     "pageWidth":"宽度",
@@ -85,13 +86,13 @@
     "margin":"边距",
     "pageLayoutOptions":"页面设置"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"User Settings",
     "submit":"Ok",
     "cancel":"Cancel",
     "ResponsiveUI":"Responsive UI"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"空值",
     "isTrue":"是",
     "isFalse":"否",
@@ -99,7 +100,7 @@
     "viewReport":"加载报表",
     "cancel":"cancel"
   },
-  "validateError":{
+  "validateError": {
     "required":"必填",
     "remote":"请修复该字段",
     "email":"邮箱错误",
@@ -115,11 +116,11 @@
     "max":"输入小于等于{0}的数",
     "min":"输入大于等于{0}的数"
   },
-  "dialog":{
+  "dialog": {
     "title":"提示",
     "close":"关闭"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"用户名称",
     "Password":"密码",
     "Login":"登入"

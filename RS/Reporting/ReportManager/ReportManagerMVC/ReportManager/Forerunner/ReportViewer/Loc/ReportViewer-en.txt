@@ -69,7 +69,8 @@
 		"reportPage": "Page",
 		"zoom": "Enable Zoom",
 		"print": "Print",
-		"userSettings": "Settings"
+		"userSettings": "Settings",
+		"saveParam": "Save Parameters"
     },
 	"print":{
 	    "title": "Print Report",

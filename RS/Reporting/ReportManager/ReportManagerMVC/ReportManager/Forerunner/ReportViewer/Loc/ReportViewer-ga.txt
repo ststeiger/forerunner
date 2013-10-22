@@ -1,5 +1,5 @@
-﻿{
-  "messages":{
+{
+  "messages": {
     "loading":"Luchtú...",
     "completeFind":"Tá an tuarascáil iomlán a chuardach",
     "keyNotFound":"Eochair gan aimsiú",
@@ -15,7 +15,7 @@
     "prepareActionFailed":"Fracasado",
     "bookmarkNotFound":"Non devolveu o marcador no informe"
   },
-  "errorTag":{
+  "errorTag": {
     "moreDetail":"Cliceáil chun níos mó sonraí",
     "serverError":"Eisceacht thrown ó fhreastalaí",
     "type":"cineál",
@@ -26,7 +26,7 @@
     "licenseErrorTitle":"Go raibh maith agat as úsáid a bhaint as Réamhtheachtaire Bhreandáin Uí Eithir Bogearraí Mobilizer, is cosúil go mbeadh fadhb le do cheadúnas.",
     "licenseErrorContent":"Téigh i dteagmháil le riarthóir do chórais. Má tá tú ag an riarthóir do thoil fhíorú do cheadúnas san uirlis cumraíochta Mobilizer."
   },
-  "exportType":{
+  "exportType": {
     "xml":"Comhad XML le sonraí tuarascáil",
     "csv":"CSV (teormharcáilte le camóga)",
     "pdf":"PDF",
@@ -35,7 +35,7 @@
     "tiff":"comhad TIFF",
     "word":"Word"
   },
-  "toolPane":{
+  "toolPane": {
     "pageOf":"de",
     "home":"Baile",
     "navigation":"Nascleanúint",
@@ -48,7 +48,7 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil"
   },
-  "toolbar":{
+  "toolbar": {
     "back":"ar ais",
     "docMap":"Léarscáil doiciméad",
     "exportMenu":"Easpórtáil",
@@ -69,9 +69,10 @@
     "reportPage":"leathanach",
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
-    "userSettings":"Settings"
+    "userSettings":"Settings",
+    "saveParam":"Save Parameters"
   },
-  "print":{
+  "print": {
     "title":"Imprimir páxina de opción de esquema",
     "pageHeight":"Alto",
     "pageWidth":"leithead",
@@ -85,13 +86,13 @@
     "margin":"Imill",
     "pageLayoutOptions":"Leathanach roghanna leagan amach"
   },
-  "userSettings":{
+  "userSettings": {
     "title":"Socruithe Úsáideoir",
     "submit":"Ok",
     "cancel":"Cancelar",
     "ResponsiveUI":"Chomhéadain sofhreagrach"
   },
-  "paramPane":{
+  "paramPane": {
     "nullField":"Null",
     "isTrue":"True",
     "isFalse":"bréagach",
@@ -99,7 +100,7 @@
     "viewReport":"Féach Tuarascáil",
     "cancel":"cancelar"
   },
-  "validateError":{
+  "validateError": {
     "required":"Riachtanach",
     "remote":"Tabhair réimse seo a shocrú",
     "email":"r-phost neamhbhailí",
@@ -115,11 +116,11 @@
     "max":"Iontráil luach níos lú ná nó cothrom le {0}",
     "min":"Iontráil luach níos mó ná nó cothrom le {0}"
   },
-  "dialog":{
+  "dialog": {
     "title":"incitar",
     "close":"pechar"
   },
-  "placeholders":{
+  "placeholders": {
     "Username":"ainm úsáideora",
     "Password":"Pasfhocal",
     "Login":"Logáil isteach"

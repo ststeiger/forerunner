@@ -836,6 +836,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-save-param",
             imageClass: "fr-icons24x24-save-param",
+            tooltip: locData.toolbar.saveParam,
             events: {
                 click: function (e) {
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");

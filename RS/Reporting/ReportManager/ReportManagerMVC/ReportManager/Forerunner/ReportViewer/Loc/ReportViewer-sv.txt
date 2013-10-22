@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"Laddar...",
     "completeFind":"Hela rapporten har sökts igenom",

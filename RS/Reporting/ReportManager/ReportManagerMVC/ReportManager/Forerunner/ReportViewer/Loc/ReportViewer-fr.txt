@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"Chargement...",
     "completeFind":"L\u0027ensemble du rapport a été recherché",

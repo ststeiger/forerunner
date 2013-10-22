@@ -96,6 +96,8 @@ namespace ReportManagerUnitTest
     [TestClass]
     public class LocalizationTests
     {
+        public TestContext TestContext { get; set; }
+
         private bool isEnglish(String filename)
         {
             if (filename.EndsWith("en.txt", true, System.Globalization.CultureInfo.CurrentCulture) ||
@@ -155,7 +157,7 @@ namespace ReportManagerUnitTest
                     jsonString = jsonString.Replace("}}", "\n  }\n}\n");
 
                     // Write the file out
-                    using (StreamWriter sw = new StreamWriter(fileInfo.FullName))
+                    using (StreamWriter sw = new StreamWriter(fileInfo.FullName, false, Encoding.UTF8))
                     {
                         sw.Write(jsonString);
                     }

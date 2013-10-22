@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"загрузка...",
     "completeFind":"Поиск завершён",

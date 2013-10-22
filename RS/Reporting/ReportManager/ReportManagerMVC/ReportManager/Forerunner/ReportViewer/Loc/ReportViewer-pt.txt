@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"Carregando...",
     "completeFind":"todo o relatório já foi revistado",

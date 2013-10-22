@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"Laden...",
     "completeFind":"Der gesamte Bericht wurde durchsucht",

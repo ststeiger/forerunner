@@ -17,15 +17,16 @@ namespace ReportManagerUnitTest
 
     public class Section : Dictionary<String, String>
     {
-        public ProcessResult Process(Section section, String sectionName, bool skipTranslationCheck)
+        public ProcessResult Process(Section section, String sectionName, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
             foreach (KeyValuePair<String, String> pair in this)
             {
-                if (!section.ContainsKey(pair.Key))
+                if (!skipAddPropertyProcessing &&
+                    !section.ContainsKey(pair.Key))
                 {
-                    Console.WriteLine("  Missing value - section: {0}, property: {1}", sectionName, pair.Key);
+                    TestContext.WriteLine("  Missing value - section: {0}, property: {1}", sectionName, pair.Key);
                     section.Add(pair.Key, pair.Value);
                     result |= ProcessResult.Changed;
                 }
@@ -33,7 +34,7 @@ namespace ReportManagerUnitTest
                 if (!skipTranslationCheck &&
                     String.Compare(section[pair.Key], this[pair.Key], true) == 0)
                 {
-                    Console.WriteLine("  Value needs translation - section: {0}, property: {1}", sectionName, pair.Key);
+                    TestContext.WriteLine("  Value needs translation - section: {0}, property: {1}", sectionName, pair.Key);
                     result |= ProcessResult.NeedsTranslation;
                 }
             }
@@ -72,7 +73,7 @@ namespace ReportManagerUnitTest
             }
         }
 
-        public ProcessResult Process(LocFile locFile, bool skipTranslationCheck)
+        public ProcessResult Process(LocFile locFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
@@ -80,12 +81,12 @@ namespace ReportManagerUnitTest
             {
                 if (!locFile.ContainsKey(pair.Key))
                 {
-                    Console.WriteLine("  Missing section: {0}", pair.Key);
+                    TestContext.WriteLine("  Missing section: {0}", pair.Key);
                     locFile.Add(pair.Key, pair.Value);
                     result |= ProcessResult.Changed;
                 }
 
-                ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck);
+                ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
                 result |= processResult;
             }
 
@@ -96,6 +97,8 @@ namespace ReportManagerUnitTest
     [TestClass]
     public class LocalizationTests
     {
+        public TestContext TestContext { get; set; }
+
         private bool isEnglish(String filename)
         {
             if (filename.EndsWith("en.txt", true, System.Globalization.CultureInfo.CurrentCulture) ||
@@ -107,9 +110,24 @@ namespace ReportManagerUnitTest
             return false;
         }
 
+        [TestCategory("Manual")]
+        [TestMethod]
+        public void LocTestWithWriteback()
+        {
+            LocTest(false);
+        }
+
+        [TestCategory("Build")]
         [TestMethod]
         public void MissingTranslationTest()
         {
+            LocTest(true);
+        }
+
+        private void LocTest(bool skipAddPropertyProcessing)
+        {
+            bool missingTranslations = false;
+
             // Get the localization file directory relative to the current working directory
             String locDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\ReportManager\Forerunner\ReportViewer\Loc");
             Assert.IsTrue(Directory.Exists(locDirectory), "locDirectory is not valid");
@@ -130,16 +148,13 @@ namespace ReportManagerUnitTest
                     continue;
                 }
 
-                Console.WriteLine("Processing file: {0}", fileInfo.Name);
+                TestContext.WriteLine("Processing file: {0}", fileInfo.Name);
 
                 LocFile locFile = new LocFile();
                 locFile.Load(fileInfo.FullName);
-                ProcessResult result = masterLocFile.Process(locFile, isEnglish(fileInfo.Name));
-                if ((result & ProcessResult.Changed) == 0)
-                {
-                    Console.WriteLine("  File up to date, no changes");
-                }
-                else
+                ProcessResult result = masterLocFile.Process(locFile, isEnglish(fileInfo.Name), skipAddPropertyProcessing, TestContext);
+                missingTranslations |= (result & ProcessResult.NeedsTranslation) != 0;
+                if ((result & ProcessResult.Changed) != 0)
                 {
                     // Encode the locFile into a JSON string
                     var jsonString = Json.Encode(locFile);
@@ -155,12 +170,14 @@ namespace ReportManagerUnitTest
                     jsonString = jsonString.Replace("}}", "\n  }\n}\n");
 
                     // Write the file out
-                    using (StreamWriter sw = new StreamWriter(fileInfo.FullName))
+                    using (StreamWriter sw = new StreamWriter(fileInfo.FullName, false, Encoding.UTF8))
                     {
                         sw.Write(jsonString);
                     }
                 }
             }
+
+            Assert.IsFalse(missingTranslations, "One or more files need translations, see the output for more detail");
         }
     }
 }

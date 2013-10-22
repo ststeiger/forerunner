@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"Cargando...",
     "completeFind":"El informe completo ha sido registrada",

@@ -431,27 +431,11 @@ $(function () {
                 }
             }
         },
-        _mask: function () {
-            var me = this;
-            var $mask = me.element.find(".fr-core-mask");
-
-            if ($mask.length === 0) {
-                $mask = $("<div class='fr-core-mask'></div>");
-                $mask.height(me.element.height());
-                me.element.append($mask);
-            }
-            return me.element;
-        },
-        _unmask: function () {
-            var me = this;
-            me.element.find(".fr-core-mask").remove();
-            return;
-        },
         _hideDocMap: function() {
             var me = this;
             var docMap = me.options.docMapArea;
             docMap.hide();
-            me._unmask();
+            me.element.unmask();
             me._trigger(events.hideDocMap);
         },
         _showDocMap: function () {
@@ -477,12 +461,8 @@ $(function () {
                 });
             }
 
-            me.savedLeft = $(window).scrollLeft();
-            me.savedTop = $(window).scrollTop();
-            me._mask().show();
+            me.element.mask();
             docMap.slideUpShow();
-            setTimeout(function () { window.scrollTo(0, 0); }, 500);
-            
             me._trigger(events.showDocMap);
         },
         _removeDocMap: function () {
@@ -587,26 +567,26 @@ $(function () {
         showNav: function () {
             var me = this;
             me._resetContextIfInvalid();
-            if (me.pageNavOpen) {
+            if (me.pageNavOpen) {//close nav
                 me.pageNavOpen = false;
-                document.body.parentNode.style.overflow = "scroll";
                 if (window.removeEventListener) {
                     window.removeEventListener("orientationchange", me._handleOrientation, false);
                 }
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me._unmask();
+                me.options.$appContainer.css("overflow", "");
+                me.element.unmask();
             }
-            else {
+            else {//open nav
                 me.pageNavOpen = true;
-                document.body.parentNode.style.overflow = "hidden";
                 if (window.addEventListener) {
                     window.addEventListener("orientationchange", me._handleOrientation, false);
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me._mask().show();
+                me.options.$appContainer.css("overflow", "hidden");
+                me.element.mask();
             }
 
             if (me.options.pageNavArea){
@@ -615,22 +595,15 @@ $(function () {
             me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
-            //if (window.orientation === undefined)
-            //    return;
-            //var orientation = window.orientation;
-
             var pageSection = $(".fr-layout-pagesection");
             if (forerunner.device.isSmall()) {//big screen, height>=768
                 //portrait
-                //if (orientation === 0 || orientation === 180) {
-                if (pageSection.is(":visible")) pageSection.hide();
-                //}
+                if (pageSection.is(":visible"))
+                    pageSection.hide();
             }
             else {//small screen, height<768
-                //if (orientation === -90 || orientation === 90) {
-                if (pageSection.is(":hidden")) pageSection.show();
-                    
-                //}
+                if (pageSection.is(":hidden"))
+                    pageSection.show();
             }
         },
 

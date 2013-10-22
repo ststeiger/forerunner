@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"積載...",
     "completeFind":"レポート全体が検索されています",

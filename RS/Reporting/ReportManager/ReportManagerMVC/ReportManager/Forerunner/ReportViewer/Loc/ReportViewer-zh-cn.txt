@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"加载中...",
     "completeFind":"全部报表查找完成",

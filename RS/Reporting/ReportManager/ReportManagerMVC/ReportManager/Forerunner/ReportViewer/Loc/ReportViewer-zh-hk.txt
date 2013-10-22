@@ -1,4 +1,4 @@
-{
+﻿{
   "messages": {
     "loading":"加載中...",
     "completeFind":"全個報告尋找完畢",

@@ -19,6 +19,7 @@ namespace ReportManager.Controllers
     public class ReportViewerController :ApiController
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
+        private string imageConsolidation = ConfigurationManager.AppSettings["Forerunner.ImageConsolidation"];
 
         private ReportViewer GetReportViewer()
         {
@@ -108,7 +109,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList, imageConsolidation != null && imageConsolidation.Equals("true")));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

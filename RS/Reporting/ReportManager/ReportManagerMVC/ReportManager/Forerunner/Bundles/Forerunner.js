@@ -351,6 +351,31 @@ $(function () {
             return this._getVirtualRootBase() + "/api/";
         },
     };
+
+    /**
+     * Defines generic helper functions
+     *
+     * @namespace
+     */
+    forerunner.helper = {
+        /**
+         * Returns the number of elements or properties in an object
+         *
+         * @member
+         *
+         * @example
+         *  var objectSize = forerunner.helper.objectSize(obj)
+         *
+         *  objectSize(obj);
+         */
+        objectSize: function (obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        },
+    },
     /**
      * Defines utility methods used to update style sheets
      *

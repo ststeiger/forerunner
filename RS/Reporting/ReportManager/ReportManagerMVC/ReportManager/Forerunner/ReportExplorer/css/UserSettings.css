@@ -34,7 +34,7 @@
 .fr-us-header {
   position: relative;
   display: block;
-  display: -webkit-box;
+  text-align: left;
 }
 
 .fr-us-print-icon-container {

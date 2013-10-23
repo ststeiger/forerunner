@@ -70,8 +70,8 @@
     "reportPage":"Page",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"réglages",
+    "saveParam":"Enregistrer les paramètres"
   },
   "print": {
     "title":"Imprimer option de mise en",

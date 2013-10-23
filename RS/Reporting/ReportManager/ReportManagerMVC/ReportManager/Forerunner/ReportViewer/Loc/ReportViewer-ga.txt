@@ -69,8 +69,8 @@
     "reportPage":"leathanach",
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"Socruithe",
+    "saveParam":"Sábháil Paraiméadair"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

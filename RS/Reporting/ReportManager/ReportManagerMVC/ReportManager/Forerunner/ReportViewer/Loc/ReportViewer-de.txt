@@ -69,8 +69,8 @@
     "reportPage":"Seite",
     "zoom":"Aktivieren Zoomen",
     "print":"Drucken",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"Fixierung",
+    "saveParam":"Parameter speichern"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",

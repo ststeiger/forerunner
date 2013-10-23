@@ -98,7 +98,8 @@
     "isFalse":"Falso",
     "required":"Richiesto",
     "viewReport":"Visualizza report",
-    "cancel":"cancellare"
+    "cancel":"cancellare",
+	"datePicker":"Data"
   },
   "validateError": {
     "required":"Richiesto",

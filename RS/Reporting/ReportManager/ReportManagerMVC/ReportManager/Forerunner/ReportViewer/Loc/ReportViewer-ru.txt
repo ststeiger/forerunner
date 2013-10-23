@@ -98,7 +98,8 @@
     "isFalse":"Неверно",
     "required":"Необходимый",
     "viewReport":"Показать отчет",
-    "cancel":"отменить"
+    "cancel":"отменить",
+    "datePicker":"дата"
   },
   "validateError": {
     "required":"Необходимый",

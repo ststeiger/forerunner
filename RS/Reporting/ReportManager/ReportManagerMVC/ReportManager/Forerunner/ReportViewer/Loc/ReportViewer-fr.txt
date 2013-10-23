@@ -99,7 +99,8 @@
     "isFalse":"Faux",
     "required":"Voulu",
     "viewReport":"Voir le Rapport",
-    "cancel":"résilier"
+    "cancel":"résilier",
+	"datePicker":"Date"
   },
   "validateError": {
     "required":"Demandé",

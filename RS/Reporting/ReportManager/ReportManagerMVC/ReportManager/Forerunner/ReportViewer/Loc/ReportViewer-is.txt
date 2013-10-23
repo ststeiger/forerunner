@@ -98,7 +98,8 @@
     "isFalse":"False",
     "required":"krafist",
     "viewReport":"Skoða skýrslu",
-    "cancel":"hætta"
+    "cancel":"hætta",
+    "datePicker":"dagsetning"
   },
   "validateError": {
     "required":"krafist",

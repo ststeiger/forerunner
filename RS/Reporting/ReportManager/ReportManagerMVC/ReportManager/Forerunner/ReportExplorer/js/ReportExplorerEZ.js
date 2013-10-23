@@ -103,7 +103,8 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
-            me._createReportExplorer();
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
 
             me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({

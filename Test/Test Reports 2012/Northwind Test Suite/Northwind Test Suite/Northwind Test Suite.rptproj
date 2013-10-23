@@ -73,6 +73,34 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>ThreeGuages.rdl</Name>
+      <FullPath>ThreeGuages.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SingleGuage.rdl</Name>
+      <FullPath>SingleGuage.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoGuages.rdl</Name>
+      <FullPath>TwoGuages.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoCharts.rdl</Name>
+      <FullPath>TwoCharts.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SingleMap.rdl</Name>
+      <FullPath>SingleMap.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ThreeMaps.rdl</Name>
+      <FullPath>ThreeMaps.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoMaps.rdl</Name>
+      <FullPath>TwoMaps.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

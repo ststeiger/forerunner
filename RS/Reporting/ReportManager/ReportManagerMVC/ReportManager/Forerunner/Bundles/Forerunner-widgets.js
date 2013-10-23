@@ -4338,12 +4338,24 @@ $(function () {
             Style += "overflow:hidden;";
 
             var ImageName;
+            var imageStyle = "";
+            var imageConsolidationOffset;
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
 
-            if (RIContext.CurrObj.Type === "Image")
+            if (RIContext.CurrObj.Type === "Image") {//for image
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
-            else
+                if (RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.NonSharedImageDataProperties)
+                    imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.NonSharedImageDataProperties.ImageConsolidationOffsets;
+            }
+            else {//for chart, map, gauge
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
+                if (RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets)
+                    imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets;
+            }
+
+            if (imageConsolidationOffset) {
+                imageStyle += "position:relative;top:" + imageConsolidationOffset.Top * -1 + "px;left:" + imageConsolidationOffset.Left * -1 + "px";
+            }
                         
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas) {
                 NewImage.useMap = "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
@@ -4355,7 +4367,7 @@ $(function () {
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
             NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
-            $(NewImage).attr("style", "display:block;" );
+            $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);
 

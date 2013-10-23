@@ -62,7 +62,7 @@
     "navigation":"Navigation",
     "next":"Next",
     "pageOf":"of",
-    "paramarea":"Parmeters",
+    "paramarea":"Parameters",
     "previousPage":"Previous",
     "recent":"Recent",
     "refresh":"Refresh",

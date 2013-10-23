@@ -98,7 +98,8 @@
     "isFalse":"僻",
     "required":"必修",
     "viewReport":"レポートの表示",
-    "cancel":"キャンセル"
+    "cancel":"キャンセル",
+    "datePicker":"日付"
   },
   "validateError": {
     "required":"必修",

@@ -52,7 +52,7 @@ namespace ReportManagerUnitTest
         public void Load(String fullname)
         {
             String json;
-            using (StreamReader sr = new StreamReader(fullname))
+            using (StreamReader sr = new StreamReader(fullname, Encoding.UTF8))
             {
                 json = sr.ReadToEnd();
             }
@@ -141,7 +141,7 @@ namespace ReportManagerUnitTest
 
             // Loop through the other locals and verify against the master
             DirectoryInfo dirInfo = new DirectoryInfo(locDirectory);
-            foreach (FileInfo fileInfo in dirInfo.EnumerateFiles("*.txt"))
+            foreach (FileInfo fileInfo in dirInfo.EnumerateFiles("*.txt", SearchOption.TopDirectoryOnly))
             {
                 if (fileInfo.Name.CompareTo(Path.GetFileName(masterFilePath)) == 0)
                 {
@@ -164,6 +164,7 @@ namespace ReportManagerUnitTest
                     {
                         jsonString = "{\n  " + jsonString.Substring(1);
                     }
+                    jsonString = jsonString.Replace("\\u0027", "'");
                     jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
                     jsonString = jsonString.Replace("\",\"", "\",\n    \"");
                     jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");

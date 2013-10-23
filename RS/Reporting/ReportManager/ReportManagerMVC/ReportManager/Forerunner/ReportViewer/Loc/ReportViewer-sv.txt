@@ -98,7 +98,8 @@
     "isFalse":"Falskt",
     "required":"krävs",
     "viewReport":"Visa rapport",
-    "cancel":"avbryta"
+    "cancel":"avbryta",
+    "datePicker":"Datum"
   },
   "validateError": {
     "required":"krävs",

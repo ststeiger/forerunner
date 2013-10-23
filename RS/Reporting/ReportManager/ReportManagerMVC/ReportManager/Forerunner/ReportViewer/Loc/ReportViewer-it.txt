@@ -98,7 +98,8 @@
     "isFalse":"Falso",
     "required":"Richiesto",
     "viewReport":"Visualizza report",
-    "cancel":"cancellare"
+    "cancel":"cancellare",
+	"datePicker":"Data"
   },
   "validateError": {
     "required":"Richiesto",
@@ -122,7 +123,7 @@
   },
   "placeholders": {
     "Username":"nome utente",
-    "Password":"parola d\u0027ordine",
+    "Password":"parola d'ordine",
     "Login":"Accedi"
   }
 }

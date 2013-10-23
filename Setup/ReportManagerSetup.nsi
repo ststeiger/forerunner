@@ -335,7 +335,7 @@ Function IsDotNETInstalled
         MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found on your computer. Mobilizer requires .Net Framework 4.5 to function. Do you want to continue? $\n$\nClick Yes to continue the installation without installing .Net Framework 4.5 first.$\n$\nClick No to take you to Microsoft to download .Net Framework 4.5 and install it before you re-run the Mobilizer setup.$\n$\nClick Cancel to exit." IDYES Continue IDNO Download
         abort
     Download:
-        ExecShell open "http://www.microsoft.com/download/en/details.aspx?id=24872"
+        ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=30653"
         abort
     Continue:
 FunctionEnd

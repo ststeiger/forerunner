@@ -7116,6 +7116,33 @@ $(function () {
             historyBack: null,
             isFullScreen: true
         },
+        _createReportExplorer: function (path, view) {
+            var me = this;
+            var path0 = path;
+            var layout = me.DefaultAppTemplate;
+            forerunner.device.allowZoom(false);
+            forerunner.dialog.closeAllModalDialogs();
+            layout.cleanUp();
+
+            if (!path)
+                path = "/";
+            if (!view)
+                view = "catalog";
+
+            var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
+            layout.$mainsection.html(null);
+            layout.$mainsection.show();
+            layout.$docmapsection.hide();
+            me.$reportExplorer = layout.$mainsection.reportExplorer({
+                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
+                forerunnerPath: forerunner.config.forerunnerFolder(),
+                path: path,
+                view: view,
+                selectedItemPath: currentSelectedPath,
+                navigateTo: me.options.navigateTo,
+                $appContainer: layout.$container
+            });
+        },
         /**
          * Transition to ReportManager view.
          *
@@ -7127,35 +7154,14 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
-            forerunner.dialog.closeAllModalDialogs();
-            layout.cleanUp();
-          
-            //layout.$mainviewport.css({ width: "100%", height: "100%"});
 
-            if (!path) 
-                path = "/";
-            if (!view)
-                view = "catalog";
-           
-            var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
-            layout.$mainsection.html(null);
-            layout.$mainsection.show();
-            layout.$docmapsection.hide();
-            me.$reportExplorer = layout.$mainsection.reportExplorer({
-                reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
-                forerunnerPath: forerunner.config.forerunnerFolder() ,
-                path: path,
-                view: view,
-                selectedItemPath: currentSelectedPath,
-                navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
-            });            
+            me._createReportExplorer(path, view)
+
             var $toolbar = layout.$mainheadersection;
             $toolbar.reportExplorerToolbar({
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container
-        });
+            });
             $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
             layout.$rightheader.height(layout.$topdiv.height());
@@ -7174,6 +7180,11 @@ $(function () {
          */
         transitionToReportViewer: function (path) {
             var me = this;
+
+            // We need to create the report explorer here so as to get the UserSettings needed in the case where
+            // the user navigates directly to a report via the URL
+            me._createReportExplorer();
+
             me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
                 DefaultAppTemplate: me.DefaultAppTemplate,
@@ -7181,7 +7192,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 historyBack: me.options.historyBack,
                 isReportManager: true,
-                userSettings: me.$reportExplorer ? me.$reportExplorer.reportExplorer("getUserSettings") : null
+                userSettings: me.$reportExplorer.reportExplorer("getUserSettings")
             });
 
             me.element.addClass("fr-Explorer-background");

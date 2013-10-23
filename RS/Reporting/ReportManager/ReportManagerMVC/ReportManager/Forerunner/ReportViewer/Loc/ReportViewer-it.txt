@@ -123,7 +123,7 @@
   },
   "placeholders": {
     "Username":"nome utente",
-    "Password":"parola d\u0027ordine",
+    "Password":"parola d'ordine",
     "Login":"Accedi"
   }
 }

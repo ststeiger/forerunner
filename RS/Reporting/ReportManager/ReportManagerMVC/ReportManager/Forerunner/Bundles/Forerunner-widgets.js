@@ -109,10 +109,13 @@ $(function () {
             } else {
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
+
+            //setup orientation change
+            window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -247,6 +250,17 @@ $(function () {
             me.loadLock = 0;
             me.$reportContainer.css({ opacity: 1 });
             me.$loadingIndicator.hide();
+        },
+        _ReRender: function () {
+            var me = this;
+
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
+                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
+                    me.pages[i].isRendered = false;
+                    me.pages[i].$container.html("");
+                }
+                me._setPage(me.curPage);
+            }
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
@@ -1449,6 +1463,13 @@ $(function () {
 
             if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
+
+                //Render responsive if set
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else

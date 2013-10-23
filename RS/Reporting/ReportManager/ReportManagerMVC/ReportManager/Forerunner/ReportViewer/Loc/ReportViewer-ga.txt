@@ -98,7 +98,8 @@
     "isFalse":"bréagach",
     "required":"Riachtanach",
     "viewReport":"Féach Tuarascáil",
-    "cancel":"cancelar"
+    "cancel":"cancelar",
+    "datePicker":"Dáta"
   },
   "validateError": {
     "required":"Riachtanach",

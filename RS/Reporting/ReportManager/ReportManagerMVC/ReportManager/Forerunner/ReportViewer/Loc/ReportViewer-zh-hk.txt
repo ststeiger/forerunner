@@ -69,8 +69,8 @@
     "reportPage":"頁面",
     "zoom":"允許縮放",
     "print":"打印",
-    "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "userSettings":"設置",
+    "saveParam":"保存參數"
   },
   "print": {
     "title":"打印報表",
@@ -87,10 +87,10 @@
     "pageLayoutOptions":"頁面設置"
   },
   "userSettings": {
-    "title":"User Settings",
-    "submit":"Ok",
-    "cancel":"Cancel",
-    "ResponsiveUI":"Responsive UI"
+    "title":"自定義設置",
+    "submit":"保存",
+    "cancel":"取消",
+    "ResponsiveUI":"動態UI"
   },
   "paramPane": {
     "nullField":"空值",
@@ -98,7 +98,8 @@
     "isFalse":"否",
     "required":"必填",
     "viewReport":"加載報告",
-    "cancel":"cancel"
+    "cancel":"取消",
+    "datePicker":"日期"
   },
   "validateError": {
     "required":"必填",

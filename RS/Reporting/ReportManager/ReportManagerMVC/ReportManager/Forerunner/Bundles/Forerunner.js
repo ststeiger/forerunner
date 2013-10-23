@@ -473,6 +473,13 @@ $(function () {
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
                 }
+                for (var i = 0; i < languageList.length && langData === null; i++) {
+                    var lang = languageList[i];
+                    if (lang.length > 2) {
+                        lang = lang.toLocaleLowerCase().substring(0, 2);
+                        langData = this._loadFile(locFileLocation, lang);
+                    }
+                }
             }
             
             // When all fails, load English.

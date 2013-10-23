@@ -804,6 +804,7 @@ namespace Forerunner.SSRS.JSONRender
                     prop.Add("ContentTop", "Single", 0x00);
                     prop.Add("ContentLeft", "Single", 0x01);
                     prop.Add("ContentWidth", "Single", 0x02);
+                    prop.Add("ImageConsolidationOffsets", "Object", 0x31, this.WriteJSONImageConsolidationOffsets);
                     prop.Write(this);
                     w.WriteEndObject();
                     w.WriteEndObject();
@@ -834,7 +835,7 @@ namespace Forerunner.SSRS.JSONRender
             RPLProperties prop;
 
 
-            // If this is a Style Property eat the header byte
+            // If this is a Style Property eat the header byte, (for BackgroundImage)
             if (RPL.InspectByte() == 0x21)
                 RPL.ReadByte();
 
@@ -885,6 +886,9 @@ namespace Forerunner.SSRS.JSONRender
         }
         private Boolean WriteJSONImageConsolidationOffsets()
         {
+            if (RPL.ReadByte() != 0x31)
+                ThrowParseError();
+
             w.WriteMember("Left");
             w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("Top");
@@ -898,16 +902,26 @@ namespace Forerunner.SSRS.JSONRender
         }
         private Boolean WriteJSONImageData()
         {
-            int Count;
-            w.WriteMember("Count");
-            Count = RPL.ReadInt32();
-            w.WriteNumber(Count);
+            //Ox27: DynamicImageData
+            //0x02: ImageData
+            if (RPL.InspectByte() == 0x27 || RPL.InspectByte() == 0x02)
+            {
+                RPL.position++;
 
-            w.WriteMember("ImageContent");
-            w.WriteStartArray();
-            for (int i = 0; i < Count; i++)
-                w.WriteNumber(RPL.ReadByte());
-            w.WriteEndArray();
+                int Count;
+                w.WriteMember("Count");
+                Count = RPL.ReadInt32();
+                w.WriteNumber(Count);
+
+                w.WriteMember("ImageContent");
+                w.WriteStartArray();
+                for (int i = 0; i < Count; i++)
+                    w.WriteNumber(RPL.ReadByte());
+                w.WriteEndArray();
+            }
+            else
+                ThrowParseError();
+
             return true;
         }
         private Boolean WriteJSONActionImageMapAreas()

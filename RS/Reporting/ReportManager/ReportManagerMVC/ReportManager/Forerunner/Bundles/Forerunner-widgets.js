@@ -3809,12 +3809,17 @@ $(function () {
 
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
-            svg.setAttribute("pointer-events", "none");
+            //svg.setAttribute("width", "100%");
+            //svg.setAttribute("height", "100%");
+            //svg.setAttribute("pointer-events", "none");
 
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8() ||forerunner.device.isSafariPC() )
+                wstyle += "z-index: -1;"                
+            else
+                wstyle += "z-index: 1000;"
+            
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
 
@@ -3832,6 +3837,7 @@ $(function () {
             text.setAttribute("x", "10");
             text.setAttribute("y", "160");
             text.setAttribute("fill", "#000");
+            text.setAttribute("pointer-events", "none");
             text.textContent = "E" + "val" + "ua" + "tion";
 
             //svg.appendChild(rect);

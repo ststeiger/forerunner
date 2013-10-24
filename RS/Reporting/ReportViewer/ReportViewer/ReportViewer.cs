@@ -194,7 +194,7 @@ namespace Forerunner.SSRS.Viewer
             return w.ToString();
         }
 
-        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, bool isImageConsolidation = false)
+        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
             byte[] result = null;
             string format;
@@ -220,8 +220,7 @@ namespace Forerunner.SSRS.Viewer
                 NewSession = SessionID;
 
             //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion>" +
-                (isImageConsolidation ? @"<ImageConsolidation>true</ImageConsolidation>" : @"<ImageConsolidation>false</ImageConsolidation>");
+            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info
@@ -250,7 +249,7 @@ namespace Forerunner.SSRS.Viewer
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
                 {
-                    rw = new ReportJSONWriter(new MemoryStream(result), isImageConsolidation);
+                    rw = new ReportJSONWriter(new MemoryStream(result));
                     JsonWriter w = new JsonTextWriter();
                     JsonReader r;
 

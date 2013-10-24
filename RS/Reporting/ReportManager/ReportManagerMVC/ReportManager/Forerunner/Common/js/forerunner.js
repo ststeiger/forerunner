@@ -649,10 +649,31 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(Firefox)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser  */
+        isSafari: function () {
+            var ua = navigator.userAgent;
+            if (ua.indexOf('Safari') != -1 && us.indexOf('Chrome') == -1) {
+                return true;
+            }
+            return false;
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser on  */
+        isSafariPC: function () {
+            var ua = navigator.userAgent;            
+            if (ua.indexOf('Safari') != -1 && ua.indexOf('Chrome') == -1 && ua.indexOf('Windows') != -1) {
+                return true;
+            }
+            return false;
+        },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE)/);
+        },
+        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
+        isMSIE8: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(MSIE 8)/);
         },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
         isMSIEAndTouch :function () {

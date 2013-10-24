@@ -111,7 +111,8 @@ $(function () {
             }
 
             //setup orientation change
-            window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+            if (!forerunner.device.isMSIE8())
+                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -2822,10 +2823,6 @@ $(function () {
                 }
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearBtnStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
             });
@@ -2849,6 +2846,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -2915,6 +2920,14 @@ $(function () {
         _clearBtnStates: function () {
             var me = this;
             me.element.find(".fr-toolbar-keyword-textbox").val("");
+            me.element.find(".fr-toolbar-reportpage-textbox").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearBtnStates();
+            me.disableTools(me._viewerButtons());
+            me.enableTools([tb.btnReportBack]);
         },
         _destroy: function () {
         },
@@ -2979,10 +2992,6 @@ $(function () {
                 
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearItemStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
@@ -3002,6 +3011,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -3075,6 +3092,14 @@ $(function () {
         _clearItemStates: function () {
             var me = this;
             me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-textbox-reportpage").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearItemStates();
+            me.disableTools(me._viewerItems());
+            me.enableTools([tp.itemReportBack]);
         },
     });  // $.widget
 });  // function()
@@ -3783,34 +3808,37 @@ $(function () {
         },
         _getWatermark: function () {
 
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8()){
+                var wtr = $("<DIV/>").html("Evaluation");
+                wstyle += "z-index: -1;" 
+                wtr.attr("style", wstyle);
+                return wtr;
+            }
+
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC() )
+                wstyle += "z-index: -1;"                
+            else
+                wstyle += "z-index: 1000;"
+            
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
 
-            /*
-            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("width", "187");
-            rect.setAttribute("height", "234");
-            rect.setAttribute("fill", "#fff");
-            rect.setAttribute("stroke", "#000");
-            rect.setAttribute("stroke-width", "2");
-            rect.setAttribute("rx", "7");
-            */
-
+            
             var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", "10");
             text.setAttribute("y", "160");
             text.setAttribute("fill", "#000");
+            text.setAttribute("pointer-events", "none");
             text.textContent = "E" + "val" + "ua" + "tion";
 
-            //svg.appendChild(rect);
             svg.appendChild(text);
 
             return svg;
@@ -4359,12 +4387,18 @@ $(function () {
         },
         _getImageURL: function (RS, ImageName) {
             var me = this;
+            if (!me.imageList)
+                me.imageList = {};
+            
+            if (!me.imageList[ImageName]) {
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                Url += "SessionID=" + me.options.reportViewer.sessionID;
+                Url += "&ImageID=" + ImageName;
+                Url += "#" + new Date().getTime();
+                me.imageList[ImageName] = Url;
+            }
 
-            var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
-            Url += "SessionID=" + me.options.reportViewer.sessionID;
-            Url += "&ImageID=" + ImageName;
-            Url += "#" + new Date().getTime();
-            return Url;
+            return me.imageList[ImageName];
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();

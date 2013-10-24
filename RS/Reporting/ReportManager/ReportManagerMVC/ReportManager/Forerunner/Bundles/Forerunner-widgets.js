@@ -111,7 +111,8 @@ $(function () {
             }
 
             //setup orientation change
-            window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+            if (!forerunner.device.isMSIE8())
+                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
@@ -3807,15 +3808,22 @@ $(function () {
         },
         _getWatermark: function () {
 
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8()){
+                var wtr = $("<DIV/>").html("Evaluation");
+                wstyle += "z-index: -1;" 
+                wtr.attr("style", wstyle);
+                return wtr;
+            }
+
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
-            //svg.setAttribute("width", "100%");
-            //svg.setAttribute("height", "100%");
-            //svg.setAttribute("pointer-events", "none");
-
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("pointer-events", "none");
 
             var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isMSIE8() ||forerunner.device.isSafariPC() )
+            if (forerunner.device.isSafariPC() )
                 wstyle += "z-index: -1;"                
             else
                 wstyle += "z-index: 1000;"
@@ -3823,16 +3831,7 @@ $(function () {
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
 
-            /*
-            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("width", "187");
-            rect.setAttribute("height", "234");
-            rect.setAttribute("fill", "#fff");
-            rect.setAttribute("stroke", "#000");
-            rect.setAttribute("stroke-width", "2");
-            rect.setAttribute("rx", "7");
-            */
-
+            
             var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", "10");
             text.setAttribute("y", "160");
@@ -3840,7 +3839,6 @@ $(function () {
             text.setAttribute("pointer-events", "none");
             text.textContent = "E" + "val" + "ua" + "tion";
 
-            //svg.appendChild(rect);
             svg.appendChild(text);
 
             return svg;

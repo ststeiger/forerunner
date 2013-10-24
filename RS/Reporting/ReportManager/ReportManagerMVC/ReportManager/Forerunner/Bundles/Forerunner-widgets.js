@@ -109,10 +109,13 @@ $(function () {
             } else {
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
+
+            //setup orientation change
+            window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -247,6 +250,17 @@ $(function () {
             me.loadLock = 0;
             me.$reportContainer.css({ opacity: 1 });
             me.$loadingIndicator.hide();
+        },
+        _ReRender: function () {
+            var me = this;
+
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
+                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
+                    me.pages[i].isRendered = false;
+                    me.pages[i].$container.html("");
+                }
+                me._setPage(me.curPage);
+            }
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
@@ -1449,6 +1463,13 @@ $(function () {
 
             if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
+
+                //Render responsive if set
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
@@ -2453,7 +2474,9 @@ $(function () {
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
             values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
-
+            if (window.navigator.standalone && forerunner.device.isiOS()) {
+                values.paneHeight = values.max;
+            }
             return values;
         },
         ResetSize: function () {
@@ -2534,17 +2557,28 @@ $(function () {
             var onInputFocus = function () {
                 if (me.options.isFullScreen)
                     me._makePositionAbsolute();
+                
+                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                me.$container.addClass("fr-layout-container-noscroll");
 
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+                me.ResetSize();
             };
 
             var onInputBlur = function () {
                 if (me.options.isFullScreen)
                     me._makePositionFixed();
 
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                }
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+
+                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);
@@ -3487,6 +3521,9 @@ $(function () {
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
                 setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+            } else {
+                setTimeout(function () { me.$explorer.scrollTop(0) }, 100);
+                setTimeout(function () { me.$explorer.scrollLeft(0) }, 100);
             }
         },
       
@@ -7183,7 +7220,8 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
-            me._createReportExplorer();
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
 
             me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({

@@ -3508,6 +3508,9 @@ $(function () {
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
                 setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+            } else {
+                setTimeout(function () { me.$explorer.scrollTop(0) }, 100);
+                setTimeout(function () { me.$explorer.scrollLeft(0) }, 100);
             }
         },
       

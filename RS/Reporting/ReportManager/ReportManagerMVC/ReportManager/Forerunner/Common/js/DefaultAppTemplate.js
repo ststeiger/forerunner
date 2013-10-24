@@ -324,7 +324,9 @@ $(function () {
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
             values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
-
+            if (window.navigator.standalone && forerunner.device.isiOS()) {
+                values.paneHeight = values.max;
+            }
             return values;
         },
         ResetSize: function () {
@@ -405,17 +407,28 @@ $(function () {
             var onInputFocus = function () {
                 if (me.options.isFullScreen)
                     me._makePositionAbsolute();
+                
+                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                me.$container.addClass("fr-layout-container-noscroll");
 
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+                me.ResetSize();
             };
 
             var onInputBlur = function () {
                 if (me.options.isFullScreen)
                     me._makePositionFixed();
 
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                }
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+
+                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);

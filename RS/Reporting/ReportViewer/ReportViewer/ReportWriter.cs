@@ -15,7 +15,6 @@ namespace Forerunner.SSRS.JSONRender
         JsonWriter w = new JsonTextWriter();
         byte majorVersion;
         byte minorVersion;
-        bool isImageConsolidation;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
         RPLReader RPL;        
 
@@ -228,10 +227,9 @@ namespace Forerunner.SSRS.JSONRender
 
         }
 
-        public ReportJSONWriter(Stream RPL, bool isImageConsolidation)
+        public ReportJSONWriter(Stream RPL)
         {
             this.RPL = new RPLReader(RPL);
-            this.isImageConsolidation = isImageConsolidation;
         }
 
         public string RPLToJSON(int NumPages)
@@ -806,8 +804,7 @@ namespace Forerunner.SSRS.JSONRender
                     prop.Add("ContentTop", "Single", 0x00);
                     prop.Add("ContentLeft", "Single", 0x01);
                     prop.Add("ContentWidth", "Single", 0x02);
-                    if (isImageConsolidation)
-                        prop.Add("ImageConsolidationOffsets", "Object", 0x31, this.WriteJSONImageConsolidationOffsets);
+                    prop.Add("ImageConsolidationOffsets", "Object", 0x31, this.WriteJSONImageConsolidationOffsets);
                     prop.Write(this);
                     w.WriteEndObject();
                     w.WriteEndObject();
@@ -905,19 +902,6 @@ namespace Forerunner.SSRS.JSONRender
         }
         private Boolean WriteJSONImageData()
         {
-            if (!isImageConsolidation) 
-            { 
-                int Count;
-                w.WriteMember("Count");
-                Count = RPL.ReadInt32();
-                w.WriteNumber(Count);
-                w.WriteMember("ImageContent");
-                w.WriteStartArray();
-                for (int i = 0; i < Count; i++)
-                    w.WriteNumber(RPL.ReadByte());
-                w.WriteEndArray();
-                return true;
-            }
             //Ox27: DynamicImageData
             //0x02: ImageData
             if (RPL.InspectByte() == 0x27 || RPL.InspectByte() == 0x02)
@@ -925,15 +909,17 @@ namespace Forerunner.SSRS.JSONRender
                 RPL.position++;
 
                 int Count;
-                w.WriteMember("Count");
+                //w.WriteMember("Count");
                 Count = RPL.ReadInt32();
-                w.WriteNumber(Count);
+                //w.WriteNumber(Count);
 
-                w.WriteMember("ImageContent");
-                w.WriteStartArray();
-                for (int i = 0; i < Count; i++)
-                    w.WriteNumber(RPL.ReadByte());
-                w.WriteEndArray();
+                RPL.position += Count;
+                //skip image content, no sense for frontend
+                //w.WriteMember("ImageContent");
+                //w.WriteStartArray();
+                //for (int i = 0; i < Count; i++)
+                //    w.WriteNumber(RPL.ReadByte());
+                //w.WriteEndArray();
             }
             else
                 ThrowParseError();

@@ -4346,12 +4346,18 @@ $(function () {
         },
         _getImageURL: function (RS, ImageName) {
             var me = this;
+            if (!me.imageList)
+                me.imageList = {};
+            
+            if (!me.imageList[ImageName]) {
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                Url += "SessionID=" + me.options.reportViewer.sessionID;
+                Url += "&ImageID=" + ImageName;
+                Url += "#" + new Date().getTime();
+                me.imageList[ImageName] = Url;
+            }
 
-            var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
-            Url += "SessionID=" + me.options.reportViewer.sessionID;
-            Url += "&ImageID=" + ImageName;
-            Url += "#" + new Date().getTime();
-            return Url;
+            return me.imageList[ImageName];
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();

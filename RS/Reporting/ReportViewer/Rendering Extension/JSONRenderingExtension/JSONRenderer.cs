@@ -52,8 +52,7 @@ namespace Forerunner.RenderingExtensions
             retval = RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
             RegisteredStream.Position = 0;
-            // BUGBUG:  Stella:  Need to make this true after Baotong has tested things.
-            JSON = new ReportJSONWriter(RegisteredStream, false);
+            JSON = new ReportJSONWriter(RegisteredStream);
             byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())));
             outputStream.Write(UTF8JSON ,0,UTF8JSON.Length);
             return retval;

@@ -1249,7 +1249,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)

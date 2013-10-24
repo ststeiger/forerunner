@@ -1250,7 +1250,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -6325,10 +6325,8 @@ $(function () {
             //when no default value exist, it will set it as the first valid value
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
-                if (me._reportDesignError === null) {
-                    me._reportDesignError = "";
-                }
-                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
+                // Do not error here because the parameter can be an internal parameter.
+                console.log(param.Name + " does not have a default value.");
             }
             //}
         },

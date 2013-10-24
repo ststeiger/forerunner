@@ -2822,10 +2822,6 @@ $(function () {
                 }
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearBtnStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
             });
@@ -2849,6 +2845,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -2915,6 +2919,14 @@ $(function () {
         _clearBtnStates: function () {
             var me = this;
             me.element.find(".fr-toolbar-keyword-textbox").val("");
+            me.element.find(".fr-toolbar-reportpage-textbox").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearBtnStates();
+            me.disableTools(me._viewerButtons());
+            me.enableTools([tb.btnReportBack]);
         },
         _destroy: function () {
         },
@@ -2979,10 +2991,6 @@ $(function () {
                 
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearItemStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
@@ -3002,6 +3010,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -3075,6 +3091,14 @@ $(function () {
         _clearItemStates: function () {
             var me = this;
             me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-textbox-reportpage").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearItemStates();
+            me.disableTools(me._viewerItems());
+            me.enableTools([tp.itemReportBack]);
         },
     });  // $.widget
 });  // function()

@@ -2,6 +2,7 @@
   width: 100%;
   height: 350px;
   bottom: 0px;
+  z-index:3;
 
   background: #9bb4d5; /* Old browsers */
   background: -moz-linear-gradient(top, #9bb4d5 0%, #8fa6cb 100%); /* FF3.6+ */
@@ -25,10 +26,9 @@ ul.fr-nav-container {
   overflow-x: scroll;
   list-style-type: square;
   -webkit-overflow-scrolling: touch;
-  border-top-width: 8px;
-  border-bottom-width: 8px;
-  border-top-style: double;
-  border-top-color: black;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
 }
 
 .fr-nav-item {

@@ -1,0 +1,147 @@
+﻿.fr-us-layout-section {
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  right: 0px;
+  position: absolute;
+  z-index: 5;
+  display: none;
+}
+
+.fr-us-page {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 5;
+  width: 100%;
+  text-align: center;
+}
+
+.fr-us-innerPage {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  display: inline-block;
+}
+
+.fr-us-layout {
+  position: relative;
+  margin-top: 100px;
+  -webkit-appearance: none;
+}
+
+.fr-us-header {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+  text-align: left;
+}
+
+.fr-us-print-icon-container {
+  height: 100%;
+  margin: 0 17px 0 11px;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.fr-us-align-middle {
+  vertical-align: middle;
+}
+
+.fr-us-title-container {
+  height: 100%;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.fr-us-title {
+  height: 45px;
+  vertical-align: middle;
+  display: table-cell;
+}
+
+.fr-us-cancel-container {
+  display: inline-block;
+  margin: 0 11px 0 17px;
+  float: right;
+}
+
+.fr-us-cancel {
+  height: 45px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+  font-family:sans-serif;
+  font-size: 13pt;
+  color: #ffffff;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.fr-us-form {
+  margin: 16px 0 25px 16px;
+  font-size: 13pt;
+  font-weight: bold;
+  color: #172949;
+  text-align: left;
+  display: block;
+}
+
+.fr-us-setting-container {
+  height: 30px;
+  width: 100%;
+  text-align: left;
+  display: table-cell;
+}
+
+.fr-us-label{
+  height: 20px;
+  display: inline-block;
+}
+
+.fr-us-checkbox {
+  display: inline-block;
+  margin: 0 6px 0 12px;
+}
+
+.fr-us-submit-container {
+  width: 100%;
+  display: inline-block;
+  margin: 25px 0 0 0;
+}
+
+.fr-us-submit-inner {
+  width: 100%;
+  display: inline-block;
+  text-align: center;
+}
+
+.fr-us-submit {
+  width: 200px;
+  display: inline-block;
+}
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-us-form {
+    margin: 4px 0 25px 16px;
+  }
+  .fr-us-submit-container {
+    margin: 4px 0 0 0;
+  }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-us-form {
+    margin: 4px 0 25px 4px;
+  }
+  .fr-us-submit-container {
+    margin: 4px 0 0 0;
+  }
+}
+
+
+

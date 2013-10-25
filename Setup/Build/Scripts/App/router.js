@@ -41,10 +41,10 @@ var ApplicationRouter = Backbone.Router.extend({
         _transitionToReportManager: function (path, view) {
             forerunner.device.allowZoom(false);
             $("body").reportExplorerEZ("transitionToReportManager", path, view);
-            $("html").removeClass("fr-docmap-background");
             $("html").addClass("fr-Explorer-background");
         },
 
+        _lastAction : null,
         navigateTo: function (action, path) {
             if (path !== null) path = String(path).replace(/%2f/g, "/");
             if (action === "home") {
@@ -58,21 +58,16 @@ var ApplicationRouter = Backbone.Router.extend({
             } else {
                 var encodedPath = String(path).replace(/\//g, "%2f");
                 var targetUrl = "#" + action + "/" + encodedPath;
-                g_App.router.navigate(targetUrl, { trigger: !forerunner.device.isFirefox(), replace: false });
+                // Do not trigger for Firefox when we are changing the anchor
+                var trigger = !forerunner.device.isFirefox() || this._lastAction === action || !this._lastAction;
+                g_App.router.navigate(targetUrl, { trigger: trigger, replace: false });
             }
+            this._lastAction = action;
         },
 
         transitionToReportViewer: function (path) {
             $("body").reportExplorerEZ("transitionToReportViewer", path);
             $("html").removeClass("fr-Explorer-background");
-
-            var events = forerunner.ssr.constants.events;
-            $(".fr-layout-reportviewer").on(events.reportViewerShowDocMap(), function (e, data) {
-                $("html").addClass("fr-docmap-background");
-            });
-            $(".fr-layout-reportviewer").on(events.reportViewerHideDocMap(), function (e, data) {
-                $("html").removeClass("fr-docmap-background");
-            });
         },
        
         toolbarHeight : function() {

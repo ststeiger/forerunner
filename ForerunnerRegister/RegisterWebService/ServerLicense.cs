@@ -114,22 +114,30 @@ namespace ForerunnerLicense
             SqlConnection SQLConn = DB.GetSQLConn();
 
             string SQL = @"UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
-                        DELETE License Where LicenseID = @MergeKey
+                        UPDATE License SET Quantity = 0 WHERE LicenseID = @MergeKey
                         ";
-            try
+
+            if (NewLicenseKey == MergeKey)
             {
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
-                SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
-                Response = String.Format(Response, "Success", "0", "Licenses Merged");
+                Response = String.Format(Response, "Fail", "110", "Cannot merge the same key");
             }
-            catch
+            else
             {
-                SQLConn.Close();
-                Response = String.Format(Response, "Fail", "3", "Server Error");
+                try
+                {
+                    SQLConn.Open();
+                    SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                    SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
+                    SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
+                    SQLComm.ExecuteNonQuery();
+                    SQLConn.Close();
+                    Response = String.Format(Response, "Success", "0", "Licenses Merged");
+                }
+                catch
+                {
+                    SQLConn.Close();
+                    Response = String.Format(Response, "Fail", "3", "Server Error");
+                }
             }
             return Response;
         }

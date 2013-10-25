@@ -1,0 +1,259 @@
+﻿.fr-layout-container {
+  
+  /*min-height: 100%;*/
+  background-color: transparent;
+  position: relative;
+  padding: 0px;
+
+  border: 0px;
+}
+
+.fr-layout-container table,td,tr {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  z-index: 0;
+}
+
+.fr-layout-mainviewport {
+    z-index: 1;
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    width:100%;
+}
+
+.fr-layout-mainViewPortShiftedRight
+{
+    /* position: fixed;*/
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.fr-layout-mainViewPortShiftedLeft {
+    /* position: fixed;*/
+    top: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.fr-layout-leftpane {
+    width: 270px;
+    vertical-align: top;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background: rgb(53,85,109); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM1NTU2ZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMTI4MmIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(53,85,109,1) 0%, rgba(33,40,43,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(53,85,109,1)), color-stop(100%,rgba(33,40,43,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', endColorstr='#21282b',GradientType=0 ); /* IE6-8 */
+    color: white;
+    z-index: 2;
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.fr-layout-leftpanecontent {
+    width: 270px;
+    overflow: hidden;
+    background: #354468;
+    display:block;
+    position: fixed;
+    left: 0;
+    top:38px;
+}
+
+.fr-layout-rightpane {
+    vertical-align: top;
+    width: 280px;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    background: rgb(53,85,109); /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzM1NTU2ZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMTI4MmIiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top,  rgba(53,85,109,1) 0%, rgba(33,40,43,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(53,85,109,1)), color-stop(100%,rgba(33,40,43,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(53,85,109,1) 0%,rgba(33,40,43,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#35556d', endColorstr='#21282b',GradientType=0 ); /* IE6-8 */
+    color: white;
+    z-index: 2;
+    display: none;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.fr-layout-rightpanecontent {
+    width: 280px;
+    display:block;
+    overflow: hidden;
+    background: #354468;
+
+    position: fixed;
+    right: 0;
+    top: 38px;
+}
+
+.fr-layout-topdiv {
+  border: 0px;
+  position: fixed;
+  top:0px;
+  left:0px;
+  width:100%;
+  height: auto;
+  margin: 0px;
+  padding: 0px;
+  background-color: white;
+  z-index: 1;
+}
+
+.fr-layout-topdivspacer {
+  height:38px;
+  display:block;
+}
+
+.fr-layout-rightheader {
+  width: 280px;
+  display:block;
+  top: 0px;
+  right: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
+.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
+.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button, .fr-layout-rightheader .fr-toolbar-print-button, .fr-layout-rightheader .fr-toolbar-reportback-button {
+  display: none;
+}
+.fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 
+.fr-layout-rightheader .fr-toolbar-sparator-text, .fr-layout-rightheader .fr-toolbar-menu-button, .fr-layout-leftheader .fr-button-recent {
+  display: none;
+}
+
+.fr-layout-rightheader .fr-toolbar-reportback-button, .fr-layout-rightheader .fr-toolbar-paramarea-button {
+    float: left;
+}
+
+.fr-layout-leftheader {
+  width: 270px;
+  display:block;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background-color: black;
+}
+
+.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
+.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-zoom-button, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
+.fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button, .fr-layout-leftheader .fr-toolbar-print-button, .fr-layout-leftheader .fr-button-recent {
+  display: none;
+}
+.fr-layout-leftheader .fr-toolbar-lastpage-button, .fr-layout-leftheader .fr-toolbar-documentmap-button, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-toolbar-find-button, 
+.fr-layout-leftheader .fr-toolbar-sparator-text, .fr-layout-leftheader .fr-toolbar-reportback-button, .fr-layout-leftheader .fr-toolbar-paramarea-button {
+  display: none;
+}
+
+.fr-layout-leftheader .fr-toolbar-menu-button {
+    float: right;
+}
+
+.fr-layout-leftheaderspacer {
+  display:block;
+}
+
+
+div.fr-layout-pagesection {
+  position: relative;
+  display:block;
+  width:auto;
+  height:auto;
+  
+}
+
+div.fr-layout-pagesection-noscroll {
+  overflow: hidden;
+}
+
+div.fr-layout-android {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+div.fr-layout-position-absolute {
+  position: absolute;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen 
+and (max-height : 320px) 
+and (min-width : 400px) 
+and (orientation : landscape) {
+/* Styles */
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+
+
+}
+
+/* Smartphones (portrait) ----------- */
+@media only screen 
+and (max-width : 320px) 
+and (orientation : portrait) {
+.fr-layout-bottomdiv {
+  display: none;
+}
+
+.fr-layout-bottomdivspacer {
+  display: none;
+}
+}
+
+/* iPads (landscape) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : landscape) {
+}
+
+/* iPads (portrait) ----------- */
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) 
+and (orientation : portrait) {
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+/* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+/* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+/* Styles */
+}

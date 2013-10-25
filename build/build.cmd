@@ -40,6 +40,9 @@ set SPBUILD_URL=%SPSITE%%SPBUILD_RELEASE%
 set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 echo Cleaning Build Files... >> %BUILD_LOG%
+echo Cleaning Setup Build Files... >> %BUILD_LOG%
+rmdir /s /q %~dp0..\Setup\Build >> %BUILD_LOG%
+echo Running git clean >> %BUILD_LOG%
 git clean -f -x >> %BUILD_LOG%
 echo Resetting Local Changes... >> %BUILD_LOG%
 git reset --hard >> %BUILD_LOG%
@@ -87,12 +90,17 @@ call %~dp0postbuild.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
+echo Running PostBuild2 >> %BUILD_LOG%
+call %~dp0postbuild2.cmd %BUILD_RELEASE% %BUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
 %ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
-%ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerReportManagerSetup.exe.zip
+%ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip
 %UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
 set MailSubject="BUILD PASSED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
 call %~dp0\buildpassed.htm.template.cmd %BUILD_RELEASE%\buildpassed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"

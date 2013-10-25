@@ -1,0 +1,13 @@
+﻿{
+    "errorTag": {
+        "type": [],
+        "stackTrace": []
+    },
+    "exportType": {
+        "pdf": [],
+        "excel": [],
+        "word": []
+    }
+}
+
+        

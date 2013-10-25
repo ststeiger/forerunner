@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Web.Helpers;
 using System.Dynamic;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ReportManagerUnitTest
@@ -13,29 +15,54 @@ namespace ReportManagerUnitTest
         UpToDate = 0,
         Changed = 1,
         NeedsTranslation = 2,
+        IncompatibleTypes = 3,
     }
 
-    public class Section : Dictionary<String, String>
+    public class Section : Dictionary<String, Object>
     {
-        public ProcessResult Process(Section section, String sectionName, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
+        public ProcessResult Process(Section section, String sectionName, String cultureName, LocFile exceptionLocFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
-            foreach (KeyValuePair<String, String> pair in this)
+            foreach (KeyValuePair<String, Object> pair in this)
             {
-                if (!skipAddPropertyProcessing &&
-                    !section.ContainsKey(pair.Key))
+                if (!section.ContainsKey(pair.Key))
                 {
                     TestContext.WriteLine("  Missing value - section: {0}, property: {1}", sectionName, pair.Key);
-                    section.Add(pair.Key, pair.Value);
-                    result |= ProcessResult.Changed;
+                    if (!skipAddPropertyProcessing)
+                    {
+                        section.Add(pair.Key, pair.Value);
+                        result |= ProcessResult.Changed;
+                    }
                 }
 
                 if (!skipTranslationCheck &&
-                    String.Compare(section[pair.Key], this[pair.Key], true) == 0)
+                    !exceptionLocFile.IsException(sectionName, pair.Key, cultureName))
                 {
-                    TestContext.WriteLine("  Value needs translation - section: {0}, property: {1}", sectionName, pair.Key);
-                    result |= ProcessResult.NeedsTranslation;
+                    if (section[pair.Key].GetType() != this[pair.Key].GetType())
+                    {
+                        TestContext.WriteLine("  Value type mismatch - section name: {0}, section type: {1}, master type: {2}", sectionName, section[pair.Key].GetType(), this[pair.Key].GetType());
+                        result |= ProcessResult.IncompatibleTypes;
+                    }
+                    else if (section[pair.Key].GetType() == typeof(String) &&
+                        String.Compare((String)section[pair.Key], (String)this[pair.Key], true) == 0)
+                    {
+                        TestContext.WriteLine("  Value needs translation - section: {0}, property: {1}, value: \"{2}\"", sectionName, pair.Key, section[pair.Key]);
+                        result |= ProcessResult.NeedsTranslation;
+                    }
+                    else if (section[pair.Key].GetType() == typeof(ArrayList))
+                    {
+                        ArrayList master = (ArrayList)this[pair.Key];
+                        ArrayList loc = (ArrayList)section[pair.Key];
+                        for (int i = 0; i < master.Count; i++)
+                        {
+                            if (String.Compare((String)master[i], (String)loc[i], true) == 0)
+                            {
+                                TestContext.WriteLine("  Value needs translation - section: {0}, property: {1}, Index: {2}, value: \"{3}\"", sectionName, pair.Key, i, loc[i]);
+                                result |= ProcessResult.NeedsTranslation;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -67,13 +94,25 @@ namespace ReportManagerUnitTest
                 Section newSection = new Section();
                 foreach (dynamic valuePair in sectionObject)
                 {
-                    newSection.Add(valuePair.Key, valuePair.Value);
+                    if (valuePair.Value.GetType() == typeof(System.Web.Helpers.DynamicJsonArray))
+                    {
+                        ArrayList a = new ArrayList();
+                        foreach (String itemValue in valuePair.Value)
+                        {
+                            a.Add(itemValue);
+                        }
+                        newSection.Add(valuePair.Key, a);
+                    }
+                    else
+                    {
+                        newSection.Add(valuePair.Key, valuePair.Value);
+                    }
                 }
                 Add(key, newSection);
             }
         }
 
-        public ProcessResult Process(LocFile locFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
+        public ProcessResult Process(LocFile locFile, String cultureName, LocFile exceptionLocFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
@@ -82,15 +121,50 @@ namespace ReportManagerUnitTest
                 if (!locFile.ContainsKey(pair.Key))
                 {
                     TestContext.WriteLine("  Missing section: {0}", pair.Key);
-                    locFile.Add(pair.Key, pair.Value);
-                    result |= ProcessResult.Changed;
-                }
+                    if (!skipAddPropertyProcessing)
+                    {
+                        result |= ProcessResult.Changed;
+                        locFile.Add(pair.Key, pair.Value);
+                        ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, cultureName, exceptionLocFile, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
+                        result |= processResult;
 
-                ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
-                result |= processResult;
+                    }
+                }
+                else
+                {
+                    ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, cultureName, exceptionLocFile, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
+                    result |= processResult;
+                }
             }
 
             return result;
+        }
+
+        public bool IsException(String sectionName, String propertyName, String cultureName)
+        {
+            if (this.ContainsKey(sectionName) &&
+                this[sectionName].ContainsKey(propertyName))
+            {
+                if (this[sectionName][propertyName].GetType() != typeof(ArrayList))
+                {
+                    return true;
+                }
+
+                ArrayList a = (ArrayList)this[sectionName][propertyName];
+                if (a.Count == 0)
+                {
+                    return true;
+                }
+
+                foreach (String exceptionCulture in a)
+                {
+                    if (String.Compare(exceptionCulture, cultureName, true) == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 
@@ -99,15 +173,24 @@ namespace ReportManagerUnitTest
     {
         public TestContext TestContext { get; set; }
 
-        private bool isEnglish(String filename)
+        private bool IsEnglish(String filename)
         {
-            if (filename.EndsWith("en.txt", true, System.Globalization.CultureInfo.CurrentCulture) ||
-                (String.Compare(filename.Substring(filename.Length - 10, 3), "-en", true) == 0))
+            String cultureName = GetCultureName(filename);
+            return String.Compare(cultureName.Substring(0, 2), "en", true) == 0;
+        }
+
+        private String GetCultureName(String filename)
+        {
+            String pattern = @"(-\w\w-\w\w)|(-\w\w)";
+            Regex regex = new Regex(pattern);
+
+            Match match = regex.Match(filename);
+            if (match.Index >= 0)
             {
-                return true;
+                return match.Value.Substring(1);
             }
 
-            return false;
+            return "";
         }
 
         [TestCategory("Manual")]
@@ -132,6 +215,16 @@ namespace ReportManagerUnitTest
             String locDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\ReportManager\Forerunner\ReportViewer\Loc");
             Assert.IsTrue(Directory.Exists(locDirectory), "locDirectory is not valid");
 
+            // Get the exception file directory relative to the current working directory
+            String exceptionFileDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\");
+            Assert.IsTrue(Directory.Exists(exceptionFileDirectory), "ExceptionFileDirectory is not valid");
+
+            // Load the translation exception file
+            String exceptionFilePath = Path.Combine(exceptionFileDirectory, "LocalizationTranslationExceptions.txt");
+            Assert.IsTrue(File.Exists(exceptionFilePath), "Exception File not found: {0}", exceptionFilePath);
+            LocFile exceptionLocFile = new LocFile();
+            exceptionLocFile.Load(exceptionFilePath);
+
             // Load the master (I.e., engish) file
             String masterFilePath = Path.Combine(locDirectory, @"ReportViewer-en.txt");
             Assert.IsTrue(File.Exists(masterFilePath), "masterFile: " + Path.GetFileName(masterFilePath) + " not found");
@@ -150,9 +243,11 @@ namespace ReportManagerUnitTest
 
                 TestContext.WriteLine("Processing file: {0}", fileInfo.Name);
 
+                String cultureName = GetCultureName(fileInfo.Name);
+
                 LocFile locFile = new LocFile();
                 locFile.Load(fileInfo.FullName);
-                ProcessResult result = masterLocFile.Process(locFile, isEnglish(fileInfo.Name), skipAddPropertyProcessing, TestContext);
+                ProcessResult result = masterLocFile.Process(locFile, cultureName, exceptionLocFile, IsEnglish(fileInfo.Name), skipAddPropertyProcessing, TestContext);
                 missingTranslations |= (result & ProcessResult.NeedsTranslation) != 0;
                 if ((result & ProcessResult.Changed) != 0)
                 {
@@ -167,6 +262,7 @@ namespace ReportManagerUnitTest
                     jsonString = jsonString.Replace("\\u0027", "'");
                     jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
                     jsonString = jsonString.Replace("\",\"", "\",\n    \"");
+                    jsonString = jsonString.Replace("\"],\"", "\"],\n    \"");
                     jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
                     jsonString = jsonString.Replace("}}", "\n  }\n}\n");
 

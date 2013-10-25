@@ -109,10 +109,14 @@ $(function () {
             } else {
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
+
+            //setup orientation change
+            if (!forerunner.device.isMSIE8())
+                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -233,7 +237,7 @@ $(function () {
                 me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
 
-                me.$reportContainer.css({ opacity: 0.5 });
+                me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
         },
@@ -245,8 +249,19 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
-            me.$reportContainer.css({ opacity: 1 });
+            me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
+        },
+        _ReRender: function () {
+            var me = this;
+
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
+                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
+                    me.pages[i].isRendered = false;
+                    me.pages[i].$container.html("");
+                }
+                me._setPage(me.curPage);
+            }
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
@@ -340,6 +355,8 @@ $(function () {
             }
         },
         _touchNav: function () {
+            if (!forerunner.device.isTouch())
+                return;
             // Touch Events
             var me = this;
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
@@ -1236,7 +1253,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -1395,6 +1412,8 @@ $(function () {
                         me._navToLink(bookmarkID);
                     if (!loadOnly && flushCache !== true)
                         me._cachePages(newPageNum);
+
+                    me._updateTableHeaders(me);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
             );
@@ -1449,6 +1468,13 @@ $(function () {
 
             if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
+
+                //Render responsive if set
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
@@ -1496,7 +1522,6 @@ $(function () {
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
-
             $.each(me.floatingHeaders, function (index, obj) {
                 me._setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
                 me._setColHeaderOffset(obj.$tablix, obj.$colHeader);
@@ -2453,7 +2478,9 @@ $(function () {
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
             values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
-
+            if (window.navigator.standalone && forerunner.device.isiOS()) {
+                values.paneHeight = values.max;
+            }
             return values;
         },
         ResetSize: function () {
@@ -2534,17 +2561,28 @@ $(function () {
             var onInputFocus = function () {
                 if (me.options.isFullScreen)
                     me._makePositionAbsolute();
+                
+                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                me.$container.addClass("fr-layout-container-noscroll");
 
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+                me.ResetSize();
             };
 
             var onInputBlur = function () {
                 if (me.options.isFullScreen)
                     me._makePositionFixed();
 
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                }
+
                 $(window).scrollTop(0);
                 $(window).scrollLeft(0);
+
+                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);
@@ -2788,10 +2826,6 @@ $(function () {
                 }
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearBtnStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowParamArea(), function (e, data) {
                 me.enableTools([tb.btnParamarea]);
             });
@@ -2815,6 +2849,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -2881,6 +2923,14 @@ $(function () {
         _clearBtnStates: function () {
             var me = this;
             me.element.find(".fr-toolbar-keyword-textbox").val("");
+            me.element.find(".fr-toolbar-reportpage-textbox").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearBtnStates();
+            me.disableTools(me._viewerButtons());
+            me.enableTools([tb.btnReportBack]);
         },
         _destroy: function () {
         },
@@ -2945,10 +2995,6 @@ $(function () {
                 
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
-                me._clearItemStates();
-            });
-
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
                 me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
@@ -2968,6 +3014,14 @@ $(function () {
                     me.freezeEnableDisable(false);
                     me.enableAllTools();
                 }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillThrough(), function (e, data) {
+                me._leaveCurReport();
+            });
+
+            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+                me._leaveCurReport();
             });
 
             // Hook up the toolbar element events
@@ -3041,6 +3095,14 @@ $(function () {
         _clearItemStates: function () {
             var me = this;
             me.element.find(".fr-item-textbox-keyword").val("");
+            me.element.find(".fr-item-textbox-reportpage").val("");
+            me.element.find(".fr-toolbar-numPages-button").html(0);
+        },
+        _leaveCurReport: function () {
+            var me = this;
+            me._clearItemStates();
+            me.disableTools(me._viewerItems());
+            me.enableTools([tp.itemReportBack]);
         },
     });  // $.widget
 });  // function()
@@ -3487,6 +3549,9 @@ $(function () {
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
                 setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+            } else {
+                setTimeout(function () { me.$explorer.scrollTop(0) }, 100);
+                setTimeout(function () { me.$explorer.scrollLeft(0) }, 100);
             }
         },
       
@@ -3746,34 +3811,37 @@ $(function () {
         },
         _getWatermark: function () {
 
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8()){
+                var wtr = $("<DIV/>").html("Evaluation");
+                wstyle += "z-index: -1;" 
+                wtr.attr("style", wstyle);
+                return wtr;
+            }
+
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC() )
+                wstyle += "z-index: -1;"                
+            else
+                wstyle += "z-index: 1000;"
+            
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
 
-            /*
-            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("width", "187");
-            rect.setAttribute("height", "234");
-            rect.setAttribute("fill", "#fff");
-            rect.setAttribute("stroke", "#000");
-            rect.setAttribute("stroke-width", "2");
-            rect.setAttribute("rx", "7");
-            */
-
+            
             var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", "10");
             text.setAttribute("y", "160");
             text.setAttribute("fill", "#000");
+            text.setAttribute("pointer-events", "none");
             text.textContent = "E" + "val" + "ua" + "tion";
 
-            //svg.appendChild(rect);
             svg.appendChild(text);
 
             return svg;
@@ -4322,12 +4390,18 @@ $(function () {
         },
         _getImageURL: function (RS, ImageName) {
             var me = this;
+            if (!me.imageList)
+                me.imageList = {};
+            
+            if (!me.imageList[ImageName]) {
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                Url += "SessionID=" + me.options.reportViewer.sessionID;
+                Url += "&ImageID=" + ImageName;
+                Url += "#" + new Date().getTime();
+                me.imageList[ImageName] = Url;
+            }
 
-            var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
-            Url += "SessionID=" + me.options.reportViewer.sessionID;
-            Url += "&ImageID=" + ImageName;
-            Url += "#" + new Date().getTime();
-            return Url;
+            return me.imageList[ImageName];
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();
@@ -4340,6 +4414,7 @@ $(function () {
             var ImageName;
             var imageStyle = "";
             var imageConsolidationOffset;
+
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
 
             if (RIContext.CurrObj.Type === "Image") {//for image
@@ -4362,7 +4437,18 @@ $(function () {
             }
             NewImage.onload = function () {
                 var naturalSize = me._getNatural(this);
-                me._writeActionImageMapAreas(RIContext, NewImage.width, NewImage.height);
+                var imageWidth, imageHeight;
+
+                if (imageConsolidationOffset) {
+                    imageWidth = imageConsolidationOffset.Width;
+                    imageHeight = imageConsolidationOffset.Height;
+                }
+                else {
+                    imageWidth = NewImage.width;
+                    imageHeight = NewImage.height;
+                }
+                    
+                me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
@@ -4373,12 +4459,11 @@ $(function () {
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
-            RIContext.$HTMLParent.attr("style", Style);
-            me._writeBookMark(RIContext);
-            RIContext.$HTMLParent.append(NewImage);
+            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
@@ -4411,9 +4496,15 @@ $(function () {
                 });
             }
         },
-        _writeActionImageMapAreas: function (RIContext, width, height) {
+        _writeActionImageMapAreas: function (RIContext, width, height, imageConsolidationOffset) {
             var actionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
-            var me = me;
+            var me = this;
+            var offsetLeft = 0, offsetTop = 0;
+
+            if (imageConsolidationOffset) {
+                offsetLeft = imageConsolidationOffset.Left;
+                offsetTop = imageConsolidationOffset.Top;
+            }
 
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
@@ -4437,20 +4528,20 @@ $(function () {
                         switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
                             case 0:
                                 shape = "rect";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) + "," +//left
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//top
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10)  + "," +//width
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);//height
                                 break;
                             case 1:
                                 shape = "poly";
                                 var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
                                 for (var k = 0; k < coorCount; k++) {
                                     if (k % 2 === 0) {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10) + offsetLeft;//X
                                     }
                                     else {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10) + offsetTop;//Y
                                     }
                                     if (k < coorCount - 1) {
                                         coords += ",";
@@ -4459,9 +4550,9 @@ $(function () {
                                 break;
                             case 2:
                                 shape = "circ";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) +"," +//X
+                                    (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//Y, (X,Y) is the center of the circle
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);//radius
                                 break;
                         }
                         $area.attr("shape", shape);
@@ -5564,6 +5655,10 @@ $(function () {
         _setDatePicker: function () {
             var me = this;
 
+            var dpLoc = me._getDatePickerLoc();
+            if (dpLoc)
+                $.datepicker.setDefaults(dpLoc);
+            
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
@@ -5742,7 +5837,6 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         gotoCurrent: true,
-                        closeText: "Close",
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -6288,12 +6382,14 @@ $(function () {
             //when no default value exist, it will set it as the first valid value
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
-                if (me._reportDesignError === null) {
-                    me._reportDesignError = "";
-                }
-                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
+                // Do not error here because the parameter can be an internal parameter.
+                console.log(param.Name + " does not have a default value.");
             }
             //}
+        },
+        _getDatePickerLoc: function () {
+            var me = this;
+            return me.options.$reportViewer.locData.datepicker;
         },
     });  // $.widget
 });
@@ -7183,7 +7279,8 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
-            me._createReportExplorer();
+            if (!me.$reportExplorer)
+                me._createReportExplorer();
 
             me.DefaultAppTemplate._selectedItemPath = null;
             me.DefaultAppTemplate.$mainviewport.reportViewerEZ({

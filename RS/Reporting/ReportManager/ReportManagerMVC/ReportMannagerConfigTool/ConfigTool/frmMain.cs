@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using ForerunnerLicense;
 
+
 namespace ReportMannagerConfigTool
 {
     public partial class frmMain : Form
@@ -289,7 +290,15 @@ namespace ReportMannagerConfigTool
                 }
                 return;
             }
-            Cursor.Current = Cursors.WaitCursor;
+
+            //load Licese agreement
+            frmEULA frm = new frmEULA();
+            DialogResult result = frm.ShowDialog();
+
+            if (result == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            Cursor.Current = Cursors.WaitCursor;   
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
@@ -304,12 +313,13 @@ namespace ReportMannagerConfigTool
                 }
             }
             Cursor.Current = Cursors.Default;
+            
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)
         {
-            frmManualActivation frm = new frmManualActivation();
-            DialogResult result = frm.ShowDialog();
+            //frmManualActivation frm = new frmManualActivation();
+            //DialogResult result = frm.ShowDialog();
         }
 
         private void btnProductInfo_Click(object sender, EventArgs e)

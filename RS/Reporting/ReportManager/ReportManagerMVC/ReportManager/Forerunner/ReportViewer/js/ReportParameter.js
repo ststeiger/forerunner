@@ -270,6 +270,10 @@ $(function () {
         _setDatePicker: function () {
             var me = this;
 
+            var dpLoc = me._getDatePickerLoc();
+            if (dpLoc)
+                $.datepicker.setDefaults(dpLoc);
+            
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
@@ -448,7 +452,6 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         gotoCurrent: true,
-                        closeText: "Close",
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -994,12 +997,14 @@ $(function () {
             //when no default value exist, it will set it as the first valid value
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
-                if (me._reportDesignError === null) {
-                    me._reportDesignError = "";
-                }
-                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
+                // Do not error here because the parameter can be an internal parameter.
+                console.log(param.Name + " does not have a default value.");
             }
             //}
+        },
+        _getDatePickerLoc: function () {
+            var me = this;
+            return me.options.$reportViewer.locData.datepicker;
         },
     });  // $.widget
 });

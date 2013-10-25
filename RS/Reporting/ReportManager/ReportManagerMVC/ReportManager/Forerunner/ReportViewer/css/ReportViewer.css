@@ -1,13 +1,15 @@
-﻿
-
-.fr-report-container {
+﻿.fr-report-container {
   position:relative;
   width:100%;
 }
 .fr-report-areacontainer {
     display:table-cell; 
 }
-
+.fr-report-container-translucent
+{
+    opacity:0.5;
+    filter:alpha(opacity=50);
+}
 .fr-report-loading-indicator  {
   border: solid 2px #86A5AD;
   background: white url(../../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;

@@ -274,6 +274,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe.config"
   File "${LOCALROOT}\Config\Manual Activation.rtf"
+  File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
   File "${RESOURCEROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
@@ -505,6 +506,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
+  Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk"

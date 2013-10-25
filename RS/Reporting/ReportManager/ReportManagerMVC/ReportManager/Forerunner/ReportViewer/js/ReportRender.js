@@ -80,34 +80,37 @@ $(function () {
         },
         _getWatermark: function () {
 
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8()){
+                var wtr = $("<DIV/>").html("Evaluation");
+                wstyle += "z-index: -1;" 
+                wtr.attr("style", wstyle);
+                return wtr;
+            }
+
             var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             svg.setAttribute("xlink", "http://www.w3.org/1999/xlink");
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute; width: 100%; height: 100%; margin: 0;z-index: 1000;left:0px;top:40px; pointer-events: none;";
+            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC() )
+                wstyle += "z-index: -1;"                
+            else
+                wstyle += "z-index: 1000;"
+            
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
 
-            /*
-            var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("width", "187");
-            rect.setAttribute("height", "234");
-            rect.setAttribute("fill", "#fff");
-            rect.setAttribute("stroke", "#000");
-            rect.setAttribute("stroke-width", "2");
-            rect.setAttribute("rx", "7");
-            */
-
+            
             var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
             text.setAttribute("x", "10");
             text.setAttribute("y", "160");
             text.setAttribute("fill", "#000");
+            text.setAttribute("pointer-events", "none");
             text.textContent = "E" + "val" + "ua" + "tion";
 
-            //svg.appendChild(rect);
             svg.appendChild(text);
 
             return svg;
@@ -656,12 +659,18 @@ $(function () {
         },
         _getImageURL: function (RS, ImageName) {
             var me = this;
+            if (!me.imageList)
+                me.imageList = {};
+            
+            if (!me.imageList[ImageName]) {
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                Url += "SessionID=" + me.options.reportViewer.sessionID;
+                Url += "&ImageID=" + ImageName;
+                Url += "#" + new Date().getTime();
+                me.imageList[ImageName] = Url;
+            }
 
-            var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
-            Url += "SessionID=" + me.options.reportViewer.sessionID;
-            Url += "&ImageID=" + ImageName;
-            Url += "#" + new Date().getTime();
-            return Url;
+            return me.imageList[ImageName];
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();
@@ -674,6 +683,7 @@ $(function () {
             var ImageName;
             var imageStyle = "";
             var imageConsolidationOffset;
+
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
 
             if (RIContext.CurrObj.Type === "Image") {//for image
@@ -696,7 +706,18 @@ $(function () {
             }
             NewImage.onload = function () {
                 var naturalSize = me._getNatural(this);
-                me._writeActionImageMapAreas(RIContext, NewImage.width, NewImage.height);
+                var imageWidth, imageHeight;
+
+                if (imageConsolidationOffset) {
+                    imageWidth = imageConsolidationOffset.Width;
+                    imageHeight = imageConsolidationOffset.Height;
+                }
+                else {
+                    imageWidth = NewImage.width;
+                    imageHeight = NewImage.height;
+                }
+                    
+                me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
@@ -707,12 +728,11 @@ $(function () {
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
-            RIContext.$HTMLParent.attr("style", Style);
-            me._writeBookMark(RIContext);
-            RIContext.$HTMLParent.append(NewImage);
+            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
@@ -745,9 +765,15 @@ $(function () {
                 });
             }
         },
-        _writeActionImageMapAreas: function (RIContext, width, height) {
+        _writeActionImageMapAreas: function (RIContext, width, height, imageConsolidationOffset) {
             var actionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
-            var me = me;
+            var me = this;
+            var offsetLeft = 0, offsetTop = 0;
+
+            if (imageConsolidationOffset) {
+                offsetLeft = imageConsolidationOffset.Left;
+                offsetTop = imageConsolidationOffset.Top;
+            }
 
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
@@ -771,20 +797,20 @@ $(function () {
                         switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
                             case 0:
                                 shape = "rect";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) + "," +//left
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//top
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10)  + "," +//width
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);//height
                                 break;
                             case 1:
                                 shape = "poly";
                                 var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
                                 for (var k = 0; k < coorCount; k++) {
                                     if (k % 2 === 0) {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10) + offsetLeft;//X
                                     }
                                     else {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10) + offsetTop;//Y
                                     }
                                     if (k < coorCount - 1) {
                                         coords += ",";
@@ -793,9 +819,9 @@ $(function () {
                                 break;
                             case 2:
                                 shape = "circ";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) +"," +//X
+                                    (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//Y, (X,Y) is the center of the circle
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);//radius
                                 break;
                         }
                         $area.attr("shape", shape);

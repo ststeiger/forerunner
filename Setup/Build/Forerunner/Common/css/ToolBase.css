@@ -24,7 +24,7 @@
 .fr-toolbase-itemcontainer {
   border-top-width:1px;
   border-top-style:groove;
-  border-top-color: lightblue;
+  border-top-color: 858ea3;
   vertical-align: top;
   color: white;
   display:block;
@@ -57,7 +57,7 @@
 .fr-toolbase-dropdown
 {
   padding:1px;
-  background-color: #d5e1f2;
+  background-color: #354468;
   border:1px solid darkgray;
 }
 .fr-toolbase-dropdown-item {
@@ -65,7 +65,7 @@
   border-top-width:1px;
   border-top-color: lightblue;
   font-size: 13pt;
-  color: #456191;
+  color: #ffffff;
   text-align:left;
 }
 .fr-toolbase-state {

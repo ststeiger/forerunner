@@ -909,15 +909,17 @@ namespace Forerunner.SSRS.JSONRender
                 RPL.position++;
 
                 int Count;
-                w.WriteMember("Count");
+                //w.WriteMember("Count");
                 Count = RPL.ReadInt32();
-                w.WriteNumber(Count);
+                //w.WriteNumber(Count);
 
-                w.WriteMember("ImageContent");
-                w.WriteStartArray();
-                for (int i = 0; i < Count; i++)
-                    w.WriteNumber(RPL.ReadByte());
-                w.WriteEndArray();
+                RPL.position += Count;
+                //skip image content, no sense for frontend
+                //w.WriteMember("ImageContent");
+                //w.WriteStartArray();
+                //for (int i = 0; i < Count; i++)
+                //    w.WriteNumber(RPL.ReadByte());
+                //w.WriteEndArray();
             }
             else
                 ThrowParseError();

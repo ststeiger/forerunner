@@ -108,10 +108,14 @@ $(function () {
             } else {
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
+
+            //setup orientation change
+            if (!forerunner.device.isMSIE8())
+                window.addEventListener("orientationchange", function() { me._ReRender.call(me);},false);
+
             //load the report Page requested
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
-            //me._loadParameters(me.options.pageNum);
             me.hideDocMap();
         },
         /**
@@ -232,7 +236,7 @@ $(function () {
                 me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
 
-                me.$reportContainer.css({ opacity: 0.5 });
+                me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
         },
@@ -244,8 +248,19 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
-            me.$reportContainer.css({ opacity: 1 });
+            me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
+        },
+        _ReRender: function () {
+            var me = this;
+
+            if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {                
+                for (var i = 1; i <= forerunner.helper.objectSize(me.pages); i++) {
+                    me.pages[i].isRendered = false;
+                    me.pages[i].$container.html("");
+                }
+                me._setPage(me.curPage);
+            }
         },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
@@ -339,6 +354,8 @@ $(function () {
             }
         },
         _touchNav: function () {
+            if (!forerunner.device.isTouch())
+                return;
             // Touch Events
             var me = this;
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
@@ -1235,7 +1252,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -1394,6 +1411,8 @@ $(function () {
                         me._navToLink(bookmarkID);
                     if (!loadOnly && flushCache !== true)
                         me._cachePages(newPageNum);
+
+                    me._updateTableHeaders(me);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
             );
@@ -1448,6 +1467,13 @@ $(function () {
 
             if (!me.pages[pageNum].reportObj.Exception) {
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
+
+                //Render responsive if set
+                var responsiveUI = false;
+                if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
+                    responsiveUI = true;
+                }
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
@@ -1495,7 +1521,6 @@ $(function () {
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
-
             $.each(me.floatingHeaders, function (index, obj) {
                 me._setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
                 me._setColHeaderOffset(obj.$tablix, obj.$colHeader);

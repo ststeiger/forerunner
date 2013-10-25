@@ -20,7 +20,7 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"]);
+        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"].ToLower());
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -86,7 +86,18 @@ namespace ReportManager.Controllers
         [HttpGet]
         public HttpResponseMessage SaveUserParameters(string reportPath, string parameters)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath,parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath, parameters)), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserSettings()
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserSettings()), "text/JSON");
+        }
+        [HttpGet]
+        public HttpResponseMessage SaveUserSettings(string settings)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserSettings(settings)), "text/JSON");
         }
 
 

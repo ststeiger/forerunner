@@ -25,7 +25,7 @@ echo         ^<tr^>^<th^>Project:^</th^>^<td^>%ProjectName%^</td^>^</tr^> >> %Ma
 echo         ^<tr^>^<th^>Version:^</th^>^<td^>%BuildVersion%^</td^>^</tr^> >> %MailBody%
 echo	     ^<tr^> >> %MailBody%
 
-echo           ^<th^>Download Setup:^</th^>^<td^>^<a href="%DropLocation%/ForerunnerReportManagerSetup.exe.zip"^>%DropLocation%/ForerunnerReportManagerSetup.exe.zip^</a^>^</td^> >> %MailBody%
+echo           ^<th^>Download Setup:^</th^>^<td^>^<a href="%DropLocation%/ForerunnerMobilizer.zip"^>%DropLocation%/ForerunnerMobilizer.zip^</a^>^</td^> >> %MailBody%
 echo	     ^</tr^> >> %MailBody%
 echo       ^</tbody^> >> %MailBody%
 echo	 ^</table^> >> %MailBody%

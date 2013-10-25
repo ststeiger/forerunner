@@ -210,6 +210,7 @@ namespace ReportMannagerConfigTool
                 }
 
                 doc.Save(path + reportServerWebConfig);
+                System.IO.File.SetLastWriteTime(path + reportServerWebConfig, DateTime.Now);
             }
             catch {
 

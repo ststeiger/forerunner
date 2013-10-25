@@ -236,7 +236,7 @@ $(function () {
                 me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
 
-                me.$reportContainer.css({ opacity: 0.5 });
+                me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
         },
@@ -248,7 +248,7 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
-            me.$reportContainer.css({ opacity: 1 });
+            me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
         },
         _ReRender: function () {

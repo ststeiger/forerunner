@@ -298,7 +298,7 @@ namespace ReportMannagerConfigTool
             if (result == System.Windows.Forms.DialogResult.Cancel)
                 return;
 
-            Cursor.Current = Cursors.WaitCursor;
+            Cursor.Current = Cursors.WaitCursor;   
             try
             {
                 rtbCurLicense.Text = ClientLicense.Activate(txtNewKey.Text);
@@ -313,6 +313,7 @@ namespace ReportMannagerConfigTool
                 }
             }
             Cursor.Current = Cursors.Default;
+            
         }
 
         private void btnManualActivation_Click(object sender, EventArgs e)

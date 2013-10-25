@@ -5638,6 +5638,10 @@ $(function () {
         _setDatePicker: function () {
             var me = this;
 
+            var dpLoc = me._getDatePickerLoc();
+            if (dpLoc)
+                $.datepicker.setDefaults(dpLoc);
+            
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
@@ -5816,7 +5820,6 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         gotoCurrent: true,
-                        closeText: "Close",
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -6366,6 +6369,10 @@ $(function () {
                 console.log(param.Name + " does not have a default value.");
             }
             //}
+        },
+        _getDatePickerLoc: function () {
+            var me = this;
+            return me.options.$reportViewer.locData.datepicker;
         },
     });  // $.widget
 });

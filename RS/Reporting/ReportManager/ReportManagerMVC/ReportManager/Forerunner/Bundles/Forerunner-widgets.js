@@ -237,7 +237,7 @@ $(function () {
                 me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
 
-                me.$reportContainer.css({ opacity: 0.5 });
+                me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
         },
@@ -249,7 +249,7 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
-            me.$reportContainer.css({ opacity: 1 });
+            me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
         },
         _ReRender: function () {
@@ -4414,6 +4414,7 @@ $(function () {
             var ImageName;
             var imageStyle = "";
             var imageConsolidationOffset;
+
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
 
             if (RIContext.CurrObj.Type === "Image") {//for image
@@ -4436,7 +4437,18 @@ $(function () {
             }
             NewImage.onload = function () {
                 var naturalSize = me._getNatural(this);
-                me._writeActionImageMapAreas(RIContext, NewImage.width, NewImage.height);
+                var imageWidth, imageHeight;
+
+                if (imageConsolidationOffset) {
+                    imageWidth = imageConsolidationOffset.Width;
+                    imageHeight = imageConsolidationOffset.Height;
+                }
+                else {
+                    imageWidth = NewImage.width;
+                    imageHeight = NewImage.height;
+                }
+                    
+                me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
                 
                 me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
             };
@@ -4447,12 +4459,11 @@ $(function () {
 
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
-            RIContext.$HTMLParent.attr("style", Style);
-            me._writeBookMark(RIContext);
-            RIContext.$HTMLParent.append(NewImage);
+            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
@@ -4485,9 +4496,15 @@ $(function () {
                 });
             }
         },
-        _writeActionImageMapAreas: function (RIContext, width, height) {
+        _writeActionImageMapAreas: function (RIContext, width, height, imageConsolidationOffset) {
             var actionImageMapAreas = RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas;
-            var me = me;
+            var me = this;
+            var offsetLeft = 0, offsetTop = 0;
+
+            if (imageConsolidationOffset) {
+                offsetLeft = imageConsolidationOffset.Left;
+                offsetTop = imageConsolidationOffset.Top;
+            }
 
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
@@ -4511,20 +4528,20 @@ $(function () {
                         switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
                             case 0:
                                 shape = "rect";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10) + "," +
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) + "," +//left
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//top
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10)  + "," +//width
+                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);//height
                                 break;
                             case 1:
                                 shape = "poly";
                                 var coorCount = element.ImageMapAreas.ImageMapArea[j].CoorCount;
                                 for (var k = 0; k < coorCount; k++) {
                                     if (k % 2 === 0) {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * width / 100, 10) + offsetLeft;//X
                                     }
                                     else {
-                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10);
+                                        coords += parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[k] * height / 100, 10) + offsetTop;//Y
                                     }
                                     if (k < coorCount - 1) {
                                         coords += ",";
@@ -4533,9 +4550,9 @@ $(function () {
                                 break;
                             case 2:
                                 shape = "circ";
-                                coords = parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + "," +
-                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) +"," +//X
+                                    (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//Y, (X,Y) is the center of the circle
+                                    parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10);//radius
                                 break;
                         }
                         $area.attr("shape", shape);
@@ -5638,6 +5655,10 @@ $(function () {
         _setDatePicker: function () {
             var me = this;
 
+            var dpLoc = me._getDatePickerLoc();
+            if (dpLoc)
+                $.datepicker.setDefaults(dpLoc);
+            
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
                 $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
@@ -5816,7 +5837,6 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         gotoCurrent: true,
-                        closeText: "Close",
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -6366,6 +6386,10 @@ $(function () {
                 console.log(param.Name + " does not have a default value.");
             }
             //}
+        },
+        _getDatePickerLoc: function () {
+            var me = this;
+            return me.options.$reportViewer.locData.datepicker;
         },
     });  // $.widget
 });

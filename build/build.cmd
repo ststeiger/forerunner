@@ -40,6 +40,9 @@ set SPBUILD_URL=%SPSITE%%SPBUILD_RELEASE%
 set UPLOADER=%~dp0tools\SharepointUploader\bin\Debug\SharepointUploader.exe
 set ZIPPER=%~dp0tools\Zipper\bin\Debug\Zipper.exe
 echo Cleaning Build Files... >> %BUILD_LOG%
+echo Cleaning Setup Build Files... >> %BUILD_LOG%
+rmdir /s /q %~dp0..\Setup\Build >> %BUILD_LOG%
+echo Running git clean >> %BUILD_LOG%
 git clean -f -x >> %BUILD_LOG%
 echo Resetting Local Changes... >> %BUILD_LOG%
 git reset --hard >> %BUILD_LOG%

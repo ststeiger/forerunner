@@ -19,21 +19,24 @@ namespace ReportManagerUnitTest
 
     public class Section : Dictionary<String, Object>
     {
-        public ProcessResult Process(Section section, String sectionName, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
+        public ProcessResult Process(Section section, String sectionName, LocFile exceptionLocFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
             foreach (KeyValuePair<String, Object> pair in this)
             {
-                if (!skipAddPropertyProcessing &&
-                    !section.ContainsKey(pair.Key))
+                if (!section.ContainsKey(pair.Key))
                 {
                     TestContext.WriteLine("  Missing value - section: {0}, property: {1}", sectionName, pair.Key);
-                    section.Add(pair.Key, pair.Value);
-                    result |= ProcessResult.Changed;
+                    if (!skipAddPropertyProcessing)
+                    {
+                        section.Add(pair.Key, pair.Value);
+                        result |= ProcessResult.Changed;
+                    }
                 }
 
-                if (!skipTranslationCheck)
+                if (!skipTranslationCheck &&
+                    !exceptionLocFile.ContainsProperty(sectionName, pair.Key))
                 {
                     if (section[pair.Key].GetType() != this[pair.Key].GetType())
                     {
@@ -108,7 +111,7 @@ namespace ReportManagerUnitTest
             }
         }
 
-        public ProcessResult Process(LocFile locFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
+        public ProcessResult Process(LocFile locFile, LocFile exceptionLocFile, bool skipTranslationCheck, bool skipAddPropertyProcessing, TestContext TestContext)
         {
             ProcessResult result = ProcessResult.UpToDate;
 
@@ -121,19 +124,28 @@ namespace ReportManagerUnitTest
                     {
                         result |= ProcessResult.Changed;
                         locFile.Add(pair.Key, pair.Value);
-                        ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
+                        ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, exceptionLocFile, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
                         result |= processResult;
 
                     }
                 }
                 else
                 {
-                    ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
+                    ProcessResult processResult = pair.Value.Process(locFile[pair.Key], pair.Key, exceptionLocFile, skipTranslationCheck, skipAddPropertyProcessing, TestContext);
                     result |= processResult;
                 }
             }
 
             return result;
+        }
+
+        public bool ContainsProperty(String sectionName, String propertyName)
+        {
+            if (this.ContainsKey(sectionName))
+            {
+                return this[sectionName].ContainsKey(propertyName);
+            }
+            return false;
         }
     }
 
@@ -175,6 +187,16 @@ namespace ReportManagerUnitTest
             String locDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\ReportManager\Forerunner\ReportViewer\Loc");
             Assert.IsTrue(Directory.Exists(locDirectory), "locDirectory is not valid");
 
+            // Get the exception file directory relative to the current working directory
+            String exceptionFileDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\");
+            Assert.IsTrue(Directory.Exists(exceptionFileDirectory), "ExceptionFileDirectory is not valid");
+
+            // Load the translation exception file
+            String exceptionFilePath = Path.Combine(exceptionFileDirectory, "LocalizationTranslationExceptions.txt");
+            Assert.IsTrue(File.Exists(exceptionFilePath), "Exception File not found: {0}", exceptionFilePath);
+            LocFile exceptionLocFile = new LocFile();
+            exceptionLocFile.Load(exceptionFilePath);
+
             // Load the master (I.e., engish) file
             String masterFilePath = Path.Combine(locDirectory, @"ReportViewer-en.txt");
             Assert.IsTrue(File.Exists(masterFilePath), "masterFile: " + Path.GetFileName(masterFilePath) + " not found");
@@ -195,7 +217,7 @@ namespace ReportManagerUnitTest
 
                 LocFile locFile = new LocFile();
                 locFile.Load(fileInfo.FullName);
-                ProcessResult result = masterLocFile.Process(locFile, isEnglish(fileInfo.Name), skipAddPropertyProcessing, TestContext);
+                ProcessResult result = masterLocFile.Process(locFile, exceptionLocFile, isEnglish(fileInfo.Name), skipAddPropertyProcessing, TestContext);
                 missingTranslations |= (result & ProcessResult.NeedsTranslation) != 0;
                 if ((result & ProcessResult.Changed) != 0)
                 {
@@ -210,6 +232,7 @@ namespace ReportManagerUnitTest
                     jsonString = jsonString.Replace("\\u0027", "'");
                     jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
                     jsonString = jsonString.Replace("\",\"", "\",\n    \"");
+                    jsonString = jsonString.Replace("\"],\"", "\"],\n    \"");
                     jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
                     jsonString = jsonString.Replace("}}", "\n  }\n}\n");
 

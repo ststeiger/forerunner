@@ -4,7 +4,7 @@ REM Runs Postbuild2 actions.
 REM
 set BUILD_RELEASE=%1
 set BUILD_LOG=%2
-set POSTBUILD_LOG=%BUILD_RELEASE%\postbuild.log
+set POSTBUILD_LOG=%BUILD_RELEASE%\postbuild2.log
 echo Executing Postbuild... >> %POSTBUILD_LOG%
 echo %DATE% >> %POSTBUILD_LOG% 
 echo %TIME% >> %POSTBUILD_LOG%

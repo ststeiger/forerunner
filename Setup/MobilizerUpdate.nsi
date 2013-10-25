@@ -37,6 +37,9 @@
 ; Add registry key
 ;Page custom fun_ApplicationConfig_RunRegister
 
+; Finish page
+!define MUI_FINISHPAGE_RUN "$INSTDIR\Config\MobilizerConfigTool.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Run Mobilizer Config Tool"
 !insertmacro MUI_PAGE_FINISH
 
 ; Language files
@@ -172,7 +175,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
-  SetOutPath "$INSTDIR"
+  SetOutPath "$INSTDIR\Config"
 
 SectionEnd
 

@@ -90,6 +90,11 @@ call %~dp0postbuild.cmd %BUILD_RELEASE% %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
+echo Running PostBuild2 >> %BUILD_LOG%
+call %~dp0postbuild2.cmd %BUILD_RELEASE% %BUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0

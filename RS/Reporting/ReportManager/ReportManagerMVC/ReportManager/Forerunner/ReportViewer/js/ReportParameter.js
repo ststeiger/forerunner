@@ -994,10 +994,8 @@ $(function () {
             //when no default value exist, it will set it as the first valid value
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
-                if (me._reportDesignError === null) {
-                    me._reportDesignError = "";
-                }
-                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
+                // Do not error here because the parameter can be an internal parameter.
+                console.log(param.Name + " does not have a default value.");
             }
             //}
         },

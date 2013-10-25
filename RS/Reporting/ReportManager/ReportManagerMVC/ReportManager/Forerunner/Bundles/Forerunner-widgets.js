@@ -355,6 +355,8 @@ $(function () {
             }
         },
         _touchNav: function () {
+            if (!forerunner.device.isTouch())
+                return;
             // Touch Events
             var me = this;
             $(me.element).hammer({ stop_browser_behavior: { userSelect: false }, swipe_max_touches: 2, drag_max_touches: 2 }).on("swipe drag touch release",
@@ -1251,7 +1253,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
-                    $paramArea.reportParameter({ $reportViewer: this });
+                    $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
@@ -1410,6 +1412,8 @@ $(function () {
                         me._navToLink(bookmarkID);
                     if (!loadOnly && flushCache !== true)
                         me._cachePages(newPageNum);
+
+                    me._updateTableHeaders(me);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
             );
@@ -1518,7 +1522,6 @@ $(function () {
         _updateTableHeaders: function (me) {
             // Update the floating headers in this viewer
             // Update the toolbar
-
             $.each(me.floatingHeaders, function (index, obj) {
                 me._setRowHeaderOffset(obj.$tablix, obj.$rowHeader);
                 me._setColHeaderOffset(obj.$tablix, obj.$colHeader);
@@ -6359,10 +6362,8 @@ $(function () {
             //when no default value exist, it will set it as the first valid value
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
-                if (me._reportDesignError === null) {
-                    me._reportDesignError = "";
-                }
-                me._reportDesignError += param.Name + "' " + me.options.$reportViewer.locData.messages.paramFieldEmpty + " </br>";
+                // Do not error here because the parameter can be an internal parameter.
+                console.log(param.Name + " does not have a default value.");
             }
             //}
         },

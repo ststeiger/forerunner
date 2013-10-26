@@ -39,13 +39,19 @@ namespace ReportManagerUnitTest
                 if (!skipTranslationCheck &&
                     !exceptionLocFile.IsException(sectionName, pair.Key, cultureName))
                 {
+                    String thisValue = "";
+                    if (this[pair.Key].GetType() == typeof(String))
+                    {
+                        thisValue = (String)this[pair.Key];
+                    }
                     if (section[pair.Key].GetType() != this[pair.Key].GetType())
                     {
                         TestContext.WriteLine("  Value type mismatch - section name: {0}, section type: {1}, master type: {2}", sectionName, section[pair.Key].GetType(), this[pair.Key].GetType());
                         result |= ProcessResult.IncompatibleTypes;
                     }
                     else if (section[pair.Key].GetType() == typeof(String) &&
-                        String.Compare((String)section[pair.Key], (String)this[pair.Key], true) == 0)
+                        String.Compare((String)section[pair.Key], (String)this[pair.Key], true) == 0 &&
+                        thisValue.Length > 0)
                     {
                         TestContext.WriteLine("  Value needs translation - section: {0}, property: {1}, value: \"{2}\"", sectionName, pair.Key, section[pair.Key]);
                         result |= ProcessResult.NeedsTranslation;

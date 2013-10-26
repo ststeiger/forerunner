@@ -156,12 +156,18 @@
     "Ago",
     "Sep",
     "Oct",
-    "Nov",
+    "Nov","Domingo",
     "Dic"], "dayNames":["Domingo",
      "Lunes",
      "Martes",
      "Miércoles",
      "Jueves",
+     "Friday",
+     "Sábado"],"dayNamesShort":["Dom",
+    "Lu ",
+    "Mar",
+    "Mié",
+    "Jue",
      "Friday",
      "Sábado"],"dayNamesShort":["Dom",
     "Lu ",
@@ -174,7 +180,13 @@
     "Ma",
     "Mi",
     "Ju",
+    "Sáb"],"dayNamesMin":["Do",
+    "Lu",
+    "Ma",
+    "Mi",
+    "Ju",
     "Fr",
+    "Sá"]
     "Sá"]
   }
 }

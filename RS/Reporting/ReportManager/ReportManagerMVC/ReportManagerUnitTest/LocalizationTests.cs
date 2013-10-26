@@ -54,6 +54,7 @@ namespace ReportManagerUnitTest
                     {
                         ArrayList master = (ArrayList)this[pair.Key];
                         ArrayList loc = (ArrayList)section[pair.Key];
+                        Assert.IsTrue(master.Count == loc.Count, String.Format("Count mismatch in array property: {0}, section: {1}, cutureName: {2}", pair.Key, sectionName, cultureName));
                         for (int i = 0; i < master.Count; i++)
                         {
                             if (String.Compare((String)master[i], (String)loc[i], true) == 0)
@@ -84,7 +85,15 @@ namespace ReportManagerUnitTest
                 json = sr.ReadToEnd();
             }
 
-            dynamic sections = Json.Decode(json);
+            dynamic sections = null;
+            try
+            {
+                sections = Json.Decode(json);
+            }
+            catch (System.ArgumentException e)
+            {
+                Assert.Fail("Invalid syntax - filename: {0}\ne.message: {1}", Path.GetFileName(fullname), e.Message);
+            }
 
             foreach (var sectionPair in sections)
             {

@@ -59,7 +59,7 @@
     "keyword":"Schlüsselwort",
     "lastPage":"Letzte",
     "menu":"Menü",
-    "navigation":"Navigation",
+    "navigation":"Steuerung",
     "next":"nächster",
     "pageOf":"von",
     "paramarea":"Parameter",

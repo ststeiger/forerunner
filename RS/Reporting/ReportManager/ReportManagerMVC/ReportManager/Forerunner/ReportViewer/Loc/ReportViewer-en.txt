@@ -1,10 +1,10 @@
 ﻿{
-    "messages": {
-        "loading": "Loading...",
-        "completeFind": "The entire report has been searched",
-        "keyNotFound": "Key not found",
-        "sessionExpired": "Your session has expired",
-        "imageNotDisplay": "Cannot display image",
+  "messages": {
+    "loading": "Loading...",
+    "completeFind": "The entire report has been searched",
+    "keyNotFound": "Key not found",
+    "sessionExpired": "Your session has expired",
+    "imageNotDisplay": "Cannot display image",
 		"saveParamSuccess":"Saved",
 		"saveParamFailed":"Failed",
 		"catalogsLoadFailed":"Failed to load the catalogs from the server.  Please try again.",
@@ -36,36 +36,36 @@
         "word": "Word"
     },
 	"toolPane": {
-        "pageOf": "of",
-        "home": "Home",
-        "navigation": "Navigation",
-        "favorites": "Favorites",
-        "back": "Back",
-        "refresh": "Refresh",
-        "docMap": "Document Map",
-        "find": "Find",
-        "next": "Next",
+    "pageOf": "of",
+    "home": "Home",
+    "navigation": "Navigation",
+    "favorites": "Favorites",
+    "back": "Back",
+    "refresh": "Refresh",
+    "docMap": "Document Map",
+    "find": "Find",
+    "next": "Next",
 		"zoom": "Enable Zoom",
 		"print": "Print"
     },
 	"toolbar": {
-        "back": "Back",
-        "docMap": "Document Map",
-        "exportMenu": "Export",
-        "favorites": "Favorites",
-        "find": "Find",
-        "firstPage": "First",
-        "home": "Home",
+    "back": "Back",
+    "docMap": "Document Map",
+    "exportMenu": "Export",
+    "favorites": "Favorites",
+    "find": "Find",
+    "firstPage": "First",
+    "home": "Home",
 		"keyword": "Keyword",
 		"lastPage": "Last",
 		"menu": "Menu",
-        "navigation": "Navigation",
-        "next": "Next",
-        "pageOf": "of",
+    "navigation": "Navigation",
+    "next": "Next",
+    "pageOf": "of",
 		"paramarea": "Parameters",
 		"previousPage": "Previous",
 		"recent": "Recent",
-        "refresh": "Refresh",
+    "refresh": "Refresh",
 		"reportPage": "Page",
 		"zoom": "Enable Zoom",
 		"print": "Print",
@@ -93,11 +93,11 @@
 		"ResponsiveUI": "Responsive UI"
 	},
 	"paramPane": {
-        "nullField": "Null",
-        "isTrue": "True",
-        "isFalse": "False",
-        "required": "Required",
-        "viewReport": "View Report",
+    "nullField": "Null",
+    "isTrue": "True",
+    "isFalse": "False",
+    "required": "Required",
+    "viewReport": "View Report",
 		"cancel": "cancel",
 		"datePicker":"Date"
     },
@@ -118,7 +118,7 @@
 		"min": "Enter a value greater than or equal to {0}"
 	},
 	"dialog":{
-	    "title":"Prompt",
+    "title":"Prompt",
 		"close":"Close"
 	},
 	"placeholders":{ 
@@ -127,23 +127,22 @@
 	    "Login": "Login" 
 	},
 	"datepicker":{
-        "closeText": "Done", 
-        "prevText": "Prev", 
-        "nextText": "Next", 
-        "currentText": "Today",
-        "weekHeader": "Wk",
-        "dateFormat": "mm/dd/yy",
-        "firstDay": 0,
-        "isRTL": false,
-        "showMonthAfterYear": false,
-        "yearSuffix": "",
-        "monthNames": ["January","February","March","April","May","June","July","August","September","October","November","December"],
-        "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
-        "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], 
-        "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], 
-        "dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"]
-    }
-
+    "closeText": "Done", 
+    "prevText": "Prev", 
+    "nextText": "Next", 
+    "currentText": "Today",
+    "weekHeader": "Wk",
+    "dateFormat": "mm/dd/yy",
+    "firstDay": 0,
+    "isRTL": false,
+    "showMonthAfterYear": false,
+    "yearSuffix": "",
+    "monthNames": ["January","February","March","April","May","June","July","August","September","October","November","December"],
+    "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
+    "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], 
+    "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], 
+    "dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"]
+  }
 }
 
         

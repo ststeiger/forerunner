@@ -1,22 +1,70 @@
 ﻿{
+  "messages": {
+    "saveParamSuccess": ["is"]
+  },
   "errorTag": {
     "type": [],
-    "stackTrace": []
+    "message": ["ro"],
+    "stackTrace": [],
+    "targetSite": []
+  },
+  "toolPane": {
+    "navigation":["fr", "is"],
+    "refresh": ["it", "ro"],
+    "docMap": ["is"],
+     "zoom": ["ru"],
+    "print": ["ro"]
+  },
+  "toolbar": {
+    "exportMenu": ["ro", "sv"],
+    "menu": ["fr", "ga", "it", "pt"],
+     "lastPage": ["ga"],
+    "navigation": ["fr", "is"],
+    "refresh": ["it", "ro"],
+    "docMap": ["is"],
+    "firstPage": ["is"],
+    "previousPage": ["fr"],
+    "reportPage": ["fr", "is"],
+     "zoom": ["ru"]
   },
   "exportType": {
     "pdf": [],
+    "mhtml": ["ga"],
     "excel": [],
+    "tiff": ["it"],
     "word": []
   },
   "print": {
-    "margin": ["de"]
+    "margin": ["de"],
+     "marginTop": ["is"],
+    "marginBottom": ["is"]
   },
   "userSettings": {
-    "submit": ["de", "es"],
+    "submit": ["de", "es", "fr", "ga", "is", "it", "ja", "pt", "sv"],
     "ResponsiveUI": ["de"]
   },
   "paramPane": {
-    "nullField":"Null"
+    "nullField": [],
+    "isTrue": ["ga", "is"],
+    "isFalse": ["is", "ro"],
+     "cancel": ["ro"],
+    "datePicker": ["fr"]
+  },
+  "dialog":{
+    "title": ["ro"]
+  },
+  "placeholders": {
+    "Login": ["es", "pt", "ro"]
+  },
+  "datepicker": {
+    "prevText": ["is", "it"], 
+    "weekHeader": ["de", "ga", "is", "it", "pt", "ro", "ru", "sv"],
+    "dateFormat": ["es", "ja", "pt", "ro", "ru", "sv"],
+    "monthNames": ["de", "is", "pt", "ro", "sv"],
+    "monthNamesShort": ["de", "es", "fr", "is", "it", "pt", "ro", "sv"],
+    "dayNames": ["pt"], 
+    "dayNamesShort": ["de", "is"],
+    "dayNamesMin": ["de", "fr", "ga", "is", "it", "sv"]
   }
 }
 

@@ -40,40 +40,39 @@ $(function () {
             me.element.html("");
 
             var $theForm = new $(
-            "<div class='fr-us-page'>" +
+            "<div class='fr-core-dialog-innerPage fr-us-innerPage fr-core-center'>" +
                 // Header
-                "<div class='fr-us-innerPage fr-us-layout fr-core-dialog-layout'>" +
-                    "<div class='fr-us-header fr-core-dialog-header'>" +
-                        "<div class='fr-us-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-title-container'>" +
-                            "<div class='fr-us-title'>" +
-                                userSettings.title +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-cancel-container'>" +
-                            "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
+                "<div class='fr-us-header fr-core-dialog-header'>" +
+                    "<div class='fr-us-print-icon-container'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
                         "</div>" +
                     "</div>" +
-                    // form
-                    "<form class='fr-us-form'>" +
-                        "<div class='fr-us-setting-container'>" +
-                            "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                            "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                    "<div class='fr-us-title-container'>" +
+                        "<div class='fr-us-title'>" +
+                            userSettings.title +
                         "</div>" +
-                        "<div class='fr-us-submit-container'>" +
-                            "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
-                        "</div>" +
-                    "</form>" +
+                    "</div>" +
+                    "<div class='fr-us-cancel-container'>" +
+                        "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
+                    "</div>" +
                 "</div>" +
+                // form
+                "<form class='fr-us-form'>" +
+                    "<div class='fr-us-setting-container'>" +
+                        "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                        "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                    "</div>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
+                    "</div>" +
+                "</form>" +
             "</div>");
 
             me.element.append($theForm);
 
-            me.element.find(".fr-us-submit").on("click", function (e) {
+            me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
                 me.closeDialog();
             });

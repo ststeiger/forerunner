@@ -5841,7 +5841,7 @@ $(function () {
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
-                        gotoCurrent: true,
+                        //gotoCurrent: true,
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();

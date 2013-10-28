@@ -4405,7 +4405,7 @@ $(function () {
                 var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
-                Url += "#" + new Date().getTime();
+                Url += "&" + new Date().getTime();
                 me.imageList[ImageName] = Url;
             }
 
@@ -4464,7 +4464,7 @@ $(function () {
             $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);
-
+            
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
 

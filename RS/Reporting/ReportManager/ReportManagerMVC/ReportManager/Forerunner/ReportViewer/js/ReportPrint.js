@@ -38,84 +38,81 @@ $(function () {
             me.element.html("");
 
             var $printForm = new $(
-            "<div class='fr-print-page'>" +
+            "<div class='fr-print-innerPage fr-core-dialog-innerPage fr-core-center'>" +
                 // Header
-                "<div class='fr-print-innerPage fr-print-layout fr-core-dialog-layout'>" +
-                    "<div class='fr-print-header fr-core-dialog-header'>" +
-                        "<div class='fr-print-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-print-title-container'>" +
-                            "<div class='fr-print-title'>" +
-                                print.title +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-print-cancel-container'>" +
-                            "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
+                "<div class='fr-print-header fr-core-dialog-header'>" +
+                    "<div class='fr-print-print-icon-container'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
                         "</div>" +
                     "</div>" +
-                    // form
-                    "<form class='fr-print-form'>" +
-                        "<div class='fr-print-options-label'>" +
-                            "<div>" +
-                                print.pageLayoutOptions +
-                            "</div>" +
+                    "<div class='fr-print-title-container'>" +
+                        "<div class='fr-print-title'>" +
+                            print.title +
                         "</div>" +
-                        // Height / Width
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.pageHeight + "</label>" +
-                                "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.pageWidth + "</label>" +
-                                "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                        "</div>" +
-                        // Orientation
-                        "<div class='fr-print-orientation-container'>" +
-                            "<div class='fr-print-portrait'></div>" +
-                            "<div class='fr-print-landscape'></div>" +
-                        "</div>" +
-                        "<div class='fr-print-margins-label'>" +
-                            print.margin +
-                        "</div>" +
-                        // Top / Bottom
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginTop + "</label>" +
-                                "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginBottom + "</label>" +
-                                "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                        "</div>" +
-                        // Left / Right
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginLeft + "</label>" +
-                                "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginRight + "</label>" +
-                                "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "</div>" +
-                                "<div class='fr-print-submit-container'>" +
-                                    "<div class='fr-print-submit-inner'>" +
-                                    "<input name='submit' type='button' class='fr-print-submit fr-core-dialog-button' value='" + print.print + "'/>" +
-                            "</div>" +
-                        "</div>" +
-                    "</form>" +
+                    "</div>" +
+                    "<div class='fr-print-cancel-container'>" +
+                        "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
+                    "</div>" +
                 "</div>" +
+                // form
+                "<form class='fr-print-form'>" +
+                    "<div class='fr-print-options-label'>" +
+                        print.pageLayoutOptions +
+                    "</div>" +
+                    // Height / Width
+                    "<div class='fr-print-settings-pair-container'>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.pageHeight + "</label>" +
+                            "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.pageWidth + "</label>" +
+                            "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                    "</div>" +
+                    // Orientation
+                    "<div class='fr-print-orientation-container'>" +
+                        "<div class='fr-print-portrait'></div>" +
+                        "<div class='fr-print-landscape'></div>" +
+                    "</div>" +
+                    "<div class='fr-print-margins-label'>" +
+                        print.margin +
+                    "</div>" +
+                    // Top / Bottom
+                    "<div class='fr-print-settings-pair-container'>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.marginTop + "</label>" +
+                            "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.marginBottom + "</label>" +
+                            "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                    "</div>" +
+                     //Left / Right
+                    "<div class='fr-print-settings-pair-container'>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.marginLeft + "</label>" +
+                            "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                        "<div class='fr-print-setting'>" +
+                            "<label class='fr-print-label'>" + print.marginRight + "</label>" +
+                            "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
+                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
+                        "</div>" +
+                    "</div>" +
+                    // Print button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='submit' type='button' class='fr-print-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + print.print + "'/>" +
+                        "</div>" +
+                    "</div>" +
+                "</form>" +
             "</div>");
 
             //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
@@ -130,7 +127,7 @@ $(function () {
             me._resetValidateMessage();
             me._validateForm(me.element.find(".fr-print-form"));
 
-            me.element.find(".fr-print-submit").on("click", function (e) {
+            me.element.find(".fr-print-submit-id").on("click", function (e) {
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
                     me.options.$reportViewer.reportViewer("printReport", printPropertyList);

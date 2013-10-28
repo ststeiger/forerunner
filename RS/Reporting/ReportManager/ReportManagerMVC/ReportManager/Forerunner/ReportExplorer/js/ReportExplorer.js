@@ -244,9 +244,9 @@ $(function () {
             };
             me.getUserSettings(true);
 
-            var $dlg = me.options.$appContainer.find(".fr-us-layout-section");
+            var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dialog fr-us-layout-section'/>");
+                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element

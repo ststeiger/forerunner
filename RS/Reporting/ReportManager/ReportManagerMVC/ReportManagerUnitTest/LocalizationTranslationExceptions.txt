@@ -9,7 +9,7 @@
     "targetSite": []
   },
   "toolPane": {
-    "navigation":["fr", "is"],
+    "navigation":["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
      "zoom": ["ru"],
@@ -19,7 +19,7 @@
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
      "lastPage": ["ga"],
-    "navigation": ["fr", "is"],
+    "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
     "firstPage": ["is"],

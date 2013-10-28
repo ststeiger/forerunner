@@ -798,14 +798,14 @@ $(function () {
             $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
-        * close all opened modal dialogs with classname 'fr-dialog'
+        * close all opened modal dialogs with classname 'fr-dialog-id'
         *
         * @function forerunner.dialog#closeAllModalDialogs
         */
         closeAllModalDialogs: function () {
             var me = this;
             $(".fr-core-mask").remove();
-            $(".fr-dialog").hide();
+            $(".fr-dialog-id").hide();
         },
         /**
         * Show message box by modal dialog
@@ -816,7 +816,7 @@ $(function () {
         showMessageBox: function ($appContainer, msg) {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
-                $msgBox = $("<div class='fr-dialog fr-messagebox'/>");
+                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout'/>");
                 $msgBox.messageBox({});
                 $appContainer.append($msgBox);
             }
@@ -829,13 +829,8 @@ $(function () {
         * @param {function} $appContainer - Modal dialog container
         */
         showReportPrintDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-layout-printsection");
-            if ($dlg.length > 0) {
-                $dlg.reportPrint("openDialog");
-            }
-            else {
-                console.log("Error - unable show the report print dialog, '.fr-layout-printsection' not found ");
-            }
+            var $dlg = $appContainer.find(".fr-print-section");
+            $dlg.reportPrint("openDialog");
         },
         /**
         * Show the report print, modal dialog
@@ -844,13 +839,8 @@ $(function () {
         * @param {function} $appContainer - Modal dialog container
         */
         showUserSettingsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-us-layout-section");
-            if ($dlg.length > 0) {
-                $dlg.userSettings("openDialog");
-            }
-            else {
-                console.log("Error - unable show the user settings dialog, '.fr-us-layout-section' not found ");
-            }
+            var $dlg = $appContainer.find(".fr-us-section");
+            $dlg.userSettings("openDialog");
         }
     };
 

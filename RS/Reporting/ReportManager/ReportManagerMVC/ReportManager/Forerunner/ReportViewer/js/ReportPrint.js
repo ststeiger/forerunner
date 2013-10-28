@@ -13,6 +13,60 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
 
+    $.widget(widgets.getFullname("settingsPairWidget"), {
+        options: {
+            label1: null,
+            name1: null,
+            text1: null,
+            unit1: null,
+            label2: null,
+            name2: null,
+            text2: null,
+            unit2: null,
+        },
+        _init: function () {
+            var me = this;
+            var name1 = "";
+            if (me.options.name1) {
+                name1 = "name='" + me.options.name1 + "'";
+            }
+
+            var name2 = "";
+            if (me.options.name2) {
+                name2 = "name='" + me.options.name2 + "'";
+            }
+
+            me.element.html("");
+            var $theTable = new $(
+            "<table class=fr-print-settings>" +
+                "<tr>" +
+                    "<td>" +
+                        "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
+                    "</td>" +
+                    "<td>" +
+                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                    "</td>" +
+                    "<td>" +
+                        "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
+                    "</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td>" +
+                        "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
+                    "</td>" +
+                    "<td>" +
+                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                    "</td>" +
+                    "<td>" +
+                        "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +
+                    "</td>" +
+                "</tr>" +
+            "</table>");
+            me.element.append($theTable);
+            me.element.addClass("fr-print-settings-pair-widget");
+        },
+    }); //$.widget
+
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
@@ -56,56 +110,25 @@ $(function () {
                 "</div>" +
                 // form
                 "<form class='fr-print-form'>" +
+                    // Print layout label
                     "<div class='fr-print-options-label'>" +
                         print.pageLayoutOptions +
                     "</div>" +
                     // Height / Width
-                    "<div class='fr-print-settings-pair-container'>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.pageHeight + "</label>" +
-                            "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.pageWidth + "</label>" +
-                            "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                    "</div>" +
+                    "<div class=fr-print-height-width-id></div>" +
                     // Orientation
                     "<div class='fr-print-orientation-container'>" +
                         "<div class='fr-print-portrait'></div>" +
                         "<div class='fr-print-landscape'></div>" +
                     "</div>" +
+                    // Margins label
                     "<div class='fr-print-margins-label'>" +
                         print.margin +
                     "</div>" +
                     // Top / Bottom
-                    "<div class='fr-print-settings-pair-container'>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.marginTop + "</label>" +
-                            "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.marginBottom + "</label>" +
-                            "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                    "</div>" +
+                    "<div class=fr-print-top-bottom-id></div>" +
                      //Left / Right
-                    "<div class='fr-print-settings-pair-container'>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.marginLeft + "</label>" +
-                            "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                        "<div class='fr-print-setting'>" +
-                            "<label class='fr-print-label'>" + print.marginRight + "</label>" +
-                            "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
-                            "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                        "</div>" +
-                    "</div>" +
+                    "<div class=fr-print-left-right-id></div>" +
                     // Print button
                     "<div class='fr-core-dialog-submit-container'>" +
                         "<div class='fr-core-center'>" +
@@ -118,6 +141,39 @@ $(function () {
             //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
 
             me.element.append($printForm);
+
+            me.element.find(".fr-print-height-width-id").settingsPairWidget({
+                label1: print.pageHeight,
+                name1: "PageHeight",
+                text1: me._unitConvert(pageLayout.PageHeight),
+                unit1: unit,
+                label2: print.pageWidth,
+                name2: "PageWidth",
+                text2: me._unitConvert(pageLayout.PageWidth),
+                unit2: unit
+            });
+
+            me.element.find(".fr-print-top-bottom-id").settingsPairWidget({
+                label1: print.marginTop,
+                name1: "MarginTop",
+                text1: me._unitConvert(pageLayout.MarginTop),
+                unit1: unit,
+                label2: print.marginBottom,
+                name2: "MarginBottom",
+                text2: me._unitConvert(pageLayout.MarginBottom),
+                unit2: unit
+            });
+
+            me.element.find(".fr-print-left-right-id").settingsPairWidget({
+                label1: print.marginLeft,
+                name1: "MarginLeft",
+                text1: me._unitConvert(pageLayout.MarginLeft),
+                unit1: unit,
+                label2: print.marginRight,
+                name2: "MarginRight",
+                text2: me._unitConvert(pageLayout.MarginRight),
+                unit2: unit
+            });
 
             me.element.find(".fr-print-text").each(function () {
                 $(this).attr("required", "true").attr("number", "true");

@@ -79,10 +79,21 @@
   display: block;
 }
 
-.fr-print-settings-pair-container {
+.fr-print-settings-pair-widget {
   vertical-align: top;
-  margin-right: 16px;
   display: inline-block;
+}
+
+.fr-print-form .fr-print-settings {
+  display:inline-table;
+  vertical-align: top;
+  padding: 0;
+  margin: 0 16px 0 0;
+}
+
+.fr-print-settings td {
+  padding-bottom: 10px;
+  vertical-align: top;
 }
 
 .fr-print-orientation-container {
@@ -125,7 +136,6 @@
 
 .fr-print-label{
   height: 20px;
-  min-width: 70px;
   margin: 0 5px 0px 0;
   display: inline-block;
 }

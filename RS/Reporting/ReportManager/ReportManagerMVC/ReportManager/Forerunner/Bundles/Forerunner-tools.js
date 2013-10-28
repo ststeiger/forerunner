@@ -847,10 +847,10 @@ $(function () {
                             parameters: parameterList,
                             },
                             function (data) {
-                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess);
+                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
                             },
                             function () {
-                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed);
+                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
                             }
                         );
                     }

@@ -56,11 +56,14 @@ $(function () {
         /**
          * @function $.forerunner.messageBox#openDialog
          */
-        openDialog: function (msg) {
+        openDialog: function (msg, caption) {
             var me = this;
 
             forerunner.dialog.showModalDialog(me.element, function () {
-                $(".fr-messagebox-msg").html(msg);
+                me.element.find(".fr-messagebox-msg").text(msg);
+                if (caption) {
+                    me.element.find(".fr-messagebox-title").text(caption);
+                }
                 me.element.css("display", "inline-block");
             });
         },

@@ -814,14 +814,14 @@ $(function () {
         * @function forerunner.dialog#showMessageBox
         * @param {function} $appContainer - Modal dialog container
         */
-        showMessageBox: function ($appContainer, msg) {
+        showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
                 $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout'/>");
                 $msgBox.messageBox({});
                 $appContainer.append($msgBox);
             }
-            $msgBox.messageBox("openDialog", msg);
+            $msgBox.messageBox("openDialog", msg, caption);
         },
         /**
         * Show the report print, modal dialog

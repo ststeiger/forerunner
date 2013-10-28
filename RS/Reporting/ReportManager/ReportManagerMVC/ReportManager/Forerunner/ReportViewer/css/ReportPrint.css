@@ -142,8 +142,7 @@
 }
 
 .fr-print-error-span {
-  width: 118px;
-  margin: 2px 0 0 0;
+  margin: 2px 0 0 4px;
   text-align: right;
   font-size: 10pt;
 

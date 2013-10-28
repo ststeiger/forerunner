@@ -228,11 +228,11 @@ namespace ReportManagerUnitTest
 
             // Get the localization file directory relative to the current working directory
             String locDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\..\ReportManager\Forerunner\ReportViewer\Loc");
-            Assert.IsTrue(Directory.Exists(locDirectory), "locDirectory is not valid");
+            Assert.IsTrue(Directory.Exists(locDirectory), "locDirectory is not valid - {0}", Path.GetFullPath(locDirectory));
 
             // Get the exception file directory relative to the current working directory
             String exceptionFileDirectory = Path.GetFullPath(Environment.CurrentDirectory + @"\..\..\");
-            Assert.IsTrue(Directory.Exists(exceptionFileDirectory), "ExceptionFileDirectory is not valid");
+            Assert.IsTrue(Directory.Exists(exceptionFileDirectory), "ExceptionFileDirectory is not valid - {0}", Path.GetFullPath(locDirectory));
 
             // Load the translation exception file
             String exceptionFilePath = Path.Combine(exceptionFileDirectory, "LocalizationTranslationExceptions.txt");

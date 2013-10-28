@@ -38,7 +38,7 @@
   "toolPane": {
     "pageOf":"von",
     "home":"Haus",
-    "navigation":"Steuerung",
+    "navigation":"Navigation",
     "favorites":"Favoriten",
     "back":"Zurück",
     "refresh":"erfrischen",
@@ -59,7 +59,7 @@
     "keyword":"Schlüsselwort",
     "lastPage":"Letzte",
     "menu":"Menü",
-    "navigation":"Steuerung",
+    "navigation":"Navigation",
     "next":"nächster",
     "pageOf":"von",
     "paramarea":"Parameter",

@@ -102,6 +102,10 @@
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>RowSpanRepro.rdl</Name>
+      <FullPath>RowSpanRepro.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Simple Gauge.rdl</Name>
       <FullPath>Simple Gauge.rdl</FullPath>
     </ProjectItem>
@@ -137,10 +141,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>RowSpanRepro.rdl</Name>
-      <FullPath>RowSpanRepro.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -149,7 +149,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://demo.forerunnersw.com/reportserver</TargetServerURL>
+        <TargetServerURL>http://forerunner-sql2/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

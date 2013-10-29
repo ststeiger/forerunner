@@ -83,7 +83,7 @@ $(function () {
             var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isMSIE8()){
                 var wtr = $("<DIV/>").html("Evaluation");
-                wstyle += "z-index: -1;" 
+                wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
                 return wtr;
             }
@@ -94,11 +94,11 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isSafariPC() )
-                wstyle += "z-index: -1;"                
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC())
+                wstyle += "z-index: -1;";
             else
-                wstyle += "z-index: 1000;"
+                wstyle += "z-index: 1000;";
             
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
@@ -281,6 +281,9 @@ $(function () {
                 else
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
                 Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
+
+                if (Measurements[Index].zIndex)
+                    Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                 //Background color goes on container
                 if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
@@ -1249,6 +1252,9 @@ $(function () {
                 Style += "max-width:" + (CurrObj.Height) + "mm;";
             }
 
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
+
             return Style;
         },
         _getMeasurements: function (CurrObj, includeHeight) {
@@ -1271,6 +1277,9 @@ $(function () {
                 Style += "min-height:" + CurrObj.Height + "mm;";
                 Style += "max-height:" + (CurrObj.Height) + "mm;";
             }
+
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },

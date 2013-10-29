@@ -490,16 +490,18 @@ $(function () {
          */
         getLocData: function (locFileLocation) {
             var languageList = this._getLanguages();
-
+            var i;
+            var lang;
             var langData = null;
+
             if (languageList !== null && languageList !== undefined) {
-                for (var i = 0; i < languageList.length && langData === null; i++) {
-                    var lang = languageList[i];
+                for (i = 0; i < languageList.length && langData === null; i++) {
+                    lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
                 }
-                for (var i = 0; i < languageList.length && langData === null; i++) {
-                    var lang = languageList[i];
+                for ( i = 0; i < languageList.length && langData === null; i++) {
+                    lang = languageList[i];
                     if (lang.length > 2) {
                         lang = lang.toLocaleLowerCase().substring(0, 2);
                         langData = this._loadFile(locFileLocation, lang);
@@ -653,7 +655,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser  */
         isSafari: function () {
             var ua = navigator.userAgent;
-            if (ua.indexOf('Safari') != -1 && us.indexOf('Chrome') == -1) {
+            if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) {
                 return true;
             }
             return false;
@@ -661,7 +663,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser on  */
         isSafariPC: function () {
             var ua = navigator.userAgent;            
-            if (ua.indexOf('Safari') != -1 && ua.indexOf('Chrome') == -1 && ua.indexOf('Windows') != -1) {
+            if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1 && ua.indexOf("Windows") !== -1) {
                 return true;
             }
             return false;

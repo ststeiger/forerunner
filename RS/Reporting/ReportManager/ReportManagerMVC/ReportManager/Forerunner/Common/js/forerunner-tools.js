@@ -159,7 +159,7 @@ $(function () {
             tooltip: locData.toolbar.next,
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
+                    e.data.$reportViewer.reportViewer("navToPage", parseInt(e.data.$reportViewer.reportViewer("getCurPage")) + 1);
                 }
             }
         },
@@ -654,7 +654,8 @@ $(function () {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
                         e.data.$reportViewer.reportViewer("find", $.trim(this.value));
-                        e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+                        // bug-622
+                        //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
                         return false;
                     }
                 },
@@ -982,7 +983,13 @@ $(function () {
     tg.itemFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-item-findgroup",
-        tools: [tg.itemFindCompositeGroup]
+        tools: [tg.itemFindCompositeGroup],
+        events: {
+            click: function (e) {
+                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
+                e.data.$reportViewer.reportViewer("find", value);
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+            }
+        }
     };
-
 });

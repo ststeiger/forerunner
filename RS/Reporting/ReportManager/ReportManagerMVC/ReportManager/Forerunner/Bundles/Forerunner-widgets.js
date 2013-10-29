@@ -4021,6 +4021,9 @@ $(function () {
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
                 Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
 
+                if (Measurements[Index].zIndex)
+                    Style += "z-index:" + Measurements[Index].zIndex + ";";
+
                 //Background color goes on container
                 if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
@@ -4988,6 +4991,9 @@ $(function () {
                 Style += "max-width:" + (CurrObj.Height) + "mm;";
             }
 
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
+
             return Style;
         },
         _getMeasurements: function (CurrObj, includeHeight) {
@@ -5010,6 +5016,9 @@ $(function () {
                 Style += "min-height:" + CurrObj.Height + "mm;";
                 Style += "max-height:" + (CurrObj.Height) + "mm;";
             }
+
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },

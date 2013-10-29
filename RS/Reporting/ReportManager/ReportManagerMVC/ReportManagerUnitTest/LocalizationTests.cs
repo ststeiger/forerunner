@@ -222,6 +222,49 @@ namespace ReportManagerUnitTest
             LocTest(true);
         }
 
+        private static string FormatForEditing(string jsonString)
+        {
+            if (jsonString.StartsWith("{"))
+            {
+                jsonString = "{\n  " + jsonString.Substring(1);
+            }
+            // Allow any arrays to stay on the same line
+            jsonString = Regex.Replace(jsonString, @""":\[(?<list>(""[^""]*"",)*)(?<last>""[^""]*"")\]", MatchEvaluator);
+            // Get rid of any extraneous escape sequesnces
+            jsonString = jsonString.Replace("\\u0027", "'");
+            // Put new object definitions on a new line
+            jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
+            // Put members on new lines
+            jsonString = jsonString.Replace("\",\"", "\",\n    \"");
+            // Put members following an array on a new line
+            jsonString = jsonString.Replace("\"],\"", "\"],\n    \"");
+            // Put new objects on a new line
+            jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
+            // Put the final object closing paran on a new line
+            jsonString = jsonString.Replace("}}", "\n  }\n}\n");
+            // Put boolean members on a new line
+            jsonString = jsonString.Replace("\":false,\"", "\":false,\n    \"");
+            jsonString = jsonString.Replace("\":true,\"", "\":true,\n    \"");
+            // Put integer types on a new line
+            jsonString = Regex.Replace(jsonString, @""":(\d+),""", "\":$1,\n    \"");
+
+            return jsonString;
+        }
+
+        private static String MatchEvaluator(Match match)
+        {
+            string returnValue = match.Value.Replace(@""",""", @""", """);
+            return returnValue;
+        }
+
+        [TestCategory("Manual")]
+        [TestMethod]
+        public void FormatTest()
+        {
+            String jsonString = "{\"messages\":{\"loading\":\"Laden...\",\"completeFind\":\"Der gesamte Bericht wurde durchsucht\",\"keyNotFound\":\"Key nicht gefunden\",\"sessionExpired\":\"Ihre Sitzung ist abgelaufen\",\"imageNotDisplay\":\"Bild kann nicht angezeigt werden\",\"saveParamSuccess\":\"Gespeichert\",\"saveParamFailed\":\"Gescheiterte\",\"catalogsLoadFailed\":\"Konnte die Kataloge vom Server zu laden. Bitte versuchen Sie es erneut.\",\"paramFieldEmpty\":\"Parameter fehlt Wert\",\"contactAdmin\":\"Bitte kontaktieren Bericht Administrator um Hilfe\",\"favoriteFailed\":\"Gescheiterte\",\"docmapShowFailed\":\"Gescheiterte\",\"prepareActionFailed\":\"Gescheiterte\",\"bookmarkNotFound\":\"Können Sie nicht das Lesezeichen im Bericht\"},\"errorTag\":{\"moreDetail\":\"Klicken Sie hier für mehr Details\",\"serverError\":\"Ausnahme vom Server geworfen\",\"type\":\"Type\",\"targetSite\":\"targeSite\",\"source\":\"Ursprung\",\"message\":\"Information\",\"stackTrace\":\"StackTrace\",\"licenseErrorTitle\":\"Vielen Dank für Ihr Forerunner Software Mobilizer, scheint es ein Problem mit Ihrer Lizenz.\",\"licenseErrorContent\":\"Bitte kontaktieren Sie Ihren Systemadministrator. Wenn Sie der Administrator überprüfen Sie bitte Ihre Lizenz in der Mobilizer Konfigurationstool.\"},\"exportType\":{\"xml\":\"XML-Datei mit Daten\",\"csv\":\"CSV (Komma getrennt)\",\"pdf\":\"PDF\",\"mhtml\":\"MHTML (Web-Archiv)\",\"excel\":\"Excel\",\"tiff\":\"TIFF Datei\",\"word\":\"Word\"},\"toolPane\":{\"pageOf\":\"von\",\"home\":\"Haus\",\"navigation\":\"Navigation\",\"favorites\":\"Favoriten\",\"back\":\"Zurück\",\"refresh\":\"erfrischen\",\"docMap\":\"Dokument anzeigen\",\"find\":\"Finden\",\"next\":\"nächster\",\"zoom\":\"Zoomen\",\"print\":\"Drucken\"},\"toolbar\":{\"back\":\"Zurück\",\"docMap\":\"Dokument anzeigen\",\"exportMenu\":\"Exportieren\",\"favorites\":\"Favoriten\",\"find\":\"Finden\",\"firstPage\":\"Erste\",\"home\":\"Haus\",\"keyword\":\"Schlüsselwort\",\"lastPage\":\"Letzte\",\"menu\":\"Menü\",\"navigation\":\"Navigation\",\"next\":\"nächster\",\"pageOf\":\"von\",\"paramarea\":\"Parameter\",\"previousPage\":\"vorhergehend\",\"recent\":\"Kürzlich\",\"refresh\":\"Dieses Seite neu laden\",\"reportPage\":\"Seite\",\"zoom\":\"Aktivieren Zoomen\",\"print\":\"Drucken\",\"userSettings\":\"Fixierung\",\"saveParam\":\"Parameter speichern\"},\"print\":{\"title\":\"Drucken Seitenlayout Option\",\"pageHeight\":\"Höhe\",\"pageWidth\":\"Breite\",\"marginTop\":\"Oberteil\",\"marginBottom\":\"Unterseite\",\"marginLeft\":\"Links\",\"marginRight\":\"Richtig\",\"print\":\"Drucken\",\"cancel\":\"Stornieren\",\"unit\":\"mm\",\"margin\":\"Margins\",\"pageLayoutOptions\":\"Seitenlayoutoptionen\"},\"userSettings\":{\"title\":\"Benutzereinstellungen\",\"submit\":\"Ok\",\"cancel\":\"Stornieren\",\"ResponsiveUI\":\"Responsive UI\"},\"paramPane\":{\"nullField\":\"Null\",\"isTrue\":\"Wahr\",\"isFalse\":\"Falsch\",\"required\":\"Erforderlich\",\"viewReport\":\"Bericht anzeigen\",\"cancel\":\"stornieren\",\"datePicker\":\"Datum\"},\"validateError\":{\"required\":\"Erforderlich\",\"remote\":\"Bitte korrigieren Sie dieses Feld\",\"email\":\"Ungültige E-Mail\",\"url\":\"Ungültige URL\",\"date\":\"Ungültiges Datum\",\"dateISO\":\"Ungültiges Datum (yyyy-mm-dd)\",\"number\":\"Ungültige Nummer\",\"digits\":\"Nur Ziffern\",\"maxlength\":\"Nicht mehr als {0} Zeichen\",\"minlength\":\"Mindestens {0} Zeichen\",\"rangelength\":\"Geben Sie einen Wert zwischen {0} und {1} Zeichen lang\",\"range\":\"Geben Sie einen Wert zwischen {0} und {1}\",\"max\":\"Geben Sie einen Wert kleiner oder gleich {0}\",\"min\":\"Geben Sie einen Wert größer oder gleich {0}\"},\"dialog\":{\"title\":\"Eingabeaufforderung\",\"close\":\"schließen\"},\"placeholders\":{\"Username\":\"Benutzername\",\"Password\":\"Kennwort\",\"Login\":\"Anmelden\"},\"datepicker\":{\"closeText\":\"Fertig\",\"prevText\":\"Zurück\",\"nextText\":\"Weiter\",\"currentText\":\"Heute\",\"weekHeader\":\"Wk\",\"dateFormat\":\"mm / tt / jj\",\"firstDay\":0,\"isRTL\":false,\"showMonthAfterYear\":false,\"yearSuffix\":\"\",\"monthNames\":[\"Januar\",\"Februar\",\"März\",\"April\",\"Mai\",\"Juni\",\"Juli\",\"August\",\"September\",\"Oktober\",\"November\",\"Dezember\"],\"monthNamesShort\":[\"Jan\",\"Feb\",\"März\",\"Apr\",\"Mai\",\"Juni\",\"Juli\",\"Aug\",\"Sept\",\"Okt\",\"Nov\",\"Dez\"],\"dayNames\":[\"Sonntag\",\"Montag\",\"Dienstag\",\"Mittwoch\",\"Donnerstag\",\"Freitag\",\"Samstag\"],\"dayNamesShort\":[\"Son\",\"Mon\",\"Die\",\"Mit\",\"Don\",\"Fre\",\"Sam\"],\"dayNamesMin\":[\"So\",\"Mo\",\"Di\",\"Mi\",\"Do\",\"Fr\",\"Sa\"]}}";
+            jsonString = FormatForEditing(jsonString);
+        }
+
         private void LocTest(bool skipAddPropertyProcessing)
         {
             bool missingTranslations = false;
@@ -270,16 +313,7 @@ namespace ReportManagerUnitTest
                     var jsonString = Json.Encode(locFile);
 
                     // Format for editing
-                    if (jsonString.StartsWith("{"))
-                    {
-                        jsonString = "{\n  " + jsonString.Substring(1);
-                    }
-                    jsonString = jsonString.Replace("\\u0027", "'");
-                    jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
-                    jsonString = jsonString.Replace("\",\"", "\",\n    \"");
-                    jsonString = jsonString.Replace("\"],\"", "\"],\n    \"");
-                    jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
-                    jsonString = jsonString.Replace("}}", "\n  }\n}\n");
+                    jsonString = FormatForEditing(jsonString);
 
                     // Write the file out
                     using (StreamWriter sw = new StreamWriter(fileInfo.FullName, false, Encoding.UTF8))

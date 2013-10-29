@@ -237,13 +237,9 @@ namespace ReportMannagerConfigTool
                 DialogResult dialogResult = MessageBox.Show(StaticMessages.removeExtension, StaticMessages.removeCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    string instanceName = ConfigToolHelper.GetReportServerInstance(targetPath);
-
-                    //stop report server before remove forerunner extension dll
-                    ConfigToolHelper.StopService(instanceName, 1000 * 30);
+                    ConfigToolHelper.StartReportServer(false, targetPath);
                     RenderExtensionConfig.removeRenderExtension(targetPath);
-                    //start report server after remove done.
-                    ConfigToolHelper.StartService(instanceName, 1000 * 30);
+                    ConfigToolHelper.StartReportServer(true, targetPath);
 
                     winform.showMessage(StaticMessages.removeDone);
                 }
@@ -268,14 +264,10 @@ namespace ReportMannagerConfigTool
 
             if (RenderExtensionConfig.VerifyReportServerPath(targetPath))
             {
-                string instanceName = ConfigToolHelper.GetReportServerInstance(targetPath);
-
-                //stop report server before update forerunner extension dll
-                ConfigToolHelper.StopService(instanceName, 1000 * 30);
+                ConfigToolHelper.StartReportServer(false, targetPath);
                 RenderExtensionConfig.addRenderExtension(targetPath);
                 RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
-                //start report server after update done.
-                ConfigToolHelper.StartService(instanceName, 1000 * 30);
+                ConfigToolHelper.StartReportServer(true, targetPath);
 
                 winform.showMessage(StaticMessages.updateDone);
             }

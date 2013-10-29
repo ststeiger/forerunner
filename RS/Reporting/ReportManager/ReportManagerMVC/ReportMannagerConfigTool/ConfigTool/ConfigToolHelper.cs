@@ -198,5 +198,25 @@ namespace ReportMannagerConfigTool
                 return reportServer + "$" + instanceName;
             }
         }
+
+        /// <summary>
+        /// Start or Stop Report Server
+        /// </summary>
+        /// <param name="isStart">True:Start; False:Stop</param>
+        /// <param name="targetPath">Report Server Folder Path</param>
+        /// <returns></returns>
+        public static bool StartReportServer(bool isStart, string targetPath) 
+        {
+            string instanceName = GetReportServerInstance(targetPath);
+
+            if (isStart)
+            {
+                return StartService(instanceName, 1000 * 30);
+            }
+            else
+            {
+                return StopService(instanceName, 1000 * 30);
+            }
+        }
     }
 }

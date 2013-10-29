@@ -610,13 +610,15 @@
     <value>True</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>406, 40</value>
+    <value>406, 61</value>
   </data>
   <data name="textBox1.TabIndex" type="System.Int32, mscorlib">
     <value>21</value>
   </data>
   <data name="textBox1.Text" xml:space="preserve">
-    <value>Location:&lt;Sql Server Folder&gt;\MSRS&lt;Version&gt;.&lt;Instance Name&gt;\Reporting Services\ReportServer</value>
+    <value>Location:&lt;Sql Server Folder&gt;\MSRS&lt;Version&gt;.&lt;Instance Name&gt;\Reporting Services\ReportServer
+
+Note: Add or remove SSRS Extensions will restart report server.</value>
   </data>
   <data name="&gt;&gt;textBox1.Name" xml:space="preserve">
     <value>textBox1</value>

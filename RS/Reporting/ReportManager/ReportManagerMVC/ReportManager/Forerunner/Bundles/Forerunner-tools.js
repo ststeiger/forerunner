@@ -160,7 +160,7 @@ $(function () {
             tooltip: locData.toolbar.next,
             events: {
                 click: function (e) {
-                    e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
+                    e.data.$reportViewer.reportViewer("navToPage", parseInt(e.data.$reportViewer.reportViewer("getCurPage")) + 1);
                 }
             }
         },

@@ -9,7 +9,6 @@ namespace ReportMannagerConfigTool
 {
     public partial class frmMain : Form
     {
-        private ConfigToolHelper configTool;
         private WinFormHelper winform;
 
         public frmMain()
@@ -17,7 +16,6 @@ namespace ReportMannagerConfigTool
             try
             {
                 InitializeComponent();
-                configTool = new ConfigToolHelper();
                 winform = new WinFormHelper();
 
                 LoadWebConfig();
@@ -37,7 +35,7 @@ namespace ReportMannagerConfigTool
             #region Detect IIS or UWS is installed.
             if (rdoIIS.Checked)
             {
-                if (!configTool.isIISInstalled())
+                if (!ConfigToolHelper.isIISInstalled())
                 {
                     winform.showWarning(StaticMessages.iisNotInstall);
                     return;
@@ -46,7 +44,7 @@ namespace ReportMannagerConfigTool
 
             if (rdoUWS.Checked)
             {
-                if (!configTool.isUWSInstalled())
+                if (!ConfigToolHelper.isUWSInstalled())
                 {
                     winform.showWarning(StaticMessages.uwsNotInstall);
                     return;
@@ -75,7 +73,7 @@ namespace ReportMannagerConfigTool
             try
             {
                 string bindingAddress = string.Empty;
-                string ip = configTool.GetLocIP();
+                string ip = ConfigToolHelper.GetLocIP();
                 string localDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).FullName;
                 string siteName = txtSiteName.Text.Trim();
                 string port = txtPort.Text.Trim();
@@ -173,9 +171,9 @@ namespace ReportMannagerConfigTool
             string result;
 
             if (rdoDomain.Checked)
-                result = configTool.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
+                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
             else
-                result = configTool.tryConnectDB(builder.ConnectionString);        
+                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);        
     
             if (result.Equals("True"))
                 winform.showMessage(StaticMessages.connectDBSuccess);
@@ -224,6 +222,7 @@ namespace ReportMannagerConfigTool
                 txtReportServer.Text = folderSSRS.SelectedPath;
         }
 
+        //Remove forerunner ssrs extension
         private void btnRemoveEx_Click(object sender, EventArgs e)
         {
             string targetPath = winform.getTextBoxValue(txtReportServer);
@@ -238,7 +237,11 @@ namespace ReportMannagerConfigTool
                 DialogResult dialogResult = MessageBox.Show(StaticMessages.removeExtension, StaticMessages.removeCaption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dialogResult == DialogResult.Yes)
                 {
+                    ConfigToolHelper.StartReportServer(false, targetPath);
                     RenderExtensionConfig.removeRenderExtension(targetPath);
+                    ConfigToolHelper.StartReportServer(true, targetPath);
+
+                    winform.showMessage(StaticMessages.removeDone);
                 }
             }
             else
@@ -248,9 +251,11 @@ namespace ReportMannagerConfigTool
             }
         }
 
+        //Add forerunner ssrs extension
         private void btnAddEx_Click(object sender, EventArgs e)
         {            
             string targetPath = winform.getTextBoxValue(txtReportServer);
+
             if (targetPath.Equals(string.Empty))
             {
                 winform.showWarning(StaticMessages.reportServerPathEmpty);
@@ -259,8 +264,12 @@ namespace ReportMannagerConfigTool
 
             if (RenderExtensionConfig.VerifyReportServerPath(targetPath))
             {
+                ConfigToolHelper.StartReportServer(false, targetPath);
                 RenderExtensionConfig.addRenderExtension(targetPath);
                 RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
+                ConfigToolHelper.StartReportServer(true, targetPath);
+
+                winform.showMessage(StaticMessages.updateDone);
             }
             else
             {

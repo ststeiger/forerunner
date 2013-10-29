@@ -94,8 +94,6 @@ namespace ReportMannagerConfigTool
                 winform.showWarning(StaticMessages.updateRSPolicyError);
                 return;
             }
-
-            winform.showMessage(StaticMessages.updateDone);
         }
 
         public static void removeRenderExtension(string targetPath)
@@ -121,8 +119,6 @@ namespace ReportMannagerConfigTool
                 winform.showWarning(StaticMessages.removeRSPolicyError);
                 return;
             }
-
-            winform.showMessage(StaticMessages.removeDone);
         }
 
         /// <summary>

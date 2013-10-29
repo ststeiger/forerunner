@@ -983,7 +983,13 @@ $(function () {
     tg.itemFindGroup = {
         toolType: toolTypes.toolGroup,
         selectorClass: "fr-item-findgroup",
-        tools: [tg.itemFindCompositeGroup]
+        tools: [tg.itemFindCompositeGroup],
+        events: {
+            click: function (e) {
+                var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
+                e.data.$reportViewer.reportViewer("find", value);
+                //e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-find"]);
+            }
+        }
     };
-
 });

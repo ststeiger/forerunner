@@ -3822,7 +3822,7 @@ $(function () {
             var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isMSIE8()){
                 var wtr = $("<DIV/>").html("Evaluation");
-                wstyle += "z-index: -1;" 
+                wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
                 return wtr;
             }
@@ -3833,11 +3833,11 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isSafariPC() )
-                wstyle += "z-index: -1;"                
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC())
+                wstyle += "z-index: -1;";
             else
-                wstyle += "z-index: 1000;"
+                wstyle += "z-index: 1000;";
             
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);

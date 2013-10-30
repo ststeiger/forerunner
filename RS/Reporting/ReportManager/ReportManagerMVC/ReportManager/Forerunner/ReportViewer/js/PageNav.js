@@ -35,7 +35,7 @@ $(function () {
         },
         _ScrolltoPage: function () {
             var me = this;
-
+            
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
                 var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left;
                 me.$ul.scrollLeft(left);
@@ -129,11 +129,14 @@ $(function () {
                 me._render();
                 me.isRendered = true;
             }
-            me._makeVisible(!me.element.is(":visible"));
 
+            me._makeVisible(!me.element.is(":visible"));
             $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
             $container = $('ul.fr-nav-container', $(me.element));
             $(".lazy", me.$list).lazyload({ container: $container });
+            if (forerunner.device.isMSIE()) {
+                me._ScrolltoPage();
+            }
         },
         _initCallbacks: function () {
             var me = this;

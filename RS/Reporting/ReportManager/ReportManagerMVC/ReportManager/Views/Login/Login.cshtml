@@ -44,7 +44,10 @@
       $(document).ready(function () {
           var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
           $('#username').attr('placeholder', locData.placeholders.Username);
-          $('#password').attr('placeholder', locData.placeholders.Password);
+          if (forerunner.device.isMSIE8())
+              $('#password').attr('placeholder', '').attr("data-placeholder-value", '').val('');
+          else
+              $('#password').attr('placeholder', locData.placeholders.Password);
           $('#login').attr('value', locData.placeholders.Login);
       });
   </script>

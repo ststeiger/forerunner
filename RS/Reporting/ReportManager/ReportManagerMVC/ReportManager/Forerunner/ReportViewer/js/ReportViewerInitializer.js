@@ -117,9 +117,9 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
-            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            var $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dialog fr-layout-printsection'/>");
+                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer

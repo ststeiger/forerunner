@@ -2,9 +2,25 @@
     cursor: pointer;
 }
 
+.fr-core-center {
+  display:table;
+  margin: 0 auto;
+}
+
 .fr-core-dialog-layout {
-  font-family:sans-serif;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  z-index: 5;
+}
+
+.fr-core-dialog-innerPage {
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: #ffffff;
+  font-family:sans-serif;
   border: 1px solid #035378;
   box-shadow: 0px 0px 15px #696969;
 }
@@ -23,6 +39,17 @@
   background: -ms-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* IE10+ */
   background: linear-gradient(to bottom,  #537eb4 0%,#3c5d9c 100%); /* W3C */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */
+}
+
+.fr-core-dialog-submit-container {
+  width: 100%;
+  display: block;
+  margin: 25px 0 0 0;
+}
+
+.fr-core-dialog-submit {
+  width: 200px;
+  display: inline-block;
 }
 
 .fr-core-dialog-button {
@@ -55,4 +82,49 @@
     left:0;
     background-color:white;
     z-index:2;
+}
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-core-dialog-submit-container {
+    margin: 5px 0 0 0;
+  }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-core-dialog-submit-container {
+    margin: 5px 0 0 0;
+  }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+  .fr-core-dialog-submit-container {
+    margin: 5px 0 0 0;
+  }
+}
+
+/* For phone with 845 * 480 ------------- */
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape)
+{
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-height : 768px) and (max-device-width : 1280px) and (orientation : landscape) {
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+}
+
+/* For phone with 845 * 480 ------------- */
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape){
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:landscape) {
+  .fr-core-dialog-submit-container {
+    margin: 5px 0 0 0;
+  }
 }

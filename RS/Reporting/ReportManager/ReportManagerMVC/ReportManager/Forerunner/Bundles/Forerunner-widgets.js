@@ -1201,7 +1201,7 @@ $(function () {
         },
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            var $dlg = me.options.$appContainer.find(".fr-print-section");
             $dlg.reportPrint("setPrint", pageLayout);
         },
        
@@ -2113,27 +2113,36 @@ $(function () {
             var me = this;
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-            $messageBox = new $("<div class='fr-messagebox-innerpage fr-core-dialog-layout'>" +
-                "<div class='fr-messagebox-header fr-core-dialog-header'><div class='fr-messagebox-title'>" + locData.dialog.title + "</div></div>" +
-                "<div class='fr-messagebox-content'><span class='fr-messagebox-msg'/></div>" +
-                "<div class='fr-messagebox-buttongroup'>" +
-                "<input class='fr-messagebox-button fr-messagebox-close fr-core-dialog-button' name='close' type='button' value='" + locData.dialog.close + "' />" +
+            $messageBox = new $("<div class='fr-messagebox-innerpage fr-core-dialog-innerPage fr-core-center'>" +
+                "<div class='fr-core-dialog-header'>" +
+                    "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
+                "</div>" +
+                "<div class='fr-messagebox-content'>" +
+                    "<span class='fr-messagebox-msg'/>" +
+                "</div>" +
+                "<div class='fr-core-dialog-submit-container'>" +
+                    "<div class='fr-core-center'>" +
+                        "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+                    "</div>" +
                 "</div>");
 
             me.element.append($messageBox);
 
-            me.element.find(".fr-messagebox-close").on("click", function () {
+            me.element.find(".fr-messagebox-close-id").on("click", function () {
                 me.closeDialog();
             });
         },
         /**
          * @function $.forerunner.messageBox#openDialog
          */
-        openDialog: function (msg) {
+        openDialog: function (msg, caption) {
             var me = this;
 
             forerunner.dialog.showModalDialog(me.element, function () {
-                $(".fr-messagebox-msg").html(msg);
+                me.element.find(".fr-messagebox-msg").text(msg);
+                if (caption) {
+                    me.element.find(".fr-messagebox-title").text(caption);
+                }
                 me.element.css("display", "inline-block");
             });
         },
@@ -2454,6 +2463,7 @@ $(function () {
             else
                 return false;
         },
+        _firstTime: true,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -2470,7 +2480,10 @@ $(function () {
                 // doesn't scroll off the location bar.
                 if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
-                    values.containerHeight += 60;
+                    if (me._firstTime) {
+                        values.containerHeight += 60;
+                        me._firstTime = false;
+                    }
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
@@ -2485,12 +2498,14 @@ $(function () {
         },
         ResetSize: function () {
             var me = this;
+            
             var heightValues = me.getHeightValues();
 
             // Setting the min-height allows the iPhone to scroll the left and right panes
             // properly even when the report has not been loaded due to paramters not being
             // entered or is very small
             if (forerunner.device.isiPhone()) {
+                $("html").css({ minHeight: heightValues.max });
                 $("body").css({ minHeight: heightValues.max });
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
@@ -2500,6 +2515,12 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
+
+            console.log(heightValues.max);
+            console.log(heightValues.paneHeight);
+            console.log(me.$mainviewport[0].clientHeight);
+            console.log(me.$mainviewport[0].scrollHeight);
+            console.log($(document).height());
         },
 
         bindViewerEvents: function () {
@@ -3145,7 +3166,7 @@ $(function () {
         },
         _ScrolltoPage: function () {
             var me = this;
-
+            
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
                 var left = me.$ul.scrollLeft() + me.listItems[me.currentPageNum - 1].position().left;
                 me.$ul.scrollLeft(left);
@@ -3239,11 +3260,14 @@ $(function () {
                 me._render();
                 me.isRendered = true;
             }
-            me._makeVisible(!me.element.is(":visible"));
 
+            me._makeVisible(!me.element.is(":visible"));
             $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
             $container = $('ul.fr-nav-container', $(me.element));
             $(".lazy", me.$list).lazyload({ container: $container });
+            if (forerunner.device.isMSIE()) {
+                me._ScrolltoPage();
+            }
         },
         _initCallbacks: function () {
             var me = this;
@@ -3594,9 +3618,9 @@ $(function () {
             };
             me.getUserSettings(true);
 
-            var $dlg = me.options.$appContainer.find(".fr-us-layout-section");
+            var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dialog fr-us-layout-section'/>");
+                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element
@@ -3649,40 +3673,39 @@ $(function () {
             me.element.html("");
 
             var $theForm = new $(
-            "<div class='fr-us-page'>" +
+            "<div class='fr-core-dialog-innerPage fr-us-innerPage fr-core-center'>" +
                 // Header
-                "<div class='fr-us-innerPage fr-us-layout fr-core-dialog-layout'>" +
-                    "<div class='fr-us-header fr-core-dialog-header'>" +
-                        "<div class='fr-us-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-title-container'>" +
-                            "<div class='fr-us-title'>" +
-                                userSettings.title +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-us-cancel-container'>" +
-                            "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
+                "<div class='fr-us-header fr-core-dialog-header'>" +
+                    "<div class='fr-us-print-icon-container'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
                         "</div>" +
                     "</div>" +
-                    // form
-                    "<form class='fr-us-form'>" +
-                        "<div class='fr-us-setting-container'>" +
-                            "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
-                            "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                    "<div class='fr-us-title-container'>" +
+                        "<div class='fr-us-title'>" +
+                            userSettings.title +
                         "</div>" +
-                        "<div class='fr-us-submit-container'>" +
-                            "<div class='fr-us-submit-inner'>" +
-                            "<input name='submit' type='button' class='fr-us-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
-                        "</div>" +
-                    "</form>" +
+                    "</div>" +
+                    "<div class='fr-us-cancel-container'>" +
+                        "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
+                    "</div>" +
                 "</div>" +
+                // form
+                "<form class='fr-us-form'>" +
+                    "<div class='fr-us-setting-container'>" +
+                        "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
+                        "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
+                    "</div>" +
+                    // Ok button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                        "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
+                    "</div>" +
+                "</form>" +
             "</div>");
 
             me.element.append($theForm);
 
-            me.element.find(".fr-us-submit").on("click", function (e) {
+            me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
                 me.closeDialog();
             });
@@ -3814,7 +3837,7 @@ $(function () {
             var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
             if (forerunner.device.isMSIE8()){
                 var wtr = $("<DIV/>").html("Evaluation");
-                wstyle += "z-index: -1;" 
+                wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
                 return wtr;
             }
@@ -3825,11 +3848,11 @@ $(function () {
             svg.setAttribute("height", "100%");
             svg.setAttribute("pointer-events", "none");
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isSafariPC() )
-                wstyle += "z-index: -1;"                
+            wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isSafariPC())
+                wstyle += "z-index: -1;";
             else
-                wstyle += "z-index: 1000;"
+                wstyle += "z-index: 1000;";
             
             //wstyle += "-webkit-transform: rotate(-45deg);-moz-transform: rotate(-45deg);-ms-transform: rotate(-45deg);transform: rotate(-45deg);"
             svg.setAttribute("style", wstyle);
@@ -4012,6 +4035,9 @@ $(function () {
                 else
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
                 Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
+
+                if (Measurements[Index].zIndex)
+                    Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                 //Background color goes on container
                 if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
@@ -4397,7 +4423,7 @@ $(function () {
                 var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
-                Url += "#" + new Date().getTime();
+                Url += "&" + new Date().getTime();
                 me.imageList[ImageName] = Url;
             }
 
@@ -4424,8 +4450,10 @@ $(function () {
             }
             else {//for chart, map, gauge
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
-                if (RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets)
+                if (RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets) {
                     imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets;
+                    Style += "width:" + imageConsolidationOffset.Width + "px;height:" + imageConsolidationOffset.Height + "px";
+                }
             }
 
             if (imageConsolidationOffset) {
@@ -4456,7 +4484,7 @@ $(function () {
             $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
 
             NewImage.src = this._getImageURL(RIContext.RS, ImageName);
-
+            
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
 
@@ -4505,7 +4533,7 @@ $(function () {
                 offsetLeft = imageConsolidationOffset.Left;
                 offsetTop = imageConsolidationOffset.Top;
             }
-
+            
             if (actionImageMapAreas) {
                 var $map = $("<MAP/>");
                 $map.attr("name", "Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -4527,11 +4555,11 @@ $(function () {
                         var coords = "";
                         switch (element.ImageMapAreas.ImageMapArea[j].ShapeType) {
                             case 0:
-                                shape = "rect";
-                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) + "," +//left
-                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//top
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10)  + "," +//width
-                                            parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10);//height
+                                shape = "rect";//(x1,y1)=upper left, (x2,y2)=lower right, describe in RPL about rect is not correct or obsolete
+                                coords = (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[0] * width / 100, 10) + offsetLeft) + "," +//x1
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[1] * height / 100, 10) + offsetTop) + "," +//y1
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[2] * width / 100, 10) + offsetLeft)  + "," +//x2
+                                            (parseInt(element.ImageMapAreas.ImageMapArea[j].Coordinates[3] * height / 100, 10) + offsetTop);//y2
                                 break;
                             case 1:
                                 shape = "poly";
@@ -4980,6 +5008,9 @@ $(function () {
                 Style += "max-width:" + (CurrObj.Height) + "mm;";
             }
 
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
+
             return Style;
         },
         _getMeasurements: function (CurrObj, includeHeight) {
@@ -5002,6 +5033,9 @@ $(function () {
                 Style += "min-height:" + CurrObj.Height + "mm;";
                 Style += "max-height:" + (CurrObj.Height) + "mm;";
             }
+
+            if (CurrObj.zIndex)
+                Style += "z-index:" + CurrObj.zIndex + ";";
 
             return Style;
         },
@@ -5836,7 +5870,7 @@ $(function () {
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
-                        gotoCurrent: true,
+                        //gotoCurrent: true,
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -6528,6 +6562,60 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
 
+    $.widget(widgets.getFullname("settingsPairWidget"), {
+        options: {
+            label1: null,
+            name1: null,
+            text1: null,
+            unit1: null,
+            label2: null,
+            name2: null,
+            text2: null,
+            unit2: null,
+        },
+        _init: function () {
+            var me = this;
+            var name1 = "";
+            if (me.options.name1) {
+                name1 = "name='" + me.options.name1 + "'";
+            }
+
+            var name2 = "";
+            if (me.options.name2) {
+                name2 = "name='" + me.options.name2 + "'";
+            }
+
+            me.element.html("");
+            var $theTable = new $(
+            "<table class=fr-print-settings>" +
+                "<tr>" +
+                    "<td>" +
+                        "<label class='fr-print-label'>" + me.options.label1 + "</label>" +
+                    "</td>" +
+                    "<td>" +
+                        "<input class='fr-print-text' " + name1 + " type='text' value='" + me.options.text1 + "'/>" +
+                    "</td>" +
+                    "<td>" +
+                        "<label class='fr-print-unit-label'>" + me.options.unit1 + "</label>" +
+                    "</td>" +
+                "</tr>" +
+                "<tr>" +
+                    "<td>" +
+                        "<label class='fr-print-label'>" + me.options.label2 + "</label>" +
+                    "</td>" +
+                    "<td>" +
+                        "<input class='fr-print-text' " + name2 + " type='text' value='" + me.options.text2 + "'/>" +
+                    "</td>" +
+                    "<td>" +
+                        "<label class='fr-print-unit-label'>" + me.options.unit2 + "</label>" +
+                    "</td>" +
+                "</tr>" +
+            "</table>");
+            me.element.append($theTable);
+            me.element.addClass("fr-print-settings-pair-widget");
+        },
+    }); //$.widget
+
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
@@ -6553,89 +6641,88 @@ $(function () {
             me.element.html("");
 
             var $printForm = new $(
-            "<div class='fr-print-page'>" +
+            "<div class='fr-print-innerPage fr-core-dialog-innerPage fr-core-center'>" +
                 // Header
-                "<div class='fr-print-innerPage fr-print-layout fr-core-dialog-layout'>" +
-                    "<div class='fr-print-header fr-core-dialog-header'>" +
-                        "<div class='fr-print-print-icon-container'>" +
-                            "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-print-title-container'>" +
-                            "<div class='fr-print-title'>" +
-                                print.title +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-print-cancel-container'>" +
-                            "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
+                "<div class='fr-print-header fr-core-dialog-header'>" +
+                    "<div class='fr-print-print-icon-container'>" +
+                        "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
                         "</div>" +
                     "</div>" +
-                    // form
-                    "<form class='fr-print-form'>" +
-                        "<div class='fr-print-options-label'>" +
-                            "<div>" +
-                                print.pageLayoutOptions +
-                            "</div>" +
+                    "<div class='fr-print-title-container'>" +
+                        "<div class='fr-print-title'>" +
+                            print.title +
                         "</div>" +
-                        // Height / Width
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.pageHeight + "</label>" +
-                                "<input class='fr-print-text'  name='PageHeight' type='text' value='" + me._unitConvert(pageLayout.PageHeight) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.pageWidth + "</label>" +
-                                "<input class='fr-print-text'  name='PageWidth' type='text' value='" + me._unitConvert(pageLayout.PageWidth) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                        "</div>" +
-                        // Orientation
-                        "<div class='fr-print-orientation-container'>" +
-                            "<div class='fr-print-portrait'></div>" +
-                            "<div class='fr-print-landscape'></div>" +
-                        "</div>" +
-                        "<div class='fr-print-margins-label'>" +
-                            print.margin +
-                        "</div>" +
-                        // Top / Bottom
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginTop + "</label>" +
-                                "<input class='fr-print-text'  name='MarginTop' type='text' value='" + me._unitConvert(pageLayout.MarginTop) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginBottom + "</label>" +
-                                "<input class='fr-print-text'  name='MarginBottom' type='text' value='" + me._unitConvert(pageLayout.MarginBottom) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                        "</div>" +
-                        // Left / Right
-                        "<div class='fr-print-settings-pair-container'>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginLeft + "</label>" +
-                                "<input class='fr-print-text'  name='MarginLeft' type='text' value='" + me._unitConvert(pageLayout.MarginLeft) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "<div class='fr-print-setting'>" +
-                                "<label class='fr-print-label'>" + print.marginRight + "</label>" +
-                                "<input class='fr-print-text'  name='MarginRight' type='text' value='" + me._unitConvert(pageLayout.MarginRight) + "'/>" +
-                                "<label class='fr-print-unit-label'>" + unit + "</label>" +
-                            "</div>" +
-                            "</div>" +
-                                "<div class='fr-print-submit-container'>" +
-                                    "<div class='fr-print-submit-inner'>" +
-                                    "<input name='submit' type='button' class='fr-print-submit fr-core-dialog-button' value='" + print.print + "'/>" +
-                            "</div>" +
-                        "</div>" +
-                    "</form>" +
+                    "</div>" +
+                    "<div class='fr-print-cancel-container'>" +
+                        "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
+                    "</div>" +
                 "</div>" +
+                // form
+                "<form class='fr-print-form'>" +
+                    // Print layout label
+                    "<div class='fr-print-options-label'>" +
+                        print.pageLayoutOptions +
+                    "</div>" +
+                    // Height / Width
+                    "<div class=fr-print-height-width-id></div>" +
+                    // Orientation
+                    "<div class='fr-print-orientation-container'>" +
+                        "<div class='fr-print-portrait'></div>" +
+                        "<div class='fr-print-landscape'></div>" +
+                    "</div>" +
+                    // Margins label
+                    "<div class='fr-print-margins-label'>" +
+                        print.margin +
+                    "</div>" +
+                    // Top / Bottom
+                    "<div class=fr-print-top-bottom-id></div>" +
+                     //Left / Right
+                    "<div class=fr-print-left-right-id></div>" +
+                    // Print button
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='submit' type='button' class='fr-print-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + print.print + "'/>" +
+                        "</div>" +
+                    "</div>" +
+                "</form>" +
             "</div>");
 
             //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
 
             me.element.append($printForm);
+
+            me.element.find(".fr-print-height-width-id").settingsPairWidget({
+                label1: print.pageHeight,
+                name1: "PageHeight",
+                text1: me._unitConvert(pageLayout.PageHeight),
+                unit1: unit,
+                label2: print.pageWidth,
+                name2: "PageWidth",
+                text2: me._unitConvert(pageLayout.PageWidth),
+                unit2: unit
+            });
+
+            me.element.find(".fr-print-top-bottom-id").settingsPairWidget({
+                label1: print.marginTop,
+                name1: "MarginTop",
+                text1: me._unitConvert(pageLayout.MarginTop),
+                unit1: unit,
+                label2: print.marginBottom,
+                name2: "MarginBottom",
+                text2: me._unitConvert(pageLayout.MarginBottom),
+                unit2: unit
+            });
+
+            me.element.find(".fr-print-left-right-id").settingsPairWidget({
+                label1: print.marginLeft,
+                name1: "MarginLeft",
+                text1: me._unitConvert(pageLayout.MarginLeft),
+                unit1: unit,
+                label2: print.marginRight,
+                name2: "MarginRight",
+                text2: me._unitConvert(pageLayout.MarginRight),
+                unit2: unit
+            });
 
             me.element.find(".fr-print-text").each(function () {
                 $(this).attr("required", "true").attr("number", "true");
@@ -6645,7 +6732,7 @@ $(function () {
             me._resetValidateMessage();
             me._validateForm(me.element.find(".fr-print-form"));
 
-            me.element.find(".fr-print-submit").on("click", function (e) {
+            me.element.find(".fr-print-submit-id").on("click", function (e) {
                 var printPropertyList = me._generatePrintProperty();
                 if (printPropertyList !== null) {
                     me.options.$reportViewer.reportViewer("printReport", printPropertyList);
@@ -6939,9 +7026,9 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
-            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            var $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-dialog fr-layout-printsection'/>");
+                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer

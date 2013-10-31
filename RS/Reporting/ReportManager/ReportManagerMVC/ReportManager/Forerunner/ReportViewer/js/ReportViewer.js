@@ -1200,7 +1200,7 @@ $(function () {
         },
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-layout-printsection");
+            var $dlg = me.options.$appContainer.find(".fr-print-section");
             $dlg.reportPrint("setPrint", pageLayout);
         },
        

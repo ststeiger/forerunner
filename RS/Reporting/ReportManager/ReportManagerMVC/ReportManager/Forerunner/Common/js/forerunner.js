@@ -489,16 +489,18 @@ $(function () {
          */
         getLocData: function (locFileLocation) {
             var languageList = this._getLanguages();
-
+            var i;
+            var lang;
             var langData = null;
+
             if (languageList !== null && languageList !== undefined) {
-                for (var i = 0; i < languageList.length && langData === null; i++) {
-                    var lang = languageList[i];
+                for (i = 0; i < languageList.length && langData === null; i++) {
+                    lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
                 }
-                for (var i = 0; i < languageList.length && langData === null; i++) {
-                    var lang = languageList[i];
+                for ( i = 0; i < languageList.length && langData === null; i++) {
+                    lang = languageList[i];
                     if (lang.length > 2) {
                         lang = lang.toLocaleLowerCase().substring(0, 2);
                         langData = this._loadFile(locFileLocation, lang);
@@ -652,7 +654,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser  */
         isSafari: function () {
             var ua = navigator.userAgent;
-            if (ua.indexOf('Safari') != -1 && us.indexOf('Chrome') == -1) {
+            if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) {
                 return true;
             }
             return false;
@@ -660,7 +662,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser on  */
         isSafariPC: function () {
             var ua = navigator.userAgent;            
-            if (ua.indexOf('Safari') != -1 && ua.indexOf('Chrome') == -1 && ua.indexOf('Windows') != -1) {
+            if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1 && ua.indexOf("Windows") !== -1) {
                 return true;
             }
             return false;
@@ -798,14 +800,14 @@ $(function () {
             $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
-        * close all opened modal dialogs with classname 'fr-dialog'
+        * close all opened modal dialogs with classname 'fr-dialog-id'
         *
         * @function forerunner.dialog#closeAllModalDialogs
         */
         closeAllModalDialogs: function () {
             var me = this;
             $(".fr-core-mask").remove();
-            $(".fr-dialog").hide();
+            $(".fr-dialog-id").hide();
         },
         /**
         * Show message box by modal dialog
@@ -813,14 +815,14 @@ $(function () {
         * @function forerunner.dialog#showMessageBox
         * @param {function} $appContainer - Modal dialog container
         */
-        showMessageBox: function ($appContainer, msg) {
+        showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
-                $msgBox = $("<div class='fr-dialog fr-messagebox'/>");
+                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout'/>");
                 $msgBox.messageBox({});
                 $appContainer.append($msgBox);
             }
-            $msgBox.messageBox("openDialog", msg);
+            $msgBox.messageBox("openDialog", msg, caption);
         },
         /**
         * Show the report print, modal dialog
@@ -829,13 +831,8 @@ $(function () {
         * @param {function} $appContainer - Modal dialog container
         */
         showReportPrintDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-layout-printsection");
-            if ($dlg.length > 0) {
-                $dlg.reportPrint("openDialog");
-            }
-            else {
-                console.log("Error - unable show the report print dialog, '.fr-layout-printsection' not found ");
-            }
+            var $dlg = $appContainer.find(".fr-print-section");
+            $dlg.reportPrint("openDialog");
         },
         /**
         * Show the report print, modal dialog
@@ -844,13 +841,8 @@ $(function () {
         * @param {function} $appContainer - Modal dialog container
         */
         showUserSettingsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-us-layout-section");
-            if ($dlg.length > 0) {
-                $dlg.userSettings("openDialog");
-            }
-            else {
-                console.log("Error - unable show the user settings dialog, '.fr-us-layout-section' not found ");
-            }
+            var $dlg = $appContainer.find(".fr-us-section");
+            $dlg.userSettings("openDialog");
         }
     };
 

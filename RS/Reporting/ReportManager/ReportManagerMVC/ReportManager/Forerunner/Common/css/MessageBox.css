@@ -1,34 +1,23 @@
 .fr-messagebox {
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  position: absolute;
-  z-index: 10;
   display: none;
 }
 
 .fr-messagebox-innerpage {
   min-width: 200px;
   max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 50px;
+  margin-top: 100px;
   display: table;
-}
-
-.fr-messagebox-header {
 }
 
 .fr-messagebox-title {
   height: 48px;
   vertical-align: middle;
-  padding-left: 8px;
+  padding: 0 8px 0 8px;
   display: table-cell;
 }
 
 .fr-messagebox-content {
-  padding: 25px 8px 30px 8px;
+  padding: 25px 8px 0px 8px;
 }
 
 .fr-messagebox-msg {
@@ -40,13 +29,11 @@
   color: #444444;
 }
 
-.fr-messagebox-buttongroup {
-  text-align: center;
-}
-
-.fr-messagebox-button {
-  margin: 0 auto 10px auto;
-  width: 76px;
+.fr-messagebox-submit {
+  min-width: 100px;
+  padding: 0 8px 0 8px;
+  margin-bottom: 11px;
+  display: inline-block;
 }
 
 /* Small toolbar (E.g., for phones, potrait) */
@@ -54,10 +41,7 @@
   .fr-messagebox-innerpage {
     min-width: 200px;
     max-width: 260px;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 50px;
-    background-color: white;
   }
 }
 
@@ -66,9 +50,6 @@
   .fr-messagebox-innerpage {
     min-width: 200px;
     max-width: 320px;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 50px;
-    background-color: white;
   }
 }

@@ -134,7 +134,7 @@
     "weekHeader":"Wk",
     "dateFormat":"mm / gg / aa",
     "firstDay":0,"isRTL":false,"showMonthAfterYear":false,"yearSuffix":"",
-    "monthNames":[""Gennaio",
+    "monthNames":["Gennaio",
      "Febbraio",
      "Marzo",
      "Aprile",

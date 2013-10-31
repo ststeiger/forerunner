@@ -1,42 +1,18 @@
-﻿.fr-layout-printsection {
-  width: 100%;
-  height: 100%;
-  left: 0px;
-  right: 0px;
-  position: absolute;
-  z-index: 5;
+﻿.fr-print-section {
   display: none;
 }
 
-.fr-print-page {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  z-index: 5;
-  width: 100%;
-}
-
 .fr-print-innerPage {
-  width: 318px;
-  height: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #ffffff;
-}
-
-.fr-print-layout {
   position: relative;
   margin-top: 100px;
   -webkit-appearance: none;
 }
 
 .fr-print-header {
-  width: 318px;
   position: relative;
+  width: 100%;
   display: inline-block;
-  display: -webkit-box;
+  text-align: left;
 }
 
 .fr-print-print-icon-container {
@@ -63,22 +39,20 @@
 }
 
 .fr-print-cancel-container {
-  margin-top: 12px;
   display: inline-block;
-  position: absolute;
-  top: 0;
-  right: 22px;
+  margin: 0 11px 0 17px;
+  float: right;
 }
 
 .fr-print-cancel {
+  height: 45px;
+  padding: 0;
+  margin: 0;
   font-family:sans-serif;
   font-size: 13pt;
   color: #ffffff;
   background-color: transparent;
   border: none;
-  padding: 0 0 0 0;
-  margin: 0 0 0 0;
-  float: right;
   cursor: pointer;
 }
 
@@ -87,33 +61,44 @@
   font-size: 13pt;
   font-weight: bold;
   color: #172949;
-  display: inline-block;
-  display: -webkit-inline-box;
+  text-align: left;
+  display: block;
   overflow-y:auto;
+  overflow-x:hidden
 }
 
 .fr-print-options-label {
   width: 100%;
-  margin-bottom: 16px;
-  display: inline-block;
+  margin: 0 11px 16px 0;
+  display: block;
 }
 
 .fr-print-margins-label {
   width: 100%;
   margin: 12px 0 16px 0;
+  display: block;
+}
+
+.fr-print-settings-pair-widget {
+  vertical-align: top;
   display: inline-block;
 }
 
-.fr-print-settings-pair-container {
-  width: 147px;
-  display: inline-block;
+.fr-print-form .fr-print-settings {
+  display:inline-table;
+  vertical-align: top;
+  padding: 0;
+  margin: 0 16px 0 0;
+}
+
+.fr-print-settings td {
+  padding-bottom: 10px;
   vertical-align: top;
 }
 
 .fr-print-orientation-container {
-  width: 100px;
   display: inline-block;
-  margin-left: 16px;
+  margin-right: 11px;
 }
 
 .fr-print-landscape {
@@ -150,11 +135,9 @@
 }
 
 .fr-print-label{
-  width: 60px;
   height: 20px;
-  vertical-align: middle;
+  margin: 0 5px 0px 0;
   display: inline-block;
-  overflow: hidden;
 }
 
 .fr-print-text {
@@ -163,14 +146,13 @@
   font-size: 13pt;
   font-weight: bold;
   color: #666666;
-  text-align:right;
+  text-align: right;
   padding: 0 6px 0 0;
   border:1px solid #c6d1e1;
 }
 
 .fr-print-error-span {
-  width: 118px;
-  margin: 2px 0 0 0;
+  margin: 2px 0 0 4px;
   text-align: right;
   font-size: 10pt;
 
@@ -193,30 +175,10 @@
   margin-left: 4px;
 }
 
-.fr-print-submit-container {
-  width: 100%;
-  display: inline-block;
-  margin: 25px 0 0 0;
-}
-
-.fr-print-submit-inner {
-  width: 100%;
-  display: inline-block;
-  text-align: center;
-}
-
-.fr-print-submit {
-  width: 200px;
-  display: inline-block;
-}
-
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
   .fr-print-form {
     margin: 4px 0 25px 16px;
-  }
-  .fr-print-submit-container {
-    margin: 4px 0 0 0;
   }
 }
 
@@ -225,62 +187,58 @@
   .fr-print-form {
     margin: 4px 0 25px 4px;
   }
-  .fr-print-submit-container {
-    margin: 4px 0 0 0;
-  }
 }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-     .fr-print-layout{
-        margin-top: 50px;
-        max-height: 220px;
-    }
+  .fr-print-form {
+    margin: 4px 0 5px 4px;
+  }
+  .fr-print-innerPage{
+    margin-top: 5px;
+    max-height: 220px;
+  }
 }
 
 /* For phone with 845 * 480 ------------- */
 @media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape)
 {
-    .fr-print-layout
-    {
-        margin-top: 50px;
-        max-height: 320px;
-    }
+  .fr-print-innerPage
+  {
+    margin-top: 50px;
+    max-height: 320px;
+  }
 }
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-height : 768px) and (max-device-width : 1280px) and (orientation : landscape) {
-    .fr-print-layout{
-        margin-top: 50px;
-        max-height: 360px;
-    } 
+  .fr-print-innerPage{
+    margin-top: 50px;
+    max-height: 360px;
+  } 
 }
 
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
-    /* Styles */
-    .fr-print-layout{
-        max-height: 600px;
-        margin-top: 100px;
-    }
+  /* Styles */
+  .fr-print-innerPage{
+    max-height: 600px;
+    margin-top: 100px;
+  }
 }
 
 /* For phone with 845 * 480 ------------- */
 @media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape){
-    .fr-print-layout{
-        margin-top:50px;
-        max-height:320px;
-    }
+  .fr-print-innerPage{
+    margin-top:50px;
+    max-height:320px;
+  }
 }
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:landscape) {
-    .fr-print-layout{
+    .fr-print-innerPage{
         max-height: 200px;
         margin-top: 50px;
     }
 }
-
-
-
-

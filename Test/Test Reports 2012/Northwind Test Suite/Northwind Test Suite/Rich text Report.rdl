@@ -89,7 +89,7 @@
         <ParameterValues>
           <ParameterValue>
             <Value>5H80, 5H81, 5H82, 5H83</Value>
-            <Label>RadioNo1</Label>
+            <Label>5H80, 5H81, 5H82, 5H83</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>

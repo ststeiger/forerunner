@@ -2463,6 +2463,7 @@ $(function () {
             else
                 return false;
         },
+        _firstTime: true,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -2479,7 +2480,10 @@ $(function () {
                 // doesn't scroll off the location bar.
                 if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
-                    values.containerHeight += 60;
+                    if (me._firstTime) {
+                        values.containerHeight += 60;
+                        me._firstTime = false;
+                    }
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
@@ -2494,12 +2498,14 @@ $(function () {
         },
         ResetSize: function () {
             var me = this;
+            
             var heightValues = me.getHeightValues();
 
             // Setting the min-height allows the iPhone to scroll the left and right panes
             // properly even when the report has not been loaded due to paramters not being
             // entered or is very small
             if (forerunner.device.isiPhone()) {
+                $("html").css({ minHeight: heightValues.max });
                 $("body").css({ minHeight: heightValues.max });
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
@@ -2509,6 +2515,12 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
+
+            console.log(heightValues.max);
+            console.log(heightValues.paneHeight);
+            console.log(me.$mainviewport[0].clientHeight);
+            console.log(me.$mainviewport[0].scrollHeight);
+            console.log($(document).height());
         },
 
         bindViewerEvents: function () {

@@ -39,7 +39,7 @@
 
 .fr-explorer-caption {
     width: 200px;
-    display: block;
+    display: table;
     margin-left: auto;
     margin-right: auto;    
 }
@@ -55,6 +55,7 @@
     text-overflow: ellipsis;
     -ms-word-wrap: break-word;
     word-wrap: break-word;
+    display: table-cell;
 }
 
 

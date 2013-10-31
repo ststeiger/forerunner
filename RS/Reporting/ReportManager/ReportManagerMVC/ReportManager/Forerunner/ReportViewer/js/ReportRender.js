@@ -696,9 +696,10 @@ $(function () {
             }
             else {//for chart, map, gauge
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.StreamName;
-                if (RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets)
+                if (RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets) {
                     imageConsolidationOffset = RIContext.CurrObj.Elements.NonSharedElements.ImageConsolidationOffsets;
                     Style += "width:" + imageConsolidationOffset.Width + "px;height:" + imageConsolidationOffset.Height + "px";
+                }
             }
 
             if (imageConsolidationOffset) {

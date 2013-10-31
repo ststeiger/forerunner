@@ -58,6 +58,10 @@
       <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Rich text Report.rdl</Name>
+      <FullPath>Rich text Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Simple Gauge.rdl</Name>
       <FullPath>Simple Gauge.rdl</FullPath>
     </ProjectItem>
@@ -101,10 +105,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>Rich text Report.rdl</Name>
-      <FullPath>Rich text Report.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -113,7 +113,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

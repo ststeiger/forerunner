@@ -38,7 +38,7 @@
   "toolPane": {
     "pageOf":"von",
     "home":"Haus",
-    "navigation":"Steuerung",
+    "navigation":"Navigation",
     "favorites":"Favoriten",
     "back":"Zurück",
     "refresh":"erfrischen",

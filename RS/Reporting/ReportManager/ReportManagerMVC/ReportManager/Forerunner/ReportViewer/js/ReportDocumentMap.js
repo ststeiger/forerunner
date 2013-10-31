@@ -41,8 +41,7 @@ $(function () {
             var me = this;
             this.element.html("");
 
-            var $docMapPanel = new $("<DIV />");
-            $docMapPanel.addClass("fr-docmap-panel").addClass("fr-docmap-panel-layout");
+            var $docMapPanel = new $("<div class='fr-docmap-panel fr-docmap-panel-layout fr-core-widget'/>");
             $docMapPanel.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
             me.element.append($docMapPanel);
         },

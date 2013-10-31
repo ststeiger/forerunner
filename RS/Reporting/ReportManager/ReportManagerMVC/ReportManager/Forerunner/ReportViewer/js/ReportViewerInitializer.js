@@ -119,7 +119,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer

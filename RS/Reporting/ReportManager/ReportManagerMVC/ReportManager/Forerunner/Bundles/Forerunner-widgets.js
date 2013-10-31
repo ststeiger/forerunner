@@ -2071,7 +2071,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
 });  // function()
@@ -2894,7 +2894,7 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
@@ -3058,8 +3058,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
-            $toolpane = new $("<div />");
-            $toolpane.addClass(me.options.toolClass);
+            $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
 
           
@@ -3177,8 +3176,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             var $list;
             
-            $list = new $("<UL />");
-            $list.addClass("fr-nav-container");
+            $list = new $("<ul class='fr-nav-container fr-core-widget' />");
             me.$ul = $list;
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
@@ -3351,7 +3349,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             
             me.element.empty();
-            me.element.append($("<div/>").addClass(me.options.toolClass));
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
             me._initCallbacks();
 
@@ -3567,7 +3565,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer'>" +
+            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -3620,7 +3618,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element
@@ -5469,7 +5467,7 @@ $(function () {
             var me = this;
 
             me.element.html(null);
-            var $params = new $("<div class=" + paramContainerClass + ">" +
+            var $params = new $("<div class='" + paramContainerClass + " fr-core-widget'>" +
                 "<form class='fr-param-form' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
@@ -6471,8 +6469,7 @@ $(function () {
             var me = this;
             this.element.html("");
 
-            var $docMapPanel = new $("<DIV />");
-            $docMapPanel.addClass("fr-docmap-panel").addClass("fr-docmap-panel-layout");
+            var $docMapPanel = new $("<div class='fr-docmap-panel fr-docmap-panel-layout fr-core-widget'/>");
             $docMapPanel.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
             me.element.append($docMapPanel);
         },
@@ -7028,7 +7025,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer

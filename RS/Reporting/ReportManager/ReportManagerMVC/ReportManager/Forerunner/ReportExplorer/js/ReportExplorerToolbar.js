@@ -63,7 +63,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             
             me.element.empty();
-            me.element.append($("<div/>").addClass(me.options.toolClass));
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
             me._initCallbacks();
 

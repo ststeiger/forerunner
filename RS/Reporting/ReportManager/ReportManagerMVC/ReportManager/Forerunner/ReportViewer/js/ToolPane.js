@@ -93,8 +93,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
-            $toolpane = new $("<div />");
-            $toolpane.addClass(me.options.toolClass);
+            $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
 
           

@@ -819,7 +819,7 @@ $(function () {
         showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
-                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout'/>");
+                $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $msgBox.messageBox({});
                 $appContainer.append($msgBox);
             }

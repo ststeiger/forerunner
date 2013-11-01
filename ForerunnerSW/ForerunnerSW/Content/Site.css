@@ -60,6 +60,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .MobilizerDetailHeader{color:#1ba0da;font-size:20px;}
 .MobilizerDetailContent{padding-bottom:20px;}
 
+.SupportTD{width:25%;}
+.SupportTDBorder{border-right:1px solid #333333;}
+.SupportTR{color:#333333;text-align:center;align-content:center;}
 
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1026px) {
@@ -84,6 +87,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .ForerunnerTD{ display:inline-block;}
     .ForerunnerTD50{width:100%;}
 
+    .SupportTD{width:50%;}
+    .SupportTDBorder{border-right:none;}
+
     .DemoPageButtonRight{display:block;float:left;text-align:center;}
     .DemoPageButtonLeft{display:block;float:left;text-align:center;}
 
@@ -95,5 +101,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}
+   
+   .SupportTD{width:100%;}
+   .SupportTDBorder{border-right:none;}
+   
    .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}
 }

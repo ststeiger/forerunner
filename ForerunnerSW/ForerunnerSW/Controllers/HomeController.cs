@@ -41,7 +41,7 @@ namespace ForerunnerSW.Controllers
         }
         public ActionResult Support()
         {
-            return Support();
+            return View();
         }
     }
 }

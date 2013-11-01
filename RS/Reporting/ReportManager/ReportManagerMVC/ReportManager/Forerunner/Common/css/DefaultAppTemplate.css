@@ -25,6 +25,10 @@
     width:100%;
 }
 
+.fr-layout-mainviewport-fullheight {
+    height:100%;
+}
+
 .fr-layout-mainViewPortShiftedRight
 {
     /* position: fixed;*/

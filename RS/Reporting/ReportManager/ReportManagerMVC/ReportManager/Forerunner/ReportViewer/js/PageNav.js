@@ -46,8 +46,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             var $list;
             
-            $list = new $("<UL />");
-            $list.addClass("fr-nav-container");
+            $list = new $("<ul class='fr-nav-container fr-core-widget' />");
             me.$ul = $list;
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");

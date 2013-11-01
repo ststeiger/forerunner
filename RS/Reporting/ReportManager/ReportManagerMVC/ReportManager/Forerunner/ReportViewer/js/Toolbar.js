@@ -105,7 +105,7 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);

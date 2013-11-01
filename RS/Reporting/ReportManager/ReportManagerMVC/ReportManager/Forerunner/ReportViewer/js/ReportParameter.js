@@ -50,7 +50,7 @@ $(function () {
             var me = this;
 
             me.element.html(null);
-            var $params = new $("<div class=" + paramContainerClass + ">" +
+            var $params = new $("<div class='" + paramContainerClass + " fr-core-widget'>" +
                 "<form class='fr-param-form' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +

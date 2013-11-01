@@ -107,7 +107,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"
-  File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.css"
+  File "${LOCALROOT}\Forerunner\Lib\jQuery\css\jquery-ui-1.10.3.forerunner.css"
   SetOutPath "$INSTDIR\Forerunner\Lib\Misc\js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.hammer.min.js"

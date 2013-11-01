@@ -677,6 +677,11 @@ $(function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE 8)/);
         },
+        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
+        isMSIE9: function () {
+            var ua = navigator.userAgent;
+            return ua.match(/(MSIE 9)/);
+        },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
         isMSIEAndTouch :function () {
             var ua = navigator.userAgent;

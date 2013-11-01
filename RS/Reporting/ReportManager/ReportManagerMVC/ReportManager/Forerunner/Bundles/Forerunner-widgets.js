@@ -4279,12 +4279,12 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.SharedElements.Value));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.NonSharedElements.Value));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -4376,10 +4376,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.SharedElements.Value));
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.NonSharedElements.Value));
                         }
                         else {
                             $TextRun.html("&nbsp");
@@ -5411,7 +5411,10 @@ $(function () {
         _getWidth: function (val) {
             // might be usfull for text sizing issues between browsers
             return val ;
-        }
+        },
+        _getNewLineFormatText: function (Value) {
+            return Value.replace(/\r\n+/g, "\n");
+        },
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js

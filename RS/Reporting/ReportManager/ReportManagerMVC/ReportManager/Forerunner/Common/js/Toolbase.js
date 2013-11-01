@@ -407,7 +407,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
 });  // function()

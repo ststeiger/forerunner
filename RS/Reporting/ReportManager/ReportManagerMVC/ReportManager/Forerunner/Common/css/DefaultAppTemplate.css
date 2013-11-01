@@ -18,10 +18,15 @@
 .fr-layout-mainviewport {
     z-index: 1;
     display: inline-block;
+    overflow-y: hidden;
     padding: 0px;
     margin: 0px;
     border: 0px;
     width:100%;
+}
+
+.fr-layout-mainviewport-fullheight {
+    height:100%;
 }
 
 .fr-layout-mainViewPortShiftedRight

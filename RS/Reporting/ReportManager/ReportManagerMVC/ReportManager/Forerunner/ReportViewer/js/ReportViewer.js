@@ -230,6 +230,8 @@ $(function () {
          */
         showLoadingIndictator: function (me) {
             if (me.loadLock === 1) {
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
@@ -248,6 +250,9 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
+            var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+            $mainviewport.remove("fr-layout-mainviewport-fullheight");
+
             me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
         },

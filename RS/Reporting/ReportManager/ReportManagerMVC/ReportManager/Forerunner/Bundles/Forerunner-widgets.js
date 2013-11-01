@@ -231,6 +231,8 @@ $(function () {
          */
         showLoadingIndictator: function (me) {
             if (me.loadLock === 1) {
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
@@ -249,6 +251,9 @@ $(function () {
         removeLoadingIndicator: function () {
             var me = this;
             me.loadLock = 0;
+            var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+            $mainviewport.remove("fr-layout-mainviewport-fullheight");
+
             me.$reportContainer.removeClass("fr-report-container-translucent");
             me.$loadingIndicator.hide();
         },
@@ -2071,7 +2076,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
 });  // function()
@@ -2463,6 +2468,7 @@ $(function () {
             else
                 return false;
         },
+        _firstTime: true,
         getHeightValues: function () {
             var me = this;
             var values = {};
@@ -2479,7 +2485,10 @@ $(function () {
                 // doesn't scroll off the location bar.
                 if (forerunner.device.isiPhone() && !forerunner.device.isiPhoneFullscreen() && !forerunner.device.isStandalone()) {
                     values.windowHeight += 60;
-                    values.containerHeight += 60;
+                    if (me._firstTime) {
+                        values.containerHeight += 60;
+                        me._firstTime = false;
+                    }
                 }
             } else if (forerunner.device.isAndroid()) {
                 values.windowHeight = window.innerHeight;
@@ -2494,12 +2503,14 @@ $(function () {
         },
         ResetSize: function () {
             var me = this;
+            
             var heightValues = me.getHeightValues();
 
             // Setting the min-height allows the iPhone to scroll the left and right panes
             // properly even when the report has not been loaded due to paramters not being
             // entered or is very small
             if (forerunner.device.isiPhone()) {
+                $("html").css({ minHeight: heightValues.max });
                 $("body").css({ minHeight: heightValues.max });
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
@@ -2509,6 +2520,12 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
+
+            console.log(heightValues.max);
+            console.log(heightValues.paneHeight);
+            console.log(me.$mainviewport[0].clientHeight);
+            console.log(me.$mainviewport[0].scrollHeight);
+            console.log($(document).height());
         },
 
         bindViewerEvents: function () {
@@ -2882,7 +2899,7 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
-            me.element.html("<div class='" + me.options.toolClass + "'/>");
+            me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
@@ -3046,8 +3063,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
-            $toolpane = new $("<div />");
-            $toolpane.addClass(me.options.toolClass);
+            $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
 
           
@@ -3165,8 +3181,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             var $list;
             
-            $list = new $("<UL />");
-            $list.addClass("fr-nav-container");
+            $list = new $("<ul class='fr-nav-container fr-core-widget' />");
             me.$ul = $list;
  
             var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
@@ -3339,7 +3354,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             
             me.element.empty();
-            me.element.append($("<div/>").addClass(me.options.toolClass));
+            me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
             me._initCallbacks();
 
@@ -3555,7 +3570,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer'>" +
+            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -3608,7 +3623,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element
@@ -4269,12 +4284,12 @@ $(function () {
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
                     //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    $TextObj.text(RIContext.CurrObj.Elements.SharedElements.Value);
+                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.SharedElements.Value));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
                     //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-                    $TextObj.text(RIContext.CurrObj.Elements.NonSharedElements.Value);
+                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.NonSharedElements.Value));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 }
                 else
@@ -4366,10 +4381,10 @@ $(function () {
                         }
 
                         if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.text(Obj.TextRuns[i].Elements.SharedElements.Value);
+                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.SharedElements.Value));
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
-                            $TextRun.text(Obj.TextRuns[i].Elements.NonSharedElements.Value);
+                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.NonSharedElements.Value));
                         }
                         else {
                             $TextRun.html("&nbsp");
@@ -5401,7 +5416,10 @@ $(function () {
         _getWidth: function (val) {
             // might be usfull for text sizing issues between browsers
             return val ;
-        }
+        },
+        _getNewLineFormatText: function (Value) {
+            return Value.replace(/\r\n+/g, "\n");
+        },
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js
@@ -5457,7 +5475,7 @@ $(function () {
             var me = this;
 
             me.element.html(null);
-            var $params = new $("<div class=" + paramContainerClass + ">" +
+            var $params = new $("<div class='" + paramContainerClass + " fr-core-widget'>" +
                 "<form class='fr-param-form' onsubmit='return false'>" +
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
@@ -6459,8 +6477,7 @@ $(function () {
             var me = this;
             this.element.html("");
 
-            var $docMapPanel = new $("<DIV />");
-            $docMapPanel.addClass("fr-docmap-panel").addClass("fr-docmap-panel-layout");
+            var $docMapPanel = new $("<div class='fr-docmap-panel fr-docmap-panel-layout fr-core-widget'/>");
             $docMapPanel.append(me._writeDocumentMapItem(docMapData.DocumentMap, 0));
             me.element.append($docMapPanel);
         },
@@ -7016,7 +7033,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer

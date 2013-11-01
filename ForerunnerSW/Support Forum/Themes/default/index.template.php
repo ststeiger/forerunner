@@ -188,9 +188,9 @@ function template_body_above()
                                 <ul>
                                     <li class="Navitem"><a href="/home/contact">Contact</a></li>
                                     <li class="Navitem"><a href="/home/about">About</a></li>
-                                    <li class="Navitem"><a href="/SMForum">Support</a></li>
+                                    <li class="Navitem"><a href="/home/support">Support</a></li>
                                     <li class="Navitem"><a href="/home/demo">Demo</a></li>
-                                    <li class="Navitem"><a href="/Docs/index.html">SDK Docs</a></li>
+                                    <li class="Navitem"><a href="/Docs/index.html">Developers</a></li>
                                     <li class="Navitem"><a href="http://shop.forerunnersw.com">Store</a></li>
                                     <li class="Navitem"><a href="/Home">Home</a></li>
                                 </ul>

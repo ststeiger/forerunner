@@ -233,6 +233,7 @@
     <Content Include="Views\Home\Register.cshtml" />
     <Content Include="Views\Home\Thankyou.cshtml" />
     <Content Include="Views\Home\PASS.cshtml" />
+    <Content Include="Views\Home\Support.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

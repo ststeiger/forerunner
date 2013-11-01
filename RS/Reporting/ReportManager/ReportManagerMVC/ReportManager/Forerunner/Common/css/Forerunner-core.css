@@ -1,113 +1,35 @@
-.fr-core-cursorpointer {
-    cursor: pointer;
-}
+.fr-core-cursorpointer { cursor: pointer; }
 
-.fr-core-center {
-  display:table;
-  margin: 0 auto;
-}
+.fr-core-center { display: table; margin: 0 auto; }
 
-.fr-core-dialog-layout {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  z-index: 5;
-}
+.fr-core-widget { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.fr-core-widget input { font-family: sans-serif Helvetica, Arial; }
 
-.fr-core-dialog-innerPage {
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: #ffffff;
-  font-family:sans-serif;
-  border: 1px solid #035378;
-  box-shadow: 0px 0px 15px #696969;
-}
-
-.fr-core-dialog-header {
-  font-family: sans-serif;
-  font-size: 15pt;
-  font-weight: bold;
-  color: #ffffff;
-
-  background: #537eb4; /* Old browsers */
-  background: -moz-linear-gradient(top,  #537eb4 0%, #3c5d9c 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#537eb4), color-stop(100%,#3c5d9c)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #537eb4 0%,#3c5d9c 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #537eb4 0%,#3c5d9c 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */
-}
-
-.fr-core-dialog-submit-container {
-  width: 100%;
-  display: block;
-  margin: 25px 0 0 0;
-}
-
-.fr-core-dialog-submit {
-  width: 200px;
-  display: inline-block;
-}
-
-.fr-core-dialog-button {
-  height: 38px;
-  padding: 0 0;
-  border: 1px solid #546681;
-  cursor: pointer;
-  text-align:center;
-  font-size: 13pt;
-  font-family: sans-serif;
-  color: #ffffff;
-
-  background: #5e96cf; /* Old browsers */
-  background: -moz-linear-gradient(top,  #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #5e96cf 0%,#4e70b0 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #5e96cf 0%,#4e70b0 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */
-}
-
-.fr-core-mask{
-    opacity:0.75;
-    filter:alpha(opacity=75);
-    position:absolute;
-    width:100%;
-    height:100%;
-    top:0;
-    left:0;
-    background-color:white;
-    z-index:2;
-}
+.fr-core-dialog-layout { width: 100%; height: 100%; position: absolute; left: 0px; right: 0px; z-index: 5; }
+.fr-core-dialog-innerPage { overflow-y: auto; overflow-x: hidden; background-color: #ffffff; border: 1px solid #035378; box-shadow: 0px 0px 15px #696969; }
+.fr-core-dialog-header { font-size: 15pt; font-weight: bold; color: #ffffff; background: #537eb4; /* Old browsers */ background: -moz-linear-gradient(top, #537eb4 0%, #3c5d9c 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#537eb4), color-stop(100%,#3c5d9c)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #537eb4 0%,#3c5d9c 100%); /* IE10+ */ background: linear-gradient(to bottom, #537eb4 0%,#3c5d9c 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#537eb4', endColorstr='#3c5d9c',GradientType=0 ); /* IE6-9 */ }
+.fr-core-dialog-submit-container { width: 100%; display: block; margin: 25px 0 0 0; }
+.fr-core-dialog-submit { width: 200px; display: inline-block; }
+.fr-core-dialog-button { height: 38px; padding: 0 0; border: 1px solid #546681; cursor: pointer; text-align: center; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }
+.fr-core-mask { opacity: 0.75; filter: alpha(opacity=75); position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-color: white; z-index: 2; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
-  .fr-core-dialog-submit-container {
-    margin: 5px 0 0 0;
-  }
+  .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  .fr-core-dialog-submit-container {
-    margin: 5px 0 0 0;
-  }
+  .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
 }
 
 /* Smartphones (landscape) ----------- */
 @media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
-  .fr-core-dialog-submit-container {
-    margin: 5px 0 0 0;
-  }
+  .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
 }
 
 /* For phone with 845 * 480 ------------- */
-@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape)
-{
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape) {
 }
 
 /* iPads (landscape) ----------- */
@@ -119,12 +41,10 @@
 }
 
 /* For phone with 845 * 480 ------------- */
-@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape){
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape) {
 }
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:landscape) {
-  .fr-core-dialog-submit-container {
-    margin: 5px 0 0 0;
-  }
+  .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
 }

@@ -193,7 +193,7 @@ $(function () {
         },
         _render: function (catalogItems) {
             var me = this;
-            me.element.html("<div class='fr-report-explorer'>" +
+            me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -246,7 +246,7 @@ $(function () {
 
             var $dlg = me.options.$appContainer.find(".fr-us-section");
             if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout'/>");
+                $dlg = $("<div class='fr-us-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.userSettings({
                     $appContainer: me.options.$appContainer,
                     $reportExplorer: me.element

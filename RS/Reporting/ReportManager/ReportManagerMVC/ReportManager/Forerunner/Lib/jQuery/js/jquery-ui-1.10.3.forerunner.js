@@ -6587,11 +6587,10 @@ $.extend(Datepicker.prototype, {
 			date = new Date();
 			inst.selectedDay = date.getDate();
 			inst.currentDay = date.getDate();
-			inst.drawMonth = inst.selectedMonth = date.getMonth();
-			inst.drawYear = inst.selectedYear = date.getFullYear();
-		    /*this._selectDate(id, this._formatDate(inst, inst.currentDay, inst.currentMonth, inst.currentYear));*/
+			inst.currentMonth = inst.drawMonth = inst.selectedMonth = date.getMonth();
+			inst.currentYear = inst.drawYear = inst.selectedYear = date.getFullYear();
 			if (inst.input) {
-			    inst.input.val(this._formatDate(inst, inst.currentDay, inst.currentMonth, inst.currentYear));
+			    inst.input.val(this._formatDate(inst, inst.selectedDay, inst.selectedMonth, inst.selectedYear));
 			}
 			this._updateAlternate(inst);
         }

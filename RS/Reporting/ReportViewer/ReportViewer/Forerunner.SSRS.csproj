@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="AuthenticationMode.cs" />
     <Compile Include="CurrentUserImpersonator.cs" />
+    <Compile Include="FormsAuthenticationHelper.cs" />
     <Compile Include="Impersonator.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

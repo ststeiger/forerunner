@@ -22,6 +22,7 @@
 					+ "Radio No(s): " + Parameters!Radio_NO.Value + vbcrlf + "Incident Type(s): " + JOIN(Parameters!EVNT_SUB_TYO_ID.Label, ",")
 				</Value>
                 <Style>
+                  <FontSize>11pt</FontSize>
                   <FontWeight>Normal</FontWeight>
                 </Style>
               </TextRun>

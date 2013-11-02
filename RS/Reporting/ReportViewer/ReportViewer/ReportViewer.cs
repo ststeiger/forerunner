@@ -119,11 +119,11 @@ namespace Forerunner.SSRS.Viewer
                 ExecutionHeader execHeader = new ExecutionHeader();
                 byte[] result = null;
                 string encoding;
-                string format;
 
                 rs.ExecutionHeaderValue = execHeader;
                 rs.ExecutionHeaderValue.ExecutionID = SessionID;
 
+                string format;
                 GetServerRendering();
                 if (this.ServerRendering)
                     format = "ForerunnerJSON";
@@ -131,6 +131,7 @@ namespace Forerunner.SSRS.Viewer
                     format = "RPL";
 
                 result = rs.RenderStream(format, ImageID, "", out encoding, out mimeType);
+  
                 if (mimeType == null)
                     mimeType = JsonUtility.GetMimeTypeFromBytes(result);
                 return result;
@@ -228,7 +229,7 @@ namespace Forerunner.SSRS.Viewer
                 NewSession = SessionID;
 
             //Device Info
-            string devInfo = @"<DeviceInfo><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info

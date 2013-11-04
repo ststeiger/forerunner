@@ -36,3 +36,11 @@ function ReSizeFooter() {
 ReSizeFooter();
 $(window).resize(ReSizeFooter);
 
+if ($("#image")) {
+    $("#image").on("click", function () {
+        $("#image").hide();
+        $("#video").show();
+        $("#video").onclick.call();
+    });
+}
+

@@ -2903,6 +2903,7 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
+            me.enableTools([tb.btnMenu, tb.btnReportBack]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -3068,6 +3069,7 @@ $(function () {
 
           
             me.addTools(1, false, me._viewerItems());
+            me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.

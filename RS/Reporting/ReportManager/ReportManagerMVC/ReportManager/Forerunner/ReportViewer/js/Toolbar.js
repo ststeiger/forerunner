@@ -109,6 +109,7 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
+            me.enableTools([tb.btnMenu, tb.btnReportBack]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }

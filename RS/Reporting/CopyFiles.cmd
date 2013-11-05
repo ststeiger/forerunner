@@ -9,7 +9,7 @@ if [%2]==[] (
 	set LOGFILE=%2
 )
 
-robocopy %Source% %Destination% /LOG+:%LOGFILE% /S /XD %Source%\App_Data %Source%\App_Start %Source%\aspnet_client %Source%\Controllers %Source%\obj %Source%\Properties %Source%\Util %Source%\Forerunner\Common\js %Source%\Forerunner\ReportExplorer\js %Source%\Forerunner\ReportViewer\js /XF *.cd *.bundle *.map *.orig *.gitignore *.csproj *.user *.Debug.config *.Release.config *.pdb *.xml *.exe.config *.cmd *.log
+robocopy %Source% %Destination% /LOG+:%LOGFILE% /S /XD %Source%\App_Data %Source%\App_Start %Source%\aspnet_client %Source%\obj %Source%\Properties %Source%\Util %Source%\Forerunner\Common\js %Source%\Forerunner\ReportExplorer\js %Source%\Forerunner\ReportViewer\js /XF *.cd *.bundle *.map *.orig *.gitignore *.csproj *.user *.Debug.config *.Release.config *.pdb *.xml *.exe.config *.cmd *.log
 if ERRORLEVEL 8 (
 	goto :Error
 )

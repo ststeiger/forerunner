@@ -100,6 +100,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
+            me.autoRefreshLock = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             
             var isTouch = forerunner.device.isTouch();
@@ -118,6 +119,8 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
+
+            forerunner.helper.timer.isAutoRefreshEnable = true;
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -250,12 +253,14 @@ $(function () {
          */
         removeLoadingIndicator: function () {
             var me = this;
-            me.loadLock = 0;
-            var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
-            $mainviewport.remove("fr-layout-mainviewport-fullheight");
+            if (me.loadLock === 1) {
+                me.loadLock = 0;
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
 
-            me.$reportContainer.removeClass("fr-report-container-translucent");
-            me.$loadingIndicator.hide();
+                me.$reportContainer.removeClass("fr-report-container-translucent");
+                me.$loadingIndicator.hide();
+            }
         },
         _ReRender: function () {
             var me = this;
@@ -1496,6 +1501,16 @@ $(function () {
                 if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                     responsiveUI = true;
                 }
+
+                //10 seconds is the shortest refresh time recommended by forerunner (currently by me personal).
+                if (me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh && !me.autoRefreshLock) {
+                    var period = me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh > 5 ? me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh : 5;
+
+                    me._setAutoRefresh(period);
+                    //some time _writePage will be invoked more than once in a single page load event.
+                    me.autoRefreshLock = true;
+                }
+
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
@@ -1677,6 +1692,20 @@ $(function () {
                 var text = document.createTextNode($(this).text());
                 $(this).replaceWith($(text));
             });
+        },
+        _setAutoRefresh: function (period) {
+            var me = this;
+
+            if (forerunner.helper.timer.isAutoRefreshEnable) {
+                var executeID = setTimeout(function () {
+                    me.lock = 0;
+                    me.refreshReport();
+                    me.autoRefreshLock = false;
+                    console.log("report refresh at:" + new Date());
+                }, period * 1000);
+
+                forerunner.helper.timer.addSetTimeout(executeID);
+            }
         }
     });  // $.widget
 });   // $(function
@@ -2928,6 +2957,8 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
+            forerunner.helper.timer.isAutoRefreshEnable = false;
+            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };

@@ -837,9 +837,13 @@ $(function () {
                         me.pages[me.curPage] = null;
                         me._loadPage(me.curPage, false);
                     }
+                    else
+                        me.lock = 0;
                 },
                 function () {
-                    console.log("error"); me.removeLoadingIndicator();
+                    me.lock = 0;
+                    console.log("error");
+                    me.removeLoadingIndicator();
                 }
             );
         },
@@ -888,16 +892,20 @@ $(function () {
                         me._navToLink(bookmarkID);
                         me.lock = 0;
                     } else {
-                        me.backupCurPage();
                         if (data.NewPage !== undefined && data.NewPage > 0) {
+                            me.backupCurPage();
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
-                            // BUGBUG:  It looks like a lot of the error messages are not yet localized.
                             forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.bookmarkNotFound);
+                            me.lock = 0;
                         }
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function () {
+                    me.lock = 0;
+                    console.log("error");
+                    me.removeLoadingIndicator();
+                }
             );
         },
 
@@ -939,6 +947,7 @@ $(function () {
                     if (data.Exception) {
                         me._renderPageError(me.$reportAreaContainer.find(".Page"), data);
                         me.removeLoadingIndicator();
+                        me.lock = 0;
                     }
                     else {
                         me.sessionID = data.SessionID;
@@ -957,7 +966,11 @@ $(function () {
                         }
                     }
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function () {
+                    me.lock = 0;
+                    console.log("error");
+                    me.removeLoadingIndicator();
+                }
             );
         },
         /**
@@ -983,7 +996,11 @@ $(function () {
                     me.hideDocMap();
                     me._loadPage(data.NewPage, false, docMapID);
                 },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
+                function () {
+                    me.lock = 0;
+                    console.log("error");
+                    me.removeLoadingIndicator();
+                }
             );
         },
         /**
@@ -2903,6 +2920,7 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
+            me.enableTools([tb.btnMenu, tb.btnReportBack]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
@@ -3068,6 +3086,7 @@ $(function () {
 
           
             me.addTools(1, false, me._viewerItems());
+            me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.

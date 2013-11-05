@@ -4818,7 +4818,7 @@ $(function () {
                         //Also add style overflow:hidden to it's parent container
                         break;
                     default:
-                        break;
+                       break;
                 }
             }
         },

@@ -623,6 +623,34 @@ $(function () {
      * @namespace
      */
     forerunner.ajax = {
+        loginUrl: null,
+
+        _getLoginUrl: function () {
+            if (!this.loginUrl) {
+                var returnValue = null;
+                $.ajax({
+                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl?reserved=1",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        returnValue = data;
+                    },
+                    fail: function () {
+                        returnValue = null;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        returnValue = null;
+                    },
+                });
+
+                if (returnValue) {
+                    this.loginUrl = returnValue.LoginUrl.replace("~", "");
+                }
+            }
+
+            return this.loginUrl;
+        },
+
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
@@ -631,9 +659,11 @@ $(function () {
         */
         ajax: function (options) {
             var errorCallback = options.error;
-                options.error = function (data) {
+            var me = this;
+            options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
                 }
                 if (errorCallback)
                     errorCallback(data);
@@ -650,6 +680,7 @@ $(function () {
         * @member
         */
         getJSON: function (url, options, done, fail) {
+            var me = this;
             return $.getJSON(url, options)
             .done(function (data) {
                 if (done)
@@ -657,7 +688,8 @@ $(function () {
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
                 if (fail)

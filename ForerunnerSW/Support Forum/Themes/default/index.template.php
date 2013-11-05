@@ -173,26 +173,27 @@ function template_body_above()
 
 // Forerunner Header
 	echo '
-<div class="ForerunnerPort Header" style="background-color:white;">
+   <!-- Header ================================================== -->
+    <div class="ForerunnerPort Header" style="">
         <div class="ForerunnerPage Center" style="">
             <table class="" style="width: 100%;">
                 <tbody>
                     <tr>
                         <td class="ForerunnerTD ForerunnerTD50" style="">
                             <div class="ForerunnerTDLeft ForerunnerLogo">
-                                <img style="" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
+                                <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
                             </div>
                         </td>
                         <td class="ForerunnerTD ForerunnerTD50" style="">
-                            <div class="Navbar ">
+                            <div class="Navbar TopNavbar">
                                 <ul>
-                                    <li class="Navitem"><a href="/home/contact">Contact</a></li>
-                                    <li class="Navitem"><a href="/home/about">About</a></li>
-                                    <li class="Navitem"><a href="/home/support">Support</a></li>
-                                    <li class="Navitem"><a href="/home/demo">Demo</a></li>
-                                    <li class="Navitem"><a href="/Docs/index.html">Developers</a></li>
-                                    <li class="Navitem"><a href="http://shop.forerunnersw.com">Store</a></li>
-                                    <li class="Navitem"><a href="/Home">Home</a></li>
+                                    <li id="Contact" class="Navitem TopNavitem"><a href="../home/contact">Contact</a></li>
+                                    <li id="About" class="Navitem TopNavitem"><a href="../home/about">About</a></li>
+                                    <li id="Support" class="Navitem TopNavitem"><a href="../home/support">Support</a></li>
+                                    <li id="Demo" class="Navitem TopNavitem"><a href="../home/demo">Demo</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="../Docs/index.html">Developers</a></li>
+                                    <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
+                                    <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -202,8 +203,8 @@ function template_body_above()
         </div>
     </div>
     <div style="clear: both"></div>
-    <div class="ForerunnerPort" style="">
-    <div class="ForerunnerPage Center" style="">';
+
+    <!-- Header ================================================== -->';
 
 
 

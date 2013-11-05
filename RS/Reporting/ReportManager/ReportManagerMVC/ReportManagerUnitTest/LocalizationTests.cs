@@ -232,14 +232,14 @@ namespace ReportManagerUnitTest
             jsonString = Regex.Replace(jsonString, @""":\[(?<list>(""[^""]*"",)*)(?<last>""[^""]*"")\]", MatchEvaluator);
             // Get rid of any extraneous escape sequesnces
             jsonString = jsonString.Replace("\\u0027", "'");
-            // Put new object definitions on a new line
-            jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
             // Put members on new lines
             jsonString = jsonString.Replace("\",\"", "\",\n    \"");
             // Put members following an array on a new line
             jsonString = jsonString.Replace("\"],\"", "\"],\n    \"");
             // Put new objects on a new line
+            jsonString = jsonString.Replace("\":{\"", "\": {\n    \"");
             jsonString = jsonString.Replace("\"},\"", "\"\n  },\n  \"");
+            jsonString = jsonString.Replace("\"]},\"", "\"]},\n  \"");
             // Put the final object closing paran on a new line
             jsonString = jsonString.Replace("}}", "\n  }\n}\n");
             // Put boolean members on a new line

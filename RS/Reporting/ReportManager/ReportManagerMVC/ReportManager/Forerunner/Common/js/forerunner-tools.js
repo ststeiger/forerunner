@@ -838,22 +838,18 @@ $(function () {
             imageClass: "fr-icons24x24-save-param",
             tooltip: locData.toolbar.saveParam,
             events: {
-                click: function (e) {
+                click: function(e) {
+                    parameterModel = forerunner.ssr.models.getParameterModel();
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
-                    if (parameterList) {
-                        forerunner.ajax.getJSON(e.data.me.options.$ReportViewerInitializer.options.ReportManagerAPI + "/SaveUserParameters",
-                            {
-                            reportPath: e.data.me.options.$reportViewer.reportViewer("option", "reportPath"),
-                            parameters: parameterList,
-                            },
-                            function (data) {
-                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
-                            },
-                            function () {
-                                forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
-                            }
-                        );
-                    }
+                    parameterModel.save(
+                        parameterList,
+                        function(data) {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
+                        },
+                        function() {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
+                        }
+                    );
                 }
             }
         },

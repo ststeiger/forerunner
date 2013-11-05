@@ -1576,7 +1576,8 @@ $(function () {
             var me = this;
             var navTo = me.element.find("[name='" + elementID + "']")[0];
             if (navTo !== undefined) {
-                $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+                //Should account for floating headers and toolbar height need to be a calculation
+                $(document).scrollTop($(navTo).offset().top - 100).scrollLeft($(navTo).offset().left);
             }
         },
         _stopDefaultEvent: function (e) {

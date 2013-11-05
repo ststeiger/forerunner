@@ -16,11 +16,11 @@ function ReSizeFooter() {
 
     if ($(window).width() < 509) {
         for ( l = 0; l < Logo.length; l++) {
-            $(Logo[l]).width($(window).width());
+            $(Logo[l]).width($(window).width()-10);
         }
 
         for ( i = 0; i < Page.length; i++) {
-            $(Page[i]).width($(window).width());
+            $(Page[i]).width($(window).width()-10);
         }
     }
    
@@ -35,4 +35,15 @@ function ReSizeFooter() {
 }
 ReSizeFooter();
 $(window).resize(ReSizeFooter);
+
+if ($("#image")) {
+    $("#image").on("click", function () {
+        $("#image").hide();
+        $("#video").show();
+        $("#video").onclick.call();
+    });
+}
+
+var page = $(document).attr('title');
+$("#"+page).addClass("TopNavSelected");
 

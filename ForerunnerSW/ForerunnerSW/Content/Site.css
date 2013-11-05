@@ -24,10 +24,15 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .FooterContent{float:left;padding-top:20px;padding-right:10px;}
 .Navbar {display:inline-block; margin-left:50px;}
-.Navbar a{color: gray;padding:8px;}
+.Navbar a{padding:8px;}
 .Navbar ul{-webkit-padding-start: 0px;-moz-padding-start: 0px;-ms-padding-start: 0px;list-style:none;padding:0;list-style-type:none;}
 .Navitem{line-height: 30px;float:right; }
-.Navitem a:hover{color:white;background-color:black;}
+
+.TopNavbar a{color: gray;}
+.TopNavSelected a{color:#017cb9;font-weight:bold;}
+.TopNavitem a:hover{color:white;background-color:#cccccc;}
+.BottomNavbar a{color: gray;}
+.BottomNavitem a:hover{color:white;}
 
 .ForerunnerImage { width:100%; }
 
@@ -56,13 +61,13 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .MobilizerBannerHeader{font-size:60px;padding-top:20px;padding-bottom:10px;line-height:50px;}
 .MobilizerBannerSubHeader{font-size:16px;font-weight:bold;}
 .MobilizerBannerContent{font-size:14px;}
-.MobilizerBannerImage{background:url(img/background_checkers.png);background-repeat:repeat;}
+.MobilizerBannerImage{background:url(img/bkg_tile.png);background-repeat:repeat;}
 .MobilizerDetailHeader{color:#1ba0da;font-size:20px;}
 .MobilizerDetailContent{padding-bottom:20px;}
 
 .SupportTD{width:25%;}
 .SupportTDBorder{border-right:1px solid #cccccc;}
-.SupportTR{color:#cccccc;text-align:center;align-content:center;}
+.SupportTR{color:#666666;text-align:center;align-content:center;}
 
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1026px) {
@@ -97,11 +102,13 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 /* 4.4 - Mobile Portrait */
 @media only screen and (max-width: 509px) {
     .ForerunnerPort{padding-right:0px;padding-left:0px;width:100%;}
-    .ForerunnerPage{width:400px;}
+    .ForerunnerPage{width:400px;padding-left:10px;}
 
    .ForerunnerTD{ display:inline-block;}
    .ForerunnerTD50{width:100%;}
    
+   .Navbar {display:inline-block; margin-left:0px;}
+
    .SupportTD{width:100%;}
    .SupportTDBorder{border-right:none;}
    

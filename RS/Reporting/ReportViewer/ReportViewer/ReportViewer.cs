@@ -129,8 +129,14 @@ namespace Forerunner.SSRS.Viewer
                     format = "ForerunnerJSON";
                 else
                     format = "RPL";
+                string devInfo = "";
+                //devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+                //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
+                //End Device Info
+                //devInfo += @"</DeviceInfo>";
 
-                result = rs.RenderStream(format, ImageID, "", out encoding, out mimeType);
+
+                result = rs.RenderStream(format, ImageID,devInfo, out encoding, out mimeType);
   
                 if (mimeType == null)
                     mimeType = JsonUtility.GetMimeTypeFromBytes(result);
@@ -230,6 +236,7 @@ namespace Forerunner.SSRS.Viewer
 
             //Device Info
             string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+            //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info

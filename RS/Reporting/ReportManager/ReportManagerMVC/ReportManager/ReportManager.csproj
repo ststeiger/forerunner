@@ -147,9 +147,6 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Forerunner\Common\css\MessageBox.css" />
-    <Content Include="Forerunner\Common\css\Login.css" />
-    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -168,6 +165,9 @@
     <Content Include="Forerunner\Bundles\Forerunner.min.js">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Forerunner\Common\css\MessageBox.css" />
+    <Content Include="Forerunner\Common\css\Login.css" />
+    <Content Include="Forerunner\Common\css\ReportManager.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
     <Content Include="Forerunner\Common\css\Forerunner-core.css" />
     <Content Include="Forerunner\Common\css\icons24x24.css" />
@@ -233,6 +233,7 @@
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
+    <Content Include="Forerunner\ReportViewer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

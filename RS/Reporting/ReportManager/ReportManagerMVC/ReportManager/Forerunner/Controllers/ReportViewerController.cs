@@ -265,5 +265,22 @@ namespace ReportManager.Controllers
                 return ReturnError(e);
             }
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage LoginUrl(string reserved)
+        {
+            try
+            {
+                string loginUrl = Forerunner.Security.AuthenticationMode.GetLoginUrl();
+                string response = "{LoginUrl : \"" + loginUrl + "\"}";
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(response), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                return ReturnError(e);
+            }
+        }
     }
 }

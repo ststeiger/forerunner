@@ -273,7 +273,7 @@ namespace ReportManager.Controllers
             try
             {
                 string loginUrl = Forerunner.Security.AuthenticationMode.GetLoginUrl();
-                string response = "{LoginUrl : \"" + loginUrl + "\"}";
+                string response = "{\"LoginUrl\" : \"" + loginUrl + "\"}";
                 return GetResponseFromBytes(Encoding.UTF8.GetBytes(response), "text/JSON");
             }
             catch (Exception e)

@@ -8,6 +8,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
+    var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
@@ -59,6 +60,8 @@ $(function () {
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
 
             var tb = forerunner.ssr.tools.mergedButtons;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
             if (me.options.isReportManager) {
                 $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
                 $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
@@ -70,16 +73,16 @@ $(function () {
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
+                $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
-                $righttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
+                $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -232,7 +235,48 @@ $(function () {
         },
         getSavedParameters: function (reportPath) {
             var parameterModel = forerunner.ssr.models.getParameterModel(reportPath);
-            return parameterModel.getDefaultSet();
+            return parameterModel.getCurrentSet();
         }
-    };
+    };  // ssr.ReportViewerInitializer.prototype
+
+    // Left Toolbar
+    $.widget(widgets.getFullname(widgets.leftToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-slide",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            var ltb = forerunner.ssr.tools.leftToolbar;
+
+            me.element.html("");
+            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [ltb.btnLTBMenu]);
+        },
+    }); //$.widget
+
+    // Right Toolbar
+    $.widget(widgets.getFullname(widgets.rightToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-slide",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            me.element.html("");
+            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [rtb.btnRTBParamarea]);
+        },
+    }); //$.widget
+
 });  // $(function ()

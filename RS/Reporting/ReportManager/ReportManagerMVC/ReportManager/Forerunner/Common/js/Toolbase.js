@@ -400,7 +400,7 @@ $(function () {
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
-    $.widget("frInternal.toolDropdown", $.forerunner.toolBase, {
+    $.widget(widgets.getFullname("toolDropdown"), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolbase-dropdown"

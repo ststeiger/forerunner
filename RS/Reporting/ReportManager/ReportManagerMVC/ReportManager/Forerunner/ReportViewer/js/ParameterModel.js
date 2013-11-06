@@ -25,13 +25,14 @@ $(function () {
         }
 
         me.currentSetId = null;
+        me.parameterSets = null;
         me.loc = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     };
 
     models.ParameterModel.prototype = {
         _isLoaded: function () {
             var me = this;
-            return me.parameterSets !== undefined;
+            return me.parameterSets !== null;
         },
         _createDefaultSet: function (parameterList) {
             var me = this;
@@ -74,7 +75,7 @@ $(function () {
             if (parameterList) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
 
-                if (me.parameterSets == undefined || me.currentSetId === null) {
+                if (me.parameterSets === null || me.currentSetId === null) {
                     var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
                     me.parameterSets = [defaultSet];
                     me.currentSetId = defaultSet.id;
@@ -105,19 +106,24 @@ $(function () {
                 );
             }
         },
-        getDefaultSet: function () {
+        getCurrentSet: function () {
             var me = this;
-            var defaultSet = null;
+            var currentSet = null;
             me._load();
             if (me.parameterSets) {
                 $.each(me.parameterSets, function (index, parameterSet) {
-                    if (parameterSet.isDefault) {
-                        defaultSet = JSON.stringify(parameterSet.data);
+                    if (me.currentSetId !== null) {
+                        if (parameterSet.id === me.currentSetId) {
+                            currentSet = JSON.stringify(parameterSet.data);
+                        }
+                    }
+                    else if (parameterSet.isDefault) {
+                        currentSet = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return defaultSet;
+            return currentSet;
         }
     }
 });

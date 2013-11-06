@@ -696,14 +696,76 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-printreport"]);
                 }
             }
-        },
+        }
     };
 
     /**
-     * Defines all the tools used in the Report Exploer Toolbar.
+     * Defines all the tools used in the left toolbar.
      *
      * @namespace
      */
+    forerunner.ssr.tools.leftToolbar = {
+        /** @member */
+        btnLTBMenu: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-ltb-menu-button",
+            imageClass: "fr-icons24x24-menu",
+            tooltip: locData.toolbar.menu,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.menuClick, null, {});
+                }
+            }
+        }
+    };
+
+    /**
+     * Defines all the tools used in the right toolbar.
+     *
+     * @namespace
+     */
+    forerunner.ssr.tools.rightToolbar = {
+        /** @member */
+        btnRTBParamarea: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rtb-paramarea-button",
+            imageClass: "fr-icons24x24-paramarea",
+            tooltip: locData.toolbar.paramarea,
+            events: {
+                click: function (e) {
+                    e.data.me._trigger(events.paramAreaClick, null, {});
+                }
+            }
+        },
+        /** @member */
+        btnSavParam: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rtb-save-param",
+            imageClass: "fr-icons24x24-save-param",
+            tooltip: locData.toolbar.saveParam,
+            events: {
+                click: function (e) {
+                    parameterModel = forerunner.ssr.models.getParameterModel();
+                    var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
+                    parameterModel.save(
+                        parameterList,
+                        function (data) {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
+                        },
+                        function () {
+                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
+                        }
+                    );
+                }
+            }
+        }
+    };
+
+    /**
+      * Defines all the tools used in the Report Exploer Toolbar.
+      *
+      * @namespace
+      */
     forerunner.ssr.tools.reportExplorerToolbar = {
         /** @member */
         btnHome: {
@@ -828,28 +890,6 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
-        btnSavParam: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-button-save-param",
-            imageClass: "fr-icons24x24-save-param",
-            tooltip: locData.toolbar.saveParam,
-            events: {
-                click: function(e) {
-                    parameterModel = forerunner.ssr.models.getParameterModel();
-                    var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
-                    parameterModel.save(
-                        parameterList,
-                        function(data) {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);
-                        },
-                        function() {
-                            forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamFailed, locData.toolbar.saveParam);
-                        }
-                    );
                 }
             }
         },

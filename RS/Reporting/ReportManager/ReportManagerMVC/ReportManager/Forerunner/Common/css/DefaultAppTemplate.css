@@ -140,16 +140,6 @@
   background-color: black;
 }
 
-.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
-.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
-.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button, .fr-layout-rightheader .fr-toolbar-print-button, .fr-layout-rightheader .fr-toolbar-reportback-button {
-  display: none;
-}
-.fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 
-.fr-layout-rightheader .fr-toolbar-sparator-text, .fr-layout-rightheader .fr-toolbar-menu-button, .fr-layout-leftheader .fr-button-recent {
-  display: none;
-}
-
 .fr-layout-rightheader .fr-toolbar-reportback-button, .fr-layout-rightheader .fr-toolbar-paramarea-button {
     float: left;
 }
@@ -161,16 +151,6 @@
   left: 0px;
   position: fixed;
   background-color: black;
-}
-
-.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
-.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-zoom-button, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
-.fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button, .fr-layout-leftheader .fr-toolbar-print-button, .fr-layout-leftheader .fr-button-recent {
-  display: none;
-}
-.fr-layout-leftheader .fr-toolbar-lastpage-button, .fr-layout-leftheader .fr-toolbar-documentmap-button, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-toolbar-find-button, 
-.fr-layout-leftheader .fr-toolbar-sparator-text, .fr-layout-leftheader .fr-toolbar-reportback-button, .fr-layout-leftheader .fr-toolbar-paramarea-button {
-  display: none;
 }
 
 .fr-layout-leftheader .fr-toolbar-menu-button {

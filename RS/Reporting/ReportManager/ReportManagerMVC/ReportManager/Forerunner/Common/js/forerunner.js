@@ -127,6 +127,11 @@ $(function () {
             userSettings: "userSettings",
             /** @constant */
             messageBox: "messageBox",
+            /** @constant */
+            leftToolbar: "leftToolbar",
+            /** @constant */
+            rightToolbar: "rightToolbar",
+
 
             /** @constant */
             namespace: "forerunner",
@@ -161,11 +166,15 @@ $(function () {
             menuClick: "menuclick",
             /** widget + event, lowercase */
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
             /** widget + event, lowercase */
             toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            rightToolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.rightToolbar + this.paramAreaClick).toLowerCase(); },
 
             /** @constant */
             setPageDone: "setPageDone",

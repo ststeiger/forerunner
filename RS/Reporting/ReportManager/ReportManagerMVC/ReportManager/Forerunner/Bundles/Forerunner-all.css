@@ -140,16 +140,6 @@
   background-color: black;
 }
 
-.fr-layout-rightheader .fr-button-home, .fr-layout-rightheader .fr-toolbar-nav-button, .fr-layout-rightheader .fr-toolbar-refresh-button, .fr-layout-rightheader .fr-toolbar-firstpage-button, .fr-layout-rightheader .fr-toolbar-prev-button, 
-.fr-layout-rightheader .fr-toolbar-next-button, .fr-layout-rightheader .fr-button-update-fav, .fr-layout-rightheader .fr-toolbar-zoom-button, .fr-layout-rightheader .fr-toolbar-export-button, .fr-layout-rightheader .fr-toolbar-reportpage-textbox,
-.fr-layout-rightheader .fr-toolbar-pageOf-button, .fr-layout-rightheader .fr-toolbar-numPages-button, .fr-layout-rightheader .fr-toolbar-print-button, .fr-layout-rightheader .fr-toolbar-reportback-button {
-  display: none;
-}
-.fr-layout-rightheader .fr-toolbar-lastpage-button, .fr-layout-rightheader .fr-toolbar-documentmap-button, .fr-layout-rightheader .fr-toolbar-keyword-textbox, .fr-layout-rightheader .fr-toolbar-find-button, 
-.fr-layout-rightheader .fr-toolbar-sparator-text, .fr-layout-rightheader .fr-toolbar-menu-button, .fr-layout-leftheader .fr-button-recent {
-  display: none;
-}
-
 .fr-layout-rightheader .fr-toolbar-reportback-button, .fr-layout-rightheader .fr-toolbar-paramarea-button {
     float: left;
 }
@@ -161,16 +151,6 @@
   left: 0px;
   position: fixed;
   background-color: black;
-}
-
-.fr-layout-leftheader .fr-button-home, .fr-layout-leftheader .fr-toolbar-nav-button, .fr-layout-leftheader .fr-toolbar-refresh-button, .fr-layout-leftheader .fr-toolbar-firstpage-button, .fr-layout-leftheader .fr-toolbar-prev-button, 
-.fr-layout-leftheader .fr-toolbar-next-button, .fr-layout-leftheader .fr-button-update-fav, .fr-layout-leftheader .fr-toolbar-zoom-button, .fr-layout-leftheader .fr-toolbar-export-button, .fr-layout-leftheader .fr-toolbar-reportpage-textbox,
-.fr-layout-leftheader .fr-toolbar-pageOf-button, .fr-layout-leftheader .fr-toolbar-numPages-button, .fr-layout-leftheader .fr-toolbar-print-button, .fr-layout-leftheader .fr-button-recent {
-  display: none;
-}
-.fr-layout-leftheader .fr-toolbar-lastpage-button, .fr-layout-leftheader .fr-toolbar-documentmap-button, .fr-layout-leftheader .fr-toolbar-keyword-textbox, .fr-layout-leftheader .fr-toolbar-find-button, 
-.fr-layout-leftheader .fr-toolbar-sparator-text, .fr-layout-leftheader .fr-toolbar-reportback-button, .fr-layout-leftheader .fr-toolbar-paramarea-button {
-  display: none;
 }
 
 .fr-layout-leftheader .fr-toolbar-menu-button {
@@ -320,7 +300,7 @@ and (min-width : 1824px) {
   height:24px;
   margin:5px;
   display:inline-block;
-  background-image:url('../Common/images/icons24x24.png');
+  background-image:url('../images/icons24x24.png');
 }
 
 .fr-icons24x24-menu {
@@ -888,19 +868,19 @@ table, td, tr {
 
 .fr-report-item-image-base { height: 100%; width: 100%; position: absolute; top: 0; left: 0; background-repeat: no-repeat; background-position: center; }
 
-.fr-report-item-outer-image { background-image: url(../reportexplorer/Images/report_bkg.png); }
+.fr-report-item-outer-image { background-image: url(../../reportexplorer/Images/report_bkg.png); }
 
-.fr-report-item-outer-image-selected { background-image: url(../reportexplorer/Images/report_bkg.png); }
+.fr-report-item-outer-image-selected { background-image: url(../../reportexplorer/Images/report_bkg.png); }
 
-.fr-report-item-ear-image { background-image: url(../reportexplorer/Images/report_ear.png); }
+.fr-report-item-ear-image { background-image: url(../../reportexplorer/Images/report_ear.png); }
 
-.fr-explorer-item-ear-selcted { background-image: url(../reportexplorer/Images/report_ear_selected.png); }
+.fr-explorer-item-ear-selcted { background-image: url(../../reportexplorer/Images/report_ear_selected.png); }
 
 .fr-report-item-inner-image { height: 170px; width: 125px; position: absolute; top: 40px; left: 25px; padding-left: 10px; padding-right: 10px; margin: 4px; }
 
-.fr-explorer-folder { height: 100%; width: 100%; background-image: url(../reportexplorer/Images/folder.png); background-repeat: no-repeat; background-position: center; }
+.fr-explorer-folder { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
+.fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
 
 .fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup { float: right; }
 
@@ -1032,14 +1012,14 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-panel { margin: 4px 0px 0px 0px; width: 100%; height: 100%; }
 .fr-param-element-border { margin: 10px 6px; display: inline-block; }
 .fr-param, .fr-param-client { margin: 4px; width: 170px; font-size: 13px; padding: 4px; border: solid 1px #1F98C7; }
-.fr-param-dropdown-textbox { width: 150px; padding-right: 24px; }
+.fr-param-dropdown-textbox { width: 150px; padding-right: 24px; overflow:hidden;text-overflow:ellipsis; white-space:nowrap; }
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; }
 .fr-param-radio { width: 36px; }
 .fr-param-radio-label { color: #ffffff; }
 .fr-param-checkbox { margin-left: 5px; margin-right: 2px; padding: 2px; }
-.fr-param-select { width: 180px; }
+.fr-param-select { width: 180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .fr-param-submit-container { display: inline-block; }
 .fr-param-cancel-container { display: inline-block; }
 .fr-param-viewreport { width: 144px; height: 39px; margin-left: 10px; text-align: center; border: 1px solid #8c9eba; cursor: pointer; font-size: 13pt; color: #ffffff; background: #5e96cf; /* Old browsers */ background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* IE10+ */ background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); /* IE6-9 */ }

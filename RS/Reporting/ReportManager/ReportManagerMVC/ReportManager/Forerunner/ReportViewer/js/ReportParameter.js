@@ -478,11 +478,8 @@ $(function () {
                     if (predefinedValue) {
                         $control.val(predefinedValue);
                     }
-                    //if (param.DefaultValues[0] === "")                        
-                    //    $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     break;
             }
-
             return $control;
         },
         _setSelectedIndex: function (s, v) {
@@ -516,12 +513,17 @@ $(function () {
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
+                    $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
                 }
 
                 $control.append($option);
             }
             if (!canLoad) me._loadedForDefault = false;
+
+            $control.on("change", function () {
+                $control.attr("title", $(this).find("option:selected").text());
+            });
 
             if (me._paramCount === 1) {
                 $control.on("change", function () { me._submitForm(pageNum); });
@@ -678,7 +680,7 @@ $(function () {
 
             if (predefinedValue) {
                 $textarea.val(me._getTextAreaValue(predefinedValue, true));
-                $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+                $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false)).attr("title", me._getTextAreaValue(predefinedValue, false));
                 $multipleTextArea.attr("jsonValues", JSON.stringify(predefinedValue));
             }
 
@@ -729,7 +731,7 @@ $(function () {
                 });
 
                 newValue = showValue.substr(0, showValue.length - 1);
-                $(".fr-paramname-" + param.Name, me.$params).val(newValue);
+                $(".fr-paramname-" + param.Name, me.$params).val(newValue).attr("title", newValue);
                 $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(JSON.stringify(hiddenValue));
             }
             else {
@@ -740,7 +742,7 @@ $(function () {
                 if (newValue.charAt(newValue.length - 1) === ",") {
                     newValue = newValue.substr(0, newValue.length - 1);
                 }
-                target.val(newValue);
+                target.val(newValue).attr("title", newValue);
                 target.attr("jsonValues", JSON.stringify(listOfValues));
             }
 

@@ -143,6 +143,6 @@
     "dayNamesShort":["BCK", "PND", "VTR", "SRD", "ChTV", "PTN", "SBT"],
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
-    "default":"Default"
+    "defaultName":"Default"
   }
 }

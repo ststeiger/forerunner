@@ -143,6 +143,6 @@
     "dayNamesShort":["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
-    "default":"Default"
+    "defaultName":"Default"
   }
 }

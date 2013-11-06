@@ -4,16 +4,15 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports objects
 forerunner.ajax = forerunner.ajax || {};
 forerunner.ssr = forerunner.ssr || {};
-forerunner.ssr.models = forerunner.ssr.models || {};
 forerunner.ssr.constants = forerunner.ssr.constants || {};
 forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var models = forerunner.ssr.models;
     var events = ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    models.ParameterModel = function (options) {
+    ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
             reportPath: null
@@ -26,10 +25,10 @@ $(function () {
 
         me.currentSetId = null;
         me.parameterSets = null;
-        me.loc = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+
     };
 
-    models.ParameterModel.prototype = {
+    ssr.ParameterModel.prototype = {
         _isLoaded: function () {
             var me = this;
             return me.parameterSets !== null;
@@ -38,7 +37,7 @@ $(function () {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: me.loc.parameterModel.default,
+                Name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
             }
             defaultSet.data = parameterList;
@@ -66,7 +65,7 @@ $(function () {
                     }
                 },
                 error: function () {
-                    console.log("models.ParameterModel._load() - error: " + data.status);
+                    console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
         },

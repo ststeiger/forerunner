@@ -143,6 +143,6 @@
     "dayNamesShort":["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam"],
     "dayNamesMin":["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]},
   "parameterModel": {
-    "default":"Default"
+    "defaultName":"Default"
   }
 }

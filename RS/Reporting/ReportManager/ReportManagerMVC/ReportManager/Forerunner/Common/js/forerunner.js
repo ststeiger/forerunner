@@ -962,7 +962,7 @@ $(function () {
                 return forerunner.ssr.models.paramModel;
             }
 
-            forerunner.ssr.models.paramModel = new forerunner.ssr.models.ParameterModel({ reportPath: reportPath });
+            forerunner.ssr.models.paramModel = new forerunner.ssr.ParameterModel({ reportPath: reportPath });
             return forerunner.ssr.models.paramModel;
         }
     };

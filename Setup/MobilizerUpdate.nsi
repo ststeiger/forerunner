@@ -166,6 +166,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Views\Home\Index.cshtml"
   SetOutPath "$INSTDIR\Views\Login"
   File "${LOCALROOT}\Views\Login\Login.cshtml"
+  SetOutPath "$INSTDIR\Controllers"
+  File "${LOCALROOT}\Controllers\LoginController.cs"
   SetOutPath "$INSTDIR\Views\Shared"
   File "${LOCALROOT}\Views\Shared\Error.cshtml"
   File "${LOCALROOT}\Views\Shared\_RMLayout.cshtml"

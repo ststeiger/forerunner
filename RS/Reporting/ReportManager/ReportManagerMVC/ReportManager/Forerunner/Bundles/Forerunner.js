@@ -128,6 +128,11 @@ $(function () {
             userSettings: "userSettings",
             /** @constant */
             messageBox: "messageBox",
+            /** @constant */
+            leftToolbar: "leftToolbar",
+            /** @constant */
+            rightToolbar: "rightToolbar",
+
 
             /** @constant */
             namespace: "forerunner",
@@ -162,11 +167,15 @@ $(function () {
             menuClick: "menuclick",
             /** widget + event, lowercase */
             toolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.menuClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            leftToolbarMenuClick: function () { return (forerunner.ssr.constants.widgets.leftToolbar + this.menuClick).toLowerCase(); },
 
             /** @constant */
             paramAreaClick: "paramareaclick",
             /** widget + event, lowercase */
             toolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.toolbar + this.paramAreaClick).toLowerCase(); },
+            /** widget + event, lowercase */
+            rightToolbarParamAreaClick: function () { return (forerunner.ssr.constants.widgets.rightToolbar + this.paramAreaClick).toLowerCase(); },
 
             /** @constant */
             setPageDone: "setPageDone",
@@ -381,36 +390,57 @@ $(function () {
          * @member
          */
         guidGen: function () {
-                var _padLeft = function (paddingString, width, replacementChar) {
-                    return paddingString.length >= width ? paddingString : _padLeft(replacementChar + paddingString, width, replacementChar || ' ');
-                };
+            var _padLeft = function (paddingString, width, replacementChar) {
+                return paddingString.length >= width ? paddingString : _padLeft(replacementChar + paddingString, width, replacementChar || ' ');
+            };
 
-                var _s4 = function (number) {
-                    var hexadecimalResult = number.toString(16);
-                    return _padLeft(hexadecimalResult, 4, '0');
-                };
+            var _s4 = function (number) {
+                var hexadecimalResult = number.toString(16);
+                return _padLeft(hexadecimalResult, 4, '0');
+            };
 
-                var _cryptoGuid = function () {
-                    var buffer = new window.Uint16Array(8);
-                    window.crypto.getRandomValues(buffer);
-                    return [_s4(buffer[0]) + _s4(buffer[1]), _s4(buffer[2]), _s4(buffer[3]), _s4(buffer[4]), _s4(buffer[5]) + _s4(buffer[6]) + _s4(buffer[7])].join('-');
-                };
+            var _cryptoGuid = function () {
+                var buffer = new window.Uint16Array(8);
+                window.crypto.getRandomValues(buffer);
+                return [_s4(buffer[0]) + _s4(buffer[1]), _s4(buffer[2]), _s4(buffer[3]), _s4(buffer[4]), _s4(buffer[5]) + _s4(buffer[6]) + _s4(buffer[7])].join('-');
+            };
 
-                var _guid = function () {
-                    var currentDateMilliseconds = new Date().getTime();
-                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (currentChar) {
-                        var randomChar = (currentDateMilliseconds + Math.random() * 16) % 16 | 0;
-                        currentDateMilliseconds = Math.floor(currentDateMilliseconds / 16);
-                        return (currentChar === 'x' ? randomChar : (randomChar & 0x7 | 0x8)).toString(16);
-                    });
-                };
+            var _guid = function () {
+                var currentDateMilliseconds = new Date().getTime();
+                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (currentChar) {
+                    var randomChar = (currentDateMilliseconds + Math.random() * 16) % 16 | 0;
+                    currentDateMilliseconds = Math.floor(currentDateMilliseconds / 16);
+                    return (currentChar === 'x' ? randomChar : (randomChar & 0x7 | 0x8)).toString(16);
+                });
+            };
 
-                var hasCrypto = typeof (window.crypto) != 'undefined',
-                    hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
+            var hasCrypto = typeof (window.crypto) != 'undefined',
+                hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
 
-                return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
+            return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
+        },
+
+        timer: {
+            isAutoRefreshEnable: false,
+
+            addSetTimeout: function (setTimeOutID) {
+                var me = this;
+                console.log('add settimeout');
+                me.setTimeOutList = me.setTimeOutList || [];
+                me.setTimeOutList.push(setTimeOutID);
+            },
+
+            removeSetTimeout: function () {
+                var me = this;
+                console.log('remove timeout')
+                if (me.setTimeOutList) {
+                    for (var i = 0; i < me.setTimeOutList.length; i++)
+                        clearTimeout(me.setTimeOutList[i]);
+                }
+
+                me.setTimeOutList = null;
+            }
         }
-
     },
     /**
      * Defines utility methods used to update style sheets
@@ -603,6 +633,34 @@ $(function () {
      * @namespace
      */
     forerunner.ajax = {
+        loginUrl: null,
+
+        _getLoginUrl: function () {
+            if (!this.loginUrl) {
+                var returnValue = null;
+                $.ajax({
+                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl?reserved=1",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        returnValue = data;
+                    },
+                    fail: function () {
+                        returnValue = null;
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        returnValue = null;
+                    },
+                });
+
+                if (returnValue) {
+                    this.loginUrl = returnValue.LoginUrl.replace("~", "");
+                }
+            }
+
+            return this.loginUrl;
+        },
+
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
@@ -611,9 +669,11 @@ $(function () {
         */
         ajax: function (options) {
             var errorCallback = options.error;
-                options.error = function (data) {
+            var me = this;
+            options.error = function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
                 }
                 if (errorCallback)
                     errorCallback(data);
@@ -630,6 +690,7 @@ $(function () {
         * @member
         */
         getJSON: function (url, options, done, fail) {
+            var me = this;
             return $.getJSON(url, options)
             .done(function (data) {
                 if (done)
@@ -637,7 +698,8 @@ $(function () {
             })
             .fail(function (data) {
                 if (data.status === 401 || data.status === 302) {
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../Login/Login?ReturnUrl=" + document.URL;
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
                 }
                 console.log(data);
                 if (fail)
@@ -901,7 +963,7 @@ $(function () {
                 return forerunner.ssr.models.paramModel;
             }
 
-            forerunner.ssr.models.paramModel = new forerunner.ssr.models.ParameterModel({ reportPath: reportPath });
+            forerunner.ssr.models.paramModel = new forerunner.ssr.ParameterModel({ reportPath: reportPath });
             return forerunner.ssr.models.paramModel;
         }
     };

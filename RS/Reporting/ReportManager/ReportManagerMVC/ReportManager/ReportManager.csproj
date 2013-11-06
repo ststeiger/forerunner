@@ -147,6 +147,12 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Forerunner\Bundles\Forerunner-all.css">
+      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-all.min.css">
+      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
+    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -199,6 +205,7 @@
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />
+    <Content Include="Forerunner\Lib\Misc\js\css3-mediaqueries.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
@@ -344,6 +351,9 @@
     </Content>
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle">
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />

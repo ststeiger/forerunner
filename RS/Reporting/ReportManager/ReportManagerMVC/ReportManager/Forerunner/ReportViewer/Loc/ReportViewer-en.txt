@@ -144,7 +144,7 @@
     "dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"]
   },
   "parameterModel":{
-    "default": "Default"
+    "defaultName": "Default"
   }
 }
 

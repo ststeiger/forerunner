@@ -4,16 +4,15 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports objects
 forerunner.ajax = forerunner.ajax || {};
 forerunner.ssr = forerunner.ssr || {};
-forerunner.ssr.models = forerunner.ssr.models || {};
 forerunner.ssr.constants = forerunner.ssr.constants || {};
 forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var models = forerunner.ssr.models;
     var events = ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    models.ParameterModel = function (options) {
+    ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
             reportPath: null
@@ -25,19 +24,20 @@ $(function () {
         }
 
         me.currentSetId = null;
-        me.loc = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+        me.parameterSets = null;
+
     };
 
-    models.ParameterModel.prototype = {
+    ssr.ParameterModel.prototype = {
         _isLoaded: function () {
             var me = this;
-            return me.parameterSets !== undefined;
+            return me.parameterSets !== null;
         },
         _createDefaultSet: function (parameterList) {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: me.loc.parameterModel.default,
+                Name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
             }
             defaultSet.data = parameterList;
@@ -65,7 +65,7 @@ $(function () {
                     }
                 },
                 error: function () {
-                    console.log("models.ParameterModel._load() - error: " + data.status);
+                    console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
         },
@@ -74,7 +74,7 @@ $(function () {
             if (parameterList) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
 
-                if (me.parameterSets == undefined || me.currentSetId === null) {
+                if (me.parameterSets === null || me.currentSetId === null) {
                     var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
                     me.parameterSets = [defaultSet];
                     me.currentSetId = defaultSet.id;
@@ -105,19 +105,24 @@ $(function () {
                 );
             }
         },
-        getDefaultSet: function () {
+        getCurrentSet: function () {
             var me = this;
-            var defaultSet = null;
+            var currentSet = null;
             me._load();
             if (me.parameterSets) {
                 $.each(me.parameterSets, function (index, parameterSet) {
-                    if (parameterSet.isDefault) {
-                        defaultSet = JSON.stringify(parameterSet.data);
+                    if (me.currentSetId !== null) {
+                        if (parameterSet.id === me.currentSetId) {
+                            currentSet = JSON.stringify(parameterSet.data);
+                        }
+                    }
+                    else if (parameterSet.isDefault) {
+                        currentSet = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return defaultSet;
+            return currentSet;
         }
     }
 });

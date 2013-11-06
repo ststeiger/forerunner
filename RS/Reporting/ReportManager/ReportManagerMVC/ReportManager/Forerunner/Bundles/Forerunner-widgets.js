@@ -100,6 +100,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
+            me.autoRefreshLock = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             
             var isTouch = forerunner.device.isTouch();
@@ -118,6 +119,8 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
+
+            forerunner.helper.timer.isAutoRefreshEnable = true;
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -250,12 +253,14 @@ $(function () {
          */
         removeLoadingIndicator: function () {
             var me = this;
-            me.loadLock = 0;
-            var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
-            $mainviewport.remove("fr-layout-mainviewport-fullheight");
+            if (me.loadLock === 1) {
+                me.loadLock = 0;
+                var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
+                $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
 
-            me.$reportContainer.removeClass("fr-report-container-translucent");
-            me.$loadingIndicator.hide();
+                me.$reportContainer.removeClass("fr-report-container-translucent");
+                me.$loadingIndicator.hide();
+            }
         },
         _ReRender: function () {
             var me = this;
@@ -1496,6 +1501,16 @@ $(function () {
                 if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                     responsiveUI = true;
                 }
+
+                //10 seconds is the shortest refresh time recommended by forerunner (currently by me personal).
+                if (me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh && !me.autoRefreshLock) {
+                    var period = me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh > 5 ? me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh : 5;
+
+                    me._setAutoRefresh(period);
+                    //some time _writePage will be invoked more than once in a single page load event.
+                    me.autoRefreshLock = true;
+                }
+
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
@@ -1562,7 +1577,8 @@ $(function () {
             var me = this;
             var navTo = me.element.find("[name='" + elementID + "']")[0];
             if (navTo !== undefined) {
-                $(document).scrollTop($(navTo).offset().top - 100);  //Should account for floating headers and toolbar height need to be a calculation
+                //Should account for floating headers and toolbar height need to be a calculation
+                $(document).scrollTop($(navTo).offset().top - 100).scrollLeft($(navTo).offset().left);
             }
         },
         _stopDefaultEvent: function (e) {
@@ -1677,6 +1693,20 @@ $(function () {
                 var text = document.createTextNode($(this).text());
                 $(this).replaceWith($(text));
             });
+        },
+        _setAutoRefresh: function (period) {
+            var me = this;
+
+            if (forerunner.helper.timer.isAutoRefreshEnable) {
+                var executeID = setTimeout(function () {
+                    me.lock = 0;
+                    me.refreshReport();
+                    me.autoRefreshLock = false;
+                    console.log("report refresh at:" + new Date());
+                }, period * 1000);
+
+                forerunner.helper.timer.addSetTimeout(executeID);
+            }
         }
     });  // $.widget
 });   // $(function
@@ -1690,16 +1720,15 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports objects
 forerunner.ajax = forerunner.ajax || {};
 forerunner.ssr = forerunner.ssr || {};
-forerunner.ssr.models = forerunner.ssr.models || {};
 forerunner.ssr.constants = forerunner.ssr.constants || {};
 forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 
 $(function () {
     var ssr = forerunner.ssr;
-    var models = forerunner.ssr.models;
     var events = ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    models.ParameterModel = function (options) {
+    ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
             reportPath: null
@@ -1711,19 +1740,20 @@ $(function () {
         }
 
         me.currentSetId = null;
-        me.loc = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+        me.parameterSets = null;
+
     };
 
-    models.ParameterModel.prototype = {
+    ssr.ParameterModel.prototype = {
         _isLoaded: function () {
             var me = this;
-            return me.parameterSets !== undefined;
+            return me.parameterSets !== null;
         },
         _createDefaultSet: function (parameterList) {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: me.loc.parameterModel.default,
+                Name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
             }
             defaultSet.data = parameterList;
@@ -1751,7 +1781,7 @@ $(function () {
                     }
                 },
                 error: function () {
-                    console.log("models.ParameterModel._load() - error: " + data.status);
+                    console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
         },
@@ -1760,7 +1790,7 @@ $(function () {
             if (parameterList) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
 
-                if (me.parameterSets == undefined || me.currentSetId === null) {
+                if (me.parameterSets === null || me.currentSetId === null) {
                     var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
                     me.parameterSets = [defaultSet];
                     me.currentSetId = defaultSet.id;
@@ -1791,19 +1821,24 @@ $(function () {
                 );
             }
         },
-        getDefaultSet: function () {
+        getCurrentSet: function () {
             var me = this;
-            var defaultSet = null;
+            var currentSet = null;
             me._load();
             if (me.parameterSets) {
                 $.each(me.parameterSets, function (index, parameterSet) {
-                    if (parameterSet.isDefault) {
-                        defaultSet = JSON.stringify(parameterSet.data);
+                    if (me.currentSetId !== null) {
+                        if (parameterSet.id === me.currentSetId) {
+                            currentSet = JSON.stringify(parameterSet.data);
+                        }
+                    }
+                    else if (parameterSet.isDefault) {
+                        currentSet = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return defaultSet;
+            return currentSet;
         }
     }
 });
@@ -2211,7 +2246,7 @@ $(function () {
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
-    $.widget("frInternal.toolDropdown", $.forerunner.toolBase, {
+    $.widget(widgets.getFullname("toolDropdown"), $.forerunner.toolBase, {
         options: {
             $reportViewer: null,
             toolClass: "fr-toolbase-dropdown"
@@ -2456,9 +2491,9 @@ $(function () {
             $mainheadersection.on(events.toolbarMenuClick(), function (e, data) { me.showSlideoutPane(true); });
             $mainheadersection.on(events.toolbarParamAreaClick(), function (e, data) { me.showSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterRender(), function (e, data) { me.showSlideoutPane(false); });
-            $(".fr-layout-leftheader", me.$container).on(events.toolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
+            $(".fr-layout-leftheader", me.$container).on(events.leftToolbarMenuClick(), function (e, data) { me.hideSlideoutPane(true); });
 
-            $(".fr-layout-rightheader", me.$container).on(events.toolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
+            $(".fr-layout-rightheader", me.$container).on(events.rightToolbarParamAreaClick(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-leftpanecontent", me.$container).on(events.toolPaneActionStarted(), function (e, data) { me.hideSlideoutPane(true); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterSubmit(), function (e, data) { me.hideSlideoutPane(false); });
             $(".fr-layout-rightpanecontent", me.$container).on(events.reportParameterCancel(), function (e, data) { me.hideSlideoutPane(false); });
@@ -2928,6 +2963,8 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
+            forerunner.helper.timer.isAutoRefreshEnable = false;
+            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };
@@ -6047,11 +6084,8 @@ $(function () {
                     if (predefinedValue) {
                         $control.val(predefinedValue);
                     }
-                    //if (param.DefaultValues[0] === "")                        
-                    //    $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     break;
             }
-
             return $control;
         },
         _setSelectedIndex: function (s, v) {
@@ -6085,12 +6119,17 @@ $(function () {
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
+                    $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
                 }
 
                 $control.append($option);
             }
             if (!canLoad) me._loadedForDefault = false;
+
+            $control.on("change", function () {
+                $control.attr("title", $(this).find("option:selected").text());
+            });
 
             if (me._paramCount === 1) {
                 $control.on("change", function () { me._submitForm(pageNum); });
@@ -6247,7 +6286,7 @@ $(function () {
 
             if (predefinedValue) {
                 $textarea.val(me._getTextAreaValue(predefinedValue, true));
-                $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false));
+                $multipleTextArea.val(me._getTextAreaValue(predefinedValue, false)).attr("title", me._getTextAreaValue(predefinedValue, false));
                 $multipleTextArea.attr("jsonValues", JSON.stringify(predefinedValue));
             }
 
@@ -6298,7 +6337,7 @@ $(function () {
                 });
 
                 newValue = showValue.substr(0, showValue.length - 1);
-                $(".fr-paramname-" + param.Name, me.$params).val(newValue);
+                $(".fr-paramname-" + param.Name, me.$params).val(newValue).attr("title", newValue);
                 $(".fr-paramname-" + param.Name + "-hidden", me.$params).val(JSON.stringify(hiddenValue));
             }
             else {
@@ -6309,7 +6348,7 @@ $(function () {
                 if (newValue.charAt(newValue.length - 1) === ",") {
                     newValue = newValue.substr(0, newValue.length - 1);
                 }
-                target.val(newValue);
+                target.val(newValue).attr("title", newValue);
                 target.attr("jsonValues", JSON.stringify(listOfValues));
             }
 
@@ -7066,6 +7105,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
+    var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
@@ -7117,6 +7157,8 @@ $(function () {
             $toolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
 
             var tb = forerunner.ssr.tools.mergedButtons;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
             if (me.options.isReportManager) {
                 $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
                 $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
@@ -7128,16 +7170,16 @@ $(function () {
 
             var $lefttoolbar = me.options.$lefttoolbar;
             if ($lefttoolbar !== null) {
-                $lefttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
+                $lefttoolbar.leftToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
             var $righttoolbar = me.options.$righttoolbar;
             if ($righttoolbar !== null) {
-                $righttoolbar.toolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, toolClass: "fr-toolbar-slide", $appContainer: me.options.$appContainer });
+                $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.toolbar("addTools", 2, true, [tb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -7290,9 +7332,50 @@ $(function () {
         },
         getSavedParameters: function (reportPath) {
             var parameterModel = forerunner.ssr.models.getParameterModel(reportPath);
-            return parameterModel.getDefaultSet();
+            return parameterModel.getCurrentSet();
         }
-    };
+    };  // ssr.ReportViewerInitializer.prototype
+
+    // Left Toolbar
+    $.widget(widgets.getFullname(widgets.leftToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-slide",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            var ltb = forerunner.ssr.tools.leftToolbar;
+
+            me.element.html("");
+            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [ltb.btnLTBMenu]);
+        },
+    }); //$.widget
+
+    // Right Toolbar
+    $.widget(widgets.getFullname(widgets.rightToolbar), $.forerunner.toolBase, {
+        options: {
+            $reportViewer: null,
+            $ReportViewerInitializer: null,
+            toolClass: "fr-toolbar-slide",
+            $appContainer: null
+        },
+        _init: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            me.element.html("");
+            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            $(me.element).append($toolbar);
+
+            me.addTools(1, true, [rtb.btnRTBParamarea]);
+        },
+    }); //$.widget
+
 });  // $(function ()
 
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportViewerEZ.js

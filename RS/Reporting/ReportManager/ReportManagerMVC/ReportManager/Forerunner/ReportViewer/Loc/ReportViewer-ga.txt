@@ -143,6 +143,6 @@
     "dayNamesShort":["Dé Dom", "Dé Lua", "Mái", "Dé Céa", "Déa", "Dé hAo", "Dé Sat"],
     "dayNamesMin":["Do", "Lu", "Má", "Cé", "Dé", "hA", "Sa"]},
   "parameterModel": {
-    "default":"Default"
+    "defaultName":"Default"
   }
 }

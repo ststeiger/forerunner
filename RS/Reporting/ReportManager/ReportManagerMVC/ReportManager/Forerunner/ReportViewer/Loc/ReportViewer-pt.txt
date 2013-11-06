@@ -143,6 +143,6 @@
     "dayNamesShort":["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
-    "default":"Default"
+    "defaultName":"Default"
   }
 }

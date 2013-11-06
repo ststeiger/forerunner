@@ -35,46 +35,42 @@ namespace ReportManager.Util.Logging
         //    set { logFilePrefix = value; }
         //}
 
-        public static void WriteLineIf(bool isTrace, String category, String message)
+        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", SourceLevels.All);
+
+        static Logger()
         {
-            System.Diagnostics.Trace.WriteLineIf(isTrace, category, message);
+            string path = System.Web.HttpContext.Current.Server.MapPath("~");
+            DateTime now = DateTime.Now;
+            string fileName = String.Format("Forerunner_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
+            TraceListener listener = new TextWriterTraceListener(path + "../LogFiles/" + fileName);
+            ts.Listeners.Add(listener);
+            ts.Listeners.Add(new ConsoleTraceListener());
         }
 
         public static void Trace(LogType logType, string message, Object[] objects = null) 
         {
+            TraceEventType eventType = TraceEventType.Information;
             switch (logType)
             {
                 case LogType.Error:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceError(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceError(message, objects);
-                    }
+                    eventType = TraceEventType.Error;
                     break;
                 case LogType.Info:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceInformation(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceInformation(message, objects);
-                    }
+                    eventType = TraceEventType.Information;
                     break;
                 case LogType.Warning:
-                    if (objects == null)
-                    {
-                        System.Diagnostics.Trace.TraceWarning(message);
-                    }
-                    else
-                    {
-                        System.Diagnostics.Trace.TraceWarning(message, objects);
-                    }
+                    eventType = TraceEventType.Warning;
                     break;
             }
+            if (objects == null)
+            {
+                ts.TraceEvent(eventType, 0, message);
+            }
+            else
+            {
+                ts.TraceEvent(eventType, 0, message, objects);
+            }
+            ts.Flush();
         }
     }
 

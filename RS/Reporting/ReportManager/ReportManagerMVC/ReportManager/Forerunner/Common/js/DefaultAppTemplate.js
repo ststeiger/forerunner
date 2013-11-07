@@ -618,8 +618,6 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
-            forerunner.helper.timer.isAutoRefreshEnable = false;
-            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };

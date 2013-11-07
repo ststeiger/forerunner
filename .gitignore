@@ -79,6 +79,9 @@ utilities/SetupUtil/SetupUtil/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 utilities/SetupUtil/SetupUtil/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/bin/*
+RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/obj/*
+RS/Reporting/ReportManager/ReportManagerMVC/LogFiles/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Release/ReportManagerConfigTool.exe.config
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/ReportManagerConfigTool.exe.config
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/bin/Debug/ReportManagerConfigTool.vshost.exe.config

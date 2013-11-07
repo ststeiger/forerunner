@@ -100,7 +100,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
-            me.autoRefreshLock = false;
+            me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             
             var isTouch = forerunner.device.isTouch();
@@ -119,8 +119,6 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
-
-            forerunner.helper.timer.isAutoRefreshEnable = true;
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -413,13 +411,16 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshReport
          */
-        refreshReport: function () {
+        refreshReport: function (curPage) {
             // Remove all cached data on the report and re-run
             var me = this;
             var paramList = null;
 
             if (me.lock === 1)
                 return;
+
+            if (curPage === undefined)
+                curPage = 1;
 
             me.sessionID = "";
             me.lock = 1;
@@ -429,7 +430,7 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList,true);            
+            me._loadPage(curPage, false, null, paramList,true);
         },
         /**
          * Navigates to the given page
@@ -543,6 +544,8 @@ $(function () {
         _cachePages: function (initPage) {
             var me = this;
              
+            initPage = parseInt(initPage, 10);
+            
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
@@ -1349,8 +1352,10 @@ $(function () {
             //me.sessionID = "";
             me.numPages = 0;
             me.floatingHeaders = [];
-            if (!isSameReport)
+            if (!isSameReport) {
                 me.paramLoaded = false;
+                me._removeSetTimeout();
+            }
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1450,15 +1455,20 @@ $(function () {
             var me = this;
             var $report = $("<Div/>");
             $report.addClass("Page");
-
             //Error, need to handle this better
             if (!data) return;
-
+            
             var responsiveUI = false;
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+
+            me._addSetPageCallback(function () {
+                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                    me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
+                }
+            });
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1500,15 +1510,6 @@ $(function () {
                 var responsiveUI = false;
                 if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                     responsiveUI = true;
-                }
-
-                //10 seconds is the shortest refresh time recommended by forerunner (currently by me personal).
-                if (me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh && !me.autoRefreshLock) {
-                    var period = me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh > 5 ? me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh : 5;
-
-                    me._setAutoRefresh(period);
-                    //some time _writePage will be invoked more than once in a single page load event.
-                    me.autoRefreshLock = true;
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
@@ -1696,18 +1697,57 @@ $(function () {
         },
         _setAutoRefresh: function (period) {
             var me = this;
+            
+            //me.autoRefreshID will be set to undefined when report viewer destory.
+            if (me.autoRefreshID !== undefined) {
+                //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
+                if (me.autoRefreshID !== null) me._removeSetTimeout();
 
-            if (forerunner.helper.timer.isAutoRefreshEnable) {
-                var executeID = setTimeout(function () {
-                    me.lock = 0;
-                    me.refreshReport();
-                    me.autoRefreshLock = false;
-                    console.log("report refresh at:" + new Date());
+                me.autoRefreshID = setTimeout(function () {
+                    if (me.lock === 1) {
+                        //if report viewer is lock then set it again.
+                        me._setAutoRefresh(period);
+                        return;
+                    }
+                    else {
+                        //restore privious scroll position
+                        var scrollTop = me.options.$appContainer.scrollTop();
+                        var scrollLeft = me.options.$appContainer.scrollLeft();
+
+                        me._addSetPageCallback(function () {
+                            me.options.$appContainer.scrollTop(scrollTop).scrollLeft(scrollLeft);
+                        });
+
+                        me.refreshReport(me.getCurPage());
+                        //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
+                    }
                 }, period * 1000);
 
-                forerunner.helper.timer.addSetTimeout(executeID);
+                //console.log('add settimeout')
             }
-        }
+        },
+        _removeSetTimeout: function () {
+            var me = this;
+
+            if (me.autoRefreshID !== null) {
+                clearTimeout(me.autoRefreshID);
+                //console.log('remove settimeout');
+            }
+            me.autoRefreshID = null;
+        },
+        destroy: function () {
+            var me = this;
+
+            me._removeSetTimeout();
+            me.autoRefreshID = undefined;
+            //console.log('report viewer destory is invoked')
+
+            //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
+            // if using jQuery UI 1.8.x
+            //$.Widget.prototype.destroy.call(this);
+            // if using jQuery UI 1.9.x
+            this._destroy();
+        },
     });  // $.widget
 });   // $(function
 
@@ -2963,8 +3003,6 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
-            forerunner.helper.timer.isAutoRefreshEnable = false;
-            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };

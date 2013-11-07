@@ -418,28 +418,6 @@ $(function () {
                 hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
-        },
-
-        timer: {
-            isAutoRefreshEnable: false,
-
-            addSetTimeout: function (setTimeOutID) {
-                var me = this;
-                console.log('add settimeout');
-                me.setTimeOutList = me.setTimeOutList || [];
-                me.setTimeOutList.push(setTimeOutID);
-            },
-
-            removeSetTimeout: function () {
-                var me = this;
-                console.log('remove timeout')
-                if (me.setTimeOutList) {
-                    for (var i = 0; i < me.setTimeOutList.length; i++)
-                        clearTimeout(me.setTimeOutList[i]);
-                }
-
-                me.setTimeOutList = null;
-            }
         }
     },
     /**

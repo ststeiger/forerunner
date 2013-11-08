@@ -35,15 +35,12 @@ namespace ReportMannagerConfigTool
         {
             get
             {
-                return ConfigurationManager.AppSettings["ReportManagerFolderPath"];
+                return ConfigToolHelper.GetAppConfig("ReportManagerFolderPath");
             }
 
             set 
             {
-                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-                config.AppSettings.Settings["ReportManagerFolderPath"].Value = value;
-                config.Save(ConfigurationSaveMode.Modified);
-                ConfigurationManager.RefreshSection("appSettings");   
+                ConfigToolHelper.SetAppConfig("ReportManagerFolderPath", value);
             }
         }
 

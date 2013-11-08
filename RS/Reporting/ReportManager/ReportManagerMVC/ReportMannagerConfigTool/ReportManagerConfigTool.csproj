@@ -96,6 +96,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderExtension\RenderExtensionConfig.cs" />
     <Compile Include="ReportManager\ReportManagerConfig.cs" />
+    <Compile Include="WebServer\WebServerConfig.cs" />
     <EmbeddedResource Include="ConfigTool\frmEULA.resx">
       <DependentUpon>frmEULA.cs</DependentUpon>
     </EmbeddedResource>

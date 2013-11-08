@@ -7,9 +7,14 @@
     <link rel="apple-touch-icon" href="~/iPhoneMobilizer.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Mobilizer</title>
-    @Styles.Render("~/Content/css")
+
+     <!-- css3-mediaqueries.js for IE less than 9 -->
+	 <!--[if lt IE 9]> 
+	 <script src="~/Forerunner/Lib/Misc/js/css3-mediaqueries.js "></script>
+     <![endif]-->
+
+    @Styles.Render("~/Forerunner/Common/css/bundle", "~/Forerunner/ReportExplorer/css/bundle", "~/Forerunner/ReportViewer/css/bundle")    
     @RenderSection("styles", required:false)
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
     @RenderBody()

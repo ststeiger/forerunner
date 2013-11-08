@@ -7561,7 +7561,7 @@ $(function () {
             historyBack: null,
             isFullScreen: true
         },
-        _createReportExplorer: function (path, view) {
+        _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
@@ -7576,7 +7576,10 @@ $(function () {
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
-            layout.$mainsection.show();
+            if (showmainesection)
+                layout.$mainsection.show();
+            else
+                layout.$mainsection.hide();
             layout.$docmapsection.hide();
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
@@ -7600,22 +7603,30 @@ $(function () {
             var path0 = path;
             var layout = me.DefaultAppTemplate;
 
-            me._createReportExplorer(path, view)
+            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
+                me.DefaultAppTemplate.$mainsection.html("");
+                me.DefaultAppTemplate.$mainsection.hide();
+            }
 
-            var $toolbar = layout.$mainheadersection;
-            $toolbar.reportExplorerToolbar({
-                navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
-            });
-            $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me._createReportExplorer(path, view, true);
 
-            layout.$rightheader.height(layout.$topdiv.height());
-            layout.$leftheader.height(layout.$topdiv.height());
-            layout.$rightheaderspacer.height(layout.$topdiv.height());
-            layout.$leftheaderspacer.height(layout.$topdiv.height());
+                var $toolbar = layout.$mainheadersection;
+                $toolbar.reportExplorerToolbar({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container
+                });
+                $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
-            layout._selectedItemPath=path0; //me._selectedItemPath = path0;
-            me.element.addClass("fr-Explorer-background");
+                layout.$rightheader.height(layout.$topdiv.height());
+                layout.$leftheader.height(layout.$topdiv.height());
+                layout.$rightheaderspacer.height(layout.$topdiv.height());
+                layout.$leftheaderspacer.height(layout.$topdiv.height());
+
+                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                me.element.addClass("fr-Explorer-background");
+            }, timeout);
         },
         /**
          * Transition to ReportViewer view
@@ -7628,19 +7639,26 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
             if (!me.$reportExplorer)
-                me._createReportExplorer();
+                me._createReportExplorer(false);
+
+            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                DefaultAppTemplate: me.DefaultAppTemplate,
-                path: path,
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                isReportManager: true,
-                userSettings: me.$reportExplorer.reportExplorer("getUserSettings")
-            });
-
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: me.DefaultAppTemplate,
+                    path: path,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: true,
+                    userSettings: userSettings
+                });
+                me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+            }, timeout);
             me.element.addClass("fr-Explorer-background");
             me.element.removeClass("fr-Explorer-background");
         },

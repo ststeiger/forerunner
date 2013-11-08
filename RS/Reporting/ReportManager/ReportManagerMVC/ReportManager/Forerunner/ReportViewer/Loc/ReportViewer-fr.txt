@@ -71,7 +71,9 @@
     "zoom":"Activer Zoom",
     "print":"Imprimer",
     "userSettings":"réglages",
-    "saveParam":"Enregistrer les paramètres"
+    "saveParam":"Enregistrer les paramètres",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprimer option de mise en",

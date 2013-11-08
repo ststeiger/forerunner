@@ -70,7 +70,9 @@
     "zoom":"允许缩放",
     "print":"打印",
     "userSettings":"设置",
-    "saveParam":"保存参数"
+    "saveParam":"保存参数",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"打印报表",

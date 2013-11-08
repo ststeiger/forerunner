@@ -70,7 +70,9 @@
     "zoom":"Ativar Zoom",
     "print":"Impressão",
     "userSettings":"configurações",
-    "saveParam":"Salvar Parâmetros"
+    "saveParam":"Salvar Parâmetros",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

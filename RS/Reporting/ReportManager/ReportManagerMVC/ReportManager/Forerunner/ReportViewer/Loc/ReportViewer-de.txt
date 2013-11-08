@@ -70,7 +70,9 @@
     "zoom":"Aktivieren Zoomen",
     "print":"Drucken",
     "userSettings":"Fixierung",
-    "saveParam":"Parameter speichern"
+    "saveParam":"Parameter speichern",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",

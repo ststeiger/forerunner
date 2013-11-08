@@ -14,7 +14,9 @@ $(function () {
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
     ssr.ReportViewerInitializer = function (options) {
-        this.options = {
+        var me = this;
+
+        me.options = {
             $toolbar: null,
             $toolPane: null,
             $viewer: null,
@@ -35,11 +37,18 @@ $(function () {
 
         // Merge options with the default settings
         if (options) {
-            $.extend(this.options, options);
+            $.extend(me.options, options);
         }
+
+        // Create the parameter model object for this report
+        me.parameterModel = new ssr.ParameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {
+        getParameterModel: function () {
+            var me = this;
+            return me.parameterModel;
+        },
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;
@@ -50,7 +59,9 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: me.getSavedParameters,
+                loadParamsCallback: function () {
+                    return me.getSavedParameters.call(me, me.options.ReportPath);
+                },
                 userSettings: me.options.userSettings,
                 $appContainer: me.options.$appContainer
             });
@@ -82,7 +93,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -234,8 +245,8 @@ $(function () {
             }
         },
         getSavedParameters: function (reportPath) {
-            var parameterModel = forerunner.ssr.models.getParameterModel(reportPath);
-            return parameterModel.getCurrentSet();
+            var me = this;
+            return me.parameterModel.getCurrentSet(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

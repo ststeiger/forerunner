@@ -739,6 +739,29 @@ $(function () {
             }
         },
         /** @member */
+        btnRTBManageSets: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rtb-manage_sets",
+            imageClass: "fr-icons24x24-parameterSets",
+            tooltip: locData.toolbar.parameterSets,
+            events: {
+                click: function (e) {
+                    forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                }
+            }
+        },
+        /** @member */
+        btnSelectSet: {
+            toolType: toolTypes.select,
+            selectorClass: "fr-rtb-select-set",
+            model: function () {
+                var me = this;
+                var initializer = me.options.$ReportViewerInitializer;
+                return initializer.getParameterModel.call(initializer);
+            },
+            tooltip: locData.toolbar.selectSet
+        },
+        /** @member */
         btnSavParam: {
             toolType: toolTypes.button,
             selectorClass: "fr-rtb-save-param",
@@ -746,7 +769,7 @@ $(function () {
             tooltip: locData.toolbar.saveParam,
             events: {
                 click: function (e) {
-                    parameterModel = forerunner.ssr.models.getParameterModel();
+                    var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
                     parameterModel.save(
                         parameterList,

@@ -70,7 +70,9 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
     "userSettings":"Inställningar",
-    "saveParam":"Spara Parameter"
+    "saveParam":"Spara Parameter",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

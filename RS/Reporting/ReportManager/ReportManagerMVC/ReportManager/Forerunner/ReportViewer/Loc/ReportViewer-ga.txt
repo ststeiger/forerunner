@@ -70,7 +70,9 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "userSettings":"Socruithe",
-    "saveParam":"Sábháil Paraiméadair"
+    "saveParam":"Sábháil Paraiméadair",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

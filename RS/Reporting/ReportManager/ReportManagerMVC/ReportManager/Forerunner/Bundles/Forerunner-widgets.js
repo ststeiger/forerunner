@@ -1235,9 +1235,10 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
+            var loadParams = me.options.loadParamsCallback;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
-            
+                (loadParams ? loadParams(me.options.reportPath) : null);
+
             if (savedParams) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
@@ -1731,7 +1732,6 @@ $(function () {
     ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
-            reportPath: null
         };
 
         // Merge options with the default settings
@@ -1741,7 +1741,7 @@ $(function () {
 
         me.currentSetId = null;
         me.parameterSets = null;
-
+        me.jq = $({});              // jQuery object used to trigger events
     };
 
     ssr.ParameterModel.prototype = {
@@ -1759,9 +1759,10 @@ $(function () {
             defaultSet.data = parameterList;
             return defaultSet;
         },
-        _load: function () {
+        _load: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + me.options.reportPath;
+            me.reportPath = reportPath;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
             if (me._isLoaded()) {
                 return;
             }
@@ -1779,6 +1780,8 @@ $(function () {
                     else if (data) {
                         me.parameterSets = data;
                     }
+
+                    me.jq.trigger("modelchanged");
                 },
                 error: function () {
                     console.log("ParameterModel._load() - error: " + data.status);
@@ -1805,7 +1808,7 @@ $(function () {
                 forerunner.ajax.getJSON(
                     url,
                     {
-                        reportPath: me.options.reportPath,
+                        reportPath: me.reportPath,
                         parameters: JSON.stringify(me.parameterSets),
                     },
                     function (data) {
@@ -1821,10 +1824,10 @@ $(function () {
                 );
             }
         },
-        getCurrentSet: function () {
+        getCurrentSet: function (reportPath) {
             var me = this;
             var currentSet = null;
-            me._load();
+            me._load(reportPath);
             if (me.parameterSets) {
                 $.each(me.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
@@ -1855,8 +1858,20 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var events = forerunner.ssr.constants.events;
 
     var dropdownContainerClass = "fr-toolbase-dropdown-container";
+
+    var getClassValue = function (textValue, defaultValue) {
+        var returnText = defaultValue;
+        if (typeof (textValue) !== "undefined") {
+            returnText = "";
+            if (textValue !== false && textValue !== null) {
+                returnText = textValue;
+            }
+        }
+        return returnText;
+    };
 
     /**
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
@@ -1965,11 +1980,15 @@ $(function () {
                 me._createDropdown($tool, toolInfo);
             }
 
+            if (toolInfo.toolType === toolTypes.select) {
+                $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+            }
+
             if (toolInfo.visible === false) {
                 $tool.hide();
             }
         },
-        _createDropdown: function($tool, toolInfo) {
+        _createDropdown: function ($tool, toolInfo) {
             var me = this;
 
             // Create the dropdown
@@ -1997,12 +2016,10 @@ $(function () {
                 }
             });
         },
-
-
         /**
-       * Return the tool object
-       * @function $.forerunner.toolBase#getTool
-       */
+         * Return the tool object
+         * @function $.forerunner.toolBase#getTool
+         */
         getTool: function (selectorClass) {
             var me = this;
             return me.allTools[selectorClass];
@@ -2153,13 +2170,13 @@ $(function () {
             var me = this;
 
             // Get class string options
-            var toolStateClass = me._getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
-            var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
-            var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
-            var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
-            var itemContainerClass = me._getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
-            var itemTextContainerClass = me._getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
-            var itemTextClass = me._getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
+            var toolStateClass = getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
+            var iconClass = getClassValue(toolInfo.iconClass, "fr-icons24x24");
+            var toolContainerClass = getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
+            var groupContainerClass = getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
+            var itemContainerClass = getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
+            var itemTextContainerClass = getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
+            var itemTextClass = getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
 
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" +
@@ -2173,6 +2190,9 @@ $(function () {
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
+            else if (toolInfo.toolType === toolTypes.select) {
+                return "<div class='fr-toolbase-selectcontainer' />";
+            }
             else if (toolInfo.toolType === toolTypes.textButton) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
@@ -2185,7 +2205,7 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
 
-                var imageClass = me._getClassValue(toolInfo.imageClass, "");
+                var imageClass = getClassValue(toolInfo.imageClass, "");
                 var rightImageDiv = "";
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
@@ -2202,16 +2222,6 @@ $(function () {
             else if (toolInfo.toolType === toolTypes.toolGroup) {
                 return "<div class='" + groupContainerClass + " " + toolInfo.selectorClass + "'></div>";
             }
-        },
-        _getClassValue: function (textValue, defaultValue) {
-            var returnText = defaultValue;
-            if (typeof (textValue) !== "undefined") {
-                returnText = "";
-                if (textValue !== false && textValue !== null) {
-                    returnText = textValue;
-                }
-            }
-            return returnText;
         },
         _getText: function (toolInfo) {
             var text;
@@ -2256,6 +2266,38 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
+
+    $.widget(widgets.getFullname("selectTool"), {
+        options: {
+            toolClass: "fr-toolbase-selectinner",
+        },
+        _onModelChanged: function(e) {
+        },
+        _init: function () {
+            var me = this;
+
+            var optionClass = getClassValue(me.options.toolInfo.optionClass, "fr-toolbase-option");
+
+            me.element.html("");
+            var $selectContainer = $(
+                "<div class='" + me.options.toolClass + " fr-core-widget'>" +
+                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'>" +
+                        "<option class='" + optionClass + "' value='guid'> Default</option>" +
+                        "<option class='" + optionClass + "' value='guid'> Set 1</option>" +
+                        "<option class='" + optionClass + "' value='guid'> Big set</option>" +
+                        "<option class='" + optionClass + "' value='guid'> Special very big big big set that just goes on and on</option>" +
+                    "</select>" +
+                "</div>");
+
+            me.element.append($selectContainer);
+        },
+        _create: function () {
+            var me = this;
+            me.model = me.options.toolInfo.model.call(me);
+            me.model.jq.on(events.modelChanged, me._onModelChanged);
+        }
+    });  // $widget
+
 });  // function()
 
 ///#source 1 1 /Forerunner/Common/js/MessageBox.js
@@ -7111,7 +7153,9 @@ $(function () {
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
     ssr.ReportViewerInitializer = function (options) {
-        this.options = {
+        var me = this;
+
+        me.options = {
             $toolbar: null,
             $toolPane: null,
             $viewer: null,
@@ -7132,11 +7176,18 @@ $(function () {
 
         // Merge options with the default settings
         if (options) {
-            $.extend(this.options, options);
+            $.extend(me.options, options);
         }
+
+        // Create the parameter model object for this report
+        me.parameterModel = new ssr.ParameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {
+        getParameterModel: function () {
+            var me = this;
+            return me.parameterModel;
+        },
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;
@@ -7147,7 +7198,9 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: me.getSavedParameters,
+                loadParamsCallback: function () {
+                    return me.getSavedParameters.call(me, me.options.ReportPath);
+                },
                 userSettings: me.options.userSettings,
                 $appContainer: me.options.$appContainer
             });
@@ -7179,7 +7232,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -7331,8 +7384,8 @@ $(function () {
             }
         },
         getSavedParameters: function (reportPath) {
-            var parameterModel = forerunner.ssr.models.getParameterModel(reportPath);
-            return parameterModel.getCurrentSet();
+            var me = this;
+            return me.parameterModel.getCurrentSet(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

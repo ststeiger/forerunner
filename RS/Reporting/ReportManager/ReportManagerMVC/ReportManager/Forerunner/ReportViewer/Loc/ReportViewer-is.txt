@@ -70,7 +70,9 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "userSettings":"Stillingar",
-    "saveParam":"Vista Breytur"
+    "saveParam":"Vista Breytur",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",

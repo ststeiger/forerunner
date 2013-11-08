@@ -15,7 +15,6 @@ $(function () {
     ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
-            reportPath: null
         };
 
         // Merge options with the default settings
@@ -25,7 +24,7 @@ $(function () {
 
         me.currentSetId = null;
         me.parameterSets = null;
-
+        me.jq = $({});              // jQuery object used to trigger events
     };
 
     ssr.ParameterModel.prototype = {
@@ -43,9 +42,10 @@ $(function () {
             defaultSet.data = parameterList;
             return defaultSet;
         },
-        _load: function () {
+        _load: function (reportPath) {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + me.options.reportPath;
+            me.reportPath = reportPath;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
             if (me._isLoaded()) {
                 return;
             }
@@ -63,6 +63,8 @@ $(function () {
                     else if (data) {
                         me.parameterSets = data;
                     }
+
+                    me.jq.trigger("modelchanged");
                 },
                 error: function () {
                     console.log("ParameterModel._load() - error: " + data.status);
@@ -89,7 +91,7 @@ $(function () {
                 forerunner.ajax.getJSON(
                     url,
                     {
-                        reportPath: me.options.reportPath,
+                        reportPath: me.reportPath,
                         parameters: JSON.stringify(me.parameterSets),
                     },
                     function (data) {
@@ -105,10 +107,10 @@ $(function () {
                 );
             }
         },
-        getCurrentSet: function () {
+        getCurrentSet: function (reportPath) {
             var me = this;
             var currentSet = null;
-            me._load();
+            me._load(reportPath);
             if (me.parameterSets) {
                 $.each(me.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {

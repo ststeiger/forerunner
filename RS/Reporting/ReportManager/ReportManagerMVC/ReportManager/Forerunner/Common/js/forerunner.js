@@ -256,6 +256,9 @@ $(function () {
 
             /** @constant */
             closeModalDialog: "closeModalDialog",
+
+            /** @constant */
+            modelChanged: "modelchanged"
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -269,8 +272,9 @@ $(function () {
             textButton: "textbutton",
             plainText: "plaintext",
             containerItem: "containeritem",
-            toolGroup: "toolgroup"
-        },
+            toolGroup: "toolgroup",
+            select: "select"
+},
         /**
          * sort order used in the Report Viewer sort() method.
          *
@@ -946,24 +950,6 @@ $(function () {
         showUserSettingsDialog: function ($appContainer) {
             var $dlg = $appContainer.find(".fr-us-section");
             $dlg.userSettings("openDialog");
-        }
-    };
-
-    /**
-    * Defines utility methods related to ssr models
-    *
-    * @namespace
-    */
-    forerunner.ssr.models = {
-        getParameterModel: function (reportPath) {
-            if (forerunner.ssr.models.paramModel &&
-                (reportPath === forerunner.ssr.models.paramModel.options.reportPath ||
-                 reportPath === undefined)) {
-                return forerunner.ssr.models.paramModel;
-            }
-
-            forerunner.ssr.models.paramModel = new forerunner.ssr.ParameterModel({ reportPath: reportPath });
-            return forerunner.ssr.models.paramModel;
         }
     };
 

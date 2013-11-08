@@ -70,7 +70,9 @@
     "zoom":"Permite Zoom",
     "print":"imprima",
     "userSettings":"Setări",
-    "saveParam":"Salvare Parametrii"
+    "saveParam":"Salvare Parametrii",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"imprima raportul",

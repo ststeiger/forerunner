@@ -70,7 +70,9 @@
     "zoom":"Enable Zoom",
     "print":"Print",
     "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "saveParam":"Save Parameters",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Print Report",

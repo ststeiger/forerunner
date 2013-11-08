@@ -4466,7 +4466,7 @@ $(function () {
                 $Sort.html("&nbsp");
                 var Direction = "None";
                 var sortDirection = forerunner.ssr.constants.sortDirection;
-
+                
                 if (RIContext.CurrObj.Elements.NonSharedElements.SortState === 2) {
                     $Sort.attr("class", "fr-render-sort-descending");
                     Direction = sortDirection.desc;
@@ -4478,7 +4478,10 @@ $(function () {
                 else
                     $Sort.attr("class", "fr-render-sort-unsorted");
 
-                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction, Clear: !me.shiftKeyDown }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID, !e.shiftKey); });
+                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction },
+                    function (e) {
+                        e.data.Viewer.sort(e.data.Direction, e.data.SortID, !(e.shiftKey));
+                    });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);

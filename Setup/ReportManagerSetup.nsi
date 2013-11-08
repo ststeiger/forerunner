@@ -117,7 +117,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\EntityFramework.dll"
-  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"   
+  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
   File "${LOCALROOT}\Forerunner\Common\css\Login.css"
   File "${LOCALROOT}\Forerunner\Common\css\ReportManager.css"
@@ -295,7 +295,7 @@ SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\ForerunnerMobilizer"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\ForerunnerMobilizer"
@@ -304,6 +304,13 @@ Section -Post
 SectionEnd
 
 Function .onInit
+   System::Call 'kernel32::CreateMutexA(i 0, i 0, t "myMutex") i .r1 ?e'
+   Pop $R0
+ 
+   StrCmp $R0 0 +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION "Installer is already running."
+   Abort
+
   ;Verify admin right before install
   !insertmacro VerifyUserIsAdmin
   ;Verify .net framework 4 is installed.

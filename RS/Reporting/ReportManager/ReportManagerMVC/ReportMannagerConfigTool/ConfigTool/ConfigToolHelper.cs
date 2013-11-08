@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using Microsoft.Win32;
 using Forerunner.Security;
 using System.ServiceProcess;
+using System.Configuration;
 
 namespace ReportMannagerConfigTool
 {
@@ -217,6 +218,29 @@ namespace ReportMannagerConfigTool
             {
                 return StopService(instanceName, 1000 * 30);
             }
+        }
+
+        /// <summary>
+        /// Set config node value.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public static void SetAppConfig(string key, string value)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings[key].Value = value;
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");   
+        }
+
+        /// <summary>
+        /// Get config node value.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string GetAppConfig(string key)
+        {
+            return ConfigurationManager.AppSettings[key];
         }
     }
 }

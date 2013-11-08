@@ -100,7 +100,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
-            me.autoRefreshLock = false;
+            me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             
             var isTouch = forerunner.device.isTouch();
@@ -119,8 +119,6 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
-
-            forerunner.helper.timer.isAutoRefreshEnable = true;
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -413,13 +411,16 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshReport
          */
-        refreshReport: function () {
+        refreshReport: function (curPage) {
             // Remove all cached data on the report and re-run
             var me = this;
             var paramList = null;
 
             if (me.lock === 1)
                 return;
+
+            if (curPage === undefined)
+                curPage = 1;
 
             me.sessionID = "";
             me.lock = 1;
@@ -429,7 +430,7 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList,true);            
+            me._loadPage(curPage, false, null, paramList,true);
         },
         /**
          * Navigates to the given page
@@ -543,6 +544,8 @@ $(function () {
         _cachePages: function (initPage) {
             var me = this;
              
+            initPage = parseInt(initPage, 10);
+            
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
@@ -1350,8 +1353,10 @@ $(function () {
             //me.sessionID = "";
             me.numPages = 0;
             me.floatingHeaders = [];
-            if (!isSameReport)
+            if (!isSameReport) {
                 me.paramLoaded = false;
+                me._removeSetTimeout();
+            }
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1451,15 +1456,20 @@ $(function () {
             var me = this;
             var $report = $("<Div/>");
             $report.addClass("Page");
-
             //Error, need to handle this better
             if (!data) return;
-
+            
             var responsiveUI = false;
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+
+            me._addSetPageCallback(function () {
+                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                    me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
+                }
+            });
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1501,15 +1511,6 @@ $(function () {
                 var responsiveUI = false;
                 if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                     responsiveUI = true;
-                }
-
-                //10 seconds is the shortest refresh time recommended by forerunner (currently by me personal).
-                if (me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh && !me.autoRefreshLock) {
-                    var period = me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh > 5 ? me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh : 5;
-
-                    me._setAutoRefresh(period);
-                    //some time _writePage will be invoked more than once in a single page load event.
-                    me.autoRefreshLock = true;
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
@@ -1697,18 +1698,57 @@ $(function () {
         },
         _setAutoRefresh: function (period) {
             var me = this;
+            
+            //me.autoRefreshID will be set to undefined when report viewer destory.
+            if (me.autoRefreshID !== undefined) {
+                //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
+                if (me.autoRefreshID !== null) me._removeSetTimeout();
 
-            if (forerunner.helper.timer.isAutoRefreshEnable) {
-                var executeID = setTimeout(function () {
-                    me.lock = 0;
-                    me.refreshReport();
-                    me.autoRefreshLock = false;
-                    console.log("report refresh at:" + new Date());
+                me.autoRefreshID = setTimeout(function () {
+                    if (me.lock === 1) {
+                        //if report viewer is lock then set it again.
+                        me._setAutoRefresh(period);
+                        return;
+                    }
+                    else {
+                        //restore privious scroll position
+                        var scrollTop = me.options.$appContainer.scrollTop();
+                        var scrollLeft = me.options.$appContainer.scrollLeft();
+
+                        me._addSetPageCallback(function () {
+                            me.options.$appContainer.scrollTop(scrollTop).scrollLeft(scrollLeft);
+                        });
+
+                        me.refreshReport(me.getCurPage());
+                        //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
+                    }
                 }, period * 1000);
 
-                forerunner.helper.timer.addSetTimeout(executeID);
+                //console.log('add settimeout')
             }
-        }
+        },
+        _removeSetTimeout: function () {
+            var me = this;
+
+            if (me.autoRefreshID !== null) {
+                clearTimeout(me.autoRefreshID);
+                //console.log('remove settimeout');
+            }
+            me.autoRefreshID = null;
+        },
+        destroy: function () {
+            var me = this;
+
+            me._removeSetTimeout();
+            me.autoRefreshID = undefined;
+            //console.log('report viewer destory is invoked')
+
+            //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
+            // if using jQuery UI 1.8.x
+            //$.Widget.prototype.destroy.call(this);
+            // if using jQuery UI 1.9.x
+            this._destroy();
+        },
     });  // $.widget
 });   // $(function
 
@@ -1755,7 +1795,7 @@ $(function () {
                 isDefault: true,
                 Name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
-            }
+            };
             defaultSet.data = parameterList;
             return defaultSet;
         },
@@ -1783,7 +1823,7 @@ $(function () {
 
                     me.jq.trigger("modelchanged");
                 },
-                error: function () {
+                error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
@@ -1799,7 +1839,7 @@ $(function () {
                     me.currentSetId = defaultSet.id;
                 } else {
                     $.each(me.parameterSets, function (index, parameterSet) {
-                        if (parameterSet.id == me.currentSetId) {
+                        if (parameterSet.id === me.currentSetId) {
                             parameterSet.data = JSON.parse(parameterList);
                         }
                     });
@@ -1843,7 +1883,7 @@ $(function () {
             }
             return currentSet;
         }
-    }
+    };
 });
 
 ///#source 1 1 /Forerunner/Common/js/Toolbase.js
@@ -3005,8 +3045,6 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
-            forerunner.helper.timer.isAutoRefreshEnable = false;
-            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };
@@ -4470,7 +4508,7 @@ $(function () {
                 $Sort.html("&nbsp");
                 var Direction = "None";
                 var sortDirection = forerunner.ssr.constants.sortDirection;
-
+                
                 if (RIContext.CurrObj.Elements.NonSharedElements.SortState === 2) {
                     $Sort.attr("class", "fr-render-sort-descending");
                     Direction = sortDirection.desc;
@@ -4482,7 +4520,10 @@ $(function () {
                 else
                     $Sort.attr("class", "fr-render-sort-unsorted");
 
-                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction, Clear: !me.shiftKeyDown }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID, !e.shiftKey); });
+                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction },
+                    function (e) {
+                        e.data.Viewer.sort(e.data.Direction, e.data.SortID, !(e.shiftKey));
+                    });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
@@ -7573,7 +7614,7 @@ $(function () {
             historyBack: null,
             isFullScreen: true
         },
-        _createReportExplorer: function (path, view) {
+        _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
@@ -7588,7 +7629,10 @@ $(function () {
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
-            layout.$mainsection.show();
+            if (showmainesection)
+                layout.$mainsection.show();
+            else
+                layout.$mainsection.hide();
             layout.$docmapsection.hide();
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
@@ -7612,22 +7656,30 @@ $(function () {
             var path0 = path;
             var layout = me.DefaultAppTemplate;
 
-            me._createReportExplorer(path, view)
+            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
+                me.DefaultAppTemplate.$mainsection.html("");
+                me.DefaultAppTemplate.$mainsection.hide();
+            }
 
-            var $toolbar = layout.$mainheadersection;
-            $toolbar.reportExplorerToolbar({
-                navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
-            });
-            $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me._createReportExplorer(path, view, true);
 
-            layout.$rightheader.height(layout.$topdiv.height());
-            layout.$leftheader.height(layout.$topdiv.height());
-            layout.$rightheaderspacer.height(layout.$topdiv.height());
-            layout.$leftheaderspacer.height(layout.$topdiv.height());
+                var $toolbar = layout.$mainheadersection;
+                $toolbar.reportExplorerToolbar({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container
+                });
+                $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
-            layout._selectedItemPath=path0; //me._selectedItemPath = path0;
-            me.element.addClass("fr-Explorer-background");
+                layout.$rightheader.height(layout.$topdiv.height());
+                layout.$leftheader.height(layout.$topdiv.height());
+                layout.$rightheaderspacer.height(layout.$topdiv.height());
+                layout.$leftheaderspacer.height(layout.$topdiv.height());
+
+                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                me.element.addClass("fr-Explorer-background");
+            }, timeout);
         },
         /**
          * Transition to ReportViewer view
@@ -7640,19 +7692,26 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
             if (!me.$reportExplorer)
-                me._createReportExplorer();
+                me._createReportExplorer(false);
+
+            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                DefaultAppTemplate: me.DefaultAppTemplate,
-                path: path,
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                isReportManager: true,
-                userSettings: me.$reportExplorer.reportExplorer("getUserSettings")
-            });
-
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: me.DefaultAppTemplate,
+                    path: path,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: true,
+                    userSettings: userSettings
+                });
+                me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+            }, timeout);
             me.element.addClass("fr-Explorer-background");
             me.element.removeClass("fr-Explorer-background");
         },

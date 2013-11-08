@@ -38,7 +38,7 @@ $(function () {
                 isDefault: true,
                 Name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
-            }
+            };
             defaultSet.data = parameterList;
             return defaultSet;
         },
@@ -66,7 +66,7 @@ $(function () {
 
                     me.jq.trigger("modelchanged");
                 },
-                error: function () {
+                error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
@@ -82,7 +82,7 @@ $(function () {
                     me.currentSetId = defaultSet.id;
                 } else {
                     $.each(me.parameterSets, function (index, parameterSet) {
-                        if (parameterSet.id == me.currentSetId) {
+                        if (parameterSet.id === me.currentSetId) {
                             parameterSet.data = JSON.parse(parameterList);
                         }
                     });
@@ -126,5 +126,5 @@ $(function () {
             }
             return currentSet;
         }
-    }
+    };
 });

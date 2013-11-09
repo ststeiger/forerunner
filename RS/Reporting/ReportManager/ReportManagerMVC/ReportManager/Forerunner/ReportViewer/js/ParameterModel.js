@@ -36,11 +36,22 @@ $(function () {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: locData.parameterModel.defaultName,
+                name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
             };
             defaultSet.data = parameterList;
             return defaultSet;
+        },
+        _triggerModelChange: function() {
+            var me = this;
+            var optionArray = Array();
+            $.each(me.parameterSets, function (index, parameterSet) {
+                optionArray.push({
+                    value: parameterSet.id,
+                    text: parameterSet.name
+                });
+            });
+            me.jq.trigger("modelchanged", { optionArray: optionArray });
         },
         _load: function (reportPath) {
             var me = this;
@@ -63,8 +74,7 @@ $(function () {
                     else if (data) {
                         me.parameterSets = data;
                     }
-
-                    me.jq.trigger("modelchanged");
+                    me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);

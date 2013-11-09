@@ -745,7 +745,7 @@ $(function () {
             tooltip: locData.toolbar.parameterSets,
             events: {
                 click: function (e) {
-                    forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                    forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, "Under construction");
                 }
             }
         },

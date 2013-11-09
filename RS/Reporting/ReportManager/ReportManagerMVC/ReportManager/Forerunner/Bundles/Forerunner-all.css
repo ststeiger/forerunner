@@ -741,7 +741,7 @@ table, td, tr {
 .fr-toolbase-toolcontainer { width: 36px; height: 36px; border-width: 0px; vertical-align: top; border-radius: 2px; display: inline-block; text-align: center; color: white; }
 .fr-toolbase-selectcontainer { height: 100%; border: 0px; vertical-align: top; display: inline-block; }
 .fr-toolbase-selectinner { height: 36px; vertical-align: middle; display: table-cell; }
-  .fr-toolbase-selectinner select { margin: auto 0; font-size: 13pt; color: #666666; height: 22px; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; }
+  .fr-toolbase-selectinner select { margin: auto 0; font-size: 13pt; color: #666666; height: 26px; background-color: white; border: 1px solid #424242; box-shadow: 0px 0px 7px #545454 inset; }
 .fr-toolbase-textcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; margin: 1px; display: inline-block; text-align: center; color: white; }
 .fr-toolbase-groupcontainer { position: relative; display: inline-block; }
 .fr-toolbase-itemcontainer { border-top-width: 1px; border-top-style: groove; border-top-color: #858ea3; vertical-align: top; color: white; display: block; }

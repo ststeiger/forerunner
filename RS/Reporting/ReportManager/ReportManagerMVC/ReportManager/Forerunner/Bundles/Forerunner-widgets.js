@@ -1793,11 +1793,22 @@ $(function () {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: locData.parameterModel.defaultName,
+                name: locData.parameterModel.defaultName,
                 id: forerunner.helper.guidGen()
             };
             defaultSet.data = parameterList;
             return defaultSet;
+        },
+        _triggerModelChange: function() {
+            var me = this;
+            var optionArray = Array();
+            $.each(me.parameterSets, function (index, parameterSet) {
+                optionArray.push({
+                    value: parameterSet.id,
+                    text: parameterSet.name
+                });
+            });
+            me.jq.trigger("modelchanged", { optionArray: optionArray });
         },
         _load: function (reportPath) {
             var me = this;
@@ -1820,8 +1831,7 @@ $(function () {
                     else if (data) {
                         me.parameterSets = data;
                     }
-
-                    me.jq.trigger("modelchanged");
+                    me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
@@ -2311,30 +2321,28 @@ $(function () {
         options: {
             toolClass: "fr-toolbase-selectinner",
         },
-        _onModelChanged: function(e) {
-        },
         _init: function () {
             var me = this;
-
             var optionClass = getClassValue(me.options.toolInfo.optionClass, "fr-toolbase-option");
 
             me.element.html("");
             var $selectContainer = $(
                 "<div class='" + me.options.toolClass + " fr-core-widget'>" +
-                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'>" +
-                        "<option class='" + optionClass + "' value='guid'> Default</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Set 1</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Big set</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Special very big big big set that just goes on and on</option>" +
-                    "</select>" +
+                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
                 "</div>");
-
             me.element.append($selectContainer);
         },
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.jq.on(events.modelChanged, me._onModelChanged);
+            me.model.jq.on(events.modelChanged, function (e, arg) {
+                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+                $select.html("");
+                $.each(arg.optionArray, function (index, option) {
+                    $option = $("<option value=" + option.value + ">" + option.text + "</option>");
+                    $select.append($option);
+                });
+            });
         }
     });  // $widget
 

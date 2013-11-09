@@ -422,30 +422,28 @@ $(function () {
         options: {
             toolClass: "fr-toolbase-selectinner",
         },
-        _onModelChanged: function(e) {
-        },
         _init: function () {
             var me = this;
-
             var optionClass = getClassValue(me.options.toolInfo.optionClass, "fr-toolbase-option");
 
             me.element.html("");
             var $selectContainer = $(
                 "<div class='" + me.options.toolClass + " fr-core-widget'>" +
-                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'>" +
-                        "<option class='" + optionClass + "' value='guid'> Default</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Set 1</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Big set</option>" +
-                        "<option class='" + optionClass + "' value='guid'> Special very big big big set that just goes on and on</option>" +
-                    "</select>" +
+                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
                 "</div>");
-
             me.element.append($selectContainer);
         },
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.jq.on(events.modelChanged, me._onModelChanged);
+            me.model.jq.on(events.modelChanged, function (e, arg) {
+                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+                $select.html("");
+                $.each(arg.optionArray, function (index, option) {
+                    $option = $("<option value=" + option.value + ">" + option.text + "</option>");
+                    $select.append($option);
+                });
+            });
         }
     });  // $widget
 

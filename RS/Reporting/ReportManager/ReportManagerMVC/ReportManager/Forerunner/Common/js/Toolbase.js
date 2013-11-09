@@ -436,7 +436,7 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.jq.on(events.modelChanged, function (e, arg) {
+            me.model.on(events.modelChanged, function (e, arg) {
                 var $select = me.element.find("." + me.options.toolInfo.selectorClass);
                 $select.html("");
                 $.each(arg.optionArray, function (index, option) {

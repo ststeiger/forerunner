@@ -1779,9 +1779,12 @@ $(function () {
             $.extend(me.options, options);
         }
 
+        // Add support for jQuery events
+        var events = $({});
+        $.extend(me, events);
+
         me.currentSetId = null;
         me.parameterSets = null;
-        me.jq = $({});              // jQuery object used to trigger events
     };
 
     ssr.ParameterModel.prototype = {
@@ -1808,7 +1811,7 @@ $(function () {
                     text: parameterSet.name
                 });
             });
-            me.jq.trigger("modelchanged", { optionArray: optionArray });
+            me.trigger("modelchanged", { optionArray: optionArray });
         },
         _load: function (reportPath) {
             var me = this;
@@ -2335,7 +2338,7 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.jq.on(events.modelChanged, function (e, arg) {
+            me.model.on(events.modelChanged, function (e, arg) {
                 var $select = me.element.find("." + me.options.toolInfo.selectorClass);
                 $select.html("");
                 $.each(arg.optionArray, function (index, option) {

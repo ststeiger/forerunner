@@ -22,9 +22,12 @@ $(function () {
             $.extend(me.options, options);
         }
 
+        // Add support for jQuery events
+        var events = $({});
+        $.extend(me, events);
+
         me.currentSetId = null;
         me.parameterSets = null;
-        me.jq = $({});              // jQuery object used to trigger events
     };
 
     ssr.ParameterModel.prototype = {
@@ -51,7 +54,7 @@ $(function () {
                     text: parameterSet.name
                 });
             });
-            me.jq.trigger("modelchanged", { optionArray: optionArray });
+            me.trigger("modelchanged", { optionArray: optionArray });
         },
         _load: function (reportPath) {
             var me = this;

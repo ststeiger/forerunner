@@ -130,10 +130,10 @@ namespace Forerunner.SSRS.Viewer
                 else
                     format = "RPL";
                 string devInfo = "";
-                //devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
+                devInfo += @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
                 //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
                 //End Device Info
-                //devInfo += @"</DeviceInfo>";
+                devInfo += @"</DeviceInfo>";
 
 
                 result = rs.RenderStream(format, ImageID,devInfo, out encoding, out mimeType);

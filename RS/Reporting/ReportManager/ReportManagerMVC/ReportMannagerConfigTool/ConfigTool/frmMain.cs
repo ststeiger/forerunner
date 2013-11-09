@@ -123,7 +123,7 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
+            Process.Start("http://localhost:" + (rdoIIS.Checked ? "80" : txtPort.Text.Trim()) + "/" + txtSiteName.Text.Trim());
         }
 
         private void SaveWebServerConfig()

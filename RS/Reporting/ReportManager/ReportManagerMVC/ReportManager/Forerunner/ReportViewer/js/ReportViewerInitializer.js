@@ -131,12 +131,24 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
+            var $dlg;
+            $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer
+                });
+                me.options.$appContainer.append($dlg);
+            }
+
+            $dlg = me.options.$appContainer.find(".fr-mps-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.manageParamSets({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: $viewer,
+                    model: me.getParameterModel
                 });
                 me.options.$appContainer.append($dlg);
             }

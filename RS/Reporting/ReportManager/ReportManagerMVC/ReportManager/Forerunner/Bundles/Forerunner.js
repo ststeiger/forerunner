@@ -132,7 +132,8 @@ $(function () {
             leftToolbar: "leftToolbar",
             /** @constant */
             rightToolbar: "rightToolbar",
-
+            /** @constant */
+            manageParamSets: "manageParamSets",
 
             /** @constant */
             namespace: "forerunner",
@@ -929,8 +930,18 @@ $(function () {
         showUserSettingsDialog: function ($appContainer) {
             var $dlg = $appContainer.find(".fr-us-section");
             $dlg.userSettings("openDialog");
+        },
+        /**
+        * Show the manage parameter sets, modal dialog
+        *
+        * @function forerunner.dialog#showUserSettingsDialog
+        * @param {function} $appContainer - Modal dialog container
+        */
+        showUserManageParamSetsDialog: function ($appContainer) {
+            var $dlg = $appContainer.find(".fr-mps-section");
+            $dlg.manageParamSets("openDialog");
         }
-    };
+};
 
     forerunner.ssr.map = function(initialData) {
         // can pass initial data for the set in an object

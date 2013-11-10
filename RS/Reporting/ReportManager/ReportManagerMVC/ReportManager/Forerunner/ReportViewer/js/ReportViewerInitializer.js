@@ -148,7 +148,8 @@ $(function () {
                 $dlg.manageParamSets({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer,
-                    model: me.getParameterModel
+                    $reportViewerInitializer: me,
+                    model: me.parameterModel
                 });
                 me.options.$appContainer.append($dlg);
             }
@@ -258,7 +259,7 @@ $(function () {
         },
         getSavedParameters: function (reportPath) {
             var me = this;
-            return me.parameterModel.getCurrentSet(reportPath);
+            return me.parameterModel.getCurrentParameterList(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

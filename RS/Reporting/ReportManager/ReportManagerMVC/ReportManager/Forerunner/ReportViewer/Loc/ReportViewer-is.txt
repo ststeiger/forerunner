@@ -146,5 +146,16 @@
     "dayNamesMin":["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "default":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply"
   }
 }

@@ -1780,60 +1780,77 @@ $(function () {
         }
 
         // Add support for jQuery events
-        var events = $({});
-        $.extend(me, events);
+        $.extend(me, $({}));
 
         me.currentSetId = null;
-        me.parameterSets = null;
+        me.serverData = null;
     };
 
     ssr.ParameterModel.prototype = {
-        _isLoaded: function () {
-            var me = this;
-            return me.parameterSets !== null;
-        },
-        _createDefaultSet: function (parameterList) {
+        _createDefaultServerData: function (parameterList) {
             var me = this;
             var defaultSet = {
                 isDefault: true,
+                isAllUser: false,
                 name: locData.parameterModel.defaultName,
-                id: forerunner.helper.guidGen()
+                id: forerunner.helper.guidGen(),
+                data: parameterList
             };
-            defaultSet.data = parameterList;
-            return defaultSet;
+            me.serverData = {
+                canEditAllUsersSet: false,
+                parameterSets: [defaultSet]
+            };
+            me.currentSetId = defaultSet.id;
+        },
+        getServerData: function () {
+            var me = this;
+            return me.serverData;
+        },
+        setServerData: function (serverData) {
+            var me = this;
+            me.serverData = serverData;
+            me._triggerModelChange;
+        },
+        _getOptionArray: function () {
+            var me = this;
+            var optionArray = Array();
+            if (me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                    optionArray.push({
+                        value: parameterSet.id,
+                        text: parameterSet.name,
+                    });
+                });
+            }
+            return optionArray;
         },
         _triggerModelChange: function() {
             var me = this;
-            var optionArray = Array();
-            $.each(me.parameterSets, function (index, parameterSet) {
-                optionArray.push({
-                    value: parameterSet.id,
-                    text: parameterSet.name
-                });
-            });
+            var optionArray = me._getOptionArray();
             me.trigger("modelchanged", { optionArray: optionArray });
+        },
+        _isLoaded: function (reportPath) {
+            var me = this;
+            return me.serverData !== null && me.reportPath === reportPath;
         },
         _load: function (reportPath) {
             var me = this;
-            me.reportPath = reportPath;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
-            if (me._isLoaded()) {
+            if (me._isLoaded(reportPath)) {
                 return;
             }
-
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        var defaultSet = me._createDefaultSet(data);
-                        me.parameterSets = [defaultSet];
-                        me.currentSetId = defaultSet.id;
+                        me._createDefaultServerData(data.ParamsList);
                     }
                     else if (data) {
-                        me.parameterSets = data;
+                        me.serverData = data;
                     }
+                    me.reportPath = reportPath;
                     me._triggerModelChange();
                 },
                 error: function (data) {
@@ -1846,12 +1863,10 @@ $(function () {
             if (parameterList) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
 
-                if (me.parameterSets === null || me.currentSetId === null) {
-                    var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
-                    me.parameterSets = [defaultSet];
-                    me.currentSetId = defaultSet.id;
+                if (me.serverData === null || me.currentSetId === null) {
+                    me._createDefaultServerData(JSON.parse(parameterList));
                 } else {
-                    $.each(me.parameterSets, function (index, parameterSet) {
+                    $.each(me.serverData.parameterSets, function (index, parameterSet) {
                         if (parameterSet.id === me.currentSetId) {
                             parameterSet.data = JSON.parse(parameterList);
                         }
@@ -1862,7 +1877,7 @@ $(function () {
                     url,
                     {
                         reportPath: me.reportPath,
-                        parameters: JSON.stringify(me.parameterSets),
+                        parameters: JSON.stringify(me.serverData),
                     },
                     function (data) {
                         if (success && typeof (success) === "function") {
@@ -1877,24 +1892,24 @@ $(function () {
                 );
             }
         },
-        getCurrentSet: function (reportPath) {
+        getCurrentParameterList: function (reportPath) {
             var me = this;
-            var currentSet = null;
+            var currentParameterList = null;
             me._load(reportPath);
-            if (me.parameterSets) {
-                $.each(me.parameterSets, function (index, parameterSet) {
+            if (me.serverData && me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
                         if (parameterSet.id === me.currentSetId) {
-                            currentSet = JSON.stringify(parameterSet.data);
+                            currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentSet = JSON.stringify(parameterSet.data);
+                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return currentSet;
+            return currentParameterList;
         }
     };
 });
@@ -7213,6 +7228,44 @@ $(function () {
         _create: function () {
 
         },
+        _initTBody: function() {
+            var me = this;
+            me.serverData = me.options.model.getServerData();
+            if (me.serverData === null || me.serverData === undefined) {
+                return;
+            }
+            var $tbody = me.element.find(".fr-mps-main-table-body-id");
+            $tbody.html("");
+            var allUsersTdClass = "";
+            if (me.serverData.canEditAllUsersSet) {
+                allUsersTdClass = " class='fr-core-cursorpointer'";
+            }
+            $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                var textElement = "<input type='text' class='fr-rtb-select-set' value='" + parameterSet.name + "'/>";
+                var allUsersClass = "";
+                if (parameterSet.isAllUser) {
+                    textElement = parameterSet.name;
+                    allUsersClass = "ui-icon-check ui-icon ";
+                }
+                var defaultClass = "";
+                if (parameterSet.isDefault) {
+                    defaultClass = "ui-icon-check ui-icon ";
+                }
+                var rowClass = (index + 1) & 1 ? "class='fr-mps-odd-row'" : "";
+                var $row = $(
+                    "<tr " + rowClass + ">" +
+                        // Name
+                        "<td title='" + parameterSet.name + "'>" + textElement + "</td>" +
+                        // Default
+                        "<td class='fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
+                        // All Users
+                        "<td" + allUsersTdClass + "><div class='" + allUsersClass + "fr-core-center' /></td>" +
+                        // Delete
+                        "<td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
+                    "</tr>");
+                $tbody.append($row);
+            });
+        },
         _init: function () {
             var me = this;
             var manageParamSets = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer").manageParamSets;
@@ -7228,42 +7281,27 @@ $(function () {
                         "</div>" +
                         "<div class='fr-mps-title-container'>" +
                             "<div class='fr-mps-title'>" +
-                                "<!--Loc-->" +
-                                "Manage Sets" +
+                                manageParamSets.manageSets +
                             "</div>" +
                         "</div>" +
                         "<div class='fr-mps-cancel-container'>" +
-                            "<!--Loc-->" +
-                            "<input type='button' class='fr-mps-cancel' value='cancel'/>" +
+                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
                         "</div>" +
                     "</div>" +
                     "<form class='fr-mps-form'>" +
                         "<div class='fr-core-center'>" +
-                            "<!--Loc-->" +
-                            "<input name='add' type='button' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button' value='Add' title='Add New Set'/>" +
+                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<!--Loc-->" +
-                                    "<th class='fr-rtb-select-set'>Name</th><th class='fr-mps-property-header'>Default</th><th class='fr-mps-property-header'>All</th><th class='fr-mps-property-header'>Delete</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.default + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
-                                "<tbody>" +
-                                    "<tr class='fr-mps-odd-row'>" +
-                                        "<td title='Default'><input type='text' class='fr-rtb-select-set' value='Default'/></td><td class='fr-core-cursorpointer'><div class='ui-icon-check ui-icon fr-core-center' /></td><td></td><td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
-                                    "</tr>" +
-                                    "<tr>" +
-                                        "<td class='fr-rtb-select-set' title='Set 2'>Set 2</td><td class='fr-core-cursorpointer'></td><td><div class='ui-icon-check ui-icon fr-core-center' /></td><td></td>" +
-                                    "</tr>" +
-                                    "<tr class='fr-mps-odd-row'>" +
-                                        "<td title='Another set with a really long name'><input type='text' class='fr-rtb-select-set' value='Another set with a really long name'/></td><td class='fr-core-cursorpointer'></td><td></td><td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
-                                    "</tr>" +
-                                "</tbody>" +
+                                "<tbody class='fr-mps-main-table-body-id'></tbody>" +
                             "</table>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<!--Loc-->" +
-                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='Apply' />" +
+                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -7271,6 +7309,7 @@ $(function () {
                 "</div>");
 
             me.element.append($dialog);
+            me._initTBody();
 
             /*
             me.element.find(".fr-print-text").each(function () {
@@ -7300,6 +7339,7 @@ $(function () {
          */
         openDialog: function () {
             var me = this;
+            me._initTBody();
             forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
                 me.element.css("display", "inline-block");
             });
@@ -7492,7 +7532,8 @@ $(function () {
                 $dlg.manageParamSets({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer,
-                    model: me.getParameterModel
+                    $reportViewerInitializer: me,
+                    model: me.parameterModel
                 });
                 me.options.$appContainer.append($dlg);
             }
@@ -7602,7 +7643,7 @@ $(function () {
         },
         getSavedParameters: function (reportPath) {
             var me = this;
-            return me.parameterModel.getCurrentSet(reportPath);
+            return me.parameterModel.getCurrentParameterList(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

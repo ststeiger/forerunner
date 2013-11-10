@@ -22,6 +22,44 @@ $(function () {
         _create: function () {
 
         },
+        _initTBody: function() {
+            var me = this;
+            me.serverData = me.options.model.getServerData();
+            if (me.serverData === null || me.serverData === undefined) {
+                return;
+            }
+            var $tbody = me.element.find(".fr-mps-main-table-body-id");
+            $tbody.html("");
+            var allUsersTdClass = "";
+            if (me.serverData.canEditAllUsersSet) {
+                allUsersTdClass = " class='fr-core-cursorpointer'";
+            }
+            $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                var textElement = "<input type='text' class='fr-rtb-select-set' value='" + parameterSet.name + "'/>";
+                var allUsersClass = "";
+                if (parameterSet.isAllUser) {
+                    textElement = parameterSet.name;
+                    allUsersClass = "ui-icon-check ui-icon ";
+                }
+                var defaultClass = "";
+                if (parameterSet.isDefault) {
+                    defaultClass = "ui-icon-check ui-icon ";
+                }
+                var rowClass = (index + 1) & 1 ? "class='fr-mps-odd-row'" : "";
+                var $row = $(
+                    "<tr " + rowClass + ">" +
+                        // Name
+                        "<td title='" + parameterSet.name + "'>" + textElement + "</td>" +
+                        // Default
+                        "<td class='fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
+                        // All Users
+                        "<td" + allUsersTdClass + "><div class='" + allUsersClass + "fr-core-center' /></td>" +
+                        // Delete
+                        "<td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
+                    "</tr>");
+                $tbody.append($row);
+            });
+        },
         _init: function () {
             var me = this;
             var manageParamSets = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer").manageParamSets;
@@ -37,42 +75,27 @@ $(function () {
                         "</div>" +
                         "<div class='fr-mps-title-container'>" +
                             "<div class='fr-mps-title'>" +
-                                "<!--Loc-->" +
-                                "Manage Sets" +
+                                manageParamSets.manageSets +
                             "</div>" +
                         "</div>" +
                         "<div class='fr-mps-cancel-container'>" +
-                            "<!--Loc-->" +
-                            "<input type='button' class='fr-mps-cancel' value='cancel'/>" +
+                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
                         "</div>" +
                     "</div>" +
                     "<form class='fr-mps-form'>" +
                         "<div class='fr-core-center'>" +
-                            "<!--Loc-->" +
-                            "<input name='add' type='button' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button' value='Add' title='Add New Set'/>" +
+                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<!--Loc-->" +
-                                    "<th class='fr-rtb-select-set'>Name</th><th class='fr-mps-property-header'>Default</th><th class='fr-mps-property-header'>All</th><th class='fr-mps-property-header'>Delete</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.default + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
-                                "<tbody>" +
-                                    "<tr class='fr-mps-odd-row'>" +
-                                        "<td title='Default'><input type='text' class='fr-rtb-select-set' value='Default'/></td><td class='fr-core-cursorpointer'><div class='ui-icon-check ui-icon fr-core-center' /></td><td></td><td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
-                                    "</tr>" +
-                                    "<tr>" +
-                                        "<td class='fr-rtb-select-set' title='Set 2'>Set 2</td><td class='fr-core-cursorpointer'></td><td><div class='ui-icon-check ui-icon fr-core-center' /></td><td></td>" +
-                                    "</tr>" +
-                                    "<tr class='fr-mps-odd-row'>" +
-                                        "<td title='Another set with a really long name'><input type='text' class='fr-rtb-select-set' value='Another set with a really long name'/></td><td class='fr-core-cursorpointer'></td><td></td><td class='ui-state-error-text fr-core-cursorpointer'><div class='ui-icon-circle-close ui-icon fr-core-center' /></td>" +
-                                    "</tr>" +
-                                "</tbody>" +
+                                "<tbody class='fr-mps-main-table-body-id'></tbody>" +
                             "</table>" +
                             "<div class='fr-core-dialog-submit-container'>" +
                                 "<div class='fr-core-center'>" +
-                                    "<!--Loc-->" +
-                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='Apply' />" +
+                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
                                 "</div>" +
                             "</div>" +
                         "</div>" +
@@ -80,6 +103,7 @@ $(function () {
                 "</div>");
 
             me.element.append($dialog);
+            me._initTBody();
 
             /*
             me.element.find(".fr-print-text").each(function () {
@@ -109,6 +133,7 @@ $(function () {
          */
         openDialog: function () {
             var me = this;
+            me._initTBody();
             forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
                 me.element.css("display", "inline-block");
             });

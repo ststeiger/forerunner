@@ -30,38 +30,96 @@ $(function () {
     };
 
     ssr.ParameterModel.prototype = {
-        _createDefaultServerData: function (parameterList) {
-            var me = this;
-            var defaultSet = {
-                isDefault: true,
+        getNewSet: function (name, parameterList) {
+            var newSet = {
                 isAllUser: false,
-                name: locData.parameterModel.defaultName,
+                isDefault: false,
+                name: name,
                 id: forerunner.helper.guidGen(),
                 data: parameterList
             };
-            me.serverData = {
-                canEditAllUsersSet: false,
-                parameterSets: [defaultSet]
-            };
-            me.currentSetId = defaultSet.id;
+            return newSet;
         },
-        getServerData: function () {
+        _pushNewSet: function (name, parameterList) {
             var me = this;
-            return me.serverData;
+            var newSet = me.getNewSet(name, parameterList);
+            if (me.serverData) {
+                me.serverData.parameterSets.push(newSet);
+            }
+            else {
+                newSet.isDefault = true;
+                me.serverData = {
+                    canEditAllUsersSet: false,
+                    parameterSets: [newSet]
+                };
+                me.currentSetId = newSet.id;
+            }
+            return newSet;
         },
-        setServerData: function (serverData) {
+        cloneServerData: function () {
             var me = this;
-            me.serverData = serverData;
-            me._triggerModelChange;
+            if (me.serverData) {
+                return {
+                    canEditAllUsersSet: me.serverData.canEditAllUsersSet,
+                    parameterSets: me._getOptionArray()
+                };
+            }
+
+            return null;
+        },
+        applyServerData: function (applyData) {
+            var me = this;
+
+            // First apply the modifications or additions
+            $.each(applyData.parameterSets, function (index, applySet) {
+                var modelSet = me._getSet(me.serverData.parameterSets, applySet.id);
+                if (modelSet) {
+                    modelSet.isAllUser = applySet.isAllUser;
+                    modelSet.isDefault = applySet.isDefault;
+                    modelSet.name = applySet.name;
+                    modelSet.id = applySet.id;
+                }
+                else {
+                    me.serverData.parameterSets.push(applySet);
+                }
+            });
+
+            // Next handle any deletions
+            var deleteArray = [];
+            $.each(me.serverData.parameterSets, function (index, modelSet) {
+                var applySet = me._getSet(applyData.parameterSets, modelSet.id);
+                if (applySet === null) {
+                    deleteArray.push(index);
+                }
+            });
+            while (deleteArray.length > 0) {
+                var index = deleteArray.pop();
+                me.serverData.parameterSets.splice(index, 1);
+            }
+
+            // save the results
+            me._saveModel();
+            me._triggerModelChange();
+        },
+        _getSet: function (sets, id) {
+            var parameterSet = null;
+            $.each(sets, function (index, set) {
+                if (set.id === id) {
+                    parameterSet = set;
+                }
+            });
+            return parameterSet;
         },
         _getOptionArray: function () {
             var me = this;
-            var optionArray = Array();
+            var optionArray = [];
             if (me.serverData.parameterSets) {
                 $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     optionArray.push({
-                        value: parameterSet.id,
-                        text: parameterSet.name,
+                        isAllUser: parameterSet.isAllUser,
+                        isDefault: parameterSet.isDefault,
+                        name: parameterSet.name,
+                        id: parameterSet.id,
                     });
                 });
             }
@@ -88,7 +146,7 @@ $(function () {
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        me._createDefaultServerData(data.ParamsList);
+                        me._pushNewSet(locData.parameterModel.defaultName, data.ParamsList);
                     }
                     else if (data) {
                         me.serverData = data;
@@ -101,13 +159,32 @@ $(function () {
                 }
             });
         },
+        _saveModel: function(success, error) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
+            forerunner.ajax.getJSON(
+                url,
+                {
+                    reportPath: me.reportPath,
+                    parameters: JSON.stringify(me.serverData),
+                },
+                function (data) {
+                    if (success && typeof (success) === "function") {
+                        success(data);
+                    }
+                },
+                function () {
+                    if (error && typeof (error) === "function") {
+                        error();
+                    }
+                }
+            );
+        },
         save: function (parameterList, success, error) {
             var me = this;
             if (parameterList) {
-                var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
-
                 if (me.serverData === null || me.currentSetId === null) {
-                    me._createDefaultServerData(JSON.parse(parameterList));
+                    me._pushNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
                 } else {
                     $.each(me.serverData.parameterSets, function (index, parameterSet) {
                         if (parameterSet.id === me.currentSetId) {
@@ -115,24 +192,7 @@ $(function () {
                         }
                     });
                 }
-
-                forerunner.ajax.getJSON(
-                    url,
-                    {
-                        reportPath: me.reportPath,
-                        parameters: JSON.stringify(me.serverData),
-                    },
-                    function (data) {
-                        if (success && typeof (success) === "function") {
-                            success(data);
-                        }
-                    },
-                    function () {
-                        if (error && typeof (error) === "function") {
-                            error();
-                        }
-                    }
-                );
+                me._saveModel();
             }
         },
         getCurrentParameterList: function (reportPath) {

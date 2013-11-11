@@ -202,8 +202,8 @@ $(function () {
                     bodyIndex = i;
             }
 
-            loc = bodyIndex >= 0 ? me._getMeasurmentsObj(RIContext.CurrObj, bodyIndex) : me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-          
+            loc = bodyIndex >= 0 ? sectionMeasurement.Measurements[bodyIndex] : me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+            
             //Page Header
             if (RIContext.CurrObj.PageHeader)
                 $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));

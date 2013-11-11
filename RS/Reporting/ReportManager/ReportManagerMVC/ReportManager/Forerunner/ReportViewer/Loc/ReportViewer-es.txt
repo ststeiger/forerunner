@@ -71,7 +71,9 @@
     "print":"Imprimir",
     "userSettings":"fraguado",
     "paramarea":"Parámetros",
-    "saveParam":"Guardar parámetros"
+    "saveParam":"Guardar parámetros",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -145,5 +147,16 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "default":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply"
   }
 }

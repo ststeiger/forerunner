@@ -15,7 +15,6 @@ $(function () {
     ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
-            reportPath: null
         };
 
         // Merge options with the default settings
@@ -23,46 +22,79 @@ $(function () {
             $.extend(me.options, options);
         }
 
-        me.currentSetId = null;
-        me.parameterSets = null;
+        // Add support for jQuery events
+        $.extend(me, $({}));
 
+        me.currentSetId = null;
+        me.serverData = null;
     };
 
     ssr.ParameterModel.prototype = {
-        _isLoaded: function () {
-            var me = this;
-            return me.parameterSets !== null;
-        },
-        _createDefaultSet: function (parameterList) {
+        _createDefaultServerData: function (parameterList) {
             var me = this;
             var defaultSet = {
                 isDefault: true,
-                Name: locData.parameterModel.defaultName,
-                id: forerunner.helper.guidGen()
+                isAllUser: false,
+                name: locData.parameterModel.defaultName,
+                id: forerunner.helper.guidGen(),
+                data: parameterList
             };
-            defaultSet.data = parameterList;
-            return defaultSet;
+            me.serverData = {
+                canEditAllUsersSet: false,
+                parameterSets: [defaultSet]
+            };
+            me.currentSetId = defaultSet.id;
         },
-        _load: function () {
+        getServerData: function () {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + me.options.reportPath;
-            if (me._isLoaded()) {
+            return me.serverData;
+        },
+        setServerData: function (serverData) {
+            var me = this;
+            me.serverData = serverData;
+            me._triggerModelChange;
+        },
+        _getOptionArray: function () {
+            var me = this;
+            var optionArray = Array();
+            if (me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                    optionArray.push({
+                        value: parameterSet.id,
+                        text: parameterSet.name,
+                    });
+                });
+            }
+            return optionArray;
+        },
+        _triggerModelChange: function() {
+            var me = this;
+            var optionArray = me._getOptionArray();
+            me.trigger("modelchanged", { optionArray: optionArray });
+        },
+        _isLoaded: function (reportPath) {
+            var me = this;
+            return me.serverData !== null && me.reportPath === reportPath;
+        },
+        _load: function (reportPath) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            if (me._isLoaded(reportPath)) {
                 return;
             }
-
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        var defaultSet = me._createDefaultSet(data);
-                        me.parameterSets = [defaultSet];
-                        me.currentSetId = defaultSet.id;
+                        me._createDefaultServerData(data.ParamsList);
                     }
                     else if (data) {
-                        me.parameterSets = data;
+                        me.serverData = data;
                     }
+                    me.reportPath = reportPath;
+                    me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
@@ -74,12 +106,10 @@ $(function () {
             if (parameterList) {
                 var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
 
-                if (me.parameterSets === null || me.currentSetId === null) {
-                    var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
-                    me.parameterSets = [defaultSet];
-                    me.currentSetId = defaultSet.id;
+                if (me.serverData === null || me.currentSetId === null) {
+                    me._createDefaultServerData(JSON.parse(parameterList));
                 } else {
-                    $.each(me.parameterSets, function (index, parameterSet) {
+                    $.each(me.serverData.parameterSets, function (index, parameterSet) {
                         if (parameterSet.id === me.currentSetId) {
                             parameterSet.data = JSON.parse(parameterList);
                         }
@@ -89,8 +119,8 @@ $(function () {
                 forerunner.ajax.getJSON(
                     url,
                     {
-                        reportPath: me.options.reportPath,
-                        parameters: JSON.stringify(me.parameterSets),
+                        reportPath: me.reportPath,
+                        parameters: JSON.stringify(me.serverData),
                     },
                     function (data) {
                         if (success && typeof (success) === "function") {
@@ -105,24 +135,24 @@ $(function () {
                 );
             }
         },
-        getCurrentSet: function () {
+        getCurrentParameterList: function (reportPath) {
             var me = this;
-            var currentSet = null;
-            me._load();
-            if (me.parameterSets) {
-                $.each(me.parameterSets, function (index, parameterSet) {
+            var currentParameterList = null;
+            me._load(reportPath);
+            if (me.serverData && me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
                         if (parameterSet.id === me.currentSetId) {
-                            currentSet = JSON.stringify(parameterSet.data);
+                            currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentSet = JSON.stringify(parameterSet.data);
+                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return currentSet;
+            return currentParameterList;
         }
     };
 });

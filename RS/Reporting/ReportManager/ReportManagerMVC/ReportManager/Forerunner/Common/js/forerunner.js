@@ -131,7 +131,8 @@ $(function () {
             leftToolbar: "leftToolbar",
             /** @constant */
             rightToolbar: "rightToolbar",
-
+            /** @constant */
+            manageParamSets: "manageParamSets",
 
             /** @constant */
             namespace: "forerunner",
@@ -256,6 +257,9 @@ $(function () {
 
             /** @constant */
             closeModalDialog: "closeModalDialog",
+
+            /** @constant */
+            modelChanged: "modelchanged"
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -269,8 +273,9 @@ $(function () {
             textButton: "textbutton",
             plainText: "plaintext",
             containerItem: "containeritem",
-            toolGroup: "toolgroup"
-        },
+            toolGroup: "toolgroup",
+            select: "select"
+},
         /**
          * sort order used in the Report Viewer sort() method.
          *
@@ -924,26 +929,18 @@ $(function () {
         showUserSettingsDialog: function ($appContainer) {
             var $dlg = $appContainer.find(".fr-us-section");
             $dlg.userSettings("openDialog");
+        },
+        /**
+        * Show the manage parameter sets, modal dialog
+        *
+        * @function forerunner.dialog#showUserSettingsDialog
+        * @param {function} $appContainer - Modal dialog container
+        */
+        showUserManageParamSetsDialog: function ($appContainer) {
+            var $dlg = $appContainer.find(".fr-mps-section");
+            $dlg.manageParamSets("openDialog");
         }
-    };
-
-    /**
-    * Defines utility methods related to ssr models
-    *
-    * @namespace
-    */
-    forerunner.ssr.models = {
-        getParameterModel: function (reportPath) {
-            if (forerunner.ssr.models.paramModel &&
-                (reportPath === forerunner.ssr.models.paramModel.options.reportPath ||
-                 reportPath === undefined)) {
-                return forerunner.ssr.models.paramModel;
-            }
-
-            forerunner.ssr.models.paramModel = new forerunner.ssr.ParameterModel({ reportPath: reportPath });
-            return forerunner.ssr.models.paramModel;
-        }
-    };
+};
 
     forerunner.ssr.map = function(initialData) {
         // can pass initial data for the set in an object

@@ -1237,9 +1237,10 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
+            var loadParams = me.options.loadParamsCallback;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
-            
+                (loadParams ? loadParams(me.options.reportPath) : null);
+
             if (savedParams) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({

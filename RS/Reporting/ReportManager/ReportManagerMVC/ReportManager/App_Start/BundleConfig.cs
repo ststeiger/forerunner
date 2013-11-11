@@ -31,6 +31,7 @@ namespace ReportManager
                 ));
 
             bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(
+                  "~/Forerunner/ReportViewer/css/ManageParamSets.css",
                   "~/Forerunner/ReportViewer/css/PageNav.css",
                   "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
                   "~/Forerunner/ReportViewer/css/ReportParameter.css",

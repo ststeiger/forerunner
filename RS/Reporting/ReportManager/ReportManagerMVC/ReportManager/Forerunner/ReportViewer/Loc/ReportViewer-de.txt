@@ -70,7 +70,9 @@
     "zoom":"Aktivieren Zoomen",
     "print":"Drucken",
     "userSettings":"Fixierung",
-    "saveParam":"Parameter speichern"
+    "saveParam":"Parameter speichern",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",
@@ -144,5 +146,16 @@
     "dayNamesMin":["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "default":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply"
   }
 }

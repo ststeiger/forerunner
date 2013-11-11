@@ -154,7 +154,7 @@
     "add":"Add",
     "addNewSet":"Add New Set",
     "name":"Name",
-    "default":"Default",
+    "defaultHeader":"Default",
     "allUsers":"All",
     "delete":"Delete",
     "apply":"Apply",

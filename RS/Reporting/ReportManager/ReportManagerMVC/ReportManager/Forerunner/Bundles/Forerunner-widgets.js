@@ -1800,7 +1800,7 @@ $(function () {
         _pushNewSet: function (name, parameterList) {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);
-            if (me.serverData) {
+            if (me.serverData && me.serverData.parameterSets) {
                 me.serverData.parameterSets.push(newSet);
             }
             else {
@@ -1907,6 +1907,9 @@ $(function () {
                     }
                     else if (data) {
                         me.serverData = data;
+                        if (me.serverData.parameterSets === undefined) {
+                            me._pushNewSet(locData.parameterModel.defaultName);
+                        }
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
@@ -1949,7 +1952,7 @@ $(function () {
                         }
                     });
                 }
-                me._saveModel();
+                me._saveModel(success, error);
             }
         },
         getCurrentParameterList: function (reportPath) {
@@ -7390,7 +7393,7 @@ $(function () {
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.default + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +

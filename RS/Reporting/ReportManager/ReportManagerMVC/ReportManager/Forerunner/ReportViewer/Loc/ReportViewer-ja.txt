@@ -70,7 +70,9 @@
     "zoom":"ズームを有効にする",
     "print":"刷り出す",
     "userSettings":"設定",
-    "saveParam":"パラメータを保存"
+    "saveParam":"パラメータを保存",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -144,5 +146,17 @@
     "dayNamesMin":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

@@ -42,14 +42,16 @@ namespace ForerunnerLicense
         }
         private static void Init(bool forceCheck)
         {
-            TimeSpan ts = DateTime.Now - LastInit;
-            if (ts.TotalMinutes > 1)
+            lock (ThisMachine)
             {
-                LastInit = DateTime.Now;
-                Load(forceCheck);
-                MachineCheck(forceCheck);
+                TimeSpan ts = DateTime.Now - LastInit;
+                if (ts.TotalMinutes > 1)
+                {
+                    LastInit = DateTime.Now;
+                    Load(forceCheck);
+                    MachineCheck(forceCheck);
+                }
             }
-
         }
          private static void MachineCheck(bool forceCheck)
         {

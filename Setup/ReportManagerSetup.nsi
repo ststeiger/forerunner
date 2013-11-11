@@ -117,7 +117,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\EntityFramework.dll"
-  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"   
+  File "${LOCALROOT}\bin\Antlr3.Runtime.dll"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
   File "${LOCALROOT}\Forerunner\Common\css\Login.css"
   File "${LOCALROOT}\Forerunner\Common\css\ReportManager.css"
@@ -163,6 +163,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
@@ -186,6 +187,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportRender.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportPrint.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\ManageParamSets.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
@@ -295,7 +297,7 @@ SectionEnd
 
 Section -Post
   WriteUninstaller "$INSTDIR\uninst.exe"
-  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\ForerunnerMobilizer"
+  WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\ForerunnerMobilizer"
@@ -304,6 +306,13 @@ Section -Post
 SectionEnd
 
 Function .onInit
+   System::Call 'kernel32::CreateMutexA(i 0, i 0, t "myMutex") i .r1 ?e'
+   Pop $R0
+ 
+   StrCmp $R0 0 +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION "Installer is already running."
+   Abort
+
   ;Verify admin right before install
   !insertmacro VerifyUserIsAdmin
   ;Verify .net framework 4 is installed.
@@ -422,6 +431,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportRender.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewer.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportPrint.css"
+  Delete "$INSTDIR\Forerunner\ReportViewer\css\ManageParamSets.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewer-all.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewerEZ.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"
@@ -445,6 +455,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\Placeholders.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\json2.js"
+  Delete "$INSTDIR\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery.watermark.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery-1.9.1.js"

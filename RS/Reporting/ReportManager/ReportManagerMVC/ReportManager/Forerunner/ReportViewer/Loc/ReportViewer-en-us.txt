@@ -70,7 +70,9 @@
     "zoom":"Enable Zoom",
     "print":"Print",
     "userSettings":"Settings",
-    "saveParam":"Save Parameters"
+    "saveParam":"Save Parameters",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Print Report",
@@ -144,5 +146,17 @@
     "dayNamesMin":["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

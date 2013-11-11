@@ -70,7 +70,9 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать",
     "userSettings":"окружение",
-    "saveParam":"Сохранить параметры"
+    "saveParam":"Сохранить параметры",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Печать отчета",
@@ -144,5 +146,17 @@
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

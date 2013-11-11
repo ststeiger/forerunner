@@ -20,6 +20,7 @@ namespace ReportMannagerConfigTool
 
                 LoadWebConfig();
                 SetReportManagerFolderPath();
+                LoadWebServerConfig();
                 rtbCurLicense.Text = ClientLicense.GetLicenseString();
             }
             catch(Exception ex)
@@ -108,6 +109,7 @@ namespace ReportMannagerConfigTool
                     bindingAddress = string.Format("http://{0}:{1}", "*", port);
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
+                SaveWebServerConfig();
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
@@ -121,7 +123,27 @@ namespace ReportMannagerConfigTool
         //open the site by default browser
         private void btnTestWeb_Click(object sender, EventArgs e)
         {
-             Process.Start("http://localhost:" + txtPort.Text.Trim() + "/" + txtSiteName.Text.Trim());
+            Process.Start("http://localhost:" + (rdoIIS.Checked ? "80" : txtPort.Text.Trim()) + "/" + txtSiteName.Text.Trim());
+        }
+
+        private void SaveWebServerConfig()
+        {
+            WebServerConfig.ServerType = rdoIIS.Checked ? "IIS" : "UWS";
+            WebServerConfig.SiteName = winform.getTextBoxValue(txtSiteName);
+            WebServerConfig.Port = winform.getTextBoxValue(txtPort);
+        }
+
+        private void LoadWebServerConfig() 
+        {
+            if (!String.Empty.Equals(WebServerConfig.ServerType))
+            {
+                if ("IIS".Equals(WebServerConfig.ServerType))
+                    rdoIIS.Checked = true;
+                else
+                    rdoUWS.Checked = true;
+            }
+            winform.setTextBoxValue(txtSiteName, WebServerConfig.SiteName);
+            winform.setTextBoxValue(txtPort, WebServerConfig.Port);
         }
         #endregion
 

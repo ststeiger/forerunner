@@ -8,36 +8,42 @@ namespace ReportManager
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
-                        "~/Scripts/jquery-ui-{version}.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.unobtrusive*",
-                        "~/Scripts/jquery.validate*"));
-
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            //bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
+            //            "~/Scripts/modernizr-*"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
+            //bundles.Add(new StyleBundle("~/Content/css").Include("~/Content/site.css"));
 
-            bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
-                        "~/Content/themes/base/jquery.ui.core.css",
-                        "~/Content/themes/base/jquery.ui.resizable.css",
-                        "~/Content/themes/base/jquery.ui.selectable.css",
-                        "~/Content/themes/base/jquery.ui.accordion.css",
-                        "~/Content/themes/base/jquery.ui.autocomplete.css",
-                        "~/Content/themes/base/jquery.ui.button.css",
-                        "~/Content/themes/base/jquery.ui.dialog.css",
-                        "~/Content/themes/base/jquery.ui.slider.css",
-                        "~/Content/themes/base/jquery.ui.tabs.css",
-                        "~/Content/themes/base/jquery.ui.datepicker.css",
-                        "~/Content/themes/base/jquery.ui.progressbar.css",
-                        "~/Content/themes/base/jquery.ui.theme.css"));
+            bundles.Add(new StyleBundle("~/Forerunner/Common/css/bundle").Include(
+                  "~/Forerunner/Common/css/DefaultAppTemplate.css",
+                  "~/Forerunner/Common/css/Forerunner-core.css",
+                  "~/Forerunner/Common/css/icons24x24.css",
+                  "~/Forerunner/Common/css/icons25x31.css",
+                  "~/Forerunner/Common/css/Login.css",
+                  "~/Forerunner/Common/css/MessageBox.css",
+                  "~/Forerunner/Common/css/ReportManager.css",
+                  "~/Forerunner/Common/css/ToolBase.css"));
+
+            bundles.Add(new StyleBundle("~/Forerunner/ReportExplorer/css/bundle").Include(
+                "~/Forerunner/ReportExplorer/css/ReportExplorer.css",
+                "~/Forerunner/ReportExplorer/css/UserSettings.css"
+                ));
+
+            bundles.Add(new StyleBundle("~/Forerunner/ReportViewer/css/bundle").Include(
+                  "~/Forerunner/ReportViewer/css/ManageParamSets.css",
+                  "~/Forerunner/ReportViewer/css/PageNav.css",
+                  "~/Forerunner/ReportViewer/css/ReportDocumentMap.css",
+                  "~/Forerunner/ReportViewer/css/ReportParameter.css",
+                  "~/Forerunner/ReportViewer/css/ReportPrint.css",
+                  "~/Forerunner/ReportViewer/css/ReportRender.css",
+                  "~/Forerunner/ReportViewer/css/ReportViewer.css",
+                  "~/Forerunner/ReportViewer/css/ReportViewerEZ.css",
+                  "~/Forerunner/ReportViewer/css/Toolbar.css",
+                  "~/Forerunner/ReportViewer/css/ToolPane.css"
+                ));
+
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

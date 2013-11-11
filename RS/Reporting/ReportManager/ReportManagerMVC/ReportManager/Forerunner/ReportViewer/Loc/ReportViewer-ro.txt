@@ -70,7 +70,9 @@
     "zoom":"Permite Zoom",
     "print":"imprima",
     "userSettings":"Setări",
-    "saveParam":"Salvare Parametrii"
+    "saveParam":"Salvare Parametrii",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"imprima raportul",
@@ -144,5 +146,17 @@
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

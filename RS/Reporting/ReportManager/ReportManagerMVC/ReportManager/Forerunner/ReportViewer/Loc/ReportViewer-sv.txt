@@ -70,7 +70,9 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
     "userSettings":"Inställningar",
-    "saveParam":"Spara Parameter"
+    "saveParam":"Spara Parameter",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -144,5 +146,17 @@
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

@@ -74,7 +74,6 @@ RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerMobilizerUpdate.exe"
-InstallDir "$PROGRAMFILES\Forerunner\MobilizerV1"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 
@@ -114,6 +113,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
@@ -126,6 +126,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportViewer.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportRender.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportPrint.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\ManageParamSets.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
@@ -184,8 +185,15 @@ Section "ReportManager" SEC01
 
 SectionEnd
 
-
 Function .onInit
+   System::Call 'kernel32::CreateMutexA(i 0, i 0, t "myMutex") i .r1 ?e'
+   Pop $R0
+ 
+   StrCmp $R0 0 +3
+   MessageBox MB_OK|MB_ICONEXCLAMATION "Installer is already running."
+   Abort
+
+   Call IsMobilizerInstalled
   ;Verify admin right before install
   !insertmacro VerifyUserIsAdmin
   ;Verify .net framework 4 is installed.
@@ -203,6 +211,14 @@ Function un.onInit
   
   MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
   Abort
+FunctionEnd
+
+Function IsMobilizerInstalled
+	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV1" ""
+	StrCmp $0 "" 0 +3
+	MessageBox MB_OK "Mobilizer is not found, please install Mobilizer first then do update!"
+	Abort
+	StrCpy $INSTDIR $0
 FunctionEnd
 
 Function IsDotNETInstalled

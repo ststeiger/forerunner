@@ -70,7 +70,9 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "userSettings":"Stillingar",
-    "saveParam":"Vista Breytur"
+    "saveParam":"Vista Breytur",
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",
@@ -144,5 +146,17 @@
     "dayNamesMin":["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"]},
   "parameterModel": {
     "defaultName":"Default"
+  },
+  "manageParamSets": {
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "delete":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

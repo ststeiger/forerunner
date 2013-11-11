@@ -9,8 +9,20 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var events = forerunner.ssr.constants.events;
 
     var dropdownContainerClass = "fr-toolbase-dropdown-container";
+
+    var getClassValue = function (textValue, defaultValue) {
+        var returnText = defaultValue;
+        if (typeof (textValue) !== "undefined") {
+            returnText = "";
+            if (textValue !== false && textValue !== null) {
+                returnText = textValue;
+            }
+        }
+        return returnText;
+    };
 
     /**
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
@@ -119,11 +131,15 @@ $(function () {
                 me._createDropdown($tool, toolInfo);
             }
 
+            if (toolInfo.toolType === toolTypes.select) {
+                $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+            }
+
             if (toolInfo.visible === false) {
                 $tool.hide();
             }
         },
-        _createDropdown: function($tool, toolInfo) {
+        _createDropdown: function ($tool, toolInfo) {
             var me = this;
 
             // Create the dropdown
@@ -151,12 +167,10 @@ $(function () {
                 }
             });
         },
-
-
         /**
-       * Return the tool object
-       * @function $.forerunner.toolBase#getTool
-       */
+         * Return the tool object
+         * @function $.forerunner.toolBase#getTool
+         */
         getTool: function (selectorClass) {
             var me = this;
             return me.allTools[selectorClass];
@@ -307,13 +321,13 @@ $(function () {
             var me = this;
 
             // Get class string options
-            var toolStateClass = me._getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
-            var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
-            var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
-            var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
-            var itemContainerClass = me._getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
-            var itemTextContainerClass = me._getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
-            var itemTextClass = me._getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
+            var toolStateClass = getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
+            var iconClass = getClassValue(toolInfo.iconClass, "fr-icons24x24");
+            var toolContainerClass = getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
+            var groupContainerClass = getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
+            var itemContainerClass = getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
+            var itemTextContainerClass = getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
+            var itemTextClass = getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
 
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" +
@@ -327,6 +341,9 @@ $(function () {
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
+            else if (toolInfo.toolType === toolTypes.select) {
+                return "<div class='fr-toolbase-selectcontainer' />";
+            }
             else if (toolInfo.toolType === toolTypes.textButton) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
@@ -339,7 +356,7 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
 
-                var imageClass = me._getClassValue(toolInfo.imageClass, "");
+                var imageClass = getClassValue(toolInfo.imageClass, "");
                 var rightImageDiv = "";
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
@@ -356,16 +373,6 @@ $(function () {
             else if (toolInfo.toolType === toolTypes.toolGroup) {
                 return "<div class='" + groupContainerClass + " " + toolInfo.selectorClass + "'></div>";
             }
-        },
-        _getClassValue: function (textValue, defaultValue) {
-            var returnText = defaultValue;
-            if (typeof (textValue) !== "undefined") {
-                returnText = "";
-                if (textValue !== false && textValue !== null) {
-                    returnText = textValue;
-                }
-            }
-            return returnText;
         },
         _getText: function (toolInfo) {
             var text;
@@ -410,4 +417,34 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
+
+    $.widget(widgets.getFullname("selectTool"), {
+        options: {
+            toolClass: "fr-toolbase-selectinner",
+        },
+        _init: function () {
+            var me = this;
+            var optionClass = getClassValue(me.options.toolInfo.optionClass, "fr-toolbase-option");
+
+            me.element.html("");
+            var $selectContainer = $(
+                "<div class='" + me.options.toolClass + " fr-core-widget'>" +
+                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
+                "</div>");
+            me.element.append($selectContainer);
+        },
+        _create: function () {
+            var me = this;
+            me.model = me.options.toolInfo.model.call(me);
+            me.model.on(events.modelChanged, function (e, arg) {
+                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+                $select.html("");
+                $.each(arg.optionArray, function (index, option) {
+                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                    $select.append($option);
+                });
+            });
+        }
+    });  // $widget
+
 });  // function()

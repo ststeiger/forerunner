@@ -100,7 +100,7 @@ $(function () {
             me.origionalReportPath = "";
             me._setPageCallback = null;
             me.renderError = false;
-            me.autoRefreshLock = false;
+            me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             
             var isTouch = forerunner.device.isTouch();
@@ -119,8 +119,6 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
-
-            forerunner.helper.timer.isAutoRefreshEnable = true;
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -413,13 +411,16 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#refreshReport
          */
-        refreshReport: function () {
+        refreshReport: function (curPage) {
             // Remove all cached data on the report and re-run
             var me = this;
             var paramList = null;
 
             if (me.lock === 1)
                 return;
+
+            if (curPage === undefined)
+                curPage = 1;
 
             me.sessionID = "";
             me.lock = 1;
@@ -429,7 +430,7 @@ $(function () {
                 paramList = me.options.paramArea.reportParameter("getParamsList");
             }
             me._resetViewer(true);
-            me._loadPage(1, false, null, paramList,true);            
+            me._loadPage(curPage, false, null, paramList,true);
         },
         /**
          * Navigates to the given page
@@ -543,6 +544,8 @@ $(function () {
         _cachePages: function (initPage) {
             var me = this;
              
+            initPage = parseInt(initPage, 10);
+            
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
@@ -1235,9 +1238,10 @@ $(function () {
         //Page Loading
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
+            var loadParams = me.options.loadParamsCallback;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.loadParamsCallback ? me.options.loadParamsCallback(me.options.reportPath) : null);
-            
+                (loadParams ? loadParams(me.options.reportPath) : null);
+
             if (savedParams) {
                 if (me.options.paramArea) {
                     me.options.paramArea.reportParameter({
@@ -1349,8 +1353,10 @@ $(function () {
             //me.sessionID = "";
             me.numPages = 0;
             me.floatingHeaders = [];
-            if (!isSameReport)
+            if (!isSameReport) {
                 me.paramLoaded = false;
+                me._removeSetTimeout();
+            }
             me.scrollTop = 0;
             me.scrollLeft = 0;
             me.finding = false;
@@ -1450,15 +1456,20 @@ $(function () {
             var me = this;
             var $report = $("<Div/>");
             $report.addClass("Page");
-
             //Error, need to handle this better
             if (!data) return;
-
+            
             var responsiveUI = false;
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+
+            me._addSetPageCallback(function () {
+                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                    me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
+                }
+            });
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1500,15 +1511,6 @@ $(function () {
                 var responsiveUI = false;
                 if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                     responsiveUI = true;
-                }
-
-                //10 seconds is the shortest refresh time recommended by forerunner (currently by me personal).
-                if (me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh && !me.autoRefreshLock) {
-                    var period = me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh > 5 ? me.pages[pageNum].reportObj.ReportContainer.Report.AutoRefresh : 5;
-
-                    me._setAutoRefresh(period);
-                    //some time _writePage will be invoked more than once in a single page load event.
-                    me.autoRefreshLock = true;
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
@@ -1696,18 +1698,57 @@ $(function () {
         },
         _setAutoRefresh: function (period) {
             var me = this;
+            
+            //me.autoRefreshID will be set to undefined when report viewer destory.
+            if (me.autoRefreshID !== undefined) {
+                //one report viewer should has only one auto refresh, so clear previous setTimeout when new one come
+                if (me.autoRefreshID !== null) me._removeSetTimeout();
 
-            if (forerunner.helper.timer.isAutoRefreshEnable) {
-                var executeID = setTimeout(function () {
-                    me.lock = 0;
-                    me.refreshReport();
-                    me.autoRefreshLock = false;
-                    console.log("report refresh at:" + new Date());
+                me.autoRefreshID = setTimeout(function () {
+                    if (me.lock === 1) {
+                        //if report viewer is lock then set it again.
+                        me._setAutoRefresh(period);
+                        return;
+                    }
+                    else {
+                        //restore privious scroll position
+                        var scrollTop = me.options.$appContainer.scrollTop();
+                        var scrollLeft = me.options.$appContainer.scrollLeft();
+
+                        me._addSetPageCallback(function () {
+                            me.options.$appContainer.scrollTop(scrollTop).scrollLeft(scrollLeft);
+                        });
+
+                        me.refreshReport(me.getCurPage());
+                        //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
+                    }
                 }, period * 1000);
 
-                forerunner.helper.timer.addSetTimeout(executeID);
+                //console.log('add settimeout')
             }
-        }
+        },
+        _removeSetTimeout: function () {
+            var me = this;
+
+            if (me.autoRefreshID !== null) {
+                clearTimeout(me.autoRefreshID);
+                //console.log('remove settimeout');
+            }
+            me.autoRefreshID = null;
+        },
+        destroy: function () {
+            var me = this;
+
+            me._removeSetTimeout();
+            me.autoRefreshID = undefined;
+            //console.log('report viewer destory is invoked')
+
+            //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
+            // if using jQuery UI 1.8.x
+            //$.Widget.prototype.destroy.call(this);
+            // if using jQuery UI 1.9.x
+            this._destroy();
+        },
     });  // $.widget
 });   // $(function
 
@@ -1731,7 +1772,6 @@ $(function () {
     ssr.ParameterModel = function (options) {
         var me = this;
         me.options = {
-            reportPath: null
         };
 
         // Merge options with the default settings
@@ -1739,108 +1779,202 @@ $(function () {
             $.extend(me.options, options);
         }
 
-        me.currentSetId = null;
-        me.parameterSets = null;
+        // Add support for jQuery events
+        $.extend(me, $({}));
 
+        me.currentSetId = null;
+        me.serverData = null;
     };
 
     ssr.ParameterModel.prototype = {
-        _isLoaded: function () {
-            var me = this;
-            return me.parameterSets !== null;
+        getNewSet: function (name, parameterList) {
+            var newSet = {
+                isAllUser: false,
+                isDefault: false,
+                name: name,
+                id: forerunner.helper.guidGen(),
+                data: parameterList
+            };
+            return newSet;
         },
-        _createDefaultSet: function (parameterList) {
+        _pushNewSet: function (name, parameterList) {
             var me = this;
-            var defaultSet = {
-                isDefault: true,
-                Name: locData.parameterModel.defaultName,
-                id: forerunner.helper.guidGen()
+            var newSet = me.getNewSet(name, parameterList);
+            if (me.serverData && me.serverData.parameterSets) {
+                me.serverData.parameterSets.push(newSet);
             }
-            defaultSet.data = parameterList;
-            return defaultSet;
+            else {
+                newSet.isDefault = true;
+                me.serverData = {
+                    canEditAllUsersSet: false,
+                    parameterSets: [newSet]
+                };
+                me.currentSetId = newSet.id;
+            }
+            return newSet;
         },
-        _load: function () {
+        cloneServerData: function () {
             var me = this;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + me.options.reportPath;
-            if (me._isLoaded()) {
-                return;
+            if (me.serverData) {
+                return {
+                    canEditAllUsersSet: me.serverData.canEditAllUsersSet,
+                    parameterSets: me._getOptionArray()
+                };
             }
 
+            return null;
+        },
+        applyServerData: function (applyData) {
+            var me = this;
+
+            // First apply the modifications or additions
+            $.each(applyData.parameterSets, function (index, applySet) {
+                var modelSet = me._getSet(me.serverData.parameterSets, applySet.id);
+                if (modelSet) {
+                    modelSet.isAllUser = applySet.isAllUser;
+                    modelSet.isDefault = applySet.isDefault;
+                    modelSet.name = applySet.name;
+                    modelSet.id = applySet.id;
+                }
+                else {
+                    me.serverData.parameterSets.push(applySet);
+                }
+            });
+
+            // Next handle any deletions
+            var deleteArray = [];
+            $.each(me.serverData.parameterSets, function (index, modelSet) {
+                var applySet = me._getSet(applyData.parameterSets, modelSet.id);
+                if (applySet === null) {
+                    deleteArray.push(index);
+                }
+            });
+            while (deleteArray.length > 0) {
+                var index = deleteArray.pop();
+                me.serverData.parameterSets.splice(index, 1);
+            }
+
+            // save the results
+            me._saveModel();
+            me._triggerModelChange();
+        },
+        _getSet: function (sets, id) {
+            var parameterSet = null;
+            $.each(sets, function (index, set) {
+                if (set.id === id) {
+                    parameterSet = set;
+                }
+            });
+            return parameterSet;
+        },
+        _getOptionArray: function () {
+            var me = this;
+            var optionArray = [];
+            if (me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                    optionArray.push({
+                        isAllUser: parameterSet.isAllUser,
+                        isDefault: parameterSet.isDefault,
+                        name: parameterSet.name,
+                        id: parameterSet.id,
+                    });
+                });
+            }
+            return optionArray;
+        },
+        _triggerModelChange: function() {
+            var me = this;
+            var optionArray = me._getOptionArray();
+            me.trigger("modelchanged", { optionArray: optionArray });
+        },
+        _isLoaded: function (reportPath) {
+            var me = this;
+            return me.serverData !== null && me.reportPath === reportPath;
+        },
+        _load: function (reportPath) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;
+            if (me._isLoaded(reportPath)) {
+                return;
+            }
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        var defaultSet = me._createDefaultSet(data);
-                        me.parameterSets = [defaultSet];
-                        me.currentSetId = defaultSet.id;
+                        me._pushNewSet(locData.parameterModel.defaultName, data.ParamsList);
                     }
                     else if (data) {
-                        me.parameterSets = data;
+                        me.serverData = data;
+                        if (me.serverData.parameterSets === undefined) {
+                            me._pushNewSet(locData.parameterModel.defaultName);
+                        }
                     }
+                    me.reportPath = reportPath;
+                    me._triggerModelChange();
                 },
-                error: function () {
+                error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
                 }
             });
         },
+        _saveModel: function(success, error) {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
+            forerunner.ajax.getJSON(
+                url,
+                {
+                    reportPath: me.reportPath,
+                    parameters: JSON.stringify(me.serverData),
+                },
+                function (data) {
+                    if (success && typeof (success) === "function") {
+                        success(data);
+                    }
+                },
+                function () {
+                    if (error && typeof (error) === "function") {
+                        error();
+                    }
+                }
+            );
+        },
         save: function (parameterList, success, error) {
             var me = this;
             if (parameterList) {
-                var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
-
-                if (me.parameterSets === null || me.currentSetId === null) {
-                    var defaultSet = me._createDefaultSet(JSON.parse(parameterList));
-                    me.parameterSets = [defaultSet];
-                    me.currentSetId = defaultSet.id;
+                if (me.serverData === null || me.currentSetId === null) {
+                    me._pushNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
                 } else {
-                    $.each(me.parameterSets, function (index, parameterSet) {
-                        if (parameterSet.id == me.currentSetId) {
+                    $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                        if (parameterSet.id === me.currentSetId) {
                             parameterSet.data = JSON.parse(parameterList);
                         }
                     });
                 }
-
-                forerunner.ajax.getJSON(
-                    url,
-                    {
-                        reportPath: me.options.reportPath,
-                        parameters: JSON.stringify(me.parameterSets),
-                    },
-                    function (data) {
-                        if (success && typeof (success) === "function") {
-                            success(data);
-                        }
-                    },
-                    function () {
-                        if (error && typeof (error) === "function") {
-                            error();
-                        }
-                    }
-                );
+                me._saveModel(success, error);
             }
         },
-        getCurrentSet: function () {
+        getCurrentParameterList: function (reportPath) {
             var me = this;
-            var currentSet = null;
-            me._load();
-            if (me.parameterSets) {
-                $.each(me.parameterSets, function (index, parameterSet) {
+            var currentParameterList = null;
+            me._load(reportPath);
+            if (me.serverData && me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
                         if (parameterSet.id === me.currentSetId) {
-                            currentSet = JSON.stringify(parameterSet.data);
+                            currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentSet = JSON.stringify(parameterSet.data);
+                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
                     }
                 });
             }
-            return currentSet;
+            return currentParameterList;
         }
-    }
+    };
 });
 
 ///#source 1 1 /Forerunner/Common/js/Toolbase.js
@@ -1855,8 +1989,20 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var toolTypes = forerunner.ssr.constants.toolTypes;
+    var events = forerunner.ssr.constants.events;
 
     var dropdownContainerClass = "fr-toolbase-dropdown-container";
+
+    var getClassValue = function (textValue, defaultValue) {
+        var returnText = defaultValue;
+        if (typeof (textValue) !== "undefined") {
+            returnText = "";
+            if (textValue !== false && textValue !== null) {
+                returnText = textValue;
+            }
+        }
+        return returnText;
+    };
 
     /**
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
@@ -1965,11 +2111,15 @@ $(function () {
                 me._createDropdown($tool, toolInfo);
             }
 
+            if (toolInfo.toolType === toolTypes.select) {
+                $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+            }
+
             if (toolInfo.visible === false) {
                 $tool.hide();
             }
         },
-        _createDropdown: function($tool, toolInfo) {
+        _createDropdown: function ($tool, toolInfo) {
             var me = this;
 
             // Create the dropdown
@@ -1997,12 +2147,10 @@ $(function () {
                 }
             });
         },
-
-
         /**
-       * Return the tool object
-       * @function $.forerunner.toolBase#getTool
-       */
+         * Return the tool object
+         * @function $.forerunner.toolBase#getTool
+         */
         getTool: function (selectorClass) {
             var me = this;
             return me.allTools[selectorClass];
@@ -2153,13 +2301,13 @@ $(function () {
             var me = this;
 
             // Get class string options
-            var toolStateClass = me._getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
-            var iconClass = me._getClassValue(toolInfo.iconClass, "fr-icons24x24");
-            var toolContainerClass = me._getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
-            var groupContainerClass = me._getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
-            var itemContainerClass = me._getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
-            var itemTextContainerClass = me._getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
-            var itemTextClass = me._getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
+            var toolStateClass = getClassValue(toolInfo.toolStateClass, "fr-toolbase-state ");
+            var iconClass = getClassValue(toolInfo.iconClass, "fr-icons24x24");
+            var toolContainerClass = getClassValue(toolInfo.toolContainerClass, "fr-toolbase-toolcontainer");
+            var groupContainerClass = getClassValue(toolInfo.groupContainerClass, "fr-toolbase-groupcontainer");
+            var itemContainerClass = getClassValue(toolInfo.itemContainerClass, "fr-toolbase-itemcontainer");
+            var itemTextContainerClass = getClassValue(toolInfo.itemTextContainerClass, "fr-toolbase-item-text-container");
+            var itemTextClass = getClassValue(toolInfo.itemTextClass, "fr-toolbase-item-text");
 
             if (toolInfo.toolType === toolTypes.button) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" +
@@ -2173,6 +2321,9 @@ $(function () {
                 }
                 return "<input class='" + toolInfo.selectorClass + "'" + type + " />";
             }
+            else if (toolInfo.toolType === toolTypes.select) {
+                return "<div class='fr-toolbase-selectcontainer' />";
+            }
             else if (toolInfo.toolType === toolTypes.textButton) {
                 return "<div class='" + toolContainerClass + " " + toolStateClass + toolInfo.selectorClass + "'>" + me._getText(toolInfo) + "</div>";
             }
@@ -2185,7 +2336,7 @@ $(function () {
                     text = me._getText(toolInfo);
                 }
 
-                var imageClass = me._getClassValue(toolInfo.imageClass, "");
+                var imageClass = getClassValue(toolInfo.imageClass, "");
                 var rightImageDiv = "";
                 if (toolInfo.rightImageClass) {
                     rightImageDiv = "<div class='fr-toolbase-rightimage " + toolInfo.rightImageClass + "'></div>";
@@ -2202,16 +2353,6 @@ $(function () {
             else if (toolInfo.toolType === toolTypes.toolGroup) {
                 return "<div class='" + groupContainerClass + " " + toolInfo.selectorClass + "'></div>";
             }
-        },
-        _getClassValue: function (textValue, defaultValue) {
-            var returnText = defaultValue;
-            if (typeof (textValue) !== "undefined") {
-                returnText = "";
-                if (textValue !== false && textValue !== null) {
-                    returnText = textValue;
-                }
-            }
-            return returnText;
         },
         _getText: function (toolInfo) {
             var text;
@@ -2256,6 +2397,36 @@ $(function () {
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
+
+    $.widget(widgets.getFullname("selectTool"), {
+        options: {
+            toolClass: "fr-toolbase-selectinner",
+        },
+        _init: function () {
+            var me = this;
+            var optionClass = getClassValue(me.options.toolInfo.optionClass, "fr-toolbase-option");
+
+            me.element.html("");
+            var $selectContainer = $(
+                "<div class='" + me.options.toolClass + " fr-core-widget'>" +
+                    "<select class='" + me.options.toolInfo.selectorClass + "' readonly='true' ismultiple='false'></select>" +
+                "</div>");
+            me.element.append($selectContainer);
+        },
+        _create: function () {
+            var me = this;
+            me.model = me.options.toolInfo.model.call(me);
+            me.model.on(events.modelChanged, function (e, arg) {
+                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+                $select.html("");
+                $.each(arg.optionArray, function (index, option) {
+                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                    $select.append($option);
+                });
+            });
+        }
+    });  // $widget
+
 });  // function()
 
 ///#source 1 1 /Forerunner/Common/js/MessageBox.js
@@ -2963,8 +3134,6 @@ $(function () {
             //make sure container can scrollable when click phycial back button 
             //when modal dialog show up which disable scroll and not restore.
             me.$container.css("overflow", "");
-            forerunner.helper.timer.isAutoRefreshEnable = false;
-            forerunner.helper.timer.removeSetTimeout();
         },
         _selectedItemPath: null,
     };
@@ -4140,8 +4309,8 @@ $(function () {
                     bodyIndex = i;
             }
 
-            loc = bodyIndex >= 0 ? me._getMeasurmentsObj(RIContext.CurrObj, bodyIndex) : me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-          
+            loc = bodyIndex >= 0 ? sectionMeasurement.Measurements[bodyIndex] : me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
+            
             //Page Header
             if (RIContext.CurrObj.PageHeader)
                 $newObj.append(me._writeHeaderFooter(RIContext, "PageHeader", headerIndex));
@@ -4428,7 +4597,7 @@ $(function () {
                 $Sort.html("&nbsp");
                 var Direction = "None";
                 var sortDirection = forerunner.ssr.constants.sortDirection;
-
+                
                 if (RIContext.CurrObj.Elements.NonSharedElements.SortState === 2) {
                     $Sort.attr("class", "fr-render-sort-descending");
                     Direction = sortDirection.desc;
@@ -4440,7 +4609,10 @@ $(function () {
                 else
                     $Sort.attr("class", "fr-render-sort-unsorted");
 
-                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction, Clear: !me.shiftKeyDown }, function (e) { e.data.Viewer.sort(e.data.Direction, e.data.SortID, !e.shiftKey); });
+                $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction },
+                    function (e) {
+                        e.data.Viewer.sort(e.data.Direction, e.data.SortID, !(e.shiftKey));
+                    });
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
@@ -7094,6 +7266,325 @@ $(function () {
         },
     }); //$.widget
 });
+///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
+/**
+ * @file Contains the print widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var manageParamSets = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer").manageParamSets;
+
+    $.widget(widgets.getFullname(widgets.manageParamSets), {
+        options: {
+            $reportViewer: null,
+            $appContainer: null,
+            model: null
+        },
+        _initTBody: function() {
+            var me = this;
+            me.serverData = me.options.model.cloneServerData();
+            if (me.serverData === null || me.serverData === undefined) {
+                return;
+            }
+
+            // Create the rows from the server data
+            me._createRows();
+        },
+        _createRows: function() {
+            var me = this;
+
+            // Remove any previous event handlers
+            me.element.find(".fr-mps-input-id").off("change");
+            me.element.find(".fr-mps-default-id").off("click");
+            me.element.find(".fr-mps-all-users-id").off("click");
+            me.element.find(".fr-mps-delete-id").off("click");
+
+            me.$tbody.html("");
+            $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                var $row = me._createRow(index, parameterSet);
+                me.$tbody.append($row);
+            });
+
+            // Add any table body specific event handlers
+            me.element.find(".fr-mps-input-id").on("change", function (e) {
+                me._onChangeInput(e);
+            });
+            me.element.find(".fr-mps-default-id").on("click", function (e) {
+                me._onClickDefault(e);
+            });
+            me.element.find(".fr-mps-all-users-id").on("click", function (e) {
+                me._onClickAllUsers(e);
+            });
+            me.element.find(".fr-mps-delete-id").on("click", function (e) {
+                me._onClickDelete(e);
+            });
+        },
+        _createRow: function(index, parameterSet) {
+            var me = this;
+
+            var allUsersTdClass = "";
+            if (me.serverData.canEditAllUsersSet) {
+                allUsersTdClass = " fr-core-cursorpointer";
+            }
+
+            var textElement = "<input type='text' class='fr-mps-input-id fr-rtb-select-set' value='" + parameterSet.name + "'/>";
+            var allUsersClass = "fr-mps-all-users-check-id ";
+            var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
+            if (parameterSet.isAllUser) {
+                if (!me.serverData.canEditAllUsersSet) {
+                    textElement = parameterSet.name;
+                    deleteClass = "";
+                }
+                allUsersClass = "fr-mps-all-users-check-id ui-icon-check ui-icon ";
+            }
+
+            var defaultClass = "fr-mps-default-check-id ";
+            if (parameterSet.isDefault) {
+                defaultClass = "fr-mps-default-check-id ui-icon-check ui-icon ";
+            }
+
+            var rowClass = (index + 1) & 1 ? " class='fr-mps-odd-row'" : "";
+            var $row = $(
+                "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
+                    // Name
+                    "<td title='" + parameterSet.name + "'>" + textElement + "</td>" +
+                    // Default
+                    "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
+                    // All Users
+                    "<td class='fr-mps-all-users-id" + allUsersTdClass + "'><div class='" + allUsersClass + "fr-core-center' /></td>" +
+                    // Delete
+                    "<td class='fr-mps-delete-id ui-state-error-text fr-core-cursorpointer'><div" + deleteClass + "/></td>" +
+                "</tr>");
+            return $row;
+        },
+        _init: function () {
+            var me = this;
+
+            me.element.html("");
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-mps-innerPage fr-core-center'>" +
+                    "<div class='fr-mps-header fr-core-dialog-header'>" +
+                        "<div class='fr-mps-icon-container'>" +
+                            "<div class='fr-mps-icon-inner'>" +
+                                "<div class='fr-icons24x24 fr-icons24x24-parameterSets fr-mps-align-middle'></div>" +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-mps-title-container'>" +
+                            "<div class='fr-mps-title'>" +
+                                manageParamSets.manageSets +
+                            "</div>" +
+                        "</div>" +
+                        "<div class='fr-mps-cancel-container'>" +
+                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
+                        "</div>" +
+                    "</div>" +
+                    "<form class='fr-mps-form'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
+                            "<table class='fr-mps-main-table'>" +
+                                "<thead>" +
+                                    "<tr>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
+                                    "</tr>" +
+                                "</thead>" +
+                                "<tbody class='fr-mps-main-table-body-id'></tbody>" +
+                            "</table>" +
+                            "<div class='fr-core-dialog-submit-container'>" +
+                                "<div class='fr-core-center'>" +
+                                    "<input name='submit' type='button' class='fr-mps-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + manageParamSets.apply + "' />" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+            me.$tbody = me.element.find(".fr-mps-main-table-body-id");
+            me._initTBody();
+
+            /*
+            me.element.find(".fr-print-text").each(function () {
+                $(this).attr("required", "true").attr("number", "true");
+                $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
+            });
+            me._resetValidateMessage();
+            me._validateForm(me.element.find(".fr-print-form"));
+            */
+
+            me.element.find(".fr-mps-cancel").on("click", function(e) {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-mps-add-id").on("click", function(e) {
+                me._onAdd(e);
+            });
+
+            me.element.find(".fr-mps-submit-id").on("click", function (e) {
+                me.options.model.applyServerData.call(me.options.model, me.serverData);
+                me.closeDialog();
+            });
+        },
+        _findId: function (e) {
+            var $target = $(e.target);
+            var $tr = $target;
+            while (!$tr.is("tr") && !$tr.is("table")) {
+                $tr = $tr.parent();
+            }
+            if ($tr.is("tr")) {
+                return $tr.attr("modelid");
+            }
+
+            return null;
+        },
+        _findRow: function(id) {
+            var me = this;
+            return me.$tbody.find("[modelid='" + id + "']");
+        },
+        _onAdd: function (e) {
+            var me = this;
+            var newSet = me.options.model.getNewSet(manageParamSets.newSet);
+            me.serverData.parameterSets.push(newSet);
+            me._createRows();
+            var $tr = me._findRow(newSet.id);
+            var $input = $tr.find("input");
+            $input.focus();
+        },
+        _onChangeInput: function(e) {
+            var me = this;
+            var $input = $(e.target);
+            var id = me._findId(e);
+            $.each(me.serverData.parameterSets, function (index, set) {
+                if (set.id === id) {
+                    set.name = $input.val();
+                }
+            });
+        },
+        _onClickDefault: function(e) {
+            var me = this;
+
+            // Update the UI
+            me.$tbody.find(".fr-mps-default-id div").removeClass("ui-icon-check ui-icon");
+            var $div = $(e.target);
+            if (!$div.hasClass("fr-mps-default-check-id")) {
+                $div = $div.find(".fr-mps-default-check-id");
+            }
+            $div.addClass("ui-icon-check ui-icon");
+
+            // Update the paramaterSets
+            var id = me._findId(e);
+            $.each(me.serverData.parameterSets, function (index, set) {
+                if (set.id === id) {
+                    set.isDefault = true;
+                } else {
+                    set.isDefault = false;
+                }
+            });
+        },
+        _onClickAllUsers: function(e) {
+            var me = this;
+
+            // Update the UI
+            var $div = $(e.target);
+            if (!$div.hasClass("fr-mps-all-users-check-id")) {
+                $div = $div.find(".fr-mps-all-users-check-id");
+            }
+            $div.toggleClass("ui-icon-check ui-icon");
+
+            // Update the paramaterSets
+            var id = me._findId(e);
+            $.each(me.serverData.parameterSets, function (index, set) {
+                if (set.id === id) {
+                    set.isAllUser = !set.isAllUser;
+                }
+            });
+        },
+        _onClickDelete: function(e) {
+            var me = this;
+
+            if (me.serverData.parameterSets.length <= 1) {
+                return;
+            }
+
+            // Update the UI
+            var id = me._findId(e);
+            var $tr = me._findRow(id);
+            $tr.remove();
+
+            // Update the paramaterSets
+            var id = me._findId(e);
+            var setIndex = -1;
+            var isDefault = false;
+            $.each(me.serverData.parameterSets, function (index, set) {
+                if (set.id === id) {
+                    setIndex = index;
+                    isDefault = set.isDefault;
+                }
+            });
+
+            if (setIndex !== -1) {
+                if (isDefault) {
+                    var $first = me.$tbody.find(".fr-mps-default-check-id").first();
+                    me._onClickDefault({ target: $first });
+                }
+                me.serverData.parameterSets.splice(setIndex, 1);
+            }
+        },
+        /**
+         * @function $.forerunner.userSettings#openDialog
+         */
+        openDialog: function () {
+            var me = this;
+            me._initTBody();
+            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "inline-block");
+            });
+        },
+        /**
+         * @function $.forerunner.userSettings#openDialog
+         */
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+                me.element.css("display", "");
+            });
+        },
+
+        _validateForm: function (form) {
+            form.validate({
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find("span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find("span").addClass("fr-print-error-position");
+                    $(element).addClass("fr-print-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find("span").removeClass("fr-print-error-position");
+                    $(element).removeClass("fr-print-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = me.locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
+        },
+    }); //$.widget
+});
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportViewerInitializer.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
@@ -7111,7 +7602,9 @@ $(function () {
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
     ssr.ReportViewerInitializer = function (options) {
-        this.options = {
+        var me = this;
+
+        me.options = {
             $toolbar: null,
             $toolPane: null,
             $viewer: null,
@@ -7132,11 +7625,18 @@ $(function () {
 
         // Merge options with the default settings
         if (options) {
-            $.extend(this.options, options);
+            $.extend(me.options, options);
         }
+
+        // Create the parameter model object for this report
+        me.parameterModel = new ssr.ParameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {
+        getParameterModel: function () {
+            var me = this;
+            return me.parameterModel;
+        },
         render: function () {
             var me = this;
             var $viewer = me.options.$viewer;
@@ -7147,7 +7647,9 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: me.getSavedParameters,
+                loadParamsCallback: function () {
+                    return me.getSavedParameters.call(me, me.options.ReportPath);
+                },
                 userSettings: me.options.userSettings,
                 $appContainer: me.options.$appContainer
             });
@@ -7179,7 +7681,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -7217,12 +7719,25 @@ $(function () {
                 $viewer.reportViewer("option", "paramArea", $paramarea);
             }
 
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
+            var $dlg;
+            $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
                 $dlg.reportPrint({
                     $appContainer: me.options.$appContainer,
                     $reportViewer: $viewer
+                });
+                me.options.$appContainer.append($dlg);
+            }
+
+            $dlg = me.options.$appContainer.find(".fr-mps-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                $dlg.manageParamSets({
+                    $appContainer: me.options.$appContainer,
+                    $reportViewer: $viewer,
+                    $reportViewerInitializer: me,
+                    model: me.parameterModel
                 });
                 me.options.$appContainer.append($dlg);
             }
@@ -7331,8 +7846,8 @@ $(function () {
             }
         },
         getSavedParameters: function (reportPath) {
-            var parameterModel = forerunner.ssr.models.getParameterModel(reportPath);
-            return parameterModel.getCurrentSet();
+            var me = this;
+            return me.parameterModel.getCurrentParameterList(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 
@@ -7520,7 +8035,7 @@ $(function () {
             historyBack: null,
             isFullScreen: true
         },
-        _createReportExplorer: function (path, view) {
+        _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
@@ -7535,7 +8050,10 @@ $(function () {
 
             var currentSelectedPath = layout._selectedItemPath;// me._selectedItemPath;
             layout.$mainsection.html(null);
-            layout.$mainsection.show();
+            if (showmainesection)
+                layout.$mainsection.show();
+            else
+                layout.$mainsection.hide();
             layout.$docmapsection.hide();
             me.$reportExplorer = layout.$mainsection.reportExplorer({
                 reportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
@@ -7559,22 +8077,30 @@ $(function () {
             var path0 = path;
             var layout = me.DefaultAppTemplate;
 
-            me._createReportExplorer(path, view)
+            if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
+                me.DefaultAppTemplate.$mainsection.html("");
+                me.DefaultAppTemplate.$mainsection.hide();
+            }
 
-            var $toolbar = layout.$mainheadersection;
-            $toolbar.reportExplorerToolbar({
-                navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
-            });
-            $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me._createReportExplorer(path, view, true);
 
-            layout.$rightheader.height(layout.$topdiv.height());
-            layout.$leftheader.height(layout.$topdiv.height());
-            layout.$rightheaderspacer.height(layout.$topdiv.height());
-            layout.$leftheaderspacer.height(layout.$topdiv.height());
+                var $toolbar = layout.$mainheadersection;
+                $toolbar.reportExplorerToolbar({
+                    navigateTo: me.options.navigateTo,
+                    $appContainer: layout.$container
+                });
+                $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 
-            layout._selectedItemPath=path0; //me._selectedItemPath = path0;
-            me.element.addClass("fr-Explorer-background");
+                layout.$rightheader.height(layout.$topdiv.height());
+                layout.$leftheader.height(layout.$topdiv.height());
+                layout.$rightheaderspacer.height(layout.$topdiv.height());
+                layout.$leftheaderspacer.height(layout.$topdiv.height());
+
+                layout._selectedItemPath = path0; //me._selectedItemPath = path0;
+                me.element.addClass("fr-Explorer-background");
+            }, timeout);
         },
         /**
          * Transition to ReportViewer view
@@ -7587,19 +8113,26 @@ $(function () {
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
             // the user navigates directly to a report via the URL
+            me.DefaultAppTemplate.$mainsection.html("");
+            me.DefaultAppTemplate.$mainsection.hide();
             if (!me.$reportExplorer)
-                me._createReportExplorer();
+                me._createReportExplorer(false);
+
+            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
-                DefaultAppTemplate: me.DefaultAppTemplate,
-                path: path,
-                navigateTo: me.options.navigateTo,
-                historyBack: me.options.historyBack,
-                isReportManager: true,
-                userSettings: me.$reportExplorer.reportExplorer("getUserSettings")
-            });
-
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            setTimeout(function () {
+                me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
+                    DefaultAppTemplate: me.DefaultAppTemplate,
+                    path: path,
+                    navigateTo: me.options.navigateTo,
+                    historyBack: me.options.historyBack,
+                    isReportManager: true,
+                    userSettings: userSettings
+                });
+                me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+            }, timeout);
             me.element.addClass("fr-Explorer-background");
             me.element.removeClass("fr-Explorer-background");
         },

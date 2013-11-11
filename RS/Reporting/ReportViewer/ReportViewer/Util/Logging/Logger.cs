@@ -36,15 +36,25 @@ namespace ReportManager.Util.Logging
         //}
 
         static private TraceSource ts = new TraceSource("ForerunnerMobilizer", SourceLevels.All);
+        static private bool isInit = false;
 
         static Logger()
         {
-            string path = System.Web.HttpContext.Current.Server.MapPath("~");
-            DateTime now = DateTime.Now;
-            string fileName = String.Format("Forerunner_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
-            TraceListener listener = new TextWriterTraceListener(path + "../LogFiles/" + fileName);
-            ts.Listeners.Add(listener);
-            ts.Listeners.Add(new ConsoleTraceListener());
+            lock (ts)
+            {
+                if (!isInit)
+                {
+                    string path = System.Web.HttpContext.Current.Server.MapPath("~");
+                    DateTime now = DateTime.Now;
+                    string fileName = String.Format("Forerunner_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
+                    string filePath = path + @"\..\LogFiles\" + fileName;
+                    TraceListener listener = new TextWriterTraceListener(filePath);
+                    ts.Listeners.Add(listener);
+                    ts.Listeners.Add(new ConsoleTraceListener());
+                    Trace(LogType.Info, "Logging to " + fileName + "...");
+                    isInit = true;
+                }
+            }
         }
 
         public static void Trace(LogType logType, string message, Object[] objects = null) 

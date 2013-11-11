@@ -306,7 +306,7 @@ namespace ForerunnerLicense
             // Create POST data and convert it to a byte array.            
             byte[] byteArray = Encoding.UTF8.GetBytes (Value);
             
-            request.ContentType = "tesx/xml";            
+            request.ContentType = "text/xml";            
             request.ContentLength = byteArray.Length;
             request.Timeout = 100000;
             

@@ -157,6 +157,7 @@
     "default":"Default",
     "allUsers":"All",
     "delete":"Delete",
-    "apply":"Apply"
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

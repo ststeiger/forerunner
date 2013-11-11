@@ -440,7 +440,7 @@ $(function () {
                 var $select = me.element.find("." + me.options.toolInfo.selectorClass);
                 $select.html("");
                 $.each(arg.optionArray, function (index, option) {
-                    $option = $("<option value=" + option.value + ">" + option.text + "</option>");
+                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
                     $select.append($option);
                 });
             });

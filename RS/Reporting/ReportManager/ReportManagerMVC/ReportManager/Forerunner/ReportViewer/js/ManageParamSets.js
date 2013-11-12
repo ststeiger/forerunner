@@ -129,7 +129,7 @@ $(function () {
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +

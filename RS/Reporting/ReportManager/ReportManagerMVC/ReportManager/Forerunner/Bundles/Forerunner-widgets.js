@@ -1415,6 +1415,8 @@ $(function () {
                             me.element.show(); //scrollto does not work with the slide in functions:(
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
+                        if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
+                            me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                     }
@@ -1465,11 +1467,11 @@ $(function () {
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
-            me._addSetPageCallback(function () {
-                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+            if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
-                }
-            });
+                })
+            };
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1724,7 +1726,7 @@ $(function () {
                     }
                 }, period * 1000);
 
-                //console.log('add settimeout')
+                //console.log('add settimeout, period: ' + period + "s");
             }
         },
         _removeSetTimeout: function () {

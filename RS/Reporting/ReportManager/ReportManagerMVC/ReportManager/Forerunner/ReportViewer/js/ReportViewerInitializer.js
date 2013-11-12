@@ -59,9 +59,7 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: function () {
-                    return me.getSavedParameters.call(me, me.options.ReportPath);
-                },
+                parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
                 $appContainer: me.options.$appContainer
             });
@@ -256,10 +254,6 @@ $(function () {
                     me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
             }
-        },
-        getSavedParameters: function (reportPath) {
-            var me = this;
-            return me.parameterModel.getCurrentParameterList(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

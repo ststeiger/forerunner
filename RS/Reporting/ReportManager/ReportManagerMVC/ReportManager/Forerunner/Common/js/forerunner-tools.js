@@ -758,7 +758,16 @@ $(function () {
                 var initializer = me.options.$ReportViewerInitializer;
                 return initializer.getParameterModel.call(initializer);
             },
-            tooltip: locData.toolbar.selectSet
+            tooltip: locData.toolbar.selectSet,
+            events: {
+                change: function (e) {
+                    var $select = $(".fr-layout-rightheader select");
+                    var id = $select.val();
+                    var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
+                    parameterModel.setCurrentSet(id);
+                }
+            }
+
         },
         /** @member */
         btnSavParam: {

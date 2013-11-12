@@ -260,7 +260,10 @@ $(function () {
             closeModalDialog: "closeModalDialog",
 
             /** @constant */
-            modelChanged: "modelchanged"
+            modelChanged: "modelchanged",
+
+            /** @constant */
+            modelSetChanged: "modelsetchanged",
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

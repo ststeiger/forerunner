@@ -421,8 +421,11 @@ $(function () {
                 });
             };
 
-            var hasCrypto = typeof (window.crypto) != 'undefined',
+            var hasRandomValues = false;
+            var hasCrypto = typeof (window.crypto) != 'undefined';
+            if (hasCrypto) {
                 hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
+            };
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
         }

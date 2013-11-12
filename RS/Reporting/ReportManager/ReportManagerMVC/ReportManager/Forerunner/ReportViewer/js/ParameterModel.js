@@ -128,7 +128,7 @@ $(function () {
         _triggerModelChange: function() {
             var me = this;
             var optionArray = me._getOptionArray();
-            me.trigger("modelchanged", { optionArray: optionArray });
+            me.trigger(events.modelChanged, { optionArray: optionArray });
         },
         _isLoaded: function (reportPath) {
             var me = this;
@@ -196,6 +196,22 @@ $(function () {
                     });
                 }
                 me._saveModel(success, error);
+            }
+        },
+        setCurrentSet: function (id) {
+            var me = this;
+            if (id && me.serverData && me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                    if (parameterSet.id === id) {
+                        me.currentSetId = id;
+                        if (parameterSet.data) {
+                            me.trigger(events.modelSetChanged, JSON.stringify(parameterSet.data));
+                        }
+                        else {
+                            me.trigger(events.modelSetChanged, null);
+                        }
+                    }
+                });
             }
         },
         getCurrentParameterList: function (reportPath) {

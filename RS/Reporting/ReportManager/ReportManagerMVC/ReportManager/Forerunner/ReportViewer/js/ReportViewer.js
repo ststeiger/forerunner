@@ -118,6 +118,12 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
+
+            if (me.options.parameterModel) {
+                me.options.parameterModel.on(events.modelSetChanged, function (e, args) {
+                    me._onModelSetChanged.call(me, e, args);
+                });
+            }
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -1235,11 +1241,18 @@ $(function () {
         },
        
         //Page Loading
+        _onModelSetChanged: function (e, savedParams) {
+            var me = this;
+            var pageNum = me.getCurPage();
+            if (savedParams) {
+                me.refreshParameters(savedParams, true, pageNum);
+            }
+        },
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var loadParams = me.options.loadParamsCallback;
+            var loadParams = me.options.parameterModel.getCurrentParameterList;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (loadParams ? loadParams(me.options.reportPath) : null);
+                (loadParams ? loadParams.call(me.options.parameterModel, me.options.reportPath) : null);
 
             if (savedParams) {
                 if (me.options.paramArea) {

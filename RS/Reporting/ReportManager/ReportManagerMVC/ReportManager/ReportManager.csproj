@@ -346,6 +346,9 @@
     </Content>
     <Content Include="Views\Debug\Index.cshtml" />
     <Content Include="JSdoc\readme.md" />
+    <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
@@ -354,9 +357,6 @@
     </Content>
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle">
-      <SubType>Designer</SubType>
     </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />

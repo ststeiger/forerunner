@@ -2783,6 +2783,14 @@ $(function () {
                     me._updateTopDiv(me);
                 });
             }
+            
+            //IOS safari have a bug that report the window height wrong
+            if (forerunner.device.isiOS()) {
+                $(document.documentElement).height(window.innerHeight);
+                $(window).on("orientationchange", function () {
+                    $(document.documentElement).height(window.innerHeight);
+                });
+            }
         },
 
         _containElement: function(element , className) {

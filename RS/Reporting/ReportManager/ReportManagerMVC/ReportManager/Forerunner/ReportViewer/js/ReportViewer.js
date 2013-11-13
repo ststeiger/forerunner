@@ -118,6 +118,12 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
+
+            if (me.options.parameterModel) {
+                me.options.parameterModel.on(events.parameterModelSetChanged(), function (e, args) {
+                    me._onModelSetChanged.call(me, e, args);
+                });
+            }
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -1235,11 +1241,17 @@ $(function () {
         },
        
         //Page Loading
+        _onModelSetChanged: function (e, savedParams) {
+            var me = this;
+            var pageNum = me.getCurPage();
+            if (savedParams) {
+                me.refreshParameters(savedParams, true, pageNum);
+            }
+        },
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var loadParams = me.options.loadParamsCallback;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (loadParams ? loadParams(me.options.reportPath) : null);
+                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
 
             if (savedParams) {
                 if (me.options.paramArea) {
@@ -1414,6 +1426,8 @@ $(function () {
                             me.element.show(); //scrollto does not work with the slide in functions:(
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
+                        if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
+                            me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                     }
@@ -1464,11 +1478,11 @@ $(function () {
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
-            me._addSetPageCallback(function () {
-                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+            if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
-                }
-            });
+                })
+            };
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1723,7 +1737,7 @@ $(function () {
                     }
                 }, period * 1000);
 
-                //console.log('add settimeout')
+                //console.log('add settimeout, period: ' + period + "s");
             }
         },
         _removeSetTimeout: function () {

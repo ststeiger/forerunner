@@ -155,7 +155,7 @@
     "name":"Name",
     "defaultHeader":"Default",
     "allUsers":"All",
-    "delete":"Delete",
+    "deleteHeader":"Delete",
     "apply":"Apply",
     "newSet":"New Set"
   }

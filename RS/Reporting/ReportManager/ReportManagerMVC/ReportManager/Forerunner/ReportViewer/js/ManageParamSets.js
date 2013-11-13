@@ -22,7 +22,7 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
-            me.serverData = me.options.model.cloneServerData();
+            me.serverData = me.options.model.parameterModel("cloneServerData");
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -43,6 +43,17 @@ $(function () {
             $.each(me.serverData.parameterSets, function (index, parameterSet) {
                 var $row = me._createRow(index, parameterSet);
                 me.$tbody.append($row);
+
+                if (me.serverData.canEditAllUsersSet) {
+                    $row.find(".fr-mps-all-users-id").on("click", function (e) {
+                        me._onClickAllUsers(e);
+                    });
+                }
+                if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                    $row.find(".fr-mps-delete-id").on("click", function (e) {
+                        me._onClickDelete(e);
+                    });
+                }
             });
 
             // Add any table body specific event handlers
@@ -51,12 +62,6 @@ $(function () {
             });
             me.element.find(".fr-mps-default-id").on("click", function (e) {
                 me._onClickDefault(e);
-            });
-            me.element.find(".fr-mps-all-users-id").on("click", function (e) {
-                me._onClickAllUsers(e);
-            });
-            me.element.find(".fr-mps-delete-id").on("click", function (e) {
-                me._onClickDelete(e);
             });
         },
         _createRow: function(index, parameterSet) {
@@ -124,7 +129,7 @@ $(function () {
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +
@@ -160,7 +165,7 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                me.options.model.applyServerData.call(me.options.model, me.serverData);
+                me.options.model.parameterModel("applyServerData", me.serverData);
                 me.closeDialog();
             });
         },
@@ -182,7 +187,7 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.getNewSet(manageParamSets.newSet);
+            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet);
             me.serverData.parameterSets.push(newSet);
             me._createRows();
             var $tr = me._findRow(newSet.id);

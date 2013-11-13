@@ -119,6 +119,12 @@ $(function () {
             me.element.append(me.$reportContainer);
             me._addLoadingIndicator();
             me.hideDocMap();
+
+            if (me.options.parameterModel) {
+                me.options.parameterModel.on(events.parameterModelSetChanged(), function (e, args) {
+                    me._onModelSetChanged.call(me, e, args);
+                });
+            }
         },
         /**
          * @function $.forerunner.reportViewer#getUserSettings
@@ -1236,11 +1242,17 @@ $(function () {
         },
        
         //Page Loading
+        _onModelSetChanged: function (e, savedParams) {
+            var me = this;
+            var pageNum = me.getCurPage();
+            if (savedParams) {
+                me.refreshParameters(savedParams, true, pageNum);
+            }
+        },
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var loadParams = me.options.loadParamsCallback;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (loadParams ? loadParams(me.options.reportPath) : null);
+                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
 
             if (savedParams) {
                 if (me.options.paramArea) {
@@ -1415,6 +1427,8 @@ $(function () {
                             me.element.show(); //scrollto does not work with the slide in functions:(
                         if (bookmarkID)
                             me._navToLink(bookmarkID);
+                        if (me.pages[newPageNum].reportObj.ReportContainer && me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh) // reset auto refresh if exist.
+                            me._setAutoRefresh(me.pages[newPageNum].reportObj.ReportContainer.Report.AutoRefresh);
                         if (flushCache !== true)
                             me._cachePages(newPageNum);
                     }
@@ -1465,11 +1479,11 @@ $(function () {
             }
             $report.reportRender({ reportViewer: me, responsive: responsiveUI });
 
-            me._addSetPageCallback(function () {
-                if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+            if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+                me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
-                }
-            });
+                })
+            };
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -1724,7 +1738,7 @@ $(function () {
                     }
                 }, period * 1000);
 
-                //console.log('add settimeout')
+                //console.log('add settimeout, period: ' + period + "s");
             }
         },
         _removeSetTimeout: function () {
@@ -1767,26 +1781,18 @@ forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    ssr.ParameterModel = function (options) {
-        var me = this;
-        me.options = {
-        };
+    $.widget(widgets.getFullname(widgets.parameterModel), {
+        options: {
 
-        // Merge options with the default settings
-        if (options) {
-            $.extend(me.options, options);
-        }
-
-        // Add support for jQuery events
-        $.extend(me, $({}));
-
-        me.currentSetId = null;
-        me.serverData = null;
-    };
-
-    ssr.ParameterModel.prototype = {
+        },
+        _create: function () {
+            var me = this;
+            me.currentSetId = null;
+            me.serverData = null;
+        },
         getNewSet: function (name, parameterList) {
             var newSet = {
                 isAllUser: false,
@@ -1840,7 +1846,6 @@ $(function () {
                     me.serverData.parameterSets.push(applySet);
                 }
             });
-
             // Next handle any deletions
             var deleteArray = [];
             $.each(me.serverData.parameterSets, function (index, modelSet) {
@@ -1885,7 +1890,7 @@ $(function () {
         _triggerModelChange: function() {
             var me = this;
             var optionArray = me._getOptionArray();
-            me.trigger("modelchanged", { optionArray: optionArray });
+            me._trigger(events.modelChanged, null, { optionArray: optionArray });
         },
         _isLoaded: function (reportPath) {
             var me = this;
@@ -1933,7 +1938,7 @@ $(function () {
                         success(data);
                     }
                 },
-                function () {
+                function (data) {
                     if (error && typeof (error) === "function") {
                         error();
                     }
@@ -1955,6 +1960,22 @@ $(function () {
                 me._saveModel(success, error);
             }
         },
+        setCurrentSet: function (id) {
+            var me = this;
+            if (id && me.serverData && me.serverData.parameterSets) {
+                $.each(me.serverData.parameterSets, function (index, parameterSet) {
+                    if (parameterSet.id === id) {
+                        me.currentSetId = id;
+                        if (parameterSet.data) {
+                            me._trigger(events.modelSetChanged, null, JSON.stringify(parameterSet.data));
+                        }
+                        else {
+                            me._trigger(events.modelSetChanged, null, null);
+                        }
+                    }
+                });
+            }
+        },
         getCurrentParameterList: function (reportPath) {
             var me = this;
             var currentParameterList = null;
@@ -1962,20 +1983,22 @@ $(function () {
             if (me.serverData && me.serverData.parameterSets) {
                 $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
-                        if (parameterSet.id === me.currentSetId) {
+                        if (parameterSet.id === me.currentSetId && parameterSet.data) {
                             currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
+                        if (parameterSet.data) {
+                            currentParameterList = JSON.stringify(parameterSet.data);
+                        }
                     }
                 });
             }
             return currentParameterList;
         }
-    };
-});
+    });  // $.widget(
+});  // $(function ()
 
 ///#source 1 1 /Forerunner/Common/js/Toolbase.js
 /**
@@ -2416,7 +2439,7 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.modelChanged, function (e, arg) {
+            me.model.on(events.parameterModelChanged(), function (e, arg) {
                 var $select = me.element.find("." + me.options.toolInfo.selectorClass);
                 $select.html("");
                 $.each(arg.optionArray, function (index, option) {
@@ -7291,7 +7314,7 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
-            me.serverData = me.options.model.cloneServerData();
+            me.serverData = me.options.model.parameterModel("cloneServerData");
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -7312,6 +7335,17 @@ $(function () {
             $.each(me.serverData.parameterSets, function (index, parameterSet) {
                 var $row = me._createRow(index, parameterSet);
                 me.$tbody.append($row);
+
+                if (me.serverData.canEditAllUsersSet) {
+                    $row.find(".fr-mps-all-users-id").on("click", function (e) {
+                        me._onClickAllUsers(e);
+                    });
+                }
+                if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                    $row.find(".fr-mps-delete-id").on("click", function (e) {
+                        me._onClickDelete(e);
+                    });
+                }
             });
 
             // Add any table body specific event handlers
@@ -7320,12 +7354,6 @@ $(function () {
             });
             me.element.find(".fr-mps-default-id").on("click", function (e) {
                 me._onClickDefault(e);
-            });
-            me.element.find(".fr-mps-all-users-id").on("click", function (e) {
-                me._onClickAllUsers(e);
-            });
-            me.element.find(".fr-mps-delete-id").on("click", function (e) {
-                me._onClickDelete(e);
             });
         },
         _createRow: function(index, parameterSet) {
@@ -7393,7 +7421,7 @@ $(function () {
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.delete + "</th>" +
+                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +
@@ -7429,7 +7457,7 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                me.options.model.applyServerData.call(me.options.model, me.serverData);
+                me.options.model.parameterModel("applyServerData", me.serverData);
                 me.closeDialog();
             });
         },
@@ -7451,7 +7479,7 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.getNewSet(manageParamSets.newSet);
+            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet);
             me.serverData.parameterSets.push(newSet);
             me._createRows();
             var $tr = me._findRow(newSet.id);
@@ -7629,7 +7657,7 @@ $(function () {
         }
 
         // Create the parameter model object for this report
-        me.parameterModel = new ssr.ParameterModel();
+        me.parameterModel = $({}).parameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -7647,9 +7675,7 @@ $(function () {
                 reportPath: me.options.ReportPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
-                loadParamsCallback: function () {
-                    return me.getSavedParameters.call(me, me.options.ReportPath);
-                },
+                parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
                 $appContainer: me.options.$appContainer
             });
@@ -7844,10 +7870,6 @@ $(function () {
                     me.$itemFavorite.addClass("fr-icons24x24-favorite-plus");
                 }
             }
-        },
-        getSavedParameters: function (reportPath) {
-            var me = this;
-            return me.parameterModel.getCurrentParameterList(reportPath);
         }
     };  // ssr.ReportViewerInitializer.prototype
 

@@ -758,7 +758,16 @@ $(function () {
                 var initializer = me.options.$ReportViewerInitializer;
                 return initializer.getParameterModel.call(initializer);
             },
-            tooltip: locData.toolbar.selectSet
+            tooltip: locData.toolbar.selectSet,
+            events: {
+                change: function (e) {
+                    var $select = $(".fr-layout-rightheader select");
+                    var id = $select.val();
+                    var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
+                    parameterModel.parameterModel("setCurrentSet", id);
+                }
+            }
+
         },
         /** @member */
         btnSavParam: {
@@ -770,7 +779,7 @@ $(function () {
                 click: function (e) {
                     var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
-                    parameterModel.save(
+                    parameterModel.parameterModel("save",
                         parameterList,
                         function (data) {
                             forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);

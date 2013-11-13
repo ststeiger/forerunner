@@ -95,6 +95,12 @@ ${EndIf}
 !macroend
 
 Section "ReportManager" SEC01
+  ;Here is to get MobilizerV1 parent folder
+  Push "$INSTDIR"
+  Call GetParent
+  Pop $R0
+  CreateDirectory "$R0\LogFiles"
+  
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifnewer
   File "${LOCALROOT}\bin\WebGrease.dll"
@@ -356,6 +362,57 @@ Function fun_ApplicationConfig_RunRegister
   ExecWait "$INSTDIR\Config\SetupUtil.exe"
 FunctionEnd
 
+;To call function in uninstall section function must prefixed with un. 
+;so we have two GetParent methods here even they have same code.
+Function un.GetParent
+   Exch $R0
+   Push $R1
+   Push $R2
+   Push $R3
+
+   StrCpy $R1 0
+   StrLen $R2 $R0
+
+   loop:
+     IntOp $R1 $R1 + 1
+     IntCmp $R1 $R2 get 0 get
+     StrCpy $R3 $R0 1 -$R1
+     StrCmp $R3 "\" get
+     Goto loop
+
+   get:
+     StrCpy $R0 $R0 -$R1
+
+     Pop $R3
+     Pop $R2
+     Pop $R1
+     Exch $R0
+FunctionEnd
+
+Function GetParent
+   Exch $R0
+   Push $R1
+   Push $R2
+   Push $R3
+
+   StrCpy $R1 0
+   StrLen $R2 $R0
+
+   loop:
+     IntOp $R1 $R1 + 1
+     IntCmp $R1 $R2 get 0 get
+     StrCpy $R3 $R0 1 -$R1
+     StrCmp $R3 "\" get
+     Goto loop
+
+   get:
+     StrCpy $R0 $R0 -$R1
+
+     Pop $R3
+     Pop $R2
+     Pop $R1
+     Exch $R0
+FunctionEnd
 
 Section Uninstall
   Delete "$INSTDIR\config.ini"
@@ -558,14 +615,23 @@ Section Uninstall
   RMDir "$INSTDIR\Forerunner\Bundles"
   RMDir "$INSTDIR\Forerunner\Controllers"
   RMDir "$INSTDIR\Forerunner"
+  RMDir "$INSTDIR\Controllers"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
+   ;$INSTDIR is the folder where uninst.exe belong to which is MolibizerV1
   RMDir "$INSTDIR"
+  
+  ;Here is to get MobilizerV1 parent folder
+  Push "$INSTDIR"
+  Call un.GetParent
+  Pop $R0
+  ;Recursive delete the LogFiles folder
+  RMDir /r "$R0\LogFiles"
+  ;We can't delete the root folder, it may delete system folder.
+  ;RMDir "$R0"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
   SetAutoClose true
 SectionEnd
-
-

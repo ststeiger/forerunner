@@ -133,6 +133,8 @@ $(function () {
             rightToolbar: "rightToolbar",
             /** @constant */
             manageParamSets: "manageParamSets",
+            /** @constant */
+            parameterModel: "parameterModel",
 
             /** @constant */
             namespace: "forerunner",
@@ -259,7 +261,13 @@ $(function () {
             closeModalDialog: "closeModalDialog",
 
             /** @constant */
-            modelChanged: "modelchanged"
+            modelChanged: "changed",
+            /** widget + event, lowercase */
+            parameterModelChanged: function () { return (forerunner.ssr.constants.widgets.parameterModel + this.modelChanged).toLowerCase(); },
+
+            /** @constant */
+            modelSetChanged: "setchanged",
+            parameterModelSetChanged: function () { return (forerunner.ssr.constants.widgets.parameterModel + this.modelSetChanged).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -418,8 +426,11 @@ $(function () {
                 });
             };
 
-            var hasCrypto = typeof (window.crypto) != 'undefined',
+            var hasRandomValues = false;
+            var hasCrypto = typeof (window.crypto) != 'undefined';
+            if (hasCrypto) {
                 hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
+            };
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
         }

@@ -764,7 +764,7 @@ $(function () {
                     var $select = $(".fr-layout-rightheader select");
                     var id = $select.val();
                     var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
-                    parameterModel.setCurrentSet(id);
+                    parameterModel.parameterModel("setCurrentSet", id);
                 }
             }
 
@@ -779,7 +779,7 @@ $(function () {
                 click: function (e) {
                     var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
                     var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
-                    parameterModel.save(
+                    parameterModel.parameterModel("save",
                         parameterList,
                         function (data) {
                             forerunner.dialog.showMessageBox(e.data.me.options.$appContainer, locData.messages.saveParamSuccess, locData.toolbar.saveParam);

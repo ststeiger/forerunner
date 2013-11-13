@@ -121,7 +121,7 @@ $(function () {
             me.hideDocMap();
 
             if (me.options.parameterModel) {
-                me.options.parameterModel.on(events.modelSetChanged, function (e, args) {
+                me.options.parameterModel.on(events.parameterModelSetChanged(), function (e, args) {
                     me._onModelSetChanged.call(me, e, args);
                 });
             }
@@ -1251,9 +1251,8 @@ $(function () {
         },
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var loadParams = me.options.parameterModel.getCurrentParameterList;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (loadParams ? loadParams.call(me.options.parameterModel, me.options.reportPath) : null);
+                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
 
             if (savedParams) {
                 if (me.options.paramArea) {
@@ -1782,26 +1781,18 @@ forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    ssr.ParameterModel = function (options) {
-        var me = this;
-        me.options = {
-        };
+    $.widget(widgets.getFullname(widgets.parameterModel), {
+        options: {
 
-        // Merge options with the default settings
-        if (options) {
-            $.extend(me.options, options);
-        }
-
-        // Add support for jQuery events
-        $.extend(me, $({}));
-
-        me.currentSetId = null;
-        me.serverData = null;
-    };
-
-    ssr.ParameterModel.prototype = {
+        },
+        _create: function () {
+            var me = this;
+            me.currentSetId = null;
+            me.serverData = null;
+        },
         getNewSet: function (name, parameterList) {
             var newSet = {
                 isAllUser: false,
@@ -1855,7 +1846,6 @@ $(function () {
                     me.serverData.parameterSets.push(applySet);
                 }
             });
-
             // Next handle any deletions
             var deleteArray = [];
             $.each(me.serverData.parameterSets, function (index, modelSet) {
@@ -1900,7 +1890,7 @@ $(function () {
         _triggerModelChange: function() {
             var me = this;
             var optionArray = me._getOptionArray();
-            me.trigger(events.modelChanged, { optionArray: optionArray });
+            me._trigger(events.modelChanged, null, { optionArray: optionArray });
         },
         _isLoaded: function (reportPath) {
             var me = this;
@@ -1948,7 +1938,7 @@ $(function () {
                         success(data);
                     }
                 },
-                function () {
+                function (data) {
                     if (error && typeof (error) === "function") {
                         error();
                     }
@@ -1977,10 +1967,10 @@ $(function () {
                     if (parameterSet.id === id) {
                         me.currentSetId = id;
                         if (parameterSet.data) {
-                            me.trigger(events.modelSetChanged, JSON.stringify(parameterSet.data));
+                            me._trigger(events.modelSetChanged, null, JSON.stringify(parameterSet.data));
                         }
                         else {
-                            me.trigger(events.modelSetChanged, null);
+                            me._trigger(events.modelSetChanged, null, null);
                         }
                     }
                 });
@@ -1993,20 +1983,22 @@ $(function () {
             if (me.serverData && me.serverData.parameterSets) {
                 $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
-                        if (parameterSet.id === me.currentSetId) {
+                        if (parameterSet.id === me.currentSetId && parameterSet.data) {
                             currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
+                        if (parameterSet.data) {
+                            currentParameterList = JSON.stringify(parameterSet.data);
+                        }
                     }
                 });
             }
             return currentParameterList;
         }
-    };
-});
+    });  // $.widget(
+});  // $(function ()
 
 ///#source 1 1 /Forerunner/Common/js/Toolbase.js
 /**
@@ -2447,7 +2439,7 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.modelChanged, function (e, arg) {
+            me.model.on(events.parameterModelChanged(), function (e, arg) {
                 var $select = me.element.find("." + me.options.toolInfo.selectorClass);
                 $select.html("");
                 $.each(arg.optionArray, function (index, option) {
@@ -7322,7 +7314,7 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
-            me.serverData = me.options.model.cloneServerData();
+            me.serverData = me.options.model.parameterModel("cloneServerData");
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -7465,7 +7457,7 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                me.options.model.applyServerData.call(me.options.model, me.serverData);
+                me.options.model.parameterModel("applyServerData", me.serverData);
                 me.closeDialog();
             });
         },
@@ -7487,7 +7479,7 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.getNewSet(manageParamSets.newSet);
+            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet);
             me.serverData.parameterSets.push(newSet);
             me._createRows();
             var $tr = me._findRow(newSet.id);
@@ -7665,7 +7657,7 @@ $(function () {
         }
 
         // Create the parameter model object for this report
-        me.parameterModel = new ssr.ParameterModel();
+        me.parameterModel = $({}).parameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {

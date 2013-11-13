@@ -41,7 +41,7 @@ $(function () {
         }
 
         // Create the parameter model object for this report
-        me.parameterModel = new ssr.ParameterModel();
+        me.parameterModel = $({}).parameterModel();
     };
 
     ssr.ReportViewerInitializer.prototype = {

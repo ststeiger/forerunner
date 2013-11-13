@@ -10,26 +10,18 @@ forerunner.ssr.constants.events = forerunner.ssr.constants.events || {};
 $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
+    var widgets = forerunner.ssr.constants.widgets;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
-    ssr.ParameterModel = function (options) {
-        var me = this;
-        me.options = {
-        };
+    $.widget(widgets.getFullname(widgets.parameterModel), {
+        options: {
 
-        // Merge options with the default settings
-        if (options) {
-            $.extend(me.options, options);
-        }
-
-        // Add support for jQuery events
-        $.extend(me, $({}));
-
-        me.currentSetId = null;
-        me.serverData = null;
-    };
-
-    ssr.ParameterModel.prototype = {
+        },
+        _create: function () {
+            var me = this;
+            me.currentSetId = null;
+            me.serverData = null;
+        },
         getNewSet: function (name, parameterList) {
             var newSet = {
                 isAllUser: false,
@@ -83,7 +75,6 @@ $(function () {
                     me.serverData.parameterSets.push(applySet);
                 }
             });
-
             // Next handle any deletions
             var deleteArray = [];
             $.each(me.serverData.parameterSets, function (index, modelSet) {
@@ -128,7 +119,7 @@ $(function () {
         _triggerModelChange: function() {
             var me = this;
             var optionArray = me._getOptionArray();
-            me.trigger(events.modelChanged, { optionArray: optionArray });
+            me._trigger(events.modelChanged, null, { optionArray: optionArray });
         },
         _isLoaded: function (reportPath) {
             var me = this;
@@ -176,7 +167,7 @@ $(function () {
                         success(data);
                     }
                 },
-                function () {
+                function (data) {
                     if (error && typeof (error) === "function") {
                         error();
                     }
@@ -205,10 +196,10 @@ $(function () {
                     if (parameterSet.id === id) {
                         me.currentSetId = id;
                         if (parameterSet.data) {
-                            me.trigger(events.modelSetChanged, JSON.stringify(parameterSet.data));
+                            me._trigger(events.modelSetChanged, null, JSON.stringify(parameterSet.data));
                         }
                         else {
-                            me.trigger(events.modelSetChanged, null);
+                            me._trigger(events.modelSetChanged, null, null);
                         }
                     }
                 });
@@ -221,17 +212,19 @@ $(function () {
             if (me.serverData && me.serverData.parameterSets) {
                 $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     if (me.currentSetId !== null) {
-                        if (parameterSet.id === me.currentSetId) {
+                        if (parameterSet.id === me.currentSetId && parameterSet.data) {
                             currentParameterList = JSON.stringify(parameterSet.data);
                         }
                     }
                     else if (parameterSet.isDefault) {
-                        currentParameterList = JSON.stringify(parameterSet.data);
                         me.currentSetId = parameterSet.id;
+                        if (parameterSet.data) {
+                            currentParameterList = JSON.stringify(parameterSet.data);
+                        }
                     }
                 });
             }
             return currentParameterList;
         }
-    };
-});
+    });  // $.widget(
+});  // $(function ()

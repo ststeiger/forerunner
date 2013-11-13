@@ -22,7 +22,7 @@ $(function () {
         },
         _initTBody: function() {
             var me = this;
-            me.serverData = me.options.model.cloneServerData();
+            me.serverData = me.options.model.parameterModel("cloneServerData");
             if (me.serverData === null || me.serverData === undefined) {
                 return;
             }
@@ -165,7 +165,7 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                me.options.model.applyServerData.call(me.options.model, me.serverData);
+                me.options.model.parameterModel("applyServerData", me.serverData);
                 me.closeDialog();
             });
         },
@@ -187,7 +187,7 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.getNewSet(manageParamSets.newSet);
+            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet);
             me.serverData.parameterSets.push(newSet);
             me._createRows();
             var $tr = me._findRow(newSet.id);

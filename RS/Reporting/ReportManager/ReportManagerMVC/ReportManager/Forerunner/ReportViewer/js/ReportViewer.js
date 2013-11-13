@@ -120,7 +120,7 @@ $(function () {
             me.hideDocMap();
 
             if (me.options.parameterModel) {
-                me.options.parameterModel.on(events.modelSetChanged, function (e, args) {
+                me.options.parameterModel.on(events.parameterModelSetChanged(), function (e, args) {
                     me._onModelSetChanged.call(me, e, args);
                 });
             }
@@ -1250,9 +1250,8 @@ $(function () {
         },
         _loadParameters: function (pageNum, savedParamFromHistory) {
             var me = this;
-            var loadParams = me.options.parameterModel.getCurrentParameterList;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (loadParams ? loadParams.call(me.options.parameterModel, me.options.reportPath) : null);
+                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
 
             if (savedParams) {
                 if (me.options.paramArea) {

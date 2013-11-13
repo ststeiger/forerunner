@@ -1927,6 +1927,19 @@ $(function () {
         _saveModel: function(success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
+            $.post(
+                url,
+                {
+                    reportPath: me.reportPath,
+                    parameters: JSON.stringify(me.serverData),
+                },
+                function (data, textStatus, jqXHR) {
+                    if (success && typeof (success) === "function") {
+                        success(data);
+                    }
+                }
+            );
+            /*
             forerunner.ajax.getJSON(
                 url,
                 {
@@ -1944,6 +1957,7 @@ $(function () {
                     }
                 }
             );
+            */
         },
         save: function (parameterList, success, error) {
             var me = this;

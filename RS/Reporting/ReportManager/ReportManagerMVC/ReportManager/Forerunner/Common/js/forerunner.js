@@ -961,7 +961,7 @@ $(function () {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
                 $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $msgBox.messageBox({});
+                $msgBox.messageBox({ $appContainer: $appContainer });
                 $appContainer.append($msgBox);
             }
             $msgBox.messageBox("openDialog", msg, caption);

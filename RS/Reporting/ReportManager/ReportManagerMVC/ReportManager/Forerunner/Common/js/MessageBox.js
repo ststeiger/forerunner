@@ -26,6 +26,7 @@ $(function () {
      */
     $.widget(widgets.getFullname(widgets.messageBox), {
         options: {
+            $appContainer: null
         },
         _create: function () {
             
@@ -59,24 +60,21 @@ $(function () {
         openDialog: function (msg, caption) {
             var me = this;
 
-            forerunner.dialog.showModalDialog(me.element, function () {
-                me.element.find(".fr-messagebox-msg").text(msg);
-                if (caption) {
-                    me.element.find(".fr-messagebox-title").text(caption);
-                }
-                me.element.css("display", "inline-block");
-            });
+            me.element.find(".fr-messagebox-msg").text(msg);
+            if (caption) {
+                me.element.find(".fr-messagebox-title").text(caption);
+            }
+
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
          * @function $.forerunner.messageBox#closeDialog
          */
         closeDialog: function () {
             var me = this;
-
-            forerunner.dialog.closeModalDialog(me.element, function () {
-                $(".fr-messagebox-msg").val();
-                me.element.css("display", "");
-            });
+            $(".fr-messagebox-msg").val();
+            
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         }
 
     }); //$.widget

@@ -141,6 +141,7 @@ namespace ReportMannagerConfigTool
                 ApplicationPool newpool = serverManager.ApplicationPools.Add(forerunnerPoolName);
                 newpool.ManagedPipelineMode = ManagedPipelineMode.Integrated;
                 newpool.ManagedRuntimeVersion = "v4.0";
+                newpool.ProcessModel.IdentityType = ProcessModelIdentityType.NetworkService;
                 serverManager.CommitChanges();
             }
         }

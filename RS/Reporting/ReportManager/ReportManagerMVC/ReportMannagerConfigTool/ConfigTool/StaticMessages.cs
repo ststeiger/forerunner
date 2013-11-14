@@ -32,5 +32,7 @@
 
         public static readonly string windowsAuth = "Windows";
         public static readonly string formsAuth = "Forms";
+
+        public static readonly string NetworkServiceAccount = "NETWORK SERVICE";
     }
 }

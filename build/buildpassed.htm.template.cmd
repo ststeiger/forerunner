@@ -22,6 +22,7 @@ echo	     ^<tr^> >> %MailBody%
 echo           ^<th^>Drop location:^</th^>^<td^>^<a href="%DropLocation%"^>%DropLocation%^</a^>^</td^> >> %MailBody%
 echo	     ^</tr^> >> %MailBody%
 echo         ^<tr^>^<th^>Project:^</th^>^<td^>%ProjectName%^</td^>^</tr^> >> %MailBody%
+echo         ^<tr^>^<th^>Branch:^</th^>^<td^>%Branch%^</td^>^</tr^> >> %MailBody%
 echo         ^<tr^>^<th^>Version:^</th^>^<td^>%BuildVersion%^</td^>^</tr^> >> %MailBody%
 echo	     ^<tr^> >> %MailBody%
 

@@ -1220,7 +1220,8 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            me._printDialog.reportPrint("openDialog");
+            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
         },
         /**
         * print current reprot in custom PDF format
@@ -1234,10 +1235,13 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
+
+        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
             var $dlg = me.options.$appContainer.find(".fr-print-section");
             $dlg.reportPrint("setPrint", pageLayout);
+            me._printDialog = $dlg;
         },
        
         //Page Loading

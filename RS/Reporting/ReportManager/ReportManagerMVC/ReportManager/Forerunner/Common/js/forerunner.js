@@ -674,7 +674,7 @@ $(function () {
             return $.ajax(options);
         },
         /**
-        * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
+        * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
         *
         * @param {String} Url of the ajax call
         * @param {object} Options for the ajax call.
@@ -699,6 +699,31 @@ $(function () {
                     fail(data);
             });
         },
+        /**
+        * Wraps the $.post call and if the response status 401 or 302, it will redirect to login page. 
+        *
+        * @param {String} Url of the ajax call
+        * @param {object} data for the ajax call.
+        * @param {function} Handler for the success path.
+        * @param {function} Handler for the failure path.
+        * @member
+        */
+        post: function (url, data, success, fail) {
+            var me = this;
+            return $.post(url, data, function (data, textStatus, jqXHR) {
+                if (success && typeof (success) === "function") {
+                    success(data);
+                }
+            }).fail(function(data, textStatus, jqXHR) {
+                if (data.status === 401 || data.status === 302) {
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
+                }
+                console.log(jqXHR);
+                if (fail)
+                    fail(data);
+            });
+        }
     };
     /**
      * Contains device specific methods.

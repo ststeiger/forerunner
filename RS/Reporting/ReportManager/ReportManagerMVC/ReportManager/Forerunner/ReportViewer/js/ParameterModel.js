@@ -156,23 +156,22 @@ $(function () {
         _saveModel: function(success, error) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserParameters";
-            forerunner.ajax.getJSON(
+            forerunner.ajax.post(
                 url,
                 {
                     reportPath: me.reportPath,
                     parameters: JSON.stringify(me.serverData),
                 },
-                function (data) {
+                function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
                         success(data);
                     }
                 },
-                function (data) {
+                function (data, textStatus, jqXHR) {
                     if (error && typeof (error) === "function") {
                         error();
                     }
-                }
-            );
+                });
         },
         save: function (parameterList, success, error) {
             var me = this;

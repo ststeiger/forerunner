@@ -660,7 +660,8 @@ $(function () {
 
             if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/GetReportJSON/",
+                    type: "POST",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
@@ -769,6 +770,7 @@ $(function () {
             }
             forerunner.ajax.ajax(
                 {
+                    type: "POST",
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
@@ -1275,22 +1277,27 @@ $(function () {
         },
         _loadDefaultParameters: function (pageNum) {
             var me = this;
-            forerunner.ajax.getJSON(
-                    me.options.reportViewerAPI + "/ParameterJSON/",
-                    {
-                        ReportPath: me.options.reportPath,
-                        SessionID: me.getSessionID()
-                    },
-                    function (data) {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-                        me._addLoadingIndicator();
-                        me._showParameters(pageNum, data);
-                    },
-                    function (data) {
-                        console.log("error");
-                        me.removeLoadingIndicator();
-                    });
+            forerunner.ajax.ajax({
+                type: "POST",
+                url: me.options.reportViewerAPI + "/ParameterJSON/",
+                data: {
+                    ReportPath: me.options.reportPath,
+                    SessionID: me.getSessionID(),
+                    ParameterList: null
+                },
+                dataType: "json",
+                async: true,
+                success: function (data) {
+                    if (data.SessionID)
+                        me.sessionID = data.SessionID;
+                    me._addLoadingIndicator();
+                    me._showParameters(pageNum, data);
+                },
+                error: function (data) {
+                    console.log("error");
+                    me.removeLoadingIndicator();
+                }
+            });
         },
         _showParameters: function (pageNum, data) {
             var me = this;
@@ -1333,7 +1340,13 @@ $(function () {
             }
             if (paramList) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/ParameterJSON?ReportPath=" + me.options.reportPath + "&SessionID=" + me.getSessionID() + "&paramList=" + paramList,
+                    type: "POST",
+                    url: me.options.reportViewerAPI + "/ParameterJSON",
+                    data : {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.getSessionID(),
+                        ParameterList: paramList
+                    },
                     dataType: "json",
                     async: false,
                     success: function (data) {
@@ -1444,30 +1457,35 @@ $(function () {
                 me._addLoadingIndicator();
             }
             me.togglePageNum = newPageNum;            
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/ReportJSON/",
+            forerunner.ajax.ajax(
                 {
-                    ReportPath: me.options.reportPath,
-                    SessionID: me.sessionID,
-                    PageNumber: newPageNum,
-                    ParameterList: paramList
-                },
-                function (data) {
-                    me._writePage(data, newPageNum, loadOnly);
-                    if (data.ReportContainer) {
-                        me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
-                    }
+                    type: "POST",
+                    dataType: "json",
+                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    data: {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.sessionID,
+                        PageNumber: newPageNum,
+                        ParameterList: paramList
+                    },
+                    async: true,
+                    success: function (data) {
+                        me._writePage(data, newPageNum, loadOnly);
+                        if (data.ReportContainer) {
+                            me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                        }
 
-                    if (!me.element.is(":visible") && !loadOnly)
-                        me.element.show();  //scrollto does not work with the slide in functions:(
-                    if (bookmarkID)
-                        me._navToLink(bookmarkID);
-                    if (!loadOnly && flushCache !== true)
-                        me._cachePages(newPageNum);
+                        if (!me.element.is(":visible") && !loadOnly)
+                            me.element.show();  //scrollto does not work with the slide in functions:(
+                        if (bookmarkID)
+                            me._navToLink(bookmarkID);
+                        if (!loadOnly && flushCache !== true)
+                            me._cachePages(newPageNum);
 
-                    me._updateTableHeaders(me);
-                },
-                function () { console.log("error"); me.removeLoadingIndicator(); }
-            );
+                        me._updateTableHeaders(me);
+                    },
+                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                });
         },
         
         _writePage: function (data, newPageNum, loadOnly) {
@@ -3572,7 +3590,7 @@ $(function () {
             me.listItems = new Array(maxNumPages);
 
             for (var i = 1; i <= maxNumPages; i++) {
-                var url = reportViewerAPI + "/GetThumbnail/?ReportPath="
+                var url = reportViewerAPI + "/Thumbnail/?ReportPath="
                         + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
                 var $listItem = new $("<LI />");
                 $list.append($listItem);
@@ -3855,7 +3873,7 @@ $(function () {
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
-              + "/GetThumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
+              + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
 
             //Item
             var $item = new $("<div />");
@@ -4818,7 +4836,7 @@ $(function () {
                 me.imageList = {};
             
             if (!me.imageList[ImageName]) {
-                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/Image/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
                 Url += "&" + new Date().getTime();

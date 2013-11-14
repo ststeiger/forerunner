@@ -67,7 +67,8 @@ namespace ReportManager.Controllers
 
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportPath,string DefDate)
+        [ActionName("Thumbnail")]
+        public HttpResponseMessage Thumbnail(string ReportPath,string DefDate)
         {
             return GetResponseFromBytes(GetReportManager().GetCatalogImage(ReportPath), "image/JPEG",true);            
         }

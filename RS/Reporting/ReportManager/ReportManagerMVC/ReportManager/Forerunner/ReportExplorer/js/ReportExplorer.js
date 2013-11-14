@@ -98,7 +98,7 @@ $(function () {
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
-              + "/GetThumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
+              + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
 
             //Item
             var $item = new $("<div />");

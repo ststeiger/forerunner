@@ -14,6 +14,14 @@ using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
+    public class ParametersPostBack
+    {
+        public string SessionID { get; set; }
+        public string ReportPath { get; set; }
+        public string ParameterList { get; set; }
+        public int PageNumber {get; set;}
+    }
+
     [ExceptionLog]
     [Authorize]
     public class ReportViewerController :ApiController
@@ -54,6 +62,7 @@ namespace ReportManager.Controllers
 
         [AllowAnonymous]
         [HttpGet]
+        [ActionName("AcceptLanguage")]
         public HttpResponseMessage AcceptLanguage()
         {
             HttpHeaderValueCollection<StringWithQualityHeaderValue> acceptLanguage = this.Request.Headers.AcceptLanguage;
@@ -67,7 +76,8 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(result, "text/json");
         }
 
-        [HttpGet]        
+        [HttpGet]
+        [ActionName("Image")]
         public HttpResponseMessage Image( string SessionID, string ImageID)
         {
             try
@@ -86,6 +96,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("Thumbnail")]
         public HttpResponseMessage Thumbnail(string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2)
         {
             try
@@ -102,13 +113,14 @@ namespace ReportManager.Controllers
             }            
         }
 
-        [HttpGet]
-        public HttpResponseMessage ReportJSON( string ReportPath, string SessionID, int PageNumber, string ParameterList)
+        [HttpPost]
+        [ActionName("ReportJSON")]
+        public HttpResponseMessage ReportJSON(ParametersPostBack postBackValue)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -118,13 +130,14 @@ namespace ReportManager.Controllers
             }
         }
 
-        [HttpGet]
-        public HttpResponseMessage ParameterJSON(string ReportPath, string SessionID, string paramList = null)
+        [HttpPost]
+        [ActionName("ParameterJSON")]
+        public HttpResponseMessage ParameterJSON(ParametersPostBack postBackValue)
         {
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(ReportPath), SessionID, paramList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -136,6 +149,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("DocMapJSON")]
         public HttpResponseMessage DocMapJSON(string SessionID)
         {
             try
@@ -153,6 +167,7 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("SortReport")]
         public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort = true)
         {
 
@@ -170,7 +185,7 @@ namespace ReportManager.Controllers
 
         }
 
-       [HttpGet]
+        [HttpGet]
         public HttpResponseMessage PingSession(string PingSessionID)
         {
             try
@@ -268,7 +283,8 @@ namespace ReportManager.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public HttpResponseMessage LoginUrl(string reserved)
+        [ActionName("LoginUrl")]
+        public HttpResponseMessage LoginUrl()
         {
             try
             {

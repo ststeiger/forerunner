@@ -632,7 +632,7 @@ $(function () {
             if (!this.loginUrl) {
                 var returnValue = null;
                 $.ajax({
-                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl?reserved=1",
+                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl",
                     dataType: "json",
                     async: false,
                     success: function (data) {

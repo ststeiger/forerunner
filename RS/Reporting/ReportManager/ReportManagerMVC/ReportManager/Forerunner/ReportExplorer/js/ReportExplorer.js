@@ -252,7 +252,17 @@ $(function () {
                     $reportExplorer: me.element
                 });
                 me.options.$appContainer.append($dlg);
+                me._userSettingsDialog = $dlg;
             }
-        }
+        },
+        /**
+         * Show the user settings modal dialog.
+         * @function $.forerunner.reportExplorer#showUserSettingsDialog
+         *
+         */
+        showUserSettingsDialog : function() {
+            var me = this;
+            me._userSettingsDialog.userSettings("openDialog");
+        },
     });  // $.widget
 });  // function()

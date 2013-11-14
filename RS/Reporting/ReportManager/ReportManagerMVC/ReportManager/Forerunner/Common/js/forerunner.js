@@ -898,28 +898,48 @@ $(function () {
        *
        * @function forerunner.dialog#showModalDialog
        * @param {function} $appContainer - Modal dialog container
-       * @param {function} showModal - Callback function to show a specific modal dialog
+       * @param {function} me - The element where the dialog is at
        */
-        showModalDialog: function ($appContainer, showModal) {
-            $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
+        showModalDialog: function ($appContainer, me) {
+            if (!forerunner.device.isWindowsPhone())
+                $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
-            if (showModal && typeof (showModal) === "function") {
-                setTimeout(function () { showModal(); }, 50);
-            }
+            //if (showModal && typeof (showModal) === "function") {
+            //    setTimeout(function () { showModal(); }, 50);
+            //}
+
+            setTimeout(function () {
+                if (!me._dialogInit) {
+                    me.element.dialog({
+                        dialogClass: "noTitleStuff",
+                        height: me.element.height(),
+                        width: me.element.width(),
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        autoOpen: false,
+                        position: ['center', 0],
+                    }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
+                    me._dialogInit = true;
+                }
+
+                me.element.dialog("open");
+            }, 200);
         },
         /**
         * Close a modal dialog
         *
         * @function forerunner.dialog#closeModalDialog
         * @param {function} $appContainer - Modal dialog container
-        * @param {function} closeModal - Callback function to remove a specific modal dialog
+        * @param {function} me - The element where the dialog is at
         */
-        closeModalDialog: function ($appContainer, closeModal) {
-            if (closeModal && typeof (closeModal) === "function") {
-                setTimeout(function () { closeModal(); }, 50);
-            }
-
-            $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
+        closeModalDialog: function ($appContainer, me) {
+            me.element.dialog("close");
+            //if (closeModal && typeof (closeModal) === "function") {
+            //    setTimeout(function () { closeModal(); }, 50);
+            //}
+            if (!forerunner.device.isWindowsPhone())
+                $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
         * close all opened modal dialogs with classname 'fr-dialog-id'
@@ -946,36 +966,6 @@ $(function () {
             }
             $msgBox.messageBox("openDialog", msg, caption);
         },
-        /**
-        * Show the report print, modal dialog
-        *
-        * @function forerunner.dialog#showReportPrintDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showReportPrintDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-print-section");
-            $dlg.reportPrint("openDialog");
-        },
-        /**
-        * Show the report print, modal dialog
-        *
-        * @function forerunner.dialog#showUserSettingsDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showUserSettingsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-us-section");
-            $dlg.userSettings("openDialog");
-        },
-        /**
-        * Show the manage parameter sets, modal dialog
-        *
-        * @function forerunner.dialog#showUserSettingsDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showUserManageParamSetsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-mps-section");
-            $dlg.manageParamSets("openDialog");
-        }
 };
 
     forerunner.ssr.map = function(initialData) {

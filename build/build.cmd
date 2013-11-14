@@ -62,7 +62,7 @@ echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
 echo %PROJECT_NAME% Code Analysis Warnings... >> %BUILD_RELEASE%\codeanalysis.wrn
 echo %PROJECT_NAME% Code Analysis Errors... >> %BUILD_RELEASE%\codeanalysis.err
 
-git push %GITHUBSSH% >> %BUILD_LOG%
+git push %GITHUBSSH% + master:%BRANCH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )

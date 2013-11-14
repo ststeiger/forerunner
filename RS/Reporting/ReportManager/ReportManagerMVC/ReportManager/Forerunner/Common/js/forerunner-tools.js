@@ -745,7 +745,8 @@ $(function () {
             tooltip: locData.toolbar.parameterSets,
             events: {
                 click: function (e) {
-                    forerunner.dialog.showUserManageParamSetsDialog(e.data.me.options.$appContainer);
+                    e.data.me.options.$ReportViewerInitializer.showManageParamSetsDialog();
+                    //forerunner.dialog.showUserManageParamSetsDialog(e.data.me.options.$appContainer);
                 }
             }
         },
@@ -859,7 +860,8 @@ $(function () {
         tooltip: locData.toolbar.userSettings,
         events: {
             click: function (e) {
-                forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
+                //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
             }
         }
     }

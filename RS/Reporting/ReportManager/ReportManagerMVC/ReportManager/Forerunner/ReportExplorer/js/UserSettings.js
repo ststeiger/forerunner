@@ -102,9 +102,10 @@ $(function () {
             var me = this;
 
             me._getSettings();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "inline-block");
-            });
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "inline-block");
+            //});
         },
         /**
          * @function $.forerunner.userSettings#closeDialog
@@ -112,9 +113,10 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "");
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "");
+            //});
         }
     }); //$.widget
 });

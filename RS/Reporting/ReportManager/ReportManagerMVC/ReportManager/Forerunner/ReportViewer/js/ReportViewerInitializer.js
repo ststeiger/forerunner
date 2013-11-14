@@ -151,12 +151,17 @@ $(function () {
                 });
                 me.options.$appContainer.append($dlg);
             }
+            me._manageParamSetsDialog = $dlg;
 
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
             $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
+        },
+        showManageParamSetsDialog : function() {
+            var me = this;
+            me._manageParamSetsDialog.manageParamSets("openDialog");
         },
         setFavoriteState: function (path) {
             var me = this;

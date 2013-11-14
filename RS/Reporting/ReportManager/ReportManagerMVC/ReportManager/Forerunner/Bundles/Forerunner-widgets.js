@@ -1221,7 +1221,8 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            me._printDialog.reportPrint("openDialog");
+            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
         },
         /**
         * print current reprot in custom PDF format
@@ -1235,10 +1236,13 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
+
+        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
             var $dlg = me.options.$appContainer.find(".fr-print-section");
             $dlg.reportPrint("setPrint", pageLayout);
+            me._printDialog = $dlg;
         },
        
         //Page Loading
@@ -2697,11 +2701,11 @@ $(function () {
                 me.$container.addClass("fr-layout-container-noscroll");
                 me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 me.showModal = true;
-                me.$container.css("overflow", "hidden").mask();
+                //me.$container.css("overflow", "hidden").mask();
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
-                me.scrollLock = true;
-                me.scrollToPosition(me.getOriginalPosition());
+                //me.scrollLock = true;
+                //me.scrollToPosition(me.getOriginalPosition());
             });
 
             me.$container.on(events.closeModalDialog, function () {
@@ -2709,9 +2713,9 @@ $(function () {
                 me.showModal = false;
                 me.$container.removeClass("fr-layout-container-noscroll");
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                me.$container.css("overflow", "").unmask();
-                me.scrollLock = false;
-                me.restoreScroll();
+                // me.$container.css("overflow", "").unmask();
+                //me.scrollLock = false;
+                //me.restoreScroll();
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -2899,12 +2903,6 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
-
-            console.log(heightValues.max);
-            console.log(heightValues.paneHeight);
-            console.log(me.$mainviewport[0].clientHeight);
-            console.log(me.$mainviewport[0].scrollHeight);
-            console.log($(document).height());
         },
 
         bindViewerEvents: function () {
@@ -2964,30 +2962,34 @@ $(function () {
             }
 
             var onInputFocus = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionAbsolute();
-                
-                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                me.$container.addClass("fr-layout-container-noscroll");
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-                me.ResetSize();
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }
             };
 
             var onInputBlur = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionFixed();
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                    me.$container.removeClass("fr-layout-container-noscroll");
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+
+                    me.ResetSize();
                 }
-
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-
-                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);
@@ -4010,8 +4012,18 @@ $(function () {
                     $reportExplorer: me.element
                 });
                 me.options.$appContainer.append($dlg);
+                me._userSettingsDialog = $dlg;
             }
-        }
+        },
+        /**
+         * Show the user settings modal dialog.
+         * @function $.forerunner.reportExplorer#showUserSettingsDialog
+         *
+         */
+        showUserSettingsDialog : function() {
+            var me = this;
+            me._userSettingsDialog.userSettings("openDialog");
+        },
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportExplorer/js/UserSettings.js
@@ -4119,9 +4131,10 @@ $(function () {
             var me = this;
 
             me._getSettings();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "inline-block");
-            });
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "inline-block");
+            //});
         },
         /**
          * @function $.forerunner.userSettings#closeDialog
@@ -4129,9 +4142,10 @@ $(function () {
         closeDialog: function () {
             var me = this;
 
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "");
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "");
+            //});
         }
     }); //$.widget
 });
@@ -7078,8 +7092,7 @@ $(function () {
                 "</form>" +
             "</div>");
 
-            //var $maskDiv = $("<div class='fr-print-mask'></div>").css({ width: me.element.width(), height: me.element.height() });
-
+            
             me.element.append($printForm);
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
@@ -7215,23 +7228,28 @@ $(function () {
                 me.$printPortrait.addClass("fr-print-portrait-icon-active");
             }
         },
+
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * @function $.forerunner.reportPrint#openDialog
          */
         openDialog: function () {
             var me = this;
-            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "inline-block");
-            });
+
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
+            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "inline-block");
+            //});
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * @function $.forerunner.reportPrint#openDialog
          */
         closeDialog: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "");
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "");
+            //});
         },
         _validateForm: function (form) {
             form.validate({
@@ -7580,18 +7598,20 @@ $(function () {
         openDialog: function () {
             var me = this;
             me._initTBody();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "inline-block");
-            });
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "inline-block");
+            //});
         },
         /**
          * @function $.forerunner.userSettings#openDialog
          */
         closeDialog: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "");
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "");
+            //});
         },
 
         _validateForm: function (form) {
@@ -7775,12 +7795,17 @@ $(function () {
                 });
                 me.options.$appContainer.append($dlg);
             }
+            me._manageParamSetsDialog = $dlg;
 
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
             $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
+        },
+        showManageParamSetsDialog : function() {
+            var me = this;
+            me._manageParamSetsDialog.manageParamSets("openDialog");
         },
         setFavoriteState: function (path) {
             var me = this;
@@ -8119,7 +8144,8 @@ $(function () {
                 var $toolbar = layout.$mainheadersection;
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
-                    $appContainer: layout.$container
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
                 });
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 

@@ -669,7 +669,7 @@ $(function () {
                 me.imageList = {};
             
             if (!me.imageList[ImageName]) {
-                var Url = me.options.reportViewer.options.reportViewerAPI + "/GetImage/?";
+                var Url = me.options.reportViewer.options.reportViewerAPI + "/Image/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
                 Url += "&" + new Date().getTime();

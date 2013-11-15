@@ -280,18 +280,20 @@ $(function () {
         openDialog: function () {
             var me = this;
             me._initTBody();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "inline-block");
-            });
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "inline-block");
+            //});
         },
         /**
          * @function $.forerunner.userSettings#openDialog
          */
         closeDialog: function () {
             var me = this;
-            forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
-                me.element.css("display", "");
-            });
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+            //forerunner.dialog.closeModalDialog(me.options.$appContainer, function () {
+            //    me.element.css("display", "");
+            //});
         },
 
         _validateForm: function (form) {

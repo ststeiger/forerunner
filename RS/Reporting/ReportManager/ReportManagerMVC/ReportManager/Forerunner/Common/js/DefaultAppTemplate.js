@@ -158,11 +158,11 @@ $(function () {
                 me.$container.addClass("fr-layout-container-noscroll");
                 me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 me.showModal = true;
-                me.$container.css("overflow", "hidden").mask();
+                //me.$container.css("overflow", "hidden").mask();
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
-                me.scrollLock = true;
-                me.scrollToPosition(me.getOriginalPosition());
+                //me.scrollLock = true;
+                //me.scrollToPosition(me.getOriginalPosition());
             });
 
             me.$container.on(events.closeModalDialog, function () {
@@ -170,9 +170,9 @@ $(function () {
                 me.showModal = false;
                 me.$container.removeClass("fr-layout-container-noscroll");
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                me.$container.css("overflow", "").unmask();
-                me.scrollLock = false;
-                me.restoreScroll();
+                // me.$container.css("overflow", "").unmask();
+                //me.scrollLock = false;
+                //me.restoreScroll();
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -360,12 +360,6 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $('.fr-toolpane', me.$container).css({ height: '100%' });
-
-            console.log(heightValues.max);
-            console.log(heightValues.paneHeight);
-            console.log(me.$mainviewport[0].clientHeight);
-            console.log(me.$mainviewport[0].scrollHeight);
-            console.log($(document).height());
         },
 
         bindViewerEvents: function () {
@@ -425,30 +419,34 @@ $(function () {
             }
 
             var onInputFocus = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionAbsolute();
-                
-                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                me.$container.addClass("fr-layout-container-noscroll");
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-                me.ResetSize();
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }
             };
 
             var onInputBlur = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionFixed();
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                    me.$container.removeClass("fr-layout-container-noscroll");
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+
+                    me.ResetSize();
                 }
-
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-
-                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);

@@ -7736,10 +7736,16 @@ $.extend(Datepicker.prototype, {
 			inst.drawMonth = inst.selectedMonth = inst.currentMonth;
 			inst.drawYear = inst.selectedYear = inst.currentYear;
 		} else {
-			date = new Date();
-			inst.selectedDay = date.getDate();
-			inst.drawMonth = inst.selectedMonth = date.getMonth();
-			inst.drawYear = inst.selectedYear = date.getFullYear();
+            /* StellaR:  This is a bug fix made by JonT that we need to keep porting. */
+		    date = new Date();
+		    inst.selectedDay = date.getDate();
+		    inst.currentDay = date.getDate();
+		    inst.currentMonth = inst.drawMonth = inst.selectedMonth = date.getMonth();
+		    inst.currentYear = inst.drawYear = inst.selectedYear = date.getFullYear();
+		    if (inst.input) {
+		        inst.input.val(this._formatDate(inst, inst.selectedDay, inst.selectedMonth, inst.selectedYear));
+		    }
+		    this._updateAlternate(inst);
 		}
 		this._notifyChange(inst);
 		this._adjustDate(target);

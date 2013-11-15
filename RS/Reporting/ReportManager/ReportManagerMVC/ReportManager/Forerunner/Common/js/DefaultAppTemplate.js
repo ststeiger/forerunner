@@ -412,6 +412,13 @@ $(function () {
                 me.$pagesection.show();
             });
 
+            //nav to the found keyword and clear saved position to resolve the conflict with left pane.
+            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
+                var position = { left: data.left, top: data.top };
+                me.scrollToPosition(position);
+                me.savePosition = null;
+            });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {

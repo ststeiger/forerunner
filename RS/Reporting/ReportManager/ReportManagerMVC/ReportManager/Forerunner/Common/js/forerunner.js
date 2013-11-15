@@ -225,6 +225,11 @@ $(function () {
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
             /** @constant */
+            findKeyword: "findKeyword",
+            /** widget + event, lowercase */
+            reportViewerFindKeyword: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.findKeyword).toLowerCase();},
+
+            /** @constant */
             loadCascadingParam: "loadcascadingparam",
             /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },

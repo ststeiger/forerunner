@@ -2665,9 +2665,22 @@ $(function () {
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
+
+            // This is a workaround for bug 658
+            if (forerunner.device.isiOS() && me.options.isFullScreen) {
+                me.$topdiv.addClass("fr-layout-position-absolute");
+            }
+
             me.bindEvents();
 
             //Cannot get zoom event so fake it
+
+            // This is a workaround for bug 658
+            setTimeout(function () {
+                if (forerunner.device.isiOS() && me.options.isFullScreen) {
+                    me.$topdiv.removeClass("fr-layout-position-absolute");
+                }
+            }, 10);
 
             setInterval(function () {
                 me.toggleZoom();
@@ -3758,6 +3771,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
+            
             
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));

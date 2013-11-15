@@ -1747,11 +1747,14 @@ $(function () {
                     }
                     else {
                         //restore privious scroll position
-                        var scrollTop = me.options.$appContainer.scrollTop();
-                        var scrollLeft = me.options.$appContainer.scrollLeft();
-
+                        var containerTop = me.options.$appContainer.scrollTop();
+                        var containerLeft = me.options.$appContainer.scrollLeft();
+                        var windowTop = $(window).scrollTop();
+                        var windowLeft = $(window).scrollLeft();
+                        
                         me._addSetPageCallback(function () {
-                            me.options.$appContainer.scrollTop(scrollTop).scrollLeft(scrollLeft);
+                            me.options.$appContainer.scrollTop(containerTop).scrollLeft(containerLeft);
+                            $(window).scrollTop(windowTop).scrollLeft(windowLeft);
                         });
 
                         me.refreshReport(me.getCurPage());

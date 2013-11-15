@@ -3767,7 +3767,6 @@ $(function () {
             //// if me.element contains or a a child contains the options.toolClass don't replace the html
             ///////////////////////////////////////////////////////////////////////////////////////////////
             
-            
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
@@ -7767,7 +7766,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [/*rtb.btnRTBManageSets, rtb.btnSelectSet, */rtb.btnSavParam]);
             }
 
             // Create / render the menu pane

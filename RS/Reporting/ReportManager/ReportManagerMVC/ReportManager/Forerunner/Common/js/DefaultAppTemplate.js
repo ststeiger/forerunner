@@ -204,11 +204,11 @@ $(function () {
                 }  
             }
 
-            $(me.$container).on('touchmove', function (e) {
-                if (me.$container.hasClass('fr-layout-container-noscroll')) {
+            $(me.$container).on("touchmove", function (e) {
+                if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                        || me._containElement(e.target, 'fr-layout-rightpane') || me._containElement(e.target, 'fr-print-form');
+                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane")
+                        || me._containElement(e.target, "fr-layout-rightpane") || me._containElement(e.target, "fr-print-form");
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -351,7 +351,7 @@ $(function () {
             me.$rightpane.css({ height: heightValues.max });
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
-            $('.fr-toolpane', me.$container).css({ height: '100%' });
+            $(".fr-toolpane", me.$container).css({ height: "100%" });
 
             console.log(heightValues.max);
             console.log(heightValues.paneHeight);
@@ -525,23 +525,23 @@ $(function () {
             }
 
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
-                me.$pagesection.addClass('fr-layout-android');
+                me.$pagesection.addClass("fr-layout-android");
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
-                    me.$viewer.reportViewer('allowSwipe', true);
+                    me.$viewer.reportViewer("allowSwipe", true);
                 }
-                me.$viewer.reportViewer('triggerEvent', events.hidePane);
+                me.$viewer.reportViewer("triggerEvent", events.hidePane);
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
             if (me.$viewer !== undefined) {
-                me.$viewer.reportViewer('allowZoom', false);
-                me.$viewer.reportViewer('allowSwipe', false);
+                me.$viewer.reportViewer("allowZoom", false);
+                me.$viewer.reportViewer("allowSwipe", false);
             } else {
                 forerunner.device.allowZoom(false);
             }
@@ -565,8 +565,8 @@ $(function () {
                 me.$mainheadersection.toolbar("hideAllTools");
 
                 if (me.$viewer !== undefined) {
-                    me.$viewer.reportViewer('allowZoom', false);
-                    me.$viewer.reportViewer('allowSwipe', false);
+                    me.$viewer.reportViewer("allowZoom", false);
+                    me.$viewer.reportViewer("allowSwipe", false);
                 } else {
                     forerunner.device.allowZoom(false);
                 }
@@ -580,7 +580,7 @@ $(function () {
             me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer('triggerEvent', events.showPane);
+                me.$viewer.reportViewer("triggerEvent", events.showPane);
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
@@ -594,7 +594,7 @@ $(function () {
         },
         setBackgroundLayout: function () {
             var me = this;
-            var reportArea = $('.fr-report-areacontainer', me.$container);
+            var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
             var containerWidth = me.$container.width();
             

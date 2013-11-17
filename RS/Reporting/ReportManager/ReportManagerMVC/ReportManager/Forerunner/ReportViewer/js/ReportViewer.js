@@ -1481,8 +1481,8 @@ $(function () {
             if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
-                })
-            };
+                });
+            }
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);

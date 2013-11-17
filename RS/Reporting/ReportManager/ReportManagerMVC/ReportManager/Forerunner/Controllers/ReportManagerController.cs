@@ -20,6 +20,9 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
+        private bool IsNativeRS = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.IsNative"].ToLower());
+        private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
+
         private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"].ToLower());
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
@@ -27,13 +30,14 @@ namespace ReportManager.Controllers
         private string ReportServerDBPWD = ConfigurationManager.AppSettings["Forerunner.ReportServerDBPWD"];
         private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
+        private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
         private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
             //Put application security here
             Credentials WSCred = null;
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-            return new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity);
+            return new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
         }
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {

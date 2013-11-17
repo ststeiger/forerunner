@@ -293,7 +293,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum) {
             var me = this;
-            var $label = new $("<div class='fr-param-label'>" + param.Name + "</div>");
+            var $label = new $("<div class='fr-param-label' style='width:100%;'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 

@@ -225,6 +225,11 @@ $(function () {
             reportViewerShowParamArea: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showParamArea).toLowerCase(); },
 
             /** @constant */
+            findKeyword: "findKeyword",
+            /** widget + event, lowercase */
+            reportViewerFindKeyword: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.findKeyword).toLowerCase();},
+
+            /** @constant */
             loadCascadingParam: "loadcascadingparam",
             /** widget + event, lowercase */
             reportParameterLoadCascadingParam: function () { return (forerunner.ssr.constants.widgets.reportParameter + this.loadCascadingParam).toLowerCase(); },
@@ -632,7 +637,7 @@ $(function () {
             if (!this.loginUrl) {
                 var returnValue = null;
                 $.ajax({
-                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl?reserved=1",
+                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl",
                     dataType: "json",
                     async: false,
                     success: function (data) {
@@ -674,7 +679,7 @@ $(function () {
             return $.ajax(options);
         },
         /**
-        * Wraps the $.getJSON call and if the response status 302, it will redirect to login page. 
+        * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
         *
         * @param {String} Url of the ajax call
         * @param {object} Options for the ajax call.
@@ -699,6 +704,31 @@ $(function () {
                     fail(data);
             });
         },
+        /**
+        * Wraps the $.post call and if the response status 401 or 302, it will redirect to login page. 
+        *
+        * @param {String} Url of the ajax call
+        * @param {object} data for the ajax call.
+        * @param {function} Handler for the success path.
+        * @param {function} Handler for the failure path.
+        * @member
+        */
+        post: function (url, data, success, fail) {
+            var me = this;
+            return $.post(url, data, function (data, textStatus, jqXHR) {
+                if (success && typeof (success) === "function") {
+                    success(data);
+                }
+            }).fail(function(data, textStatus, jqXHR) {
+                if (data.status === 401 || data.status === 302) {
+                    var loginUrl = me._getLoginUrl();
+                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
+                }
+                console.log(jqXHR);
+                if (fail)
+                    fail(data);
+            });
+        }
     };
     /**
      * Contains device specific methods.
@@ -873,28 +903,48 @@ $(function () {
        *
        * @function forerunner.dialog#showModalDialog
        * @param {function} $appContainer - Modal dialog container
-       * @param {function} showModal - Callback function to show a specific modal dialog
+       * @param {function} me - The element where the dialog is at
        */
-        showModalDialog: function ($appContainer, showModal) {
-            $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
+        showModalDialog: function ($appContainer, me) {
+            if (!forerunner.device.isWindowsPhone())
+                $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
-            if (showModal && typeof (showModal) === "function") {
-                setTimeout(function () { showModal(); }, 50);
-            }
+            //if (showModal && typeof (showModal) === "function") {
+            //    setTimeout(function () { showModal(); }, 50);
+            //}
+
+            setTimeout(function () {
+                if (!me._dialogInit) {
+                    me.element.dialog({
+                        dialogClass: "noTitleStuff",
+                        height: me.element.height(),
+                        width: me.element.width(),
+                        modal: true,
+                        resizable: false,
+                        draggable: false,
+                        autoOpen: false,
+                        position: ['center', 0],
+                    }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
+                    me._dialogInit = true;
+                }
+
+                me.element.dialog("open");
+            }, 200);
         },
         /**
         * Close a modal dialog
         *
         * @function forerunner.dialog#closeModalDialog
         * @param {function} $appContainer - Modal dialog container
-        * @param {function} closeModal - Callback function to remove a specific modal dialog
+        * @param {function} me - The element where the dialog is at
         */
-        closeModalDialog: function ($appContainer, closeModal) {
-            if (closeModal && typeof (closeModal) === "function") {
-                setTimeout(function () { closeModal(); }, 50);
-            }
-
-            $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
+        closeModalDialog: function ($appContainer, me) {
+            me.element.dialog("close");
+            //if (closeModal && typeof (closeModal) === "function") {
+            //    setTimeout(function () { closeModal(); }, 50);
+            //}
+            if (!forerunner.device.isWindowsPhone())
+                $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
         * close all opened modal dialogs with classname 'fr-dialog-id'
@@ -916,41 +966,11 @@ $(function () {
             var $msgBox = $appContainer.find(".fr-messagebox");
             if ($msgBox.length === 0) {
                 $msgBox = $("<div class='fr-messagebox fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $msgBox.messageBox({});
+                $msgBox.messageBox({ $appContainer: $appContainer });
                 $appContainer.append($msgBox);
             }
             $msgBox.messageBox("openDialog", msg, caption);
         },
-        /**
-        * Show the report print, modal dialog
-        *
-        * @function forerunner.dialog#showReportPrintDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showReportPrintDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-print-section");
-            $dlg.reportPrint("openDialog");
-        },
-        /**
-        * Show the report print, modal dialog
-        *
-        * @function forerunner.dialog#showUserSettingsDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showUserSettingsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-us-section");
-            $dlg.userSettings("openDialog");
-        },
-        /**
-        * Show the manage parameter sets, modal dialog
-        *
-        * @function forerunner.dialog#showUserSettingsDialog
-        * @param {function} $appContainer - Modal dialog container
-        */
-        showUserManageParamSetsDialog: function ($appContainer) {
-            var $dlg = $appContainer.find(".fr-mps-section");
-            $dlg.manageParamSets("openDialog");
-        }
 };
 
     forerunner.ssr.map = function(initialData) {

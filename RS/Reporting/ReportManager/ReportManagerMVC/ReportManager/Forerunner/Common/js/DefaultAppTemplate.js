@@ -106,9 +106,22 @@ $(function () {
             if (!me.options.isFullScreen) {
                 me._makePositionAbsolute();
             }
+
+            // This is a workaround for bug 658
+            if (forerunner.device.isiOS() && me.options.isFullScreen) {
+                me.$topdiv.addClass("fr-layout-position-absolute");
+            }
+
             me.bindEvents();
 
             //Cannot get zoom event so fake it
+
+            // This is a workaround for bug 658
+            setTimeout(function () {
+                if (forerunner.device.isiOS() && me.options.isFullScreen) {
+                    me.$topdiv.removeClass("fr-layout-position-absolute");
+                }
+            }, 10);
 
             setInterval(function () {
                 me.toggleZoom();
@@ -158,11 +171,11 @@ $(function () {
                 me.$container.addClass("fr-layout-container-noscroll");
                 me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 me.showModal = true;
-                me.$container.css("overflow", "hidden").mask();
+                //me.$container.css("overflow", "hidden").mask();
                 //this field is to remove the conflict of restore scroll invoke list
                 //made by left pane and modal dialog.
-                me.scrollLock = true;
-                me.scrollToPosition(me.getOriginalPosition());
+                //me.scrollLock = true;
+                //me.scrollToPosition(me.getOriginalPosition());
             });
 
             me.$container.on(events.closeModalDialog, function () {
@@ -170,9 +183,9 @@ $(function () {
                 me.showModal = false;
                 me.$container.removeClass("fr-layout-container-noscroll");
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                me.$container.css("overflow", "").unmask();
-                me.scrollLock = false;
-                me.restoreScroll();
+                // me.$container.css("overflow", "").unmask();
+                //me.scrollLock = false;
+                //me.restoreScroll();
             });
 
             var isTouch = forerunner.device.isTouch();
@@ -228,6 +241,14 @@ $(function () {
                 });
                 me.$container.on("scroll", function () {
                     me._updateTopDiv(me);
+                });
+            }
+            
+            //IOS safari have a bug that report the window height wrong
+            if (forerunner.device.isiOS()) {
+                $(document.documentElement).height(window.innerHeight);
+                $(window).on("orientationchange", function () {
+                    $(document.documentElement).height(window.innerHeight);
                 });
             }
         },
@@ -352,12 +373,6 @@ $(function () {
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $(".fr-toolpane", me.$container).css({ height: "100%" });
-
-            console.log(heightValues.max);
-            console.log(heightValues.paneHeight);
-            console.log(me.$mainviewport[0].clientHeight);
-            console.log(me.$mainviewport[0].scrollHeight);
-            console.log($(document).height());
         },
 
         bindViewerEvents: function () {
@@ -410,6 +425,13 @@ $(function () {
                 me.$pagesection.show();
             });
 
+            //nav to the found keyword and clear saved position to resolve the conflict with left pane.
+            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
+                var position = { left: data.left, top: data.top };
+                me.scrollToPosition(position);
+                me.savePosition = null;
+            });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
@@ -417,30 +439,34 @@ $(function () {
             }
 
             var onInputFocus = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionAbsolute();
-                
-                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                me.$container.addClass("fr-layout-container-noscroll");
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionAbsolute();
 
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-                me.ResetSize();
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+                    me.ResetSize();
+                }
             };
 
             var onInputBlur = function () {
-                if (me.options.isFullScreen)
-                    me._makePositionFixed();
+                if (forerunner.device.isiOS()) {
+                    if (me.options.isFullScreen)
+                        me._makePositionFixed();
 
-                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                    me.$container.removeClass("fr-layout-container-noscroll");
+                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                        me.$container.removeClass("fr-layout-container-noscroll");
+                    }
+
+                    $(window).scrollTop(0);
+                    $(window).scrollLeft(0);
+
+                    me.ResetSize();
                 }
-
-                $(window).scrollTop(0);
-                $(window).scrollLeft(0);
-
-                me.ResetSize();
             };
 
             $viewer.reportViewer("option", "onInputFocus", onInputFocus);

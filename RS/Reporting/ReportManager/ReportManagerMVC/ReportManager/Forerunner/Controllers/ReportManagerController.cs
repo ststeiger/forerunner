@@ -14,6 +14,12 @@ using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
+    public class SaveParameters
+    {
+        public string reportPath { get; set; }
+        public string parameters { get; set; }
+    }
+
     [ExceptionLog]
     [Authorize]
     public class ReportManagerController : ApiController
@@ -65,7 +71,8 @@ namespace ReportManager.Controllers
 
 
         [HttpGet]
-        public HttpResponseMessage GetThumbnail(string ReportPath,string DefDate)
+        [ActionName("Thumbnail")]
+        public HttpResponseMessage Thumbnail(string ReportPath,string DefDate)
         {
             return GetResponseFromBytes(GetReportManager().GetCatalogImage(ReportPath), "image/JPEG",true);            
         }
@@ -87,10 +94,10 @@ namespace ReportManager.Controllers
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserParameters(reportPath)), "text/JSON");
         }
-        [HttpGet]
-        public HttpResponseMessage SaveUserParameters(string reportPath, string parameters)
+        [HttpPost]
+        public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(reportPath, parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]

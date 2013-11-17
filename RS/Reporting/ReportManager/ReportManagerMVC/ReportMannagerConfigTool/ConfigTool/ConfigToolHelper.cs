@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using Microsoft.Win32;
-using Forerunner.Security;
+using System.Security.AccessControl;
 using System.ServiceProcess;
-using System.Configuration;
+using Forerunner.Security;
+using Microsoft.Win32;
 
 namespace ReportMannagerConfigTool
 {
@@ -241,6 +243,46 @@ namespace ReportMannagerConfigTool
         public static string GetAppConfig(string key)
         {
             return ConfigurationManager.AppSettings[key];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void SetLogFilesFolderPermission()
+        {
+            //For release build folder path
+            string path = System.Environment.CurrentDirectory + @"\..\..\LogFiles";
+            //For visual studio folder path
+            //string path = System.Environment.CurrentDirectory + @"\..\..\..\LogFiles";
+            SetFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
+        }
+
+        public static void SetExtensionLogFilesFolderPermission(string extensionPath)
+        {
+            string path = extensionPath + @"\..\LogFiles";
+            SetFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
+        }
+
+        public static void RemoveExtensionLogFilesFolderPermission(string extensionPath)
+        {
+            string path = extensionPath + @"\..\LogFiles";
+            RemoveFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
+        }
+
+        private static void SetFolderPermission(string folderPath, string username, FileSystemRights level)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+            DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+            dirSecurity.AddAccessRule(new FileSystemAccessRule(username, level, AccessControlType.Allow));
+            dirInfo.SetAccessControl(dirSecurity);
+        }
+
+        private static void RemoveFolderPermission(string folderPath, string username, FileSystemRights level)
+        {
+            DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
+            DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
+            dirSecurity.RemoveAccessRule(new FileSystemAccessRule(username, level, AccessControlType.Allow));
+            dirInfo.SetAccessControl(dirSecurity);
         }
     }
 }

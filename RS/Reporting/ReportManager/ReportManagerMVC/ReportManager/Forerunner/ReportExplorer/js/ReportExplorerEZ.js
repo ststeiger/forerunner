@@ -90,7 +90,8 @@ $(function () {
                 var $toolbar = layout.$mainheadersection;
                 $toolbar.reportExplorerToolbar({
                     navigateTo: me.options.navigateTo,
-                    $appContainer: layout.$container
+                    $appContainer: layout.$container,
+                    $reportExplorer: me.$reportExplorer
                 });
                 $toolbar.reportExplorerToolbar("setFolderBtnActive", viewToBtnMap[view]);
 

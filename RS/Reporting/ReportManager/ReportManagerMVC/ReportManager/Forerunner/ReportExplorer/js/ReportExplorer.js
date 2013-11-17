@@ -98,7 +98,7 @@ $(function () {
         _generatePCListItem: function (catalogItem, isSelected) {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
-              + "/GetThumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
+              + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
 
             //Item
             var $item = new $("<div />");
@@ -252,7 +252,17 @@ $(function () {
                     $reportExplorer: me.element
                 });
                 me.options.$appContainer.append($dlg);
+                me._userSettingsDialog = $dlg;
             }
-        }
+        },
+        /**
+         * Show the user settings modal dialog.
+         * @function $.forerunner.reportExplorer#showUserSettingsDialog
+         *
+         */
+        showUserSettingsDialog : function() {
+            var me = this;
+            me._userSettingsDialog.userSettings("openDialog");
+        },
     });  // $.widget
 });  // function()

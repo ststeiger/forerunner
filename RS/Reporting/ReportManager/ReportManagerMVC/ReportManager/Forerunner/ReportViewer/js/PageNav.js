@@ -57,7 +57,7 @@ $(function () {
             me.listItems = new Array(maxNumPages);
 
             for (var i = 1; i <= maxNumPages; i++) {
-                var url = reportViewerAPI + "/GetThumbnail/?ReportPath="
+                var url = reportViewerAPI + "/Thumbnail/?ReportPath="
                         + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
                 var $listItem = new $("<LI />");
                 $list.append($listItem);

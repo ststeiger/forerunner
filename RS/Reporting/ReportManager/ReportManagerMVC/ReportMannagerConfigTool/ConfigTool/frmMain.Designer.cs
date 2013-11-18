@@ -32,6 +32,19 @@
             this.folderSSRS = new System.Windows.Forms.FolderBrowserDialog();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.gbSSRS = new System.Windows.Forms.GroupBox();
+            this.lblWSUrl = new System.Windows.Forms.Label();
+            this.txtWSUrl = new System.Windows.Forms.TextBox();
+            this.lblDBName = new System.Windows.Forms.Label();
+            this.txtDBName = new System.Windows.Forms.TextBox();
+            this.lblServer = new System.Windows.Forms.Label();
+            this.txtServerName = new System.Windows.Forms.TextBox();
+            this.gbSharePoint = new System.Windows.Forms.GroupBox();
+            this.txtSharePointHostName = new System.Windows.Forms.TextBox();
+            this.rdoIsNativeFalse = new System.Windows.Forms.RadioButton();
+            this.rdoIsNativeTrue = new System.Windows.Forms.RadioButton();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblIsNative = new System.Windows.Forms.Label();
             this.gbDBLoginInfo = new System.Windows.Forms.GroupBox();
             this.lblDomain = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
@@ -41,14 +54,12 @@
             this.txtUser = new System.Windows.Forms.TextBox();
             this.rdoSQL = new System.Windows.Forms.RadioButton();
             this.rdoDomain = new System.Windows.Forms.RadioButton();
-            this.lblWSUrl = new System.Windows.Forms.Label();
-            this.txtWSUrl = new System.Windows.Forms.TextBox();
-            this.lblDBName = new System.Windows.Forms.Label();
-            this.txtDBName = new System.Windows.Forms.TextBox();
-            this.lblServer = new System.Windows.Forms.Label();
-            this.txtServerName = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
+            this.tabSecurity = new System.Windows.Forms.TabPage();
+            this.btnSecurityApply = new System.Windows.Forms.Button();
+            this.txtDefaultUserDomain = new System.Windows.Forms.TextBox();
+            this.lblDefaultUserDomain = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnRemoveEx = new System.Windows.Forms.Button();
@@ -83,7 +94,10 @@
             this.btnActivate = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.gbSSRS.SuspendLayout();
+            this.gbSharePoint.SuspendLayout();
             this.gbDBLoginInfo.SuspendLayout();
+            this.tabSecurity.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.gbAuthType.SuspendLayout();
@@ -93,6 +107,7 @@
             // tabMain
             // 
             this.tabMain.Controls.Add(this.tabPage2);
+            this.tabMain.Controls.Add(this.tabSecurity);
             this.tabMain.Controls.Add(this.tabPage3);
             this.tabMain.Controls.Add(this.tabPage1);
             this.tabMain.Controls.Add(this.tabActivation);
@@ -102,18 +117,100 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.gbSSRS);
+            this.tabPage2.Controls.Add(this.gbSharePoint);
             this.tabPage2.Controls.Add(this.gbDBLoginInfo);
-            this.tabPage2.Controls.Add(this.lblWSUrl);
-            this.tabPage2.Controls.Add(this.txtWSUrl);
-            this.tabPage2.Controls.Add(this.lblDBName);
-            this.tabPage2.Controls.Add(this.txtDBName);
-            this.tabPage2.Controls.Add(this.lblServer);
-            this.tabPage2.Controls.Add(this.txtServerName);
             this.tabPage2.Controls.Add(this.btnTest);
             this.tabPage2.Controls.Add(this.btnApply);
             resources.ApplyResources(this.tabPage2, "tabPage2");
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // gbSSRS
+            // 
+            this.gbSSRS.Controls.Add(this.lblWSUrl);
+            this.gbSSRS.Controls.Add(this.txtWSUrl);
+            this.gbSSRS.Controls.Add(this.lblDBName);
+            this.gbSSRS.Controls.Add(this.txtDBName);
+            this.gbSSRS.Controls.Add(this.lblServer);
+            this.gbSSRS.Controls.Add(this.txtServerName);
+            resources.ApplyResources(this.gbSSRS, "gbSSRS");
+            this.gbSSRS.Name = "gbSSRS";
+            this.gbSSRS.TabStop = false;
+            // 
+            // lblWSUrl
+            // 
+            resources.ApplyResources(this.lblWSUrl, "lblWSUrl");
+            this.lblWSUrl.Name = "lblWSUrl";
+            // 
+            // txtWSUrl
+            // 
+            resources.ApplyResources(this.txtWSUrl, "txtWSUrl");
+            this.txtWSUrl.Name = "txtWSUrl";
+            this.txtWSUrl.Tag = "Report Server Web Service Url";
+            // 
+            // lblDBName
+            // 
+            resources.ApplyResources(this.lblDBName, "lblDBName");
+            this.lblDBName.Name = "lblDBName";
+            // 
+            // txtDBName
+            // 
+            resources.ApplyResources(this.txtDBName, "txtDBName");
+            this.txtDBName.Name = "txtDBName";
+            this.txtDBName.Tag = "Database Name";
+            // 
+            // lblServer
+            // 
+            resources.ApplyResources(this.lblServer, "lblServer");
+            this.lblServer.Name = "lblServer";
+            // 
+            // txtServerName
+            // 
+            resources.ApplyResources(this.txtServerName, "txtServerName");
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Tag = "Server Name";
+            // 
+            // gbSharePoint
+            // 
+            this.gbSharePoint.Controls.Add(this.txtSharePointHostName);
+            this.gbSharePoint.Controls.Add(this.rdoIsNativeFalse);
+            this.gbSharePoint.Controls.Add(this.rdoIsNativeTrue);
+            this.gbSharePoint.Controls.Add(this.label6);
+            this.gbSharePoint.Controls.Add(this.lblIsNative);
+            resources.ApplyResources(this.gbSharePoint, "gbSharePoint");
+            this.gbSharePoint.Name = "gbSharePoint";
+            this.gbSharePoint.TabStop = false;
+            // 
+            // txtSharePointHostName
+            // 
+            resources.ApplyResources(this.txtSharePointHostName, "txtSharePointHostName");
+            this.txtSharePointHostName.Name = "txtSharePointHostName";
+            // 
+            // rdoIsNativeFalse
+            // 
+            resources.ApplyResources(this.rdoIsNativeFalse, "rdoIsNativeFalse");
+            this.rdoIsNativeFalse.Name = "rdoIsNativeFalse";
+            this.rdoIsNativeFalse.TabStop = true;
+            this.rdoIsNativeFalse.UseVisualStyleBackColor = true;
+            // 
+            // rdoIsNativeTrue
+            // 
+            resources.ApplyResources(this.rdoIsNativeTrue, "rdoIsNativeTrue");
+            this.rdoIsNativeTrue.Checked = true;
+            this.rdoIsNativeTrue.Name = "rdoIsNativeTrue";
+            this.rdoIsNativeTrue.TabStop = true;
+            this.rdoIsNativeTrue.UseVisualStyleBackColor = true;
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
+            // lblIsNative
+            // 
+            resources.ApplyResources(this.lblIsNative, "lblIsNative");
+            this.lblIsNative.Name = "lblIsNative";
             // 
             // gbDBLoginInfo
             // 
@@ -180,39 +277,6 @@
             this.rdoDomain.Tag = "DomainAccount";
             this.rdoDomain.UseVisualStyleBackColor = true;
             // 
-            // lblWSUrl
-            // 
-            resources.ApplyResources(this.lblWSUrl, "lblWSUrl");
-            this.lblWSUrl.Name = "lblWSUrl";
-            // 
-            // txtWSUrl
-            // 
-            resources.ApplyResources(this.txtWSUrl, "txtWSUrl");
-            this.txtWSUrl.Name = "txtWSUrl";
-            this.txtWSUrl.Tag = "Report Server Web Service Url";
-            // 
-            // lblDBName
-            // 
-            resources.ApplyResources(this.lblDBName, "lblDBName");
-            this.lblDBName.Name = "lblDBName";
-            // 
-            // txtDBName
-            // 
-            resources.ApplyResources(this.txtDBName, "txtDBName");
-            this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Tag = "DB Name";
-            // 
-            // lblServer
-            // 
-            resources.ApplyResources(this.lblServer, "lblServer");
-            this.lblServer.Name = "lblServer";
-            // 
-            // txtServerName
-            // 
-            resources.ApplyResources(this.txtServerName, "txtServerName");
-            this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Tag = "Server Name";
-            // 
             // btnTest
             // 
             resources.ApplyResources(this.btnTest, "btnTest");
@@ -226,6 +290,33 @@
             this.btnApply.Name = "btnApply";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            // 
+            // tabSecurity
+            // 
+            this.tabSecurity.Controls.Add(this.btnSecurityApply);
+            this.tabSecurity.Controls.Add(this.txtDefaultUserDomain);
+            this.tabSecurity.Controls.Add(this.lblDefaultUserDomain);
+            resources.ApplyResources(this.tabSecurity, "tabSecurity");
+            this.tabSecurity.Name = "tabSecurity";
+            this.tabSecurity.UseVisualStyleBackColor = true;
+            // 
+            // btnSecurityApply
+            // 
+            resources.ApplyResources(this.btnSecurityApply, "btnSecurityApply");
+            this.btnSecurityApply.Name = "btnSecurityApply";
+            this.btnSecurityApply.UseVisualStyleBackColor = true;
+            this.btnSecurityApply.Click += new System.EventHandler(this.btnSecurityApply_Click);
+            // 
+            // txtDefaultUserDomain
+            // 
+            resources.ApplyResources(this.txtDefaultUserDomain, "txtDefaultUserDomain");
+            this.txtDefaultUserDomain.Name = "txtDefaultUserDomain";
+            this.txtDefaultUserDomain.Tag = "Default User Domain";
+            // 
+            // lblDefaultUserDomain
+            // 
+            resources.ApplyResources(this.lblDefaultUserDomain, "lblDefaultUserDomain");
+            this.lblDefaultUserDomain.Name = "lblDefaultUserDomain";
             // 
             // tabPage3
             // 
@@ -277,6 +368,7 @@
             // 
             resources.ApplyResources(this.txtReportServer, "txtReportServer");
             this.txtReportServer.Name = "txtReportServer";
+            this.txtReportServer.Tag = "Report Server Folder";
             // 
             // tabPage1
             // 
@@ -471,9 +563,14 @@
             this.Name = "frmMain";
             this.tabMain.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.gbSSRS.ResumeLayout(false);
+            this.gbSSRS.PerformLayout();
+            this.gbSharePoint.ResumeLayout(false);
+            this.gbSharePoint.PerformLayout();
             this.gbDBLoginInfo.ResumeLayout(false);
             this.gbDBLoginInfo.PerformLayout();
+            this.tabSecurity.ResumeLayout(false);
+            this.tabSecurity.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
@@ -490,31 +587,13 @@
 
         private System.Windows.Forms.FolderBrowserDialog folderSSRS;
         private System.Windows.Forms.TabControl tabMain;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.Label lblDBName;
-        private System.Windows.Forms.TextBox txtDBName;
-        private System.Windows.Forms.Label lblServer;
-        private System.Windows.Forms.TextBox txtServerName;
-        private System.Windows.Forms.Button btnTest;
-        private System.Windows.Forms.Label lblDomain;
-        private System.Windows.Forms.TextBox txtDomain;
-        private System.Windows.Forms.Button btnApply;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPWD;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtUser;
-        private System.Windows.Forms.RadioButton rdoSQL;
-        private System.Windows.Forms.RadioButton rdoDomain;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnRemoveEx;
         private System.Windows.Forms.Button btnAddEx;
         private System.Windows.Forms.Button btnFolderBrowser;
         private System.Windows.Forms.Label lblReportServer;
         private System.Windows.Forms.TextBox txtReportServer;
-        private System.Windows.Forms.Label lblWSUrl;
-        private System.Windows.Forms.TextBox txtWSUrl;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.GroupBox gbDBLoginInfo;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button btnTestWeb;
         private System.Windows.Forms.Button btnApplyWebServer;
@@ -540,6 +619,35 @@
         private System.Windows.Forms.Button btnDeActivate;
         private System.Windows.Forms.Button btnValidate;
         private System.Windows.Forms.Button btnMerge;
+        private System.Windows.Forms.TabPage tabSecurity;
+        private System.Windows.Forms.Button btnSecurityApply;
+        private System.Windows.Forms.TextBox txtDefaultUserDomain;
+        private System.Windows.Forms.Label lblDefaultUserDomain;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox gbSSRS;
+        private System.Windows.Forms.Label lblWSUrl;
+        private System.Windows.Forms.TextBox txtWSUrl;
+        private System.Windows.Forms.Label lblDBName;
+        private System.Windows.Forms.TextBox txtDBName;
+        private System.Windows.Forms.Label lblServer;
+        private System.Windows.Forms.TextBox txtServerName;
+        private System.Windows.Forms.GroupBox gbSharePoint;
+        private System.Windows.Forms.TextBox txtSharePointHostName;
+        private System.Windows.Forms.RadioButton rdoIsNativeFalse;
+        private System.Windows.Forms.RadioButton rdoIsNativeTrue;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label lblIsNative;
+        private System.Windows.Forms.GroupBox gbDBLoginInfo;
+        private System.Windows.Forms.Label lblDomain;
+        private System.Windows.Forms.TextBox txtDomain;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtPWD;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox txtUser;
+        private System.Windows.Forms.RadioButton rdoSQL;
+        private System.Windows.Forms.RadioButton rdoDomain;
+        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnApply;
     }
 }
 

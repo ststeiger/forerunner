@@ -7,6 +7,7 @@
         public static readonly string siteEmpty = "Site Name can not be empty!";
         public static readonly string portEmpty = "Port can not be empty!";
         public static readonly string portNotFree = "Port: {0} is not free!";
+        public static readonly string commonSuccess = "Update success!";
 
         public static readonly string deploySuccess = "Deploy to {0} success!";
         public static readonly string connectDBSuccess = "Connected test success!";

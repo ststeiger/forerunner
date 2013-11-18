@@ -151,19 +151,29 @@ namespace ReportMannagerConfigTool
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            var existConfig = ReportManagerConfig.GetForerunnerWebConfig();
+            var savedConfig = ReportManagerConfig.GetForerunnerWebConfig();
 
-            winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
-            winform.setTextBoxValue(txtServerName , existConfig["DataSource"]);
-            winform.setTextBoxValue(txtDBName, existConfig["Database"]);
-            winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
-            winform.setTextBoxValue(txtUser, existConfig["User"]);
-            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
-            if (existConfig["SQLIntegrated"].ToLower() == "true")
+            winform.setTextBoxValue(txtWSUrl, savedConfig["WSUrl"]);
+            winform.setTextBoxValue(txtServerName , savedConfig["DataSource"]);
+            winform.setTextBoxValue(txtDBName, savedConfig["Database"]);
+            winform.setTextBoxValue(txtDomain, savedConfig["UserDomain"]);
+            winform.setTextBoxValue(txtUser, savedConfig["User"]);
+            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(savedConfig["Password"]));
+
+            if (savedConfig["SQLIntegrated"].ToLower() == "true")
                 rdoDomain.Checked = true;
             else
                 rdoSQL.Checked = true;
-            winform.setSelectRdoValue(gbAuthType, existConfig["AuthType"]);
+
+            if (savedConfig["IsNative"].ToLower() == "false")
+                rdoIsNativeFalse.Checked = true;
+            else
+                rdoIsNativeTrue.Checked = true;
+
+            winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
+            winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
+
+            winform.setTextBoxValue(txtDefaultUserDomain, savedConfig["DefaultUserDomain"]);
         }
 
         private void SetReportManagerFolderPath()
@@ -173,7 +183,7 @@ namespace ReportMannagerConfigTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -206,17 +216,15 @@ namespace ReportMannagerConfigTool
 
         private void btnApply_Click(object sender, EventArgs e)
         {
-            
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbSSRS) || !winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
             try
             {
-
                 Cursor.Current = Cursors.WaitCursor;
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    rdoDomain.Checked ? true: false);
+                    rdoDomain.Checked ? true : false, rdoIsNativeTrue.Checked ? true : false, winform.getTextBoxValue(txtSharePointHostName));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -234,6 +242,26 @@ namespace ReportMannagerConfigTool
                 txtDomain.Enabled = false;
             else
                 txtDomain.Enabled = true;
+        }
+
+        private void btnSecurityApply_Click(object sender, EventArgs e)
+        {
+            if (!winform.isTextBoxNotEmpty(tabSecurity))
+                return;
+            try
+            {
+
+                Cursor.Current = Cursors.WaitCursor;
+                ReportManagerConfig.UpdateDefaultUserDomain(winform.getTextBoxValue(txtDefaultUserDomain));
+
+                winform.showMessage(StaticMessages.commonSuccess);
+            }
+            catch
+            {
+                Cursor.Current = Cursors.Default;
+                winform.showWarning(StaticMessages.updateError);
+            }
+            Cursor.Current = Cursors.Default;
         }
         #endregion
 
@@ -456,6 +484,5 @@ namespace ReportMannagerConfigTool
             Cursor.Current = Cursors.Default;
            
         }
-
     }
 }

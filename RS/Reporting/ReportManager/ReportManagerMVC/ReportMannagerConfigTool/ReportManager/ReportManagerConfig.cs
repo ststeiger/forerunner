@@ -22,6 +22,9 @@ namespace ReportMannagerConfigTool
         private static string reportServerDBUser = ConfigurationManager.AppSettings["ReportServerDBUser"];
         private static string reportServerDBPWD = ConfigurationManager.AppSettings["ReportServerDBPWD"];
         private static string reportServerDBUseIntegrated = ConfigurationManager.AppSettings["UseIntegratedSecurityForSQL"];
+        private static string isNative = ConfigurationManager.AppSettings["IsNative"];
+        private static string sharepointHost = ConfigurationManager.AppSettings["SharePointHost"];
+        private static string defaultUserDomain = ConfigurationManager.AppSettings["DefaultUserDomain"];
 
         private static string anonymousAuthenticationPath = ConfigurationManager.AppSettings["anonymousAuthentication"];
         private static string windowsAuthenticationPath = ConfigurationManager.AppSettings["windowsAuthentication"];
@@ -261,7 +264,7 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
         public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, 
-            string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated)
+            string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated, bool isnative, string sharepointhostname)
         {
             GetAppSettingNode(xmlDoc, reportServerWSUrl).SetAppSettingValue(wsurl);
 
@@ -276,8 +279,17 @@ namespace ReportMannagerConfigTool
             GetAppSettingNode(xmlDoc, reportServerDBPWD).SetAppSettingValue(reportserverdbpwd);
 
             GetAppSettingNode(xmlDoc, reportServerDBUseIntegrated).SetAppSettingValue(SQLIntegrated.ToString());
-            //GetAuthNode(doc).SetAuthMode(authtype, doc);
 
+            GetAppSettingNode(xmlDoc, isNative).SetAppSettingValue(isnative.ToString());
+
+            GetAppSettingNode(xmlDoc, sharepointHost).SetAppSettingValue(sharepointhostname);
+
+            xmlDoc.Save(filePath);
+        }
+
+        public static void UpdateDefaultUserDomain(string defaultuserdomain)
+        {
+            GetAppSettingNode(xmlDoc, defaultUserDomain).SetAppSettingValue(defaultuserdomain);
             xmlDoc.Save(filePath);
         }
 
@@ -297,6 +309,9 @@ namespace ReportMannagerConfigTool
             result.Add("Password", GetAppSettingNode(xmlDoc, reportServerDBPWD).GetAppSettingValue());
             result.Add("SQLIntegrated", GetAppSettingNode(xmlDoc, reportServerDBUseIntegrated).GetAppSettingValue());
             result.Add("AuthType", GetAuthNode().GetAuthMode());
+            result.Add("IsNative", GetAppSettingNode(xmlDoc, isNative).GetAppSettingValue());
+            result.Add("SharePointHostName", GetAppSettingNode(xmlDoc, sharepointHost).GetAppSettingValue());
+            result.Add("DefaultUserDomain", GetAppSettingNode(xmlDoc, defaultUserDomain).GetAppSettingValue());
 
             return result;
         }

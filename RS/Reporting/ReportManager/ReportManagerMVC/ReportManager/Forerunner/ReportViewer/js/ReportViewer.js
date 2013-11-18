@@ -1185,9 +1185,7 @@ $(function () {
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($item.offset().top - 150);
-                $(window).scrollLeft($item.offset().left - 250);
-                //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);
+                me._trigger(events.findKeyword, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
             }
         },
         /**

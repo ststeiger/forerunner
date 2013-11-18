@@ -1186,9 +1186,7 @@ $(function () {
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($item.offset().top - 150);
-                $(window).scrollLeft($item.offset().left - 250);
-                //window.scrollTo($item.offset().left - 100, $item.offset().top - 100);
+                me._trigger(events.findKeyword, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
             }
         },
         /**
@@ -2975,6 +2973,13 @@ $(function () {
                     me.$topdiv.show();
                     $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
                 }
+            });
+
+            //nav to the found keyword and clear saved position to resolve the conflict with left pane.
+            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
+                var position = { left: data.left, top: data.top };
+                me.scrollToPosition(position);
+                me.savePosition = null;
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {

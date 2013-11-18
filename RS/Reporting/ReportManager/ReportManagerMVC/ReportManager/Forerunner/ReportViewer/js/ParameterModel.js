@@ -160,7 +160,9 @@ $(function () {
                 url,
                 {
                     reportPath: me.reportPath,
-                    parameters: JSON.stringify(me.serverData),
+                    // This line will kepp the database in the v1 format
+                    parameters: JSON.stringify({ ParamsList: me.serverData.parameterSets[0].data }),
+                    //parameters: JSON.stringify(me.serverData),
                 },
                 function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {

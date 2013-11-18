@@ -98,7 +98,7 @@ if ERRORLEVEL 1 (
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
-%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
+%ZIPPER% %BUILD_RELEASE%\Symbols %BUILD_RELEASE%_Upload\Symbols.zip
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
 %ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip
 %UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"

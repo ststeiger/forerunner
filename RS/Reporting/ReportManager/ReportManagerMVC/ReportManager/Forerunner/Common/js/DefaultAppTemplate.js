@@ -416,6 +416,13 @@ $(function () {
                 }
             });
 
+            //nav to the found keyword and clear saved position to resolve the conflict with left pane.
+            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
+                var position = { left: data.left, top: data.top };
+                me.scrollToPosition(position);
+                me.savePosition = null;
+            });
+
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 me.setBackgroundLayout();
             });

@@ -62,7 +62,7 @@ echo %PROJECT_NAME% Warnings... >> %BUILD_RELEASE%\build.wrn
 echo %PROJECT_NAME% Code Analysis Warnings... >> %BUILD_RELEASE%\codeanalysis.wrn
 echo %PROJECT_NAME% Code Analysis Errors... >> %BUILD_RELEASE%\codeanalysis.err
 
-git push %GITHUBSSH% >> %BUILD_LOG%
+git push %GITHUBSSH% master:%BRANCH% >> %BUILD_LOG%
 if ERRORLEVEL 1 (
 	goto :Error
 )
@@ -98,7 +98,7 @@ if ERRORLEVEL 1 (
 
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
-%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
+%ZIPPER% %BUILD_RELEASE%\Symbols %BUILD_RELEASE%_Upload\Symbols.zip
 robocopy %BUILD_RELEASE%\Setup %BUILD_RELEASE%\Setup_Upload *.exe /R:0
 %ZIPPER% %BUILD_RELEASE%\Setup_Upload %BUILD_RELEASE%_Upload\ForerunnerMobilizer.zip
 %UPLOADER% -s %SPSITE% -c %SECRETS_ROOT%\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
@@ -117,7 +117,7 @@ exit /b 1
 echo The Build Failed. >> %BUILD_LOG%
 mkdir %BUILD_RELEASE%_Upload
 robocopy %BUILD_RELEASE% %BUILD_RELEASE%_Upload *.log *.err *.wrn /R:0
-%ZIPPER% %BUILD_RELEASE%\bin\Release %BUILD_RELEASE%_Upload\Release.zip
+%ZIPPER% %BUILD_RELEASE%\Symbols %BUILD_RELEASE%_Upload\Symbols.zip
 %UPLOADER% -s %SPSITE% -c %~dp0\Credentials.xml %BUILD_RELEASE%_Upload "%SPBUILD_RELEASE%"
 set MailSubject="BUILD FAILED: %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION%"
 call %~dp0\buildfailed.htm.template.cmd %BUILD_RELEASE%\buildfailed.htm %MailSubject% %PROJECT_NAME% %BUILD_MAJOR%.%BUILD_MINOR%.%BUILD_BUILD%.%BUILD_REVISION% "%SPBUILD_URL%"

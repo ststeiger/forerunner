@@ -23,6 +23,12 @@ if ERRORLEVEL 1 (
 	goto :Error
 )
 
+echo Copying Symbols for archival... >> %POSTBUILD_LOG%
+call %~dp0..\RS\Reporting\CopySymbols.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
+if ERRORLEVEL 1 (
+	goto :Error
+)
+
 echo Copying Files for Setup... >> %POSTBUILD_LOG%
 call %~dp0..\RS\Reporting\CopyFiles.cmd %BUILD_RELEASE% %POSTBUILD_LOG%
 if ERRORLEVEL 1 (

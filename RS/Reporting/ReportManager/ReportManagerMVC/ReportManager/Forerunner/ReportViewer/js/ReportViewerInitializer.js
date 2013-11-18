@@ -91,7 +91,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [/*rtb.btnRTBManageSets, rtb.btnSelectSet, */rtb.btnSavParam]);
             }
 
             // Create / render the menu pane

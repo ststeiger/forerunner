@@ -1957,7 +1957,9 @@ $(function () {
                 url,
                 {
                     reportPath: me.reportPath,
-                    parameters: JSON.stringify(me.serverData),
+                    // This line will kepp the database in the v1 format
+                    parameters: JSON.stringify({ ParamsList: me.serverData.parameterSets[0].data }),
+                    //parameters: JSON.stringify(me.serverData),
                 },
                 function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
@@ -2982,6 +2984,13 @@ $(function () {
                     me.$topdiv.show();
                     $viewer.reportViewer("option", "toolbarHeight", me.$topdiv.outerHeight());
                 }
+            });
+
+            //nav to the found keyword and clear saved position to resolve the conflict with left pane.
+            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
+                var position = { left: data.left, top: data.top };
+                me.scrollToPosition(position);
+                me.savePosition = null;
             });
 
             $viewer.on(events.reportViewerSetPageDone(), function (e, data) {
@@ -7780,7 +7789,7 @@ $(function () {
             }
 
             if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
+                $righttoolbar.rightToolbar("addTools", 2, true, [/*rtb.btnRTBManageSets, rtb.btnSelectSet, */rtb.btnSavParam]);
             }
 
             // Create / render the menu pane

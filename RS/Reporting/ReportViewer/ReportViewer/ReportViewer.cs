@@ -236,7 +236,6 @@ namespace Forerunner.SSRS.Viewer
 
             //Device Info
             string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>false</ImageConsolidation>";
-            //devInfo += @"<DpiX>296</DpiX><DpiY>296</DpiY>";
             //Page number   
             devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
             //End Device Info

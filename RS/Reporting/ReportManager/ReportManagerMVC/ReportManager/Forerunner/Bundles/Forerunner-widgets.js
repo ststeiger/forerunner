@@ -1502,8 +1502,8 @@ $(function () {
             if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
-                })
-            };
+                });
+            }
 
             if (!me.pages[newPageNum])
                 me.pages[newPageNum] = new reportPage($report, data);
@@ -2779,11 +2779,11 @@ $(function () {
                 }  
             }
 
-            $(me.$container).on('touchmove', function (e) {
-                if (me.$container.hasClass('fr-layout-container-noscroll')) {
+            $(me.$container).on("touchmove", function (e) {
+                if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, 'fr-layout-leftpane')
-                        || me._containElement(e.target, 'fr-layout-rightpane') || me._containElement(e.target, 'fr-print-form');
+                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane")
+                        || me._containElement(e.target, "fr-layout-rightpane") || me._containElement(e.target, "fr-print-form");
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -2934,7 +2934,7 @@ $(function () {
             me.$rightpane.css({ height: heightValues.max });
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
-            $('.fr-toolpane', me.$container).css({ height: '100%' });
+            $(".fr-toolpane", me.$container).css({ height: "100%" });
         },
 
         bindViewerEvents: function () {
@@ -3113,23 +3113,23 @@ $(function () {
             }
 
             if (forerunner.device.isAndroid() && !forerunner.device.isChrome())
-                me.$pagesection.addClass('fr-layout-android');
+                me.$pagesection.addClass("fr-layout-android");
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
-                    me.$viewer.reportViewer('allowSwipe', true);
+                    me.$viewer.reportViewer("allowSwipe", true);
                 }
-                me.$viewer.reportViewer('triggerEvent', events.hidePane);
+                me.$viewer.reportViewer("triggerEvent", events.hidePane);
             }
         },
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
             if (me.$viewer !== undefined) {
-                me.$viewer.reportViewer('allowZoom', false);
-                me.$viewer.reportViewer('allowSwipe', false);
+                me.$viewer.reportViewer("allowZoom", false);
+                me.$viewer.reportViewer("allowSwipe", false);
             } else {
                 forerunner.device.allowZoom(false);
             }
@@ -3153,8 +3153,8 @@ $(function () {
                 me.$mainheadersection.toolbar("hideAllTools");
 
                 if (me.$viewer !== undefined) {
-                    me.$viewer.reportViewer('allowZoom', false);
-                    me.$viewer.reportViewer('allowSwipe', false);
+                    me.$viewer.reportViewer("allowZoom", false);
+                    me.$viewer.reportViewer("allowSwipe", false);
                 } else {
                     forerunner.device.allowZoom(false);
                 }
@@ -3168,7 +3168,7 @@ $(function () {
             me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer('triggerEvent', events.showPane);
+                me.$viewer.reportViewer("triggerEvent", events.showPane);
             }
         },
         toggleSlideoutPane: function (isLeftPane) {
@@ -3182,7 +3182,7 @@ $(function () {
         },
         setBackgroundLayout: function () {
             var me = this;
-            var reportArea = $('.fr-report-areacontainer', me.$container);
+            var reportArea = $(".fr-report-areacontainer", me.$container);
             var containerHeight = me.$container.height();
             var containerWidth = me.$container.width();
             
@@ -3807,7 +3807,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -3907,7 +3907,7 @@ $(function () {
 
             var $anchor = new $("<a />");
             //action
-            var action = catalogItem.Type === 1 ? "explore" : "browse";
+            var action = (catalogItem.Type === 1 || catalogItem.Type === 7)? "explore" : "browse";
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
@@ -3925,7 +3925,7 @@ $(function () {
            
 
             //Images
-            if (catalogItem.Type === 1)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7)
                 if (isSelected)
                     outerImage.addClass("fr-explorer-folder-selected");
                 else
@@ -3936,7 +3936,7 @@ $(function () {
                 $imageblock.append(innerImage);
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
-                imageSrc =  reportThumbnailPath;
+                var imageSrc =  reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
@@ -3996,11 +3996,11 @@ $(function () {
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
-                setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
-                setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20); }, 100);  //This is a hack for now
             } else {
-                setTimeout(function () { me.$explorer.scrollTop(0) }, 100);
-                setTimeout(function () { me.$explorer.scrollLeft(0) }, 100);
+                setTimeout(function () { me.$explorer.scrollTop(0); }, 100);
+                setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
       

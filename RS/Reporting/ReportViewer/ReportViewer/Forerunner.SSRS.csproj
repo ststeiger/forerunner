@@ -90,6 +90,9 @@
     <Compile Include="ReportViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReportWriter.cs" />
+    <Compile Include="SSRS Proxy\ReportingService2006.cs" />
+    <Compile Include="SSRS Proxy\ReportingService200X.cs" />
+    <Compile Include="SSRS Proxy\RSManagmentProxy.cs" />
     <Compile Include="ThreadContext.cs" />
     <Compile Include="Thumbnail.cs">
       <SubType>Code</SubType>

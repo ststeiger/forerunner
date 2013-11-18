@@ -10,10 +10,13 @@
     <link href="/content/site.css" rel="stylesheet">
      <script>
          
-         if (window.location.protocol != "https:") {
-             var oldURL = window.location.href
-             var newURL = oldURL.replace("http:", "https:");
-             window.location = newURL;
+         if (window.location.hostname !== "localhost") {
+
+             if (window.location.protocol != "https:") {
+                 var oldURL = window.location.href
+                 var newURL = oldURL.replace("http:", "https:");
+                 window.location = newURL;
+             }
          }
          
          (function (i, s, o, g, r, a, m) {

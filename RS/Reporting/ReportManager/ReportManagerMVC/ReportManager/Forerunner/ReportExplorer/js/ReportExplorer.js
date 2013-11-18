@@ -8,7 +8,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -108,7 +108,7 @@ $(function () {
 
             var $anchor = new $("<a />");
             //action
-            var action = catalogItem.Type === 1 ? "explore" : "browse";
+            var action = (catalogItem.Type === 1 || catalogItem.Type === 7)? "explore" : "browse";
             $anchor.on("click", function (event) {
                 if (me.options.navigateTo) {
                     me.options.navigateTo(action, catalogItem.Path);
@@ -126,7 +126,7 @@ $(function () {
            
 
             //Images
-            if (catalogItem.Type === 1)
+            if (catalogItem.Type === 1 || catalogItem.Type === 7)
                 if (isSelected)
                     outerImage.addClass("fr-explorer-folder-selected");
                 else
@@ -137,7 +137,7 @@ $(function () {
                 $imageblock.append(innerImage);
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
-                imageSrc =  reportThumbnailPath;
+                var imageSrc =  reportThumbnailPath;
                 innerImage.addClass("fr-report-item-inner-image");
                 innerImage.addClass("fr-report-item-image-base");
                 outerImage.addClass("fr-report-item-image-base");
@@ -197,11 +197,11 @@ $(function () {
                                 "</div>");
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
-                setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50) }, 100);  //This is a hack for now
-                setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20) }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
+                setTimeout(function () { me.$explorer.scrollLeft(me.$selectedItem.offset().left - 20); }, 100);  //This is a hack for now
             } else {
-                setTimeout(function () { me.$explorer.scrollTop(0) }, 100);
-                setTimeout(function () { me.$explorer.scrollLeft(0) }, 100);
+                setTimeout(function () { me.$explorer.scrollTop(0); }, 100);
+                setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
       

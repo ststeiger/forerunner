@@ -222,7 +222,7 @@ namespace Forerunner.SSRS.Manager
                             END
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID))
+                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), CONSTRAINT uip_PK UNIQUE (ItemID,UserID))
                             END
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
                             BEGIN	                            	                            
@@ -306,13 +306,11 @@ namespace Forerunner.SSRS.Manager
 
         public string SaveUserParamaters(string path, string parameters)
         {
-            string IID = GetItemID(path);
-
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
 
             string userParameters = model.GetUserParameters();
-            returnValue = SaveUserParamatersInternal(path, userParameters);
+            string returnValue = SaveUserParamatersInternal(path, userParameters);
             if (returnValue.IndexOf("Success", StringComparison.InvariantCultureIgnoreCase) == -1)
             {
                 return returnValue;
@@ -329,22 +327,21 @@ namespace Forerunner.SSRS.Manager
 
         private string SaveAllUserParamaters(string path, string parameters)
         {
+            string IID = GetItemID(path);
             Impersonator impersonator = null;
             try
             {
                 impersonator = tryImpersonate();
                 string SQL = @"
-                            DECLARE @IID uniqueidentifier
-                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID = NULL AND ItemID = @IID)
+                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID IS NULL AND ItemID = @IID)
 	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @IID,NULL,@Params 
                             ELSE
-                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = NULL AND ItemID = @IID
+                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID IS NULL AND ItemID = @IID
                             ";
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SetUserNameParameters(SQLComm);
-                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.Parameters.AddWithValue("@IID", IID);
                 SQLComm.Parameters.AddWithValue("@Params", parameters);
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
@@ -368,6 +365,7 @@ namespace Forerunner.SSRS.Manager
 
         private string SaveUserParamatersInternal(string path, string parameters)
         {
+            string IID = GetItemID(path);
             Impersonator impersonator = null;
             try
             {
@@ -423,15 +421,17 @@ namespace Forerunner.SSRS.Manager
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
                 string savedParams = string.Empty;
-                Guid userID = Guid.Empty;
                 ParameterModel model = new ParameterModel();
                 bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
 
                 while (SQLReader.Read())
                 {
                     savedParams = SQLReader.GetString(0);
-                    userID = SQLReader.GetGuid(1);
-                    ParameterModel.AllUser allUser = userID == Guid.Empty ? ParameterModel.AllUser.IsAllUser : ParameterModel.AllUser.NotAllUser;
+                    ParameterModel.AllUser allUser = ParameterModel.AllUser.IsAllUser;
+                    if (!SQLReader.IsDBNull(1))
+                    {
+                        allUser = ParameterModel.AllUser.NotAllUser;
+                    }
                     if (savedParams.Length > 0)
                     {
                         ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);

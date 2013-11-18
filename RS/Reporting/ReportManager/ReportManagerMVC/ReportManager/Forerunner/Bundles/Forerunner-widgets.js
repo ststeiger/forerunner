@@ -1916,7 +1916,7 @@ $(function () {
         _triggerModelChange: function() {
             var me = this;
             var optionArray = me._getOptionArray();
-            me._trigger(events.modelChanged, null, { optionArray: optionArray });
+            me._trigger(events.modelChanged, null, { optionArray: optionArray, currentSetId: me.currentSetId });
         },
         _isLoaded: function (reportPath) {
             var me = this;
@@ -2020,6 +2020,7 @@ $(function () {
                     }
                 });
             }
+            me._triggerModelChange();
             return currentParameterList;
         }
     });  // $.widget(
@@ -2470,6 +2471,11 @@ $(function () {
                 $.each(arg.optionArray, function (index, option) {
                     $option = $("<option value=" + option.id + ">" + option.name + "</option>");
                     $select.append($option);
+                });
+                $select.children("option").each(function (index, option) {
+                    if ($(option).val() === arg.currentSetId) {
+                        $select.prop("selectedIndex", index);
+                    }
                 });
             });
         }

@@ -443,6 +443,11 @@ $(function () {
                     $option = $("<option value=" + option.id + ">" + option.name + "</option>");
                     $select.append($option);
                 });
+                $select.children("option").each(function (index, option) {
+                    if ($(option).val() === arg.currentSetId) {
+                        $select.prop("selectedIndex", index);
+                    }
+                });
             });
         }
     });  // $widget

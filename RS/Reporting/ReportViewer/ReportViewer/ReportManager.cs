@@ -14,10 +14,10 @@ using Jayrock.Json;
 using System.Threading;
 using System.Web.Security;
 using System.Security.Principal;
+using Forerunner.SSRS;
 
 namespace Forerunner.SSRS.Manager
 {
-
     /// <summary>
     /// This is the proxy class that would call RS to get the data
     /// </summary>
@@ -213,7 +213,7 @@ namespace Forerunner.SSRS.Manager
                             END
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
-                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID,UserID))
+                                CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), PRIMARY KEY (ItemID))
                             END
                             IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
                             BEGIN	                            	                            
@@ -296,6 +296,68 @@ namespace Forerunner.SSRS.Manager
 
         public string SaveUserParamaters(string path, string parameters)
         {
+            string returnValue = String.Empty;
+
+            bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
+            ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
+
+            string userParameters = model.GetUserParameters();
+            returnValue = SaveUserParamatersInternal(path, userParameters);
+            if (returnValue.IndexOf("Success", StringComparison.InvariantCultureIgnoreCase) == -1)
+            {
+                return returnValue;
+            }
+
+            if (canEditAllUsersSet)
+            {
+                string allUserParameters = model.GetAllUserParameters();
+                returnValue = SaveAllUserParamaters(path, allUserParameters);
+            }
+
+            return returnValue;
+        }
+
+        private string SaveAllUserParamaters(string path, string parameters)
+        {
+            Impersonator impersonator = null;
+            try
+            {
+                impersonator = tryImpersonate();
+                string SQL = @"
+                            DECLARE @IID uniqueidentifier
+                            SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
+                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID = NULL AND ItemID = @IID)
+	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @IID,NULL,@Params 
+                            ELSE
+                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = NULL AND ItemID = @IID
+                            ";
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SetUserNameParameters(SQLComm);
+                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                SQLComm.Parameters.AddWithValue("@Params", parameters);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+
+                //Need to try catch and return error
+                JsonWriter w = new JsonTextWriter();
+                w.WriteStartObject();
+                w.WriteMember("Status");
+                w.WriteString("Success");
+                w.WriteEndObject();
+                return w.ToString();
+            }
+            finally
+            {
+                if (impersonator != null)
+                {
+                    impersonator.Undo();
+                }
+            }
+        }
+
+        private string SaveUserParamatersInternal(string path, string parameters)
+        {
             Impersonator impersonator = null;
             try
             {
@@ -344,7 +406,7 @@ namespace Forerunner.SSRS.Manager
                                 DECLARE @IID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT @IID = (SELECT ItemID FROM Catalog WHERE Path = @Path  )
-                                SELECT SavedParameters FROM ForerunnerUserItemProperties WHERE UserID = @UID AND ItemID = @IID";
+                                SELECT SavedParameters, UserID FROM ForerunnerUserItemProperties WHERE (UserID = @UID OR UserID IS NULL) AND ItemID = @IID";
                 SQLConn.Open();
                 SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
                 SetUserNameParameters(SQLComm);
@@ -352,16 +414,25 @@ namespace Forerunner.SSRS.Manager
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
                 string savedParams = string.Empty;
+                Guid userID = Guid.Empty;
+                ParameterModel model = new ParameterModel();
+                bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
 
                 while (SQLReader.Read())
                 {
                     savedParams = SQLReader.GetString(0);
+                    userID = SQLReader.GetGuid(1);
+                    ParameterModel.AllUser allUser = userID == Guid.Empty ? ParameterModel.AllUser.IsAllUser : ParameterModel.AllUser.NotAllUser;
+                    if (savedParams.Length > 0)
+                    {
+                        ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
+                        model.merge(newModel);
+                    }
                 }
                 SQLReader.Close();
                 SQLConn.Close();
 
-                //Need to try catch and return error
-                return savedParams == "" ? "{}" : savedParams;
+                return model.ToJson();
             }
             finally
             {
@@ -722,19 +793,24 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public byte[] GetCatalogImage(string path)
+        public bool HasPermission(string path, string requiredPermission)
         {
-            string execute = "Execute";
             bool hasPermission = false;
             foreach (string permission in callGetPermissions(path))
             {
-                if (permission.IndexOf(execute,StringComparison.OrdinalIgnoreCase) != -1)
+                if (permission.IndexOf(requiredPermission, StringComparison.OrdinalIgnoreCase) != -1)
                 {
                     hasPermission = true;
                     break;
-                }                
+                }
             }
 
+            return hasPermission;
+        }
+
+        public byte[] GetCatalogImage(string path)
+        {
+            bool hasPermission = HasPermission(path, "Execute");
             if (hasPermission)
             {
                 byte[] retval = null;

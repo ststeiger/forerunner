@@ -1830,6 +1830,9 @@ $(function () {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);
             if (me.serverData && me.serverData.parameterSets) {
+                if (me.serverData.parameterSets.length === 0) {
+                    newSet.isDefault = true;
+                }
                 me.serverData.parameterSets.push(newSet);
             }
             else {
@@ -1935,7 +1938,7 @@ $(function () {
                     }
                     else if (data) {
                         me.serverData = data;
-                        if (me.serverData.parameterSets === undefined) {
+                        if (me.serverData.parameterSets.length === 0) {
                             me._pushNewSet(locData.parameterModel.defaultName);
                         }
                     }

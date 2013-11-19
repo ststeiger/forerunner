@@ -35,5 +35,6 @@
         public static readonly string formsAuth = "Forms";
 
         public static readonly string NetworkServiceAccount = "NETWORK SERVICE";
+        public static readonly string IISUsrsAccount = "IIS_IUSRS";
     }
 }

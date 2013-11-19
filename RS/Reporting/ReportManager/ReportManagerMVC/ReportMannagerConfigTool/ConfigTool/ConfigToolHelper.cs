@@ -248,25 +248,13 @@ namespace ReportMannagerConfigTool
         /// <summary>
         /// 
         /// </summary>
-        public static void SetLogFilesFolderPermission()
+        public static void SetLogFilesFolderPermission(bool isIIS)
         {
             //For release build folder path
             string path = System.Environment.CurrentDirectory + @"\..\..\LogFiles";
             //For visual studio folder path
             //string path = System.Environment.CurrentDirectory + @"\..\..\..\LogFiles";
-            SetFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
-        }
-
-        public static void SetExtensionLogFilesFolderPermission(string extensionPath)
-        {
-            string path = extensionPath + @"\..\LogFiles";
-            SetFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
-        }
-
-        public static void RemoveExtensionLogFilesFolderPermission(string extensionPath)
-        {
-            string path = extensionPath + @"\..\LogFiles";
-            RemoveFolderPermission(path, StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
+            SetFolderPermission(path, isIIS ? StaticMessages.IISUsrsAccount : StaticMessages.NetworkServiceAccount, FileSystemRights.Write);
         }
 
         private static void SetFolderPermission(string folderPath, string username, FileSystemRights level)

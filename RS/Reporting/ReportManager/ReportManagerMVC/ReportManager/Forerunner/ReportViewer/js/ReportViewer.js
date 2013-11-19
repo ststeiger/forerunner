@@ -1185,7 +1185,7 @@ $(function () {
             var $item = me.$reportContainer.find(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                me._trigger(events.findKeyword, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+                me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
             }
         },
         /**
@@ -1468,18 +1468,20 @@ $(function () {
                     async: true,
                     success: function (data) {
                         me._writePage(data, newPageNum, loadOnly);
-                        if (data.ReportContainer) {
-                            me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                        if (!loadOnly) {
+                            if (data.ReportContainer) {
+                                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                            }
+
+                            if (!me.element.is(":visible"))
+                                me.element.show();  //scrollto does not work with the slide in functions:(                            
+                            if (bookmarkID)
+                                me._navToLink(bookmarkID);
+                            if (flushCache !== true)
+                                me._cachePages(newPageNum);
+
+                            me._updateTableHeaders(me);
                         }
-
-                        if (!me.element.is(":visible") && !loadOnly)
-                            me.element.show();  //scrollto does not work with the slide in functions:(
-                        if (bookmarkID)
-                            me._navToLink(bookmarkID);
-                        if (!loadOnly && flushCache !== true)
-                            me._cachePages(newPageNum);
-
-                        me._updateTableHeaders(me);
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }
                 });
@@ -1613,7 +1615,9 @@ $(function () {
             var navTo = me.element.find("[name='" + elementID + "']")[0];
             if (navTo !== undefined) {
                 //Should account for floating headers and toolbar height need to be a calculation
-                $(document).scrollTop($(navTo).offset().top - 100).scrollLeft($(navTo).offset().left);
+                //$(document).scrollTop($(navTo).offset().top - 100).scrollLeft($(navTo).offset().left);
+                var bookmarkPosition = { top: $(navTo).offset().top - 100, left: $(navTo).offset().left };
+                me._trigger(events.navToPosition, null, bookmarkPosition);
             }
         },
         _stopDefaultEvent: function (e) {

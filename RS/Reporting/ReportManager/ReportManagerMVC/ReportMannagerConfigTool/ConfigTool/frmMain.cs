@@ -166,9 +166,9 @@ namespace ReportMannagerConfigTool
                 rdoSQL.Checked = true;
 
             if (savedConfig["IsNative"].ToLower() == "false")
-                rdoIsNativeFalse.Checked = true;
+                chkSharepoint.Checked = true;
             else
-                rdoIsNativeTrue.Checked = true;
+                chkSharepoint.Checked = true;
 
             winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
             winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
@@ -224,7 +224,7 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    rdoDomain.Checked ? true : false, rdoIsNativeTrue.Checked ? true : false, winform.getTextBoxValue(txtSharePointHostName));
+                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? true : false, winform.getTextBoxValue(txtSharePointHostName));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -244,25 +244,7 @@ namespace ReportMannagerConfigTool
                 txtDomain.Enabled = true;
         }
 
-        private void btnSecurityApply_Click(object sender, EventArgs e)
-        {
-            if (!winform.isTextBoxNotEmpty(tabSecurity))
-                return;
-            try
-            {
-
-                Cursor.Current = Cursors.WaitCursor;
-                ReportManagerConfig.UpdateDefaultUserDomain(winform.getTextBoxValue(txtDefaultUserDomain));
-
-                winform.showMessage(StaticMessages.commonSuccess);
-            }
-            catch
-            {
-                Cursor.Current = Cursors.Default;
-                winform.showWarning(StaticMessages.updateError);
-            }
-            Cursor.Current = Cursors.Default;
-        }
+        
         #endregion
 
         #region SSRS Extension
@@ -481,6 +463,23 @@ namespace ReportMannagerConfigTool
             }
             Cursor.Current = Cursors.Default;
            
+        }
+
+        private void chkSharepoint_CheckedChanged(object sender, EventArgs e)
+        {
+              lblSharepoint.Enabled = chkSharepoint.Checked;
+              txtSharePointHostName.Enabled = chkSharepoint.Checked;
+            
+        }
+
+        private void lblWSUrl_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

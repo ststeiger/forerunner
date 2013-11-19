@@ -398,10 +398,12 @@ $(function () {
 
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
+                me.scrollLock = true;
                 me.scrollToPosition(me.getOriginalPosition());
             });
 
             $viewer.on(events.reportViewerHideDocMap(), function (e, data) {
+                me.scrollLock = false;
                 me.restoreScrollPosition();
             });
 
@@ -426,9 +428,8 @@ $(function () {
             });
 
             //nav to the found keyword and clear saved position to resolve the conflict with left pane.
-            $viewer.on(events.reportViewerFindKeyword(), function (e, data) {
-                var position = { left: data.left, top: data.top };
-                me.scrollToPosition(position);
+            $viewer.on(events.reportViewerNavToPosition(), function (e, data) {
+                me.scrollToPosition(data);
                 me.savePosition = null;
             });
 

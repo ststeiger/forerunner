@@ -120,20 +120,6 @@
   <metadata name="folderSSRS.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 173</value>
-  </data>
-  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>187, 41</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="label5.TabIndex" type="System.Int32, mscorlib">
-    <value>35</value>
-  </data>
-  <data name="label5.Text" xml:space="preserve">
-    <value>The domain to use if no domain is specified at logon</value>
-  </data>
   <data name="&gt;&gt;label5.Name" xml:space="preserve">
     <value>label5</value>
   </data>
@@ -145,15 +131,6 @@
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="txtDefaultUserDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 150</value>
-  </data>
-  <data name="txtDefaultUserDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>187, 20</value>
-  </data>
-  <data name="txtDefaultUserDomain.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
   </data>
   <data name="&gt;&gt;txtDefaultUserDomain.Name" xml:space="preserve">
     <value>txtDefaultUserDomain</value>
@@ -167,25 +144,6 @@
   <data name="&gt;&gt;txtDefaultUserDomain.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="lblDefaultUserDomain.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="lblDefaultUserDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblDefaultUserDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 137</value>
-  </data>
-  <data name="lblDefaultUserDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 13</value>
-  </data>
-  <data name="lblDefaultUserDomain.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="lblDefaultUserDomain.Text" xml:space="preserve">
-    <value>Default User Domain:</value>
-  </data>
   <data name="&gt;&gt;lblDefaultUserDomain.Name" xml:space="preserve">
     <value>lblDefaultUserDomain</value>
   </data>
@@ -197,24 +155,6 @@
   </data>
   <data name="&gt;&gt;lblDefaultUserDomain.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="chkSharepoint.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="chkSharepoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="chkSharepoint.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 74</value>
-  </data>
-  <data name="chkSharepoint.Size" type="System.Drawing.Size, System.Drawing">
-    <value>132, 17</value>
-  </data>
-  <data name="chkSharepoint.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
-  </data>
-  <data name="chkSharepoint.Text" xml:space="preserve">
-    <value>SharePoint Intergrated</value>
   </data>
   <data name="&gt;&gt;chkSharepoint.Name" xml:space="preserve">
     <value>chkSharepoint</value>
@@ -228,18 +168,6 @@
   <data name="&gt;&gt;chkSharepoint.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="txtSharePointHostName.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="txtSharePointHostName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 113</value>
-  </data>
-  <data name="txtSharePointHostName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtSharePointHostName.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
   <data name="&gt;&gt;txtSharePointHostName.Name" xml:space="preserve">
     <value>txtSharePointHostName</value>
   </data>
@@ -251,27 +179,6 @@
   </data>
   <data name="&gt;&gt;txtSharePointHostName.ZOrder" xml:space="preserve">
     <value>4</value>
-  </data>
-  <data name="lblSharepoint.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblSharepoint.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="lblSharepoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblSharepoint.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 100</value>
-  </data>
-  <data name="lblSharepoint.Size" type="System.Drawing.Size, System.Drawing">
-    <value>115, 13</value>
-  </data>
-  <data name="lblSharepoint.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
-  </data>
-  <data name="lblSharepoint.Text" xml:space="preserve">
-    <value>SharePoint Host Name</value>
   </data>
   <data name="&gt;&gt;lblSharepoint.Name" xml:space="preserve">
     <value>lblSharepoint</value>
@@ -285,24 +192,6 @@
   <data name="&gt;&gt;lblSharepoint.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="lblWSUrl.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblWSUrl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblWSUrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 22</value>
-  </data>
-  <data name="lblWSUrl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 13</value>
-  </data>
-  <data name="lblWSUrl.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="lblWSUrl.Text" xml:space="preserve">
-    <value>Web Service URL</value>
-  </data>
   <data name="&gt;&gt;lblWSUrl.Name" xml:space="preserve">
     <value>lblWSUrl</value>
   </data>
@@ -314,18 +203,6 @@
   </data>
   <data name="&gt;&gt;lblWSUrl.ZOrder" xml:space="preserve">
     <value>6</value>
-  </data>
-  <data name="txtWSUrl.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 36</value>
-  </data>
-  <data name="txtWSUrl.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtWSUrl.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="txtWSUrl.Text" xml:space="preserve">
-    <value>http://localhost/reportserver</value>
   </data>
   <data name="&gt;&gt;txtWSUrl.Name" xml:space="preserve">
     <value>txtWSUrl</value>
@@ -339,12 +216,14 @@
   <data name="&gt;&gt;txtWSUrl.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="gbSSRS.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 7</value>
   </data>
   <data name="gbSSRS.Size" type="System.Drawing.Size, System.Drawing">
     <value>211, 237</value>
   </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="gbSSRS.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
   </data>
@@ -363,24 +242,6 @@
   <data name="&gt;&gt;gbSSRS.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="lblDomain.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 173</value>
-  </data>
-  <data name="lblDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 13</value>
-  </data>
-  <data name="lblDomain.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="lblDomain.Text" xml:space="preserve">
-    <value>Domain</value>
-  </data>
   <data name="&gt;&gt;lblDomain.Name" xml:space="preserve">
     <value>lblDomain</value>
   </data>
@@ -392,15 +253,6 @@
   </data>
   <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="txtDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 187</value>
-  </data>
-  <data name="txtDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtDomain.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
   </data>
   <data name="&gt;&gt;txtDomain.Name" xml:space="preserve">
     <value>txtDomain</value>
@@ -414,24 +266,6 @@
   <data name="&gt;&gt;txtDomain.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 137</value>
-  </data>
-  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>53, 13</value>
-  </data>
-  <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="label1.Text" xml:space="preserve">
-    <value>Password</value>
-  </data>
   <data name="&gt;&gt;label1.Name" xml:space="preserve">
     <value>label1</value>
   </data>
@@ -443,18 +277,6 @@
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
     <value>2</value>
-  </data>
-  <data name="txtPWD.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 150</value>
-  </data>
-  <data name="txtPWD.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
-    <value>*</value>
-  </data>
-  <data name="txtPWD.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtPWD.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
   </data>
   <data name="&gt;&gt;txtPWD.Name" xml:space="preserve">
     <value>txtPWD</value>
@@ -468,24 +290,6 @@
   <data name="&gt;&gt;txtPWD.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 99</value>
-  </data>
-  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>33, 13</value>
-  </data>
-  <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="label2.Text" xml:space="preserve">
-    <value>Login</value>
-  </data>
   <data name="&gt;&gt;label2.Name" xml:space="preserve">
     <value>label2</value>
   </data>
@@ -497,15 +301,6 @@
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
     <value>4</value>
-  </data>
-  <data name="txtUser.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 113</value>
-  </data>
-  <data name="txtUser.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtUser.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
   </data>
   <data name="&gt;&gt;txtUser.Name" xml:space="preserve">
     <value>txtUser</value>
@@ -519,24 +314,6 @@
   <data name="&gt;&gt;txtUser.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="rdoSQL.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rdoSQL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="rdoSQL.Location" type="System.Drawing.Point, System.Drawing">
-    <value>116, 214</value>
-  </data>
-  <data name="rdoSQL.Size" type="System.Drawing.Size, System.Drawing">
-    <value>89, 17</value>
-  </data>
-  <data name="rdoSQL.TabIndex" type="System.Int32, mscorlib">
-    <value>21</value>
-  </data>
-  <data name="rdoSQL.Text" xml:space="preserve">
-    <value>SQL Account</value>
-  </data>
   <data name="&gt;&gt;rdoSQL.Name" xml:space="preserve">
     <value>rdoSQL</value>
   </data>
@@ -548,24 +325,6 @@
   </data>
   <data name="&gt;&gt;rdoSQL.ZOrder" xml:space="preserve">
     <value>6</value>
-  </data>
-  <data name="lblDBName.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lblDBName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblDBName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 58</value>
-  </data>
-  <data name="lblDBName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 13</value>
-  </data>
-  <data name="lblDBName.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="lblDBName.Text" xml:space="preserve">
-    <value>Database Name</value>
   </data>
   <data name="&gt;&gt;lblDBName.Name" xml:space="preserve">
     <value>lblDBName</value>
@@ -579,24 +338,6 @@
   <data name="&gt;&gt;lblDBName.ZOrder" xml:space="preserve">
     <value>7</value>
   </data>
-  <data name="rdoDomain.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="rdoDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="rdoDomain.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 214</value>
-  </data>
-  <data name="rdoDomain.Size" type="System.Drawing.Size, System.Drawing">
-    <value>104, 17</value>
-  </data>
-  <data name="rdoDomain.TabIndex" type="System.Int32, mscorlib">
-    <value>20</value>
-  </data>
-  <data name="rdoDomain.Text" xml:space="preserve">
-    <value>Domain Account</value>
-  </data>
   <data name="&gt;&gt;rdoDomain.Name" xml:space="preserve">
     <value>rdoDomain</value>
   </data>
@@ -608,18 +349,6 @@
   </data>
   <data name="&gt;&gt;rdoDomain.ZOrder" xml:space="preserve">
     <value>8</value>
-  </data>
-  <data name="txtDBName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 74</value>
-  </data>
-  <data name="txtDBName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtDBName.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="txtDBName.Text" xml:space="preserve">
-    <value>ReportServer</value>
   </data>
   <data name="&gt;&gt;txtDBName.Name" xml:space="preserve">
     <value>txtDBName</value>
@@ -633,21 +362,6 @@
   <data name="&gt;&gt;txtDBName.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <data name="lblServer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="lblServer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>4, 20</value>
-  </data>
-  <data name="lblServer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 13</value>
-  </data>
-  <data name="lblServer.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="lblServer.Text" xml:space="preserve">
-    <value>Database Server Name</value>
-  </data>
   <data name="&gt;&gt;lblServer.Name" xml:space="preserve">
     <value>lblServer</value>
   </data>
@@ -659,18 +373,6 @@
   </data>
   <data name="&gt;&gt;lblServer.ZOrder" xml:space="preserve">
     <value>10</value>
-  </data>
-  <data name="txtServerName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>6, 36</value>
-  </data>
-  <data name="txtServerName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>188, 20</value>
-  </data>
-  <data name="txtServerName.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="txtServerName.Text" xml:space="preserve">
-    <value>.</value>
   </data>
   <data name="&gt;&gt;txtServerName.Name" xml:space="preserve">
     <value>txtServerName</value>
@@ -708,6 +410,7 @@
   <data name="&gt;&gt;gbDBLoginInfo.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="btnTest.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
@@ -1214,6 +917,381 @@
   </data>
   <data name="&gt;&gt;tabMain.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="lblWSUrl.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblWSUrl.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblWSUrl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 22</value>
+  </data>
+  <data name="lblWSUrl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>94, 13</value>
+  </data>
+  <data name="lblWSUrl.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="lblWSUrl.Text" xml:space="preserve">
+    <value>Web Service URL</value>
+  </data>
+  <data name="&gt;&gt;lblWSUrl.Name" xml:space="preserve">
+    <value>lblWSUrl</value>
+  </data>
+  <data name="&gt;&gt;lblWSUrl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblWSUrl.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;lblWSUrl.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="txtWSUrl.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 36</value>
+  </data>
+  <data name="txtWSUrl.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtWSUrl.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="txtWSUrl.Text" xml:space="preserve">
+    <value>http://localhost/reportserver</value>
+  </data>
+  <data name="&gt;&gt;txtWSUrl.Name" xml:space="preserve">
+    <value>txtWSUrl</value>
+  </data>
+  <data name="&gt;&gt;txtWSUrl.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtWSUrl.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;txtWSUrl.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="lblDBName.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDBName.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDBName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 58</value>
+  </data>
+  <data name="lblDBName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 13</value>
+  </data>
+  <data name="lblDBName.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lblDBName.Text" xml:space="preserve">
+    <value>Database Name</value>
+  </data>
+  <data name="&gt;&gt;lblDBName.Name" xml:space="preserve">
+    <value>lblDBName</value>
+  </data>
+  <data name="&gt;&gt;lblDBName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDBName.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;lblDBName.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="txtDBName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 74</value>
+  </data>
+  <data name="txtDBName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtDBName.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="txtDBName.Text" xml:space="preserve">
+    <value>ReportServer</value>
+  </data>
+  <data name="&gt;&gt;txtDBName.Name" xml:space="preserve">
+    <value>txtDBName</value>
+  </data>
+  <data name="&gt;&gt;txtDBName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDBName.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;txtDBName.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="lblServer.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblServer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 20</value>
+  </data>
+  <data name="lblServer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>134, 13</value>
+  </data>
+  <data name="lblServer.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="lblServer.Text" xml:space="preserve">
+    <value>Database Server Name</value>
+  </data>
+  <data name="&gt;&gt;lblServer.Name" xml:space="preserve">
+    <value>lblServer</value>
+  </data>
+  <data name="&gt;&gt;lblServer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblServer.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;lblServer.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="txtServerName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 36</value>
+  </data>
+  <data name="txtServerName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtServerName.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="txtServerName.Text" xml:space="preserve">
+    <value>.</value>
+  </data>
+  <data name="&gt;&gt;txtServerName.Name" xml:space="preserve">
+    <value>txtServerName</value>
+  </data>
+  <data name="&gt;&gt;txtServerName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtServerName.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;txtServerName.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="lblDomain.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDomain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 173</value>
+  </data>
+  <data name="lblDomain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>43, 13</value>
+  </data>
+  <data name="lblDomain.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="lblDomain.Text" xml:space="preserve">
+    <value>Domain</value>
+  </data>
+  <data name="&gt;&gt;lblDomain.Name" xml:space="preserve">
+    <value>lblDomain</value>
+  </data>
+  <data name="&gt;&gt;lblDomain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDomain.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;lblDomain.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="txtDomain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 187</value>
+  </data>
+  <data name="txtDomain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtDomain.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="&gt;&gt;txtDomain.Name" xml:space="preserve">
+    <value>txtDomain</value>
+  </data>
+  <data name="&gt;&gt;txtDomain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDomain.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;txtDomain.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="label1.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>4, 137</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 13</value>
+  </data>
+  <data name="label1.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="&gt;&gt;label1.Name" xml:space="preserve">
+    <value>label1</value>
+  </data>
+  <data name="&gt;&gt;label1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label1.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="txtPWD.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 150</value>
+  </data>
+  <data name="txtPWD.PasswordChar" type="System.Char, mscorlib" xml:space="preserve">
+    <value>*</value>
+  </data>
+  <data name="txtPWD.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtPWD.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;txtPWD.Name" xml:space="preserve">
+    <value>txtPWD</value>
+  </data>
+  <data name="&gt;&gt;txtPWD.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtPWD.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;txtPWD.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="label2.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 99</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>33, 13</value>
+  </data>
+  <data name="label2.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="&gt;&gt;label2.Name" xml:space="preserve">
+    <value>label2</value>
+  </data>
+  <data name="&gt;&gt;label2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label2.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="txtUser.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 113</value>
+  </data>
+  <data name="txtUser.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtUser.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="&gt;&gt;txtUser.Name" xml:space="preserve">
+    <value>txtUser</value>
+  </data>
+  <data name="&gt;&gt;txtUser.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtUser.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;txtUser.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="rdoSQL.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoSQL.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdoSQL.Location" type="System.Drawing.Point, System.Drawing">
+    <value>116, 214</value>
+  </data>
+  <data name="rdoSQL.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 17</value>
+  </data>
+  <data name="rdoSQL.TabIndex" type="System.Int32, mscorlib">
+    <value>21</value>
+  </data>
+  <data name="rdoSQL.Text" xml:space="preserve">
+    <value>SQL Account</value>
+  </data>
+  <data name="&gt;&gt;rdoSQL.Name" xml:space="preserve">
+    <value>rdoSQL</value>
+  </data>
+  <data name="&gt;&gt;rdoSQL.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoSQL.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;rdoSQL.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="rdoDomain.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="rdoDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="rdoDomain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 214</value>
+  </data>
+  <data name="rdoDomain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 17</value>
+  </data>
+  <data name="rdoDomain.TabIndex" type="System.Int32, mscorlib">
+    <value>20</value>
+  </data>
+  <data name="rdoDomain.Text" xml:space="preserve">
+    <value>Domain Account</value>
+  </data>
+  <data name="&gt;&gt;rdoDomain.Name" xml:space="preserve">
+    <value>rdoDomain</value>
+  </data>
+  <data name="&gt;&gt;rdoDomain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.RadioButton, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;rdoDomain.Parent" xml:space="preserve">
+    <value>gbDBLoginInfo</value>
+  </data>
+  <data name="&gt;&gt;rdoDomain.ZOrder" xml:space="preserve">
+    <value>8</value>
   </data>
   <data name="textBox1.Enabled" type="System.Boolean, mscorlib">
     <value>False</value>
@@ -2026,6 +2104,168 @@ Note: Add or remove SSRS Extensions will restart report server.</value>
   </data>
   <data name="&gt;&gt;btnActivate.ZOrder" xml:space="preserve">
     <value>10</value>
+  </data>
+  <data name="chkSharepoint.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="chkSharepoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="chkSharepoint.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 74</value>
+  </data>
+  <data name="chkSharepoint.Size" type="System.Drawing.Size, System.Drawing">
+    <value>132, 17</value>
+  </data>
+  <data name="chkSharepoint.TabIndex" type="System.Int32, mscorlib">
+    <value>4</value>
+  </data>
+  <data name="chkSharepoint.Text" xml:space="preserve">
+    <value>SharePoint Intergrated</value>
+  </data>
+  <data name="&gt;&gt;chkSharepoint.Name" xml:space="preserve">
+    <value>chkSharepoint</value>
+  </data>
+  <data name="&gt;&gt;chkSharepoint.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;chkSharepoint.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;chkSharepoint.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="txtSharePointHostName.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="txtSharePointHostName.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 113</value>
+  </data>
+  <data name="txtSharePointHostName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>188, 20</value>
+  </data>
+  <data name="txtSharePointHostName.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;txtSharePointHostName.Name" xml:space="preserve">
+    <value>txtSharePointHostName</value>
+  </data>
+  <data name="&gt;&gt;txtSharePointHostName.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtSharePointHostName.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;txtSharePointHostName.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="lblSharepoint.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblSharepoint.Enabled" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="lblSharepoint.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblSharepoint.Location" type="System.Drawing.Point, System.Drawing">
+    <value>5, 100</value>
+  </data>
+  <data name="lblSharepoint.Size" type="System.Drawing.Size, System.Drawing">
+    <value>115, 13</value>
+  </data>
+  <data name="lblSharepoint.TabIndex" type="System.Int32, mscorlib">
+    <value>5</value>
+  </data>
+  <data name="lblSharepoint.Text" xml:space="preserve">
+    <value>SharePoint Host Name</value>
+  </data>
+  <data name="&gt;&gt;lblSharepoint.Name" xml:space="preserve">
+    <value>lblSharepoint</value>
+  </data>
+  <data name="&gt;&gt;lblSharepoint.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblSharepoint.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;lblSharepoint.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="txtDefaultUserDomain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 150</value>
+  </data>
+  <data name="txtDefaultUserDomain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>187, 20</value>
+  </data>
+  <data name="txtDefaultUserDomain.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;txtDefaultUserDomain.Name" xml:space="preserve">
+    <value>txtDefaultUserDomain</value>
+  </data>
+  <data name="&gt;&gt;txtDefaultUserDomain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.TextBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;txtDefaultUserDomain.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;txtDefaultUserDomain.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lblDefaultUserDomain.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lblDefaultUserDomain.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="lblDefaultUserDomain.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 137</value>
+  </data>
+  <data name="lblDefaultUserDomain.Size" type="System.Drawing.Size, System.Drawing">
+    <value>108, 13</value>
+  </data>
+  <data name="lblDefaultUserDomain.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="lblDefaultUserDomain.Text" xml:space="preserve">
+    <value>Default User Domain:</value>
+  </data>
+  <data name="&gt;&gt;lblDefaultUserDomain.Name" xml:space="preserve">
+    <value>lblDefaultUserDomain</value>
+  </data>
+  <data name="&gt;&gt;lblDefaultUserDomain.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lblDefaultUserDomain.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;lblDefaultUserDomain.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 173</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>187, 41</value>
+  </data>
+  <data name="label5.TabIndex" type="System.Int32, mscorlib">
+    <value>35</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>The domain to use if no domain is specified at logon</value>
+  </data>
+  <data name="&gt;&gt;label5.Name" xml:space="preserve">
+    <value>label5</value>
+  </data>
+  <data name="&gt;&gt;label5.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label5.Parent" xml:space="preserve">
+    <value>gbSSRS</value>
+  </data>
+  <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

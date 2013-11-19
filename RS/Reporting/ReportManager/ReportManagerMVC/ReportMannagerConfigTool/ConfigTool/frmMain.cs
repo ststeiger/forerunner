@@ -168,7 +168,7 @@ namespace ReportMannagerConfigTool
             if (savedConfig["IsNative"].ToLower() == "false")
                 chkSharepoint.Checked = true;
             else
-                chkSharepoint.Checked = true;
+                chkSharepoint.Checked = false;
 
             winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
             winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
@@ -224,7 +224,7 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? true : false, winform.getTextBoxValue(txtSharePointHostName));
+                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -478,6 +478,11 @@ namespace ReportMannagerConfigTool
         }
 
         private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
         {
 
         }

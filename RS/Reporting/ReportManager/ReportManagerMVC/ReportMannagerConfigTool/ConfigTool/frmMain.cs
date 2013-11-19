@@ -110,7 +110,7 @@ namespace ReportMannagerConfigTool
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
                 SaveWebServerConfig();
-                ConfigToolHelper.SetLogFilesFolderPermission();
+                ConfigToolHelper.SetLogFilesFolderPermission(rdoIIS.Checked);
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
@@ -291,7 +291,6 @@ namespace ReportMannagerConfigTool
                     ConfigToolHelper.StartReportServer(false, targetPath);
                     RenderExtensionConfig.removeRenderExtension(targetPath);
                     ConfigToolHelper.StartReportServer(true, targetPath);
-                    ConfigToolHelper.RemoveExtensionLogFilesFolderPermission(targetPath);
                     winform.showMessage(StaticMessages.removeDone);
                 }
             }
@@ -319,7 +318,6 @@ namespace ReportMannagerConfigTool
                 RenderExtensionConfig.addRenderExtension(targetPath);
                 RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
                 ConfigToolHelper.StartReportServer(true, targetPath);
-                ConfigToolHelper.SetExtensionLogFilesFolderPermission(targetPath);
                 winform.showMessage(StaticMessages.updateDone);
             }
             else

@@ -263,8 +263,8 @@ namespace ReportMannagerConfigTool
         /// <param name="reportserverdb">Report Server Database Name</param>
         /// <param name="reportserverdbuser">Report Server Database User</param>
         /// <param name="reportserverdbpwd">Report Server Database User Password</param>
-        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain, 
-            string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated, bool isnative, string sharepointhostname)
+        public static void UpdateForerunnerWebConfig(string wsurl, string reportserverdatasource, string reportserverdb, string reportserverdbuserdomain,
+            string reportserverdbuser, string reportserverdbpwd, bool SQLIntegrated, bool isnative, string sharepointhostname, string defaultuserdomain)
         {
             GetAppSettingNode(xmlDoc, reportServerWSUrl).SetAppSettingValue(wsurl);
 
@@ -284,12 +284,8 @@ namespace ReportMannagerConfigTool
 
             GetAppSettingNode(xmlDoc, sharepointHost).SetAppSettingValue(sharepointhostname);
 
-            xmlDoc.Save(filePath);
-        }
-
-        public static void UpdateDefaultUserDomain(string defaultuserdomain)
-        {
             GetAppSettingNode(xmlDoc, defaultUserDomain).SetAppSettingValue(defaultuserdomain);
+
             xmlDoc.Save(filePath);
         }
 

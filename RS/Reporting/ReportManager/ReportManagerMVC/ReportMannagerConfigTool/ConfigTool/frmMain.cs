@@ -171,9 +171,8 @@ namespace ReportMannagerConfigTool
                 chkSharepoint.Checked = false;
 
             winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
-            winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
-
             winform.setTextBoxValue(txtDefaultUserDomain, savedConfig["DefaultUserDomain"]);
+            winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
         }
 
         private void SetReportManagerFolderPath()
@@ -224,7 +223,8 @@ namespace ReportMannagerConfigTool
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName));
+                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName),
+                    winform.getTextBoxValue(txtDefaultUserDomain));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }

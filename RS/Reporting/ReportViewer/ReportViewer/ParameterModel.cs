@@ -43,12 +43,17 @@ namespace Forerunner.SSRS
         public ParameterModel()
         {
             canEditAllUsersSet = false;
+        }
+
+        public ParameterModel(bool startingCanEditAllUsersSet)
+        {
+            canEditAllUsersSet = startingCanEditAllUsersSet;
             parameterSets = new List<ParameterSet>();
         }
 
         public string GetUserParameters()
         {
-            ParameterModel model = new ParameterModel();
+            ParameterModel model = new ParameterModel(canEditAllUsersSet);
 
             model.canEditAllUsersSet = canEditAllUsersSet;
             model.parameterSets = parameterSets.FindAll(
@@ -61,7 +66,7 @@ namespace Forerunner.SSRS
 
         public string GetAllUserParameters()
         {
-            ParameterModel model = new ParameterModel();
+            ParameterModel model = new ParameterModel(canEditAllUsersSet);
 
             model.canEditAllUsersSet = canEditAllUsersSet;
             model.parameterSets = parameterSets.FindAll(

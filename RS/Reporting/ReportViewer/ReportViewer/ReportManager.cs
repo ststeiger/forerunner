@@ -203,10 +203,10 @@ namespace Forerunner.SSRS.Manager
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
-                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.1','0'
+                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.2','0'
                             END
                             ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.1'  FROM ForerunnerDBVersion
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.2'  FROM ForerunnerDBVersion
 
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 
@@ -220,34 +220,39 @@ namespace Forerunner.SSRS.Manager
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END
-                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), CONSTRAINT uip_PK UNIQUE (ItemID,UserID))
                             END
-                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
                             END
 
-                          /*  Version update Code */
-                           /*
-                           IF @DBVersionPrev = 1.1 
-                             BEGIN
-                              ALTER TABLE ForerunnerCatalog ...
-                              ALTER TABLE ForerunnerUserItemProperties ...
-                              SELECT @DBVersionPrev = '1.2'
-                             END
+                           /*  Version update Code */
+                           IF @DBVersionPrev = 1.1
+                            BEGIN
+	                            DECLARE @PKName varchar(200) 
+	                            select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
+	                            DECLARE @SQL VARCHAR(1000)
+	                            SET @SQL = 'ALTER TABLE ForerunnerUserItemProperties DROP CONSTRAINT ' + @PKName
+	                            EXEC (@SQL)
 
-                           IF @DBVersionPrev = 1.2 
-                             BEGIN
-                              ALTER TABLE ForerunnerCatalog ...
-                              ALTER TABLE ForerunnerUserItemProperties ...
-                              SELECT @DBVersionPrev = '1.3'
-                             END
+	                            ALTER TABLE ForerunnerUserItemProperties ALTER COLUMN UserID uniqueidentifier NULL
 
+	                            ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
 
-                           */ 
+                                SELECT @DBVersionPrev = '1.2'
+                            END
 
+                            /*
+                            IF @DBVersionPrev = 1.2 
+                                BEGIN
+                                ALTER TABLE ForerunnerCatalog ...
+                                ALTER TABLE ForerunnerUserItemProperties ...
+                                SELECT @DBVersionPrev = '1.3'
+                                END
+                            */ 
                             ";
                 SQLConn.Open();
 
@@ -421,8 +426,8 @@ namespace Forerunner.SSRS.Manager
                 SqlDataReader SQLReader;
                 SQLReader = SQLComm.ExecuteReader();
                 string savedParams = string.Empty;
-                ParameterModel model = new ParameterModel();
                 bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
+                ParameterModel model = new ParameterModel(canEditAllUsersSet);
 
                 while (SQLReader.Read())
                 {

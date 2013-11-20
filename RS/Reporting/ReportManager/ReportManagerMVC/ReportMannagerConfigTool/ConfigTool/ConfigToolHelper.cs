@@ -102,7 +102,7 @@ namespace ReportMannagerConfigTool
                     impersonator.Undo();
             }
 
-            return "True";
+            return StaticMessages.testSuccess;
         }     
 
         /// <summary>
@@ -127,7 +127,44 @@ namespace ReportMannagerConfigTool
                     conn.Close();
             }
 
-            return "True";
+            return StaticMessages.testSuccess;
+        }
+
+        /// <summary>
+        /// Detect the given web service url is available or not
+        /// </summary>
+        /// <param name="url">Web Service Url</param>
+        /// <returns>True: web service url is available; ErrorMessage</returns>
+        public static string tryWebServiceUrl(string url)
+        {
+            try
+            {
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                request.Credentials = CredentialCache.DefaultNetworkCredentials;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    return StaticMessages.testSuccess;
+                }
+            }
+            catch (WebException e) 
+            {
+                if (e.Response == null)
+                {
+                    return String.Format(StaticMessages.webServiceUrlInvalid, e.Message);
+                }
+                else
+                {
+                    var response = (HttpWebResponse)e.Response;
+                    string description = response.StatusDescription;
+
+                    e.Response.Close();
+                    return String.Format(StaticMessages.webServiceUrlError, description);
+                }
+            }
+            catch (Exception e) 
+            {
+                return String.Format(StaticMessages.webServiceUrlInvalid, e.Message);
+            }
         }
 
         /// <summary>

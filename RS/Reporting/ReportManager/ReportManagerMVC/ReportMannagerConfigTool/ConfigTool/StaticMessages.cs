@@ -10,7 +10,7 @@
         public static readonly string commonSuccess = "Update success!";
 
         public static readonly string deploySuccess = "Deploy to {0} success!";
-        public static readonly string connectDBSuccess = "Connected test success!";
+        public static readonly string connectDBSuccess = "Connection test success!";
 
         public static readonly string ssrsUpdateSuccess = "SSRS Connection config file update success!";
         public static readonly string updateError = "Error occured when update, please try later!";
@@ -36,5 +36,10 @@
 
         public static readonly string NetworkServiceAccount = "NETWORK SERVICE";
         public static readonly string IISUsrsAccount = "IIS_IUSRS";
+
+        public static readonly string testSuccess = "Success";
+        public static readonly string testFail = "Fail";
+        public static readonly string webServiceUrlInvalid = "Web Service Url is invalid: {0}";
+        public static readonly string webServiceUrlError = "Web Service Url is not work: {0}";
     }
 }

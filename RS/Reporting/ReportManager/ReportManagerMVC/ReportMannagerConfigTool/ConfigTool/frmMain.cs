@@ -110,7 +110,7 @@ namespace ReportMannagerConfigTool
                     ReportManagerConfig.CreateAnUWSSite(siteName, localDirectory, bindingAddress, ref siteUrl, authType);
                 }
                 SaveWebServerConfig();
-                ConfigToolHelper.SetLogFilesFolderPermission();
+                ConfigToolHelper.SetLogFilesFolderPermission(rdoIIS.Checked);
                 winform.showMessage(string.Format(StaticMessages.deploySuccess, (rdoIIS.Checked ? "IIS " : "UWS")));
             }
             catch (Exception ex)
@@ -151,19 +151,28 @@ namespace ReportMannagerConfigTool
         #region SSRS Connection
         private void LoadWebConfig()
         {
-            var existConfig = ReportManagerConfig.GetForerunnerWebConfig();
+            var savedConfig = ReportManagerConfig.GetForerunnerWebConfig();
 
-            winform.setTextBoxValue(txtWSUrl, existConfig["WSUrl"]);
-            winform.setTextBoxValue(txtServerName , existConfig["DataSource"]);
-            winform.setTextBoxValue(txtDBName, existConfig["Database"]);
-            winform.setTextBoxValue(txtDomain, existConfig["UserDomain"]);
-            winform.setTextBoxValue(txtUser, existConfig["User"]);
-            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(existConfig["Password"]));
-            if (existConfig["SQLIntegrated"].ToLower() == "true")
+            winform.setTextBoxValue(txtWSUrl, savedConfig["WSUrl"]);
+            winform.setTextBoxValue(txtServerName , savedConfig["DataSource"]);
+            winform.setTextBoxValue(txtDBName, savedConfig["Database"]);
+            winform.setTextBoxValue(txtDomain, savedConfig["UserDomain"]);
+            winform.setTextBoxValue(txtUser, savedConfig["User"]);
+            winform.setTextBoxValue(txtPWD, Forerunner.SSRS.Security.Encryption.Decrypt(savedConfig["Password"]));
+
+            if (savedConfig["SQLIntegrated"].ToLower() == "true")
                 rdoDomain.Checked = true;
             else
                 rdoSQL.Checked = true;
-            winform.setSelectRdoValue(gbAuthType, existConfig["AuthType"]);
+
+            if (savedConfig["IsNative"].ToLower() == "false")
+                chkSharepoint.Checked = true;
+            else
+                chkSharepoint.Checked = false;
+
+            winform.setTextBoxValue(txtSharePointHostName, savedConfig["SharePointHostName"]);
+            winform.setTextBoxValue(txtDefaultUserDomain, savedConfig["DefaultUserDomain"]);
+            winform.setSelectRdoValue(gbAuthType, savedConfig["AuthType"]);
         }
 
         private void SetReportManagerFolderPath()
@@ -173,7 +182,7 @@ namespace ReportMannagerConfigTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
 
             Cursor.Current = Cursors.WaitCursor;
@@ -191,32 +200,53 @@ namespace ReportMannagerConfigTool
             }
 
             Cursor.Current = Cursors.Default;
-            string result;
-
-            if (rdoDomain.Checked)
-                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
-            else
-                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);        
+            string result = testSSRSConnection(rdoDomain.Checked, builder);
     
-            if (result.Equals("True"))
+            if (StaticMessages.testSuccess.Equals(result))
                 winform.showMessage(StaticMessages.connectDBSuccess);
             else
                 MessageBox.Show(result);
         }
 
+        private string testSSRSConnection(bool isDomainAccount, SqlConnectionStringBuilder builder)
+        {
+            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
+
+            //Test database connection string is correct.
+            string result = isDomainAccount ? ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser),
+                winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD)) : ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+            }
+
+            //Test web service url is availabel.
+            result = ConfigToolHelper.tryWebServiceUrl(winform.getTextBoxValue(txtWSUrl));
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+            }
+
+            if (errorMessage.Length != 0)
+            {
+                return errorMessage.ToString();
+            }
+            return StaticMessages.testSuccess;
+        }
+
         private void btnApply_Click(object sender, EventArgs e)
         {
-            
-            if (!winform.isTextBoxNotEmpty(tabPage2))
+            if (!winform.isTextBoxNotEmpty(gbSSRS) || !winform.isTextBoxNotEmpty(gbDBLoginInfo))
                 return;
             try
             {
-
                 Cursor.Current = Cursors.WaitCursor;
                 ReportManagerConfig.UpdateForerunnerWebConfig(winform.getTextBoxValue(txtWSUrl), winform.getTextBoxValue(txtServerName),
                     winform.getTextBoxValue(txtDBName), winform.getTextBoxValue(txtDomain),
                     winform.getTextBoxValue(txtUser), Forerunner.SSRS.Security.Encryption.Encrypt(winform.getTextBoxValue(txtPWD)),
-                    rdoDomain.Checked ? true: false);
+                    rdoDomain.Checked ? true : false, chkSharepoint.Checked ? false : true, winform.getTextBoxValue(txtSharePointHostName),
+                    winform.getTextBoxValue(txtDefaultUserDomain));
                 
                 winform.showMessage(StaticMessages.ssrsUpdateSuccess);
             }
@@ -235,6 +265,8 @@ namespace ReportMannagerConfigTool
             else
                 txtDomain.Enabled = true;
         }
+
+        
         #endregion
 
         #region SSRS Extension
@@ -263,7 +295,6 @@ namespace ReportMannagerConfigTool
                     ConfigToolHelper.StartReportServer(false, targetPath);
                     RenderExtensionConfig.removeRenderExtension(targetPath);
                     ConfigToolHelper.StartReportServer(true, targetPath);
-                    ConfigToolHelper.RemoveExtensionLogFilesFolderPermission(targetPath);
                     winform.showMessage(StaticMessages.removeDone);
                 }
             }
@@ -291,7 +322,6 @@ namespace ReportMannagerConfigTool
                 RenderExtensionConfig.addRenderExtension(targetPath);
                 RenderExtensionConfig.ReprotManagerFolderPath = targetPath;
                 ConfigToolHelper.StartReportServer(true, targetPath);
-                ConfigToolHelper.SetExtensionLogFilesFolderPermission(targetPath);
                 winform.showMessage(StaticMessages.updateDone);
             }
             else
@@ -457,5 +487,26 @@ namespace ReportMannagerConfigTool
            
         }
 
+        private void chkSharepoint_CheckedChanged(object sender, EventArgs e)
+        {
+              lblSharepoint.Enabled = chkSharepoint.Checked;
+              txtSharePointHostName.Enabled = chkSharepoint.Checked;
+            
+        }
+
+        private void lblWSUrl_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -168,6 +168,7 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
+            $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             $item.append($caption);            
@@ -190,6 +191,7 @@ $(function () {
                 me.rmListItems[i] = me._generatePCListItem(catalogItem, isSelected);
                 me.$UL.append(me.rmListItems[i]);
             }
+            me.$UL.find(".fr-explorer-item-title").multiLineEllipsis();
         },
         _render: function (catalogItems) {
             var me = this;
@@ -204,7 +206,6 @@ $(function () {
                 setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
-      
         _fetch: function (view,path) {
             var me = this;
             forerunner.ajax.ajax({

@@ -83,7 +83,48 @@ jQuery.fn.extend({
     unmask: function () {
         $(this).find(".fr-core-mask").remove();
         return $(this);
-    }
+    },
+    multiLineEllipsis: function () {
+        return this.each(function () {
+            var el = $(this);
+
+            if (el.css("overflow") == "hidden") {
+                var text = el.html();
+                var clone = $(this.cloneNode(true)).hide().css('position', 'absolute').css('overflow', 'visible').width(el.width()).height('auto');
+                el.after(clone);
+
+                function height() { return clone.height() > el.height(); };
+
+                if (height()) {
+                    var myElipse = " ...";
+                    clone.html(text);
+                    var suggestedCharLength = parseInt(text.length * el.height() / clone.height(), 10);
+                    clone.html(text.substr(0, suggestedCharLength) + myElipse);
+                    
+                    var x = 1;
+                    if (height()) {
+                        do {
+                            clone.html(text.substr(0, suggestedCharLength - x) + myElipse);
+                            x++;
+                        }
+                        while (height());
+                    }
+                    else {
+                        do {
+                            clone.html(text.substr(0, suggestedCharLength + x) + myElipse);
+                            x++;
+                        }
+                        while (!height());
+                        x -= 2;
+                        clone.html(text.substr(0, suggestedCharLength + x) + myElipse);
+                    }
+                    
+                    el.html(clone.html());
+                }
+                clone.remove();
+            }
+        });
+    },
 });
 $(function () {
     /**

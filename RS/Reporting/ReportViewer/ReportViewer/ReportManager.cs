@@ -242,6 +242,8 @@ namespace Forerunner.SSRS.Manager
 
 	                            ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
 
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = '1.2' FROM ForerunnerDBVersion
+
                                 SELECT @DBVersionPrev = '1.2'
                             END
 

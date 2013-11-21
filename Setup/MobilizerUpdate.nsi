@@ -17,6 +17,8 @@
 
 ; MUI2
 !include MUI2.nsh
+; Word Function
+!include WordFunc.nsh
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -218,7 +220,14 @@ Function IsMobilizerInstalled
 	StrCmp $0 "" 0 +3
 	MessageBox MB_OK "Mobilizer is not found, please install Mobilizer first then do update!"
 	Abort
-	StrCpy $INSTDIR $0
+
+	;Verify it is old version or new version, if it's new version $1 will be 1:not found
+	${WordReplace} "$0" "\ForerunnerMobilizer" "" "E-1" $1
+	
+	StrCmp $1 1 0 +3
+           StrCpy $INSTDIR $0 ; ForerunnerMobilizer not found - new build
+           goto +2
+           StrCpy $INSTDIR $1 ; old build
 FunctionEnd
 
 Function IsDotNETInstalled

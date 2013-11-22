@@ -1409,8 +1409,12 @@ $(function () {
             me._resetViewer();            
             me.options.reportPath = reportPath;
             me.options.pageNum = pageNum;
-            me._loadParameters(pageNum);            
-            
+
+            if (me.options.jsonPath) {
+                me._renderJson();
+            } else {
+                me._loadParameters(pageNum);
+            }
         },
         /**
          * Load current report with the given parameter list
@@ -1427,6 +1431,38 @@ $(function () {
                 pageNum = 1;
             }
             me._loadPage(pageNum, false, null, paramList, true);
+        },
+        _renderJson : function () {
+            var me = this;
+            var newPageNum = 1;
+            var loadOnly = false;
+
+            if (!me.element.is(":visible") && !loadOnly)
+                me.element.show(); //scrollto does not work with the slide in functions:(
+
+            me._addLoadingIndicator();
+            me.togglePageNum = newPageNum;
+            forerunner.ajax.ajax(
+                {
+                    type: "GET",
+                    dataType: "json",
+                    url: me.options.jsonPath,
+                    async: false,
+                    success: function (data) {
+                        me._writePage(data, newPageNum, loadOnly);
+                        if (!loadOnly) {
+                            if (data.ReportContainer) {
+                                me._setPrint(data.ReportContainer.Report.PageContent.PageLayoutStart);
+                            }
+
+                            if (!me.element.is(":visible"))
+                                me.element.show();  //scrollto does not work with the slide in functions:(                            
+
+                            me._updateTableHeaders(me);
+                        }
+                    },
+                    error: function () { console.log("error"); me.removeLoadingIndicator(); }
+                });
         },
         _loadPage: function (newPageNum, loadOnly, bookmarkID, paramList, flushCache) {
             var me = this;

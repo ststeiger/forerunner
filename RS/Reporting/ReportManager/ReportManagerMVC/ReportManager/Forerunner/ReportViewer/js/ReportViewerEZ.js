@@ -31,6 +31,7 @@ $(function () {
         options: {
             DefaultAppTemplate: null,
             path: null,
+            jsonPath: null,
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
@@ -69,6 +70,7 @@ $(function () {
                 $docMap: layout.$docmapsection,
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
                 ReportPath: path,
+                jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,

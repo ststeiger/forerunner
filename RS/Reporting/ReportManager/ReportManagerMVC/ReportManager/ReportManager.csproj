@@ -269,6 +269,7 @@
     <Content Include="QUnit\lib\QUnit\css\qunit-1.12.0.css" />
     <Content Include="QUnit\lib\QUnit\js\qunit-1.12.0.js" />
     <Content Include="Samples\BottomNav.html" />
+    <Content Include="Samples\RenderJson.html" />
     <Content Include="Samples\FullPage.html" />
     <Content Include="Samples\Dashboard.html" />
     <Content Include="JSdoc\Tutorials\GettingStarted.html" />

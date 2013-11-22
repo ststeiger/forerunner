@@ -57,6 +57,7 @@ $(function () {
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
                 reportPath: me.options.ReportPath,
+                jsonPath: me.options.jsonPath,
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,

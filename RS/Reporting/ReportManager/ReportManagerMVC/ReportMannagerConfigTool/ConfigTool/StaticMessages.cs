@@ -37,9 +37,16 @@
         public static readonly string NetworkServiceAccount = "NETWORK SERVICE";
         public static readonly string IISUsrsAccount = "IIS_IUSRS";
 
+        public static readonly string databaseConnectionFail = "Database connection failed: {0}";
         public static readonly string testSuccess = "Success";
         public static readonly string testFail = "Fail";
         public static readonly string webServiceUrlInvalid = "Web Service Url is invalid: {0}";
         public static readonly string webServiceUrlError = "Web Service Url is not work: {0}";
+        public static readonly string webServiceUrlIncorrect = "Web Service Url is not correct!"; 
+
+        public static readonly string ssrs2005url = "/ReportService2005.asmx?wsdl";
+        public static readonly string ssrs2006url = "/ReportService2006.asmx?wsdl";
+        public static readonly string ssrs2005TargetNS = "http://schemas.microsoft.com/sqlserver/2005/06/30/reporting/reportingservices";
+        public static readonly string ssrs2006TargetNS = "http://schemas.microsoft.com/sqlserver/2006/03/15/reporting/reportingservices";
     }
 }

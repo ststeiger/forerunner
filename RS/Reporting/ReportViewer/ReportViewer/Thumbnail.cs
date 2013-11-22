@@ -78,10 +78,20 @@ namespace Forerunner.Thumbnail
             if (ThreadingAttempts++ > 10)
                 return null;
 
-            Thread t = new Thread(new ThreadStart(this._GetScreenShot));
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            t.Join();
+            Thread t = null;
+            try
+            {
+                t = new Thread(new ThreadStart(this._GetScreenShot));
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
+            }
+            finally
+            {
+                if (t != null)
+                {
+                    t.Join();
+                }
+            }
             return bmp;
         }
         

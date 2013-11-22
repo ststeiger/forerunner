@@ -10,6 +10,7 @@ using System.Xml;
 using ForerunnerLicense;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using Forerunner.Logging;
 
 namespace ForerunnerLicense
 {
@@ -30,20 +31,22 @@ namespace ForerunnerLicense
         internal static string MergerequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey><MergeKey>{2}</MergeKey></LicenseRequest>";
         static RegistryKey MobV1Key = null;
         static int IsMachineSame = -1;
-        static DateTime LastServerValidation;
-        static DateTime LastServerValidationTry;
-        static DateTime LastInit;
+        internal static DateTime LastServerValidation;
+        internal static DateTime LastServerValidationTry;
+        internal static DateTime LastInit;
         static int LastStatus=-1;
         internal static MachineId ThisMachine = new MachineId();
         static ClientLicense()
         {
+            Logger.Trace(LogType.Info, "ClientLicense Type Initializer invoked.");
             Init(false);
-             
         }
+
         private static void Init(bool forceCheck)
         {
             lock (ThisMachine)
             {
+                Logger.Trace(LogType.Info, "ClientLicense.Init invoked.  ForceChecked: " + forceCheck);
                 TimeSpan ts = DateTime.Now - LastInit;
                 if (ts.TotalMinutes > 1)
                 {
@@ -51,9 +54,10 @@ namespace ForerunnerLicense
                     Load(forceCheck);
                     MachineCheck(forceCheck);
                 }
+                Logger.Trace(LogType.Info, "ClientLicense.Init ends.");
             }
         }
-         private static void MachineCheck(bool forceCheck)
+        private static void MachineCheck(bool forceCheck)
         {
             if (IsMachineSame == -1 || forceCheck)
             {
@@ -66,13 +70,18 @@ namespace ForerunnerLicense
                 }
             }
         }
-         private static void Load(bool forceCheck )
+        private static void Load(bool forceCheck )
         {
+            Logger.Trace(LogType.Info, "ClientLicense.Load invoked.  ForceChecked: " + forceCheck);
+               
             if (License != null && !forceCheck)
                 return;
 
+            
+            
             if (MobV1Key == null)
             {
+                Logger.Trace(LogType.Info, "ClientLicense.Load  Getting MobV1Key.");
                 RegistryKey forerunnerswKey ;
                 RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software);
           
@@ -99,6 +108,7 @@ namespace ForerunnerLicense
                 MobV1Key = forerunnerswKey.OpenSubKey(VersionKey,true);
                 if (MobV1Key == null)
                 {
+                    Logger.Trace(LogType.Info, "ClientLicense.Load Creating the key.");
                     //Handle the beta case where forerunner key exists
                     if (wow6432NodeKey == null)
                         forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey,true);
@@ -111,15 +121,19 @@ namespace ForerunnerLicense
                     rs.AddAccessRule(new RegistryAccessRule(new SecurityIdentifier(WellKnownSidType.WorldSid, null), RegistryRights.FullControl, InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit, PropagationFlags.None, AccessControlType.Allow));
                     MobV1Key.SetAccessControl(rs);
                 }
+
+                Logger.Trace(LogType.Info, "ClientLicense.Load MobV1Key is " + MobV1Key.Name);
             }
 
             var value = MobV1Key.GetValue(LicenseDataKey);
             if (value != null)
             {
+                Logger.Trace(LogType.Info, "ClientLicense.Load Verifying Key");
                 string temp = MobV1Key.GetValue(LicenseDataKey).ToString();
                 if (temp != LicenseString)
                 {
                     LicenseString = temp;
+                    Logger.Trace(LogType.Info, "ClientLicense.Load Calling LicenceUtil.Verify " + LicenseString);
                     License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 }
             }
@@ -141,8 +155,8 @@ namespace ForerunnerLicense
                     MobV1Key.DeleteValue(LicenseTimestampKey);
                 }
             }
-            
 
+            Logger.Trace(LogType.Info, "ClientLicense.Load ends.");
         }
 
         private static void DeleteLicense()
@@ -285,8 +299,12 @@ namespace ForerunnerLicense
                     }
                     else
                     {
-                        LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)),DateTimeKind.Utc);
-                        MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
+                        // This needs to be thread safe.
+                        lock (ThisMachine)
+                        {
+                            LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)), DateTimeKind.Utc);
+                            MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
+                        }
                     }
                 }
 
@@ -299,9 +317,9 @@ namespace ForerunnerLicense
         public static ServerResponse Post(string Value)
         {
             string url = "https://forerunnersw.com/register/api/License";
-#if (DEBUG)
+//#if (DEBUG)
             url = "http://localhost:13149/api/License";
-#endif
+//#endif
             WebRequest request = WebRequest.Create (url);
             request.Method = "POST";
 
@@ -311,19 +329,22 @@ namespace ForerunnerLicense
             request.ContentType = "text/xml";            
             request.ContentLength = byteArray.Length;
             request.Timeout = 100000;
-            
-            Stream dataStream = request.GetRequestStream ();            
-            dataStream.Write (byteArray, 0, byteArray.Length);          
-            dataStream.Close ();
-            
-            WebResponse response = request.GetResponse ();
-            dataStream = response.GetResponseStream ();
-            StreamReader reader = new StreamReader (dataStream);
-            string responseFromServer = reader.ReadToEnd ();
 
-            reader.Close ();
-            dataStream.Close ();
-            response.Close ();
+            string responseFromServer = "";
+            using (Stream dataStream = request.GetRequestStream())
+            {
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (Stream dataStream2 = response.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(dataStream2);
+                        responseFromServer = reader.ReadToEnd();
+                    }
+                }
+            }
             return ProcessResponse(responseFromServer);
 
         }

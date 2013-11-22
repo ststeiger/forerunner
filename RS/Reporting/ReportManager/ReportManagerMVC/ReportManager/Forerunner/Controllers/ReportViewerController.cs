@@ -10,7 +10,7 @@ using System.Text;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
 using System.IO;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 
 namespace ReportManager.Controllers
 {

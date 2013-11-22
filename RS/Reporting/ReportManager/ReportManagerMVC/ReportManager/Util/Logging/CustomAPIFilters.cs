@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Web.Http.Filters;
 
-namespace ReportManager.Util.Logging
+namespace Forerunner.Logging
 {
     public class ExceptionLogAttribute : ExceptionFilterAttribute
     {

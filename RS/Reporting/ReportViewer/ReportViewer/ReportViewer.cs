@@ -11,7 +11,7 @@ using System.Security.Principal;
 using System.Web;
 using System.Web.Security;
 using Forerunner.Security;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 
 namespace Forerunner.SSRS.Viewer
 {

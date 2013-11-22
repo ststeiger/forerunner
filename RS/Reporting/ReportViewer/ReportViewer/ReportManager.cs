@@ -9,7 +9,7 @@ using Forerunner;
 using Forerunner.SSRS.Viewer;
 using Forerunner.SSRS.Management;
 using Forerunner.Security;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 using Jayrock.Json;
 using System.Threading;
 using System.Web.Security;

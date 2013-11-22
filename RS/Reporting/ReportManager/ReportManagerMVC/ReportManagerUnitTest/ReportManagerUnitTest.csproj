@@ -38,7 +38,10 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -53,7 +56,20 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="ClientLicenseTest.cs" />
     <Compile Include="LocalizationTests.cs" />
+    <Compile Include="..\ReportMannagerConfigTool\ClientLicense.cs">
+      <Link>ClientLicense.cs</Link>
+    </Compile>
+    <Compile Include="..\ReportMannagerConfigTool\LicenseUtil.cs">
+      <Link>LicenseUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\ReportViewer\ReportViewer\Encryption.cs">
+      <Link>Encryption.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\ReportViewer\ReportViewer\Util\Logging\Logger.cs">
+      <Link>Logger.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

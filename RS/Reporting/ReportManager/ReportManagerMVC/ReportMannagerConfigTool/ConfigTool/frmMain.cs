@@ -200,29 +200,23 @@ namespace ReportMannagerConfigTool
             }
 
             Cursor.Current = Cursors.Default;
-            string result = testSSRSConnection(rdoDomain.Checked, builder);
-    
-            if (StaticMessages.testSuccess.Equals(result))
-                winform.showMessage(StaticMessages.connectDBSuccess);
-            else
-                MessageBox.Show(result);
-        }
-
-        private string testSSRSConnection(bool isDomainAccount, SqlConnectionStringBuilder builder)
-        {
             System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
+            string result;
 
-            //Test database connection string is correct.
-            string result = isDomainAccount ? ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser),
-                winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD)) : ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+            //Test database connection
+            if (rdoDomain.Checked)
+                result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
+            else
+                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
 
             if (!StaticMessages.testSuccess.Equals(result))
             {
                 errorMessage.AppendLine(result);
+                errorMessage.AppendLine();
             }
 
-            //Test web service url is availabel.
-            result = ConfigToolHelper.tryWebServiceUrl(winform.getTextBoxValue(txtWSUrl));
+            //Test web service url connection
+            result = ConfigToolHelper.tryWebServiceUrl(chkSharepoint.Checked, winform.getTextBoxValue(txtWSUrl));
             if (!StaticMessages.testSuccess.Equals(result))
             {
                 errorMessage.AppendLine(result);
@@ -230,9 +224,10 @@ namespace ReportMannagerConfigTool
 
             if (errorMessage.Length != 0)
             {
-                return errorMessage.ToString();
+                winform.showWarning(errorMessage.ToString());
+                return;
             }
-            return StaticMessages.testSuccess;
+            winform.showMessage(StaticMessages.connectDBSuccess);
         }
 
         private void btnApply_Click(object sender, EventArgs e)

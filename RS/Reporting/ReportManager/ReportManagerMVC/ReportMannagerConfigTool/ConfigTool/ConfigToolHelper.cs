@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.AccessControl;
 using System.ServiceProcess;
+using System.Xml;
 using Forerunner.Security;
 using Microsoft.Win32;
 
@@ -92,7 +93,7 @@ namespace ReportMannagerConfigTool
             }
             catch (Exception error)
             {
-                return error.Message;
+                return String.Format(StaticMessages.databaseConnectionFail, error.Message);
             }
             finally
             {
@@ -119,7 +120,7 @@ namespace ReportMannagerConfigTool
             }
             catch (Exception error)
             {
-                return error.Message;
+                return String.Format(StaticMessages.databaseConnectionFail, error.Message);
             }
             finally
             {
@@ -131,19 +132,39 @@ namespace ReportMannagerConfigTool
         }
 
         /// <summary>
-        /// Detect the given web service url is available or not
+        /// Detect the given report service web service url is available or not
         /// </summary>
+        /// <param name="isSharePoint">Native mode or SharePoint mode</param>
         /// <param name="url">Web Service Url</param>
         /// <returns>True: web service url is available; ErrorMessage</returns>
-        public static string tryWebServiceUrl(string url)
+        public static string tryWebServiceUrl(bool isSharePoint, string url)
         {
             try
             {
+                url += isSharePoint ? StaticMessages.ssrs2006url : StaticMessages.ssrs2005url;
+                
                 HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
                 request.Credentials = CredentialCache.DefaultNetworkCredentials;
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    return StaticMessages.testSuccess;
+                    //return content type should be text/xml
+                    if (response.ContentType.Contains("text/xml"))
+                    {
+                        XmlDocument wsdl = new XmlDocument();
+                        wsdl.Load(response.GetResponseStream());
+
+                        string namespaceUri = wsdl.DocumentElement.NamespaceURI;
+                        XmlNamespaceManager nsmgr = new XmlNamespaceManager(wsdl.NameTable);
+                        nsmgr.AddNamespace("wsdl", namespaceUri);
+
+                        string targetNamespace = wsdl.SelectSingleNode("wsdl:definitions", nsmgr).Attributes["targetNamespace"].Value;
+
+                        if (targetNamespace.Equals(isSharePoint ? StaticMessages.ssrs2006TargetNS : StaticMessages.ssrs2005TargetNS))
+                        {
+                            return StaticMessages.testSuccess;
+                        }
+                    }
+                    return StaticMessages.webServiceUrlIncorrect;
                 }
             }
             catch (WebException e) 
@@ -296,6 +317,9 @@ namespace ReportMannagerConfigTool
 
         private static void SetFolderPermission(string folderPath, string username, FileSystemRights level)
         {
+            if (!Directory.Exists(folderPath)) 
+                Directory.CreateDirectory(folderPath);
+
             DirectoryInfo dirInfo = new DirectoryInfo(folderPath);
             DirectorySecurity dirSecurity = dirInfo.GetAccessControl();
             dirSecurity.AddAccessRule(new FileSystemAccessRule(username, level, AccessControlType.Allow));

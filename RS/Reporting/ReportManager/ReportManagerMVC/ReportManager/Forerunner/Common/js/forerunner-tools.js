@@ -745,7 +745,8 @@ $(function () {
             tooltip: locData.toolbar.parameterSets,
             events: {
                 click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.showManageParamSetsDialog();
+                    var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
+                    e.data.me.options.$ReportViewerInitializer.showManageParamSetsDialog(parameterList);
                     //forerunner.dialog.showUserManageParamSetsDialog(e.data.me.options.$appContainer);
                 }
             }

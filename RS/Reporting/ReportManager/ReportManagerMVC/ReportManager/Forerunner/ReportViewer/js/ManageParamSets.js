@@ -187,7 +187,7 @@ $(function () {
         },
         _onAdd: function (e) {
             var me = this;
-            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet);
+            var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets.push(newSet);
             me._createRows();
             var $tr = me._findRow(newSet.id);
@@ -277,13 +277,13 @@ $(function () {
         /**
          * @function $.forerunner.userSettings#openDialog
          */
-        openDialog: function () {
+        openDialog: function (parameterList) {
             var me = this;
-            me._initTBody();
-            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
-            //forerunner.dialog.showModalDialog(me.options.$appContainer, function () {
-            //    me.element.css("display", "inline-block");
-            //});
+            if (parameterList) {
+                me.parameterList = JSON.parse(parameterList);
+                me._initTBody();
+                forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            }
         },
         /**
          * @function $.forerunner.userSettings#openDialog

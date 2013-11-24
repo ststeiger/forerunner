@@ -160,9 +160,9 @@ $(function () {
 
             $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
         },
-        showManageParamSetsDialog : function() {
+        showManageParamSetsDialog: function (parameterList) {
             var me = this;
-            me._manageParamSetsDialog.manageParamSets("openDialog");
+            me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
         },
         setFavoriteState: function (path) {
             var me = this;

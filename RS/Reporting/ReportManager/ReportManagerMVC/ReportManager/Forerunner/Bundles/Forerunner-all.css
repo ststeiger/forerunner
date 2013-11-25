@@ -900,13 +900,17 @@ table, td, tr {
   .fr-mps-form .fr-mps-action-button { width: 65px; margin: 10px 10px 10px 0; }
   .fr-mps-form [name='delete'] { float: right; }
   .fr-mps-form .fr-mps-add-id { height: 24px; font-size: 10pt; }
-  .fr-mps-form [type='text'] { margin: auto 0; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; height: 24px; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; }
+  .fr-mps-form .fr-mps-text-input { display: block; width: 156px; margin: auto 0; padding: 0 0 0 4px; vertical-align: middle; font-size: 13pt; color: #666; background-color: #fff; border: 1px solid #424242; box-shadow: 0 0 7px #545454 inset; overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis; -o-text-overflow: ellipsis; text-overflow: ellipsis; }
 
 .fr-mps-main-table { }
   .fr-mps-main-table th { font-weight: bold; }
   .fr-mps-main-table td { border: 1px solid rgba(94, 150, 207, .2); height: 26px; }
+  .fr-mps-main-table .fr-mps-name-header { width: 156px; }
   .fr-mps-main-table .fr-mps-odd-row { background: rgba(94, 150, 207, .1); }
   .fr-mps-main-table .fr-mps-property-header { width: 60px; }
+  .fr-mps-main-table .fr-mps-error-span { display: inline; font-size: 10pt; }
+  .fr-mps-main-table .fr-mps-error-position { display: inline; }
+  .fr-mps-main-table .fr-mps-error { border-width: thin; border-color: red; }
 
 /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {

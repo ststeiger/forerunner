@@ -7421,7 +7421,8 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var manageParamSets = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer").manageParamSets;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var manageParamSets = locData.manageParamSets;
 
     $.widget(widgets.getFullname(widgets.manageParamSets), {
         options: {
@@ -7443,7 +7444,7 @@ $(function () {
             var me = this;
 
             // Remove any previous event handlers
-            me.element.find(".fr-mps-input-id").off("change");
+            me.element.find(".fr-mps-text-input").off("change");
             me.element.find(".fr-mps-default-id").off("click");
             me.element.find(".fr-mps-all-users-id").off("click");
             me.element.find(".fr-mps-delete-id").off("click");
@@ -7466,12 +7467,15 @@ $(function () {
             });
 
             // Add any table body specific event handlers
-            me.element.find(".fr-mps-input-id").on("change", function (e) {
+            me.element.find(".fr-mps-text-input").on("change", function (e) {
                 me._onChangeInput(e);
             });
             me.element.find(".fr-mps-default-id").on("click", function (e) {
                 me._onClickDefault(e);
             });
+
+            // Set up the form validation
+            me._validateForm(me.$form);
         },
         _createRow: function(index, parameterSet) {
             var me = this;
@@ -7481,7 +7485,7 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var textElement = "<input type='text' class='fr-mps-input-id fr-rtb-select-set' value='" + parameterSet.name + "'/>";
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + parameterSet.name + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
@@ -7538,7 +7542,7 @@ $(function () {
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
+                                    "<th class='fr-mps-name-header'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +
@@ -7556,14 +7560,9 @@ $(function () {
             me.$tbody = me.element.find(".fr-mps-main-table-body-id");
             me._initTBody();
 
-            /*
-            me.element.find(".fr-print-text").each(function () {
-                $(this).attr("required", "true").attr("number", "true");
-                $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
-            });
+            me.$form = me.element.find(".fr-mps-form");
+
             me._resetValidateMessage();
-            me._validateForm(me.element.find(".fr-print-form"));
-            */
 
             me.element.find(".fr-mps-cancel").on("click", function(e) {
                 me.closeDialog();
@@ -7574,8 +7573,10 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                me.options.model.parameterModel("applyServerData", me.serverData);
-                me.closeDialog();
+                if (me.$form.valid() === true) {
+                    me.options.model.parameterModel("applyServerData", me.serverData);
+                    me.closeDialog();
+                }
             });
         },
         _findId: function (e) {
@@ -7606,6 +7607,7 @@ $(function () {
         _onChangeInput: function(e) {
             var me = this;
             var $input = $(e.target);
+            $input.attr("title", $input.val());
             var id = me._findId(e);
             $.each(me.serverData.parameterSets, function (index, set) {
                 if (set.id === id) {
@@ -7707,22 +7709,23 @@ $(function () {
 
         _validateForm: function (form) {
             form.validate({
+                debug: true,
                 errorPlacement: function (error, element) {
                     error.appendTo($(element).parent().find("span"));
                 },
                 highlight: function (element) {
-                    $(element).parent().find("span").addClass("fr-print-error-position");
-                    $(element).addClass("fr-print-error");
+                    $(element).parent().find("span").addClass("fr-mps-error-position");
+                    $(element).addClass("fr-mps-error");
                 },
                 unhighlight: function (element) {
-                    $(element).parent().find("span").removeClass("fr-print-error-position");
-                    $(element).removeClass("fr-print-error");
+                    $(element).parent().find("span").removeClass("fr-mps-error-position");
+                    $(element).removeClass("fr-mps-error");
                 }
             });
         },
         _resetValidateMessage: function () {
             var me = this;
-            var error = me.locData.validateError;
+            var error = locData.validateError;
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,

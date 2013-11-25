@@ -754,14 +754,17 @@ namespace Forerunner.SSRS.Manager
 
             return IsUserSpecific;
         }
-        private void SaveImage(byte[] image, string path, string userName, int IsUserSpecific)
-        {   
-            //Impersonator impersonator = null;
-            //try
-            //{
-            //    impersonator = tryImpersonate();
 
-            string IID = GetItemID(path);
+        /// <summary>
+        /// This is called by GetThumbnail.  The caller takes care of the impersonation.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="path"></param>
+        /// <param name="userName"></param>
+        /// <param name="IID"></param>
+        /// <param name="IsUserSpecific"></param>
+        private void SaveImage(byte[] image, string path, string userName, string IID, int IsUserSpecific)
+        {   
             string SQL = @" BEGIN TRAN t1
                             DECLARE @UID uniqueidentifier
                                                                                         
@@ -792,15 +795,8 @@ namespace Forerunner.SSRS.Manager
                 SQLComm.Parameters.AddWithValue("@IID", IID);
                 SQLComm.ExecuteNonQuery();
                 SQLConn.Close();
-            //}
-            //finally
-            //{
-            //    if (impersonator != null)
-            //    {
-            //        impersonator.Undo();
-            //    }
-            //}
         }
+
         public byte[] GetDBImage(string path)
         {
             string IID = GetItemID(path);
@@ -922,10 +918,12 @@ namespace Forerunner.SSRS.Manager
             byte[] retval = null;
             int isUserSpecific = 0;
             bool isException = false;
+            string IID = null;
             Impersonator sqlImpersonator = threadContext.SqlImpersonator;
             try
             {
                 threadContext.Impersonate();
+                IID = GetItemID(path);
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetImpersonator(threadContext.SecondImpersonator);
                 if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
@@ -957,14 +955,13 @@ namespace Forerunner.SSRS.Manager
             }
             if (retval != null)
             {
-                
                 try
                 {
                     if (sqlImpersonator != null)
                     { 
                         sqlImpersonator.Impersonate(); 
                     }
-                    SaveImage(retval, path.ToString(), userName, isUserSpecific);
+                    SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
                 }
                 finally
                 {

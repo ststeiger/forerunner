@@ -1952,9 +1952,23 @@ $(function () {
                 me.serverData.parameterSets.splice(index, 1);
             }
 
+            me._sort();
+
             // save the results
             me._saveModel();
             me._triggerModelChange();
+        },
+        _sort: function () {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+        },
+        _sortOnName: function (a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _getSet: function (sets, id) {
             var parameterSet = null;
@@ -2533,17 +2547,21 @@ $(function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
             me.model.on(events.parameterModelChanged(), function (e, arg) {
-                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
-                $select.html("");
-                $.each(arg.optionArray, function (index, option) {
-                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
-                    $select.append($option);
-                });
-                $select.children("option").each(function (index, option) {
-                    if ($(option).val() === arg.currentSetId) {
-                        $select.prop("selectedIndex", index);
-                    }
-                });
+                me._onModelChange.call(me, e, arg);
+            });
+        },
+        _onModelChange: function (e, arg) {
+            var me = this;
+            var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+            $select.html("");
+            $.each(arg.optionArray, function (index, option) {
+                $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                $select.append($option);
+            });
+            $select.children("option").each(function (index, option) {
+                if ($(option).val() === arg.currentSetId) {
+                    $select.prop("selectedIndex", index);
+                }
             });
         }
     });  // $widget
@@ -7622,10 +7640,23 @@ $(function () {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets.push(newSet);
-            me._createRows();
+            me._sort();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+        },
+        _sort: function() {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+            me._createRows();
+        },
+        _sortOnName: function(a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -7637,6 +7668,7 @@ $(function () {
                     set.name = $input.val();
                 }
             });
+            me._sort();
         },
         _onClickDefault: function(e) {
             var me = this;

@@ -114,9 +114,23 @@ $(function () {
                 me.serverData.parameterSets.splice(index, 1);
             }
 
+            me._sort();
+
             // save the results
             me._saveModel();
             me._triggerModelChange();
+        },
+        _sort: function () {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+        },
+        _sortOnName: function (a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _getSet: function (sets, id) {
             var parameterSet = null;

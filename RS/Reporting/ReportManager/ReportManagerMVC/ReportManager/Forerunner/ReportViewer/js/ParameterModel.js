@@ -32,6 +32,29 @@ $(function () {
             };
             return newSet;
         },
+        isCurrentSetAllUser: function () {
+            var me = this;
+            if (me.serverData && me.serverData.parameterSets && me.currentSetId) {
+                var set = me._getSet(me.serverData.parameterSets, me.currentSetId);
+                return set.isAllUser;
+            }
+            return false;
+        },
+        canEditAllUsersSet: function () {
+            var me = this;
+            if (me.serverData) {
+                return me.serverData.canEditAllUsersSet;
+            }
+            return false;
+        },
+        canUserSaveCurrentSet: function () {
+            var me = this;
+            if (me.serverData && me.serverData.canEditAllUsersSet) {
+                return true;
+            }
+
+            return !me.isCurrentSetAllUser();
+        },
         _pushNewSet: function (name, parameterList) {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);

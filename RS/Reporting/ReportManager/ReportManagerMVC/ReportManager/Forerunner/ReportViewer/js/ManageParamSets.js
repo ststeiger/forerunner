@@ -300,7 +300,6 @@ $(function () {
 
         _validateForm: function (form) {
             form.validate({
-                debug: true,
                 errorPlacement: function (error, element) {
                     error.appendTo($(element).parent().find("span"));
                 },

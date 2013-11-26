@@ -24,7 +24,6 @@ namespace Forerunner.SSRS.Manager
     public class ReportManager : IDisposable
     {
         RSManagementProxy rs;
-        SqlConnection SQLConn = new SqlConnection();
         Credentials WSCredentials;
         Credentials DBCredentials;
         Impersonator impersonator;
@@ -34,6 +33,7 @@ namespace Forerunner.SSRS.Manager
         bool isSchemaChecked = false;
         string DefaultUserDomain = null;
         string SharePointHostName = null;
+        SqlConnection SQLConn;
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName = null)
         {
@@ -64,7 +64,7 @@ namespace Forerunner.SSRS.Manager
             }
 
 
-            SQLConn.ConnectionString = builder.ConnectionString;
+            SQLConn = new SqlConnection(builder.ConnectionString);
             CheckSchema();
         }
 
@@ -128,6 +128,22 @@ namespace Forerunner.SSRS.Manager
         {
             rs.Credentials = GetCredentials();
             return rs.ListChildren(HttpUtility.UrlDecode(path),isRecursive);
+        }
+
+        private void OpenSQLConn()
+        {
+            if (SQLConn.State != System.Data.ConnectionState.Open)
+            {
+                SQLConn.Open();
+            }
+        }
+
+        private void CloseSQLConn()
+        {
+            if (SQLConn.State == System.Data.ConnectionState.Open)
+            {
+                SQLConn.Close();
+            }
         }
 
         private Property[] callGetProperties(string path, Property[] props)
@@ -256,12 +272,13 @@ namespace Forerunner.SSRS.Manager
                                 END
                             */ 
                             ";
-                SQLConn.Open();
+                OpenSQLConn();
 
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
-                isSchemaChecked = true;
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SQLComm.ExecuteNonQuery();
+                    isSchemaChecked = true;
+                }
             }
             finally
             {
@@ -269,6 +286,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -286,13 +304,14 @@ namespace Forerunner.SSRS.Manager
                             BEGIN
 	                            INSERT ForerunnerFavorites (ItemID, UserID) SELECT @IID,@UID
                             END";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.ExecuteNonQuery();
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -308,6 +327,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -345,13 +365,14 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID IS NULL AND ItemID = @IID
                             ";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SQLComm.Parameters.AddWithValue("@Params", parameters);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.Parameters.AddWithValue("@Params", parameters);
+                    SQLComm.ExecuteNonQuery();
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -367,6 +388,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -384,14 +406,15 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID = @UID AND ItemID = @IID
                             ";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@Params", parameters);
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@Params", parameters);
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.ExecuteNonQuery();
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -407,6 +430,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -417,36 +441,38 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
+                ParameterModel model;
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT SavedParameters, UserID FROM ForerunnerUserItemProperties WHERE (UserID = @UID OR UserID IS NULL) AND ItemID = @IID";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SqlDataReader SQLReader;
-                SQLReader = SQLComm.ExecuteReader();
-                string savedParams = string.Empty;
-                bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
-                ParameterModel model = new ParameterModel(canEditAllUsersSet);
-
-                while (SQLReader.Read())
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    savedParams = SQLReader.GetString(0);
-                    ParameterModel.AllUser allUser = ParameterModel.AllUser.IsAllUser;
-                    if (!SQLReader.IsDBNull(1))
+                    SetUserNameParameters(SQLComm);
+                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
-                        allUser = ParameterModel.AllUser.NotAllUser;
-                    }
-                    if (savedParams.Length > 0)
-                    {
-                        ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
-                        model.merge(newModel);
+                        string savedParams = string.Empty;
+                        bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
+                        model = new ParameterModel(canEditAllUsersSet);
+
+                        while (SQLReader.Read())
+                        {
+                            savedParams = SQLReader.GetString(0);
+                            ParameterModel.AllUser allUser = ParameterModel.AllUser.IsAllUser;
+                            if (!SQLReader.IsDBNull(1))
+                            {
+                                allUser = ParameterModel.AllUser.NotAllUser;
+                            }
+                            if (savedParams.Length > 0)
+                            {
+                                ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
+                                model.merge(newModel);
+                            }
+                        }
                     }
                 }
-                SQLReader.Close();
-                SQLConn.Close();
 
                 return model.ToJson();
             }
@@ -456,6 +482,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
         public string SaveUserSettings(string settings)
@@ -471,12 +498,13 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 UPDATE ForerunnerUserSettings SET Settings = @Params WHERE UserID = @UID
                             ";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                SQLComm.Parameters.AddWithValue("@Params", settings);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    SQLComm.Parameters.AddWithValue("@Params", settings);
+                    SQLComm.ExecuteNonQuery();
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -492,6 +520,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -501,22 +530,24 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
+                string settings;
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT Settings FROM ForerunnerUserSettings WHERE UserID = @UID";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                SqlDataReader SQLReader;
-                SQLReader = SQLComm.ExecuteReader();
-                string settings = string.Empty;
-
-                while (SQLReader.Read())
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    settings = SQLReader.GetString(0);
+                    SetUserNameParameters(SQLComm);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        settings = string.Empty;
+
+                        while (SQLReader.Read())
+                        {
+                            settings = SQLReader.GetString(0);
+                        }
+                    }
                 }
-                SQLReader.Close();
-                SQLConn.Close();
 
                 //Need to try catch and return error
                 return settings == "" ? "{}" : settings;
@@ -527,6 +558,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
         private string GetItemID(string path)
@@ -548,19 +580,21 @@ namespace Forerunner.SSRS.Manager
             try
             {
                 impersonator = tryImpersonate();
+                bool isFav;
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 SELECT * FROM ForerunnerFavorites WHERE UserID = @UID AND ItemID = @IID";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                SetUserNameParameters(SQLComm);
-                //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SqlDataReader SQLReader;
-                SQLReader = SQLComm.ExecuteReader();
-                bool isFav = SQLReader.HasRows;
-                SQLReader.Close();
-                SQLConn.Close();
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        isFav = SQLReader.HasRows;
+                    }
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -576,6 +610,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -600,26 +635,25 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @"DECLARE @UID uniqueidentifier
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT DISTINCT Path,Name,ModifiedDate,c.ItemID FROM ForerunnerFavorites f INNER JOIN Catalog c ON f.ItemID = c.ItemID WHERE f.UserID = @UID";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-
-                SetUserNameParameters(SQLComm);
-                SqlDataReader SQLReader;
-                SQLReader = SQLComm.ExecuteReader();
-
-                while (SQLReader.Read())
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    c = new CatalogItem();
-                    c.Path = GetPath(SQLReader.GetString(0));
-                    c.Name = SQLReader.GetString(1);
-                    c.ModifiedDate = SQLReader.GetDateTime(2);
-                    c.ModifiedDateSpecified = true;
-                    c.Type = ItemTypeEnum.Report;
-                    c.ID = SQLReader.GetGuid(3).ToString();
-                    list.Add(c);
+                    SetUserNameParameters(SQLComm);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        while (SQLReader.Read())
+                        {
+                            c = new CatalogItem();
+                            c.Path = GetPath(SQLReader.GetString(0));
+                            c.Name = SQLReader.GetString(1);
+                            c.ModifiedDate = SQLReader.GetDateTime(2);
+                            c.ModifiedDateSpecified = true;
+                            c.Type = ItemTypeEnum.Report;
+                            c.ID = SQLReader.GetGuid(3).ToString();
+                            list.Add(c);
+                        }
+                    }
                 }
-                SQLReader.Close();
-                SQLConn.Close();
                 return list.ToArray();
             }
             finally
@@ -628,6 +662,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -694,15 +729,15 @@ namespace Forerunner.SSRS.Manager
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                 DELETE ForerunnerFavorites WHERE ItemID = @IID AND UserID =  @UID";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm);
+                    //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
 
-                SetUserNameParameters(SQLComm);
-                //SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
+                    SQLComm.ExecuteNonQuery();
+                }
 
                 //Need to try catch and return error
                 JsonWriter w = new JsonTextWriter();
@@ -718,6 +753,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -754,14 +790,17 @@ namespace Forerunner.SSRS.Manager
 
             return IsUserSpecific;
         }
-        private void SaveImage(byte[] image, string path, string userName, int IsUserSpecific)
-        {   
-            //Impersonator impersonator = null;
-            //try
-            //{
-            //    impersonator = tryImpersonate();
 
-            string IID = GetItemID(path);
+        /// <summary>
+        /// This is called by GetThumbnail.  The caller takes care of the impersonation.
+        /// </summary>
+        /// <param name="image"></param>
+        /// <param name="path"></param>
+        /// <param name="userName"></param>
+        /// <param name="IID"></param>
+        /// <param name="IsUserSpecific"></param>
+        private void SaveImage(byte[] image, string path, string userName, string IID, int IsUserSpecific)
+        {   
             string SQL = @" BEGIN TRAN t1
                             DECLARE @UID uniqueidentifier
                                                                                         
@@ -781,26 +820,26 @@ namespace Forerunner.SSRS.Manager
                             ELSE
                                 COMMIT TRAN t1        
                             ";
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            try
+            {
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
+                {
+                    SetUserNameParameters(SQLComm, userName);
 
-                SetUserNameParameters(SQLComm, userName);
-
-                SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
-                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@Image", image);
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SQLComm.ExecuteNonQuery();
-                SQLConn.Close();
-            //}
-            //finally
-            //{
-            //    if (impersonator != null)
-            //    {
-            //        impersonator.Undo();
-            //    }
-            //}
+                    SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
+                    SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@Image", image);
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SQLComm.ExecuteNonQuery();
+                }
+            }
+            finally
+            {
+                CloseSQLConn();
+            }
         }
+
         public byte[] GetDBImage(string path)
         {
             string IID = GetItemID(path);
@@ -814,22 +853,22 @@ namespace Forerunner.SSRS.Manager
                                SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
                                SELECT ThumbnailImage FROM ForerunnerCatalog f INNER JOIN Catalog c ON c.ItemID = f.ItemID WHERE (f.UserID IS NULL OR f.UserID = @UID) AND c.ItemID = @IID AND c.ModifiedDate <= f.SaveDate";
 
-                SQLConn.Open();
-                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                //SQLComm.Prepare();
-                SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                SQLComm.Parameters.AddWithValue("@IID", IID);
-                SetUserNameParameters(SQLComm);
-                SqlDataReader SQLReader;
-                SQLReader = SQLComm.ExecuteReader();
-
-                if (SQLReader.HasRows)
+                OpenSQLConn();
+                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
                 {
-                    SQLReader.Read();
-                    retval = SQLReader.GetSqlBytes(0).Buffer;
+                    //SQLComm.Prepare();
+                    SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
+                    SQLComm.Parameters.AddWithValue("@IID", IID);
+                    SetUserNameParameters(SQLComm);
+                    using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
+                    {
+                        if (SQLReader.HasRows)
+                        {
+                            SQLReader.Read();
+                            retval = SQLReader.GetSqlBytes(0).Buffer;
+                        }
+                    }
                 }
-                SQLReader.Close();
-                SQLConn.Close();
                 return retval;
             }
             finally
@@ -838,6 +877,7 @@ namespace Forerunner.SSRS.Manager
                 {
                     impersonator.Undo();
                 }
+                CloseSQLConn();
             }
         }
 
@@ -922,10 +962,12 @@ namespace Forerunner.SSRS.Manager
             byte[] retval = null;
             int isUserSpecific = 0;
             bool isException = false;
+            string IID = null;
             Impersonator sqlImpersonator = threadContext.SqlImpersonator;
             try
             {
                 threadContext.Impersonate();
+                IID = GetItemID(path);
                 ReportViewer rep = new ReportViewer(this.URL);
                 rep.SetImpersonator(threadContext.SecondImpersonator);
                 if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
@@ -957,14 +999,13 @@ namespace Forerunner.SSRS.Manager
             }
             if (retval != null)
             {
-                
                 try
                 {
                     if (sqlImpersonator != null)
                     { 
                         sqlImpersonator.Impersonate(); 
                     }
-                    SaveImage(retval, path.ToString(), userName, isUserSpecific);
+                    SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
                 }
                 finally
                 {

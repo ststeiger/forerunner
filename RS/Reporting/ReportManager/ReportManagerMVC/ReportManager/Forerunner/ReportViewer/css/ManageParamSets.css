@@ -57,6 +57,7 @@
 @media only screen and (min-width : 1224px) {
   /* Styles */
   .fr-mps-innerPage { max-height: 600px; margin-top: 100px; }
+  .fr-mps-form { max-height: 340px; }
 }
 
 /* For phone with 845 * 480 ------------- */

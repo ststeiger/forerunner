@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using Forerunner.Thumbnail;
+using ReportManager.Util.Logging;
 
 namespace Forerunner.RenderingExtensions
 {
@@ -35,7 +36,6 @@ namespace Forerunner.RenderingExtensions
             //Create an instance of type RPLRenderer. 
             //Now, RPLRenderer inherits from IRenderingExtension which is a public interface so cast it.
             InnerRender = (IRenderingExtension)RendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
-
         }
 
         public void GetRenderingResource(CreateAndRegisterStream createAndRegisterStreamCallback, NameValueCollection deviceInfo)
@@ -45,23 +45,35 @@ namespace Forerunner.RenderingExtensions
         
         public bool Render(Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
         {
-            bool retval;
-            MemoryStream ms = new MemoryStream(); 
-
-            Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
-            retval = InnerRender.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
-
-            RegisteredStream.Position = 0;
-            WebSiteThumbnail.GetStreamThumbnail(RegisteredStream, 1.2).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-
-            byte[] buffer = new byte[8 * 1024];
-            int len;
-            ms.Position = 0;
-            while ((len = ms.Read(buffer, 0, buffer.Length)) > 0)
+            try
             {
-                outputStream.Write(buffer, 0, len);
+                Logger.Trace(LogType.Info, "ThumbnailRenderer.Render " + report.Name);
+                bool retval;
+                using (MemoryStream ms = new MemoryStream())
+                {
+
+                    Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
+
+                    retval = InnerRender.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
+
+                    RegisteredStream.Position = 0;
+                    WebSiteThumbnail.GetStreamThumbnail(RegisteredStream, 1.2).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                    byte[] buffer = new byte[8 * 1024];
+                    int len;
+                    ms.Position = 0;
+                    while ((len = ms.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        outputStream.Write(buffer, 0, len);
+                    }
+                }
+                return retval;
             }
-            return retval;
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                return false;
+            }
         }
 
         public bool RenderStream(string streamName, Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)

@@ -11,6 +11,7 @@ using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using Forerunner.SSRS.JSONRender;
 using Forerunner.RenderingExtensions;
+using ReportManager.Util.Logging;
 
 namespace Forerunner.RenderingExtensions
 {
@@ -37,7 +38,6 @@ namespace Forerunner.RenderingExtensions
             //Create an instance of type RPLRenderer. 
             //Now, RPLRenderer inherits from IRenderingExtension which is a public interface so cast it.
             RPL = (IRenderingExtension)rplRendererType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, null, Type.EmptyTypes, null).Invoke(null);
-
         }
 
         public void GetRenderingResource(CreateAndRegisterStream createAndRegisterStreamCallback, NameValueCollection deviceInfo)
@@ -47,15 +47,24 @@ namespace Forerunner.RenderingExtensions
         
         public bool Render(Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
         {
-            bool retval;
-            Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
-            retval = RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
+            try
+            {
+                Logger.Trace(LogType.Info, "JSONRenderer.Render " + report.Name);
+                bool retval;
+                Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
+                retval = RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
-            RegisteredStream.Position = 0;
-            JSON = new ReportJSONWriter(RegisteredStream);
-            byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())));
-            outputStream.Write(UTF8JSON ,0,UTF8JSON.Length);
-            return retval;
+                RegisteredStream.Position = 0;
+                JSON = new ReportJSONWriter(RegisteredStream);
+                byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())));
+                outputStream.Write(UTF8JSON, 0, UTF8JSON.Length);
+                return retval;
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                return false;
+            }
         }
 
         public bool RenderStream(string streamName, Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)

@@ -11,7 +11,7 @@
   .fr-mps-header .fr-mps-cancel-container { display: inline-block; margin: 0 11px 0 17px; float: right; }
   .fr-mps-header .fr-mps-cancel { height: 45px; padding: 0; margin: 0; font-size: 13pt; color: #ffffff; background-color: transparent; border: none; cursor: pointer; }
 
-.fr-mps-form { margin: 0 8px 25px 16px; font-size: 13pt; color: #172949; text-align: left; display: block; }
+.fr-mps-form { margin: 0 8px 25px 16px; font-size: 13pt; color: #172949; text-align: left; display: block;  overflow-y: auto; overflow-x: hidden; }
   .fr-mps-form .fr-mps-action-button { width: 65px; margin: 10px 10px 10px 0; }
   .fr-mps-form [name='delete'] { float: right; }
   .fr-mps-form .fr-mps-add-id { height: 24px; font-size: 10pt; }
@@ -27,12 +27,44 @@
   .fr-mps-main-table .fr-mps-error-position { display: inline; }
   .fr-mps-main-table .fr-mps-error { border-width: thin; border-color: red; }
 
-/* (E.g., for phones, landscape) */
+  /* (E.g., for phones, landscape) */
 @media only screen and (max-height : 340px) {
-  .fr-mps-form { margin: 4px 0 25px 8px; }
+  .fr-mps-form { margin: 4px 0 25px 16px; }
 }
 
 /* (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
   .fr-mps-form { margin: 4px 0 25px 4px; }
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+  .fr-mps-form { margin: 4px 0 5px 4px; }
+  .fr-mps-innerPage { margin-top: 5px; max-height: 220px; }
+}
+
+/* For phone with 845 * 480 ------------- */
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape) {
+  .fr-mps-innerPage { margin-top: 50px; max-height: 320px; }
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-height : 768px) and (max-device-width : 1280px) and (orientation : landscape) {
+  .fr-mps-innerPage { margin-top: 50px; max-height: 360px; }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+  /* Styles */
+  .fr-mps-innerPage { max-height: 600px; margin-top: 100px; }
+}
+
+/* For phone with 845 * 480 ------------- */
+@media only screen and (max-height:480px) and (min-width:800px) and (orientation: landscape) {
+  .fr-mps-innerPage { margin-top: 50px; max-height: 320px; }
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5) and (min-device-pixel-ratio : 1.5) and (orientation:landscape) {
+  .fr-mps-innerPage { max-height: 200px; margin-top: 50px; }
 }

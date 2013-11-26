@@ -2873,8 +2873,10 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane")
-                        || me._containElement(e.target, "fr-layout-rightpane") || me._containElement(e.target, "fr-print-form");
+                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane") ||
+                                       me._containElement(e.target, "fr-layout-rightpane") ||
+                                       me._containElement(e.target, "fr-print-form") ||
+                                       me._containElement(e.target, "fr-mps-form");
 
                     if (!isScrollable)
                         e.preventDefault();

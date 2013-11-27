@@ -376,7 +376,7 @@ namespace Forerunner.SSRS.Manager
             Impersonator impersonator = null;
             try
             {
-                ParameterModel model;
+                string savedParams = String.Empty;
                 impersonator = tryImpersonate();
                 string SQL = @" DECLARE @UID uniqueidentifier
                                 SELECT @UID = (SELECT UserID FROM Users WHERE (UserName = @UserName OR UserName = @DomainUser))
@@ -391,28 +391,13 @@ namespace Forerunner.SSRS.Manager
 
                     using (SqlDataReader SQLReader = SQLComm.ExecuteReader())
                     {
-                        string savedParams = string.Empty;
-                        model = new ParameterModel();
-                        bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
-
                         while (SQLReader.Read())
                         {
                             savedParams = SQLReader.GetString(0);
-                            ParameterModel.AllUser allUser = ParameterModel.AllUser.IsAllUser;
-                            if (!SQLReader.IsDBNull(1))
-                            {
-                                allUser = ParameterModel.AllUser.NotAllUser;
-                            }
-                            if (savedParams.Length > 0)
-                            {
-                                ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
-                                model.merge(newModel);
-                            }
                         }
                     }
+                    return savedParams;
                 }
-
-                return model.ToJson();
             }
             finally
             {

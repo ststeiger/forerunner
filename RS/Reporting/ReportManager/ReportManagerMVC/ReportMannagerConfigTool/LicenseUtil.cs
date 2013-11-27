@@ -224,7 +224,8 @@ namespace ForerunnerLicense
             }
             catch(Exception e)
             {
-                Logger.Trace(LogType.Error, "LicenseUtil.RSADecryptUsingKey errored", new Object[] {e});
+                Logger.Trace(LogType.Error, "LicenseUtil.RSADecryptUsingKey errored");
+                ExceptionLogGenerator.LogException(e);
                 return null;
             }
         }
@@ -255,7 +256,8 @@ namespace ForerunnerLicense
             }
             catch(Exception e)
             {
-                Logger.Trace(LogType.Error, "LicenseUtil.RSAEncryptUsingKey errored", new Object[] { e });
+                Logger.Trace(LogType.Error, "LicenseUtil.RSAEncryptUsingKey errored");
+                ExceptionLogGenerator.LogException(e);
                 return null;
             }
         }
@@ -364,7 +366,8 @@ namespace ForerunnerLicense
             }
             catch(Exception e)
             {
-                Logger.Trace(LogType.Error, "MachineId c'tor failed", new Object[] { e });
+                Logger.Trace(LogType.Error, "MachineId c'tor failed");
+                ExceptionLogGenerator.LogException(e);
                 throw e;
             }
         }
@@ -511,7 +514,8 @@ namespace ForerunnerLicense
                         }
                         catch(Exception e)
                         {
-                            Logger.Trace(LogType.Error, "MachineId.identifier error ", new Object[] { e });
+                            Logger.Trace(LogType.Error, "MachineId.identifier error");
+                            ExceptionLogGenerator.LogException(e);
                             throw e;
                         }
                     }

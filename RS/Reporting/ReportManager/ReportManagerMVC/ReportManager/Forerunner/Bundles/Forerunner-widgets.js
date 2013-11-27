@@ -1870,6 +1870,29 @@ $(function () {
             };
             return newSet;
         },
+        isCurrentSetAllUser: function () {
+            var me = this;
+            if (me.serverData && me.serverData.parameterSets && me.currentSetId) {
+                var set = me._getSet(me.serverData.parameterSets, me.currentSetId);
+                return set.isAllUser;
+            }
+            return false;
+        },
+        canEditAllUsersSet: function () {
+            var me = this;
+            if (me.serverData) {
+                return me.serverData.canEditAllUsersSet;
+            }
+            return false;
+        },
+        canUserSaveCurrentSet: function () {
+            var me = this;
+            if (me.serverData && me.serverData.canEditAllUsersSet) {
+                return true;
+            }
+
+            return !me.isCurrentSetAllUser();
+        },
         _pushNewSet: function (name, parameterList) {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);
@@ -1929,9 +1952,23 @@ $(function () {
                 me.serverData.parameterSets.splice(index, 1);
             }
 
+            me._sort();
+
             // save the results
             me._saveModel();
             me._triggerModelChange();
+        },
+        _sort: function () {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+        },
+        _sortOnName: function (a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _getSet: function (sets, id) {
             var parameterSet = null;
@@ -2510,17 +2547,21 @@ $(function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
             me.model.on(events.parameterModelChanged(), function (e, arg) {
-                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
-                $select.html("");
-                $.each(arg.optionArray, function (index, option) {
-                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
-                    $select.append($option);
-                });
-                $select.children("option").each(function (index, option) {
-                    if ($(option).val() === arg.currentSetId) {
-                        $select.prop("selectedIndex", index);
-                    }
-                });
+                me._onModelChange.call(me, e, arg);
+            });
+        },
+        _onModelChange: function (e, arg) {
+            var me = this;
+            var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+            $select.html("");
+            $.each(arg.optionArray, function (index, option) {
+                $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                $select.append($option);
+            });
+            $select.children("option").each(function (index, option) {
+                if ($(option).val() === arg.currentSetId) {
+                    $select.prop("selectedIndex", index);
+                }
             });
         }
     });  // $widget
@@ -2832,8 +2873,10 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane")
-                        || me._containElement(e.target, "fr-layout-rightpane") || me._containElement(e.target, "fr-print-form");
+                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane") ||
+                                       me._containElement(e.target, "fr-layout-rightpane") ||
+                                       me._containElement(e.target, "fr-print-form") ||
+                                       me._containElement(e.target, "fr-mps-form");
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -7559,10 +7602,23 @@ $(function () {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets.push(newSet);
-            me._createRows();
+            me._sort();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+        },
+        _sort: function() {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+            me._createRows();
+        },
+        _sortOnName: function(a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -7574,6 +7630,7 @@ $(function () {
                     set.name = $input.val();
                 }
             });
+            me._sort();
         },
         _onClickDefault: function(e) {
             var me = this;
@@ -7669,7 +7726,6 @@ $(function () {
 
         _validateForm: function (form) {
             form.validate({
-                debug: true,
                 errorPlacement: function (error, element) {
                     error.appendTo($(element).parent().find("span"));
                 },
@@ -7989,16 +8045,38 @@ $(function () {
             toolClass: "fr-toolbar-slide",
             $appContainer: null
         },
+        _initCallbacks: function () {
+            var me = this;
+            me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+            me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+        },
         _init: function () {
             var me = this;
             var rtb = forerunner.ssr.tools.rightToolbar;
+            me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
             me.element.html("");
             $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [rtb.btnRTBParamarea]);
+
+            me._initCallbacks();
         },
+        _onModelChange: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            if (me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+                me.enableTools([rtb.btnSavParam]);
+            } else {
+                me.disableTools([rtb.btnSavParam]);
+            }
+        }
     }); //$.widget
 
 });  // $(function ()

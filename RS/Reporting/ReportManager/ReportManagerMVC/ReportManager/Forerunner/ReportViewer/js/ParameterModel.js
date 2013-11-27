@@ -32,6 +32,29 @@ $(function () {
             };
             return newSet;
         },
+        isCurrentSetAllUser: function () {
+            var me = this;
+            if (me.serverData && me.serverData.parameterSets && me.currentSetId) {
+                var set = me._getSet(me.serverData.parameterSets, me.currentSetId);
+                return set.isAllUser;
+            }
+            return false;
+        },
+        canEditAllUsersSet: function () {
+            var me = this;
+            if (me.serverData) {
+                return me.serverData.canEditAllUsersSet;
+            }
+            return false;
+        },
+        canUserSaveCurrentSet: function () {
+            var me = this;
+            if (me.serverData && me.serverData.canEditAllUsersSet) {
+                return true;
+            }
+
+            return !me.isCurrentSetAllUser();
+        },
         _pushNewSet: function (name, parameterList) {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);
@@ -91,9 +114,23 @@ $(function () {
                 me.serverData.parameterSets.splice(index, 1);
             }
 
+            me._sort();
+
             // save the results
             me._saveModel();
             me._triggerModelChange();
+        },
+        _sort: function () {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+        },
+        _sortOnName: function (a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _getSet: function (sets, id) {
             var parameterSet = null;

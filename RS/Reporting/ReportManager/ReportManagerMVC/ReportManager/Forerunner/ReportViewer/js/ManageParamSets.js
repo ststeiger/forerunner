@@ -177,10 +177,23 @@ $(function () {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets.push(newSet);
-            me._createRows();
+            me._sort();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+        },
+        _sort: function() {
+            var me = this;
+            me.serverData.parameterSets.sort(me._sortOnName);
+            me._createRows();
+        },
+        _sortOnName: function(a, b) {
+            if (a.name === b.name) {
+                return 0;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return -1;
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -192,6 +205,7 @@ $(function () {
                     set.name = $input.val();
                 }
             });
+            me._sort();
         },
         _onClickDefault: function(e) {
             var me = this;
@@ -287,7 +301,6 @@ $(function () {
 
         _validateForm: function (form) {
             form.validate({
-                debug: true,
                 errorPlacement: function (error, element) {
                     error.appendTo($(element).parent().find("span"));
                 },

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
+using Forerunner.Logging;
 
 namespace Forerunner.Thumbnail
 {
@@ -72,11 +73,25 @@ namespace Forerunner.Thumbnail
             this.maxHeightToWidthRatio = maxHeightToWidthRatio;
         }
 
+        private int GetSleepTime()
+        {
+            return Convert.ToInt32(Math.Pow(2, ThreadingAttempts));
+        }
         public Bitmap GetScreenShot()
         {
 
-            if (ThreadingAttempts++ > 10)
+            if (ThreadingAttempts++ > 4)
+            {
+                Logger.Trace(LogType.Info, "GetScreenShot failed for report.");
                 return null;
+            }
+            else
+            {
+                if (ThreadingAttempts > 1)
+                {
+                    Thread.Sleep(GetSleepTime());
+                }
+            }
 
             Thread t = null;
             try
@@ -103,72 +118,84 @@ namespace Forerunner.Thumbnail
                 return;
             }
 
-            using (WebBrowser webBrowser = new WebBrowser())
+            string fileName = null;
+            try
             {
-                webBrowser.ScrollBarsEnabled = false;
-                string fileName = null;
+                using (WebBrowser webBrowser = new WebBrowser())
+                {
+                    webBrowser.ScrollBarsEnabled = false;
+                    
 
-                if (MHTML == null && sMHTML == null)
-                {
-                    int length = 0;
-                    webBrowser.Navigate("about:blank");
-                    webBrowser.Document.OpenNew(true);
-                    while (webBrowser.Document == null && webBrowser.Document.Body == null)
-                        Application.DoEvents();
-                    webBrowser.Document.Write(this.HTML);
-                    foreach (HtmlElement he in webBrowser.Document.Images)
+                    if (MHTML == null && sMHTML == null)
                     {
-                        string src = he.GetAttribute("src");
-                        string s = null;
-                        try
+                        int length = 0;
+                        webBrowser.Navigate("about:blank");
+                        webBrowser.Document.OpenNew(true);
+                        while (webBrowser.Document == null && webBrowser.Document.Body == null)
+                            Application.DoEvents();
+                        webBrowser.Document.Write(this.HTML);
+                        foreach (HtmlElement he in webBrowser.Document.Images)
                         {
-                            if (currentUserImpersonator != null)
+                            string src = he.GetAttribute("src");
+                            string s = null;
+                            try
                             {
-                                currentUserImpersonator.Impersonate();
+                                if (currentUserImpersonator != null)
+                                {
+                                    currentUserImpersonator.Impersonate();
+                                }
+                                s = callback(src);
                             }
-                            s = callback(src);
-                        }
-                        finally
-                        {
-                            if (currentUserImpersonator != null)
+                            finally
                             {
-                                currentUserImpersonator.Undo();
+                                if (currentUserImpersonator != null)
+                                {
+                                    currentUserImpersonator.Undo();
+                                }
                             }
+                            he.SetAttribute("src", s);
+                            length += s.Length;
+                            if (length > 1024 * 10000) break;  //Limit the size
                         }
-                        he.SetAttribute("src", s);
-                        length += s.Length;
-                        if (length > 1024 * 10000) break;  //Limit the size
+                        webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
+                        webBrowser.Update();
                     }
-                    webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
-                    webBrowser.Update();
-                }
-                else
-                {
-                    fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
-                    if (MHTML != null)
-                        System.IO.File.WriteAllBytes(fileName, MHTML);
-                    if (sMHTML != null)
+                    else
                     {
-                        using (FileStream f = System.IO.File.OpenWrite(fileName))
+                        fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
+                        if (MHTML != null)
+                            System.IO.File.WriteAllBytes(fileName, MHTML);
+                        if (sMHTML != null)
                         {
                             byte[] buffer = new byte[8 * 1024];
-                            int len;
-                            while ((len = sMHTML.Read(buffer, 0, buffer.Length)) > 0)
+                            using (FileStream f = System.IO.File.OpenWrite(fileName))
                             {
-                                f.Write(buffer, 0, len);
+                                int len;
+                                while ((len = sMHTML.Read(buffer, 0, buffer.Length)) > 0)
+                                {
+                                    f.Write(buffer, 0, len);
+                                }
+                                f.Close();
                             }
-                            f.Close();
                         }
+                        webBrowser.Url = new System.Uri(fileName);
+                        while (webBrowser.ReadyState != WebBrowserReadyState.Complete)
+                            Application.DoEvents();
                     }
-                    webBrowser.Url = new System.Uri(fileName);
-                    while (webBrowser.ReadyState != WebBrowserReadyState.Complete)
-                        Application.DoEvents();
+                    SetIamge(webBrowser);
                 }
-
-                SetIamge(webBrowser);
+            }
+            catch (Exception e)
+            {
+                Logger.Trace(LogType.Error, "_GetScreenShot failed");
+                ExceptionLogGenerator.LogException(e);
+            }
+            finally
+            {
                 if (fileName != null)
                     File.Delete(fileName);
             }
+
         }
 
         private void SetIamge(WebBrowser webBrowser)

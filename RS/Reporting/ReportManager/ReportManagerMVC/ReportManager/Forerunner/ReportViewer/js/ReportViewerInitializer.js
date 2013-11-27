@@ -291,16 +291,38 @@ $(function () {
             toolClass: "fr-toolbar-slide",
             $appContainer: null
         },
+        _initCallbacks: function () {
+            var me = this;
+            me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+            me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
+            });
+        },
         _init: function () {
             var me = this;
             var rtb = forerunner.ssr.tools.rightToolbar;
+            me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
             me.element.html("");
             $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [rtb.btnRTBParamarea]);
+
+            me._initCallbacks();
         },
+        _onModelChange: function () {
+            var me = this;
+            var rtb = forerunner.ssr.tools.rightToolbar;
+
+            if (me.parameterModel.parameterModel("canUserSaveCurrentSet")) {
+                me.enableTools([rtb.btnSavParam]);
+            } else {
+                me.disableTools([rtb.btnSavParam]);
+            }
+        }
     }); //$.widget
 
 });  // $(function ()

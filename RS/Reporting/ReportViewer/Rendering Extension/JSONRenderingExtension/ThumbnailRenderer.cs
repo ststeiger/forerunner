@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.IO;
@@ -52,12 +53,19 @@ namespace Forerunner.RenderingExtensions
                 using (MemoryStream ms = new MemoryStream())
                 {
 
-                    Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
-
+                    
                     retval = InnerRender.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
                     RegisteredStream.Position = 0;
-                    WebSiteThumbnail.GetStreamThumbnail(RegisteredStream, 1.2).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    Bitmap b = WebSiteThumbnail.GetStreamThumbnail(RegisteredStream, 1.2);
+                    if (b == null)
+                    {
+                        Logger.Trace(LogType.Error, "Failed to generate thumbnail for report: " + report.Name);
+                        return false;
+                    }
+                    b.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                    Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
 
                     byte[] buffer = new byte[8 * 1024];
                     int len;

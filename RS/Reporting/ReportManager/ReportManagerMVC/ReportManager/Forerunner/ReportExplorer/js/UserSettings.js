@@ -39,25 +39,12 @@ $(function () {
 
             me.element.html("");
 
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
-            "<div class='fr-core-dialog-innerPage fr-us-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-us-header fr-core-dialog-header'>" +
-                    "<div class='fr-us-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-title-container'>" +
-                        "<div class='fr-us-title'>" +
-                            userSettings.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-cancel-container'>" +
-                        "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-us-form'>" +
+                "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +

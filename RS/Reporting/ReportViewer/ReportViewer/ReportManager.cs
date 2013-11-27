@@ -329,67 +329,6 @@ namespace Forerunner.SSRS.Manager
         public string SaveUserParamaters(string path, string parameters)
         {
             path = HttpUtility.UrlDecode(path);
-            bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
-            ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
-
-            string userParameters = model.GetUserParameters();
-            string returnValue = SaveUserParamatersInternal(path, userParameters);
-            if (returnValue.IndexOf("Success", StringComparison.InvariantCultureIgnoreCase) == -1)
-            {
-                return returnValue;
-            }
-
-            if (canEditAllUsersSet)
-            {
-                string allUserParameters = model.GetAllUserParameters();
-                returnValue = SaveAllUserParamaters(path, allUserParameters);
-            }
-
-            return returnValue;
-        }
-
-        private string SaveAllUserParamaters(string path, string parameters)
-        {
-            string IID = GetItemID(path);
-            Impersonator impersonator = null;
-            try
-            {
-                impersonator = tryImpersonate();
-                string SQL = @"
-                            IF NOT EXISTS (SELECT * FROM ForerunnerUserItemProperties WHERE UserID IS NULL AND ItemID = @IID)
-	                            INSERT ForerunnerUserItemProperties (ItemID, UserID,SavedParameters) SELECT @IID,NULL,@Params 
-                            ELSE
-                                UPDATE ForerunnerUserItemProperties SET SavedParameters = @Params WHERE UserID IS NULL AND ItemID = @IID
-                            ";
-                OpenSQLConn();
-                using (SqlCommand SQLComm = new SqlCommand(SQL, SQLConn))
-                {
-                    SetUserNameParameters(SQLComm);
-                    SQLComm.Parameters.AddWithValue("@IID", IID);
-                    SQLComm.Parameters.AddWithValue("@Params", parameters);
-                    SQLComm.ExecuteNonQuery();
-                }
-
-                //Need to try catch and return error
-                JsonWriter w = new JsonTextWriter();
-                w.WriteStartObject();
-                w.WriteMember("Status");
-                w.WriteString("Success");
-                w.WriteEndObject();
-                return w.ToString();
-            }
-            finally
-            {
-                if (impersonator != null)
-                {
-                    impersonator.Undo();
-                }
-                CloseSQLConn();
-            }
-        }
-
-        private string SaveUserParamatersInternal(string path, string parameters)
-        {
             string IID = GetItemID(path);
             Impersonator impersonator = null;
             try
@@ -432,6 +371,7 @@ namespace Forerunner.SSRS.Manager
 
         public string GetUserParameters(string path)
         {
+            path = HttpUtility.UrlDecode(path);
             string IID = GetItemID(path);
             Impersonator impersonator = null;
             try

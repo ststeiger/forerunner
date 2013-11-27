@@ -1,6 +1,6 @@
 ﻿.fr-print-section { display: none; }
 
-.fr-print-form { overflow-y: auto; overflow-x: hidden; }
+.fr-print-form { }
 
 .fr-print-options-label { width: 100%; margin: 0 11px 16px 0; display: block; }
 

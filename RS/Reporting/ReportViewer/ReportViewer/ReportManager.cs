@@ -328,6 +328,7 @@ namespace Forerunner.SSRS.Manager
 
         public string SaveUserParamaters(string path, string parameters)
         {
+            path = HttpUtility.UrlDecode(path);
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
 

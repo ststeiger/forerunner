@@ -107,7 +107,7 @@ $(function () {
         _getOptionArray: function () {
             var me = this;
             var optionArray = [];
-            if (me.serverData.parameterSets) {
+            if (me.serverData && me.serverData.parameterSets) {
                 $.each(me.serverData.parameterSets, function (index, parameterSet) {
                     optionArray.push({
                         isAllUser: parameterSet.isAllUser,
@@ -144,7 +144,7 @@ $(function () {
                     }
                     else if (data) {
                         me.serverData = data;
-                        if (me.serverData.parameterSets.length === 0) {
+                        if (me.serverData.parameterSets && me.serverData.parameterSets.length === 0) {
                             me._pushNewSet(locData.parameterModel.defaultName);
                         }
                     }

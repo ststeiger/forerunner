@@ -396,6 +396,11 @@ namespace Forerunner.SSRS.Manager
                             savedParams = SQLReader.GetString(0);
                         }
                     }
+
+                    if (savedParams == String.Empty)
+                    {
+                        savedParams = "{}";
+                    }
                     return savedParams;
                 }
             }

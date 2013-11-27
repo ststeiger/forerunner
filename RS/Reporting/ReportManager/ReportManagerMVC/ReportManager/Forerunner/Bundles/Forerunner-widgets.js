@@ -4202,25 +4202,12 @@ $(function () {
 
             me.element.html("");
 
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
-            "<div class='fr-core-dialog-innerPage fr-us-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-us-header fr-core-dialog-header'>" +
-                    "<div class='fr-us-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-title-container'>" +
-                        "<div class='fr-us-title'>" +
-                            userSettings.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-cancel-container'>" +
-                        "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-us-form'>" +
+                "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
@@ -7178,26 +7165,12 @@ $(function () {
             var unit = print.unit;
 
             me.element.html("");
-
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
-            "<div class='fr-print-innerPage fr-core-dialog-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-print-header fr-core-dialog-header'>" +
-                    "<div class='fr-print-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-title-container'>" +
-                        "<div class='fr-print-title'>" +
-                            print.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-cancel-container'>" +
-                        "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-print-form'>" +
+                "<form class='fr-print-form fr-core-dialog-form'>" +
                     // Print layout label
                     "<div class='fr-print-options-label'>" +
                         print.pageLayoutOptions +
@@ -7562,24 +7535,11 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-parameterSets', manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-mps-innerPage fr-core-center'>" +
-                    "<div class='fr-mps-header fr-core-dialog-header'>" +
-                        "<div class='fr-mps-icon-container'>" +
-                            "<div class='fr-mps-icon-inner'>" +
-                                "<div class='fr-icons24x24 fr-icons24x24-parameterSets fr-mps-align-middle'></div>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-title-container'>" +
-                            "<div class='fr-mps-title'>" +
-                                manageParamSets.manageSets +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-cancel-container'>" +
-                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
-                        "</div>" +
-                    "</div>" +
-                    "<form class='fr-mps-form'>" +
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-mps-form fr-core-dialog-form'>" +
                         "<div class='fr-core-center'>" +
                             "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
                             "<table class='fr-mps-main-table'>" +

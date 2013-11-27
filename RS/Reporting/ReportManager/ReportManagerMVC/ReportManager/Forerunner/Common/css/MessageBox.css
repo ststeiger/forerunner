@@ -1,55 +1,21 @@
-.fr-messagebox {
-  display: none;
-}
+.fr-messagebox { display: none; }
 
-.fr-messagebox-innerpage {
-  min-width: 200px;
-  max-width: 400px;
-  margin-top: 100px;
-  display: table;
-}
+.fr-messagebox-innerpage { min-width: 200px; max-width: 400px; }
 
-.fr-messagebox-title {
-  height: 48px;
-  vertical-align: middle;
-  padding: 0 8px 0 8px;
-  display: table-cell;
-}
+.fr-messagebox-title { height: 48px; vertical-align: middle; padding: 0 8px 0 8px; display: table-cell; }
 
-.fr-messagebox-content {
-  padding: 25px 8px 0px 8px;
-}
+.fr-messagebox-content { padding: 25px 8px 0px 8px; }
 
-.fr-messagebox-msg {
-  width: 100%;
-  height: 100%;
-  display: block;
+.fr-messagebox-msg { width: 100%; height: 100%; display: block; font-size: 13pt; color: #444444; }
 
-  font-size: 13pt;
-  color: #444444;
-}
-
-.fr-messagebox-submit {
-  min-width: 100px;
-  padding: 0 8px 0 8px;
-  margin-bottom: 11px;
-  display: inline-block;
-}
+.fr-messagebox-submit { min-width: 150px; padding: 0 8px 0 8px; margin-bottom: 11px; display: inline-block; }
 
 /* Small toolbar (E.g., for phones, potrait) */
 @media only screen and (max-width : 479px) {
-  .fr-messagebox-innerpage {
-    min-width: 200px;
-    max-width: 260px;
-    margin-top: 50px;
-  }
+  .fr-messagebox-innerpage { min-width: 200px; max-width: 260px; }
 }
 
 /* Medium toolbar (E.g., for phones, landscape) */
 @media only screen and (min-width : 480px) and (max-width : 567px) {
-  .fr-messagebox-innerpage {
-    min-width: 200px;
-    max-width: 320px;
-    margin-top: 50px;
-  }
+  .fr-messagebox-innerpage { min-width: 200px; max-width: 320px; }
 }

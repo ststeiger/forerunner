@@ -329,7 +329,7 @@ $(function () {
             containerItem: "containeritem",
             toolGroup: "toolgroup",
             select: "select"
-},
+        },
         /**
          * sort order used in the Report Viewer sort() method.
          *
@@ -958,8 +958,8 @@ $(function () {
                 if (!me._dialogInit) {
                     me.element.dialog({
                         dialogClass: "noTitleStuff",
-                        height: me.element.height(),
-                        width: me.element.width(),
+                        height: 'auto',
+                        width: 'auto',
                         modal: true,
                         resizable: false,
                         draggable: false,
@@ -1011,6 +1011,33 @@ $(function () {
                 $appContainer.append($msgBox);
             }
             $msgBox.messageBox("openDialog", msg, caption);
+        },
+        /**
+        * Get modal dialog static header html snippet
+        *
+        * @function forerunner.dialog#getModalDialogHeaderHtml
+        * @param {function} iconClass - icon class to specific icon position
+        * @param {function} title - modal dialog title
+        * @param {function} cancel - special cancel button class
+        * @param {function} cancel - cancel button's value
+        */
+        getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord) {
+            var html = "<div class='fr-core-dialog-header'>" +
+                            "<div class='fr-core-dialog-icon-container'>" +
+                                "<div class='fr-core-dialog-icon-inner'>" +
+                                    "<div class='fr-icons24x24 fr-core-dialog-align-middle " + iconClass + "'></div>" +
+                                "</div>" +
+                            "</div>" +
+                            "<div class='fr-core-dialog-title-container'>" +
+                                "<div class='fr-core-dialog-title'>" +
+                                   title +
+                                "</div>" +
+                            "</div>" +
+                            "<div class='fr-core-dialog-cancel-container'>" +
+                                "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                            "</div>" +
+                       "</div>";
+            return html;
         },
 };
 

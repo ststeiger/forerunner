@@ -73,24 +73,13 @@ namespace Forerunner.Thumbnail
             this.maxHeightToWidthRatio = maxHeightToWidthRatio;
         }
 
-        private int GetSleepTime()
-        {
-            return Convert.ToInt32(Math.Pow(2, ThreadingAttempts));
-        }
         public Bitmap GetScreenShot()
         {
 
-            if (ThreadingAttempts++ > 4)
+            if (ThreadingAttempts++ > 10)
             {
                 Logger.Trace(LogType.Info, "GetScreenShot failed for report.");
                 return null;
-            }
-            else
-            {
-                if (ThreadingAttempts > 1)
-                {
-                    Thread.Sleep(GetSleepTime());
-                }
             }
 
             Thread t = null;

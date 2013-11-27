@@ -959,8 +959,8 @@ $(function () {
                 if (!me._dialogInit) {
                     me.element.dialog({
                         dialogClass: "noTitleStuff",
-                        height: me.element.height(),
-                        width: me.element.width(),
+                        height: 'auto',
+                        width: 'auto',
                         modal: true,
                         resizable: false,
                         draggable: false,

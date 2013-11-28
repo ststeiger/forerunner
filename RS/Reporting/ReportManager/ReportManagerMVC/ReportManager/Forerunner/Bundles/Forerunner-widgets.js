@@ -3201,6 +3201,7 @@ $(function () {
                 topdiv.removeClass(className, delay);
                 me.$mainheadersection.toolbar("showAllTools");
             }
+            
             if (me.showModal !== true) {
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 me.$container.removeClass("fr-layout-container-noscroll");
@@ -3211,6 +3212,7 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            me.$container.resize();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
                     me.$viewer.reportViewer("allowSwipe", true);
@@ -3297,9 +3299,8 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
-            //make sure container can scrollable when click phycial back button 
-            //when modal dialog show up which disable scroll and not restore.
-            me.$container.css("overflow", "");
+            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            me.$container.removeClass("fr-layout-container-noscroll");
         },
         _selectedItemPath: null,
     };
@@ -8229,10 +8230,7 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
-            forerunner.dialog.closeAllModalDialogs();
-            layout.cleanUp();
-
+            
             if (!path)
                 path = "/";
             if (!view)
@@ -8271,6 +8269,9 @@ $(function () {
                 me.DefaultAppTemplate.$mainsection.html("");
                 me.DefaultAppTemplate.$mainsection.hide();
             }
+            layout.cleanUp();
+            forerunner.device.allowZoom(false);
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
             setTimeout(function () {
@@ -8306,6 +8307,8 @@ $(function () {
             // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
             if (!me.$reportExplorer)
                 me._createReportExplorer(false);
 

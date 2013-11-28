@@ -40,10 +40,7 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
-            forerunner.dialog.closeAllModalDialogs();
-            layout.cleanUp();
-
+            
             if (!path)
                 path = "/";
             if (!view)
@@ -82,6 +79,9 @@ $(function () {
                 me.DefaultAppTemplate.$mainsection.html("");
                 me.DefaultAppTemplate.$mainsection.hide();
             }
+            layout.cleanUp();
+            forerunner.device.allowZoom(false);
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
             setTimeout(function () {
@@ -117,6 +117,8 @@ $(function () {
             // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
             if (!me.$reportExplorer)
                 me._createReportExplorer(false);
 

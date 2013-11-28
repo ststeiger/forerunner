@@ -548,6 +548,7 @@ $(function () {
                 topdiv.removeClass(className, delay);
                 me.$mainheadersection.toolbar("showAllTools");
             }
+            
             if (me.showModal !== true) {
                 me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 me.$container.removeClass("fr-layout-container-noscroll");
@@ -558,6 +559,7 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            me.$container.resize();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
                     me.$viewer.reportViewer("allowSwipe", true);
@@ -644,9 +646,8 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
-            //make sure container can scrollable when click phycial back button 
-            //when modal dialog show up which disable scroll and not restore.
-            me.$container.css("overflow", "");
+            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            me.$container.removeClass("fr-layout-container-noscroll");
         },
         _selectedItemPath: null,
     };

@@ -945,9 +945,9 @@ $(function () {
        *
        * @function forerunner.dialog#showModalDialog
        * @param {function} $appContainer - Modal dialog container
-       * @param {function} me - The element where the dialog is at
+       * @param {function} target - The element where the dialog is at
        */
-        showModalDialog: function ($appContainer, me) {
+        showModalDialog: function ($appContainer, target) {
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
@@ -956,8 +956,8 @@ $(function () {
             //}
 
             setTimeout(function () {
-                if (!me._dialogInit) {
-                    me.element.dialog({
+                if (!target.element.parent().hasClass("ui-dialog")) {
+                    target.element.dialog({
                         dialogClass: "noTitleStuff",
                         height: 'auto',
                         width: 'auto',
@@ -967,10 +967,10 @@ $(function () {
                         autoOpen: false,
                         position: ['center', 0],
                     }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
-                    me._dialogInit = true;
+                    //target._dialogInit = true;
                 }
 
-                me.element.dialog("open");
+                target.element.dialog("open");
             }, 200);
         },
         /**
@@ -978,10 +978,10 @@ $(function () {
         *
         * @function forerunner.dialog#closeModalDialog
         * @param {function} $appContainer - Modal dialog container
-        * @param {function} me - The element where the dialog is at
+        * @param {function} target - The element where the dialog is at
         */
-        closeModalDialog: function ($appContainer, me) {
-            me.element.dialog("close");
+        closeModalDialog: function ($appContainer, target) {
+            target.element.dialog("close");
             //if (closeModal && typeof (closeModal) === "function") {
             //    setTimeout(function () { closeModal(); }, 50);
             //}
@@ -993,10 +993,12 @@ $(function () {
         *
         * @function forerunner.dialog#closeAllModalDialogs
         */
-        closeAllModalDialogs: function () {
-            var me = this;
-            $(".fr-core-mask").remove();
-            $(".fr-dialog-id").hide();
+        closeAllModalDialogs: function ($appContainer) {
+            $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
+                if ($(modalDialog).is(":visible")) {
+                    $(modalDialog).dialog("close");
+                }
+            });
         },
         /**
         * Show message box by modal dialog

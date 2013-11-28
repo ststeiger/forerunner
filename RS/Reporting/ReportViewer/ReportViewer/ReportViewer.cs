@@ -633,21 +633,21 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                if (this.ServerRendering)
-                    format = "ForerunnerThumbnail";
-                else
-                {
+                //if (this.ServerRendering)
+                //    format = "ForerunnerThumbnail";
+                //else
+                //{
                     devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
                     devInfo += @"<ReplacementRoot></ReplacementRoot>";
                     devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>";
-                }
+                //}
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                if (!this.ServerRendering)
-                {
+                //if (!this.ServerRendering)
+                //{
                     // Cache the current httpcontext credential for other threads to use
                     SetCredentials(GetCredentials());
                     if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
@@ -656,7 +656,7 @@ namespace Forerunner.SSRS.Viewer
                     }
                     WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator == null ? new CurrentUserImpersonator(): impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
-                }
+                //}
 
                 return result;
             }

@@ -837,7 +837,7 @@ namespace Forerunner.SSRS.Manager
                     {
 
                         sqlImpersonator = tryImpersonate(true);
-                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, !GetServerRendering());
+                        context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, true/*!GetServerRendering()*/);
                         this.SetCredentials(context.NetworkCredential);
                         ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
                         //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                

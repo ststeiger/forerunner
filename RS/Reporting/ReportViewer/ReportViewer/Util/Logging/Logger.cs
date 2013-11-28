@@ -50,11 +50,11 @@ namespace ReportManager.Util.Logging
                         DateTime now = DateTime.Now;
                         string fileName = String.Format("Forerunner_{0}_{1}_{2}_{3}_{4}_{5}.log", now.Month, now.Day, now.Year, now.Hour, now.Minute, now.Second);
                         string filePath = path + @"\..\LogFiles\" + fileName;
-                        TraceListener listener = new TextWriterTraceListener(filePath);
+                        TraceListener listener = new TextWriterTraceListener(filePath) { TraceOutputOptions = TraceOptions.DateTime | TraceOptions.ThreadId };
                         ts.Listeners.Add(listener);
                         Trace(LogType.Info, "Logging to " + fileName + "...");
                     }
-                    ts.Listeners.Add(new ConsoleTraceListener());
+                    ts.Listeners.Add(new ConsoleTraceListener() { TraceOutputOptions = TraceOptions.DateTime | TraceOptions.ThreadId });
                     isInit = true;
                 }
             }

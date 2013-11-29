@@ -947,6 +947,7 @@ $(function () {
        * @param {function} target - The element where the dialog is at
        */
         showModalDialog: function ($appContainer, target) {
+            var me = this;
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
@@ -970,6 +971,10 @@ $(function () {
                 }
 
                 target.element.dialog("open");
+
+                //reset modal dialog position when window resize happen or orientation change
+                $(window).off("resize", me._setPosition);
+                $(window).on("resize", { target: target }, me._setPosition);
             }, 200);
         },
         /**
@@ -980,7 +985,10 @@ $(function () {
         * @param {function} target - The element where the dialog is at
         */
         closeModalDialog: function ($appContainer, target) {
+            var me = this;
+
             target.element.dialog("close");
+            $(window).off("resize", me._setPosition);
             //if (closeModal && typeof (closeModal) === "function") {
             //    setTimeout(function () { closeModal(); }, 50);
             //}
@@ -993,11 +1001,13 @@ $(function () {
         * @function forerunner.dialog#closeAllModalDialogs
         */
         closeAllModalDialogs: function ($appContainer) {
+            var me = this;
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
                 if ($(modalDialog).is(":visible")) {
                     $(modalDialog).dialog("close");
                 }
             });
+            $(window).off("resize", me._setPosition);
         },
         /**
         * Show message box by modal dialog
@@ -1041,7 +1051,24 @@ $(function () {
                        "</div>";
             return html;
         },
-};
+        _timer: null,
+        _setPosition: function (event) {
+            var me = this;
+            if (me._timer) clearTimeout(me._timer);
+
+            me._timer = setTimeout(function () {
+                if (event.data.target) {
+                    var uiDialog = event.data.target.element.parent();
+                    if (uiDialog.is(":visible")) {
+                        var clone = uiDialog.clone().appendTo(uiDialog.parent());
+                        var newTop = clone.css('position', 'static').offset().top * -1;
+                        uiDialog.css("top", newTop);
+                        clone.remove();
+                    }
+                }
+            }, 100);
+        }
+    };
 
     forerunner.ssr.map = function(initialData) {
         // can pass initial data for the set in an object

@@ -44,7 +44,7 @@ namespace ReportManager.Controllers
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 if (cache)
-                    resp.Headers.Add("Cache-Control", "max-age=86400");
+                    resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
                 if (fileName != null)
                     resp.Content.Headers.Add("Content-Disposition", "attachment;filename=" + HttpUtility.UrlEncode(fileName));
             }
@@ -85,7 +85,7 @@ namespace ReportManager.Controllers
                 byte[] result = null;
                 string mimeType;
                 result = GetReportViewer().GetImage(SessionID, ImageID, out mimeType);
-                return GetResponseFromBytes(result, mimeType);
+                return GetResponseFromBytes(result, mimeType,true);
             }
             catch(Exception e)
             {

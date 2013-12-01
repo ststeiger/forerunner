@@ -25,7 +25,6 @@ $(function () {
         getNewSet: function (name, parameterList) {
             var newSet = {
                 isAllUser: false,
-                isDefault: false,
                 name: name,
                 id: forerunner.helper.guidGen(),
                 data: parameterList
@@ -35,7 +34,7 @@ $(function () {
         isCurrentSetAllUser: function () {
             var me = this;
             if (me.serverData && me.serverData.parameterSets && me.currentSetId) {
-                var set = me._getSet(me.serverData.parameterSets, me.currentSetId);
+                var set = me.serverData.parameterSets[me.currentSetId];
                 return set.isAllUser;
             }
             return false;
@@ -55,115 +54,108 @@ $(function () {
 
             return !me.isCurrentSetAllUser();
         },
-        _pushNewSet: function (name, parameterList) {
+        _addNewSet: function (name, parameterList) {
             var me = this;
             var newSet = me.getNewSet(name, parameterList);
-            if (me.serverData && me.serverData.parameterSets) {
-                if (me.serverData.parameterSets.length === 0) {
-                    newSet.isDefault = true;
-                }
-                me.serverData.parameterSets.push(newSet);
-            }
-            else {
-                newSet.isDefault = true;
+            if (me.serverData === undefined || me.serverData === null) {
                 me.serverData = {
                     canEditAllUsersSet: false,
-                    parameterSets: [newSet]
+                    defaultSetId: newSet.id,
+                    parameterSets: {}
                 };
-                me.currentSetId = newSet.id;
             }
+            me.serverData.parameterSets[newSet.id] = newSet;
+            me.serverData.defaultSetId = newSet.id;
+            me.currentSetId = newSet.id;
+
             return newSet;
         },
         cloneServerData: function () {
             var me = this;
             if (me.serverData) {
-                return {
-                    canEditAllUsersSet: me.serverData.canEditAllUsersSet,
-                    parameterSets: me._getOptionArray()
-                };
+                // Returns a deep clone of me.serverData
+                return $.extend(true, {}, me.serverData);
             }
 
             return null;
         },
         applyServerData: function (applyData) {
             var me = this;
+            var id = null;
+
+            // Save the default set id
+            me.serverData.defaultSetId = applyData.defaultSetId;
 
             // First apply the modifications or additions
-            $.each(applyData.parameterSets, function (index, applySet) {
-                var modelSet = me._getSet(me.serverData.parameterSets, applySet.id);
+            for (id in applyData.parameterSets) {
+                var modelSet = me.serverData.parameterSets[id];
+                var applySet = applyData.parameterSets[id];
                 if (modelSet) {
                     modelSet.isAllUser = applySet.isAllUser;
-                    modelSet.isDefault = applySet.isDefault;
                     modelSet.name = applySet.name;
-                    modelSet.id = applySet.id;
+                } else {
+                    me.serverData.parameterSets[id] = applySet;
                 }
-                else {
-                    me.serverData.parameterSets.push(applySet);
-                }
-            });
-            // Next handle any deletions
-            var deleteArray = [];
-            $.each(me.serverData.parameterSets, function (index, modelSet) {
-                var applySet = me._getSet(applyData.parameterSets, modelSet.id);
-                if (applySet === null) {
-                    deleteArray.push(index);
-                }
-            });
-            while (deleteArray.length > 0) {
-                var index = deleteArray.pop();
-                me.serverData.parameterSets.splice(index, 1);
             }
 
-            me._sort();
+            // Next handle any deletions
+            var deleteArray = [];
+            for (id in me.serverData.parameterSets) {
+                if (!applyData.parameterSets.hasOwnProperty(id)) {
+                    deleteArray.push(id);
+                }
+            }
+            while (deleteArray.length > 0) {
+                id = deleteArray.pop();
+                delete me.serverData.parameterSets[id];
+            }
 
             // save the results
             me._saveModel();
             me._triggerModelChange();
         },
-        _sort: function () {
-            var me = this;
-            me.serverData.parameterSets.sort(me._sortOnName);
-        },
-        _sortOnName: function (a, b) {
-            if (a.name === b.name) {
-                return 0;
-            } else if (a.name > b.name) {
-                return 1;
-            }
-            return -1;
-        },
-        _getSet: function (sets, id) {
-            var parameterSet = null;
-            $.each(sets, function (index, set) {
-                if (set.id === id) {
-                    parameterSet = set;
-                }
-            });
-            return parameterSet;
-        },
-        _getOptionArray: function () {
-            var me = this;
+        getOptionArray: function (parameterSets) {
             var optionArray = [];
-            if (me.serverData.parameterSets) {
-                $.each(me.serverData.parameterSets, function (index, parameterSet) {
-                    optionArray.push({
-                        isAllUser: parameterSet.isAllUser,
-                        isDefault: parameterSet.isDefault,
-                        name: parameterSet.name,
-                        id: parameterSet.id,
-                    });
+            for (var id in parameterSets) {
+                var set = parameterSets[id];
+                optionArray.push({
+                    id: set.id,
+                    name: set.name
                 });
             }
+            optionArray.sort(function (a, b) {
+                if (a.name > b.name) return 1;
+                if (b.name > a.name) return -1;
+                return 0;
+            });
             return optionArray;
+        },
+        _modelChangeData: function () {
+            var me = this;
+            var data = {
+                selectedId: me.currentSetId,
+            };
+            data.optionArray = me.getOptionArray(me.serverData.parameterSets);
+            return data;
         },
         _triggerModelChange: function() {
             var me = this;
-            var optionArray = me._getOptionArray();
-            me._trigger(events.modelChanged, null, { optionArray: optionArray, currentSetId: me.currentSetId });
+            me._trigger(events.modelChanged, null, me._modelChangeData());
         },
         _isLoaded: function (reportPath) {
             var me = this;
             return me.serverData !== null && me.reportPath === reportPath;
+        },
+        areSetsEmpty: function (serverData) {
+            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+                return true;
+            }
+
+            for (var property in serverData.parameterSets) {
+                return false;
+            }
+
+            return true;
         },
         _load: function (reportPath) {
             var me = this;
@@ -177,12 +169,15 @@ $(function () {
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        me._pushNewSet(locData.parameterModel.defaultName, data.ParamsList);
+                        me._addNewSet(locData.parameterModel.defaultName, data.ParamsList);
                     }
                     else if (data) {
                         me.serverData = data;
-                        if (me.serverData.parameterSets.length === 0) {
-                            me._pushNewSet(locData.parameterModel.defaultName);
+                        if (me.areSetsEmpty(me.serverData)) {
+                            me._addNewSet(locData.parameterModel.defaultName);
+                        }
+                        else {
+                            me.currentSetId = me.serverData.defaultSetId;
                         }
                     }
                     me.reportPath = reportPath;
@@ -217,53 +212,45 @@ $(function () {
             var me = this;
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
-                    me._pushNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
                 } else {
-                    $.each(me.serverData.parameterSets, function (index, parameterSet) {
-                        if (parameterSet.id === me.currentSetId) {
-                            parameterSet.data = JSON.parse(parameterList);
-                        }
-                    });
+                    me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);
                 }
                 me._saveModel(success, error);
             }
         },
         setCurrentSet: function (id) {
             var me = this;
-            if (id && me.serverData && me.serverData.parameterSets) {
-                $.each(me.serverData.parameterSets, function (index, parameterSet) {
-                    if (parameterSet.id === id) {
-                        me.currentSetId = id;
-                        if (parameterSet.data) {
-                            me._trigger(events.modelSetChanged, null, JSON.stringify(parameterSet.data));
-                        }
-                        else {
-                            me._trigger(events.modelSetChanged, null, null);
-                        }
-                    }
-                });
+            if (id && me.serverData && me.serverData.parameterSets.hasOwnProperty(id)) {
+                me.currentSetId = id;
+                var parameterSet = me.serverData.parameterSets[id];
+                if (parameterSet.data) {
+                    me._trigger(events.modelSetChanged, null, JSON.stringify(parameterSet.data));
+                }
+                else {
+                    me._trigger(events.modelSetChanged, null, null);
+                }
             }
         },
         getCurrentParameterList: function (reportPath) {
             var me = this;
             var currentParameterList = null;
             me._load(reportPath);
-            if (me.serverData && me.serverData.parameterSets) {
-                $.each(me.serverData.parameterSets, function (index, parameterSet) {
-                    if (me.currentSetId !== null) {
-                        if (parameterSet.id === me.currentSetId && parameterSet.data) {
-                            currentParameterList = JSON.stringify(parameterSet.data);
-                        }
-                    }
-                    else if (parameterSet.isDefault) {
-                        me.currentSetId = parameterSet.id;
-                        if (parameterSet.data) {
-                            currentParameterList = JSON.stringify(parameterSet.data);
-                        }
-                    }
-                });
+            if (me.serverData) {
+                var parameterSet;
+                if (me.currentSetId) {
+                    parameterSet = me.serverData.parameterSets[me.currentSetId];
+                } else if (me.serverData.defaultSetId) {
+                    me.currentSetId = me.serverData.defaultSetId;
+                    parameterSet = me.serverData.parameterSets[me.serverData.defaultSetId];
+                    me._triggerModelChange();
+                } else {
+                    return null;
+                }
+                if (parameterSet.data) {
+                    currentParameterList = JSON.stringify(parameterSet.data);
+                }
             }
-            me._triggerModelChange();
             return currentParameterList;
         }
     });  // $.widget(

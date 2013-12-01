@@ -468,7 +468,7 @@ namespace Forerunner.SSRS.Manager
                             if (savedParams.Length > 0)
                             {
                                 ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
-                                model.merge(newModel);
+                                model.Merge(newModel);
                             }
                         }
                     }

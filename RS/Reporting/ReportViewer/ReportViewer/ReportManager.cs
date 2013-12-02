@@ -154,7 +154,7 @@ namespace Forerunner.SSRS.Manager
             // No need to impersonate again.
             rs.Credentials = GetCredentials();
 
-            return rs.GetProperties(path, props);
+            return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
 
         private string[] callGetPermissions(string path)
@@ -328,7 +328,6 @@ namespace Forerunner.SSRS.Manager
 
         public string SaveUserParamaters(string path, string parameters)
         {
-            path = HttpUtility.UrlDecode(path);
             string IID = GetItemID(path);
             Impersonator impersonator = null;
             try
@@ -371,7 +370,6 @@ namespace Forerunner.SSRS.Manager
 
         public string GetUserParameters(string path)
         {
-            path = HttpUtility.UrlDecode(path);
             string IID = GetItemID(path);
             Impersonator impersonator = null;
             try
@@ -806,8 +804,9 @@ namespace Forerunner.SSRS.Manager
             }
         }
 
-        public bool HasPermission(string path, string requiredPermission)
+        private bool HasPermission(string path, string requiredPermission)
         {
+            path = HttpUtility.UrlDecode(path);
             bool hasPermission = false;
             foreach (string permission in callGetPermissions(path))
             {

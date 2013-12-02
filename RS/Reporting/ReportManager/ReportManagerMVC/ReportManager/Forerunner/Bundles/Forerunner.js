@@ -937,9 +937,10 @@ $(function () {
        *
        * @function forerunner.dialog#showModalDialog
        * @param {function} $appContainer - Modal dialog container
-       * @param {function} me - The element where the dialog is at
+       * @param {function} target - The element where the dialog is at
        */
-        showModalDialog: function ($appContainer, me) {
+        showModalDialog: function ($appContainer, target) {
+            var me = this;
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
 
@@ -948,21 +949,25 @@ $(function () {
             //}
 
             setTimeout(function () {
-                if (!me._dialogInit) {
-                    me.element.dialog({
+                if (!target._dialogInit) {
+                    target.element.dialog({
                         dialogClass: "noTitleStuff",
-                        height: me.element.height(),
-                        width: me.element.width(),
+                        height: 'auto',
+                        width: 'auto',
                         modal: true,
                         resizable: false,
                         draggable: false,
                         autoOpen: false,
                         position: ['center', 0],
                     }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
-                    me._dialogInit = true;
+                    target._dialogInit = true;
                 }
 
-                me.element.dialog("open");
+                target.element.dialog("open");
+                
+                //reset modal dialog position when window resize happen or orientation change
+                $(window).off("resize", me._setPosition);
+                $(window).on("resize", { target: target }, me._setPosition);
             }, 200);
         },
         /**
@@ -970,10 +975,12 @@ $(function () {
         *
         * @function forerunner.dialog#closeModalDialog
         * @param {function} $appContainer - Modal dialog container
-        * @param {function} me - The element where the dialog is at
+        * @param {function} target - The element where the dialog is at
         */
-        closeModalDialog: function ($appContainer, me) {
-            me.element.dialog("close");
+        closeModalDialog: function ($appContainer, target) {
+            var me = this;
+            target.element.dialog("close");
+            $(window).off("resize", me._setPosition);
             //if (closeModal && typeof (closeModal) === "function") {
             //    setTimeout(function () { closeModal(); }, 50);
             //}
@@ -985,10 +992,14 @@ $(function () {
         *
         * @function forerunner.dialog#closeAllModalDialogs
         */
-        closeAllModalDialogs: function () {
+        closeAllModalDialogs: function ($appContainer) {
             var me = this;
-            $(".fr-core-mask").remove();
-            $(".fr-dialog-id").hide();
+            $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
+                if ($(modalDialog).is(":visible")) {
+                    $(modalDialog).dialog("close");
+                }
+            });
+            $(window).off("resize", me._setPosition);
         },
         /**
         * Show message box by modal dialog
@@ -1005,6 +1016,50 @@ $(function () {
             }
             $msgBox.messageBox("openDialog", msg, caption);
         },
+        /**
+        * Get modal dialog static header html snippet
+        *
+        * @function forerunner.dialog#getModalDialogHeaderHtml
+        * @param {function} iconClass - icon class to specific icon position
+        * @param {function} title - modal dialog title
+        * @param {function} cancel - special cancel button class
+        * @param {function} cancel - cancel button's value
+        */
+        getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord) {
+                var html = "<div class='fr-core-dialog-header'>" +
+                                "<div class='fr-core-dialog-icon-container'>" +
+                                    "<div class='fr-core-dialog-icon-inner'>" +
+                                        "<div class='fr-icons24x24 fr-core-dialog-align-middle " + iconClass + "'></div>" +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='fr-core-dialog-title-container'>" +
+                                    "<div class='fr-core-dialog-title'>" +
+                                       title +
+                                    "</div>" +
+                                "</div>" +
+                                "<div class='fr-core-dialog-cancel-container'>" +
+                                    "<input type='button' class='fr-core-dialog-cancel " + cancelClass + "' value='" + cancelWord + "' />" +
+                                "</div>" +
+                           "</div>";
+                return html;
+        },
+        _timer: null,
+        _setPosition: function (event) {
+                var me = this;
+                if (me._timer) clearTimeout(me._timer);
+    
+                me._timer = setTimeout(function () {
+                        if (event.data.target) {
+                                var uiDialog = event.data.target.element.parent();
+                                if (uiDialog.is(":visible")) {
+                                        var clone = uiDialog.clone().appendTo(uiDialog.parent());
+                                        var newTop = clone.css('position', 'static').offset().top * -1;
+                                        uiDialog.css("top", newTop);
+                                        clone.remove();
+                                    }
+                            }
+                    }, 100);
+        }
 };
 
     forerunner.ssr.map = function(initialData) {

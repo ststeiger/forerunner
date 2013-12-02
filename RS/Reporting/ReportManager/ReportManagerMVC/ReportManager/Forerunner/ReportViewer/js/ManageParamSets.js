@@ -106,30 +106,17 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-mps-innerPage fr-core-center'>" +
-                    "<div class='fr-mps-header fr-core-dialog-header'>" +
-                        "<div class='fr-mps-icon-container'>" +
-                            "<div class='fr-mps-icon-inner'>" +
-                                "<div class='fr-icons24x24 fr-icons24x24-parameterSets fr-mps-align-middle'></div>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-title-container'>" +
-                            "<div class='fr-mps-title'>" +
-                                manageParamSets.manageSets +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-cancel-container'>" +
-                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
-                        "</div>" +
-                    "</div>" +
-                    "<form class='fr-mps-form'>" +
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-mps-form fr-core-dialog-form'>" +
                         "<div class='fr-core-center'>" +
                             "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
+                                    "<th class='fr-mps-name-header'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +

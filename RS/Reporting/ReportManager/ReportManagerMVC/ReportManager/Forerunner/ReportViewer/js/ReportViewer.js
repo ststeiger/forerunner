@@ -101,6 +101,7 @@ $(function () {
             me.renderError = false;
             me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            me.renderTime = new Date().getTime();
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -428,6 +429,7 @@ $(function () {
                 curPage = 1;
 
             me.sessionID = "";
+            me.renderTime = new Date().getTime();
             me.lock = 1;
             me._revertUnsubmittedParameters();
 
@@ -585,6 +587,7 @@ $(function () {
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
+                me.renderTime = action.renderTime;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
@@ -749,6 +752,7 @@ $(function () {
                     me.scrollTop = $(window).scrollTop();
 
                     me.numPages = data.NumPages;
+                    me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1045,7 +1049,7 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime
             });
         },
         _setScrollLocation: function (top, left) {
@@ -1497,7 +1501,8 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+            $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
+
 
             if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
@@ -1547,7 +1552,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else

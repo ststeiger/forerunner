@@ -102,6 +102,7 @@ $(function () {
             me.renderError = false;
             me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            me.renderTime = new Date().getTime();
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -429,6 +430,7 @@ $(function () {
                 curPage = 1;
 
             me.sessionID = "";
+            me.renderTime = new Date().getTime();
             me.lock = 1;
             me._revertUnsubmittedParameters();
 
@@ -586,6 +588,7 @@ $(function () {
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
+                me.renderTime = action.renderTime;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
@@ -750,6 +753,7 @@ $(function () {
                     me.scrollTop = $(window).scrollTop();
 
                     me.numPages = data.NumPages;
+                    me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1046,7 +1050,7 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime
             });
         },
         _setScrollLocation: function (top, left) {
@@ -1498,7 +1502,8 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+            $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
+
 
             if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
@@ -1548,7 +1553,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else
@@ -2629,7 +2634,6 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv");
             me.$topdiv = $topdiv;
-            $mainviewport.append($topdiv);
             var $mainheadersection = new $("<div />");
             $mainheadersection.addClass("fr-layout-mainheadersection");
             me.$mainheadersection = $mainheadersection;
@@ -2638,6 +2642,7 @@ $(function () {
             $topdivspacer.addClass("fr-layout-topdivspacer");
             me.$topdivspacer = $topdivspacer;
             $mainviewport.append($topdivspacer);
+            $mainviewport.append($topdiv);
             // Page section
             var $pagesection = new $("<div />");
             $pagesection.addClass("fr-layout-pagesection");
@@ -3135,6 +3140,7 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            me.$container.resize();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
                     me.$viewer.reportViewer("allowSwipe", true);
@@ -3221,9 +3227,8 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
-            //make sure container can scrollable when click phycial back button 
-            //when modal dialog show up which disable scroll and not restore.
-            me.$container.css("overflow", "");
+            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            me.$container.removeClass("fr-layout-container-noscroll");
         },
         _selectedItemPath: null,
     };
@@ -4125,25 +4130,12 @@ $(function () {
 
             me.element.html("");
 
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
-            "<div class='fr-core-dialog-innerPage fr-us-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-us-header fr-core-dialog-header'>" +
-                    "<div class='fr-us-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-setup fr-us-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-title-container'>" +
-                        "<div class='fr-us-title'>" +
-                            userSettings.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-us-cancel-container'>" +
-                        "<input type='button' class='fr-us-cancel' value='" + userSettings.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-us-form'>" +
+                "<form class='fr-us-form fr-core-dialog-form'>" +
                     "<div class='fr-us-setting-container'>" +
                         "<label class='fr-us-label'>" + userSettings.ResponsiveUI + "</label>" +
                         "<input class='fr-us-responsive-ui-id fr-us-checkbox'  name='ResponsiveUI' type='checkbox'/>" +
@@ -4258,6 +4250,7 @@ $(function () {
         options: {
             reportViewer: null,
             responsive: false,
+            renderTime: null,
         },
         // Constructor
         _create: function () {
@@ -4881,7 +4874,7 @@ $(function () {
                 var Url = me.options.reportViewer.options.reportViewerAPI + "/Image/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
-                Url += "&" + new Date().getTime();
+                Url += "&" + me.options.renderTime;
                 me.imageList[ImageName] = Url;
             }
 
@@ -7102,25 +7095,12 @@ $(function () {
 
             me.element.html("");
 
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
-            "<div class='fr-print-innerPage fr-core-dialog-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-print-header fr-core-dialog-header'>" +
-                    "<div class='fr-print-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-title-container'>" +
-                        "<div class='fr-print-title'>" +
-                            print.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-cancel-container'>" +
-                        "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-print-form'>" +
+                "<form class='fr-print-form fr-core-dialog-form'>" +
                     // Print layout label
                     "<div class='fr-print-options-label'>" +
                         print.pageLayoutOptions +
@@ -7481,30 +7461,17 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
-                "<div class='fr-core-dialog-innerPage fr-mps-innerPage fr-core-center'>" +
-                    "<div class='fr-mps-header fr-core-dialog-header'>" +
-                        "<div class='fr-mps-icon-container'>" +
-                            "<div class='fr-mps-icon-inner'>" +
-                                "<div class='fr-icons24x24 fr-icons24x24-parameterSets fr-mps-align-middle'></div>" +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-title-container'>" +
-                            "<div class='fr-mps-title'>" +
-                                manageParamSets.manageSets +
-                            "</div>" +
-                        "</div>" +
-                        "<div class='fr-mps-cancel-container'>" +
-                            "<input type='button' class='fr-mps-cancel' value='" + manageParamSets.cancel + "'/>" +
-                        "</div>" +
-                    "</div>" +
-                    "<form class='fr-mps-form'>" +
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    headerHtml +
+                    "<form class='fr-mps-form fr-core-dialog-form'>" +
                         "<div class='fr-core-center'>" +
                             "<input name='add' type='button' value='" + manageParamSets.add + "' title='" + manageParamSets.addNewSet + "' class='fr-mps-add-id fr-mps-action-button fr-core-dialog-button'/>" +
                             "<table class='fr-mps-main-table'>" +
                                 "<thead>" +
                                     "<tr>" +
-                                    "<th class='fr-rtb-select-set'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
+                                    "<th class='fr-mps-name-header'>" + manageParamSets.name + "</th><th class='fr-mps-property-header'>" + manageParamSets.defaultHeader + "</th><th class='fr-mps-property-header'>" + manageParamSets.allUsers + "</th><th class='fr-mps-property-header'>" + manageParamSets.deleteHeader + "</th>" +
                                     "</tr>" +
                                 "</thead>" +
                                 "<tbody class='fr-mps-main-table-body-id'></tbody>" +
@@ -8151,9 +8118,6 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-            forerunner.device.allowZoom(false);
-            forerunner.dialog.closeAllModalDialogs();
-            layout.cleanUp();
 
             if (!path)
                 path = "/";
@@ -8193,6 +8157,9 @@ $(function () {
                 me.DefaultAppTemplate.$mainsection.html("");
                 me.DefaultAppTemplate.$mainsection.hide();
             }
+            layout.cleanUp();
+            forerunner.device.allowZoom(false);
+            forerunner.dialog.closeAllModalDialogs(layout.$container);
 
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
             setTimeout(function () {
@@ -8228,6 +8195,8 @@ $(function () {
             // the user navigates directly to a report via the URL
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
+            forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
+
             if (!me.$reportExplorer)
                 me._createReportExplorer(false);
 

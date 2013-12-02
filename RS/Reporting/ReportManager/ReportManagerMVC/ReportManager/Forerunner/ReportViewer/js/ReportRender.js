@@ -49,6 +49,7 @@ $(function () {
         options: {
             reportViewer: null,
             responsive: false,
+            renderTime: null,
         },
         // Constructor
         _create: function () {
@@ -672,7 +673,7 @@ $(function () {
                 var Url = me.options.reportViewer.options.reportViewerAPI + "/Image/?";
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
-                Url += "&" + new Date().getTime();
+                Url += "&" + me.options.renderTime;
                 me.imageList[ImageName] = Url;
             }
 

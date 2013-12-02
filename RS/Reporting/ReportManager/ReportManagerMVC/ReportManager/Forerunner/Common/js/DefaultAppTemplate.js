@@ -56,7 +56,6 @@ $(function () {
             var $topdiv = new $("<div />");
             $topdiv.addClass("fr-layout-topdiv");
             me.$topdiv = $topdiv;
-            $mainviewport.append($topdiv);
             var $mainheadersection = new $("<div />");
             $mainheadersection.addClass("fr-layout-mainheadersection");
             me.$mainheadersection = $mainheadersection;
@@ -65,6 +64,7 @@ $(function () {
             $topdivspacer.addClass("fr-layout-topdivspacer");
             me.$topdivspacer = $topdivspacer;
             $mainviewport.append($topdivspacer);
+            $mainviewport.append($topdiv);
             // Page section
             var $pagesection = new $("<div />");
             $pagesection.addClass("fr-layout-pagesection");
@@ -562,6 +562,7 @@ $(function () {
 
             // Make sure the scroll position is restored after the call to hideAddressBar
             me.restoreScroll();
+            me.$container.resize();
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 if (!forerunner.device.isAllowZoom()) {
                     me.$viewer.reportViewer("allowSwipe", true);
@@ -648,9 +649,8 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
-            //make sure container can scrollable when click phycial back button 
-            //when modal dialog show up which disable scroll and not restore.
-            me.$container.css("overflow", "");
+            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+            me.$container.removeClass("fr-layout-container-noscroll");
         },
         _selectedItemPath: null,
     };

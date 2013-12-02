@@ -91,25 +91,12 @@ $(function () {
 
             me.element.html("");
 
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
-            "<div class='fr-print-innerPage fr-core-dialog-innerPage fr-core-center'>" +
-                // Header
-                "<div class='fr-print-header fr-core-dialog-header'>" +
-                    "<div class='fr-print-print-icon-container'>" +
-                        "<div class='fr-icons24x24 fr-icons24x24-printreport fr-print-align-middle'>" +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-title-container'>" +
-                        "<div class='fr-print-title'>" +
-                            print.title +
-                        "</div>" +
-                    "</div>" +
-                    "<div class='fr-print-cancel-container'>" +
-                        "<input type='button' class='fr-print-cancel' value='" + print.cancel + "'/>" +
-                    "</div>" +
-                "</div>" +
+            "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                headerHtml +
                 // form
-                "<form class='fr-print-form'>" +
+                "<form class='fr-print-form fr-core-dialog-form'>" +
                     // Print layout label
                     "<div class='fr-print-options-label'>" +
                         print.pageLayoutOptions +

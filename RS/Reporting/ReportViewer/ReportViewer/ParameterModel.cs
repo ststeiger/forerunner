@@ -21,8 +21,12 @@ namespace Forerunner.SSRS
 
     public class ParameterSet
     {
+        public ParameterSet()
+        {
+            data = new Data();
+        }
+
         public bool isAllUser { get; set; }
-        public bool isDefault { get; set; }
         public string name { get; set; }
         public string id { get; set; }
         public Data data { get; set; }
@@ -38,17 +42,19 @@ namespace Forerunner.SSRS
         }
 
         public bool canEditAllUsersSet { get; set; }
-        public List<ParameterSet> parameterSets { get; set; }
+        public string defaultSetId { get; set; }
+        public Dictionary<string, ParameterSet> parameterSets { get; set; }
 
         public ParameterModel()
         {
             canEditAllUsersSet = false;
+            parameterSets = new Dictionary<string, ParameterSet>();
         }
 
         public ParameterModel(bool startingCanEditAllUsersSet)
         {
             canEditAllUsersSet = startingCanEditAllUsersSet;
-            parameterSets = new List<ParameterSet>();
+            parameterSets = new Dictionary<string, ParameterSet>();
         }
 
         public string GetUserParameters()
@@ -56,11 +62,8 @@ namespace Forerunner.SSRS
             ParameterModel model = new ParameterModel(canEditAllUsersSet);
 
             model.canEditAllUsersSet = canEditAllUsersSet;
-            model.parameterSets = parameterSets.FindAll(
-            delegate(ParameterSet set)
-            {
-                return !set.isAllUser;
-            });
+            model.defaultSetId = defaultSetId;
+            model.parameterSets = parameterSets.Where(set => !set.Value.isAllUser).ToDictionary(pair => pair.Key, pair => pair.Value);
             return model.ToJson();
         }
 
@@ -69,11 +72,7 @@ namespace Forerunner.SSRS
             ParameterModel model = new ParameterModel(canEditAllUsersSet);
 
             model.canEditAllUsersSet = canEditAllUsersSet;
-            model.parameterSets = parameterSets.FindAll(
-            delegate(ParameterSet set)
-            {
-                return set.isAllUser;
-            });
+            model.parameterSets = parameterSets.Where(set => set.Value.isAllUser).ToDictionary(pair => pair.Key, pair => pair.Value);
             return model.ToJson();
         }
 
@@ -86,10 +85,14 @@ namespace Forerunner.SSRS
             return buffer.ToString();
         }
 
-        public void merge(ParameterModel newModel)
+        public void Merge(ParameterModel newModel)
         {
             canEditAllUsersSet = canEditAllUsersSet || newModel.canEditAllUsersSet;
-            parameterSets.AddRange(newModel.parameterSets);
+            if (newModel.defaultSetId != null && newModel.defaultSetId.Length > 0)
+            {
+                defaultSetId = newModel.defaultSetId;
+            }
+            parameterSets = parameterSets.Concat(newModel.parameterSets).ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         static public ParameterModel parse(string savedParams, AllUser allUser, bool canEditAllUsersSet)
@@ -100,9 +103,9 @@ namespace Forerunner.SSRS
             newModel.canEditAllUsersSet = canEditAllUsersSet;
             if (allUser != AllUser.KeepDefinition)
             {
-                foreach (ParameterSet set in newModel.parameterSets)
+                foreach (KeyValuePair<string, ParameterSet> pair in newModel.parameterSets)
                 {
-                    set.isAllUser = allUser == AllUser.IsAllUser;
+                    pair.Value.isAllUser = allUser == AllUser.IsAllUser;
                 }
             }
 

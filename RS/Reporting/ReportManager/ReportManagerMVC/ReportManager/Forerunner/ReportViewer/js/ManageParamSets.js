@@ -41,7 +41,9 @@ $(function () {
             me.element.find(".fr-mps-delete-id").off("click");
 
             me.$tbody.html("");
-            $.each(me.serverData.parameterSets, function (index, parameterSet) {
+            var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
+            $.each(optionArray, function(index, option){
+                var parameterSet = me.serverData.parameterSets[option.id];
                 var $row = me._createRow(index, parameterSet);
                 me.$tbody.append($row);
 
@@ -88,7 +90,7 @@ $(function () {
             }
 
             var defaultClass = "fr-mps-default-check-id ";
-            if (parameterSet.isDefault) {
+            if (parameterSet.id === me.serverData.defaultSetId) {
                 defaultClass = "fr-mps-default-check-id ui-icon-check ui-icon ";
             }
 
@@ -110,7 +112,7 @@ $(function () {
             var me = this;
 
             me.element.html("");
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-parameterSets', manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     headerHtml +
@@ -176,36 +178,19 @@ $(function () {
         _onAdd: function (e) {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
-            me.serverData.parameterSets.push(newSet);
-            me._sort();
+            me.serverData.parameterSets[newSet.id] = newSet;
+            me._createRows();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
-        },
-        _sort: function() {
-            var me = this;
-            me.serverData.parameterSets.sort(me._sortOnName);
-            me._createRows();
-        },
-        _sortOnName: function(a, b) {
-            if (a.name === b.name) {
-                return 0;
-            } else if (a.name > b.name) {
-                return 1;
-            }
-            return -1;
         },
         _onChangeInput: function(e) {
             var me = this;
             var $input = $(e.target);
             $input.attr("title", $input.val());
             var id = me._findId(e);
-            $.each(me.serverData.parameterSets, function (index, set) {
-                if (set.id === id) {
-                    set.name = $input.val();
-                }
-            });
-            me._sort();
+            me.serverData.parameterSets[id].name = $input.val();
+            me._createRows();
         },
         _onClickDefault: function(e) {
             var me = this;
@@ -219,14 +204,7 @@ $(function () {
             $div.addClass("ui-icon-check ui-icon");
 
             // Update the paramaterSets
-            var id = me._findId(e);
-            $.each(me.serverData.parameterSets, function (index, set) {
-                if (set.id === id) {
-                    set.isDefault = true;
-                } else {
-                    set.isDefault = false;
-                }
-            });
+            me.serverData.defaultSetId = me._findId(e);
         },
         _onClickAllUsers: function(e) {
             var me = this;
@@ -240,16 +218,13 @@ $(function () {
 
             // Update the paramaterSets
             var id = me._findId(e);
-            $.each(me.serverData.parameterSets, function (index, set) {
-                if (set.id === id) {
-                    set.isAllUser = !set.isAllUser;
-                }
-            });
+            var set = me.serverData.parameterSets[id];
+            set.isAllUser = !set.isAllUser;
         },
         _onClickDelete: function(e) {
             var me = this;
 
-            if (me.serverData.parameterSets.length <= 1) {
+            if (me.options.model.parameterModel("areSetsEmpty", me.serverData)) {
                 return;
             }
 
@@ -259,23 +234,12 @@ $(function () {
             $tr.remove();
 
             // Update the paramaterSets
-            var id = me._findId(e);
-            var setIndex = -1;
-            var isDefault = false;
-            $.each(me.serverData.parameterSets, function (index, set) {
-                if (set.id === id) {
-                    setIndex = index;
-                    isDefault = set.isDefault;
-                }
-            });
-
-            if (setIndex !== -1) {
-                if (isDefault) {
-                    var $first = me.$tbody.find(".fr-mps-default-check-id").first();
-                    me._onClickDefault({ target: $first });
-                }
-                me.serverData.parameterSets.splice(setIndex, 1);
+            id = me._findId(e);
+            if (id === me.serverData.defaultSetId) {
+                var $first = me.$tbody.find(".fr-mps-default-check-id").first();
+                me._onClickDefault({ target: $first });
             }
+            delete me.serverData.parameterSets[id];
         },
         /**
          * @function $.forerunner.userSettings#openDialog

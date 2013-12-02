@@ -436,20 +436,20 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.parameterModelChanged(), function (e, arg) {
-                me._onModelChange.call(me, e, arg);
+            me.model.on(events.parameterModelChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
             });
         },
-        _onModelChange: function (e, arg) {
+        _onModelChange: function (e, data) {
             var me = this;
             var $select = me.element.find("." + me.options.toolInfo.selectorClass);
             $select.html("");
-            $.each(arg.optionArray, function (index, option) {
+            $.each(data.optionArray, function (index, option) {
                 $option = $("<option value=" + option.id + ">" + option.name + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {
-                if ($(option).val() === arg.currentSetId) {
+                if ($(option).val() === data.selectedId) {
                     $select.prop("selectedIndex", index);
                 }
             });

@@ -198,7 +198,7 @@ $(function () {
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (me._containElement(ev.target, "fr-layout-topdiv") || me.$container.hasClass("fr-layout-container-noscroll"))
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -220,10 +220,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane") ||
-                                       me._containElement(e.target, "fr-layout-rightpane") ||
-                                       me._containElement(e.target, "fr-print-form") ||
-                                       me._containElement(e.target, "fr-mps-form");
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form"]);
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -254,26 +251,7 @@ $(function () {
                 });
             }
         },
-
-        _containElement: function(element , className) {
-            var isContained = false;
-            if ($(element).hasClass(className)) {
-                isContained = true;
-            } else {
-                var parent = element.parentElement;
-                while (parent !== undefined && parent !== null) {
-                    if ($(parent).hasClass(className)) {
-                        isContained = true;
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-            }
-
-            return isContained;
-        },
-        
-
+       
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;

@@ -479,7 +479,35 @@ $(function () {
             };
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
-        }
+        },
+        /**
+         * Returns whether given element contain a speficif class name
+         *
+         * @member
+         */
+        containElement: function (element, classList) {
+            var isContained = false;
+
+            $.each(classList, function (index, className) {
+                if ($(element).hasClass(className)) {
+                    isContained = true;
+                } else {
+                    var parent = element.parentElement;
+                    while (parent !== undefined && parent !== null) {
+                        if ($(parent).hasClass(className)) {
+                            isContained = true;
+                            break;
+                        }
+                        parent = parent.parentElement;
+                    }
+                }
+
+                if (isContained)
+                    return false; //break the $.each loop if isCOntained === true
+            });
+                       
+            return isContained;
+        },
     },
     /**
      * Defines utility methods used to update style sheets

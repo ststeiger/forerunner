@@ -1147,8 +1147,7 @@ $(function () {
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($nextWord.offset().top - 150);
-                $(window).scrollLeft($nextWord.offset().left - 250);
+                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -2844,7 +2843,7 @@ $(function () {
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (me._containElement(ev.target, "fr-layout-topdiv") || me.$container.hasClass("fr-layout-container-noscroll"))
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -2866,10 +2865,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane") ||
-                                       me._containElement(e.target, "fr-layout-rightpane") ||
-                                       me._containElement(e.target, "fr-print-form") ||
-                                       me._containElement(e.target, "fr-mps-form");
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form"]);
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -2900,26 +2896,7 @@ $(function () {
                 });
             }
         },
-
-        _containElement: function(element , className) {
-            var isContained = false;
-            if ($(element).hasClass(className)) {
-                isContained = true;
-            } else {
-                var parent = element.parentElement;
-                while (parent !== undefined && parent !== null) {
-                    if ($(parent).hasClass(className)) {
-                        isContained = true;
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-            }
-
-            return isContained;
-        },
-        
-
+       
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;

@@ -1140,8 +1140,7 @@ $(function () {
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($nextWord.offset().top - 150);
-                $(window).scrollLeft($nextWord.offset().left - 250);
+                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {

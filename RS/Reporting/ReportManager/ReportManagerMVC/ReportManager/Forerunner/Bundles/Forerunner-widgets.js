@@ -1942,7 +1942,8 @@ $(function () {
                 async: false,
                 success: function (data) {
                     if (data.ParamsList !== undefined) {
-                        me._pushNewSet(locData.parameterModel.defaultName, data.ParamsList);
+                        // Add support for build 436 schema.
+                        me._pushNewSet(locData.parameterModel.defaultName, (data.ParamsList instanceof Array) ? data : data.ParamsList);
                     }
                     else if (data) {
                         me.serverData = data;

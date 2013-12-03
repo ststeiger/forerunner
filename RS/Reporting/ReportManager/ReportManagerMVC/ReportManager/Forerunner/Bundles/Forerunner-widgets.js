@@ -1442,6 +1442,7 @@ $(function () {
             var me = this;
            
             me._resetViewer(true);
+            me.renderTime = new Date().getTime();
             if (!pageNum) {
                 pageNum = 1;
             }

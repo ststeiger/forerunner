@@ -33,6 +33,7 @@
 !insertmacro MUI_PAGE_WELCOME
 
 ; Directory page
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE "CheckSelectedDir"
 !insertmacro MUI_PAGE_DIRECTORY
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
@@ -90,6 +91,14 @@ ${EndIf}
 !macroend
 
 Section "ReportManager" SEC01
+  ;Detect whether LogFiles folder exist or not.
+  Push "$INSTDIR"
+  Call GetParent
+  Pop $R0
+  IfFileExists $R0\LogFiles\*.* 0 +2
+  Goto +2
+  CreateDirectory "$R0\LogFiles"
+
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifnewer
   File "${LOCALROOT}\bin\Forerunner.ReportManager.dll"
@@ -220,7 +229,6 @@ Function IsMobilizerInstalled
 	StrCmp $0 "" 0 +3
 	MessageBox MB_OK "Mobilizer is not found, please install Mobilizer first then do update!"
 	Abort
-
 	;Verify it is old version or new version, if it's new version $1 will be 1:not found
 	${WordReplace} "$0" "\ForerunnerMobilizer" "" "E-1" $1
 	
@@ -250,3 +258,34 @@ Function IsDotNETInstalled
     Continue:
 FunctionEnd
 
+Function GetParent
+   Exch $R0
+   Push $R1
+   Push $R2
+   Push $R3
+
+   StrCpy $R1 0
+   StrLen $R2 $R0
+
+   loop:
+     IntOp $R1 $R1 + 1
+     IntCmp $R1 $R2 get 0 get
+     StrCpy $R3 $R0 1 -$R1
+     StrCmp $R3 "\" get
+     Goto loop
+
+   get:
+     StrCpy $R0 $R0 -$R1
+
+     Pop $R3
+     Pop $R2
+     Pop $R1
+     Exch $R0
+FunctionEnd
+
+Function CheckSelectedDir
+    IfFileExists $INSTDIR\bin\Forerunner.ReportManager.dll 0 +2
+	goto +3
+	MessageBox MB_OK "Path $INSTDIR is not correct"
+	Abort
+FunctionEnd

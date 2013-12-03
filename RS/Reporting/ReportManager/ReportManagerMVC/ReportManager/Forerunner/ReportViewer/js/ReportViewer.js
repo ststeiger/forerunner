@@ -567,9 +567,17 @@ $(function () {
             }
 
         },
+
         /**
-         * Either:
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
+        *  Returns the number of actions in history for the back event
+        *
+        * @function $.forerunner.reportViewer#actionHistoryDepth
+        */
+        actionHistoryDepth:function(){
+            return this.actionHistory.length;
+        },
+        /**
+         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
          *
          * @function $.forerunner.reportViewer#back
          * @fires reportviewerdrillback
@@ -593,8 +601,8 @@ $(function () {
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-
                 me._loadParameters(action.CurrentPage, action.savedParams);
+                me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -1053,6 +1061,7 @@ $(function () {
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates,renderTime : me.renderTime
             });
+            me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
         _setScrollLocation: function (top, left) {
             var me = this;

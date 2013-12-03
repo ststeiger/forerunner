@@ -79,8 +79,6 @@ $(function () {
 
             initializer.render();
 
-            me.options.historyBack = null;
-
             $viewer.on("reportviewerback", function (e, data) {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {

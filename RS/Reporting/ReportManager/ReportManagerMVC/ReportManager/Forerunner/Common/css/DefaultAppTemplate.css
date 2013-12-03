@@ -119,10 +119,10 @@
   top:0px;
   left:0px;
   width:100%;
-  height: auto;
+  height: 38px;
   margin: 0px;
   padding: 0px;
-  background-color: white;
+  background-color: transparent;
   z-index: 1;
 }
 

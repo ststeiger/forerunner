@@ -98,6 +98,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super(); //Invokes the method of the same name from the parent widget
 
             // TODO [jont]
             //
@@ -178,7 +179,6 @@ $(function () {
         },
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
         },

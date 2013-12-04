@@ -625,7 +625,6 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "");
                 me.element.unmask();
             }
             else {//open nav
@@ -635,7 +634,6 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "hidden");
                 me.element.mask();
             }
 
@@ -2517,6 +2515,11 @@ $(function () {
         },
         _create: function () {
         },
+        _init: function () {
+            var me = this;
+            //inilialize widget data
+            me.frozen = false;
+        }
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
@@ -2527,6 +2530,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
@@ -3012,11 +3017,16 @@ $(function () {
                 if (!data.open) {
                     $spacer.hide();
                     me.$pagesection.show();
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
                     if (forerunner.device.isSmall())
                         me.$pagesection.hide();
+
+                    me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 }
 
             });
@@ -3267,6 +3277,7 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
+            me.$pagesection.show();
             me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
             me.$container.removeClass("fr-layout-container-noscroll");
         },
@@ -3375,6 +3386,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super(); //Invokes the method of the same name from the parent widget
 
             // TODO [jont]
             //
@@ -3455,7 +3467,6 @@ $(function () {
         },
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
         },
@@ -3551,6 +3562,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             // TODO [jont]
             //
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -3851,6 +3864,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
 
             // TODO [jont]
             //
@@ -7981,6 +7995,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
@@ -8010,6 +8025,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var rtb = forerunner.ssr.tools.rightToolbar;
             me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
@@ -8151,6 +8167,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {

@@ -205,6 +205,16 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            actionHistoryPop: "actionHistoryPop",
+            /** widget + event, lowercase */
+            reportVieweractionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
+            
+            /** @constant */
+            actionHistoryPush: "actionHistoryPush",
+            /** widget + event, lowercase */
+            reportVieweractionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
+            
+            /** @constant */
             showNav: "showNav",
             /** widget + event, lowercase */
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },

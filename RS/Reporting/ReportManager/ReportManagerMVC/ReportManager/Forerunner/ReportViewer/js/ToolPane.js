@@ -42,10 +42,10 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 
                 if (data.renderError === true) {
-                    me.enableTools([tp.itemReportBack, tp.itemRefresh]);
+                    me.enableTools([tp.itemRefresh]);
                 }
                 else {
-                    me.enableTools(me._viewerItems());
+                    me.enableTools(me._viewerItems(false));
                     me._updateItemStates(data.newPageNum, maxNumPages);
                 }
                 
@@ -53,7 +53,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
+                me.enableTools([tp.itemDocumentMap]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -98,7 +98,6 @@ $(function () {
 
           
             me.addTools(1, false, me._viewerItems());
-            me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -109,14 +108,20 @@ $(function () {
                 me._initCallbacks();
             }
         },
-        _viewerItems: function () {
-            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+        _viewerItems: function (allButtons) {
+            var listOfItems;
+            if (allButtons === true || allButtons === undefined)
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            else
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                if (allButtons === true || allButtons === undefined)
+                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                else
+                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
-
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -157,8 +162,7 @@ $(function () {
         _leaveCurReport: function () {
             var me = this;
             me._clearItemStates();
-            me.disableTools(me._viewerItems());
-            me.enableTools([tp.itemReportBack]);
+            me.disableTools(me._viewerItems(false));
         },
     });  // $.widget
 });  // function()

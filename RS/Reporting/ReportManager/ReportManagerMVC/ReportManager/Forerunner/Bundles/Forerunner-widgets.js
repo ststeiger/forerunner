@@ -4195,13 +4195,14 @@ $(function () {
             $reportExplorer: null,
         },
         _create: function () {
-            
         },
         _init: function () {
             var me = this;
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
             var userSettings = locData.userSettings;
             var unit = locData.unit;
+
+            var buildVersion = me._getBuildVersion();
 
             me.element.html("");
 
@@ -4221,6 +4222,9 @@ $(function () {
                         "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
                     "</div>" +
                 "</form>" +
+                "<div class='fr-buildversion-container'>" +
+                    buildVersion +
+                "</div>" +
             "</div>");
 
             me.element.append($theForm);
@@ -4234,6 +4238,27 @@ $(function () {
                 me.closeDialog();
             });
 
+        },
+        _getBuildVersion: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerFolder() + "/version.txt";
+            var buildVersion = null;
+            $.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    buildVersion = data.buildVersion;
+                },
+                fail: function (data) {
+                    console.log(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+            });
+
+            return buildVersion;
         },
         _getSettings: function () {
             var me = this;

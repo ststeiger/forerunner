@@ -55,6 +55,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
 
             // TODO [jont]
             //

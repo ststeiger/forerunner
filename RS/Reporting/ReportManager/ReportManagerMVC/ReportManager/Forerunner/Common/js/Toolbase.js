@@ -404,6 +404,11 @@ $(function () {
         },
         _create: function () {
         },
+        _init: function () {
+            var me = this;
+            //inilialize widget data
+            me.frozen = false;
+        },
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
@@ -414,6 +419,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget

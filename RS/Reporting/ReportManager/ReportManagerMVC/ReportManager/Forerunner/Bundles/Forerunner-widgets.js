@@ -623,7 +623,7 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "");
+               
                 me.element.unmask();
             }
             else {//open nav
@@ -633,7 +633,7 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "hidden");
+                
                 me.element.mask();
             }
 
@@ -2453,6 +2453,11 @@ $(function () {
         },
         _create: function () {
         },
+        _init: function () {
+            var me = this;
+            //inilialize widget data
+            me.frozen = false;
+        },
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
@@ -2463,6 +2468,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
@@ -2963,11 +2969,17 @@ $(function () {
                 if (!data.open) {
                     $spacer.hide();
                     me.$pagesection.show();
+
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                    me.$container.removeClass("fr-layout-container-noscroll");
                 }
                 else {
                     $spacer.show();
                     if (forerunner.device.isSmall())
                         me.$pagesection.hide();
+
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                    me.$container.addClass("fr-layout-container-noscroll");
                 }
 
             });
@@ -3224,6 +3236,7 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
+            me.$pagesection.show();
             me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
             me.$container.removeClass("fr-layout-container-noscroll");
         },
@@ -3332,7 +3345,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-
+            me._super();
             // TODO [jont]
             //
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -3504,6 +3517,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             // TODO [jont]
             //
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -3799,6 +3814,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
 
             // TODO [jont]
             //
@@ -6011,7 +6027,6 @@ $(function () {
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
-            me._resetLabelWidth();
             me.resetValidateMessage();
             $(".fr-param-form", me.$params).validate({
                 errorPlacement: function (error, element) {
@@ -6174,7 +6189,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum) {
             var me = this;
-            var $label = new $("<div class='fr-param-label' style='width:100%;'>" + param.Prompt + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
@@ -6772,15 +6787,6 @@ $(function () {
                 return null;
             else
                 return param.value;
-        },
-        _resetLabelWidth: function () {
-            var max = 0;
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                if ($(obj).width() > max) max = $(obj).width();
-            });
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                $(obj).width(max);
-            });
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -7948,6 +7954,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
@@ -7968,6 +7975,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             me.element.html("");
@@ -8093,6 +8101,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {

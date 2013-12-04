@@ -105,7 +105,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   SetOutPath "$INSTDIR\Forerunner"
-  File "${LOCALROOT}\Forerunner\version.json"
+  File "${LOCALROOT}\Forerunner\version.txt"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
   File "${LOCALROOT}\Forerunner\Common\css\Login.css"
   File "${LOCALROOT}\Forerunner\Common\css\ReportManager.css"

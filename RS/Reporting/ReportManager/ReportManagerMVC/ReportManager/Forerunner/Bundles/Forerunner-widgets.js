@@ -567,14 +567,21 @@ $(function () {
 
         },
         /**
-         * Either:
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
-         *
-         * @function $.forerunner.reportViewer#back
-         * @fires reportviewerdrillback
-         * @fires reportviewerback
-         * @see forerunner.ssr.constants.events
-         */
+        * Returns the number of actions in history for the back event
+        *
+        * @function $.forerunner.reportViewer#actionHistoryDepth
+        */
+        actionHistoryDepth:function() {
+            return this.actionHistory.length;
+        },
+        /**
+        * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+        *
+        * @function $.forerunner.reportViewer#back
+        * @fires reportviewerdrillback
+        * @fires reportviewerback
+        * @see forerunner.ssr.constants.events
+        */
         back: function () {
             var me = this;
             var action = me.actionHistory.pop();
@@ -594,6 +601,7 @@ $(function () {
                 }
 
                 me._loadParameters(action.CurrentPage, action.savedParams);
+                me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -1052,6 +1060,7 @@ $(function () {
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime
             });
+            me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1413,7 +1422,6 @@ $(function () {
             me.options.reportPath = reportPath;
             me.options.pageNum = pageNum;
             me._loadParameters(pageNum);            
-            
         },
         /**
          * Load current report with the given parameter list
@@ -1426,6 +1434,7 @@ $(function () {
             var me = this;
            
             me._resetViewer(true);
+            me.renderTime = new Date().getTime();
             if (!pageNum) {
                 pageNum = 1;
             }
@@ -3285,10 +3294,10 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 
                 if (data.renderError === true) {
-                    me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnRefresh]);
+                    me.enableTools([tb.btnMenu, tb.btnRefresh]);
                 }
                 else {
-                    me.enableTools(me._viewerButtons());
+                    me.enableTools(me._viewerButtons(false));
                     me._updateBtnStates(data.newPageNum, maxNumPages);
 
                     if (data.numOfVisibleParameters === 0)
@@ -3347,17 +3356,25 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
-            me.enableTools([tb.btnMenu, tb.btnReportBack]);
+            me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
         },
-        _viewerButtons: function () {
-            var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+        _viewerButtons: function (allButtons) {
+            var listOfButtons;
+            if (allButtons === true || allButtons === undefined)
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+            else
+                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                if (allButtons === true || allButtons === undefined)
+                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                else
+                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];               
             }
 
             return listOfButtons;
@@ -3400,8 +3417,7 @@ $(function () {
         _leaveCurReport: function () {
             var me = this;
             me._clearBtnStates();
-            me.disableTools(me._viewerButtons());
-            me.enableTools([tb.btnReportBack]);
+            me.disableTools(me._viewerButtons(false));
         },
         _destroy: function () {
         },
@@ -3457,10 +3473,10 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 
                 if (data.renderError === true) {
-                    me.enableTools([tp.itemReportBack, tp.itemRefresh]);
+                    me.enableTools([tp.itemRefresh]);
                 }
                 else {
-                    me.enableTools(me._viewerItems());
+                    me.enableTools(me._viewerItems(false));
                     me._updateItemStates(data.newPageNum, maxNumPages);
                 }
                 
@@ -3468,7 +3484,7 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.disableAllTools();
-                me.enableTools([tp.itemDocumentMap, tp.itemReportBack]);
+                me.enableTools([tp.itemDocumentMap]);
             });
 
             me.options.$reportViewer.on(events.reportViewerHideDocMap(), function (e, data) {
@@ -3515,7 +3531,6 @@ $(function () {
 
           
             me.addTools(1, false, me._viewerItems());
-            me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
@@ -3526,14 +3541,20 @@ $(function () {
                 me._initCallbacks();
             }
         },
-        _viewerItems: function () {
-            var listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+        _viewerItems: function (allButtons) {
+            var listOfItems;
+            if (allButtons === true || allButtons === undefined)
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+            else
+                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                if (allButtons === true || allButtons === undefined)
+                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                else
+                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
-
             return listOfItems;
         },
         _updateItemStates: function (curPage, maxPage) {
@@ -3574,8 +3595,7 @@ $(function () {
         _leaveCurReport: function () {
             var me = this;
             me._clearItemStates();
-            me.disableTools(me._viewerItems());
-            me.enableTools([tp.itemReportBack]);
+            me.disableTools(me._viewerItems(false));
         },
     });  // $.widget
 });  // function()
@@ -8064,6 +8084,25 @@ $(function () {
                     me.options.historyBack();
                 }
             });
+
+            $viewer.on("reportvieweractionhistorypop", function (e, data) {           
+                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") == 0)) {
+                    layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                    layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+                if (!me.options.historyBack) {
+                    layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                    layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+ 
+            if (me.options.historyBack){
+                layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+            }
 
             me.DefaultAppTemplate.bindViewerEvents();
 

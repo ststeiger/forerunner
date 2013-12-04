@@ -566,14 +566,21 @@ $(function () {
 
         },
         /**
-         * Either:
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
-         *
-         * @function $.forerunner.reportViewer#back
-         * @fires reportviewerdrillback
-         * @fires reportviewerback
-         * @see forerunner.ssr.constants.events
-         */
+        * Returns the number of actions in history for the back event
+        *
+        * @function $.forerunner.reportViewer#actionHistoryDepth
+        */
+        actionHistoryDepth:function() {
+            return this.actionHistory.length;
+        },
+        /**
+        * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+        *
+        * @function $.forerunner.reportViewer#back
+        * @fires reportviewerdrillback
+        * @fires reportviewerback
+        * @see forerunner.ssr.constants.events
+        */
         back: function () {
             var me = this;
             var action = me.actionHistory.pop();
@@ -593,6 +600,7 @@ $(function () {
                 }
 
                 me._loadParameters(action.CurrentPage, action.savedParams);
+                me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -1051,6 +1059,7 @@ $(function () {
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime
             });
+            me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1412,7 +1421,6 @@ $(function () {
             me.options.reportPath = reportPath;
             me.options.pageNum = pageNum;
             me._loadParameters(pageNum);            
-            
         },
         /**
          * Load current report with the given parameter list
@@ -1425,6 +1433,7 @@ $(function () {
             var me = this;
            
             me._resetViewer(true);
+            me.renderTime = new Date().getTime();
             if (!pageNum) {
                 pageNum = 1;
             }

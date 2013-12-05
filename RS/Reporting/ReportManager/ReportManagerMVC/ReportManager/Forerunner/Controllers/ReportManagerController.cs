@@ -26,10 +26,9 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        private bool IsNativeRS = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.IsNative"].ToLower());
+        private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
         private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
-
-        private bool useIntegratedSecurity = String.Equals("true", ConfigurationManager.AppSettings["Forerunner.UseIntegratedSecurityForSQL"].ToLower());
+        private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
         private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -38,6 +37,11 @@ namespace ReportManager.Controllers
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
+        static private bool GetAppSetting(string key, bool defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
+        }
         private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
             //Put application security here

@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Управление наборы",
+    "cancel":"отменить",
+    "add":"добавлять",
+    "addNewSet":"Добавить новый набор",
+    "name":"название",
+    "defaultHeader":"дефолт",
+    "allUsers":"все",
+    "deleteHeader":"удалять",
+    "apply":"применять",
+    "newSet":"Новый набор"
   }
 }

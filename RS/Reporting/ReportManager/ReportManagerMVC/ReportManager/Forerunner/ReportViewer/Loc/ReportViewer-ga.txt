@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Socraigh Bainistigh",
+    "cancel":"Cealaigh",
+    "add":"Cuir",
+    "addNewSet":"Cuir Socraigh Nua",
+    "name":"Ainm",
+    "defaultHeader":"Réamhshocrú",
+    "allUsers":"Gach",
+    "deleteHeader":"Scrios",
+    "apply":"Cuir iarratas isteach",
+    "newSet":"Socraigh Nua"
   }
 }

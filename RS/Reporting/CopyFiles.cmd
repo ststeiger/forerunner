@@ -29,7 +29,7 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
-:: Create the version.json file
+:: Create the version file
 %~dp0%CreateVersionFile.cmd
 
 exit /b 0

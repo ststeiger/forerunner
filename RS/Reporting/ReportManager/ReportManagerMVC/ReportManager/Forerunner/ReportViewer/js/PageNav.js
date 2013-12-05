@@ -96,8 +96,15 @@ $(function () {
             me.element.html("");
             var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
-            
             $slider.addClass("fr-nav-container");
+
+            var $close = $("<DIV />");
+            $close.addClass("fr-nav-close-button");
+            $close.on('click', function () {
+                me.options.$reportViewer.reportViewer("showNav");
+            });
+
+            $slider.append($close);
  
             var $list = me._renderList();
             me.$list = $list;

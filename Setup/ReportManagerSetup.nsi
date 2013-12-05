@@ -221,6 +221,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\print_landscape_1.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\print_portrait.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\print_portrait_1.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolbar"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
@@ -493,6 +494,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\print_landscape_1.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\print_portrait.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\print_portrait_1.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\NavigationClose.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"

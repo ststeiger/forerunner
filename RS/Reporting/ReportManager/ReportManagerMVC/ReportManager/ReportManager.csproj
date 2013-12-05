@@ -234,6 +234,7 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
     <Content Include="Forerunner\ReportViewer\images\print_portrait.png" />

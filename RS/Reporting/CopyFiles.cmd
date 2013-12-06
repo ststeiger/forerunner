@@ -29,6 +29,9 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+:: Create the version file
+%~dp0%CreateVersionFile.cmd
+
 exit /b 0
 :Error
 

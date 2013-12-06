@@ -107,22 +107,9 @@ $(function () {
                 me._makePositionAbsolute();
             }
 
-            // This is a workaround for bug 658
-            if (forerunner.device.isiOS() && me.options.isFullScreen) {
-                me.$topdiv.addClass("fr-layout-position-absolute");
-            }
-
             me.bindEvents();
 
             //Cannot get zoom event so fake it
-
-            // This is a workaround for bug 658
-            setTimeout(function () {
-                if (forerunner.device.isiOS() && me.options.isFullScreen) {
-                    me.$topdiv.removeClass("fr-layout-position-absolute");
-                }
-            }, 10);
-
             setInterval(function () {
                 me.toggleZoom();
             }, 100);
@@ -198,7 +185,7 @@ $(function () {
                         switch (ev.type) {
                             // Hide the header on touch
                             case "touch":
-                                if (me._containElement(ev.target, "fr-layout-topdiv") || me.$container.hasClass("fr-layout-container-noscroll"))
+                                if (forerunner.helper.containElement(ev.target, ["fr-layout-topdiv"]) || me.$container.hasClass("fr-layout-container-noscroll"))
                                     return;
                                 me.$topdiv.hide();
                                 break;
@@ -220,10 +207,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = me._containElement(e.target, "fr-layout-leftpane") ||
-                                       me._containElement(e.target, "fr-layout-rightpane") ||
-                                       me._containElement(e.target, "fr-print-form") ||
-                                       me._containElement(e.target, "fr-mps-form");
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form"]);
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -254,26 +238,7 @@ $(function () {
                 });
             }
         },
-
-        _containElement: function(element , className) {
-            var isContained = false;
-            if ($(element).hasClass(className)) {
-                isContained = true;
-            } else {
-                var parent = element.parentElement;
-                while (parent !== undefined && parent !== null) {
-                    if ($(parent).hasClass(className)) {
-                        isContained = true;
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-            }
-
-            return isContained;
-        },
-        
-
+       
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
@@ -391,11 +356,16 @@ $(function () {
                 if (!data.open) {
                     $spacer.hide();
                     me.$pagesection.show();
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
                     if (forerunner.device.isSmall())
                         me.$pagesection.hide();
+
+                    me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 }
 
             });
@@ -646,6 +616,7 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
+            me.$pagesection.show();
             me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
             me.$container.removeClass("fr-layout-container-noscroll");
         },

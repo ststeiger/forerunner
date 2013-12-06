@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"セットを管理",
+    "cancel":"キャンセル",
+    "add":"加える",
+    "addNewSet":"新規セットを追加",
+    "name":"名前",
+    "defaultHeader":"デフォルト",
+    "allUsers":"すべて",
+    "deleteHeader":"削除",
+    "apply":"適用する",
+    "newSet":"新規セット"
   }
 }

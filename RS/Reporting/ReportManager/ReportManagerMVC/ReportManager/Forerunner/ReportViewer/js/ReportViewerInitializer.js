@@ -273,6 +273,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
@@ -302,6 +303,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var rtb = forerunner.ssr.tools.rightToolbar;
             me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 

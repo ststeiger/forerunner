@@ -153,7 +153,7 @@ namespace Forerunner.SSRS.Manager
             // No need to impersonate again.
             rs.Credentials = GetCredentials();
 
-            return rs.GetProperties(path, props);
+            return rs.GetProperties(HttpUtility.UrlDecode(path), props);
         }
 
         private string[] callGetPermissions(string path)
@@ -468,7 +468,7 @@ namespace Forerunner.SSRS.Manager
                             if (savedParams.Length > 0)
                             {
                                 ParameterModel newModel = ParameterModel.parse(savedParams, allUser, canEditAllUsersSet);
-                                model.merge(newModel);
+                                model.Merge(newModel);
                             }
                         }
                     }
@@ -884,7 +884,7 @@ namespace Forerunner.SSRS.Manager
         public bool HasPermission(string path, string requiredPermission)
         {
             bool hasPermission = false;
-            foreach (string permission in callGetPermissions(path))
+            foreach (string permission in callGetPermissions(HttpUtility.UrlDecode(path)))
             {
                 if (permission.IndexOf(requiredPermission, StringComparison.OrdinalIgnoreCase) != -1)
                 {

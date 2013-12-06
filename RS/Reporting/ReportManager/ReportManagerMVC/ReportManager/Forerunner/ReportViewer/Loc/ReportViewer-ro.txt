@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gestionați Seturi",
+    "cancel":"anula",
+    "add":"adăuga",
+    "addNewSet":"Adăuga noi Set",
+    "name":"nume",
+    "defaultHeader":"lipsă",
+    "allUsers":"toate",
+    "deleteHeader":"șterge",
+    "apply":"aplica",
+    "newSet":"Set nou"
   }
 }

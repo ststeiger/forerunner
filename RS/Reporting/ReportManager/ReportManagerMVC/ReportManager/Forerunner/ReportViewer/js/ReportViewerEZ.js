@@ -83,8 +83,28 @@ $(function () {
                 layout._selectedItemPath = data.path;
                 if (me.options.historyBack) {
                     me.options.historyBack();
+                }             
+            });
+
+            $viewer.on("reportvieweractionhistorypop", function (e, data) {
+                
+                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") == 0)) {
+                    layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                    layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }
             });
+
+            $viewer.on("reportvieweractionhistorypush", function (e, data) {
+                if (!me.options.historyBack) {
+                    layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                    layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+                }
+            });
+
+            if (me.options.historyBack){
+                layout.$mainheadersection.toolbar("enableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
+                layout.$leftpanecontent.toolPane("enableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
+            }
 
             me.DefaultAppTemplate.bindViewerEvents();
 
@@ -93,6 +113,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {

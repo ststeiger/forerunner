@@ -101,6 +101,7 @@ $(function () {
             me.renderError = false;
             me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            me.renderTime = new Date().getTime();
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -429,6 +430,8 @@ $(function () {
                 curPage = 1;
 
             me.sessionID = "";
+            me.renderTime = new Date().getTime();
+
             me.lock = 1;
             me._revertUnsubmittedParameters();
 
@@ -564,9 +567,17 @@ $(function () {
             }
 
         },
+
         /**
-         * Either:
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
+        *  Returns the number of actions in history for the back event
+        *
+        * @function $.forerunner.reportViewer#actionHistoryDepth
+        */
+        actionHistoryDepth:function(){
+            return this.actionHistory.length;
+        },
+        /**
+         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
          *
          * @function $.forerunner.reportViewer#back
          * @fires reportviewerdrillback
@@ -586,11 +597,12 @@ $(function () {
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
+                me.renderTime = action.renderTime;
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-
                 me._loadParameters(action.CurrentPage, action.savedParams);
+                me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
                 me._trigger(events.back, null, { path: me.options.reportPath });
@@ -612,7 +624,6 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "");
                 me.element.unmask();
             }
             else {//open nav
@@ -622,7 +633,6 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "hidden");
                 me.element.mask();
             }
 
@@ -750,6 +760,7 @@ $(function () {
                     me.scrollTop = $(window).scrollTop();
 
                     me.numPages = data.NumPages;
+                    me.renderTime = new Date().getTime();
                     me._loadPage(data.NewPage, false, null, null, true);
                 },
                 function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1046,8 +1057,9 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates,renderTime : me.renderTime
             });
+            me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1141,8 +1153,7 @@ $(function () {
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
             if ($nextWord.length > 0) {
                 $nextWord.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
-                $(window).scrollTop($nextWord.offset().top - 150);
-                $(window).scrollLeft($nextWord.offset().left - 250);
+                me._trigger(events.navToPosition, null, { top: $nextWord.offset().top - 150, left: $nextWord.offset().left - 250 });
             }
             else {
                 if (me.getNumPages() === 1) {
@@ -1395,6 +1406,7 @@ $(function () {
             me.origionalReportPath = "";
             me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
+            
         },
         /**
          * Load the given report
@@ -1427,6 +1439,7 @@ $(function () {
             var me = this;
            
             me._resetViewer(true);
+            me.renderTime = new Date().getTime();
             if (!pageNum) {
                 pageNum = 1;
             }
@@ -1535,7 +1548,7 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
-            $report.reportRender({ reportViewer: me, responsive: responsiveUI });
+            $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
 
             if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
@@ -1585,7 +1598,7 @@ $(function () {
                     responsiveUI = true;
                 }
 
-                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI });
+                me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
             else

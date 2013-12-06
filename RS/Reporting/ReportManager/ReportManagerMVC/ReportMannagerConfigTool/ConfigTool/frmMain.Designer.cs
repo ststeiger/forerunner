@@ -33,12 +33,14 @@
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.gbSSRS = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtDefaultUserDomain = new System.Windows.Forms.TextBox();
+            this.lblDefaultUserDomain = new System.Windows.Forms.Label();
+            this.chkSharepoint = new System.Windows.Forms.CheckBox();
+            this.txtSharePointHostName = new System.Windows.Forms.TextBox();
+            this.lblSharepoint = new System.Windows.Forms.Label();
             this.lblWSUrl = new System.Windows.Forms.Label();
             this.txtWSUrl = new System.Windows.Forms.TextBox();
-            this.lblDBName = new System.Windows.Forms.Label();
-            this.txtDBName = new System.Windows.Forms.TextBox();
-            this.lblServer = new System.Windows.Forms.Label();
-            this.txtServerName = new System.Windows.Forms.TextBox();
             this.gbDBLoginInfo = new System.Windows.Forms.GroupBox();
             this.lblDomain = new System.Windows.Forms.Label();
             this.txtDomain = new System.Windows.Forms.TextBox();
@@ -47,7 +49,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtUser = new System.Windows.Forms.TextBox();
             this.rdoSQL = new System.Windows.Forms.RadioButton();
+            this.lblDBName = new System.Windows.Forms.Label();
             this.rdoDomain = new System.Windows.Forms.RadioButton();
+            this.txtDBName = new System.Windows.Forms.TextBox();
+            this.lblServer = new System.Windows.Forms.Label();
+            this.txtServerName = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -82,12 +88,6 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
-            this.chkSharepoint = new System.Windows.Forms.CheckBox();
-            this.txtSharePointHostName = new System.Windows.Forms.TextBox();
-            this.lblSharepoint = new System.Windows.Forms.Label();
-            this.txtDefaultUserDomain = new System.Windows.Forms.TextBox();
-            this.lblDefaultUserDomain = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -133,6 +133,40 @@
             this.gbSSRS.Name = "gbSSRS";
             this.gbSSRS.TabStop = false;
             // 
+            // label5
+            // 
+            resources.ApplyResources(this.label5, "label5");
+            this.label5.Name = "label5";
+            this.label5.Click += new System.EventHandler(this.label5_Click);
+            // 
+            // txtDefaultUserDomain
+            // 
+            resources.ApplyResources(this.txtDefaultUserDomain, "txtDefaultUserDomain");
+            this.txtDefaultUserDomain.Name = "txtDefaultUserDomain";
+            this.txtDefaultUserDomain.Tag = "Default User Domain";
+            // 
+            // lblDefaultUserDomain
+            // 
+            resources.ApplyResources(this.lblDefaultUserDomain, "lblDefaultUserDomain");
+            this.lblDefaultUserDomain.Name = "lblDefaultUserDomain";
+            // 
+            // chkSharepoint
+            // 
+            resources.ApplyResources(this.chkSharepoint, "chkSharepoint");
+            this.chkSharepoint.Name = "chkSharepoint";
+            this.chkSharepoint.UseVisualStyleBackColor = true;
+            this.chkSharepoint.CheckedChanged += new System.EventHandler(this.chkSharepoint_CheckedChanged);
+            // 
+            // txtSharePointHostName
+            // 
+            resources.ApplyResources(this.txtSharePointHostName, "txtSharePointHostName");
+            this.txtSharePointHostName.Name = "txtSharePointHostName";
+            // 
+            // lblSharepoint
+            // 
+            resources.ApplyResources(this.lblSharepoint, "lblSharepoint");
+            this.lblSharepoint.Name = "lblSharepoint";
+            // 
             // lblWSUrl
             // 
             resources.ApplyResources(this.lblWSUrl, "lblWSUrl");
@@ -144,28 +178,6 @@
             resources.ApplyResources(this.txtWSUrl, "txtWSUrl");
             this.txtWSUrl.Name = "txtWSUrl";
             this.txtWSUrl.Tag = "Report Server Web Service Url";
-            // 
-            // lblDBName
-            // 
-            resources.ApplyResources(this.lblDBName, "lblDBName");
-            this.lblDBName.Name = "lblDBName";
-            // 
-            // txtDBName
-            // 
-            resources.ApplyResources(this.txtDBName, "txtDBName");
-            this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Tag = "Database Name";
-            // 
-            // lblServer
-            // 
-            resources.ApplyResources(this.lblServer, "lblServer");
-            this.lblServer.Name = "lblServer";
-            // 
-            // txtServerName
-            // 
-            resources.ApplyResources(this.txtServerName, "txtServerName");
-            this.txtServerName.Name = "txtServerName";
-            this.txtServerName.Tag = "Server Name";
             // 
             // gbDBLoginInfo
             // 
@@ -227,6 +239,11 @@
             this.rdoSQL.UseVisualStyleBackColor = true;
             this.rdoSQL.CheckedChanged += new System.EventHandler(this.rdoSQL_CheckedChanged);
             // 
+            // lblDBName
+            // 
+            resources.ApplyResources(this.lblDBName, "lblDBName");
+            this.lblDBName.Name = "lblDBName";
+            // 
             // rdoDomain
             // 
             resources.ApplyResources(this.rdoDomain, "rdoDomain");
@@ -235,6 +252,23 @@
             this.rdoDomain.TabStop = true;
             this.rdoDomain.Tag = "DomainAccount";
             this.rdoDomain.UseVisualStyleBackColor = true;
+            // 
+            // txtDBName
+            // 
+            resources.ApplyResources(this.txtDBName, "txtDBName");
+            this.txtDBName.Name = "txtDBName";
+            this.txtDBName.Tag = "Database Name";
+            // 
+            // lblServer
+            // 
+            resources.ApplyResources(this.lblServer, "lblServer");
+            this.lblServer.Name = "lblServer";
+            // 
+            // txtServerName
+            // 
+            resources.ApplyResources(this.txtServerName, "txtServerName");
+            this.txtServerName.Name = "txtServerName";
+            this.txtServerName.Tag = "Server Name";
             // 
             // btnTest
             // 
@@ -484,40 +518,6 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
-            // 
-            // chkSharepoint
-            // 
-            resources.ApplyResources(this.chkSharepoint, "chkSharepoint");
-            this.chkSharepoint.Name = "chkSharepoint";
-            this.chkSharepoint.UseVisualStyleBackColor = true;
-            this.chkSharepoint.CheckedChanged += new System.EventHandler(this.chkSharepoint_CheckedChanged);
-            // 
-            // txtSharePointHostName
-            // 
-            resources.ApplyResources(this.txtSharePointHostName, "txtSharePointHostName");
-            this.txtSharePointHostName.Name = "txtSharePointHostName";
-            // 
-            // lblSharepoint
-            // 
-            resources.ApplyResources(this.lblSharepoint, "lblSharepoint");
-            this.lblSharepoint.Name = "lblSharepoint";
-            // 
-            // txtDefaultUserDomain
-            // 
-            resources.ApplyResources(this.txtDefaultUserDomain, "txtDefaultUserDomain");
-            this.txtDefaultUserDomain.Name = "txtDefaultUserDomain";
-            this.txtDefaultUserDomain.Tag = "Default User Domain";
-            // 
-            // lblDefaultUserDomain
-            // 
-            resources.ApplyResources(this.lblDefaultUserDomain, "lblDefaultUserDomain");
-            this.lblDefaultUserDomain.Name = "lblDefaultUserDomain";
-            // 
-            // label5
-            // 
-            resources.ApplyResources(this.label5, "label5");
-            this.label5.Name = "label5";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // frmMain
             // 

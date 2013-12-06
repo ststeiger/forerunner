@@ -47,10 +47,10 @@ $(function () {
                 var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
 
                 if (data.renderError === true) {
-                    me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnRefresh]);
+                    me.enableTools([tb.btnMenu, tb.btnRefresh]);
                 }
                 else {
-                    me.enableTools(me._viewerButtons());
+                    me.enableTools(me._viewerButtons(false));
                     me._updateBtnStates(data.newPageNum, maxNumPages);
 
                     if (data.numOfVisibleParameters === 0)
@@ -98,6 +98,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super(); //Invokes the method of the same name from the parent widget
 
             // TODO [jont]
             //
@@ -109,17 +110,28 @@ $(function () {
            
             me.addTools(1, false, me._viewerButtons());
             me.addTools(1, false, [tb.btnParamarea]);
-            me.enableTools([tb.btnMenu, tb.btnReportBack]);
+            me.enableTools([tb.btnMenu]);
             if (me.options.$reportViewer) {
                 me._initCallbacks();
             }
         },
-        _viewerButtons: function () {
-            var listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+        _viewerButtons: function (allButtons) {
+            var listOfButtons;
+
+            if (allButtons === true || allButtons === undefined)
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+            else
+                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                if (allButtons === true || allButtons === undefined)
+                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                else
+                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+
+                
             }
 
             return listOfButtons;
@@ -162,12 +174,11 @@ $(function () {
         _leaveCurReport: function () {
             var me = this;
             me._clearBtnStates();
-            me.disableTools(me._viewerButtons());
-            me.enableTools([tb.btnReportBack]);
+            me.disableTools(me._viewerButtons(false));
+            //me.enableTools([tb.btnReportBack]);
         },
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
         },

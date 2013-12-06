@@ -250,11 +250,6 @@
                 <Action>
                   <Drillthrough>
                     <ReportName>Parameter by Category</ReportName>
-                    <Parameters>
-                      <Parameter Name="Category">
-                        <Value>=1</Value>
-                      </Parameter>
-                    </Parameters>
                   </Drillthrough>
                 </Action>
               </Actions>
@@ -372,7 +367,7 @@
                           <ReportName>Parameter by Region</ReportName>
                           <Parameters>
                             <Parameter Name="ReportParameter1">
-                              <Value>="NM"</Value>
+                              <Value>="WA"</Value>
                             </Parameter>
                           </Parameters>
                         </Drillthrough>
@@ -999,7 +994,7 @@
                 <ReportName>Parameter by Region</ReportName>
                 <Parameters>
                   <Parameter Name="ReportParameter1">
-                    <Value>="WA"</Value>
+                    <Value>="Co. Cork"</Value>
                   </Parameter>
                 </Parameters>
               </Drillthrough>

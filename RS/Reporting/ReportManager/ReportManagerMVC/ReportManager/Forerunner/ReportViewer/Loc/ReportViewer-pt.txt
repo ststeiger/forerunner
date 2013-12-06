@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gerenciar conjuntos",
+    "cancel":"cancelar",
+    "add":"adicionar",
+    "addNewSet":"Adicionar Novo Set",
+    "name":"nome",
+    "defaultHeader":"omissão",
+    "allUsers":"tudo",
+    "deleteHeader":"excluir",
+    "apply":"aplicar",
+    "newSet":"Novo conjunto"
   }
 }

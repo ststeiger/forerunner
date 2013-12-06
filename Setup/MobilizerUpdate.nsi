@@ -33,6 +33,7 @@
 !insertmacro MUI_PAGE_WELCOME
 
 ; Directory page
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE "CheckSelectedDir"
 !insertmacro MUI_PAGE_DIRECTORY
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
@@ -90,11 +91,21 @@ ${EndIf}
 !macroend
 
 Section "ReportManager" SEC01
+  ;Detect whether LogFiles folder exist or not.
+  Push "$INSTDIR"
+  Call GetParent
+  Pop $R0
+  IfFileExists $R0\LogFiles\*.* 0 +2
+  Goto +2
+  CreateDirectory "$R0\LogFiles"
+
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifnewer
   File "${LOCALROOT}\bin\Forerunner.ReportManager.dll"
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
+  SetOutPath "$INSTDIR\Forerunner"
+  File "${LOCALROOT}\Forerunner\version.txt"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
   File "${LOCALROOT}\Forerunner\Common\css\Login.css"
   File "${LOCALROOT}\Forerunner\Common\css\ReportManager.css"
@@ -132,6 +143,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
+  SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
+  
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
@@ -234,18 +248,58 @@ Function IsDotNETInstalled
     StrCmp $0 "1" 0 noNotNET35
 
     ;detect .net framework 4.5
-    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"	
-    StrCmp $0 "378389" Continue noNotNET45
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Install"
+    ;firstly detect v4\Full install=1
+    StrCmp $0 "1" +1 noNotNET45
+
+    ;detect .net framework 4.5
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"
+    ;secondly detect release node exist in v4\Full
+    StrCmp $0 "" noNotNET45 Continue
 
     noNotNET35:
-        MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 3.5 or above on your machine. Installtion will abort.$\n$\nIf you don't have it on your PC,click OK to download it from official website. click Cancel to abort the installation." IDOK Download
+        MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 3.5 or above on your machine. Installtion will abort.$\n$\nIf you don't have it on your PC,click OK to download it from official website. click Cancel to abort the installation." IDOK Download35
         abort
     noNotNET45:
-        MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found on your computer. Mobilizer requires .Net Framework 4.5 to function. Do you want to continue? $\n$\nClick Yes to continue the installation without installing .Net Framework 4.5 first.$\n$\nClick No to take you to Microsoft to download .Net Framework 4.5 and install it before you re-run the Mobilizer setup.$\n$\nClick Cancel to exit." IDYES Continue IDNO Download
+        MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found on your computer. Mobilizer requires .Net Framework 4.5 to function. Do you want to continue? $\n$\nClick Yes to continue the installation without installing .Net Framework 4.5 first.$\n$\nClick No to take you to Microsoft to download .Net Framework 4.5 and install it before you re-run the Mobilizer setup.$\n$\nClick Cancel to exit." IDYES Continue IDNO Download45
         abort
-    Download:
+    Download35:
+        ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=21"
+        abort
+    Download45:
         ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=30653"
         abort
     Continue:
 FunctionEnd
 
+Function GetParent
+   Exch $R0
+   Push $R1
+   Push $R2
+   Push $R3
+
+   StrCpy $R1 0
+   StrLen $R2 $R0
+
+   loop:
+     IntOp $R1 $R1 + 1
+     IntCmp $R1 $R2 get 0 get
+     StrCpy $R3 $R0 1 -$R1
+     StrCmp $R3 "\" get
+     Goto loop
+
+   get:
+     StrCpy $R0 $R0 -$R1
+
+     Pop $R3
+     Pop $R2
+     Pop $R1
+     Exch $R0
+FunctionEnd
+
+Function CheckSelectedDir
+    IfFileExists $INSTDIR\bin\Forerunner.ReportManager.dll 0 +2
+	goto +3
+	MessageBox MB_OK "Path $INSTDIR is not correct"
+	Abort
+FunctionEnd

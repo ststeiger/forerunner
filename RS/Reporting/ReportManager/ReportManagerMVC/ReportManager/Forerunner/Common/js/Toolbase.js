@@ -404,6 +404,11 @@ $(function () {
         },
         _create: function () {
         },
+        _init: function () {
+            var me = this;
+            //inilialize widget data
+            me.frozen = false;
+        }
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
@@ -414,6 +419,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
@@ -436,20 +443,20 @@ $(function () {
         _create: function () {
             var me = this;
             me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.parameterModelChanged(), function (e, arg) {
-                me._onModelChange.call(me, e, arg);
+            me.model.on(events.parameterModelChanged(), function (e, data) {
+                me._onModelChange.call(me, e, data);
             });
         },
-        _onModelChange: function (e, arg) {
+        _onModelChange: function (e, data) {
             var me = this;
             var $select = me.element.find("." + me.options.toolInfo.selectorClass);
             $select.html("");
-            $.each(arg.optionArray, function (index, option) {
+            $.each(data.optionArray, function (index, option) {
                 $option = $("<option value=" + option.id + ">" + option.name + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {
-                if ($(option).val() === arg.currentSetId) {
+                if ($(option).val() === data.selectedId) {
                     $select.prop("selectedIndex", index);
                 }
             });

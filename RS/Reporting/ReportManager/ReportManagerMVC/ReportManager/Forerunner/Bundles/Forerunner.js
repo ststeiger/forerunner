@@ -247,6 +247,16 @@ $(function () {
             reportViewerBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.back).toLowerCase(); },
 
             /** @constant */
+            actionHistoryPop: "actionHistoryPop",
+            /** widget + event, lowercase */
+            reportVieweractionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
+
+            /** @constant */
+            actionHistoryPush: "actionHistoryPush",
+            /** widget + event, lowercase */
+            reportVieweractionHistoryPush: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPush).toLowerCase(); },
+
+            /** @constant */
             showNav: "showNav",
             /** widget + event, lowercase */
             reportViewerShowNav: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showNav).toLowerCase(); },
@@ -480,7 +490,35 @@ $(function () {
             };
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
-        }
+        },
+        /**
+         * Returns whether given element contain a speficif class name
+         *
+         * @member
+         */
+        containElement: function (element, classList) {
+            var isContained = false;
+
+            $.each(classList, function (index, className) {
+                if ($(element).hasClass(className)) {
+                    isContained = true;
+                } else {
+                    var parent = element.parentElement;
+                    while (parent !== undefined && parent !== null) {
+                        if ($(parent).hasClass(className)) {
+                            isContained = true;
+                            break;
+                        }
+                        parent = parent.parentElement;
+                    }
+                }
+
+                if (isContained)
+                    return false; //break the $.each loop if isCOntained === true
+            });
+                       
+            return isContained;
+        },
     },
     /**
      * Defines utility methods used to update style sheets

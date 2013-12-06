@@ -23,6 +23,7 @@ namespace Forerunner.RenderingExtensions
         static Type rplRendererType = null;
         private Stream RegisteredStream = null;
         private ReportJSONWriter JSON;
+        private CreateAndRegisterStream RenderStreams = null;
 
         public JSONRenderer()
         {
@@ -51,6 +52,7 @@ namespace Forerunner.RenderingExtensions
             {
                 Logger.Trace(LogType.Info, "JSONRenderer.Render " + report.Name);
                 bool retval;
+                RenderStreams = createAndRegisterStream;
                 Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
                 retval = RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
@@ -87,14 +89,17 @@ namespace Forerunner.RenderingExtensions
         {
             // Create and return a new MemoryStream,
             // which will contain the results of the PDF renderer.
-            CreateAndRegisterStreamStream crss = new CreateAndRegisterStreamStream(name, extension, encoding, mimeType, willSeek, operation, new MemoryStream());
-
 
             if (operation == StreamOper.CreateAndRegister && this.RegisteredStream == null)
+            {
                 //Create the main stream. Contents of this stream are returned later
+                CreateAndRegisterStreamStream crss = new CreateAndRegisterStreamStream(name, extension, encoding, mimeType, willSeek, operation, new MemoryStream());
                 this.RegisteredStream = crss.Stream;
+                return crss.Stream;
+            }
 
-            return crss.Stream;
+            return RenderStreams(name, extension, encoding, mimeType, willSeek, operation);
+            
         }   
     }
 

@@ -130,7 +130,6 @@ $(function () {
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
-            me._resetLabelWidth();
             me.resetValidateMessage();
             $(".fr-param-form", me.$params).validate({
                 errorPlacement: function (error, element) {
@@ -293,7 +292,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum) {
             var me = this;
-            var $label = new $("<div class='fr-param-label' style='width:100%;'>" + param.Prompt + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
@@ -891,15 +890,6 @@ $(function () {
                 return null;
             else
                 return param.value;
-        },
-        _resetLabelWidth: function () {
-            var max = 0;
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                if ($(obj).width() > max) max = $(obj).width();
-            });
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                $(obj).width(max);
-            });
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage

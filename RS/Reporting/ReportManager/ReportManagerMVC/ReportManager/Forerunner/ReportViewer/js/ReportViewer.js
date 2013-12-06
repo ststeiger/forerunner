@@ -57,7 +57,8 @@ $(function () {
             userSettings: null,
             onInputBlur: null,
             onInputFocus: null,
-            $appContainer: null
+            $appContainer: null,
+            parameterModel: null
         },
 
         _destroy: function () {

@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"管理參數集",
+    "cancel":"取消",
+    "add":"添加",
+    "addNewSet":"添加參數集",
+    "name":"名稱",
+    "defaultHeader":"默認",
+    "allUsers":"全部",
+    "deleteHeader":"刪除",
+    "apply":"應用",
+    "newSet":"新參數集"
   }
 }

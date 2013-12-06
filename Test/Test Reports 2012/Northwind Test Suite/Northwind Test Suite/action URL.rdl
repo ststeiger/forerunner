@@ -41,7 +41,9 @@
                   <ActionInfo>
                     <Actions>
                       <Action>
-                        <Hyperlink>http://www.msn.com</Hyperlink>
+                        <Drillthrough>
+                          <ReportName>B-ParamReportWithOneDS</ReportName>
+                        </Drillthrough>
                       </Action>
                     </Actions>
                   </ActionInfo>

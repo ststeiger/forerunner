@@ -149,15 +149,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gérer jeux",
+    "cancel":"Annuler",
+    "add":"Ajouter",
+    "addNewSet":"Ajouter un nouveau Set",
+    "name":"Nom",
+    "defaultHeader":"Par défaut",
+    "allUsers":"tout",
+    "deleteHeader":"Effacer",
+    "apply":"Appliquer",
+    "newSet":"Nouveau jeu"
   }
 }

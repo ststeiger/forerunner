@@ -57,7 +57,8 @@ $(function () {
             userSettings: null,
             onInputBlur: null,
             onInputFocus: null,
-            $appContainer: null
+            $appContainer: null,
+            parameterModel: null
         },
 
         _destroy: function () {
@@ -648,7 +649,6 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "");
                 me.element.unmask();
             }
             else {//open nav
@@ -658,7 +658,6 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "hidden");
                 me.element.mask();
             }
 

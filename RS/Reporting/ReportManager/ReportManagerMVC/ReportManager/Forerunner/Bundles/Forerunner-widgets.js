@@ -58,7 +58,8 @@ $(function () {
             userSettings: null,
             onInputBlur: null,
             onInputFocus: null,
-            $appContainer: null
+            $appContainer: null,
+            parameterModel: null
         },
 
         _destroy: function () {
@@ -649,7 +650,6 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "");
                 me.element.unmask();
             }
             else {//open nav
@@ -659,7 +659,6 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.options.$appContainer.css("overflow", "hidden");
                 me.element.mask();
             }
 
@@ -2560,6 +2559,11 @@ $(function () {
         },
         _create: function () {
         },
+        _init: function () {
+            var me = this;
+            //inilialize widget data
+            me.frozen = false;
+        }
     });  // $.widget
 
     // popup widget used with the showDrowpdown method
@@ -2570,6 +2574,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
         },
     });  // $widget
@@ -3055,11 +3061,16 @@ $(function () {
                 if (!data.open) {
                     $spacer.hide();
                     me.$pagesection.show();
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
                 }
                 else {
                     $spacer.show();
                     if (forerunner.device.isSmall())
                         me.$pagesection.hide();
+
+                    me.$container.addClass("fr-layout-container-noscroll");
+                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
                 }
 
             });
@@ -3310,6 +3321,7 @@ $(function () {
             me.hideSlideoutPane(false);
             me.$bottomdiv.hide();
             me.$bottomdivspacer.hide();
+            me.$pagesection.show();
             me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
             me.$container.removeClass("fr-layout-container-noscroll");
         },
@@ -3418,6 +3430,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super(); //Invokes the method of the same name from the parent widget
 
             // TODO [jont]
             //
@@ -3498,7 +3511,6 @@ $(function () {
         },
         _destroy: function () {
         },
-
         _create: function () {
             var me = this;
         },
@@ -3594,6 +3606,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             // TODO [jont]
             //
             ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -3779,8 +3793,15 @@ $(function () {
             me.element.html("");
             var isTouch = forerunner.device.isTouch();          
             var $slider = new $("<DIV />");
-            
             $slider.addClass("fr-nav-container");
+
+            var $close = $("<DIV />");
+            $close.addClass("fr-nav-close-button");
+            $close.on('click', function () {
+                me.options.$reportViewer.reportViewer("showNav");
+            });
+
+            $slider.append($close);
  
             var $list = me._renderList();
             me.$list = $list;
@@ -3894,6 +3915,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
 
             // TODO [jont]
             //
@@ -4224,13 +4246,14 @@ $(function () {
             $reportExplorer: null,
         },
         _create: function () {
-            
         },
         _init: function () {
             var me = this;
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
             var userSettings = locData.userSettings;
             var unit = locData.unit;
+
+            var buildVersion = me._getBuildVersion();
 
             me.element.html("");
 
@@ -4250,6 +4273,9 @@ $(function () {
                         "<input name='submit' type='button' class='fr-us-submit-id fr-core-dialog-submit fr-core-dialog-button' value='" + userSettings.submit + "'/>" +
                     "</div>" +
                 "</form>" +
+                "<div class='fr-buildversion-container'>" +
+                    buildVersion +
+                "</div>" +
             "</div>");
 
             me.element.append($theForm);
@@ -4263,6 +4289,27 @@ $(function () {
                 me.closeDialog();
             });
 
+        },
+        _getBuildVersion: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerFolder() + "/version.txt";
+            var buildVersion = null;
+            $.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    buildVersion = data.buildVersion;
+                },
+                fail: function (data) {
+                    console.log(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                },
+            });
+
+            return buildVersion;
         },
         _getSettings: function () {
             var me = this;
@@ -6116,7 +6163,6 @@ $(function () {
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
-            me._resetLabelWidth();
             me.resetValidateMessage();
             $(".fr-param-form", me.$params).validate({
                 errorPlacement: function (error, element) {
@@ -6284,7 +6330,7 @@ $(function () {
         },
         _writeParamControl: function (param, $parent, pageNum) {
             var me = this;
-            var $label = new $("<div class='fr-param-label' style='width:100%;'>" + param.Prompt + "</div>");
+            var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
@@ -6884,15 +6930,6 @@ $(function () {
                 return null;
             else
                 return param.value;
-        },
-        _resetLabelWidth: function () {
-            var max = 0;
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                if ($(obj).width() > max) max = $(obj).width();
-            });
-            $(".fr-param-label", this.$params).each(function (index, obj) {
-                $(obj).width(max);
-            });
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -8040,6 +8077,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
@@ -8069,6 +8107,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
             var rtb = forerunner.ssr.tools.rightToolbar;
             me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
@@ -8210,6 +8249,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {

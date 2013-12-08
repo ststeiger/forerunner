@@ -113,6 +113,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me._super();
+
             if (me.options.DefaultAppTemplate === null) {
                 me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.options.isFullScreen }).render();
             } else {

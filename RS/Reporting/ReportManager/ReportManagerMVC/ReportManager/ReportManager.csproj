@@ -234,6 +234,7 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
     <Content Include="Forerunner\ReportViewer\images\print_portrait.png" />
@@ -264,6 +265,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt" />
+    <Content Include="Forerunner\version.txt" />
     <Content Include="QUnit\Index.html" />
     <Content Include="QUnit\js\LocalizationTests.js" />
     <Content Include="QUnit\lib\QUnit\css\qunit-1.12.0.css" />

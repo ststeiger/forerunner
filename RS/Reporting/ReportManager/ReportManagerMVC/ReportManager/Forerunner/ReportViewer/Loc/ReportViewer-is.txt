@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
+    "manageSets":"stjórna Leikmynd",
+    "cancel":"Hætta",
+    "add":"Bæta",
+    "addNewSet":"Bæta nýtt sett",
+    "name":"nafn",
     "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "allUsers":"allt",
+    "deleteHeader":"eyða",
+    "apply":"gilda",
+    "newSet":"nýtt sett"
   }
 }

@@ -828,15 +828,12 @@ table, td, tr {
 
 .fr-us-section { display: none; }
 
-.fr-us-form { }
+.fr-us-form { margin-bottom: 8px; }
+  .fr-us-form .fr-us-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+  .fr-us-form .fr-us-label { height: 20px; display: inline-block; }
+  .fr-us-form .fr-us-checkbox { display: inline-block; margin: 0 6px 0 12px; }
 
-.fr-us-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
-
-.fr-us-label { height: 20px; display: inline-block; }
-
-.fr-us-checkbox { display: inline-block; margin: 0 6px 0 12px; }
-
-
+.fr-buildversion-container { font-size: 8pt; margin: 16px 0 0 0; }
 
 .fr-mps-section { display: none; }
 
@@ -873,11 +870,14 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 .fr-nav-li-spacer { display: inline-block; width: 0px; }
 
+.fr-nav-close-button { display:none; width: 32px; height: 32px; position: absolute; right: 20px; top: 10px; z-index: 4; cursor: pointer; text-align: center; vertical-align: middle; font-size: 20px; font-weight: bold; background-image: url(../images/NavigationClose.png); }
+
 /* Smartphones  ----------- */
 @media only screen and (max-height : 768px) {
   .fr-nav-container { width: 100%; height: 100%; background: #9bb4d5; /* Old browsers */ background: -moz-linear-gradient(top, #9bb4d5 0%, #8fa6cb 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#9bb4d5), color-stop(100%,#8fa6cb)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* IE10+ */ background: linear-gradient(to bottom, #9bb4d5 0%,#8fa6cb 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9bb4d5', endColorstr='#8fa6cb',GradientType=0 ); /* IE6-9 */ }
   .fr-nav-item { display: inline-block; vertical-align: top; width: 240px; max-height: 320px; padding: 10px 10px 10px 10px; margin-top: 100px; margin-right: 20px; }
   .fr-nav-li-spacer { display: inline-block; width: 30px; }
+  .fr-nav-close-button { display:block; }
 }
 
 /* Desktops and laptops ----------- */

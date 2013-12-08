@@ -88,12 +88,12 @@ jQuery.fn.extend({
         return this.each(function () {
             var el = $(this);
 
-            if (el.css("overflow") == "hidden") {
+            if (el.css("overflow") === "hidden") {
                 var text = el.html();
-                var clone = $(this.cloneNode(true)).hide().css('position', 'absolute').css('overflow', 'visible').width(el.width()).height('auto');
+                var clone = $(this.cloneNode(true)).hide().css("position", "absolute").css("overflow", "visible").width(el.width()).height("auto");
                 el.after(clone);
 
-                function height() { return clone.height() > el.height(); };
+                function height() { return clone.height() > el.height(); }
 
                 if (height()) {
                     var myElipse = " ...";
@@ -231,11 +231,7 @@ $(function () {
             /** widget + event, lowercase */
             reportViewerChangePage: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changePage).toLowerCase(); },
 
-            /** @constant */
-            drillBack: "drillback",
-            /** widget + event, lowercase */
-            reportViewerDrillBack: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.drillBack).toLowerCase(); },
-
+  
             /** @constant */
             drillThrough: "drillThrough",
             /** widget + event, lowercase */
@@ -250,6 +246,11 @@ $(function () {
             actionHistoryPop: "actionHistoryPop",
             /** widget + event, lowercase */
             reportVieweractionHistoryPop: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.actionHistoryPop).toLowerCase(); },
+
+            /** @constant */
+            changeReport: "changeReport",
+            /** widget + event, lowercase */
+            reportViewerChangeReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.changeReport).toLowerCase(); },
 
             /** @constant */
             actionHistoryPush: "actionHistoryPush",
@@ -460,34 +461,34 @@ $(function () {
          */
         guidGen: function () {
             var _padLeft = function (paddingString, width, replacementChar) {
-                return paddingString.length >= width ? paddingString : _padLeft(replacementChar + paddingString, width, replacementChar || ' ');
+                return paddingString.length >= width ? paddingString : _padLeft(replacementChar + paddingString, width, replacementChar || " ");
             };
 
             var _s4 = function (number) {
                 var hexadecimalResult = number.toString(16);
-                return _padLeft(hexadecimalResult, 4, '0');
+                return _padLeft(hexadecimalResult, 4, "0");
             };
 
             var _cryptoGuid = function () {
                 var buffer = new window.Uint16Array(8);
                 window.crypto.getRandomValues(buffer);
-                return [_s4(buffer[0]) + _s4(buffer[1]), _s4(buffer[2]), _s4(buffer[3]), _s4(buffer[4]), _s4(buffer[5]) + _s4(buffer[6]) + _s4(buffer[7])].join('-');
+                return [_s4(buffer[0]) + _s4(buffer[1]), _s4(buffer[2]), _s4(buffer[3]), _s4(buffer[4]), _s4(buffer[5]) + _s4(buffer[6]) + _s4(buffer[7])].join("-");
             };
 
             var _guid = function () {
                 var currentDateMilliseconds = new Date().getTime();
-                return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (currentChar) {
+                return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (currentChar) {
                     var randomChar = (currentDateMilliseconds + Math.random() * 16) % 16 | 0;
                     currentDateMilliseconds = Math.floor(currentDateMilliseconds / 16);
-                    return (currentChar === 'x' ? randomChar : (randomChar & 0x7 | 0x8)).toString(16);
+                    return (currentChar === "x" ? randomChar : (randomChar & 0x7 | 0x8)).toString(16);
                 });
             };
 
             var hasRandomValues = false;
-            var hasCrypto = typeof (window.crypto) != 'undefined';
+            var hasCrypto = typeof (window.crypto) !== "undefined";
             if (hasCrypto) {
-                hasRandomValues = typeof (window.crypto.getRandomValues) != 'undefined';
-            };
+                hasRandomValues = typeof (window.crypto.getRandomValues) !== "undefined";
+            }
 
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
         },
@@ -998,13 +999,13 @@ $(function () {
                 if (!target.element.parent().hasClass("ui-dialog")) {
                     target.element.dialog({
                         dialogClass: "noTitleStuff",
-                        height: 'auto',
-                        width: 'auto',
+                        height: "auto",
+                        width: "auto",
                         modal: true,
                         resizable: false,
                         draggable: false,
                         autoOpen: false,
-                        position: ['center', 0],
+                        position: ["center", 0],
                     }).removeClass("ui-widget-content").removeClass("ui-dialog-content").removeClass("ui-selectable-helper").siblings(".ui-dialog-titlebar").remove();
                     //target._dialogInit = true;
                 }
@@ -1035,7 +1036,7 @@ $(function () {
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
-        * close all opened modal dialogs with classname 'fr-dialog-id'
+        * close all opened modal dialogs with classname "fr-dialog-id"
         *
         * @function forerunner.dialog#closeAllModalDialogs
         */
@@ -1100,7 +1101,7 @@ $(function () {
                     var uiDialog = event.data.target.element.parent();
                     if (uiDialog.is(":visible")) {
                         var clone = uiDialog.clone().appendTo(uiDialog.parent());
-                        var newTop = clone.css('position', 'static').offset().top * -1;
+                        var newTop = clone.css("position", "static").offset().top * -1;
                         uiDialog.css("top", newTop);
                         clone.remove();
                     }

@@ -103,6 +103,7 @@ $(function () {
             me.autoRefreshID = null;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             me.renderTime = new Date().getTime();
+            me.paramDefs = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -591,18 +592,41 @@ $(function () {
             if (action) {
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
-                
-                me._trigger(events.drillBack);
-                me._removeParameters();
+                me.curPage = action.CurrentPage;
+
+               
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
+                
+
+                //Trigger Change Report, disables buttons.  Differnt than pop
+                me._trigger(events.changeReport, null, { path: me.options.reportPath });
+
+                //This means we changed reports
                 if (action.FlushCache) {
+                    me._removeParameters();
                     me.flushCache();
+                    me.pages = action.reportPages;
+                    me.paramDefs = action.paramDefs;
+
+                    me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
+
+                    me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
+                    me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                    if (me.$numOfVisibleParameters > 0) {
+                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    }
+                    
+                    if (me.options.parameterModel)
+                        me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+
+                    me.paramLoaded = true;
+                   
                 }
-                me._loadParameters(action.CurrentPage, action.savedParams);
+                me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
@@ -984,6 +1008,9 @@ $(function () {
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.options.reportPath;
                         me.options.reportPath = data.ReportPath;
+                        if (me.options.parameterModel)
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
                         if (data.ParametersRequired) {
                             me.$reportAreaContainer.find(".Page").detach();
@@ -1060,7 +1087,7 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates,renderTime : me.renderTime
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs
             });
             me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
@@ -1267,10 +1294,13 @@ $(function () {
                 me.refreshParameters(savedParams, true, pageNum);
             }
         },
-        _loadParameters: function (pageNum, savedParamFromHistory) {
+        _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
             var savedParams = savedParamFromHistory ? savedParamFromHistory :
                 (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
+
+            if (submitForm === undefined)
+                submitForm = true;
 
             if (savedParams) {
                 if (me.options.paramArea) {
@@ -1278,7 +1308,14 @@ $(function () {
                         $reportViewer: this,
                         $appContainer: me.options.$appContainer
                     });
-                    me.refreshParameters(savedParams, true, pageNum);
+                    
+                    if (submitForm === false) {
+                        me._loadPage(pageNum, false, null, null, false);
+                        me.options.paramArea.reportParameter("setsubmittedParamsList", savedParams);
+                    }
+                    else
+                        me.refreshParameters(savedParams, submitForm, pageNum, false);
+                        
                 }
             } else {
                 me._loadDefaultParameters(pageNum);
@@ -1319,6 +1356,7 @@ $(function () {
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
+                    me.paramDefs = data;
                     $paramArea.reportParameter({ $reportViewer: this, $appContainer: me.options.$appContainer });
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
@@ -1364,17 +1402,22 @@ $(function () {
                     success: function (data) {
                         if (data.SessionID)
                             me.sessionID = data.SessionID;
-
-                        if (data.ParametersList) {
-                            me.options.paramArea.reportParameter("updateParameterPanel", data, submitForm, pageNum, renderParamArea);
-                            me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                            if (me.$numOfVisibleParameters > 0) { 
-                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
-                            }
-                            me.paramLoaded = true;
-                        }
+                        me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                        
                     }
                 });
+            }
+        },
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea) {
+            var me = this;
+            if (paramData) {
+                me.paramDefs = paramData;
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea);
+                me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                if (me.$numOfVisibleParameters > 0) {
+                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                }
+                me.paramLoaded = true;
             }
         },
         _removeParameters: function () {
@@ -3004,7 +3047,7 @@ $(function () {
 
             var $viewer = $(".fr-layout-reportviewer", me.$container);
             me.$viewer = $viewer;
-            $viewer.on(events.reportViewerDrillBack(), function (e, data) { me.hideSlideoutPane(false); });
+            $viewer.on(events.reportVieweractionHistoryPop(), function (e, data) { me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerDrillThrough(), function (e, data) { me.hideSlideoutPane(true); me.hideSlideoutPane(false); });
             $viewer.on(events.reportViewerShowNav(), function (e, data) {
                 var $spacer = me.$bottomdivspacer;
@@ -3364,7 +3407,7 @@ $(function () {
                 me._leaveCurReport();
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
             });
 
@@ -3541,7 +3584,7 @@ $(function () {
                 me._leaveCurReport();
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
             });
 
@@ -3558,7 +3601,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
-            $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
 
           
@@ -3567,7 +3610,7 @@ $(function () {
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
-            $spacerdiv = new $("<div />");
+            var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
             $toolpane.append($spacerdiv);
             if (me.options.$reportViewer) {
@@ -6030,6 +6073,15 @@ $(function () {
             this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
+        resetToSavedParameters: function (paramDefs, savedParams, pageNum) {
+            var me = this;
+            me.updateParameterPanel(paramDefs, false, pageNum, false);
+            me._submittedParamsList = savedParams;
+            this._hasPostedBackWithoutSubmitForm = false;
+            me.revertParameters();
+        },
+
+
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
@@ -6107,7 +6159,7 @@ $(function () {
                 }
             } else {
                 if (renderParamArea !== false)
-                    me._trigger(events.render);
+                    me._trigger(events.render);                
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
@@ -6129,6 +6181,11 @@ $(function () {
         },
 
         _submittedParamsList: null,
+
+        setsubmittedParamsList: function (paramList) {
+            var me = this;
+            me._submittedParamsList = paramList;
+        },
 
         _submitForm: function (pageNum) {
             var me = this;
@@ -6520,7 +6577,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            param.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -6528,7 +6586,7 @@ $(function () {
                 var key;
                 var value;
                 if (i === 0) {
-                    var SelectAll = param.ValidValues[param.ValidValues.length - 1];
+                    var SelectAll = param.ValidValues[param.ValidValues.length - 1];                    
                     key = SelectAll.Key;
                     value = SelectAll.Value;
                 }
@@ -6650,7 +6708,8 @@ $(function () {
         _setMultipleInputValues: function (param) {
             var me = this;
             var newValue, oldValue;
-            var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            //var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            var target = $(".fr-paramname-" + param.Name, me.$params);
             oldValue = target.val();
 
             if (target.hasClass("fr-param-client")) {
@@ -7819,7 +7878,7 @@ $(function () {
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
                 });
-                $viewer.on(events.reportViewerDrillBack(), function (e, data) {
+                $viewer.on(events.reportViewerChangeReport(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
                 });
                
@@ -7984,7 +8043,7 @@ $(function () {
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
-            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [ltb.btnLTBMenu]);
@@ -8014,7 +8073,7 @@ $(function () {
             me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
             me.element.html("");
-            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [rtb.btnRTBParamarea]);
@@ -8126,7 +8185,7 @@ $(function () {
 
             $viewer.on("reportvieweractionhistorypop", function (e, data) {
                 
-                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") == 0)) {
+                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }

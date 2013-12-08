@@ -124,7 +124,8 @@ namespace ForerunnerWebService
 
         internal void WriteLicense(string GroupID,string SKU, string ProductName,int Quantity,string LicenseID = null)
         {
-            string SQL = @"INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
+            string SQL = @"IF NOT EXISTS (SELECT * FROM License WHERE LicenseID = @LicenseID)
+                            INSERT License (LicenseID,LicenseGroupID, SKU,ProductName,Quantity,LastActivateDate,ActivationAttempts,CreateDate)
                             SELECT @LicenseID, @GroupID,@SKU,@ProductName,@Quantity,NULL,0,GETDATE()";
 
             ForerunnerDB DB = new ForerunnerDB();

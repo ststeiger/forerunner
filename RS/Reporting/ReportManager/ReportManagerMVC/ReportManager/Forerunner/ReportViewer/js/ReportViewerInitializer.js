@@ -111,7 +111,7 @@ $(function () {
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
                 });
-                $viewer.on(events.reportViewerDrillBack(), function (e, data) {
+                $viewer.on(events.reportViewerChangeReport(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
                 });
                
@@ -276,7 +276,7 @@ $(function () {
             var ltb = forerunner.ssr.tools.leftToolbar;
 
             me.element.html("");
-            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [ltb.btnLTBMenu]);
@@ -306,7 +306,7 @@ $(function () {
             me.parameterModel = me.options.$ReportViewerInitializer.getParameterModel();
 
             me.element.html("");
-            $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolbar = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolbar);
 
             me.addTools(1, true, [rtb.btnRTBParamarea]);

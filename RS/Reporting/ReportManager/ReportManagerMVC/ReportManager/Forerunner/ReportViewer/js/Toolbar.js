@@ -87,7 +87,7 @@ $(function () {
                 me._leaveCurReport();
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
             });
 

@@ -162,7 +162,7 @@ namespace ForerunnerRegister
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
                                 INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber
                             ELSE
-                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1, LicenseID =  @LicenseID WHERE Email = @Email
+                                UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1 WHERE Email = @Email
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
             SQLConn.Open();

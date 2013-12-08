@@ -96,6 +96,15 @@ $(function () {
             this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
+        resetToSavedParameters: function (paramDefs, savedParams, pageNum) {
+            var me = this;
+            me.updateParameterPanel(paramDefs, false, pageNum, false);
+            me._submittedParamsList = savedParams;
+            this._hasPostedBackWithoutSubmitForm = false;
+            me.revertParameters();
+        },
+
+
         /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
@@ -173,7 +182,7 @@ $(function () {
                 }
             } else {
                 if (renderParamArea !== false)
-                    me._trigger(events.render);
+                    me._trigger(events.render);                
                 me.options.$reportViewer.removeLoadingIndicator();
             }
 
@@ -195,6 +204,11 @@ $(function () {
         },
 
         _submittedParamsList: null,
+
+        setsubmittedParamsList: function (paramList) {
+            var me = this;
+            me._submittedParamsList = paramList;
+        },
 
         _submitForm: function (pageNum) {
             var me = this;
@@ -586,7 +600,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            param.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -594,7 +609,7 @@ $(function () {
                 var key;
                 var value;
                 if (i === 0) {
-                    var SelectAll = param.ValidValues[param.ValidValues.length - 1];
+                    var SelectAll = param.ValidValues[param.ValidValues.length - 1];                    
                     key = SelectAll.Key;
                     value = SelectAll.Value;
                 }
@@ -716,7 +731,8 @@ $(function () {
         _setMultipleInputValues: function (param) {
             var me = this;
             var newValue, oldValue;
-            var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            //var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            var target = $(".fr-paramname-" + param.Name, me.$params);
             oldValue = target.val();
 
             if (target.hasClass("fr-param-client")) {

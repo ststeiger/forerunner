@@ -76,7 +76,7 @@ $(function () {
                 me._leaveCurReport();
             });
 
-            me.options.$reportViewer.on(events.reportViewerDrillBack(), function (e, data) {
+            me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
             });
 
@@ -93,7 +93,7 @@ $(function () {
             ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
-            $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
+            var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
 
           
@@ -102,7 +102,7 @@ $(function () {
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
             // Bottom padding/border or margin won't be rendered in some cases.
-            $spacerdiv = new $("<div />");
+            var $spacerdiv = new $("<div />");
             $spacerdiv.attr("style", "height:65px");
             $toolpane.append($spacerdiv);
             if (me.options.$reportViewer) {

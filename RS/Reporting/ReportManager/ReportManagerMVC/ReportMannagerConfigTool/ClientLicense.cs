@@ -316,7 +316,9 @@ namespace ForerunnerLicense
 
         public static ServerResponse Post(string Value)
         {
-            string url = "https://forerunnersw.com/register/api/License";
+           string url = "https://forerunnersw.com/register/api/License";
+
+           //string url = "http://localhost:13149/api/License";
 
             WebRequest request = WebRequest.Create (url);
             request.Method = "POST";

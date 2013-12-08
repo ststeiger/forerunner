@@ -88,7 +88,7 @@ $(function () {
 
             $viewer.on("reportvieweractionhistorypop", function (e, data) {
                 
-                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") == 0)) {
+                if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
                 }

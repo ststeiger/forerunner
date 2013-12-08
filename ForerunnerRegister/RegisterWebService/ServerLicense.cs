@@ -154,7 +154,7 @@ namespace ForerunnerLicense
             
                     
             string SQL = @"UPDATE License Set ActivationAttempts = ActivationAttempts+1 WHERE LicenseID = @LicenseID
-                           SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,s.Duration,RequireValidation,IsTrial FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
+                           SELECT MachineData,LastActivateDate,Quantity,l.SKU,FirstActivationDate,IsSubscription,ISNULL(l.Duration,s.Duration),RequireValidation,IsTrial FROM License l INNER JOIN SKU s ON l.SKU = s.SKU  WHERE LicenseID = @LicenseID";
            try
             {
                 SQLConn.Open();

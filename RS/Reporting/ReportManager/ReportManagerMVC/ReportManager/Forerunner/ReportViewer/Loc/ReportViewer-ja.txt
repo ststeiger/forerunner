@@ -71,8 +71,8 @@
     "print":"刷り出す",
     "userSettings":"設定",
     "saveParam":"パラメータを保存",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"セットを管理",
+    "selectSet":"セットを選択します。"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -90,7 +90,7 @@
   },
   "userSettings": {
     "title":"ユーザー設定",
-    "submit":"OK",
+    "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI"
   },
@@ -145,7 +145,7 @@
     "dayNamesShort":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],
     "dayNamesMin":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"既定"
   },
   "manageParamSets": {
     "manageSets":"セットを管理",

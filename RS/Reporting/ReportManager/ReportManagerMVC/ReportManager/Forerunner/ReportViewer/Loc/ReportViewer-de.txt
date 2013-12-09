@@ -71,8 +71,8 @@
     "print":"Drucken",
     "userSettings":"Fixierung",
     "saveParam":"Parameter speichern",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Sätze verwalten",
+    "selectSet":"wählen Sätze"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",
@@ -134,7 +134,7 @@
     "nextText":"Weiter",
     "currentText":"Heute",
     "weekHeader":"Wk",
-    "dateFormat":"mm / tt / jj",
+    "dateFormat":"tt/mm/jj",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

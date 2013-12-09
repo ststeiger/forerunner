@@ -71,7 +71,7 @@
     "print":"打印",
     "userSettings":"設置",
     "saveParam":"保存參數",
-    "parameterSets":"Manage Sets",
+    "parameterSets":"管理參數集",
     "selectSet":"Select Set"
   },
   "print": {

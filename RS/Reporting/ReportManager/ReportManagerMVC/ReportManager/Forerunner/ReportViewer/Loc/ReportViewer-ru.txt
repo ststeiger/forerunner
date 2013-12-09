@@ -71,8 +71,8 @@
     "print":"Напечатать",
     "userSettings":"окружение",
     "saveParam":"Сохранить параметры",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"управлять наборами",
+    "selectSet":"Выбор набора"
   },
   "print": {
     "title":"Печать отчета",
@@ -109,7 +109,7 @@
     "email":"Неверный email",
     "url":"Неверный URL",
     "date":"Неверные данные",
-    "dateISO":"неверная дата (yyyy-mm-dd)",
+    "dateISO":"неверная дата (гггг-мм-дд)",
     "number":"Неверный номер",
     "digits":"Только цифры",
     "maxlength":"Не больше, чем {0} символов",
@@ -134,7 +134,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"дд / мм / гг",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,7 +145,7 @@
     "dayNamesShort":["BCK", "PND", "VTR", "SRD", "ChTV", "PTN", "SBT"],
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"невыполнение обязательств"
   },
   "manageParamSets": {
     "manageSets":"Управление наборы",

@@ -72,7 +72,7 @@
     "userSettings":"設置",
     "saveParam":"保存參數",
     "parameterSets":"管理參數集",
-    "selectSet":"Select Set"
+    "selectSet":"選擇參數集"
   },
   "print": {
     "title":"打印報表",

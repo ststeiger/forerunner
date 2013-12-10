@@ -71,8 +71,8 @@
     "print":"打印",
     "userSettings":"设置",
     "saveParam":"保存参数",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"管理参数集",
+    "selectSet":"选择参数集"
   },
   "print": {
     "title":"打印报表",

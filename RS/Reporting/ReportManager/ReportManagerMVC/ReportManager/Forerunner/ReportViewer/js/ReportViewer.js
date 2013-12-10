@@ -474,6 +474,10 @@ $(function () {
         _hideDocMap: function() {
             var me = this;
             var docMap = me.options.docMapArea;
+
+            me.savedTop = 0;
+            me.savedLeft = 0;
+
             docMap.hide();
             me.element.unmask();
             me._trigger(events.hideDocMap);
@@ -500,6 +504,9 @@ $(function () {
                     fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
                 });
             }
+
+            me.savedTop = $(window).scrollTop();
+            me.savedLeft = $(window).scrollLeft();
 
             me.element.mask();
             docMap.slideUpShow();
@@ -593,7 +600,6 @@ $(function () {
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
-
                
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
@@ -1066,15 +1072,18 @@ $(function () {
         backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
 
-            var top = $(window).scrollTop();
-            var left = $(window).scrollLeft();
-            var savedParams;
+            var top, left, savedParams;
 
             if (flushCache !== true)
                 flushCache = false;
+
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;
+            }
+            else {
+                top = $(window).scrollTop();
+                left = $(window).scrollLeft;
             }
 
             if (me.paramLoaded) {

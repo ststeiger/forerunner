@@ -71,8 +71,8 @@
     "print":"Priontáil",
     "userSettings":"Socruithe",
     "saveParam":"Sábháil Paraiméadair",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Socraigh Bainistigh",
+    "selectSet":"roghnaigh Socraigh"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

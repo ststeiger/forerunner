@@ -72,8 +72,8 @@
     "print":"Imprimer",
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Gérer jeux",
+    "selectSet":"Sélectionnez Set"
   },
   "print": {
     "title":"Imprimer option de mise en",

@@ -72,8 +72,8 @@
     "userSettings":"fraguado",
     "paramarea":"Parámetros",
     "saveParam":"Guardar parámetros",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"administrar Sets",
+    "selectSet":"Seleccione Establecer"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

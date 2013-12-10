@@ -18,10 +18,10 @@
   "errorTag": {
     "moreDetail":"Click pentru mai multe detalii",
     "serverError":"Excepție aruncat de la server",
-    "type":"Type",
+    "type":"model",
     "targetSite":"targetSite",
     "source":"Sursa",
-    "message":"Message",
+    "message":"semnaliza",
     "stackTrace":"StackTrace",
     "licenseErrorTitle":"Vă mulțumim pentru ajutorul Forerunner Software mobilizator, se pare că există o problemă cu licența.",
     "licenseErrorContent":"Vă rugăm să contactați administratorul de sistem. Dacă sunteți administratorul vă rugăm să verificați de licență în instrument de configurare mobilizator."
@@ -41,12 +41,12 @@
     "navigation":"Navigare",
     "favorites":"Favorite",
     "back":"Înapoi",
-    "refresh":"Refresh",
+    "refresh":"primeni",
     "docMap":"Planul documentului",
     "find":"Găseşte",
     "next":"Înainte",
     "zoom":"Permite Zoom",
-    "print":"Print"
+    "print":"se tipări"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -71,8 +71,8 @@
     "print":"imprima",
     "userSettings":"Setări",
     "saveParam":"Salvare Parametrii",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Gestionați Seturi",
+    "selectSet":"Selectați Set"
   },
   "print": {
     "title":"imprima raportul",
@@ -100,7 +100,7 @@
     "isFalse":"False",
     "required":"Necesare",
     "viewReport":"Vizualizare raport",
-    "cancel":"cancel",
+    "cancel":"anula",
     "datePicker":"Data"
   },
   "validateError": {
@@ -109,7 +109,7 @@
     "email":"E-mail nevalidă",
     "url":"E-mail nevalidă",
     "date":"Data invalid",
-    "dateISO":"Data invalid (yyyy-mm-dd)",
+    "dateISO":"Data invalid (aaaa-ll-zz)",
     "number":"Număr Invalid",
     "digits":"Doar cifre",
     "maxlength":"Nu mai mult de { 0 } caractere",
@@ -126,7 +126,7 @@
   "placeholders": {
     "Username":"nume utilizator",
     "Password":"parola",
-    "Login":"Login"
+    "Login":"autentificare"
   },
   "datepicker": {
     "closeText":"făcut",
@@ -145,7 +145,8 @@
     "dayNamesShort":["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"
+neprezentare"
   },
   "manageParamSets": {
     "manageSets":"Gestionați Seturi",

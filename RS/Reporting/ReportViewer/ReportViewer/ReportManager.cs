@@ -910,17 +910,12 @@ namespace Forerunner.SSRS.Manager
             {
                 if (isException)
                 {
-                    if (sqlImpersonator != null)
-                    {
-                        sqlImpersonator.Dispose();
-                    }
                     if (threadContext.SecondImpersonator != null)
                     {
                         threadContext.SecondImpersonator.Dispose();
                     }
-                }
-                threadContext.Undo();
-                threadContext.Dispose();
+                    threadContext.Dispose();
+                }                    
             }
             if (retval != null)
             {
@@ -935,10 +930,7 @@ namespace Forerunner.SSRS.Manager
                 }
                 finally
                 {
-                    if (sqlImpersonator != null)
-                    {
-                        sqlImpersonator.Dispose();
-                    }
+                    threadContext.Dispose();
                 }
             }
         }

@@ -902,9 +902,10 @@ namespace Forerunner.SSRS.Manager
                     rep.Dispose();
                 }
             }
-            catch
+            catch(Exception e)
             {
                 isException = true;
+                ExceptionLogGenerator.LogException(e);
             }
             finally
             {
@@ -917,21 +918,25 @@ namespace Forerunner.SSRS.Manager
                     threadContext.Dispose();
                 }                    
             }
-            if (retval != null)
+
+            try
             {
-                
-                try
+                if (retval != null)
                 {
                     if (sqlImpersonator != null)
-                    { 
-                        sqlImpersonator.Impersonate(); 
+                    {
+                        sqlImpersonator.Impersonate();
                     }
                     SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
                 }
-                finally
-                {
-                    threadContext.Dispose();
-                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+            }
+            finally
+            {
+                threadContext.Dispose();
             }
         }
 

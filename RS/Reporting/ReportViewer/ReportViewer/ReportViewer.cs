@@ -652,15 +652,14 @@ namespace Forerunner.SSRS.Viewer
                 //{
                 // Cache the current httpcontext credential for other threads to use
                 SetCredentials(GetCredentials());
-                if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+                
+                if (impersonator == null)
                 {
-                    if (impersonator == null)
-                    {
-                        newImpersonator = new CurrentUserImpersonator();
-                    }
-                    impersonator = impersonator == null ? newImpersonator : impersonator;
+                    newImpersonator = new CurrentUserImpersonator();
                 }
-                WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator == null ? new CurrentUserImpersonator() : impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                impersonator = impersonator == null ? newImpersonator : impersonator;
+                
+                WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                 result = ms.ToArray();
                 //}
 

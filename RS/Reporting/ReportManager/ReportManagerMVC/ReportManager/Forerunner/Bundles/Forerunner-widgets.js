@@ -2797,6 +2797,9 @@ $(function () {
                     $(me.$container).on("scrollstop", function () {
                         me._updateTopDiv(me);
                     });
+                    $(window).on("scrollstop", function () {
+                        me._updateTopDiv(me);
+                    });
                 }  
             }
 

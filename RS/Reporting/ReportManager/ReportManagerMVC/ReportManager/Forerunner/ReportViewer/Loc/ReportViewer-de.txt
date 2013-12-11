@@ -71,8 +71,8 @@
     "print":"Drucken",
     "userSettings":"Fixierung",
     "saveParam":"Parameter speichern",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Sätze verwalten",
+    "selectSet":"wählen Sätze"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",
@@ -134,7 +134,7 @@
     "nextText":"Weiter",
     "currentText":"Heute",
     "weekHeader":"Wk",
-    "dateFormat":"mm / tt / jj",
+    "dateFormat":"tt/mm/jj",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -148,15 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
+    "manageSets":"Sets verwalten",
+    "cancel":"Abbestellen",
+    "add":"ergänzen",
+    "addNewSet":"Neue Set",
     "name":"Name",
     "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "allUsers":"Alle",
+    "deleteHeader":"Löschen",
+    "apply":"Anwenden",
+    "newSet":"Neues Set"
   }
 }

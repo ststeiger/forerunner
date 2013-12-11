@@ -71,8 +71,8 @@
     "print":"Prenta",
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"stjórna Leikmynd",
+    "selectSet":"valið er Stilla"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",

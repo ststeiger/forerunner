@@ -475,6 +475,10 @@ $(function () {
         _hideDocMap: function() {
             var me = this;
             var docMap = me.options.docMapArea;
+
+            me.savedTop = 0;
+            me.savedLeft = 0;
+
             docMap.hide();
             me.element.unmask();
             me._trigger(events.hideDocMap);
@@ -501,6 +505,9 @@ $(function () {
                     fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
                 });
             }
+
+            me.savedTop = $(window).scrollTop();
+            me.savedLeft = $(window).scrollLeft();
 
             me.element.mask();
             docMap.slideUpShow();
@@ -594,7 +601,6 @@ $(function () {
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
-
                
                 me.hideDocMap();
                 me.scrollLeft = action.ScrollLeft;
@@ -1067,15 +1073,18 @@ $(function () {
         backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
 
-            var top = $(window).scrollTop();
-            var left = $(window).scrollLeft();
-            var savedParams;
+            var top, left, savedParams;
 
             if (flushCache !== true)
                 flushCache = false;
+
             if (useSavedLocation === true) {
                 top = me.savedTop;
                 left = me.savedLeft;
+            }
+            else {
+                top = $(window).scrollTop();
+                left = $(window).scrollLeft;
             }
 
             if (me.paramLoaded) {
@@ -2658,16 +2667,18 @@ $(function () {
             var me = this;
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-            $messageBox = new $("<div class='fr-messagebox-innerpage fr-core-dialog-innerPage fr-core-center'>" +
-                "<div class='fr-core-dialog-header'>" +
-                    "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
-                "</div>" +
-                "<div class='fr-messagebox-content'>" +
-                    "<span class='fr-messagebox-msg'/>" +
-                "</div>" +
-                "<div class='fr-core-dialog-submit-container'>" +
-                    "<div class='fr-core-center'>" +
-                        "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+            $messageBox = new $("<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                "<div class='fr-messagebox-innerpage'>" +
+                    "<div class='fr-core-dialog-header'>" +
+                        "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
+                    "</div>" +
+                    "<div class='fr-messagebox-content'>" +
+                        "<span class='fr-messagebox-msg'/>" +
+                    "</div>" +
+                    "<div class='fr-core-dialog-submit-container'>" +
+                        "<div class='fr-core-center'>" +
+                            "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+                        "</div>" +
                     "</div>" +
                 "</div>");
 
@@ -2947,12 +2958,14 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
+
+            var diff = Math.min($(window).scrollTop() - me.$container.position().top, me.$container.height() - 38);
             if (me.$leftpane.is(":visible")) {
-                me.$leftpane.css("top", me.$container.scrollTop());
+                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             } else if (me.$rightpane.is(":visible")) {
-                me.$rightpane.css("top", me.$container.scrollTop());
+                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             }
-            me.$topdiv.css("top", me.$container.scrollTop());
+            me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
             me.$topdiv.css("left", me.$container.scrollLeft());
             if (!me.isZoomed()) {
                 me.$topdiv.show();
@@ -3459,11 +3472,9 @@ $(function () {
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
-                else
                     listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
-
-                
+                else
+                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
             }
 
             return listOfButtons;

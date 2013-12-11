@@ -71,8 +71,8 @@
     "print":"Impressão",
     "userSettings":"configurações",
     "saveParam":"Salvar Parâmetros",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Gerenciar conjuntos",
+    "selectSet":"Selecione Definir"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -109,7 +109,7 @@
     "email":"E-mail inválido",
     "url":"URL inválido",
     "date":"Data inválida",
-    "dateISO":"Data inválida (yyyy-mm-dd)",
+    "dateISO":"Data inválida (aaaa-mm-dd)",
     "number":"Número inválido",
     "digits":"Somente dígitos",
     "maxlength":"Não mais de {0} caracteres",
@@ -134,7 +134,7 @@
     "nextText":"próximo",
     "currentText":"hoje",
     "weekHeader":"Wk",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"dd/mm/aa",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,7 +145,7 @@
     "dayNamesShort":["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"revelia"
   },
   "manageParamSets": {
     "manageSets":"Gerenciar conjuntos",

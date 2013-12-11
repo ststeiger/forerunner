@@ -71,8 +71,8 @@
     "print":"Stampare",
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"gestire Sets",
+    "selectSet":"selezionare Imposta"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",

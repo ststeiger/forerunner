@@ -71,8 +71,8 @@
     "print":"Skriv ut",
     "userSettings":"Inställningar",
     "saveParam":"Spara Parameter",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"hantera uppsättningar",
+    "selectSet":"välj set"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -134,7 +134,7 @@
     "nextText":"nästa",
     "currentText":"i dag",
     "weekHeader":"Wk",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"dd / mm / åå",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

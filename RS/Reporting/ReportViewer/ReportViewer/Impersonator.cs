@@ -47,6 +47,7 @@ namespace Forerunner.Security
         #endregion Public Methods
 
         #region Private Methods
+        private IntPtr securityHandle = IntPtr.Zero;
         private WindowsIdentity Logon()
         {
             var handle = IntPtr.Zero;
@@ -74,7 +75,8 @@ namespace Forerunner.Security
                     throw new ApplicationException(
                         "Logon failed attemting to duplicate handle");
                 // Logon Succeeded ! return new WindowsIdentity instance
-                return (new WindowsIdentity(handle));
+                securityHandle = dupHandle;
+                return (new WindowsIdentity(dupHandle));
             }
             // close the open handle to the authenticated account
             finally { NativeMethods.CloseHandle(handle); }
@@ -88,7 +90,14 @@ namespace Forerunner.Security
         protected virtual void Dispose(bool isDisposing)
         {
             if (disposed) return;
-            if (isDisposing) Undo();
+            if (isDisposing)
+            {
+                Undo();
+                if (securityHandle != IntPtr.Zero)
+                {
+                    NativeMethods.CloseHandle(securityHandle);
+                }
+            }
             // -----------------
             disposed = true;
             GC.SuppressFinalize(this);

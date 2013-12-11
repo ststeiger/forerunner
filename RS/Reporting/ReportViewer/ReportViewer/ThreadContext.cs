@@ -30,6 +30,8 @@ namespace Forerunner
             }
         }
 
+        // Second impersonator should be cleaned out by the ReportViewer as 
+        // it will be passed into the viewer.
         private Security.CurrentUserImpersonator secondImpersonator;
         public Security.CurrentUserImpersonator SecondImpersonator
         {
@@ -46,6 +48,10 @@ namespace Forerunner
             if (isDisposing)
             {
                 base.Dispose(isDisposing);
+                if (sqlImpersonator != null)
+                {
+                    sqlImpersonator.Dispose();
+                }
             }
             // -----------------
             disposed = true;

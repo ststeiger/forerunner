@@ -26,7 +26,6 @@ namespace Forerunner.SSRS.Manager
         RSManagementProxy rs;
         Credentials WSCredentials;
         Credentials DBCredentials;
-        Impersonator impersonator;
         bool useIntegratedSecurity;
         bool IsNativeRS = true;
         string URL;
@@ -197,11 +196,10 @@ namespace Forerunner.SSRS.Manager
         private Impersonator tryImpersonate(bool doNotCallImpersonate = false) 
         {
             if (!useIntegratedSecurity) return null;
-            if (impersonator == null)
-            {
-                String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
-                impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
-            }
+            
+            String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+            Impersonator impersonator = new Impersonator(DBCredentials.UserName, DBCredentials.Domain, Password);
+        
             if (!doNotCallImpersonate)
                 impersonator.Impersonate();
             return impersonator;
@@ -278,7 +276,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -320,7 +318,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -362,7 +360,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -406,7 +404,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -445,7 +443,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -483,7 +481,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -536,7 +534,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -591,7 +589,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -646,7 +644,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -684,7 +682,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -798,7 +796,7 @@ namespace Forerunner.SSRS.Manager
             {
                 if (impersonator != null)
                 {
-                    impersonator.Undo();
+                    impersonator.Dispose();
                 }
                 CloseSQLConn();
             }
@@ -892,14 +890,17 @@ namespace Forerunner.SSRS.Manager
             {
                 threadContext.Impersonate();
                 IID = GetItemID(path);
-                ReportViewer rep = new ReportViewer(this.URL);
-                rep.SetImpersonator(threadContext.SecondImpersonator);
-                if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+                using (ReportViewer rep = new ReportViewer(this.URL))
                 {
-                    rep.SetCredentials(threadContext.NetworkCredential);
+                    rep.SetImpersonator(threadContext.SecondImpersonator);
+                    if (Forerunner.Security.AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Forms)
+                    {
+                        rep.SetCredentials(threadContext.NetworkCredential);
+                    }
+                    retval = rep.GetThumbnail(path, "", "1", 1.2);
+                    isUserSpecific = IsUserSpecific(path);
+                    rep.Dispose();
                 }
-                retval = rep.GetThumbnail(path, "", "1", 1.2);
-                isUserSpecific = IsUserSpecific(path);
             }
             catch
             {
@@ -950,10 +951,6 @@ namespace Forerunner.SSRS.Manager
                 if (SQLConn.State == System.Data.ConnectionState.Open)
                     SQLConn.Close();
                 SQLConn.Dispose();
-                if (impersonator != null)
-                {
-                    impersonator.Undo();
-                }
             }
         }
 

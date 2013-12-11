@@ -617,6 +617,7 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
 
             rs.ExecutionHeaderValue = execHeader;
+            CurrentUserImpersonator newImpersonator = null;
             try
             {
                 GetServerRendering();
@@ -650,11 +651,12 @@ namespace Forerunner.SSRS.Viewer
                 //{
                     // Cache the current httpcontext credential for other threads to use
                     SetCredentials(GetCredentials());
-                    if (AuthenticationMode.GetAuthenticationMode() == System.Web.Configuration.AuthenticationMode.Windows)
+                    if (impersonator == null)
                     {
-                        impersonator = impersonator == null ? new CurrentUserImpersonator() : impersonator;
+                        newImpersonator = new CurrentUserImpersonator();
                     }
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator == null ? new CurrentUserImpersonator(): impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    impersonator = impersonator == null ? newImpersonator : impersonator;
+                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                     result = ms.ToArray();
                 //}
 
@@ -665,6 +667,13 @@ namespace Forerunner.SSRS.Viewer
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
                 return null;
+            }
+            finally
+            {
+                if (newImpersonator != null)
+                {
+                    newImpersonator.Dispose();
+                }
             }
         }
 

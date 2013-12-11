@@ -2855,12 +2855,14 @@ $(function () {
         _updateTopDiv: function (me) {
             if (me.options.isFullScreen)
                 return;
+
+            var diff = Math.min($(window).scrollTop() - me.$container.position().top, me.$container.height() - 38);
             if (me.$leftpane.is(":visible")) {
-                me.$leftpane.css("top", me.$container.scrollTop());
+                me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             } else if (me.$rightpane.is(":visible")) {
-                me.$rightpane.css("top", me.$container.scrollTop());
+                me.$rightpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             }
-            me.$topdiv.css("top", me.$container.scrollTop());
+            me.$topdiv.css("top", diff > 0 ? diff : me.$container.scrollTop());
             me.$topdiv.css("left", me.$container.scrollLeft());
             if (!me.isZoomed()) {
                 me.$topdiv.show();

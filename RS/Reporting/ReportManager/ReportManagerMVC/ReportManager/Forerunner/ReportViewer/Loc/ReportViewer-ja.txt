@@ -46,7 +46,8 @@
     "find":"見つける",
     "next":"次",
     "zoom":"ズームを有効にする",
-    "print":"刷る"
+    "print":"刷る",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"裏面",
@@ -72,7 +73,8 @@
     "userSettings":"設定",
     "saveParam":"パラメータを保存",
     "parameterSets":"セットを管理",
-    "selectSet":"セットを選択します。"
+    "selectSet":"セットを選択します。",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -158,5 +160,13 @@
     "deleteHeader":"削除",
     "apply":"適用する",
     "newSet":"新規セット"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

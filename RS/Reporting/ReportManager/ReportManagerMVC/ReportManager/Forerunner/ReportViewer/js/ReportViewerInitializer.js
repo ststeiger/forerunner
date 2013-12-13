@@ -134,12 +134,16 @@ $(function () {
             $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.reportPrint({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer
-                });
                 me.options.$appContainer.append($dlg);
             }
+            $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+            $dlg = me.options.$appContainer.find(".fr-dsc-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-dsc-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
             $dlg = me.options.$appContainer.find(".fr-mps-section");
             if ($dlg.length === 0) {

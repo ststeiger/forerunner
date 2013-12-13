@@ -19,5 +19,6 @@
   <file>/Forerunner/ReportViewer/js/ManageParamSets.js</file>
   <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
   <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
+  <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
   <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
 </bundle>

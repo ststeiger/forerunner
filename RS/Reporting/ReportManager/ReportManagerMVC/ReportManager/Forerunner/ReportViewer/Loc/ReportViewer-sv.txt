@@ -46,7 +46,8 @@
     "find":"Hitta",
     "next":"nästa",
     "zoom":"Aktivera Zoom",
-    "print":"Skriv ut"
+    "print":"Skriv ut",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"bakåt",
@@ -72,7 +73,8 @@
     "userSettings":"Inställningar",
     "saveParam":"Spara Parameter",
     "parameterSets":"hantera uppsättningar",
-    "selectSet":"välj set"
+    "selectSet":"välj set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -158,5 +160,13 @@
     "deleteHeader":"Radera",
     "apply":"Ansök",
     "newSet":"Nytt Set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

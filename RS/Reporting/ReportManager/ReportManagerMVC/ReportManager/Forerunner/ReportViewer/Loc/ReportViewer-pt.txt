@@ -46,7 +46,8 @@
     "find":"Procurar",
     "next":"Próximo",
     "zoom":"Ativar Zoom",
-    "print":"Impressão"
+    "print":"Impressão",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Volta",
@@ -72,7 +73,8 @@
     "userSettings":"configurações",
     "saveParam":"Salvar Parâmetros",
     "parameterSets":"Gerenciar conjuntos",
-    "selectSet":"Selecione Definir"
+    "selectSet":"Selecione Definir",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -158,5 +160,13 @@
     "deleteHeader":"excluir",
     "apply":"aplicar",
     "newSet":"Novo conjunto"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

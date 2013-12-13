@@ -46,7 +46,8 @@
     "find":"Faigh",
     "next":"Ar Aghaidh",
     "zoom":"Cumasaigh Zoom",
-    "print":"Priontáil"
+    "print":"Priontáil",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"ar ais",
@@ -72,7 +73,8 @@
     "userSettings":"Socruithe",
     "saveParam":"Sábháil Paraiméadair",
     "parameterSets":"Socraigh Bainistigh",
-    "selectSet":"roghnaigh Socraigh"
+    "selectSet":"roghnaigh Socraigh",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -158,5 +160,13 @@
     "deleteHeader":"Scrios",
     "apply":"Cuir iarratas isteach",
     "newSet":"Socraigh Nua"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

@@ -46,7 +46,8 @@
     "find":"finna",
     "next":"Næsta",
     "zoom":"Virkja Zoom",
-    "print":"Prenta"
+    "print":"Prenta",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Til baka",
@@ -72,7 +73,8 @@
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
     "parameterSets":"stjórna Leikmynd",
-    "selectSet":"valið er Stilla"
+    "selectSet":"valið er Stilla",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",
@@ -158,5 +160,13 @@
     "deleteHeader":"eyða",
     "apply":"gilda",
     "newSet":"nýtt sett"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

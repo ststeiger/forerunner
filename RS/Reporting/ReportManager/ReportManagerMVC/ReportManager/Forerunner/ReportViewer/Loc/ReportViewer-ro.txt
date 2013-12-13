@@ -46,7 +46,8 @@
     "find":"Găseşte",
     "next":"Înainte",
     "zoom":"Permite Zoom",
-    "print":"se tipări"
+    "print":"se tipări",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -72,7 +73,8 @@
     "userSettings":"Setări",
     "saveParam":"Salvare Parametrii",
     "parameterSets":"Gestionați Seturi",
-    "selectSet":"Selectați Set"
+    "selectSet":"Selectați Set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"imprima raportul",
@@ -145,8 +147,7 @@
     "dayNamesShort":["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
-    "defaultName":"
-neprezentare"
+    "defaultName":"neprezentare"
   },
   "manageParamSets": {
     "manageSets":"Gestionați Seturi",
@@ -159,5 +160,13 @@ neprezentare"
     "deleteHeader":"șterge",
     "apply":"aplica",
     "newSet":"Set nou"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

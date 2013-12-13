@@ -46,7 +46,8 @@
     "find":"Encontrar",
     "next":"Fespués",
     "zoom":"Habilitar zoom",
-    "print":"Imprimir"
+    "print":"Imprimir",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -73,7 +74,8 @@
     "paramarea":"Parámetros",
     "saveParam":"Guardar parámetros",
     "parameterSets":"administrar Sets",
-    "selectSet":"Seleccione Establecer"
+    "selectSet":"Seleccione Establecer",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -159,5 +161,13 @@
     "deleteHeader":"Borrar",
     "apply":"Aplicar",
     "newSet":"Nuevo Juego"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

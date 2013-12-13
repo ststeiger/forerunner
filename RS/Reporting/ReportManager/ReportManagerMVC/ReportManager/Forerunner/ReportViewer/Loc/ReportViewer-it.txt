@@ -46,7 +46,8 @@
     "find":"trovare",
     "next":"Successivo",
     "zoom":"Abilita Zoom",
-    "print":"stampare"
+    "print":"stampare",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"indietro",
@@ -72,7 +73,8 @@
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
     "parameterSets":"gestire Sets",
-    "selectSet":"selezionare Imposta"
+    "selectSet":"selezionare Imposta",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -158,5 +160,13 @@
     "deleteHeader":"cancellare",
     "apply":"azionare",
     "newSet":"nuovo set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

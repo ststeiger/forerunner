@@ -209,7 +209,7 @@ namespace Forerunner.SSRS.Viewer
             return w.ToString();
         }
 
-        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
+        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
         {
             byte[] result = null;
             string format;
@@ -249,17 +249,34 @@ namespace Forerunner.SSRS.Viewer
             try
             {
                 if (NewSession != "")
+                {
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    execInfo = rs.GetExecutionInfo();
+                }
                 else
+                {
                     execInfo = rs.LoadReport(reportPath, historyID);
+                }
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0 && parametersList != null)
+                if (execInfo.CredentialsRequired)
                 {
-                    rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    if (credentials != null)
+                    {
+                        execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                    }
+                    else
+                    {
+                        return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum);
+                    }
                 }
-                
+
+                if (execInfo.Parameters.Length != 0 && parametersList != null)
+                {
+                    execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                }
+
                 result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
                 if (result.Length != 0)
@@ -321,7 +338,7 @@ namespace Forerunner.SSRS.Viewer
                 return JsonUtility.WriteExceptionJSON(e);
             }
         }
-        public string GetParameterJson(string ReportPath, string SessionID, string paramList)
+        public string GetParameterJson(string ReportPath, string SessionID, string paramList, string credentials)
         {
             string historyID = null;
             string NewSession;
@@ -329,7 +346,7 @@ namespace Forerunner.SSRS.Viewer
             // BUGBUG:: This can be made more optimized if we can use an existing session id.
             // Need to add the plumbing there. - added by baotong - 2013-10-14
 
-            
+
             try
             {
                 rs.Credentials = GetCredentials();
@@ -340,16 +357,30 @@ namespace Forerunner.SSRS.Viewer
                     ExecutionHeader execHeader = new ExecutionHeader();
                     rs.ExecutionHeaderValue = execHeader;
                     rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                    execInfo = rs.GetExecutionInfo();
                 }
                 else
                     execInfo = rs.LoadReport(ReportPath, historyID);
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
+
+                if (execInfo.CredentialsRequired)
+                {
+                    if (credentials != null)
+                    {
+                        execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                    }
+                    else
+                    {
+                        return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, ReportPath, NewSession);
+                    }
+                }
+
                 if (paramList != null)
                     execInfo = rs.SetExecutionParameters(values, null);
 
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
+                if (execInfo.Parameters.Length != 0)
                 {
                     ReportParameter[] reportParameter = execInfo.Parameters;
                     return JsonUtility.ConvertParamemterToJSON(reportParameter, NewSession, ReportServerURL, ReportPath, execInfo.NumPages);
@@ -494,10 +525,19 @@ namespace Forerunner.SSRS.Viewer
                 w.WriteStartObject();
                 w.WriteMember("SessionID");
                 w.WriteString(execInfo.ExecutionID);
+                w.WriteMember("CredentialsRequired");
+                w.WriteBoolean(execInfo.CredentialsRequired);
                 w.WriteMember("ParametersRequired");
                 w.WriteBoolean(execInfo.Parameters.Length != 0 ? true : false);
                 w.WriteMember("ReportPath");
                 w.WriteString(execInfo.ReportPath);
+
+                if (execInfo.CredentialsRequired)
+                {
+                    w.WriteMember("Credentials");
+                    JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, execInfo.ReportPath, execInfo.ExecutionID, execInfo.NumPages.ToString())));
+                    w.WriteFromReader(r);
+                }
 
                 if (execInfo.Parameters.Length != 0)
                 {
@@ -505,6 +545,7 @@ namespace Forerunner.SSRS.Viewer
                     JsonReader r = new JsonBufferReader(JsonBuffer.From(JsonUtility.ConvertParamemterToJSON(execInfo.Parameters, execInfo.ExecutionID, ReportServerURL, execInfo.ReportPath, execInfo.NumPages)));
                     w.WriteFromReader(r);
                 }
+
                 w.WriteEndObject();
                 return w.ToString();
 

@@ -46,7 +46,8 @@
     "find":"查找",
     "next":"下一个",
     "zoom":"允许缩放",
-    "print":"打印"
+    "print":"打印",
+    "dsCredential":"数据源验证"
   },
   "toolbar": {
     "back":"返回",
@@ -72,7 +73,8 @@
     "userSettings":"设置",
     "saveParam":"保存参数",
     "parameterSets":"管理参数集",
-    "selectSet":"选择参数集"
+    "selectSet":"选择参数集",
+    "dsCredential":"数据源验证"
   },
   "print": {
     "title":"打印报表",
@@ -158,5 +160,13 @@
     "deleteHeader":"删除",
     "apply":"应用",
     "newSet":"新参数集"
+  },
+  "dsCredential": {
+    "title":"数据源验证",
+    "cancel":"取消",
+    "submit":"提交",
+    "username":"登录名:",
+    "password":"密码:",
+    "reset":"重置"
   }
 }

@@ -38,17 +38,20 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
-                var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-
                 if (data.renderError === true) {
                     me.enableTools([tp.itemRefresh]);
                 }
                 else {
+                    $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+
                     me.enableTools(me._viewerItems(false));
                     me._updateItemStates(data.newPageNum, maxNumPages);
+
+                    if (data.credentialRequired === false) {
+                        me.disableTools([tp.itemCredential]);
+                    }
                 }
-                
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -78,6 +81,20 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
+
+                if (data.credentialRequired === true) {
+                    me.enableTools([tp.itemCredential]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
+                me.enableTools([tp.itemCredential]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
+                me._clearItemStates();
+                me.disableTools(me._viewerItems());
+                me.enableTools([tp.itemReportBack, tp.itemCredential]);
             });
 
             // Hook up the toolbar element events
@@ -97,9 +114,9 @@ $(function () {
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
-
-          
+            
             me.addTools(1, false, me._viewerItems());
+            
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
@@ -115,17 +132,17 @@ $(function () {
             var listOfItems;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
             return listOfItems;
@@ -169,6 +186,7 @@ $(function () {
             var me = this;
             me._clearItemStates();
             me.disableTools(me._viewerItems(false));
+            me.disableTools([tp.itemCredential]);
             //me.enableTools([tp.itemReportBack]);
         },
     });  // $.widget

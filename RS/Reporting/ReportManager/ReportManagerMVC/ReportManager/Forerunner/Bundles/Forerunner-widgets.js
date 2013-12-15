@@ -2007,7 +2007,7 @@ $(function () {
 
 
 
-///#source 1 1 /Forerunner/ReportViewer/js/ParameterModel.js
+///#source 1 1 /Forerunner/ReportExplorer/js/ParameterModel.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 

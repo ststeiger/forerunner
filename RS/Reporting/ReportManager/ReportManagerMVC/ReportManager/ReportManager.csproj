@@ -219,6 +219,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
+    <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
@@ -246,7 +247,6 @@
     <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
     <Content Include="Forerunner\ReportViewer\js\DSCredential.js" />
     <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
-    <Content Include="Forerunner\ReportViewer\js\ParameterModel.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
     <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />

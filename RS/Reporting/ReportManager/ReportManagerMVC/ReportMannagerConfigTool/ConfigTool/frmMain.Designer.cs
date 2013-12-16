@@ -88,6 +88,7 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
+            this.btnSplit = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -433,6 +434,7 @@
             // 
             // tabActivation
             // 
+            this.tabActivation.Controls.Add(this.btnSplit);
             this.tabActivation.Controls.Add(this.btnMerge);
             this.tabActivation.Controls.Add(this.btnValidate);
             this.tabActivation.Controls.Add(this.btnCopy);
@@ -518,6 +520,13 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
+            // 
+            // btnSplit
+            // 
+            resources.ApplyResources(this.btnSplit, "btnSplit");
+            this.btnSplit.Name = "btnSplit";
+            this.btnSplit.UseVisualStyleBackColor = true;
+            this.btnSplit.Click += new System.EventHandler(this.btnSplit_Click);
             // 
             // frmMain
             // 
@@ -606,6 +615,7 @@
         private System.Windows.Forms.TextBox txtDefaultUserDomain;
         private System.Windows.Forms.Label lblDefaultUserDomain;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button btnSplit;
     }
 }
 

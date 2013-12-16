@@ -85,7 +85,7 @@
     "marginLeft":"Clé",
     "marginRight":"ceart",
     "print":"imprimir",
-    "cancel":"cancelar",
+    "cancel":"Cancelar",
     "unit":"mm",
     "margin":"Imill",
     "pageLayoutOptions":"Leathanach roghanna leagan amach"
@@ -101,9 +101,10 @@
     "isTrue":"True",
     "isFalse":"bréagach",
     "required":"Riachtanach",
-    "viewReport":"Féach Tuarascáil",
-    "cancel":"cancelar",
-    "datePicker":"Dáta"
+    "viewReport":"Féach",
+    "cancel":"Cancelar",
+    "datePicker":"Dáta",
+    "select":"Roghnaigh"
   },
   "validateError": {
     "required":"Riachtanach",

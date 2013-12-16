@@ -101,9 +101,10 @@
     "isTrue": "True",
     "isFalse": "False",
     "required": "Required",
-    "viewReport": "View Report",
-		"cancel": "cancel",
-		"datePicker":"Date"
+    "viewReport": "View",
+		"cancel": "Cancel",
+		"datePicker":"Date",
+		"select":"Select"
     },
 	"validateError": {
 		"required": "Required",

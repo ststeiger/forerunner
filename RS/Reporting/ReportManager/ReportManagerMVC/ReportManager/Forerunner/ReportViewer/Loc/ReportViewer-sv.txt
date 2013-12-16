@@ -85,7 +85,7 @@
     "marginLeft":"Vänster",
     "marginRight":"höger",
     "print":"skriva ut",
-    "cancel":"avbryta",
+    "cancel":"Avbryta",
     "unit":"mm",
     "margin":"marginaler",
     "pageLayoutOptions":"Sidlayout"
@@ -93,7 +93,7 @@
   "userSettings": {
     "title":"Användarinställningar",
     "submit":"Ok",
-    "cancel":"avboka",
+    "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"Sant",
     "isFalse":"Falskt",
     "required":"krävs",
-    "viewReport":"Visa rapport",
-    "cancel":"avbryta",
-    "datePicker":"Datum"
+    "viewReport":"Visa",
+    "cancel":"Avbryta",
+    "datePicker":"Datum",
+    "select":"Välj"
   },
   "validateError": {
     "required":"krävs",

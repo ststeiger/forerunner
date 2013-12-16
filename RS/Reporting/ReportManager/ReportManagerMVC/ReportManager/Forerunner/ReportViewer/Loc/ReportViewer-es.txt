@@ -86,7 +86,7 @@
     "marginLeft":"Izquierda",
     "marginRight":"Derecha",
     "print":"imprimir",
-    "cancel":"cancelar",
+    "cancel":"Cancelar",
     "unit":"mm",
     "margin":"margen",
     "pageLayoutOptions":"opciones de diseño de página"
@@ -102,9 +102,10 @@
     "isTrue":"verdadero",
     "isFalse":"Falso",
     "required":"Necesario",
-    "viewReport":"Ver Informe",
+    "viewReport":"Vista",
     "cancel":"Cancelar",
-    "datePicker":"Fecha"
+    "datePicker":"Fecha",
+    "select":"Seleccionar"
   },
   "validateError": {
     "required":"necesario",

@@ -101,9 +101,10 @@
     "isTrue":"是",
     "isFalse":"否",
     "required":"必填",
-    "viewReport":"加載報告",
+    "viewReport":"加載",
     "cancel":"取消",
-    "datePicker":"日期"
+    "datePicker":"日期",
+    "select":"選擇"
   },
   "validateError": {
     "required":"必填",

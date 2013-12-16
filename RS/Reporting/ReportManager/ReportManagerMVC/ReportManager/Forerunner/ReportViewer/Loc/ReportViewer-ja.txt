@@ -101,9 +101,10 @@
     "isTrue":"真",
     "isFalse":"僻",
     "required":"必修",
-    "viewReport":"レポートの表示",
+    "viewReport":"ビュー",
     "cancel":"キャンセル",
-    "datePicker":"日付"
+    "datePicker":"日付",
+    "select":"選択する"
   },
   "validateError": {
     "required":"必修",

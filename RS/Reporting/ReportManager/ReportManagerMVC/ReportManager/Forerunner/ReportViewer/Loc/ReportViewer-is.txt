@@ -85,7 +85,7 @@
     "marginLeft":"vinstri",
     "marginRight":"hægri",
     "print":"Prenta",
-    "cancel":"hætta",
+    "cancel":"Hætta",
     "unit":"mm",
     "margin":"framlegð",
     "pageLayoutOptions":"Útlit síðunnar"
@@ -93,7 +93,7 @@
   "userSettings": {
     "title":"notandi Stillingar",
     "submit":"Ok",
-    "cancel":"hætta",
+    "cancel":"Hætta",
     "ResponsiveUI":"móttækilegur HÍ"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"True",
     "isFalse":"False",
     "required":"krafist",
-    "viewReport":"Skoða skýrslu",
-    "cancel":"hætta",
-    "datePicker":"dagsetning"
+    "viewReport":"Skoða",
+    "cancel":"Hætta",
+    "datePicker":"dagsetning",
+    "select":"Velja"
   },
   "validateError": {
     "required":"krafist",

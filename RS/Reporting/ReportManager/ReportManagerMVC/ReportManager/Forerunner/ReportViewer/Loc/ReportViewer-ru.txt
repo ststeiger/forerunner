@@ -85,7 +85,7 @@
     "marginLeft":"левый",
     "marginRight":"правый",
     "print":"печатать",
-    "cancel":"отменить",
+    "cancel":"Oтменить",
     "unit":"mm",
     "margin":"край",
     "pageLayoutOptions":"Параметры макета страницы"
@@ -93,7 +93,7 @@
   "userSettings": {
     "title":"Настройки пользователя",
     "submit":"Оклахома",
-    "cancel":"отменить",
+    "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"Верно",
     "isFalse":"Неверно",
     "required":"Необходимый",
-    "viewReport":"Показать отчет",
-    "cancel":"отменить",
-    "datePicker":"дата"
+    "viewReport":"Показать",
+    "cancel":"Oтменить",
+    "datePicker":"дата",
+    "select":"выбирать"
   },
   "validateError": {
     "required":"Необходимый",

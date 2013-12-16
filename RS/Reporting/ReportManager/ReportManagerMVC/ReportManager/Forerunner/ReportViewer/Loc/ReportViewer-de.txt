@@ -101,9 +101,10 @@
     "isTrue":"Wahr",
     "isFalse":"Falsch",
     "required":"Erforderlich",
-    "viewReport":"Bericht anzeigen",
-    "cancel":"stornieren",
-    "datePicker":"Datum"
+    "viewReport":"Anzeigen",
+    "cancel":"Stornieren",
+    "datePicker":"Datum",
+    "select":"Wählen"
   },
   "validateError": {
     "required":"Erforderlich",

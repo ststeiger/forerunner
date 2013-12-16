@@ -6243,10 +6243,10 @@ $(function () {
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
                        "<div class='fr-param-submit-container'>" +
-                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
+                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
                        "</div>" +
                        "<div class='fr-param-cancel-container'>" +
-                          "<input type='button' class='fr-param-cancel' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
+                          "<input type='button' class='fr-param-cancel fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
                        "</div>" +
                     "</div>" +
                 "</form>" +
@@ -6705,7 +6705,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var $defaultOption = new $("<option value=''>&#60Select a Value&#62</option>");
+            var $defaultOption = new $("<option value=''>&#60" + me.options.$reportViewer.locData.paramPane.select + "&#62</option>");
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {

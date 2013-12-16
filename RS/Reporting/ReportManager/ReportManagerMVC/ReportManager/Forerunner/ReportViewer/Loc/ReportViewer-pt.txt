@@ -80,20 +80,20 @@
     "title":"Imprimir página de opção de layout",
     "pageHeight":"Altura",
     "pageWidth":"Largura",
-    "marginTop":"superior",
-    "marginBottom":"inferior",
+    "marginTop":"Superior",
+    "marginBottom":"Inferior",
     "marginLeft":"Esquerda",
     "marginRight":"Direita",
-    "print":"imprimir",
-    "cancel":"cancelar",
+    "print":"Imprimir",
+    "cancel":"Cancelar",
     "unit":"mm",
-    "margin":"margens",
+    "margin":"Margens",
     "pageLayoutOptions":"Página Opções de layout"
   },
   "userSettings": {
     "title":"Configurações do Usuário",
     "submit":"Ok",
-    "cancel":"cancelar",
+    "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"Verdade",
     "isFalse":"Falso",
     "required":"Necessário",
-    "viewReport":"Exibir relatório",
-    "cancel":"cancelar",
-    "datePicker":"Data"
+    "viewReport":"Exibir",
+    "cancel":"Cancelar",
+    "datePicker":"Data",
+    "select":"Selecionar"
   },
   "validateError": {
     "required":"Necessário",

@@ -85,7 +85,7 @@
     "marginLeft":"sinistro",
     "marginRight":"destro",
     "print":"Stampa",
-    "cancel":"annullare",
+    "cancel":"Cancellare",
     "unit":"mm",
     "margin":"margini",
     "pageLayoutOptions":"Opzioni layout pagina"
@@ -93,7 +93,7 @@
   "userSettings": {
     "title":"Impostazioni utente",
     "submit":"Ok",
-    "cancel":"cancellare",
+    "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"Vero",
     "isFalse":"Falso",
     "required":"Richiesto",
-    "viewReport":"Visualizza report",
-    "cancel":"cancellare",
-    "datePicker":"Data"
+    "viewReport":"Visualizza",
+    "cancel":"Cancellare",
+    "datePicker":"Data",
+    "select":"Selezionare"
   },
   "validateError": {
     "required":"Richiesto",

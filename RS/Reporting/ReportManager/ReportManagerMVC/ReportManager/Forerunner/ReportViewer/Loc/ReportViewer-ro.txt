@@ -85,7 +85,7 @@
     "marginLeft":"stâng",
     "marginRight":"corect",
     "print":"imprima",
-    "cancel":"anula",
+    "cancel":"Anula",
     "unit":"mm",
     "margin":"Margini",
     "pageLayoutOptions":"Opțiunile de punere în pagină"
@@ -93,7 +93,7 @@
   "userSettings": {
     "title":"Setari utilizator",
     "submit":"bine",
-    "cancel":"anula",
+    "cancel":"Anula",
     "ResponsiveUI":"UI receptiv"
   },
   "paramPane": {
@@ -101,9 +101,10 @@
     "isTrue":"Adevărat",
     "isFalse":"False",
     "required":"Necesare",
-    "viewReport":"Vizualizare raport",
-    "cancel":"anula",
-    "datePicker":"Data"
+    "viewReport":"Vedere",
+    "cancel":"Anula",
+    "datePicker":"Data",
+    "select":"Selecta"
   },
   "validateError": {
     "required":"Necesare",

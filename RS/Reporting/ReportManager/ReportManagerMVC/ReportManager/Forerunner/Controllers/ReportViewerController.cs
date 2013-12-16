@@ -20,6 +20,7 @@ namespace ReportManager.Controllers
         public string ReportPath { get; set; }
         public string ParameterList { get; set; }
         public int PageNumber {get; set;}
+        public string DSCredentials { get; set; }
     }
 
     [ExceptionLog]
@@ -120,7 +121,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -137,7 +138,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

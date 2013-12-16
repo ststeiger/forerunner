@@ -47,7 +47,8 @@
     "find":"Trouver",
     "next":"Suivant",
     "zoom":"Activer Zoom",
-    "print":"Imprimer"
+    "print":"Imprimer",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Retour",
@@ -73,7 +74,8 @@
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Gérer jeux",
-    "selectSet":"Sélectionnez Set"
+    "selectSet":"Sélectionnez Set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -84,7 +86,7 @@
     "marginLeft":"gauche",
     "marginRight":"droite",
     "print":"Imprimer",
-    "cancel":"résilier",
+    "cancel":"Résilier",
     "unit":"mm",
     "margin":"marges",
     "pageLayoutOptions":"Les options de mise"
@@ -92,7 +94,7 @@
   "userSettings": {
     "title":"Paramètres de l'utilisateur",
     "submit":"Ok",
-    "cancel":"résilier",
+    "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive"
   },
   "paramPane": {
@@ -100,9 +102,10 @@
     "isTrue":"Vrai",
     "isFalse":"Faux",
     "required":"Voulu",
-    "viewReport":"Voir le Rapport",
-    "cancel":"résilier",
-    "datePicker":"Date"
+    "viewReport":"Voir",
+    "cancel":"Résilier",
+    "datePicker":"Date",
+    "select":"Sélectionner"
   },
   "validateError": {
     "required":"Demandé",
@@ -159,5 +162,13 @@
     "deleteHeader":"Effacer",
     "apply":"Appliquer",
     "newSet":"Nouveau jeu"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

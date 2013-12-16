@@ -105,6 +105,8 @@ $(function () {
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             me.renderTime = new Date().getTime();
             me.paramDefs = null;
+            me.credentialDefs = null;
+            me.datasourceCredentials = null;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -183,6 +185,14 @@ $(function () {
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
+        },
+        /**
+        * @function $.forerunner.reportViewer#getDataSourceCredential
+        * @return {String} datasource credential if saved datasource credential exist; return null if not
+        */
+        getDataSourceCredential: function () {
+            var me = this;
+            return me.datasourceCredentials ? me.datasourceCredentials : null
         },
         /**
          * @function $.forerunner.reportViewer#triggerEvent
@@ -303,7 +313,7 @@ $(function () {
             }
                        
             me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
+            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
 
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
@@ -316,7 +326,7 @@ $(function () {
             }
             
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
+            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -598,6 +608,8 @@ $(function () {
             var me = this;
             var action = me.actionHistory.pop();
             if (action) {
+                me._clearReportViewerForDrill();
+
                 me.options.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
@@ -607,10 +619,20 @@ $(function () {
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
+                me.renderError = action.renderError;
                 
+                if (action.credentialDefs !== null) {
+                    me.credentialDefs = action.credentialDefs;
+                    me.datasourceCredentials = action.savedCredential;
+
+                    if (!me.$credentialDialog)
+                        me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
+
+                    me.$credentialDialog.dsCredential("resetSavedCredential", me.credentialDefs.CredentialsList, me.datasourceCredentials);
+                }
 
                 //Trigger Change Report, disables buttons.  Differnt than pop
-                me._trigger(events.changeReport, null, { path: me.options.reportPath });
+                me._trigger(events.changeReport, null, { path: me.options.reportPath, credentialRequired: me.credentialDefs ? true : false });
 
                 //This means we changed reports
                 if (action.FlushCache) {
@@ -877,7 +899,6 @@ $(function () {
             
             me._callToggle(toggleID);
         },
-
         
         _callToggle : function(toggleID) {
             var me = this;
@@ -1009,6 +1030,7 @@ $(function () {
                         me.lock = 0;
                     }
                     else {
+                        me.renderError = false;
                         me.sessionID = data.SessionID;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.options.reportPath;
@@ -1017,7 +1039,12 @@ $(function () {
                             me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
 
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
-                        if (data.ParametersRequired) {
+                        if (data.CredentialsRequired) {
+                            me.$reportAreaContainer.find(".Page").detach();
+                            me._setScrollLocation(0, 0);
+                            me._writeDSCredential(data.Credentials);
+                        }
+                        else if (data.ParametersRequired) {
                             me.$reportAreaContainer.find(".Page").detach();
                             me._setScrollLocation(0, 0);
                             me._showParameters(1, data.Parameters);
@@ -1095,9 +1122,21 @@ $(function () {
 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
+                reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
             });
+
+            me._clearReportViewerForDrill();
             me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
+        },
+        _clearReportViewerForDrill: function () {
+            //clean current report's property that not all reports have
+            //when drill to another report or drill back
+            var me = this;
+
+            me.datasourceCredentials = null;
+            me.credentialDefs = null;
         },
         _setScrollLocation: function (top, left) {
             var me = this;
@@ -1340,7 +1379,8 @@ $(function () {
                 data: {
                     ReportPath: me.options.reportPath,
                     SessionID: me.getSessionID(),
-                    ParameterList: null
+                    ParameterList: null,
+                    DSCredentials: me.getDataSourceCredential()
                 },
                 dataType: "json",
                 async: true,
@@ -1403,7 +1443,8 @@ $(function () {
                     data : {
                         ReportPath: me.options.reportPath,
                         SessionID: me.getSessionID(),
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        DSCredentials: me.getDataSourceCredential()
                     },
                     dataType: "json",
                     async: false,
@@ -1460,7 +1501,6 @@ $(function () {
             me.origionalReportPath = "";
             me.renderError = false;
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
-            
         },
         /**
          * Load the given report
@@ -1498,6 +1538,41 @@ $(function () {
                 pageNum = 1;
             }
             me._loadPage(pageNum, false, null, paramList, true);
+        },
+        /**
+        * Load current report with the given datasource credential list
+        *
+        * @function $.forerunner.reportViewer#loadReportWithCustomDSCredential
+        * @param {Object} credentialList - datasource credential list object
+        */
+        loadReportWithCustomDSCredential: function (credentialList) {
+            var me = this;
+
+            if (me.getDataSourceCredential()) {
+                //reset current credential before next load
+                me._resetDSCredential();
+            }
+            me.datasourceCredentials = credentialList;
+
+            if (me.paramLoaded) {
+                var paramList = me.options.paramArea.reportParameter("getParamsList");
+                me._loadPage(1, false, null, paramList, true);
+            }
+            else {
+                me.loadReport(me.getReportPath(), 1, null, null, true);
+            }
+        },
+        _resetDSCredential: function () {
+            var me = this;
+            me.flushCache();
+            
+            me.sessionID = null;
+
+            var errorpage = me.$reportContainer.find(".Page");
+            if (errorpage)
+                errorpage.detach();
+
+            me._trigger(events.resetCredential, null, { paramLoaded: me.paramLoaded });
         },
         _renderJson : function () {
             var me = this;
@@ -1567,7 +1642,8 @@ $(function () {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        DSCredentials: me.getDataSourceCredential()
                     },
                     async: true,
                     success: function (data) {
@@ -1602,9 +1678,15 @@ $(function () {
             if (me.options.userSettings && me.options.userSettings.responsiveUI === true) {
                 responsiveUI = true;
             }
+
+            if (data.CredentialsRequired) {
+                me._writeDSCredential(data);
+                return;
+            }
+
             $report.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
 
-            if (!loadOnly && !data.Exception && data.ReportContainer.Report.AutoRefresh) {
+            if (!loadOnly && data.ReportContainer && data.ReportContainer.Report.AutoRefresh) {
                 me._addSetPageCallback(function () {
                     me._setAutoRefresh(data.ReportContainer.Report.AutoRefresh);
                 });
@@ -1643,7 +1725,11 @@ $(function () {
             if (me.pages[pageNum] && me.pages[pageNum].isRendered === true)
                 return;
 
-            if (!me.pages[pageNum].reportObj.Exception) {
+            if (me.pages[pageNum].reportObj.Exception) {
+                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
+            }
+            else {
+                me.renderError = false;
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
 
                 //Render responsive if set
@@ -1655,19 +1741,39 @@ $(function () {
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
                 me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
             }
-            else
-                me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
 
             me.pages[pageNum].isRendered = true;
         },
         _renderPageError: function ($container, errorData) {
             var me = this;
-
+            
             me.renderError = true;
             $container.reportRender({ reportViewer: me });
             $container.reportRender("writeError", errorData);
+            me.removeLoadingIndicator();
+            me._trigger(events.renderError, null, errorData);
         },
-                
+        _writeDSCredential: function (data) {
+            var me = this;
+            me.flushCache();
+            me._resetViewer(false);
+            me.datasourceCredentials = null;
+            me.credentialDefs = data;
+
+            me.sessionID = data.SessionID;
+            me.numPages = data.NumPages;
+            me.curPage = 1;
+
+            me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
+            me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+
+            me._trigger(events.showCredential);
+            me.removeLoadingIndicator();
+        },
+        showDSCredential: function () {
+            var me = this;
+            me.$credentialDialog.dsCredential("openDialog");
+        },
         _sessionPing: function () {
             // Ping each report so that the seesion does not expire on the report server
             var me = this;
@@ -1901,7 +2007,7 @@ $(function () {
 
 
 
-///#source 1 1 /Forerunner/ReportViewer/js/ParameterModel.js
+///#source 1 1 /Forerunner/ReportExplorer/js/ParameterModel.js
 // Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
@@ -2667,17 +2773,19 @@ $(function () {
             var me = this;
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-            $messageBox = new $("<div class='fr-core-dialog-innerPage fr-core-center'>" +
-                "<div class='fr-messagebox-innerpage'>" +
-                    "<div class='fr-core-dialog-header'>" +
-                        "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
-                    "</div>" +
-                    "<div class='fr-messagebox-content'>" +
-                        "<span class='fr-messagebox-msg'/>" +
-                    "</div>" +
-                    "<div class='fr-core-dialog-submit-container'>" +
-                        "<div class='fr-core-center'>" +
-                            "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+            $messageBox = new $(
+                "<div class='fr-core-dialog-innerPage fr-core-center'>" +
+                    "<div class='fr-messagebox-innerpage'>" +
+                        "<div class='fr-core-dialog-header'>" +
+                            "<div class='fr-messagebox-title'>" + locData.dialog.title + "</div>" +
+                        "</div>" +
+                        "<div class='fr-messagebox-content'>" +
+                            "<span class='fr-messagebox-msg'/>" +
+                        "</div>" +
+                        "<div class='fr-core-dialog-submit-container'>" +
+                            "<div class='fr-core-center'>" +
+                                "<input name='close' type='button' class='fr-messagebox-close-id fr-messagebox-submit fr-core-dialog-button' value='" + locData.dialog.close + "' />" +
+                            "</div>" +
                         "</div>" +
                     "</div>" +
                 "</div>");
@@ -3391,18 +3499,23 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
-                var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-
                 if (data.renderError === true) {
                     me.enableTools([tb.btnMenu, tb.btnRefresh]);
+                    me._clearBtnStates();
                 }
                 else {
+                    $("input.fr-toolbar-reportpage-textbox", me.element).val(data.newPageNum);
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+
                     me.enableTools(me._viewerButtons(false));
                     me._updateBtnStates(data.newPageNum, maxNumPages);
 
-                    if (data.numOfVisibleParameters === 0)
+                    if (data.paramLoaded && data.numOfVisibleParameters === 0)
                         me.disableTools([tb.btnParamarea]);
+
+                    if (data.credentialRequired === false) {
+                        me.disableTools([tb.btnCredential]);
+                    }
                 }
             });
 
@@ -3437,6 +3550,24 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
+
+                if (data.credentialRequired === true) {
+                    me.enableTools([tb.btnCredential]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
+                me.enableTools([tb.btnCredential]);
+                //add credential button to the end of the toolbar if report require credential.
+            });
+
+            me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
+                me._clearBtnStates();
+                me.disableTools(me._viewerButtons());
+                if (data.paramLoaded === false) {
+                    me.disableTools([tb.btnParamarea]);
+                }
+                me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
             // Hook up the toolbar element events
@@ -3467,17 +3598,17 @@ $(function () {
             var listOfButtons;
 
             if (allButtons === true || allButtons === undefined)
-                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+                listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
             else
-                listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
+                listOfButtons = [tb.btnMenu, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnZoom, tb.btnPrint];
 
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                    listOfButtons = [tb.btnMenu, tb.btnReportBack, tb.btnCredential, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
                 else
-                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
+                    listOfButtons = [tb.btnMenu, tb.btnNav, tb.btnCredential, tb.btnRefresh, tb.btnDocumentMap, tg.btnExportDropdown, tg.btnVCRGroup, tg.btnFindGroup, tb.btnPrint];
             }
 
             return listOfButtons;
@@ -3521,6 +3652,7 @@ $(function () {
             var me = this;
             me._clearBtnStates();
             me.disableTools(me._viewerButtons(false));
+            me.disableTools([tb.btnCredential, tb.btnParamarea]);
             //me.enableTools([tb.btnReportBack]);
         },
         _destroy: function () {
@@ -3572,17 +3704,20 @@ $(function () {
 
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
-                $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
-                var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
-
                 if (data.renderError === true) {
                     me.enableTools([tp.itemRefresh]);
                 }
                 else {
+                    $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
+                    var maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
+
                     me.enableTools(me._viewerItems(false));
                     me._updateItemStates(data.newPageNum, maxNumPages);
+
+                    if (data.credentialRequired === false) {
+                        me.disableTools([tp.itemCredential]);
+                    }
                 }
-                
             });
 
             me.options.$reportViewer.on(events.reportViewerShowDocMap(), function (e, data) {
@@ -3612,6 +3747,20 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
+
+                if (data.credentialRequired === true) {
+                    me.enableTools([tp.itemCredential]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
+                me.enableTools([tp.itemCredential]);
+            });
+
+            me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
+                me._clearItemStates();
+                me.disableTools(me._viewerItems());
+                me.enableTools([tp.itemReportBack, tp.itemCredential]);
             });
 
             // Hook up the toolbar element events
@@ -3631,9 +3780,9 @@ $(function () {
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);
-
-          
+            
             me.addTools(1, false, me._viewerItems());
+            
             //me.enableTools([tp.itemReportBack]);
             // Need to add this to work around the iOS7 footer.
             // It has to be added to the scrollable area for it to scroll up.
@@ -3649,17 +3798,17 @@ $(function () {
             var listOfItems;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemReportBack, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
             return listOfItems;
@@ -3703,6 +3852,7 @@ $(function () {
             var me = this;
             me._clearItemStates();
             me.disableTools(me._viewerItems(false));
+            me.disableTools([tp.itemCredential]);
             //me.enableTools([tp.itemReportBack]);
         },
     });  // $.widget
@@ -6093,10 +6243,10 @@ $(function () {
                    "<div class='fr-param-element-border'><input type='text' style='display:none'></div>" +
                    "<div>" +
                        "<div class='fr-param-submit-container'>" +
-                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
+                          "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
                        "</div>" +
                        "<div class='fr-param-cancel-container'>" +
-                          "<input type='button' class='fr-param-cancel' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
+                          "<input type='button' class='fr-param-cancel fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
                        "</div>" +
                     "</div>" +
                 "</form>" +
@@ -6555,7 +6705,7 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var $defaultOption = new $("<option value=''>&#60Select a Value&#62</option>");
+            var $defaultOption = new $("<option value=''>&#60" + me.options.$reportViewer.locData.paramPane.select + "&#62</option>");
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
@@ -7952,12 +8102,16 @@ $(function () {
             $dlg = me.options.$appContainer.find(".fr-print-section");
             if ($dlg.length === 0) {
                 $dlg = $("<div class='fr-print-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.reportPrint({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer
-                });
                 me.options.$appContainer.append($dlg);
             }
+            $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
+
+            $dlg = me.options.$appContainer.find(".fr-dsc-section");
+            if ($dlg.length === 0) {
+                $dlg = $("<div class='fr-dsc-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                me.options.$appContainer.append($dlg);
+            }
+            $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
             $dlg = me.options.$appContainer.find(".fr-mps-section");
             if ($dlg.length === 0) {
@@ -8274,6 +8428,217 @@ $(function () {
         },
     });  // $.widget
 });  // function()
+///#source 1 1 /Forerunner/ReportViewer/js/DSCredential.js
+/**
+ * @file Contains the datasource credential modal dialog widget.
+ *
+ */
+
+// Assign or create the single globally scoped variable
+var forerunner = forerunner || {};
+
+// Forerunner SQL Server Reports
+forerunner.ssr = forerunner.ssr || {};
+
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+    var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var dsCredential = locData.dsCredential;
+    /**
+   * Widget used to show datasource credential dialog
+   *
+   * @namespace $.forerunner.dsCredemtial
+   */
+    $.widget(widgets.getFullname(widgets.dsCredential), {
+        options: {
+            $reportViewer: null,
+            $appContainer: null
+        },
+        create: function () {
+
+        },
+        _init: function () {
+            var me = this;
+
+            me.element.html("");
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var $dialog = $(
+                "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
+                    headerHtml +
+                    "<form class='fr-core-dialog-form fr-dsc-form'>" +
+                        "<div class='fr-core-center'>" +
+                            "<div class='fr-dsc-main-container'></div>" +
+                            "<div class='fr-core-dialog-submit-container'>" +
+                                "<div class='fr-core-center'>" +
+                                    "<input name='submit' type='button' class='fr-dsc-submit-id fr-dsc-button fr-core-dialog-button' value='" + dsCredential.submit + "' />" +
+                                    "<input name='reset' type='button' class='fr-dsc-reset-id fr-dsc-button fr-core-dialog-button' value='" + dsCredential.reset + "' />" +
+                                "</div>" +
+                            "</div>" +
+                        "</div>" +
+                    "</form>" +
+                "</div>");
+
+            me.element.append($dialog);
+            me.$container = me.element.find(".fr-dsc-main-container");
+            me.$form = me.element.find('.fr-dsc-form');
+
+            me._resetValidateMessage();
+
+            me.element.find(".fr-dsc-cancel").on("click", function () {
+                me.closeDialog();
+            });
+
+            me.element.find(".fr-dsc-reset-id").on("click", function () {
+                me._resetCredential();
+            });
+
+            me.element.find(".fr-dsc-submit-id").on("click", function () {
+                me._submitCredential();
+            });
+
+            if (me.options.$reportViewer) {
+                me._initCallback();
+            }
+        },
+        _initCallback: function () {
+            var me = this;
+
+            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
+                //highlight error datasource label by change color to right
+                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/)[0];
+                var datasourceID = error.replace(/["“”]/g, '');
+                me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+            });
+        },
+        _createRows: function (credentials) {
+            var me = this;
+            me.$container.html("");
+
+            $.each(credentials, function (index, credential) {
+                var $item = $(
+                  "<div class='fr-dsc-item-container' name='" + credential.DataSourceID + "'>" +
+                      "<div class='fr-dsc-prompt'>" +
+                          "<div>" + credential.Name + " - " + credential.Prompt + "</div>" +
+                      "</div>" +
+                      "<div class='fr-dsc-username'>" +
+                          "<label class='fr-dsc-label' >" + dsCredential.username + "</label>" +
+                          "<div class='fr-dsc-input-container'>" +
+                              "<input type='text' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
+                              "<span class='fr-dsc-error-span' />" +
+                          "</div>" +
+                      "</div>" +
+                      "<div class='fr-dsc-password'>" +
+                          "<label class='fr-dsc-label' >" + dsCredential.password + "</label>" +
+                          "<div class='fr-dsc-input-container'>" +
+                              "<input type='password' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
+                              "<span class='fr-dsc-error-span' />" +
+                          "</div>" +
+                      "</div>" +
+                  "</div>");
+
+                $item.find('.fr-dsc-text-input').on("keydown", function (e) {
+                    if (e.keyCode === 13) {
+                        me._submitCredential();
+                    } // Enter
+                });
+
+                me.$container.append($item);
+            });
+
+            me._validateForm(me.$form);
+        },
+        _submitCredential: function () {
+            var me = this;
+
+            var credentialList = me.getCredentialList();
+            if (credentialList) {
+                me.options.$reportViewer.reportViewer("loadReportWithCustomDSCredential", credentialList);
+                me.closeDialog();
+
+                me.element.find(".fr-dsc-label-error").removeClass("fr-dsc-label-error");
+            }
+        },
+        openDialog: function () {
+            var me = this;
+            forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+        },
+        writeDialog: function (credentials) {
+            var me = this;
+            if (credentials) {
+                me._createRows(credentials);
+                forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            }
+        },
+        closeDialog: function () {
+            var me = this;
+            forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
+        },
+        resetSavedCredential: function (credentials, savedCredential) {
+            var me = this;
+
+            if (credentials) {
+                me._createRows(credentials);
+            }
+            if (savedCredential) {
+                var savedData = JSON.parse(savedCredential);
+                
+                $.each(savedData.CredentialList, function (index, data) {
+                    var targetContainer = me.element.find("[name='" + data.DataSourceID + "']");
+                    targetContainer.find(".fr-dsc-username-input").val(data.Username);
+                    targetContainer.find(".fr-dsc-password-input").val(data.Password);
+                });
+            }
+        },
+        _resetCredential: function () {
+            var me = this;
+            me.element.find(".fr-dsc-text-input").val("");
+        },
+        getCredentialList: function () {
+            var me = this;
+            if (me.$form.valid()) {
+                var credentialList = [];
+                var containers = me.options.$appContainer.find(".fr-dsc-item-container");
+
+                $.each(containers, function (index, container) {
+                    var dsID = $(container).attr("name");
+                    var un = $(container).find(".fr-dsc-username-input").val();
+                    var pwd = $(container).find(".fr-dsc-password-input").val();
+
+                    credentialList.push({ DataSourceID: dsID, Username: un, Password: pwd });
+                });
+                return JSON.stringify({ "CredentialList": credentialList });
+            }
+            return null;
+        },
+        _validateForm: function (form) {
+            form.validate({
+                
+                errorPlacement: function (error, element) {
+                    error.appendTo($(element).parent().find(".fr-dsc-error-span"));
+                },
+                highlight: function (element) {
+                    $(element).parent().find(".fr-dsc-error-span").addClass("fr-dsc-error-position");
+                    $(element).addClass("fr-dsc-error");
+                },
+                unhighlight: function (element) {
+                    $(element).parent().find(".fr-dsc-error-span").removeClass("fr-dsc-error-position");
+                    $(element).removeClass("fr-dsc-error");
+                }
+            });
+        },
+        _resetValidateMessage: function () {
+            var me = this;
+            var error = locData.validateError;
+
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                number: error.number,
+                digits: error.digits
+            });
+        },
+    }); //$.widget
+}); // $(function())
 ///#source 1 1 /Forerunner/ReportExplorer/js/ReportExplorerEZ.js
 /**
  * @file Contains the reportExplorer widget.

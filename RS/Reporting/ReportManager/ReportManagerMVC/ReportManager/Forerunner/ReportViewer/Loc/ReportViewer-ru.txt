@@ -46,7 +46,8 @@
     "find":"Поиск",
     "next":"Следующий",
     "zoom":"Enable Zoom",
-    "print":"Напечатать"
+    "print":"Напечатать",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Назад",
@@ -72,7 +73,8 @@
     "userSettings":"окружение",
     "saveParam":"Сохранить параметры",
     "parameterSets":"управлять наборами",
-    "selectSet":"Выбор набора"
+    "selectSet":"Выбор набора",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Печать отчета",
@@ -83,7 +85,7 @@
     "marginLeft":"левый",
     "marginRight":"правый",
     "print":"печатать",
-    "cancel":"отменить",
+    "cancel":"Oтменить",
     "unit":"mm",
     "margin":"край",
     "pageLayoutOptions":"Параметры макета страницы"
@@ -91,7 +93,7 @@
   "userSettings": {
     "title":"Настройки пользователя",
     "submit":"Оклахома",
-    "cancel":"отменить",
+    "cancel":"Oтменить",
     "ResponsiveUI":"Отзывчивый интерфейс"
   },
   "paramPane": {
@@ -99,9 +101,10 @@
     "isTrue":"Верно",
     "isFalse":"Неверно",
     "required":"Необходимый",
-    "viewReport":"Показать отчет",
-    "cancel":"отменить",
-    "datePicker":"дата"
+    "viewReport":"Показать",
+    "cancel":"Oтменить",
+    "datePicker":"дата",
+    "select":"выбирать"
   },
   "validateError": {
     "required":"Необходимый",
@@ -158,5 +161,13 @@
     "deleteHeader":"удалять",
     "apply":"применять",
     "newSet":"Новый набор"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

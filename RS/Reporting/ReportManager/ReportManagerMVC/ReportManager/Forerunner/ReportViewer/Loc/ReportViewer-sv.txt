@@ -46,7 +46,8 @@
     "find":"Hitta",
     "next":"nästa",
     "zoom":"Aktivera Zoom",
-    "print":"Skriv ut"
+    "print":"Skriv ut",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"bakåt",
@@ -72,7 +73,8 @@
     "userSettings":"Inställningar",
     "saveParam":"Spara Parameter",
     "parameterSets":"hantera uppsättningar",
-    "selectSet":"välj set"
+    "selectSet":"välj set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -83,7 +85,7 @@
     "marginLeft":"Vänster",
     "marginRight":"höger",
     "print":"skriva ut",
-    "cancel":"avbryta",
+    "cancel":"Avbryta",
     "unit":"mm",
     "margin":"marginaler",
     "pageLayoutOptions":"Sidlayout"
@@ -91,7 +93,7 @@
   "userSettings": {
     "title":"Användarinställningar",
     "submit":"Ok",
-    "cancel":"avboka",
+    "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI"
   },
   "paramPane": {
@@ -99,9 +101,10 @@
     "isTrue":"Sant",
     "isFalse":"Falskt",
     "required":"krävs",
-    "viewReport":"Visa rapport",
-    "cancel":"avbryta",
-    "datePicker":"Datum"
+    "viewReport":"Visa",
+    "cancel":"Avbryta",
+    "datePicker":"Datum",
+    "select":"Välj"
   },
   "validateError": {
     "required":"krävs",
@@ -158,5 +161,13 @@
     "deleteHeader":"Radera",
     "apply":"Ansök",
     "newSet":"Nytt Set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

@@ -46,7 +46,8 @@
     "find":"Găseşte",
     "next":"Înainte",
     "zoom":"Permite Zoom",
-    "print":"se tipări"
+    "print":"se tipări",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -72,7 +73,8 @@
     "userSettings":"Setări",
     "saveParam":"Salvare Parametrii",
     "parameterSets":"Gestionați Seturi",
-    "selectSet":"Selectați Set"
+    "selectSet":"Selectați Set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"imprima raportul",
@@ -83,7 +85,7 @@
     "marginLeft":"stâng",
     "marginRight":"corect",
     "print":"imprima",
-    "cancel":"anula",
+    "cancel":"Anula",
     "unit":"mm",
     "margin":"Margini",
     "pageLayoutOptions":"Opțiunile de punere în pagină"
@@ -91,7 +93,7 @@
   "userSettings": {
     "title":"Setari utilizator",
     "submit":"bine",
-    "cancel":"anula",
+    "cancel":"Anula",
     "ResponsiveUI":"UI receptiv"
   },
   "paramPane": {
@@ -99,9 +101,10 @@
     "isTrue":"Adevărat",
     "isFalse":"False",
     "required":"Necesare",
-    "viewReport":"Vizualizare raport",
-    "cancel":"anula",
-    "datePicker":"Data"
+    "viewReport":"Vedere",
+    "cancel":"Anula",
+    "datePicker":"Data",
+    "select":"Selecta"
   },
   "validateError": {
     "required":"Necesare",
@@ -145,8 +148,7 @@
     "dayNamesShort":["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
-    "defaultName":"
-neprezentare"
+    "defaultName":"neprezentare"
   },
   "manageParamSets": {
     "manageSets":"Gestionați Seturi",
@@ -159,5 +161,13 @@ neprezentare"
     "deleteHeader":"șterge",
     "apply":"aplica",
     "newSet":"Set nou"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

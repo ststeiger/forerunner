@@ -220,7 +220,7 @@ namespace Forerunner.SSRS.Manager
                                 INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.2','0'
                             END
                             ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.2'  FROM ForerunnerDBVersion
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.2'  FROM ForerunnerDBVersion
 
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 
@@ -246,17 +246,21 @@ namespace Forerunner.SSRS.Manager
                            /*  Version update Code */
                            IF @DBVersionPrev = 1.1
                             BEGIN
-	                            DECLARE @PKName varchar(200) 
-	                            select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
-	                            DECLARE @SQL VARCHAR(1000)
-	                            SET @SQL = 'ALTER TABLE ForerunnerUserItemProperties DROP CONSTRAINT ' + @PKName
-	                            EXEC (@SQL)
+                                DECLARE @PKName varchar(200) 
+                                select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
+                                IF @PKName IS NOT NULL
+                                BEGIN
+                                    DECLARE @SQL VARCHAR(1000)
+                                    SET @SQL = 'ALTER TABLE ForerunnerUserItemProperties DROP CONSTRAINT ' + @PKName
+	                                EXEC (@SQL)
+                                END
 
 	                            ALTER TABLE ForerunnerUserItemProperties ALTER COLUMN UserID uniqueidentifier NULL
 
-	                            ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
-
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = '1.2' FROM ForerunnerDBVersion
+                                IF NOT EXISTS(SELECT * FROM sysobjects WHERE xtype = 'UQ' AND name = 'uc_uip_ItemUser')
+                                BEGIN
+                                    ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
+                                END
 
                                 SELECT @DBVersionPrev = '1.2'
                             END
@@ -334,7 +338,7 @@ namespace Forerunner.SSRS.Manager
             bool canEditAllUsersSet = HasPermission(path, "Update Parameters");
             ParameterModel model = ParameterModel.parse(parameters, ParameterModel.AllUser.KeepDefinition, canEditAllUsersSet);
 
-            string userParameters = model.GetUserParameters();
+            string userParameters = model.GetUserParameters(ParameterModel.GeneratedFields.Exclude);
             string returnValue = SaveUserParamatersInternal(path, userParameters);
             if (returnValue.IndexOf("Success", StringComparison.InvariantCultureIgnoreCase) == -1)
             {
@@ -343,7 +347,7 @@ namespace Forerunner.SSRS.Manager
 
             if (canEditAllUsersSet)
             {
-                string allUserParameters = model.GetAllUserParameters();
+                string allUserParameters = model.GetAllUserParameters(ParameterModel.GeneratedFields.Exclude);
                 returnValue = SaveAllUserParamaters(path, allUserParameters);
             }
 
@@ -472,7 +476,7 @@ namespace Forerunner.SSRS.Manager
                     }
                 }
 
-                return model.ToJson();
+                return model.ToJson(ParameterModel.GeneratedFields.Include);
             }
             finally
             {

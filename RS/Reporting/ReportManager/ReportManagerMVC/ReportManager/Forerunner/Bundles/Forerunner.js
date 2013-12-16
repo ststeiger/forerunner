@@ -177,6 +177,8 @@ $(function () {
             manageParamSets: "manageParamSets",
             /** @constant */
             parameterModel: "parameterModel",
+            /** @constant */
+            dsCredential: "dsCredential",
 
             /** @constant */
             namespace: "forerunner",
@@ -326,6 +328,21 @@ $(function () {
             /** @constant */
             modelSetChanged: "setchanged",
             parameterModelSetChanged: function () { return (forerunner.ssr.constants.widgets.parameterModel + this.modelSetChanged).toLowerCase(); },
+
+            /** @constant */
+            showCredential: "showCredential",
+            /** widget + event, lowercase */
+            reportViewerShowCredential: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.showCredential).toLowerCase(); },
+
+            /** @constant */
+            resetCredential: "resetCredential",
+            /** widget + event, lowercase */
+            reportViewerResetCredential: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.resetCredential).toLowerCase(); },
+
+            /** @constant */
+            renderError: "renderError",
+            /** widget + event, lowercase */
+            reportViewerRenderError: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.renderError).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

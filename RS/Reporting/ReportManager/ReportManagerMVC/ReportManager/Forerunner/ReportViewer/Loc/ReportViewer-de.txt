@@ -46,7 +46,8 @@
     "find":"Finden",
     "next":"nächster",
     "zoom":"Zoomen",
-    "print":"Drucken"
+    "print":"Drucken",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Zurück",
@@ -72,7 +73,8 @@
     "userSettings":"Fixierung",
     "saveParam":"Parameter speichern",
     "parameterSets":"Sätze verwalten",
-    "selectSet":"wählen Sätze"
+    "selectSet":"wählen Sätze",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",
@@ -99,9 +101,10 @@
     "isTrue":"Wahr",
     "isFalse":"Falsch",
     "required":"Erforderlich",
-    "viewReport":"Bericht anzeigen",
-    "cancel":"stornieren",
-    "datePicker":"Datum"
+    "viewReport":"Anzeigen",
+    "cancel":"Stornieren",
+    "datePicker":"Datum",
+    "select":"Wählen"
   },
   "validateError": {
     "required":"Erforderlich",
@@ -158,5 +161,13 @@
     "deleteHeader":"Löschen",
     "apply":"Anwenden",
     "newSet":"Neues Set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

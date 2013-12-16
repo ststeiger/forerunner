@@ -46,7 +46,8 @@
     "find":"Find",
     "next":"Next",
     "zoom":"Enable Zoom",
-    "print":"Print"
+    "print":"Print",
+    "dsCredential":"Datasource credential"
   },
   "toolbar": {
     "back":"Back",
@@ -72,7 +73,8 @@
     "userSettings":"Settings",
     "saveParam":"Save Parameters",
     "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "selectSet":"Select Set",
+    "dsCredential":"Datasource Credential"
   },
   "print": {
     "title":"Print Report",
@@ -99,9 +101,10 @@
     "isTrue":"True",
     "isFalse":"False",
     "required":"Required",
-    "viewReport":"View Report",
-    "cancel":"cancel",
-    "datePicker":"Date"
+    "viewReport":"View",
+    "cancel":"Cancel",
+    "datePicker":"Date",
+    "select":"Select"
   },
   "validateError": {
     "required":"Required",
@@ -158,5 +161,13 @@
     "deleteHeader":"Delete",
     "apply":"Apply",
     "newSet":"New Set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Cancel",
+    "submit":"Submit",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

@@ -438,6 +438,59 @@ namespace Forerunner
             return mime;
         }
 
+        internal static DataSourceCredentials[] GetDataSourceCredentialsFromString(string credentials)
+        {
+            List<DataSourceCredentials> list = new List<DataSourceCredentials>();
+            using (JsonTextReader reader = new JsonTextReader(new StringReader(credentials)))
+            {
+                JsonObject jsonObj = new JsonObject();
+                jsonObj.Import(reader);
+
+                JsonArray credArray = jsonObj["CredentialList"] as JsonArray;
+
+                foreach (JsonObject obj in credArray)
+                {
+                    DataSourceCredentials credential = new DataSourceCredentials();
+                    credential.DataSourceName = obj["DataSourceID"].ToString();
+                    credential.UserName = obj["Username"].ToString();
+                    credential.Password = obj["Password"].ToString();
+
+                    list.Add(credential);
+                }
+            }
+            return list.ToArray();
+        }
+        internal static string GetDataSourceCredentialJSON(DataSourcePrompt[] prompts, string reportPath, string sessionID, string numPages = "1")
+        {
+            JsonWriter w = new JsonTextWriter();
+            w.WriteStartObject();
+            w.WriteMember("ReportPath");
+            w.WriteString(reportPath);
+            w.WriteMember("SessionID");
+            w.WriteString(sessionID);
+            w.WriteMember("NumPages");
+            w.WriteNumber(numPages);
+            w.WriteMember("CredentialsRequired");
+            w.WriteBoolean(true);
+            w.WriteMember("CredentialsList");
+            w.WriteStartArray();
+            foreach (DataSourcePrompt prompt in prompts)
+            {
+                w.WriteStartObject();
+                w.WriteMember("DataSourceID");
+                w.WriteString(prompt.DataSourceID);
+                w.WriteMember("Name");
+                w.WriteString(prompt.Name);
+                w.WriteMember("Prompt");
+                w.WriteString(prompt.Prompt);
+                w.WriteEndObject();
+            }
+            w.WriteEndArray();
+            w.WriteEndObject();
+
+            return w.ToString();
+        }
+
         public static string ConvertListToJSON(List<string> listOfStrings)
         {
             JsonWriter w = new JsonTextWriter();

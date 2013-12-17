@@ -3242,32 +3242,36 @@ $(function () {
 
             var onInputFocus = function () {
                 if (forerunner.device.isiOS()) {
-                    if (me.options.isFullScreen)
-                        me._makePositionAbsolute();
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionAbsolute();
 
-                    me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-                    me.$container.addClass("fr-layout-container-noscroll");
+                        me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                        me.$container.addClass("fr-layout-container-noscroll");
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
-                    me.ResetSize();
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
+                        me.ResetSize();
+                    }, 50);
                 }
             };
 
             var onInputBlur = function () {
                 if (forerunner.device.isiOS()) {
-                    if (me.options.isFullScreen)
-                        me._makePositionFixed();
+                    setTimeout(function () {
+                        if (me.options.isFullScreen)
+                            me._makePositionFixed();
 
-                    if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
-                        me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
-                        me.$container.removeClass("fr-layout-container-noscroll");
-                    }
+                        if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible") && me.showModal !== true) {
+                            me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                            me.$container.removeClass("fr-layout-container-noscroll");
+                        }
 
-                    $(window).scrollTop(0);
-                    $(window).scrollLeft(0);
+                        $(window).scrollTop(0);
+                        $(window).scrollLeft(0);
 
-                    me.ResetSize();
+                        me.ResetSize();
+                    }, 50);
                 }
             };
 

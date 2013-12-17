@@ -38,13 +38,6 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
-                  <ActionInfo>
-                    <Actions>
-                      <Action>
-                        <Hyperlink>http://www.msn.com</Hyperlink>
-                      </Action>
-                    </Actions>
-                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />
@@ -351,13 +344,6 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
-                  <ActionInfo>
-                    <Actions>
-                      <Action>
-                        <Hyperlink>http://www.msn.com</Hyperlink>
-                      </Action>
-                    </Actions>
-                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />

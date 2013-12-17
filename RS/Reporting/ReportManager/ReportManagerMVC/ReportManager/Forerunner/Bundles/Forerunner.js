@@ -1028,6 +1028,7 @@ $(function () {
                 }
 
                 target.element.dialog("open");
+                target.element.find(":button").blur();
 
                 //reset modal dialog position when window resize happen or orientation change
                 $(window).off("resize", me._setPosition);

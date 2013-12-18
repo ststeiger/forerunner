@@ -100,7 +100,7 @@ Section "ReportManager" SEC01
   CreateDirectory "$R0\LogFiles"
 
   SetOutPath "$INSTDIR\bin"
-  SetOverwrite ifnewer
+  SetOverwrite ifdiff
   File "${LOCALROOT}\bin\Forerunner.ReportManager.dll"
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"

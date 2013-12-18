@@ -102,7 +102,7 @@ Section "ReportManager" SEC01
   CreateDirectory "$R0\LogFiles"
   
   SetOutPath "$INSTDIR\bin"
-  SetOverwrite ifnewer
+  SetOverwrite ifdiff
   File "${LOCALROOT}\bin\WebGrease.dll"
   File "${LOCALROOT}\bin\System.Web.WebPages.Razor.dll"
   File "${LOCALROOT}\bin\System.Web.WebPages.dll"

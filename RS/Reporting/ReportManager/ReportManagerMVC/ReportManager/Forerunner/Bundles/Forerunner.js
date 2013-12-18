@@ -661,10 +661,8 @@ $(function () {
                     lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
-                }
-                for ( i = 0; i < languageList.length && langData === null; i++) {
-                    lang = languageList[i];
-                    if (lang.length > 2) {
+
+                    if (langData === null && lang.length > 2) {
                         lang = lang.toLocaleLowerCase().substring(0, 2);
                         langData = this._loadFile(locFileLocation, lang);
                     }

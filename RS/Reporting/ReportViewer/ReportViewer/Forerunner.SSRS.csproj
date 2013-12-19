@@ -69,6 +69,7 @@
     <Compile Include="CurrentUserImpersonator.cs" />
     <Compile Include="FormsAuthenticationHelper.cs" />
     <Compile Include="Impersonator.cs" />
+    <Compile Include="MatchDataSerialization.cs" />
     <Compile Include="ParameterModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

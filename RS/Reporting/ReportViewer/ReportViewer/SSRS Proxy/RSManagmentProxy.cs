@@ -91,5 +91,112 @@ namespace Forerunner.SSRS.Management
             else
                 return RSSPS.ListChildren(path);
         }
+
+        public string CreateSubscription(string Report, ExtensionSettings ExtensionSettings, string Description, string EventType, string MatchData, ParameterValue[] Parameters)
+        {
+            if (IsNative)
+                return RSNative.CreateSubscription(Report, ExtensionSettings, Description, EventType, MatchData, Parameters);
+            else
+                return RSSPS.CreateSubscription(Report, ExtensionSettings, Description, EventType, MatchData, Parameters);
+        }
+
+        public ExtensionParameter[] GetExtensionSettings(string Extension)
+        {
+            if (IsNative)
+                return RSNative.GetExtensionSettings(Extension);
+            else
+                return RSSPS.GetExtensionSettings(Extension);
+        }
+
+        public Extension[] ListDeliveryExtensions()
+        {
+            if (IsNative)
+                return RSNative.ListExtensions(ExtensionTypeEnum.Delivery);
+            else
+                return RSSPS.ListExtensions(ExtensionTypeEnum.Delivery);
+        }
+
+        public Schedule[] ListSchedules(string siteName = null)
+        {
+            if (IsNative)
+                return RSNative.ListSchedules();
+            else
+                return RSSPS.ListSchedules(siteName);
+        }
+
+        public string GetSubscriptionProperties(string SubscriptionID, 
+            out ExtensionSettings ExtensionSettings, 
+            out string Description,
+            out ActiveState Active,
+            out string Status,
+            out string EventType,
+            out string MatchData,
+            out ParameterValue[] Parameters)
+        {
+            if (IsNative)
+                return RSNative.GetSubscriptionProperties(
+                    SubscriptionID,
+                    out ExtensionSettings,
+                    out Description,
+                    out Active,
+                    out Status,
+                    out EventType,
+                    out MatchData,
+                    out Parameters);
+            else
+                return RSSPS.GetSubscriptionProperties(
+                    SubscriptionID,
+                    out ExtensionSettings,
+                    out Description,
+                    out Active,
+                    out Status,
+                    out EventType,
+                    out MatchData,
+                    out Parameters);
+        }
+
+        public void SetSubscriptionProperties(string SubscriptionID,
+            ExtensionSettings ExtensionSettings,
+            string Description,
+            string EventType,
+            string MatchData,
+            ParameterValue[] Parameters)
+        {
+            if (IsNative)
+                RSNative.SetSubscriptionProperties(
+                    SubscriptionID,
+                    ExtensionSettings,
+                    Description,
+                    EventType,
+                    MatchData,
+                    Parameters
+                    );
+            else
+                RSSPS.SetSubscriptionProperties(
+                    SubscriptionID,
+                    ExtensionSettings,
+                    Description,
+                    EventType,
+                    MatchData,
+                    Parameters
+                    );
+        }
+
+        public Subscription[] ListSubscriptions(string Report, string Owner)
+        {
+            if (IsNative)
+                return RSNative.ListSubscriptions(Report, Owner);
+            else
+            // BUGBUG:  Need to have a way to detect 2010 SharePoint endpoints
+                return null;
+        }
+
+        public void DeleteSubscription(string SubscriptionID)
+        {
+            if (IsNative)
+                RSNative.DeleteSubscription(SubscriptionID);
+            else
+                RSSPS.DeleteSubscription(SubscriptionID);
+        }
     }
 }

@@ -10,10 +10,14 @@ using Forerunner.SSRS.Viewer;
 using Forerunner.SSRS.Management;
 using Forerunner.Security;
 using Forerunner.Logging;
+using Forerunner.Subscription;
 using Jayrock.Json;
 using System.Threading;
 using System.Web.Security;
 using System.Security.Principal;
+using System.Xml;
+using System.IO;
+using System.Xml.Serialization;
 using Forerunner.SSRS;
 
 namespace Forerunner.SSRS.Manager
@@ -1018,6 +1022,92 @@ namespace Forerunner.SSRS.Manager
             {
                 threadContext.Dispose();
             }
+        }
+
+        public Extension[] ListDeliveryExtensions()
+        {
+            return rs.ListDeliveryExtensions();
+        }
+
+        public ExtensionParameter[] GetExtensionSettings(string extension)
+        {
+            return rs.GetExtensionSettings(extension);
+        }
+
+        public Schedule[] ListSchedules(string siteName)
+        {
+            return rs.ListSchedules(siteName);
+        }
+
+
+        public class SubscriptionInfo
+        {
+            public SubscriptionInfo(string subscriptionID, string report, ExtensionSettings extensionSettings, string description, string eventType, ScheduleReference scheduleReferene, ParameterValue[] parameters)
+            {
+                SubscriptionID = subscriptionID;
+                Report = report;
+                ExtensionSettings = extensionSettings;
+                Description = description;
+                EventType = eventType;
+                ScheduleReference = scheduleReferene;
+                Parameters = parameters;
+            }
+            public string SubscriptionID { get; set; }
+            public string Report { get; set; }
+            public ExtensionSettings ExtensionSettings { get; set; }
+            public string Description { get; set; }
+            public string EventType { get; set; }
+            public ScheduleReference ScheduleReference { get; set; }
+            public ParameterValue[] Parameters { get; set; }
+        }
+
+        public string CreateSubscription(SubscriptionInfo info)
+        {
+            rs.Credentials = GetCredentials();
+            string MatchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
+            return rs.CreateSubscription(info.Report, info.ExtensionSettings, info.Description, info.EventType, MatchData, info.Parameters);
+        }
+
+        public SubscriptionInfo GetSubscription(string subscriptionID)
+        {
+            rs.Credentials = GetCredentials();
+            ExtensionSettings extensionSettings;
+            string description;
+            ActiveState activeState;
+            string status;
+            string eventType;
+            string matchData;
+            ParameterValue[] parameters;
+            rs.GetSubscriptionProperties(subscriptionID,
+                out extensionSettings,
+                out description,
+                out activeState,
+                out status,
+                out eventType,
+                out matchData,
+                out parameters);
+            ScheduleReference scheduleReference = MatchDataSerialization.GetScheduleFromMatchData(matchData);
+            SubscriptionInfo retVal = new SubscriptionInfo(subscriptionID, null, extensionSettings, description, eventType, scheduleReference, parameters);
+            return retVal;
+        }
+
+        public void SetSubscription(SubscriptionInfo info)
+        {
+            rs.Credentials = GetCredentials();
+            string matchData = MatchDataSerialization.GetMatchDataFromScheduleReference(info.ScheduleReference);
+            rs.SetSubscriptionProperties(info.SubscriptionID, info.ExtensionSettings, info.Description, info.EventType, matchData , info.Parameters);
+        }
+
+        public void DeleteSubscription(string subscriptionID)
+        {
+            rs.Credentials = GetCredentials();
+            rs.DeleteSubscription(subscriptionID);
+        }
+
+        public Management.Subscription[] ListSubscriptions(string report, string owner)
+        {
+            rs.Credentials = GetCredentials();
+            return rs.ListSubscriptions(report, owner);
         }
 
         protected virtual void Dispose(bool disposing)

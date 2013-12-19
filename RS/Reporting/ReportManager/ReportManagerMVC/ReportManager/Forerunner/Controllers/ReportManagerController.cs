@@ -115,6 +115,49 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserSettings(settings)), "text/JSON");
         }
 
+        [HttpPost]
+        public HttpResponseMessage CreateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info)
+        {
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().CreateSubscription(info)), "text/JSON");
+        }
 
+        [HttpGet]
+        public HttpResponseMessage GetSubscription(string subscriptionID)
+        {
+            Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info = GetReportManager().GetSubscription(subscriptionID);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
+        }
+
+        [HttpPut]
+        public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info)
+        {
+           
+            GetReportManager().SetSubscription(info);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage DeleteSubscription(string subscriptionID)
+        {
+            GetReportManager().DeleteSubscription(subscriptionID);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ListSubscriptions(string report)
+        {
+            /// Need to pass in current owner.
+            Subscription[] subscriptions = GetReportManager().ListSubscriptions(report, null);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
+        }
+
+        private string ToString<T>(T value)
+        {
+            StringBuilder buffer = new StringBuilder();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            serializer.Serialize(value, buffer);
+
+            return buffer.ToString();
+        }
     }
 }

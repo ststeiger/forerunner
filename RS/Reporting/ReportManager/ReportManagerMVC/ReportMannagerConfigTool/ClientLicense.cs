@@ -29,6 +29,8 @@ namespace ForerunnerLicense
         internal static LicenseData License = null;
         internal static string requestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData></LicenseRequest>";
         internal static string MergerequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey><MergeKey>{2}</MergeKey></LicenseRequest>";
+        internal static string SplitRequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData><NumberOfCores>{4}</NumberOfCores></LicenseRequest>";
+
         static RegistryKey MobV1Key = null;
         static int IsMachineSame = -1;
         internal static DateTime LastServerValidation;
@@ -200,6 +202,25 @@ namespace ForerunnerLicense
             else
                 throw new Exception(resp.Response);
             
+        }
+        public static string Split(int NumCores)
+        {
+            ServerResponse resp;
+
+            if (License == null)
+                throw new Exception("You may only split an activated license");
+            string LicenseKey = License.LicenseKey;
+
+            string request = string.Format(SplitRequestString, "Split", License.LicenseKey, License.MachineData.Serialize(false), LicenseString, NumCores);
+            resp = Post(request);
+            if (resp.StatusCode == 0)
+            {
+                DeActivate();                
+                return resp.Response;
+            }
+            else
+                throw new Exception(resp.Response);
+
         }
         public static string Activate(string LicenceKey)
         {

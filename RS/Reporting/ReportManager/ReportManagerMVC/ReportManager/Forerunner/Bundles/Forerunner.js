@@ -643,6 +643,14 @@ $(function () {
     forerunner.localize = {
         _locData: {},
 
+        _getFallBackLanguage : function(locFileLocation, lang) {
+            if (lang.length > 2) {
+                lang = lang.toLocaleLowerCase().substring(0, 2);
+                return this._loadFile(locFileLocation, lang);
+            }
+            return null;
+        },
+        
         /**
          * Returns the language specific data.
          *
@@ -661,12 +669,14 @@ $(function () {
                     lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
+                    if (forerunner.device.isAndroid() && langData == null) {
+                        langData = this._getFallBackLanguage(locFileLocation, lang);
+                    }
                 }
-                for ( i = 0; i < languageList.length && langData === null; i++) {
-                    lang = languageList[i];
-                    if (lang.length > 2) {
-                        lang = lang.toLocaleLowerCase().substring(0, 2);
-                        langData = this._loadFile(locFileLocation, lang);
+                if (!forerunner.device.isAndroid()) {
+                    for ( i = 0; i < languageList.length && langData === null; i++) {
+                        lang = languageList[i];
+                        langData = this._getFallBackLanguage(locFileLocation, lang);
                     }
                 }
             }
@@ -1028,6 +1038,7 @@ $(function () {
                 }
 
                 target.element.dialog("open");
+                target.element.find(":button").blur();
 
                 //reset modal dialog position when window resize happen or orientation change
                 $(window).off("resize", me._setPosition);

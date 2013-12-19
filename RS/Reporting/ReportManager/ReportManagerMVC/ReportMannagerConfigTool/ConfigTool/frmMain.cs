@@ -503,5 +503,51 @@ namespace ReportMannagerConfigTool
         {
 
         }
+
+        private void btnSplit_Click(object sender, EventArgs e)
+        {
+            //DialogResult dr;
+            int cores=0;
+            string input;
+            if (ClientLicense.License == null)
+            {
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(this, "LicenseKey Required", "Forerunner Software Mobilizer");
+                }
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                using (new CenterWinDialog(this))
+                {
+                    using (new CenterWinDialog(this))
+                    {
+                        input = Microsoft.VisualBasic.Interaction.InputBox("Please enter the number of cores to keep on this machine", "Forerunner Software Mobilizer", ClientLicense.ThisMachine.numberOfCores.ToString());
+                    }
+
+                    int.TryParse(input,out cores);
+                    //dr = InputBox.Show("Are you sure you wish to split this License, this process is irreversible?", "Forerunner Software Mobilizer", MessageBoxButtons.YesNo,MessageBoxIcon.Question,MessageBoxOptions.DefaultDesktopOnly,);
+                }
+                if (cores != 0)
+                {
+                    string newLic = ClientLicense.Split(cores);
+                    txtNewKey.Text = newLic;
+                    MessageBox.Show("Your new Licenses key is " + newLic + ", we will now activate it on this machine.", "Forerunner Software Mobilizer", MessageBoxButtons.OK);
+                    rtbCurLicense.Text = ClientLicense.Activate(newLic);
+                    ValidateLicense();
+                }
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                using (new CenterWinDialog(this))
+                {
+                    MessageBox.Show(ex.Message, "Forerunner Software Mobilizer");
+                }
+            }
+            Cursor.Current = Cursors.Default;
+        }
     }
 }

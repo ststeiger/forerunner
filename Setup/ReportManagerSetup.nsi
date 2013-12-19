@@ -102,7 +102,7 @@ Section "ReportManager" SEC01
   CreateDirectory "$R0\LogFiles"
   
   SetOutPath "$INSTDIR\bin"
-  SetOverwrite ifnewer
+  SetOverwrite ifdiff
   File "${LOCALROOT}\bin\WebGrease.dll"
   File "${LOCALROOT}\bin\System.Web.WebPages.Razor.dll"
   File "${LOCALROOT}\bin\System.Web.WebPages.dll"
@@ -199,6 +199,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\DSCredential.css"
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images\toolpane"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
@@ -507,6 +508,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportViewerEZ.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\Toolbar.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ToolPane.css"
+  Delete "$INSTDIR\Forerunner\ReportViewer\css\DSCredential.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\accent.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\bullet.png"
   Delete "$INSTDIR\Forerunner\ReportExplorer\images\Folder-icon.png"

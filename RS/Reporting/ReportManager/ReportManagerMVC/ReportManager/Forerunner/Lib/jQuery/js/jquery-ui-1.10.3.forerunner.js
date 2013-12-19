@@ -9032,7 +9032,7 @@ $.widget( "ui.dialog", {
 		var that = this;
 		if ( this._isOpen ) {
 			if ( this._moveToTop() ) {
-				//this._focusTabbable();
+				this._focusTabbable();
 			}
 			return;
 		}
@@ -9045,7 +9045,7 @@ $.widget( "ui.dialog", {
 		this._createOverlay();
 		this._moveToTop( null, true );
 		this._show( this.uiDialog, this.options.show, function() {
-			//that._focusTabbable();
+			that._focusTabbable();
 			that._trigger("focus");
 		});
 

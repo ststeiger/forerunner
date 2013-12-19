@@ -141,6 +141,7 @@ $(function () {
 
             me.resetValidateMessage();
             $(".fr-param-form", me.$params).validate({
+                ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("span"));

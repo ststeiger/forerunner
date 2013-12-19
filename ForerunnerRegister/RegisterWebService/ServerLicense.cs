@@ -19,6 +19,7 @@ namespace ForerunnerLicense
         string Response = "<LicenseResponse><Status>{0}</Status><StatusCode>{1}</StatusCode><Value>{2}</Value></LicenseResponse>";
         public string NewLicenseKey = null;
         public string MergeKey = null;
+        public int NumberOfCores = 0;
         internal MachineId NewMachineData = null;
         public string Action = null;
         public int Status = 0;
@@ -59,6 +60,9 @@ namespace ForerunnerLicense
                         case "MergeKey":
                             MergeKey = XMLReq.ReadElementContentAsString();
                             break;
+                        case "NumberOfCores":
+                            NumberOfCores = XMLReq.ReadElementContentAsInt();
+                            break;
                     }                    
                 }
                 else
@@ -97,6 +101,8 @@ namespace ForerunnerLicense
                     return ProcessDeActivate();
                 case "Merge":
                     return ProcessMerge();
+                case "Split":
+                    return ProcessSplit();
             }
 
             return String.Format(Response, "Fail", "2", "Invalid License Request");
@@ -113,31 +119,37 @@ namespace ForerunnerLicense
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
 
-            string SQL = @"UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
-                        UPDATE License SET Quantity = 0 WHERE LicenseID = @MergeKey
+            string SQL = @"IF EXISTS (SELECT * FROM License m INNER JOIN License l ON m.LicenseID = @MergeKey AND m.SKU= l.SKU AND l.LicenseID = @LicenseKey)
+                            BEGIN
+                                UPDATE License Set Quantity = Quantity + (SELECT Quantity FROM License m WHERE LicenseID = @MergeKey and m.SKU= l.SKU )  FROM License l WHERE LicenseID = @LicenseKey
+                                UPDATE License SET Quantity = 0 WHERE LicenseID = @MergeKey
+                            END
                         ";
 
             if (NewLicenseKey == MergeKey)
             {
                 Response = String.Format(Response, "Fail", "110", "Cannot merge the same key");
+                return Response;
             }
-            else
+
+
+            try
             {
-                try
-                {
-                    SQLConn.Open();
-                    SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-                    SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
-                    SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
-                    SQLComm.ExecuteNonQuery();
-                    SQLConn.Close();
+                SQLConn.Open();
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseKey", NewLicenseKey);
+                SQLComm.Parameters.AddWithValue("@MergeKey", MergeKey);
+                int rows = SQLComm.ExecuteNonQuery();               
+                SQLConn.Close();
+                if (rows <= 0)
+                    Response = String.Format(Response, "Fail", "110", "Invalid License combination or license not found");
+                else
                     Response = String.Format(Response, "Success", "0", "Licenses Merged");
-                }
-                catch
-                {
-                    SQLConn.Close();
-                    Response = String.Format(Response, "Fail", "3", "Server Error");
-                }
+            }
+            catch
+            {
+                SQLConn.Close();
+                Response = String.Format(Response, "Fail", "3", "Server Error");
             }
             return Response;
         }
@@ -287,6 +299,50 @@ namespace ForerunnerLicense
             {
                 SQLConn.Close();
                 Response = String.Format(Response, "Fail", "3", "Server Error");
+            }
+
+            return Response;
+
+        }
+
+        private string ProcessSplit()
+        {
+            ForerunnerDB DB = new ForerunnerDB();
+            SqlConnection SQLConn = DB.GetSQLConn();
+
+            if (NumberOfCores == 0 || NumberOfCores >= OldLD.Quantity)
+            {
+                Response = String.Format(Response, "Fail", "115", "Invalid Number of Cores");
+                return Response;
+            }
+               
+            
+            string SQL = @"UPDATE License SET Quantity = @NewQuantity WHERE LicenseID = @LicenseID AND MachineKey = @MachineKey";
+            SQLConn.Open();
+            try
+            {
+                int NewQuantity = OldLD.Quantity-NumberOfCores;
+                int NewLicQuantity = NumberOfCores;
+                SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+                SQLComm.Parameters.AddWithValue("@LicenseID", OldLD.LicenseKey);
+                SQLComm.Parameters.AddWithValue("@MachineKey", OldLD.MachineData.machineKey);
+                SQLComm.Parameters.AddWithValue("@NewQuantity", NewQuantity);
+                int rows = SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                if (rows == 0)
+                    Response = String.Format(Response, "Fail", "105", "Invalid LicenseKey or MachineKey");
+                else
+                {
+                    string NewLic = ForerunnerDB.NewLicenseID();
+                    Response = String.Format(Response, "Success", "0", NewLic);
+                    new Order().WriteLicense(Guid.NewGuid().ToString(), OldLD.SKU, "", NewLicQuantity, NewLic, OldLD.LicenseKey);
+                }                
+                
+            }
+            catch
+            {
+                Response = String.Format(Response, "Fail", "3", "Server Error");
+                SQLConn.Close();               
             }
 
             return Response;

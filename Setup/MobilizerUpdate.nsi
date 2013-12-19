@@ -100,7 +100,7 @@ Section "ReportManager" SEC01
   CreateDirectory "$R0\LogFiles"
 
   SetOutPath "$INSTDIR\bin"
-  SetOverwrite ifnewer
+  SetOverwrite ifdiff
   File "${LOCALROOT}\bin\Forerunner.ReportManager.dll"
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
@@ -143,6 +143,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
+  File "${LOCALROOT}\Forerunner\ReportViewer\css\DSCredential.css"
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
   

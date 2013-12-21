@@ -36,18 +36,31 @@ namespace ForerunnerLicense
         internal static DateTime LastServerValidation;
         internal static DateTime LastServerValidationTry;
         internal static DateTime LastInit;
-        static int LastStatus=-1;
-        internal static MachineId ThisMachine = new MachineId();
+        static int LastStatus = -1;
+        internal static MachineId ThisMachine = null;
+        internal static int MachineIdRetryCount = 0;
+        internal static Object MachineIdLock = new Object();
         static ClientLicense()
         {
             Logger.Trace(LogType.Info, "ClientLicense Type Initializer invoked.");
-            Init(false);
         }
 
         private static void Init(bool forceCheck)
         {
-            lock (ThisMachine)
+            lock (MachineIdLock)
             {
+                if (ThisMachine == null && MachineIdRetryCount < 100)
+                {
+                    try
+                    {
+                        ThisMachine = new MachineId();
+                    }
+                    catch (Exception /*e*/)
+                    {
+                        MachineIdRetryCount++;
+                        ThisMachine = null;
+                    }
+                }
                 Logger.Trace(LogType.Info, "ClientLicense.Init invoked.  ForceChecked: " + forceCheck);
                 TimeSpan ts = DateTime.Now - LastInit;
                 if (ts.TotalMinutes > 1)
@@ -63,7 +76,7 @@ namespace ForerunnerLicense
         {
             if (IsMachineSame == -1 || forceCheck)
             {
-                if (License != null)
+                if (License != null && ThisMachine != null)
                 {
                     if (License.MachineData.IsSame(ThisMachine))
                         IsMachineSame = 1;
@@ -272,10 +285,10 @@ namespace ForerunnerLicense
                 LicenseException.Throw(LicenseException.FailReason.NotActivated, "No License Detected");
 
             //Check Machine Key
-            if (IsMachineSame != 1)
+            if (IsMachineSame != 1 && ThisMachine != null)
                 LicenseException.Throw(LicenseException.FailReason.MachineMismatch, "License not Valid for this Machine");
-            
-            if (ThisMachine.numberOfCores > License.Quantity)
+
+            if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
                 LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
             if (License.RequireValidation == 1)
@@ -321,7 +334,7 @@ namespace ForerunnerLicense
                     else
                     {
                         // This needs to be thread safe.
-                        lock (ThisMachine)
+                        lock (MachineIdLock)
                         {
                             LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)), DateTimeKind.Utc);
                             MobV1Key.SetValue(LicenseTimestampKey, resp.Response);

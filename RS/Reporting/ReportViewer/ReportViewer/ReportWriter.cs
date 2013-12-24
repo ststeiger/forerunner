@@ -238,13 +238,15 @@ namespace Forerunner.SSRS.JSONRender
 //#if !DEBUG           
             ClientLicense.Validate();
 //#endif
+            LicenseData License = ClientLicense.GetLicense();
+
             RPL.position = 0;
             w.WriteStartObject();
             
             w.WriteMember("SKU");
-            w.WriteString(ClientLicense.License.SKU);
+            w.WriteString(License.SKU);
             w.WriteMember("Trial");
-            w.WriteNumber(ClientLicense.License.IsTrial);
+            w.WriteNumber(License.IsTrial);
 
             w.WriteMember("RPLStamp");
             w.WriteString(RPL.ReadString());

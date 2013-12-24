@@ -509,7 +509,8 @@ namespace ReportMannagerConfigTool
             //DialogResult dr;
             int cores=0;
             string input;
-            if (ClientLicense.License == null)
+            LicenseData License = ClientLicense.GetLicense();
+            if (License == null)
             {
                 using (new CenterWinDialog(this))
                 {

@@ -26,7 +26,15 @@ namespace ForerunnerLicense
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
 
-        internal static LicenseData License = null;
+        private static LicenseData license = null;
+        internal static LicenseData GetLicense()
+        {
+            if (license == null)
+            {
+                Init(false);
+            }
+            return license;
+        }
         internal static string requestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData></LicenseRequest>";
         internal static string MergerequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey><MergeKey>{2}</MergeKey></LicenseRequest>";
         internal static string SplitRequestString = "<LicenseRequest><Action>{0}</Action><LicenseKey>{1}</LicenseKey>{2}<LicenseData>{3}</LicenseData><NumberOfCores>{4}</NumberOfCores></LicenseRequest>";
@@ -76,6 +84,7 @@ namespace ForerunnerLicense
         {
             if (IsMachineSame == -1 || forceCheck)
             {
+                LicenseData License = GetLicense();
                 if (License != null && ThisMachine != null)
                 {
                     if (License.MachineData.IsSame(ThisMachine))
@@ -89,10 +98,8 @@ namespace ForerunnerLicense
         {
             Logger.Trace(LogType.Info, "ClientLicense.Load invoked.  ForceChecked: " + forceCheck);
                
-            if (License != null && !forceCheck)
+            if (license != null && !forceCheck)
                 return;
-
-            
             
             if (MobV1Key == null)
             {
@@ -149,12 +156,12 @@ namespace ForerunnerLicense
                 {
                     LicenseString = temp;
                     Logger.Trace(LogType.Info, "ClientLicense.Load Calling LicenceUtil.Verify " + LicenseString);
-                    License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
+                    license = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 }
             }
             else if (forceCheck)
             {
-                License = null;
+                license = null;
                 LicenseString = null;
             }
 
@@ -181,7 +188,7 @@ namespace ForerunnerLicense
                 MobV1Key.DeleteValue(LicenseDataKey,false);
                 MobV1Key.DeleteValue(LicenseTimestampKey, false);                
             }
-            License = null;
+            license = null;
             LicenseString = null;
         }
 
@@ -191,6 +198,7 @@ namespace ForerunnerLicense
         }
         public static string GetLicenseString()
         {
+            LicenseData License = GetLicense();
             if (License != null)
                 return "License Key:\t\t" + License.LicenseKey + "\r\n" + "SKU:\t\t\t" + License.SKU + "\r\n" + "Number of Cores:\t" + License.Quantity.ToString() + "\r\n" + "Activation Date:\t\t" + License.FirstActivationDate.ToString();
             else
@@ -201,6 +209,7 @@ namespace ForerunnerLicense
         {
             ServerResponse resp;
 
+            LicenseData License = GetLicense();
             if (License == null)
                 throw new Exception("License Required");
             string LicenseKey = License.LicenseKey;
@@ -220,6 +229,7 @@ namespace ForerunnerLicense
         {
             ServerResponse resp;
 
+            LicenseData License = GetLicense();
             if (License == null)
                 throw new Exception("You may only split an activated license");
             string LicenseKey = License.LicenseKey;
@@ -240,6 +250,7 @@ namespace ForerunnerLicense
             MachineId mid;
             ServerResponse resp;
 
+            LicenseData License = GetLicense();
             if (License == null)
                 mid = new MachineId();
             else
@@ -250,7 +261,7 @@ namespace ForerunnerLicense
             if (resp.StatusCode == 0)
             {
                 LicenseString = resp.Response;
-                License = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
+                license = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 SaveLicense();
                 MachineCheck(true);
                 return GetLicenseString();
@@ -260,7 +271,8 @@ namespace ForerunnerLicense
         }
 
         public static void DeActivate()
-        {            
+        {
+            LicenseData License = GetLicense();
             if (License == null)
                 throw new Exception("No license to De-Activate");
 
@@ -281,6 +293,7 @@ namespace ForerunnerLicense
             ServerResponse resp = new ServerResponse();
             Init(true);
 
+            LicenseData License = GetLicense();
             if (License == null)
                 LicenseException.Throw(LicenseException.FailReason.NotActivated, "No License Detected");
 

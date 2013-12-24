@@ -6,7 +6,7 @@
 		<ProjectFiles Include="Rendering Extension\JSONRenderingExtension\JSONRenderingExtension.csproj" />
 		<ProjectFiles Include="JSON\src\Jayrock.Json\Forerunner.Json.csproj" />
 		<ProjectFiles Include="ReportViewer\Forerunner.SSRS.csproj" />
-		<ProjectFiles Include="ReportViewer\ReportViewer\Forerunner.Thumbnail.csproj" />
+		<ProjectFiles Include="ReportViewer\ReportViewer\Forerunner.Thumbnail\Forerunner.Thumbnail.csproj" />
 <!--		<ProjectFiles Include="ReportViewerTest\ReportViewerTest\ReportViewerTest.csproj"/> -->
 	</ItemGroup> 
 	<Import Project="ReportViewer.traversal.targets"/> 

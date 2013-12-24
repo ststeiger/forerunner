@@ -389,7 +389,7 @@ namespace ForerunnerLicense
                 {
                     TimeSpan ts = DateTime.Now - ld.FirstActivationDate;
                     if (ld.LicenseDuration < ts.TotalDays )
-                        Response = String.Format(Response, "Fail", "200", "Subcription Expired");
+                        Response = String.Format(Response, "Fail", "200", "Subscription Expired");
                     else
                         Response = String.Format(Response, "Success", "0", LicenseUtil.Sign(DateTime.Now.ToUniversalTime().Ticks.ToString(),pkey));
                 }

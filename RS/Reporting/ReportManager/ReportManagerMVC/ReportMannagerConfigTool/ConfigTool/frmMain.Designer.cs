@@ -77,6 +77,7 @@
             this.rdoUWS = new System.Windows.Forms.RadioButton();
             this.rdoIIS = new System.Windows.Forms.RadioButton();
             this.tabActivation = new System.Windows.Forms.TabPage();
+            this.btnSplit = new System.Windows.Forms.Button();
             this.btnMerge = new System.Windows.Forms.Button();
             this.btnValidate = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
@@ -88,7 +89,6 @@
             this.txtNewKey = new System.Windows.Forms.TextBox();
             this.btnGetActivationKey = new System.Windows.Forms.Button();
             this.btnActivate = new System.Windows.Forms.Button();
-            this.btnSplit = new System.Windows.Forms.Button();
             this.tabMain.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.gbSSRS.SuspendLayout();
@@ -450,6 +450,13 @@
             this.tabActivation.Name = "tabActivation";
             this.tabActivation.UseVisualStyleBackColor = true;
             // 
+            // btnSplit
+            // 
+            resources.ApplyResources(this.btnSplit, "btnSplit");
+            this.btnSplit.Name = "btnSplit";
+            this.btnSplit.UseVisualStyleBackColor = true;
+            this.btnSplit.Click += new System.EventHandler(this.btnSplit_Click);
+            // 
             // btnMerge
             // 
             resources.ApplyResources(this.btnMerge, "btnMerge");
@@ -520,13 +527,6 @@
             this.btnActivate.Name = "btnActivate";
             this.btnActivate.UseVisualStyleBackColor = true;
             this.btnActivate.Click += new System.EventHandler(this.btnApplyLicense_Click);
-            // 
-            // btnSplit
-            // 
-            resources.ApplyResources(this.btnSplit, "btnSplit");
-            this.btnSplit.Name = "btnSplit";
-            this.btnSplit.UseVisualStyleBackColor = true;
-            this.btnSplit.Click += new System.EventHandler(this.btnSplit_Click);
             // 
             // frmMain
             // 

@@ -144,7 +144,7 @@ namespace Forerunner.Thumbnail
                             }
                             he.SetAttribute("src", s);
                             length += s.Length;
-                            if (length > 1024 * 10000) break;  //Limit the size
+                            if (length > 1024 * 20000) break;  //Limit the size
                         }
                         webBrowser.Document.Body.InnerHtml = webBrowser.Document.Body.InnerHtml;
                         webBrowser.Update();

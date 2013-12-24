@@ -668,7 +668,7 @@ $(function () {
                     lang = languageList[i];
                     lang = lang.toLocaleLowerCase();
                     langData = this._loadFile(locFileLocation, lang);
-                    if (forerunner.device.isAndroid() && langData == null) {
+                    if (forerunner.device.isAndroid() && langData === null) {
                         langData = this._getFallBackLanguage(locFileLocation, lang);
                     }
                 }

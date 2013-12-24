@@ -141,6 +141,14 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
+      <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ICAllocation.rdl.rdl</Name>
+      <FullPath>ICAllocation.rdl.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

@@ -32,6 +32,7 @@ namespace Forerunner.SSRS.Viewer
         private Credentials Credentials = new Credentials();
         private ReportExecutionService rs = new ReportExecutionService();
         private bool ServerRendering = false;
+        private bool MHTMLRendering = false;
         private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
 
@@ -92,13 +93,14 @@ namespace Forerunner.SSRS.Viewer
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
-                {
                     this.ServerRendering = true;
-                    break;
-                }
+                if (Ex.Name == "MHTML")
+                    this.MHTMLRendering = true;
+                
             }
 #if DEBUG 
             this.ServerRendering = false;
+            //this.MHTMLRendering = false;
 #endif
             checkedServerRendering = true;
 
@@ -624,21 +626,50 @@ namespace Forerunner.SSRS.Viewer
                 retval = "";
             else
             {
-                int delim1 = src.IndexOf(":");
                 int delim = src.IndexOf(";");
 
-                img = GetImageInternal(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+                //img = GetImageInternal(src.Substring(delim1 + 1, delim - delim1-1), src.Substring(delim + 1), out mimeType);
+                img = GetImageInternal(src.Substring(0, delim), src.Substring(delim + 1), out mimeType);
                 retval = "data:" + mimeType + ";base64, " + Convert.ToBase64String(img);
             }
             return retval;
 
         }
 
+        public byte[] GetMHTfromHTML(byte[] HTML)
+        {
+            string sHTML = Encoding.UTF8.GetString(HTML);
+            StringBuilder MHT = new StringBuilder(1024*1000);
+            int LastIndex = 0;
+            int NewIndex = 0;
+            int EndQuote = 0;
+
+            while (NewIndex >= 0)
+            {
+                NewIndex = sHTML.IndexOf("SRC=\"",LastIndex);
+                if (NewIndex >=0)
+                {
+                    NewIndex +=5;
+                    EndQuote = sHTML.IndexOf("\"",NewIndex);
+                    MHT.Append(sHTML.Substring(LastIndex, NewIndex - LastIndex));
+                    MHT.Append(getImageHandeler(sHTML.Substring(NewIndex, EndQuote-NewIndex)));
+                    MHT.Append("\"");
+                    LastIndex = EndQuote + 1;
+                    //Dont get too big
+                    if (MHT.Length > 1024 * 20000)
+                        break;
+                }
+               
+            }
+            MHT.Append(sHTML.Substring(LastIndex));
+            return Encoding.UTF8.GetBytes(MHT.ToString());
+        }
+
         public byte[] GetThumbnail(string reportPath, string SessionID, string PageNum, double maxHeightToWidthRatio)
         {
             byte[] result = null;
             MemoryStream ms = new MemoryStream();
-            string format = "HTML4.0";
+            string format = "MHTML";
             string historyID = null;
             string encoding;
             string mimeType;
@@ -675,32 +706,47 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                //if (this.ServerRendering)
-                //    format = "ForerunnerThumbnail";
-                //else
-                //{
+                if (this.ServerRendering)
+                    format = "ForerunnerThumbnail";
+                if (!this.MHTMLRendering)
+                {
+                   // Support for Express and Web that do not support MHTML                
+                    format = "HTML4.0";
+
                     devInfo += @"<StreamRoot>" + NewSession + ";</StreamRoot>";
                     devInfo += @"<ReplacementRoot></ReplacementRoot>";
                     devInfo += @"<ResourceStreamRoot>Res;</ResourceStreamRoot>";
-                //}
+                }
                 devInfo += @"</DeviceInfo>";
 
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                //if (!this.ServerRendering)
-                //{
-                    // Cache the current httpcontext credential for other threads to use
-                    SetCredentials(GetCredentials());
-                    if (impersonator == null)
+                if (!this.ServerRendering)
+                {
+                    string fileName = Path.GetTempPath() + Path.GetRandomFileName();
+                    if (!this.MHTMLRendering)
                     {
-                        newImpersonator = new CurrentUserImpersonator();
+                        result = GetMHTfromHTML(result);
+                        fileName += ".htm";
                     }
-                    impersonator = impersonator == null ? newImpersonator : impersonator;
-                    WebSiteThumbnail.GetStreamThumbnail(Encoding.UTF8.GetString(result), maxHeightToWidthRatio, getImageHandeler, impersonator).Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    result = ms.ToArray();
-                //}
+                    else
+                        fileName += ".mht";
+                    System.IO.File.WriteAllBytes(fileName, result);
 
+                    //Call external app to get image
+                    System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
+                    start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
+                    start.FileName = @"Forerunner.Thumbnail.exe";
+                    start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    start.Arguments = fileName;
+                    Process p = System.Diagnostics.Process.Start(start);
+                    p.WaitForExit();
+
+                    result = System.IO.File.ReadAllBytes(fileName + ".jpg");
+                    File.Delete(fileName + ".jpg");
+                }
+                
                 return result;
             }
             catch (Exception e)

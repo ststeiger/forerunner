@@ -466,6 +466,7 @@ $(function () {
             var me = this;
 
             Style += "display:table;";
+            Style += "table-layout: fixed;";  //This fixes FF and IE work break
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
@@ -513,7 +514,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;-ms-word-break:break-word;";
             Style += "margin:0;display: table-cell;";            
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
@@ -525,8 +526,11 @@ $(function () {
                 Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
                 $TextObj.addClass(dirClass);
             }
-            else
+            else {
+                //Needs to be 100% to handle center align
                 Style += "width:100%;height:100%;";
+            }
+               
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {

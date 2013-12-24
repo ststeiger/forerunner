@@ -6,7 +6,6 @@ using Forerunner.SSRS.Execution;
 using Jayrock.Json;
 using System.Diagnostics;
 using Forerunner.SSRS.JSONRender;
-using Forerunner.Thumbnail;
 using System.Security.Principal;
 using System.Web;
 using System.Web.Security;

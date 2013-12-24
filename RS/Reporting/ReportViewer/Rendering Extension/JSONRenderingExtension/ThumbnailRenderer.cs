@@ -9,7 +9,6 @@ using Microsoft.ReportingServices.Interfaces;
 using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
-using Forerunner.Thumbnail;
 using Forerunner.Logging;
 using System.Diagnostics;
 

@@ -28,6 +28,9 @@ $(function () {
 
         },
         _init: function () {
+                        
+        },
+        _initBody: function () {
             var me = this;
 
             me.element.html("");
@@ -75,9 +78,12 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
                 //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/)[0];
-                var datasourceID = error.replace(/["“”]/g, '');
-                me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/);
+                if (error) {
+                    var datasourceID = error[0].replace(/["“”]/g, '');
+                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                }
+                me.openDialog();
             });
         },
         _createRows: function (credentials) {
@@ -135,6 +141,7 @@ $(function () {
         writeDialog: function (credentials) {
             var me = this;
             if (credentials) {
+                me._initBody();
                 me._createRows(credentials);
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
             }
@@ -147,6 +154,7 @@ $(function () {
             var me = this;
 
             if (credentials) {
+                me._initBody();
                 me._createRows(credentials);
             }
             if (savedCredential) {

@@ -94,9 +94,6 @@
     <Compile Include="SSRS Proxy\ReportingService200X.cs" />
     <Compile Include="SSRS Proxy\RSManagmentProxy.cs" />
     <Compile Include="ThreadContext.cs" />
-    <Compile Include="Thumbnail.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Util\Logging\Logger.cs" />
   </ItemGroup>
   <ItemGroup>

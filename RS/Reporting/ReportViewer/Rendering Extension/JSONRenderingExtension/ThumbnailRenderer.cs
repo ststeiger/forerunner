@@ -9,8 +9,8 @@ using Microsoft.ReportingServices.Interfaces;
 using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
-using Forerunner.Thumbnail;
 using ReportManager.Util.Logging;
+using System.Diagnostics;
 
 namespace Forerunner.RenderingExtensions
 {
@@ -57,23 +57,33 @@ namespace Forerunner.RenderingExtensions
                     retval = InnerRender.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
                     RegisteredStream.Position = 0;
-                    Bitmap b = WebSiteThumbnail.GetStreamThumbnail(RegisteredStream, 1.2);
-                    if (b == null)
+
+                    string fileName = Path.GetTempPath() + Path.GetRandomFileName() + ".mht";
+                    byte[] buffer = new byte[8 * 1024];
+                    using (FileStream f = System.IO.File.OpenWrite(fileName))
                     {
-                        Logger.Trace(LogType.Error, "Failed to generate thumbnail for report: " + report.Name);
-                        return false;
+                        int len;
+                        while ((len = RegisteredStream.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            f.Write(buffer, 0, len);
+                        }
+                        f.Close();
                     }
-                    b.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                    //Call external app to get image
+                    System.Diagnostics.ProcessStartInfo start = new System.Diagnostics.ProcessStartInfo();
+                    start.WorkingDirectory = System.Web.Hosting.HostingEnvironment.MapPath("~/") + @"bin\";
+                    start.FileName = @"Forerunner.Thumbnail.exe";
+                    start.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    start.Arguments = fileName;
+                    Process p = System.Diagnostics.Process.Start(start);
+                    p.WaitForExit();
+
+                    byte[] jpg = System.IO.File.ReadAllBytes(fileName + ".jpg");
+                    File.Delete(fileName + ".jpg");
 
                     Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
-
-                    byte[] buffer = new byte[8 * 1024];
-                    int len;
-                    ms.Position = 0;
-                    while ((len = ms.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        outputStream.Write(buffer, 0, len);
-                    }
+                    outputStream.Write(jpg, 0, jpg.Length); 
                 }
                 return retval;
             }

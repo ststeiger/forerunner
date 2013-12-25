@@ -13,6 +13,7 @@ namespace ReportMannagerConfigTool
         
         private static string forerunnerJSONDLL = ConfigurationManager.AppSettings["forerunnerJSONDLL"];
         private static string forerunnerRenderExtensionDLL = ConfigurationManager.AppSettings["forerunnerRenderExtensionDLL"];
+        private static string forerunnerRenderThumbnailEXE = ConfigurationManager.AppSettings["forerunnerRenderThumbnailEXE"];
 
         private static string rplRendering = ConfigurationManager.AppSettings["rplRendering"];
         private static string htmlRendering = ConfigurationManager.AppSettings["htmlRendering"];
@@ -134,6 +135,10 @@ namespace ReportMannagerConfigTool
                 {
                     File.Copy(forerunnerRenderExtensionDLL, targetPath + "/Forerunner.RenderingExtensions.dll",true);
                 }
+                if (File.Exists(forerunnerRenderThumbnailEXE))
+                {
+                    File.Copy(forerunnerRenderThumbnailEXE, targetPath + "/Forerunner.Thumbnail.exe", true);
+                }
             }
             catch
             {
@@ -158,6 +163,10 @@ namespace ReportMannagerConfigTool
                 if (File.Exists(targetPath + "/Forerunner.RenderingExtensions.dll"))
                 {
                     File.Delete(targetPath + "/Forerunner.RenderingExtensions.dll");
+                }
+                if (File.Exists(targetPath + "/Forerunner.Thumbnail.exe"))
+                {
+                    File.Delete(targetPath + "/Forerunner.Thumbnail.exe");
                 }
             }
             catch

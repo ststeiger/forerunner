@@ -29,10 +29,7 @@ namespace Forerunner.RenderingExtensions
         {
             if (rplRendererType == null)
             {
-                // Use a disassembler tool like ILSpy to find The AssemblyName, type and constructor methods for other internal renderers in their respective .dlls
                 Assembly IR = Assembly.Load(new AssemblyName("Microsoft.ReportingServices.RPLRendering, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"));
-
-                //Read the PdfRenderer type from the Assembly
                 rplRendererType = IR.GetType("Microsoft.ReportingServices.Rendering.RPLRendering.RPLRenderer");
             }
 

@@ -130,7 +130,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Forerunner.snk" />
-    <None Include="Mobilizer 1 License.rtf">
+    <None Include="Mobilizer License.rtf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">

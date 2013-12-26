@@ -226,7 +226,7 @@ namespace ForerunnerLicense
                        success = false;
                    }
                }
-               //Trying to acitivate a used license or a new version on an upgrade license
+               //Trying to acitivate a used license or a new version on an upgradable license
                else
                {
                     //If no license data then use machine data from request
@@ -235,7 +235,7 @@ namespace ForerunnerLicense
                     ts = DateTime.Now - NewLD.FirstActivationDate;
 
                    //If Update on subcription
-                   if ((OldLD.MachineData.machineKey == NewLD.MachineData.machineKey) && (NewLD.LicenseDuration > ts.TotalDays) && NewLD.IsSubscription == 1)
+                   if (OldLD.MachineData.IsSame(NewLD.MachineData) && (NewLD.LicenseDuration > ts.TotalDays) && (NewLD.IsSubscription == 1 || NewLD.IsTrial == 1))
                    {
                        Response = String.Format(Response, "Success", "0", GetActivatePackage(NewLD));
                        success = true;
@@ -243,7 +243,8 @@ namespace ForerunnerLicense
 
                   //this key is alrady activated, maybe lost HD allow activation on new machine if more than 90 days
                    else
-                   {                       
+                   {               
+                       //TODO:  Change the license for a SA subscription if it is expired to the latest SKU that was avaialble at the time of expiration.
                        ts = DateTime.Now - NewLD.LastActivation;
                        if (ts.TotalDays < 90)
                            Response = String.Format(Response, "Fail", "101", "Already Activated");

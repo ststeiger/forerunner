@@ -22,7 +22,7 @@ namespace ForerunnerLicense
         private const String wow6432Node = "Wow6432Node";
         private const String forerunnerKey = "Forerunnersw";       
         private const String ProductKey = "Mobilizer";
-        private const String VersionKey = "Version1";
+        private const String VersionKey = "Version2";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
 
@@ -303,6 +303,10 @@ namespace ForerunnerLicense
 
             if (ThisMachine != null && ThisMachine.numberOfCores > License.Quantity)
                 LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
+
+            //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
+            if ( License.SKU == "Mob10" )
+                LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
 
             if (License.RequireValidation == 1)
             {                

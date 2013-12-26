@@ -16,7 +16,7 @@ namespace ReportMannagerConfigTool
         {
             InitializeComponent();
             // It is assumed that the file "Manual Activation.rtf" is in the same folder as MobilizerConfigTool.exe
-            txtEULA.LoadFile("Mobilizer 1 License.rtf");
+            txtEULA.LoadFile("Mobilizer License.rtf");
         }
 
         private void chkAgree_CheckedChanged(object sender, EventArgs e)

@@ -25,7 +25,8 @@ namespace ForerunnerLicense
             NotActivated,
             InvalidKey,
             LicenseValidationError,
-            InsufficientCoreLicenses
+            InsufficientCoreLicenses,
+            IncorrectVersion
         };
         #endregion constants
 

@@ -3034,7 +3034,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form"]);
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form", "fr-nav-container"]);
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -6260,9 +6260,13 @@ $(function () {
                 "</form>" +
                 "<div style='height:65px;'/>" +
                 "</div>");
+
             me.element.css("display", "block");
             me.element.html($params);
+
             me.$params = $params;
+            me.$form = me.element.find(".fr-param-form");
+
             me._formInit = true;
         },
 
@@ -6336,14 +6340,15 @@ $(function () {
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
             me.resetValidateMessage();
-            $(".fr-param-form", me.$params).validate({
+            me.$form.validate({
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("span"));
                     else {
-                        if ($(element).attr("IsMultiple") === "True")
+                        if ($(element).attr("IsMultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
+                        }
                         else
                             error.appendTo(element.nextAll(".fr-param-error-placeholder"));
                     }
@@ -6475,6 +6480,7 @@ $(function () {
             var me = this;
             me._closeAllDropdown();
             me.revertParameters();
+            me.$form.valid();
             me._trigger(events.cancel, null, {});
         },
         _setDatePicker: function () {
@@ -6571,14 +6577,14 @@ $(function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
                         if (param.Type === "Boolean")
-                            $(".fr-param-radio." + param.Name).removeAttr("disabled");
+                            $(".fr-paramname-" + param.Name, me.$params).removeAttr("disabled");
                         else
                             $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
                     }
                     else {
                         $checkbox.attr("checked", "true");
                         if (param.Type === "Boolean")
-                            $(".fr-param-radio." + param.Name).attr("disabled", "true");
+                            $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
                         else
                             $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
                     }
@@ -6610,7 +6616,7 @@ $(function () {
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
-            var $control = me._createDiv("fr-param-checkbox-container");
+            var $control = me._createDiv(["fr-param-checkbox-container"]);
             $control.attr("ismultiple", param.MultiValue);
             $control.attr("datatype", param.Type);
 
@@ -6693,13 +6699,15 @@ $(function () {
             return $control;
         },
         _setSelectedIndex: function (s, v) {
+
             var options = s[0];
-            for ( var i = 0; i < options.length; i++ ) {
+            for (var i = 0; i < options.length; i++) {
                 if (options[i].value === v) {
                     options[i].selected = true;
                     return;
                 }
             }
+
         },
         _writeDropDownControl: function (param, dependenceDisable, pageNum) {
             var me = this;
@@ -7025,7 +7033,7 @@ $(function () {
         getParamsList: function (noValid) {
             var me = this;
             var i;
-            if (noValid || ($(".fr-param-form", me.$params).length !== 0 && $(".fr-param-form", me.$params).valid() === true)) {
+            if (noValid || (me.$form.length !== 0 && me.$form.valid() === true)) {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
@@ -7203,7 +7211,7 @@ $(function () {
             //if no valid value exist, will popup error.
             if (!me._hasDefaultValue(param)) {
                 // Do not error here because the parameter can be an internal parameter.
-                console.log(param.Name + " does not have a default value.");
+                //console.log(param.Name + " does not have a default value.");
             }
             //}
         },
@@ -8468,6 +8476,9 @@ $(function () {
 
         },
         _init: function () {
+                        
+        },
+        _initBody: function () {
             var me = this;
 
             me.element.html("");
@@ -8515,9 +8526,12 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
                 //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/)[0];
-                var datasourceID = error.replace(/["“”]/g, '');
-                me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/);
+                if (error) {
+                    var datasourceID = error[0].replace(/["“”]/g, '');
+                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                }
+                me.openDialog();
             });
         },
         _createRows: function (credentials) {
@@ -8575,6 +8589,7 @@ $(function () {
         writeDialog: function (credentials) {
             var me = this;
             if (credentials) {
+                me._initBody();
                 me._createRows(credentials);
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
             }
@@ -8587,6 +8602,7 @@ $(function () {
             var me = this;
 
             if (credentials) {
+                me._initBody();
                 me._createRows(credentials);
             }
             if (savedCredential) {

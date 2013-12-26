@@ -480,6 +480,8 @@ $(function () {
             me._resetContextIfInvalid();
             var docMap = me.options.docMapArea;
             docMap.reportDocumentMap({ $reportViewer: me });
+            me.savedTop = $(window).scrollTop();
+            me.savedLeft = $(window).scrollLeft();
 
             //get the doc map
             if (!me.docMapData) {
@@ -599,7 +601,6 @@ $(function () {
                 if (action.FlushCache) {
                     me.flushCache();
                 }
-
                 me._loadParameters(action.CurrentPage, action.savedParams);
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
@@ -1396,8 +1397,6 @@ $(function () {
                 me.paramLoaded = false;
                 me._removeSetTimeout();
             }
-            me.scrollTop = 0;
-            me.scrollLeft = 0;
             me.finding = false;
             me.findStartPage = null;
             me.hasDocMap = false;

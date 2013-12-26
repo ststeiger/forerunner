@@ -305,7 +305,7 @@ namespace ForerunnerLicense
                 LicenseException.Throw(LicenseException.FailReason.InsufficientCoreLicenses, "Insufficient Core Licenses for this Machine");
 
             //Check Version, curretnly all other SKUs allow for version upgrade, if version upgrade occurs before subscription end.  This is checked at Activation.
-            if ( License.SKU == "Mob10" )
+            if ( License.SKU.Substring(0,5) == "Mob10" )
                 LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
 
             if (License.RequireValidation == 1)

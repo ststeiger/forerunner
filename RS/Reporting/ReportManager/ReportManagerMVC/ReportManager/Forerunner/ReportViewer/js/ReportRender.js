@@ -466,7 +466,7 @@ $(function () {
             var me = this;
 
             Style += "display:table;";
-            Style += "table-layout: fixed;";  //This fixes FF and IE work break
+            Style += "table-layout: fixed;";  //This fixes FF and IE word break
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
@@ -936,9 +936,11 @@ $(function () {
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
             Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
 
-            //MSIE Hack
-            if (forerunner.device.isMSIE() )
-                Style +=  "min-height:" + height + "mm;";
+            //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
+            if (forerunner.device.isMSIE()) {                
+                Style += "height:" + height + "mm;";
+
+            }
             else
                 Style += "height:" + height + "mm;";
             
@@ -957,7 +959,7 @@ $(function () {
                 Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
             $Cell.attr("Style", Style);
-            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;width:100%;height:100%;", new tempMeasurement(height, width))));
+            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;width:100%;height:100%;", new tempMeasurement(height, width))));
             return $Cell;
         },
         _writeTablix: function (RIContext) {

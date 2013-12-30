@@ -268,16 +268,23 @@ namespace ReportMannagerConfigTool
         /// <returns></returns>
         public static bool StartReportServer(bool isStart, string targetPath) 
         {
-            string instanceName = GetReportServerInstance(targetPath);
+            try
+            {
+                string instanceName = GetReportServerInstance(targetPath);
 
-            if (isStart)
-            {
-                return StartService(instanceName, 1000 * 30);
+                if (isStart)
+                {
+                    return StartService(instanceName, 1000 * 30);
+                }
+                else
+                {
+                    return StopService(instanceName, 1000 * 30);
+                }
             }
-            else
+            catch
             {
-                return StopService(instanceName, 1000 * 30);
-            }
+                return false;
+            }       
         }
 
         /// <summary>

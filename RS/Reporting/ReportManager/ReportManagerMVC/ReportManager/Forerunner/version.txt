@@ -1,1 +1,1 @@
-﻿developer build
+﻿{"buildVersion":"developer build"}

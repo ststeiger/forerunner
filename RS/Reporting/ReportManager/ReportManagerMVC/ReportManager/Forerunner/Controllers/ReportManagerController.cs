@@ -128,15 +128,15 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
         }
 
-        [HttpPut]
+        [HttpPost]
         public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info)
         {
            
             GetReportManager().SetSubscription(info);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
         }
 
-        [HttpDelete]
+        [HttpGet]
         public HttpResponseMessage DeleteSubscription(string subscriptionID)
         {
             GetReportManager().DeleteSubscription(subscriptionID);
@@ -144,11 +144,32 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ListSubscriptions(string report)
+        public HttpResponseMessage ListSubscriptions(string reportPath)
         {
             /// Need to pass in current owner.
-            Subscription[] subscriptions = GetReportManager().ListSubscriptions(report, null);
+            Subscription[] subscriptions = GetReportManager().ListSubscriptions(reportPath, null);
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ListDeliveryExtensions()
+        {
+            Extension[] extensions = GetReportManager().ListDeliveryExtensions();
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensions)), "text/JSON"); 
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetExtensionSettings(string extension)
+        {
+            ExtensionParameter[] extensionSettings = GetReportManager().GetExtensionSettings(extension);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensionSettings)), "text/JSON"); 
+        }
+
+        [HttpGet]
+        public HttpResponseMessage ListSchedules()
+        {
+            Schedule[] schedules = GetReportManager().ListSchedules(null);
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
         }
 
         private string ToString<T>(T value)

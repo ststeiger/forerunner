@@ -179,6 +179,8 @@ $(function () {
             parameterModel: "parameterModel",
             /** @constant */
             dsCredential: "dsCredential",
+            /** @constant */
+            subscriptionModel: "subscriptionModel",
 
             /** @constant */
             namespace: "forerunner",

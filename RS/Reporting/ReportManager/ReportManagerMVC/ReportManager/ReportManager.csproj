@@ -223,6 +223,7 @@
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
     <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
+    <Content Include="Forerunner\ReportExplorer\js\SubscriptionModel.js" />
     <Content Include="Forerunner\ReportExplorer\js\UserSettings.js" />
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />

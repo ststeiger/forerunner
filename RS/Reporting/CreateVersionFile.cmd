@@ -7,4 +7,4 @@ set buildFile="%~dp0..\..\build.txt"
 
 if exist %versionFile% del %versionFile%
 set /P buildVersion=<%buildFile%
-@echo {"buildVersion":^"%buildVersion%^"}>%versionFile%
+(@echo|set /P = %buildVersion%)>%versionFile%

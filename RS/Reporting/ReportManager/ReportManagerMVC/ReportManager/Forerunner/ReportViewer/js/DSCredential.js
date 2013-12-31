@@ -78,9 +78,9 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
                 //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/);
+                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
                 if (error) {
-                    var datasourceID = error[0].replace(/["“”]/g, '');
+                    var datasourceID = error[0].replace(/["“”']/g, '');
                     me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
                 }
                 me.openDialog();

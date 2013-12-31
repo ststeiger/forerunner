@@ -58,7 +58,8 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
-            parameterModel: null
+            parameterModel: null,
+            savePosition: null
         },
 
         _destroy: function () {
@@ -521,6 +522,15 @@ $(function () {
             me.element.mask();
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
+
+            //if doc map opened from toolpane, DefaultAppTemplate will pass savePosition here.
+            setTimeout(function () {
+                if (me.options.savePosition) {
+                    me.savedTop = me.options.savePosition.top;
+                    me.savedLeft = me.options.savePosition.left;
+                    me.options.savePosition = null;
+                }
+            }, 100);
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report

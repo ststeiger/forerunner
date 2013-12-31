@@ -59,7 +59,8 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
-            parameterModel: null
+            parameterModel: null,
+            savePosition: null
         },
 
         _destroy: function () {
@@ -522,6 +523,15 @@ $(function () {
             me.element.mask();
             docMap.slideUpShow();
             me._trigger(events.showDocMap);
+
+            //if doc map opened from toolpane, DefaultAppTemplate will pass savePosition here.
+            setTimeout(function () {
+                if (me.options.savePosition) {
+                    me.savedTop = me.options.savePosition.top;
+                    me.savedLeft = me.options.savePosition.left;
+                    me.options.savePosition = null;
+                }
+            }, 100);
         },
         _removeDocMap: function () {
             //Verify whether document map code exist in previous report
@@ -3200,6 +3210,9 @@ $(function () {
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.scrollLock = true;
+                if (me.savePosition) {
+                    me.$viewer.reportViewer("option", "savePosition", me.savePosition);
+                }
                 me.scrollToPosition(me.getOriginalPosition());
             });
 
@@ -3561,7 +3574,7 @@ $(function () {
             });
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
-                me.enableTools([tb.btnCredential]);
+                me.enableTools([tb.btnMenu, tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
             });
 
@@ -8528,9 +8541,9 @@ $(function () {
 
             me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
                 //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"]([^"“”]*)["”]/);
+                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
                 if (error) {
-                    var datasourceID = error[0].replace(/["“”]/g, '');
+                    var datasourceID = error[0].replace(/["“”']/g, '');
                     me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
                 }
                 me.openDialog();

@@ -376,6 +376,9 @@ $(function () {
             });
             $viewer.on(events.reportViewerShowDocMap(), function (e, data) {
                 me.scrollLock = true;
+                if (me.savePosition) {
+                    me.$viewer.reportViewer("option", "savePosition", me.savePosition);
+                }
                 me.scrollToPosition(me.getOriginalPosition());
             });
 

@@ -1026,16 +1026,19 @@ namespace Forerunner.SSRS.Manager
 
         public Extension[] ListDeliveryExtensions()
         {
+            rs.Credentials = GetCredentials();
             return rs.ListDeliveryExtensions();
         }
 
         public ExtensionParameter[] GetExtensionSettings(string extension)
         {
+            rs.Credentials = GetCredentials();
             return rs.GetExtensionSettings(extension);
         }
 
         public Schedule[] ListSchedules(string siteName)
         {
+            rs.Credentials = GetCredentials();
             return rs.ListSchedules(siteName);
         }
 

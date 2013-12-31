@@ -101,7 +101,7 @@ $(function () {
             });
 
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
-                me.enableTools([tb.btnCredential]);
+                me.enableTools([tb.btnMenu, tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
             });
 

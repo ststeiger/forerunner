@@ -3722,7 +3722,7 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 if (data.renderError === true) {
-                    me.enableTools([tp.itemRefresh]);
+                    me.enableTools([tp.itemRefresh, tp.itemFunctions, tg.itemFunctionGroup]);
                 }
                 else {
                     $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
@@ -3777,7 +3777,7 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
-                me.enableTools([tp.itemReportBack, tp.itemCredential]);
+                me.enableTools([tp.itemReportBack, tp.itemCredential, tp.itemFunctions, tg.itemFunctionGroup]);
             });
 
             // Hook up the toolbar element events

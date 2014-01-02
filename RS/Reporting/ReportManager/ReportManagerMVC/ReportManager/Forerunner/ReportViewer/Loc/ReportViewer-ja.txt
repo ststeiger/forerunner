@@ -47,7 +47,8 @@
     "next":"次",
     "zoom":"ズームを有効にする",
     "print":"刷る",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"裏面",

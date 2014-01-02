@@ -47,7 +47,8 @@
     "next":"下一個",
     "zoom":"允許縮放",
     "print":"打印",
-    "dsCredential":"數據源驗證"
+    "dsCredential":"數據源驗證",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"返回",

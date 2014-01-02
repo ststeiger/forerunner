@@ -47,7 +47,8 @@
     "next":"Successivo",
     "zoom":"Abilita Zoom",
     "print":"stampare",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"indietro",

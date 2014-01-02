@@ -99,7 +99,7 @@ $(function () {
             var tp = forerunner.ssr.tools.mergedItems;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
+                //$toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
 
                 $toolPane.toolPane("addTools", 4, true, [tp.itemFav]);
                 $toolPane.toolPane("disableTools", [tp.itemFav]);

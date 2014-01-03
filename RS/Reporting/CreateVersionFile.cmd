@@ -6,5 +6,4 @@ set versionFile=%Destination%\Forerunner\version.txt
 set buildFile="%~dp0..\..\build.txt"
 
 if exist %versionFile% del %versionFile%
-set /P buildVersion=<%buildFile%
-@echo {"buildVersion":^"%buildVersion%^"}>%versionFile%
+copy %buildFile% %versionFile%

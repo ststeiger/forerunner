@@ -4477,10 +4477,10 @@ $(function () {
             var buildVersion = null;
             $.ajax({
                 url: url,
-                dataType: "json",
+                dataType: "text",
                 async: false,
                 success: function (data) {
-                    buildVersion = data.buildVersion;
+                    buildVersion = data;
                 },
                 fail: function (data) {
                     console.log(data);

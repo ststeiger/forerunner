@@ -148,6 +148,43 @@
   border-bottom-color: lightblue;
 }
 
+.fr-toolpane .fr-item-functions{
+    display:none;
+}
+
+.fr-toolpane .fr-item-functions-group{
+    display:none;
+}
+
+/* Small toolbar (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px)
+{
+    .fr-toolpane .fr-item-functions {
+        display: block;
+    }
+
+    .fr-toolpane .fr-item-functions-group {
+        display: block;
+    }
+
+    .fr-toolpane .fr-id-home {
+        display:none;
+    }
+
+    .fr-toolpane .fr-item-functions-group .fr-id-home {
+        display:block;
+    }
+
+    .fr-toolpane .fr-id-home .fr-toolbase-item-text {
+        height: 31px;
+        padding-left: 7px;
+        display: table-cell;
+        vertical-align: middle;
+        font-size: 13pt;
+        color: #456191;
+    }
+}
+
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
   .fr-toolpane-dropdown-itemcontainer:hover {

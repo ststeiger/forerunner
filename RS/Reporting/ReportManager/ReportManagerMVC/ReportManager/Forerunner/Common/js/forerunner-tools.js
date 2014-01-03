@@ -1000,7 +1000,7 @@ $(function () {
             selectorClass: "fr-id-home",
             sharedClass: "fr-toolbase-no-disable-id",
             imageClass: "fr-icons24x24-home",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
+            itemTextClass: "fr-toolbase-item-text",
             toolStateClass: null,
             text: locData.toolPane.home,
             events: {

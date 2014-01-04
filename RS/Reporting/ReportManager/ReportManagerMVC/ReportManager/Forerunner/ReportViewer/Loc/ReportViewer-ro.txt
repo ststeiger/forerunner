@@ -47,7 +47,8 @@
     "next":"Înainte",
     "zoom":"Permite Zoom",
     "print":"se tipări",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"Înapoi",

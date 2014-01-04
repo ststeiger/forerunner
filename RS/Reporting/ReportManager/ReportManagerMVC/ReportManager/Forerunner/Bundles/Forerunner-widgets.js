@@ -3722,7 +3722,7 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 if (data.renderError === true) {
-                    me.enableTools([tp.itemRefresh]);
+                    me.enableTools([tp.itemRefresh, tp.itemFunctions, tg.itemFunctionGroup]);
                 }
                 else {
                     $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
@@ -3777,7 +3777,7 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
-                me.enableTools([tp.itemReportBack, tp.itemCredential]);
+                me.enableTools([tp.itemReportBack, tp.itemCredential, tp.itemFunctions, tg.itemFunctionGroup]);
             });
 
             // Hook up the toolbar element events
@@ -3815,17 +3815,17 @@ $(function () {
             var listOfItems;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
             return listOfItems;
@@ -4477,10 +4477,10 @@ $(function () {
             var buildVersion = null;
             $.ajax({
                 url: url,
-                dataType: "json",
+                dataType: "text",
                 async: false,
                 success: function (data) {
-                    buildVersion = data.buildVersion;
+                    buildVersion = data;
                 },
                 fail: function (data) {
                     console.log(data);
@@ -8099,9 +8099,9 @@ $(function () {
             var tp = forerunner.ssr.tools.mergedItems;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
+                $toolPane.toolPane("addTools", 4, true, [tp.itemHome]);
 
-                $toolPane.toolPane("addTools", 4, true, [tp.itemFav]);
+                $toolPane.toolPane("addTools", 6, true, [tp.itemFav]);
                 $toolPane.toolPane("disableTools", [tp.itemFav]);
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
                     $toolPane.toolPane("enableTools", [tp.itemFav]);

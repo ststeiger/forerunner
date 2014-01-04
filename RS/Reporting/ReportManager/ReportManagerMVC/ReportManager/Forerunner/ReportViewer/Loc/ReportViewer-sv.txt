@@ -47,7 +47,8 @@
     "next":"nästa",
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"bakåt",

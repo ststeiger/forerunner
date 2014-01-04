@@ -39,7 +39,7 @@ $(function () {
             // Hook up any / all custom events that the report viewer may trigger
             me.options.$reportViewer.on(events.reportViewerSetPageDone(), function (e, data) {
                 if (data.renderError === true) {
-                    me.enableTools([tp.itemRefresh]);
+                    me.enableTools([tp.itemRefresh, tp.itemFunctions, tg.itemFunctionGroup]);
                 }
                 else {
                     $("input.fr-item-textbox-reportpage", me.element).val(data.newPageNum);
@@ -94,7 +94,7 @@ $(function () {
             me.options.$reportViewer.on(events.reportViewerResetCredential(), function (e, data) {
                 me._clearItemStates();
                 me.disableTools(me._viewerItems());
-                me.enableTools([tp.itemReportBack, tp.itemCredential]);
+                me.enableTools([tp.itemReportBack, tp.itemCredential, tp.itemFunctions, tg.itemFunctionGroup]);
             });
 
             // Hook up the toolbar element events
@@ -132,17 +132,17 @@ $(function () {
             var listOfItems;
 
             if (allButtons === true || allButtons === undefined)
-                listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             else
-                listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemZoom, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
 
             // For Windows 8 with touch, windows phone and the default Android browser, skip the zoom button.
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemFunctions, tg.itemFunctionGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
             return listOfItems;

@@ -47,7 +47,8 @@
     "next":"Næsta",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"Til baka",

@@ -47,7 +47,8 @@
     "next":"Ar Aghaidh",
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
-    "dsCredential":"Datasource credential"
+    "dsCredential":"Datasource credential",
+    "functions":"Functions"
   },
   "toolbar": {
     "back":"ar ais",

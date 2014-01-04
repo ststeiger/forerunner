@@ -648,7 +648,7 @@ $(function () {
             events: {
                 click: function (e) {
                     var toolInfo = e.data.me.allTools["fr-item-export"];
-                    var $rightIcon = e.data.me.element.find("." + "fr-toolpane-icon16x16");
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
                     $rightIcon.toggleClass("fr-toolpane-down-icon");
                     $rightIcon.toggleClass("fr-toolpane-up-icon");
 
@@ -709,6 +709,7 @@ $(function () {
                 }
             }
         },
+        /** @member */
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
@@ -721,6 +722,25 @@ $(function () {
                 }
             }
         },        
+        /** @member */
+        itemFunctions: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-functions",
+            text: locData.toolPane.functions,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            events: {
+                click: function (e) {
+                    var toolInfo = e.data.me.allTools["fr-item-functions"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
+                }
+            }
+        },
     };
 
     /**
@@ -963,19 +983,6 @@ $(function () {
      */
     forerunner.ssr.tools.mergedItems = {
         /** @member */
-        itemHome: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-id-home",
-            sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-home",
-            text: locData.toolPane.home,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
         itemFav: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-update-fav",
@@ -987,12 +994,52 @@ $(function () {
                 }
             }
         },
-
+        /** @member */
+        itemHome: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-id-home",
+            sharedClass: "fr-toolbase-no-disable-id",
+            imageClass: "fr-icons24x24-home",
+            itemTextClass: "fr-toolbase-item-text",
+            toolStateClass: null,
+            text: locData.toolPane.home,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                }
+            }
+        },
+        itemRecent: {
+            toolType: toolTypes.containerItem,
+            selectorClass:"fr-item-recent",
+            imageClass: "fr-icons24x24-recent",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.toolbar.recent,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
+                }
+            }
+        },
+        itemFavorite: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-favorite",
+            imageClass: "fr-icons24x24-favorite",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.toolbar.favorites,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
+                }
+            }
+        },
     };
 
     var tb = forerunner.ssr.tools.toolbar;
     var tp = forerunner.ssr.tools.toolpane;
-
+    var mi = forerunner.ssr.tools.mergedItems;
     /**
      * Defines all the tool groups and dropdowns used in UI.
      *
@@ -1068,11 +1115,22 @@ $(function () {
             tools: [tp.itemKeyword,
                     tp.itemFind]
         },
+        /** @member */
+        itemFunctionGroup: {
+            toolType: toolTypes.toolGroup,
+            visible: false,
+            selectorClass: "fr-item-functions-group",
+            groupContainerClass: "fr-toolpane-dropdown-group-container",
+            tools: [mi.itemFavorite,
+                   mi.itemRecent,
+                   mi.itemHome]
+        },
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
+    tp.itemFunctions.accordionGroup = tg.itemFunctionGroup;
 
     /** @member */
     tg.itemFindGroup = {

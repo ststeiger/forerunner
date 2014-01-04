@@ -44,6 +44,10 @@ if ($("#image")) {
     });
 }
 
+if ($("#zip")) {
+    $("#zip").hide();
+}
+
 var page = $(document).attr('title');
 $("#"+page).addClass("TopNavSelected");
 

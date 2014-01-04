@@ -89,6 +89,13 @@ namespace Forerunner.Logging
 
     public class ExceptionLogGenerator
     {
+        public static void LogException(string errorStr,string sourceStr)
+        {
+            string error = string.Format("[Time:{0}] \r\n [Type:{1}] \r\n [TargetSite:{2}] \r\n [Source:{3}] \r\n [Message:{4}]  ",
+                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "), "unknown", "unknown", sourceStr, errorStr);
+
+            Logger.Trace(LogType.Error, "Exception:\r\n{0}", new object[] { error });
+        }
         public static void LogException(object obj)
         {
             Exception e = (Exception)obj;

@@ -25,6 +25,7 @@ namespace ForerunnerRegister
             public string ID = "";
             public string LicenseID = "";
             public string PhoneNumber = "";
+            public string zip = "";  //This is bot check, if there is a zip it is a bot
 
             public RegistrationData(Stream XMLData)
             {
@@ -86,6 +87,9 @@ namespace ForerunnerRegister
                         case "phonenumber":
                             PhoneNumber = HttpUtility.UrlDecode(parts[++i]);
                             break;
+                        case "zipcode":
+                            zip = HttpUtility.UrlDecode(parts[++i]);
+                            break;
                     }
                 }
             }
@@ -119,6 +123,9 @@ namespace ForerunnerRegister
                             break;
                         case "PhoneNumber":
                             PhoneNumber = XMLData.ReadElementContentAsString();
+                            break;
+                        case "ZipCode":
+                            zip = XMLData.ReadElementContentAsString();
                             break;
                         case "LicenseID":
                             LicenseID = XMLData.ReadElementContentAsString();
@@ -154,6 +161,19 @@ namespace ForerunnerRegister
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
+            SqlCommand SQLComm;
+
+            //Check for bot
+            if (RegData.zip != "")
+            {
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT BotReg (email,CreateDate) SELECT @Email,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                return "";
+            }
+
             SqlDataReader SQLReader;
             Guid ID = Guid.NewGuid();
             RegData.LicenseID = ForerunnerDB.NewLicenseID();
@@ -166,7 +186,7 @@ namespace ForerunnerRegister
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
             SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.Parameters.AddWithValue("@ID", ID);
             SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
             SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);

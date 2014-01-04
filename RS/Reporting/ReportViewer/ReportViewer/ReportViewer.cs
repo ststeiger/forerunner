@@ -309,7 +309,15 @@ namespace Forerunner.SSRS.Viewer
 
                 }
                 else
-                    return "";
+                {
+                    Exception ex = new Exception("Emply result from Server JSON Render");
+                    ex.Source = "GetReportJson";
+                    
+                    Console.WriteLine(ex.Message);
+                    ExceptionLogGenerator.LogException(ex);
+                    Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
+                    return JsonUtility.WriteExceptionJSON(ex, HttpContext.Current.User.Identity.Name);                    
+                }
 
             }
             catch (Exception e)

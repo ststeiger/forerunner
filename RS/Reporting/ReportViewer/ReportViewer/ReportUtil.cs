@@ -170,8 +170,12 @@ namespace Forerunner
                     w.WriteString("LicenseException");
                 else
                     w.WriteString(e.GetType().ToString());
+
                 w.WriteMember("TargetSite");
-                w.WriteString(e.TargetSite.ToString());
+                if (e.TargetSite != null)
+                    w.WriteString(e.TargetSite.ToString());
+                else
+                    w.WriteString("unknown");
                 w.WriteMember("Source");
                 w.WriteString(e.Source);
                 w.WriteMember("Message");

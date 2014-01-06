@@ -310,7 +310,7 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                 {
-                    throw new Exception("Report Server Rendering returns an empty stream.  Please contact your administrator.");
+                    throw new Exception("Reporting Services Error, empty result.  Please contact your administrator.");
                 }
 
             }

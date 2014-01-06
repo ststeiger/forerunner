@@ -61,8 +61,7 @@ namespace Forerunner.RenderingExtensions
             }
             catch (Exception e)
             {
-                ExceptionLogGenerator.LogException(e);
-                return false;                
+                    throw (e);
             }
         }
 

@@ -47,9 +47,9 @@
     "next":"Successivo",
     "zoom":"Abilita Zoom",
     "print":"stampare",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"datasource credenziale",
+    "functions":"Cartelle",
+    "addToFavorites":"Aggiungi ai Preferiti"
   },
   "toolbar": {
     "back":"indietro",
@@ -76,8 +76,8 @@
     "saveParam":"Vista Breytur",
     "parameterSets":"gestire Sets",
     "selectSet":"selezionare Imposta",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"datasource credenziale",
+    "addToFavorites":"Aggiungi ai Preferiti"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -166,9 +166,9 @@
     "newSet":"nuovo set"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
+    "title":"datasource credenziale",
+    "cancel":"cancellare",
+    "submit":"presentare",
     "username":"Login name:",
     "password":"Password:",
     "reset":"Reset"

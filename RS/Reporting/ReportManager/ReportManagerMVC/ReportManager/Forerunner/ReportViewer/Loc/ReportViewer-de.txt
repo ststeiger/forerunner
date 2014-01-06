@@ -47,9 +47,9 @@
     "next":"nächster",
     "zoom":"Zoomen",
     "print":"Drucken",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"Datenquelle Credential",
+    "functions":"Ordner",
+    "addToFavorites":"Zu Favoriten hinzufügen"
   },
   "toolbar": {
     "back":"Zurück",
@@ -76,8 +76,8 @@
     "saveParam":"Parameter speichern",
     "parameterSets":"Sätze verwalten",
     "selectSet":"wählen Sätze",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"Datenquelle Credential",
+    "addToFavorites":"Zu Favoriten hinzufügen"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",
@@ -90,7 +90,7 @@
     "print":"Drucken",
     "cancel":"Stornieren",
     "unit":"mm",
-    "margin":"Margins",
+    "margin":"Die Margen",
     "pageLayoutOptions":"Seitenlayoutoptionen"
   },
   "userSettings": {
@@ -166,11 +166,11 @@
     "newSet":"Neues Set"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
+    "title":"Datenquelle Credential",
+    "cancel":"stornieren",
+    "submit":"einreichen",
     "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "password":"Passwort:",
+    "reset":"rücksetzen"
   }
 }

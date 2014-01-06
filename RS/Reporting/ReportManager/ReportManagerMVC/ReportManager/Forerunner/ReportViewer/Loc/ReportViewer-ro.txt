@@ -47,9 +47,9 @@
     "next":"Înainte",
     "zoom":"Permite Zoom",
     "print":"se tipări",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"DataSource acreditare",
+    "functions":"foldere",
+    "addToFavorites":"Adauga la Favorite"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -76,8 +76,8 @@
     "saveParam":"Salvare Parametrii",
     "parameterSets":"Gestionați Seturi",
     "selectSet":"Selectați Set",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"DataSource acreditare",
+    "addToFavorites":"Adauga la Favorite"
   },
   "print": {
     "title":"imprima raportul",
@@ -166,11 +166,11 @@
     "newSet":"Set nou"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"DataSource acreditare",
+    "cancel":"anula",
+    "submit":"executa",
+    "username":"nume de login:",
+    "password":"parolă:",
+    "reset":"restabili"
   }
 }

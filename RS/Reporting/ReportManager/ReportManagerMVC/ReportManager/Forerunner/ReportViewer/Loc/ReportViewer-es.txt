@@ -48,7 +48,8 @@
     "zoom":"Habilitar zoom",
     "print":"Imprimir",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -76,7 +77,8 @@
     "saveParam":"Guardar parámetros",
     "parameterSets":"administrar Sets",
     "selectSet":"Seleccione Establecer",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Imprima opción Diseño de página",

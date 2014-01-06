@@ -48,7 +48,8 @@
     "zoom":"Abilita Zoom",
     "print":"stampare",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"indietro",
@@ -75,7 +76,8 @@
     "saveParam":"Vista Breytur",
     "parameterSets":"gestire Sets",
     "selectSet":"selezionare Imposta",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",

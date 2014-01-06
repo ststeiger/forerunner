@@ -96,15 +96,16 @@ $(function () {
             }
 
             // Create / render the menu pane
-            var tp = forerunner.ssr.tools.mergedItems;
+            var mi = forerunner.ssr.tools.mergedItems;
+            var tg = forerunner.ssr.tools.groups;
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
-                $toolPane.toolPane("addTools", 4, true, [tp.itemHome]);
+                $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
 
-                $toolPane.toolPane("addTools", 6, true, [tp.itemFav]);
-                $toolPane.toolPane("disableTools", [tp.itemFav]);
+                $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
+                $toolPane.toolPane("disableTools", [mi.itemFav]);
                 $viewer.on(events.reportViewerChangePage(), function (e, data) {
-                    $toolPane.toolPane("enableTools", [tp.itemFav]);
+                    $toolPane.toolPane("enableTools", [mi.itemFav]);
                     $toolbar.toolbar("enableTools", [tb.btnFav]);
                 });
 

@@ -48,7 +48,8 @@
     "zoom":"ズームを有効にする",
     "print":"刷る",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"裏面",
@@ -75,7 +76,8 @@
     "saveParam":"パラメータを保存",
     "parameterSets":"セットを管理",
     "selectSet":"セットを選択します。",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",

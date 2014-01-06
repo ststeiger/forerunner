@@ -48,7 +48,8 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Назад",
@@ -75,7 +76,8 @@
     "saveParam":"Сохранить параметры",
     "parameterSets":"управлять наборами",
     "selectSet":"Выбор набора",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Печать отчета",

@@ -48,7 +48,8 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Til baka",
@@ -75,7 +76,8 @@
     "saveParam":"Vista Breytur",
     "parameterSets":"stjórna Leikmynd",
     "selectSet":"valið er Stilla",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",

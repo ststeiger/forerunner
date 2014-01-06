@@ -48,7 +48,8 @@
     "zoom":"Ativar Zoom",
     "print":"Impressão",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Volta",
@@ -75,7 +76,8 @@
     "saveParam":"Salvar Parâmetros",
     "parameterSets":"Gerenciar conjuntos",
     "selectSet":"Selecione Definir",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Imprimir página de opção de layout",

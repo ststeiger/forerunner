@@ -48,7 +48,8 @@
     "zoom":"Zoomen",
     "print":"Drucken",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Zurück",
@@ -75,7 +76,8 @@
     "saveParam":"Parameter speichern",
     "parameterSets":"Sätze verwalten",
     "selectSet":"wählen Sätze",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Drucken Seitenlayout Option",

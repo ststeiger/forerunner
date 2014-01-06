@@ -48,7 +48,8 @@
     "zoom":"允許縮放",
     "print":"打印",
     "dsCredential":"數據源驗證",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"返回",
@@ -75,7 +76,8 @@
     "saveParam":"保存參數",
     "parameterSets":"管理參數集",
     "selectSet":"選擇參數集",
-    "dsCredential":"數據源驗證"
+    "dsCredential":"數據源驗證",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"打印報表",

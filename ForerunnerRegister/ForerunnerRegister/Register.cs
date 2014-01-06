@@ -146,6 +146,8 @@ namespace ForerunnerRegister
         private static string MailBody = ConfigurationManager.AppSettings["RegMailBody"];
         private static string RegMailFromAccount = ConfigurationManager.AppSettings["RegMailFromAccount"];
 
+        private static string SalesMailBody = ConfigurationManager.AppSettings["SalesNotifyMailBody"];
+
         private byte[] SetupFile = null;
   
         public string RegisterDownload(String Value)
@@ -250,7 +252,13 @@ namespace ForerunnerRegister
                 Domain = "localhost";
 #endif
             RegistrationData RegData = new RegistrationData(XMLReg);
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
+            string NewMailBody;
+            
+            
+            NewMailBody = String.Format(SalesMailBody, RegData.Email);
+            tw.SendMail(RegMailFromAccount, "Sales@forerunnersw.com", "New Trial Registration", NewMailBody);
+
+            NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

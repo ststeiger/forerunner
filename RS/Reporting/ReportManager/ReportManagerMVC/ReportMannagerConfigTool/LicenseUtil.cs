@@ -165,7 +165,7 @@ namespace ForerunnerLicense
          
             XMLReq.Read();
             if (XMLReq.Name != "Encrypt")
-                throw new Exception("Invalid Data");
+                throw new ClientLicenseException("Invalid Data");
             XMLReq.Read();
 
             while (!XMLReq.EOF)
@@ -293,7 +293,7 @@ namespace ForerunnerLicense
             if (XMLReq.Name != "License")
             {
                 Logger.Trace(LogType.Error, "LicenseData.LoadLicenseData Invalid license data");
-                throw new Exception("Invalid License Data");
+                throw new ClientLicenseException("Invalid License Data");
             }
             XMLReq.Read();
 
@@ -388,7 +388,7 @@ namespace ForerunnerLicense
             //Load from XML
             Logger.Trace(LogType.Info, "MachineId.Load invoked");
             if (XMLReq.Name != "MachineData")
-                throw new Exception("Not a Machine Data");
+                throw new ClientLicenseException("Not a Machine Data");
             XMLReq.Read();
             while (!XMLReq.EOF)
             {

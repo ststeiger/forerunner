@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using Jayrock.Json;
 using ForerunnerLicense;
+using ReportManager.Util.Logging;
 
 namespace Forerunner.SSRS.JSONRender
 {
@@ -236,7 +237,15 @@ namespace Forerunner.SSRS.JSONRender
         {
 
 //#if !DEBUG           
-            ClientLicense.Validate();
+            try
+            {
+                ClientLicense.Validate();
+            }
+            catch (TypeInitializationException e)
+            {
+                Logger.Trace(LogType.Error, "ClientLicense Type initialization failed.  Please restart RS service.");
+                throw new ClientLicenseException("ClientLicense was not initialized properly.");
+            }
 //#endif
             RPL.position = 0;
             w.WriteStartObject();

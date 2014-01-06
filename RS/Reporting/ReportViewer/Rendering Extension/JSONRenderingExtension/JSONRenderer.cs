@@ -11,6 +11,7 @@ using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using Forerunner.SSRS.JSONRender;
 using Forerunner.RenderingExtensions;
+using ForerunnerLicense;
 using ReportManager.Util.Logging;
 
 namespace Forerunner.RenderingExtensions
@@ -59,10 +60,15 @@ namespace Forerunner.RenderingExtensions
                 outputStream.Write(UTF8JSON, 0, UTF8JSON.Length);
                 return retval;
             }
-            catch (Exception e)
+            catch (ClientLicenseException e)
             {
                 ExceptionLogGenerator.LogException(e);
                 return false;
+            }
+            catch (Exception e)
+            {
+                ExceptionLogGenerator.LogException(e);
+                throw e;
             }
         }
 

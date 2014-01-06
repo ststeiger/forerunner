@@ -65,6 +65,9 @@
     <Compile Include="..\..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\ClientLicense.cs">
       <Link>ClientLicense.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\ClientLicenseException.cs">
+      <Link>ClientLicenseException.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\ReportManager\ReportManagerMVC\ReportMannagerConfigTool\LicenseUtil.cs">
       <Link>LicenseUtil.cs</Link>
     </Compile>

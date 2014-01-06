@@ -47,9 +47,9 @@
     "next":"Næsta",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"DataSource persónuskilríki",
+    "functions":"möppur",
+    "addToFavorites":"Bæta við uppáhöld"
   },
   "toolbar": {
     "back":"Til baka",
@@ -76,8 +76,8 @@
     "saveParam":"Vista Breytur",
     "parameterSets":"stjórna Leikmynd",
     "selectSet":"valið er Stilla",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"DataSource persónuskilríki",
+    "addToFavorites":"Bæta við uppáhöld"
   },
   "print": {
     "title":"Prenta Page Layout Valkostur",
@@ -166,11 +166,11 @@
     "newSet":"nýtt sett"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"DataSource persónuskilríki",
+    "cancel":"hætta",
+    "submit":"leggja",
+    "username":"notandanafn:",
+    "password":"lykilorð:",
+    "reset":"endurstilla"
   }
 }

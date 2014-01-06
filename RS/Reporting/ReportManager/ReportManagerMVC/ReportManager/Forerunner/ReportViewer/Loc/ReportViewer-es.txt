@@ -47,9 +47,9 @@
     "next":"Fespués",
     "zoom":"Habilitar zoom",
     "print":"Imprimir",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"credenciales del origen de datos",
+    "functions":"Carpetas",
+    "addToFavorites":"Añadir a Favoritos"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -77,8 +77,8 @@
     "saveParam":"Guardar parámetros",
     "parameterSets":"administrar Sets",
     "selectSet":"Seleccione Establecer",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"credenciales del origen de datos",
+    "addToFavorites":"Añadir a Favoritos"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -167,11 +167,11 @@
     "newSet":"Nuevo Juego"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"credenciales del origen de datos",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "username":"nombre de acceso:",
+    "password":"contraseña:",
+    "reset":"reajustar"
   }
 }

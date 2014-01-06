@@ -48,9 +48,9 @@
     "next":"Suivant",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"source de données d'identification",
+    "functions":"dossiers",
+    "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {
     "back":"Retour",
@@ -77,8 +77,8 @@
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Gérer jeux",
     "selectSet":"Sélectionnez Set",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"source de données d'identification",
+    "addToFavorites":"Ajouter aux favoris"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -167,11 +167,11 @@
     "newSet":"Nouveau jeu"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"source de données d'identification",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "username":"Connexion nom:",
+    "password":"mot de passe:",
+    "reset":"remettre"
   }
 }

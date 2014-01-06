@@ -47,9 +47,9 @@
     "next":"次",
     "zoom":"ズームを有効にする",
     "print":"刷る",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"データソースの資格情報",
+    "functions":"フォルダ",
+    "addToFavorites":"お気に入りに追加"
   },
   "toolbar": {
     "back":"裏面",
@@ -76,8 +76,8 @@
     "saveParam":"パラメータを保存",
     "parameterSets":"セットを管理",
     "selectSet":"セットを選択します。",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"データソースクレデンシャル",
+    "addToFavorites":"お気に入りに追加"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -166,11 +166,11 @@
     "newSet":"新規セット"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"データソースクレデンシャル",
+    "cancel":"取り消す",
+    "submit":"提出する",
+    "username":"ログイン名:",
+    "password":"パスワード:",
+    "reset":"リセット"
   }
 }

@@ -47,9 +47,9 @@
     "next":"Следующий",
     "zoom":"Enable Zoom",
     "print":"Напечатать",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"Источник данных учетных",
+    "functions":"Папки",
+    "addToFavorites":"Добавить в избранное"
   },
   "toolbar": {
     "back":"Назад",
@@ -76,8 +76,8 @@
     "saveParam":"Сохранить параметры",
     "parameterSets":"управлять наборами",
     "selectSet":"Выбор набора",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"источник данных учетных",
+    "addToFavorites":"Добавить в избранное"
   },
   "print": {
     "title":"Печать отчета",
@@ -166,11 +166,11 @@
     "newSet":"Новый набор"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"источник данных учетных",
+    "cancel":"отменить",
+    "submit":"представлять",
+    "username":"Войти название:",
+    "password":"пароль:",
+    "reset":"сброс"
   }
 }

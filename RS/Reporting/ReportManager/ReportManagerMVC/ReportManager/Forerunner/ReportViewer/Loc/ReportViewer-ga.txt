@@ -47,8 +47,8 @@
     "next":"Ar Aghaidh",
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
-    "dsCredential":"Datasource credential",
-    "functions":"Folders",
+    "dsCredential":"credential Datasource",
+    "functions":"Fillteáin",
     "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
@@ -76,7 +76,7 @@
     "saveParam":"Sábháil Paraiméadair",
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
-    "dsCredential":"Datasource Credential",
+    "dsCredential":"credential Datasource",
     "addToFavorites":"Add to Favorites"
   },
   "print": {
@@ -166,11 +166,11 @@
     "newSet":"Socraigh Nua"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"credential Datasource",
+    "cancel":"Cealaigh",
+    "submit":"Cuir",
+    "username":"ainm Logáil isteach:",
+    "password":"Pasfhocal:",
+    "reset":"Athshocraigh"
   }
 }

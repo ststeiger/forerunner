@@ -47,9 +47,9 @@
     "next":"Próximo",
     "zoom":"Ativar Zoom",
     "print":"Impressão",
-    "dsCredential":"Datasource credential",
+    "dsCredential":"datasource credencial",
     "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Adicionar aos favoritos"
   },
   "toolbar": {
     "back":"Volta",
@@ -76,8 +76,8 @@
     "saveParam":"Salvar Parâmetros",
     "parameterSets":"Gerenciar conjuntos",
     "selectSet":"Selecione Definir",
-    "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "dsCredential":"DataSource Credencial",
+    "addToFavorites":"Adicionar aos favoritos"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
@@ -166,11 +166,11 @@
     "newSet":"Novo conjunto"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "title":"DataSource Credencial",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "username":"nome de login:",
+    "password":"senha:",
+    "reset":"restabelecer"
   }
 }

@@ -48,7 +48,8 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"bakåt",
@@ -75,7 +76,8 @@
     "saveParam":"Spara Parameter",
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Skriv Option Sidlayout",

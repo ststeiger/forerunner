@@ -721,23 +721,47 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-credential"]);
                 }
             }
-        },        
+        },
         /** @member */
-        itemFunctions: {
+        itemHome: {
             toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-functions",
-            text: locData.toolPane.functions,
-            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
+            selectorClass: "fr-id-home",
+            sharedClass: "fr-toolbase-no-disable-id",
+            imageClass: "fr-icons24x24-home",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            toolStateClass: null,
+            text: locData.toolPane.home,
             events: {
                 click: function (e) {
-                    var toolInfo = e.data.me.allTools["fr-item-functions"];
-                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
-                    $rightIcon.toggleClass("fr-toolpane-down-icon");
-                    $rightIcon.toggleClass("fr-toolpane-up-icon");
-
-                    var accordionGroup = toolInfo.accordionGroup;
-                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
-                    $accordionGroup.toggle();
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
+        itemRecent: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-recent",
+            imageClass: "fr-icons24x24-recent",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.toolbar.recent,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
+                }
+            }
+        },
+        /** @member */
+        itemFavorite: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-favorite",
+            imageClass: "fr-icons24x24-favorite",
+            itemTextClass: "fr-toolpane-dropdown-item-text",
+            text: locData.toolPane.favorites,
+            toolStateClass: null,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
                 }
             }
         },
@@ -926,7 +950,7 @@ $(function () {
             selectorClass: "fr-button-update-fav",
             sharedClass: "fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-favorite-minus",
-            tooltip: locData.toolbar.favorites,
+            tooltip: locData.toolbar.addToFavorites,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
@@ -974,6 +998,9 @@ $(function () {
         },
     };
 
+    var tb = forerunner.ssr.tools.toolbar;
+    var tp = forerunner.ssr.tools.toolpane;
+
     /**
      * Defines all the tools that are merged into the Report Viewer Toolpane
      * when the Report Viewer is created via the report Explorer. If the Report
@@ -987,7 +1014,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-update-fav",
             imageClass: "fr-icons24x24-favorite-minus",
-            text: locData.toolPane.favorites,
+            text: locData.toolPane.addToFavorites,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
@@ -995,51 +1022,29 @@ $(function () {
             }
         },
         /** @member */
-        itemHome: {
+        itemFolders: {
             toolType: toolTypes.containerItem,
-            selectorClass: "fr-id-home",
-            sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-home",
-            itemTextClass: "fr-toolbase-item-text",
-            toolStateClass: null,
-            text: locData.toolPane.home,
+            selectorClass: "fr-item-folders",
+            imageClass: "fr-icons24x24-folders",
+            text: locData.toolPane.functions,
+            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                    var toolInfo = e.data.me.allTools["fr-item-folders"];
+                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    $rightIcon.toggleClass("fr-toolpane-down-icon");
+                    $rightIcon.toggleClass("fr-toolpane-up-icon");
+
+                    var accordionGroup = toolInfo.accordionGroup;
+                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
+                    $accordionGroup.toggle();
                 }
             }
-        },
-        itemRecent: {
-            toolType: toolTypes.containerItem,
-            selectorClass:"fr-item-recent",
-            imageClass: "fr-icons24x24-recent",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
-            text: locData.toolbar.recent,
-            toolStateClass: null,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
-                }
-            }
-        },
-        itemFavorite: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-favorite",
-            imageClass: "fr-icons24x24-favorite",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
-            text: locData.toolbar.favorites,
-            toolStateClass: null,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
-                }
-            }
-        },
+        }
     };
 
-    var tb = forerunner.ssr.tools.toolbar;
-    var tp = forerunner.ssr.tools.toolpane;
     var mi = forerunner.ssr.tools.mergedItems;
+
     /**
      * Defines all the tool groups and dropdowns used in UI.
      *
@@ -1116,21 +1121,19 @@ $(function () {
                     tp.itemFind]
         },
         /** @member */
-        itemFunctionGroup: {
+        itemFolderGroup: {
             toolType: toolTypes.toolGroup,
             visible: false,
-            selectorClass: "fr-item-functions-group",
+            selectorClass: "fr-item-folders-group",
             groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [mi.itemFavorite,
-                   mi.itemRecent,
-                   mi.itemHome]
-        },
+            tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
+        }
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
-    tp.itemFunctions.accordionGroup = tg.itemFunctionGroup;
+    mi.itemFolders.accordionGroup = tg.itemFolderGroup;
 
     /** @member */
     tg.itemFindGroup = {

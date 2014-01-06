@@ -48,7 +48,8 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"ar ais",
@@ -75,7 +76,8 @@
     "saveParam":"Sábháil Paraiméadair",
     "parameterSets":"Socraigh Bainistigh",
     "selectSet":"roghnaigh Socraigh",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",

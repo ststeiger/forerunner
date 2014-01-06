@@ -71,6 +71,7 @@
     <Content Include="images\24x24icons\favorites.png" />
     <Content Include="images\24x24icons\FavPlusOff.png" />
     <Content Include="images\24x24icons\FirstPageOff.png" />
+    <Content Include="images\24x24icons\Folders.png" />
     <Content Include="images\24x24icons\ForwardPageOff.png" />
     <Content Include="images\24x24icons\HomeOff.png" />
     <Content Include="images\24x24icons\LastPageOff.png" />

@@ -48,7 +48,8 @@
     "zoom":"Permite Zoom",
     "print":"se tipări",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Înapoi",
@@ -75,7 +76,8 @@
     "saveParam":"Salvare Parametrii",
     "parameterSets":"Gestionați Seturi",
     "selectSet":"Selectați Set",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"imprima raportul",

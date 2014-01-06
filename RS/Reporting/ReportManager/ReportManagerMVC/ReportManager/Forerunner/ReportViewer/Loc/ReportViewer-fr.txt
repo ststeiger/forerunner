@@ -49,7 +49,8 @@
     "zoom":"Activer Zoom",
     "print":"Imprimer",
     "dsCredential":"Datasource credential",
-    "functions":"Functions"
+    "functions":"Folders",
+    "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
     "back":"Retour",
@@ -76,7 +77,8 @@
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Gérer jeux",
     "selectSet":"Sélectionnez Set",
-    "dsCredential":"Datasource Credential"
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Add to Favorites"
   },
   "print": {
     "title":"Imprimer option de mise en",

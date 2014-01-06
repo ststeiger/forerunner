@@ -31,6 +31,7 @@
     <sourcefile name="24x24icons\recent.png" classname="fr-icons24x24-recent"></sourcefile>
     <sourcefile name="24x24icons\setup.png" classname="fr-icons24x24-setup"></sourcefile>
     <sourcefile name="24x24icons\ParameterSets.png" classname="fr-icons24x24-parameterSets"></sourcefile>
+    <sourcefile name="24x24icons\Folders.png" classname="fr-icons24x24-folders"></sourcefile>
   </compositeimage>
   <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>

@@ -80,7 +80,7 @@
     "addToFavorites":"Bæta við uppáhöld"
   },
   "print": {
-    "title":"Prenta Page Layout Valkostur",
+    "title":"Print Report",
     "pageHeight":"Hæð",
     "pageWidth":"breidd",
     "marginTop":"Top",

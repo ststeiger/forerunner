@@ -7,6 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -99,7 +100,12 @@ $(function () {
             $slider.addClass("fr-nav-container");
 
             var $close = $("<DIV />");
-            $close.addClass("fr-nav-close-button");
+            $close.addClass("fr-nav-close-container");
+
+            var $span = $("<SPAN>" + locData.paramPane.cancel + "</SPAN>");
+            $span.addClass("fr-nav-close");
+            $close.append($span);
+
             $close.on('click', function () {
                 me.options.$reportViewer.reportViewer("showNav");
             });

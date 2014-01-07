@@ -60,7 +60,7 @@ namespace Forerunner.RenderingExtensions
                 outputStream.Write(UTF8JSON, 0, UTF8JSON.Length);
                 return retval;
             }
-            catch (ClientLicenseException e)
+            catch (LicenseException e)
             {
                 ExceptionLogGenerator.LogException(e);
                 return false;

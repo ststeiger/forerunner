@@ -130,7 +130,7 @@ namespace ForerunnerLicense
             }
 
             value = MobV1Key.GetValue(LicenseTimestampKey);
-            if (value != null && !forceCheck)
+            if (value != null && (!forceCheck || LastServerValidation == DateTime.MinValue))
             {
                 try
                 {
@@ -173,7 +173,7 @@ namespace ForerunnerLicense
             ServerResponse resp;
 
             if (License == null)
-                throw new ClientLicenseException("License Required");
+                throw LicenseException.Throw(LicenseException.FailReason.Other, "License Required");
             string LicenseKey = License.LicenseKey;
 
             string request = string.Format(MergerequestString, "Merge",LicenseKey, MergeKey);
@@ -184,7 +184,7 @@ namespace ForerunnerLicense
                 return Activate(LicenseKey);
             }
             else
-                throw new ClientLicenseException(resp.Response);
+                throw LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
             
         }
         public static string Activate(string LicenceKey)
@@ -208,13 +208,13 @@ namespace ForerunnerLicense
                 return GetLicenseString();
             }
             else
-                throw new ClientLicenseException(resp.Response);
+                throw LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
         }
 
         public static void DeActivate()
         {            
             if (License == null)
-                throw new ClientLicenseException("No license to De-Activate");
+                throw LicenseException.Throw(LicenseException.FailReason.Other, "No license to De-Activate");
 
             string request = string.Format(requestString, "DeActivate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
             ServerResponse resp;
@@ -224,7 +224,7 @@ namespace ForerunnerLicense
                 DeleteLicense();               
             }
             else
-                throw new ClientLicenseException(resp.Response);
+                throw LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
            
         }
 
@@ -335,7 +335,7 @@ namespace ForerunnerLicense
 
             XMLReq.Read();
             if (XMLReq.Name != "LicenseResponse")
-                throw new ClientLicenseException("Invalid Response from server");
+                throw LicenseException.Throw(LicenseException.FailReason.Other, "Invalid Response from server");
             XMLReq.Read();
 
 

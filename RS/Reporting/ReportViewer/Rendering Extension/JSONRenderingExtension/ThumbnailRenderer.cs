@@ -10,7 +10,6 @@ using System.Collections.Specialized;
 using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using ReportManager.Util.Logging;
-using ForerunnerLicense;
 using System.Diagnostics;
 
 namespace Forerunner.RenderingExtensions
@@ -87,11 +86,6 @@ namespace Forerunner.RenderingExtensions
                     outputStream.Write(jpg, 0, jpg.Length); 
                 }
                 return retval;
-            }
-            catch (ClientLicenseException e)
-            {
-                ExceptionLogGenerator.LogException(e);
-                return false;
             }
             catch (Exception e)
             {

@@ -80,7 +80,7 @@
     "addToFavorites":"Zu Favoriten hinzufügen"
   },
   "print": {
-    "title":"Drucken Seitenlayout Option",
+    "title":"Bericht drucken",
     "pageHeight":"Höhe",
     "pageWidth":"Breite",
     "marginTop":"Oberteil",
@@ -88,15 +88,15 @@
     "marginLeft":"Links",
     "marginRight":"Richtig",
     "print":"Drucken",
-    "cancel":"Stornieren",
+    "cancel":"Abbestellen",
     "unit":"mm",
-    "margin":"Die Margen",
-    "pageLayoutOptions":"Seitenlayoutoptionen"
+    "margin":"Margen",
+    "pageLayoutOptions":"Seitenlayout-Optionen"
   },
   "userSettings": {
     "title":"Benutzereinstellungen",
     "submit":"Ok",
-    "cancel":"Stornieren",
+    "cancel":"Abbestellen",
     "ResponsiveUI":"Responsive UI"
   },
   "paramPane": {
@@ -105,7 +105,7 @@
     "isFalse":"Falsch",
     "required":"Erforderlich",
     "viewReport":"Anzeigen",
-    "cancel":"Stornieren",
+    "cancel":"Abbestellen",
     "datePicker":"Datum",
     "select":"Wählen"
   },
@@ -167,7 +167,7 @@
   },
   "dsCredential": {
     "title":"Datenquelle Credential",
-    "cancel":"stornieren",
+    "cancel":"Abbestellen",
     "submit":"einreichen",
     "username":"Login name:",
     "password":"Passwort:",

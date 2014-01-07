@@ -78,7 +78,6 @@
       <Link>Impersonator.cs</Link>
     </Compile>
     <Compile Include="ClientLicense.cs" />
-    <Compile Include="ClientLicenseException.cs" />
     <Compile Include="ConfigTool\ConfigToolHelper.cs" />
     <Compile Include="ConfigTool\frmEULA.cs">
       <SubType>Form</SubType>

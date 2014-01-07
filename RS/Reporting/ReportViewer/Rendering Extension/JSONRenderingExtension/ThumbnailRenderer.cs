@@ -11,7 +11,6 @@ using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using Forerunner.Logging;
 using System.Diagnostics;
-using ForerunnerLicense;
 
 namespace Forerunner.RenderingExtensions
 {
@@ -83,14 +82,9 @@ namespace Forerunner.RenderingExtensions
 
                     Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
                     outputStream.Write(jpg, 0, jpg.Length);
-                    
+
                 }
                 return retval;
-            }
-            catch (ClientLicenseException e)
-            {
-                ExceptionLogGenerator.LogException(e);
-                return false;
             }
             catch (Exception e)
             {

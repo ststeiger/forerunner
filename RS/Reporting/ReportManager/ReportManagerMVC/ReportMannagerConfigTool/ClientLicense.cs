@@ -211,7 +211,7 @@ namespace ForerunnerLicense
 
             LicenseData License = GetLicense();
             if (License == null)
-                throw new ClientLicenseException("License Required");
+                LicenseException.Throw(LicenseException.FailReason.Other, "License Required");
             string LicenseKey = License.LicenseKey;
 
             string request = string.Format(MergerequestString, "Merge",LicenseKey, MergeKey);
@@ -222,7 +222,10 @@ namespace ForerunnerLicense
                 return Activate(LicenseKey);
             }
             else
-                throw new ClientLicenseException(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
             
         }
         public static string Split(int NumCores)
@@ -231,18 +234,21 @@ namespace ForerunnerLicense
 
             LicenseData License = GetLicense();
             if (License == null)
-                throw new ClientLicenseException("You may only split an activated license");
+                LicenseException.Throw(LicenseException.FailReason.Other, "You may only split an activated license");
             string LicenseKey = License.LicenseKey;
 
             string request = string.Format(SplitRequestString, "Split", License.LicenseKey, License.MachineData.Serialize(false), LicenseString, NumCores);
             resp = Post(request);
             if (resp.StatusCode == 0)
             {
-                DeActivate();                
+                DeActivate();
                 return resp.Response;
             }
             else
-                throw new ClientLicenseException(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
 
         }
         public static string Activate(string LicenceKey)
@@ -267,24 +273,29 @@ namespace ForerunnerLicense
                 return GetLicenseString();
             }
             else
-                throw new ClientLicenseException(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+                return null;
+            }
         }
 
         public static void DeActivate()
         {
             LicenseData License = GetLicense();
             if (License == null)
-                throw new ClientLicenseException("No license to De-Activate");
+                LicenseException.Throw(LicenseException.FailReason.Other, "No license to De-Activate");
 
             string request = string.Format(requestString, "DeActivate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
             ServerResponse resp;
             resp = Post(request);
             if (resp.StatusCode == 0)
             {
-                DeleteLicense();               
+                DeleteLicense();
             }
             else
-                throw new ClientLicenseException(resp.Response);
+            {
+                LicenseException.Throw(LicenseException.FailReason.Other, resp.Response);
+            }
            
         }
 
@@ -407,7 +418,7 @@ namespace ForerunnerLicense
 
             XMLReq.Read();
             if (XMLReq.Name != "LicenseResponse")
-                throw new ClientLicenseException("Invalid Response from server");
+                LicenseException.Throw(LicenseException.FailReason.Other, "Invalid Response from server");
             XMLReq.Read();
 
 

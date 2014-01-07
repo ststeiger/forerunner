@@ -62,6 +62,7 @@ namespace Forerunner.RenderingExtensions
             }
             catch (LicenseException e)
             {
+                ExceptionLogGenerator.LogException(e);
                 return false;                
             }
             catch (Exception e)

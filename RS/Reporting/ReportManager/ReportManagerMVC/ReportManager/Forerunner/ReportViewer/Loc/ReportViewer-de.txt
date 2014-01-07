@@ -68,7 +68,7 @@
     "paramarea":"Parameter",
     "previousPage":"vorhergehend",
     "recent":"Kürzlich",
-    "refresh":"Dieses Seite neu laden",
+    "refresh":"erfrischen",
     "reportPage":"Seite",
     "zoom":"Aktivieren Zoomen",
     "print":"Drucken",

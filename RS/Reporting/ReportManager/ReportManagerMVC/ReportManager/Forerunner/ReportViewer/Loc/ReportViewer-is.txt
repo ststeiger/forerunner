@@ -48,7 +48,7 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "dsCredential":"DataSource persónuskilríki",
-    "functions":"möppur",
+    "functions":"Views",
     "addToFavorites":"Bæta við uppáhöld"
   },
   "toolbar": {

@@ -48,7 +48,7 @@
     "zoom":"Abilita Zoom",
     "print":"stampare",
     "dsCredential":"datasource credenziale",
-    "functions":"Cartelle",
+    "functions":"Visualizzazioni",
     "addToFavorites":"Aggiungi ai Preferiti"
   },
   "toolbar": {

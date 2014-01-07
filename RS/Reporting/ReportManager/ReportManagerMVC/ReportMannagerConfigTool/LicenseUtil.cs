@@ -26,7 +26,9 @@ namespace ForerunnerLicense
             InvalidKey,
             LicenseValidationError,
             InsufficientCoreLicenses,
-            IncorrectVersion
+            IncorrectVersion,
+            SSRSLicenseError,
+            InitializationFailure
         };
         #endregion constants
 

@@ -166,7 +166,7 @@ namespace ForerunnerLicense
             }
 
             value = MobV1Key.GetValue(LicenseTimestampKey);
-            if (value != null && !forceCheck)
+            if (value != null && (!forceCheck || LastServerValidation == DateTime.MinValue) )
             {
                 try
                 {

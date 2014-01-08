@@ -437,6 +437,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-firstpage",
             imageClass: "fr-icons24x24-firstpage",
+            tooltip: locData.toolbar.firstPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -449,6 +450,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-prev",
             imageClass: "fr-icons24x24-prev",
+            tooltip: locData.toolbar.previousPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -461,6 +463,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
             inputType: "number",
+            tooltip: locData.toolbar.reportPage,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -494,6 +497,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-next",
             imageClass: "fr-icons24x24-next",
+            tooltip: locData.toolbar.next,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -506,6 +510,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-lastpage",
             imageClass: "fr-icons24x24-lastpage",
+            tooltip: locData.toolbar.lastPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -662,6 +667,7 @@ $(function () {
         itemKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-keyword",
+            tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -688,6 +694,7 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
+            tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());

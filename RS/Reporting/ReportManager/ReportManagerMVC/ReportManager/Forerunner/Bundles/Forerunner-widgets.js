@@ -8184,6 +8184,15 @@ $(function () {
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
+            var $viewer = me.options.$viewer;
+
+            // Re-initialize the options for the current report viewer, model, etc.
+            me._manageParamSetsDialog.manageParamSets({
+                $appContainer: me.options.$appContainer,
+                $reportViewer: $viewer,
+                $reportViewerInitializer: me,
+                model: me.parameterModel
+            });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
         },
         setFavoriteState: function (path) {

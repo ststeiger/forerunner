@@ -162,7 +162,7 @@
     "defaultHeader":"默认",
     "allUsers":"全部",
     "deleteHeader":"删除",
-    "apply":"应用",
+    "apply":"保存",
     "newSet":"新参数集"
   },
   "dsCredential": {

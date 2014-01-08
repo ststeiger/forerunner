@@ -163,7 +163,7 @@
     "defaultHeader": "Default",
     "allUsers": "All",
     "deleteHeader": "Delete",
-    "apply": "Apply",
+    "apply": "Save",
     "newSet": "New Set"
   },
    "dsCredential": {

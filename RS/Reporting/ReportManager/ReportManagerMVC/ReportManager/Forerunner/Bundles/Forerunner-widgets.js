@@ -1459,10 +1459,15 @@ $(function () {
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-                        me._updateParameterData(data, submitForm, pageNum, renderParamArea);
-                        
+                        if (data.Exception) {
+                            me._renderPageError(me.$reportContainer, data);
+                            me.removeLoadingIndicator();
+                        }
+                        else {
+                            if (data.SessionID)
+                                me.sessionID = data.SessionID;
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                        }
                     }
                 });
             }

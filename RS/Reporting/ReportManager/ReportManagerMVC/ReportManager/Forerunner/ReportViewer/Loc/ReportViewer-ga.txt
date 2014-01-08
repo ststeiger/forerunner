@@ -162,7 +162,7 @@
     "defaultHeader":"Réamhshocrú",
     "allUsers":"Gach",
     "deleteHeader":"Scrios",
-    "apply":"Cuir iarratas isteach",
+    "apply":"sábháil",
     "newSet":"Socraigh Nua"
   },
   "dsCredential": {

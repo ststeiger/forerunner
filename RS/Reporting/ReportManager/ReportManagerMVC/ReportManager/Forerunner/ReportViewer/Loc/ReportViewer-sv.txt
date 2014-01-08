@@ -162,7 +162,7 @@
     "defaultHeader":"Default",
     "allUsers":"Alla",
     "deleteHeader":"Radera",
-    "apply":"Ansök",
+    "apply":"inbespara",
     "newSet":"Nytt Set"
   },
   "dsCredential": {

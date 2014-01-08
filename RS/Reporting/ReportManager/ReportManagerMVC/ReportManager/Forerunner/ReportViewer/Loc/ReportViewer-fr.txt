@@ -163,7 +163,7 @@
     "defaultHeader":"Par défaut",
     "allUsers":"tout",
     "deleteHeader":"Effacer",
-    "apply":"Appliquer",
+    "apply":"conserver",
     "newSet":"Nouveau jeu"
   },
   "dsCredential": {

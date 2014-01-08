@@ -162,7 +162,7 @@
     "defaultHeader":"дефолт",
     "allUsers":"все",
     "deleteHeader":"удалять",
-    "apply":"применять",
+    "apply":"скопить",
     "newSet":"Новый набор"
   },
   "dsCredential": {

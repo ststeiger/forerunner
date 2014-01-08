@@ -162,7 +162,7 @@
     "defaultHeader":"Default",
     "allUsers":"allt",
     "deleteHeader":"eyða",
-    "apply":"gilda",
+    "apply":"spara",
     "newSet":"nýtt sett"
   },
   "dsCredential": {

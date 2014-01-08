@@ -162,7 +162,7 @@
     "defaultHeader":"difetto",
     "allUsers":"tutto",
     "deleteHeader":"cancellare",
-    "apply":"azionare",
+    "apply":"conservare",
     "newSet":"nuovo set"
   },
   "dsCredential": {

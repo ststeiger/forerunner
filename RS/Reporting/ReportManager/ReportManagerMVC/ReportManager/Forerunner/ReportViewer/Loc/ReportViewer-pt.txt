@@ -162,7 +162,7 @@
     "defaultHeader":"omissão",
     "allUsers":"tudo",
     "deleteHeader":"excluir",
-    "apply":"aplicar",
+    "apply":"amealhar",
     "newSet":"Novo conjunto"
   },
   "dsCredential": {

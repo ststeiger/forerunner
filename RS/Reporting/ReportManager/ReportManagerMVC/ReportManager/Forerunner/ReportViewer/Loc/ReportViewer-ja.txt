@@ -162,7 +162,7 @@
     "defaultHeader":"デフォルト",
     "allUsers":"すべて",
     "deleteHeader":"削除",
-    "apply":"適用する",
+    "apply":"除いて",
     "newSet":"新規セット"
   },
   "dsCredential": {

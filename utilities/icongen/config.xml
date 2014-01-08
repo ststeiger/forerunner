@@ -7,6 +7,7 @@
     <sourcefile name="24x24icons\BackOff.png" classname="fr-icons24x24-reportback"></sourcefile>
     <sourcefile name="24x24icons\PageNavOff.png" classname="fr-icons24x24-nav"></sourcefile>
     <sourcefile name="24x24icons\HomeOff.png" classname="fr-icons24x24-home"></sourcefile>
+    <sourcefile name="24x24icons\HomeBlue.png" classname="fr-icons24x24-homeBlue"></sourcefile>
     <sourcefile name="24x24icons\Parameters.png" classname="fr-icons24x24-paramarea"></sourcefile>
     <sourcefile name="24x24icons\DocMapOff.png" classname="fr-icons24x24-documentmap"></sourcefile>
     <sourcefile name="24x24icons\LastPageOff.png" classname="fr-icons24x24-lastpage"></sourcefile>
@@ -24,14 +25,17 @@
     <sourcefile name="24x24icons\XML.png" classname="fr-icons24x24-exportXML"></sourcefile>
     <sourcefile name="24x24icons\ZoomOff.png" classname="fr-icons24x24-zoom"></sourcefile>
     <sourcefile name="24x24icons\PrintOff.png" classname="fr-icons24x24-printreport"></sourcefile>
-    <sourcefile name="24x24icons\favorites.png" classname="fr-icons24x24-favorite"></sourcefile>
+    <sourcefile name="24x24icons\favorites.png" classname="fr-icons24x24-favorites"></sourcefile>
+    <sourcefile name="24x24icons\FavoritesBlue.png" classname="fr-icons24x24-favoritesBlue"></sourcefile>
     <sourcefile name="24x24icons\FavPlusOff.png" classname="fr-icons24x24-favorite-plus"></sourcefile>
     <sourcefile name="24x24icons\FavMinusOff.png" classname="fr-icons24x24-favorite-minus"></sourcefile>
     <sourcefile name="24x24icons\SaveParameters.png" classname="fr-icons24x24-save-param"></sourcefile>
     <sourcefile name="24x24icons\recent.png" classname="fr-icons24x24-recent"></sourcefile>
+    <sourcefile name="24x24icons\RecentBlue.png" classname="fr-icons24x24-recentBlue"></sourcefile>
     <sourcefile name="24x24icons\setup.png" classname="fr-icons24x24-setup"></sourcefile>
     <sourcefile name="24x24icons\ParameterSets.png" classname="fr-icons24x24-parameterSets"></sourcefile>
     <sourcefile name="24x24icons\Folders.png" classname="fr-icons24x24-folders"></sourcefile>
+    <sourcefile name="24x24icons\DataSourceCred.png" classname="fr-icons24x24-dataSourceCred"></sourcefile>
   </compositeimage>
   <compositeimage name="icons25x31.png" cssname="icons25x31.css" classname="fr-icons25x31" relativeurlpath="../images" width="25" height="31" margin="5">
     <sourcefile name="25x31icons\csv.png" classname="fr-icons25x31-exportCSV"></sourcefile>

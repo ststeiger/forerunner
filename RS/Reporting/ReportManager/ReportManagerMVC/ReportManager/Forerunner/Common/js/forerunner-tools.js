@@ -361,7 +361,7 @@ $(function () {
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
-            imageClass: "fr-icons24x24-setup",
+            imageClass: "fr-icons24x24-dataSourceCred",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolbar.dsCredential,
             events: {
@@ -713,7 +713,7 @@ $(function () {
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
-            imageClass: "fr-icons24x24-setup",
+            imageClass: "fr-icons24x24-dataSourceCred",
             text: locData.toolPane.dsCredential,
             events: {
                 click: function (e) {
@@ -727,7 +727,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-home",
             sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-home",
+            imageClass: "fr-icons24x24-homeBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
             text: locData.toolPane.home,
@@ -741,7 +741,7 @@ $(function () {
         itemRecent: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-recent",
-            imageClass: "fr-icons24x24-recent",
+            imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             text: locData.toolbar.recent,
             toolStateClass: null,
@@ -755,7 +755,7 @@ $(function () {
         itemFavorite: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-favorite",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             text: locData.toolPane.favorites,
             toolStateClass: null,
@@ -899,7 +899,7 @@ $(function () {
         btnFav: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-fav",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favorites",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
@@ -962,7 +962,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
             sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favorites",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {

@@ -34,7 +34,7 @@ $(function () {
             var me = this;
 
             me.element.html("");
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +

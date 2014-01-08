@@ -62,6 +62,7 @@
     <Content Include="images\24x24icons\BackOff.png" />
     <Content Include="images\24x24icons\BackPageOff.png" />
     <Content Include="images\24x24icons\CSV.png" />
+    <Content Include="images\24x24icons\DataSourceCred.png" />
     <Content Include="images\24x24icons\doc.png" />
     <Content Include="images\24x24icons\DocMapOff.png" />
     <Content Include="images\24x24icons\doc_export_icon24.png" />
@@ -69,10 +70,12 @@
     <Content Include="images\24x24icons\ExportOff.png" />
     <Content Include="images\24x24icons\FavMinusOff.png" />
     <Content Include="images\24x24icons\favorites.png" />
+    <Content Include="images\24x24icons\FavoritesBlue.png" />
     <Content Include="images\24x24icons\FavPlusOff.png" />
     <Content Include="images\24x24icons\FirstPageOff.png" />
     <Content Include="images\24x24icons\Folders.png" />
     <Content Include="images\24x24icons\ForwardPageOff.png" />
+    <Content Include="images\24x24icons\HomeBlue.png" />
     <Content Include="images\24x24icons\HomeOff.png" />
     <Content Include="images\24x24icons\LastPageOff.png" />
     <Content Include="images\24x24icons\MHT.png" />
@@ -83,6 +86,7 @@
     <Content Include="images\24x24icons\PDF.png" />
     <Content Include="images\24x24icons\PrintOff.png" />
     <Content Include="images\24x24icons\recent.png" />
+    <Content Include="images\24x24icons\RecentBlue.png" />
     <Content Include="images\24x24icons\Refresh.png" />
     <Content Include="images\24x24icons\SaveParameters.png" />
     <Content Include="images\24x24icons\setup.png" />

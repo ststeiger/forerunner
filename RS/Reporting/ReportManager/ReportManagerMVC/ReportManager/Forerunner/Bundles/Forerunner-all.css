@@ -860,7 +860,7 @@ table, td, tr {
 
 .fr-mps-section { display: none; }
 
-.fr-mps-form { }
+.fr-mps-form { margin-right: 16px; }
   .fr-mps-form .fr-mps-action-button { width: 65px; margin: 10px 10px 10px 0; }
   .fr-mps-form [name='delete'] { float: right; }
   .fr-mps-form .fr-mps-add-id { height: 24px; font-size: 10pt; }
@@ -875,6 +875,17 @@ table, td, tr {
   .fr-mps-main-table .fr-mps-error-span { display: inline; font-size: 10pt; }
   .fr-mps-main-table .fr-mps-error-position { display: inline; }
   .fr-mps-main-table .fr-mps-error { border-width: thin; border-color: red; }
+
+/* (E.g., for phones, landscape) */
+@media only screen and (max-height : 340px) {
+  .fr-mps-form { margin-right: 4px; }
+}
+
+/* (E.g., for phones, potrait) */
+@media only screen and (max-width : 479px) {
+  .fr-mps-form { margin-right: 4px; }
+}
+
 .fr-nav-container { width: 100%; height: 350px; bottom: 0px; z-index: 3; background: #9bb4d5; /* Old browsers */ background: -moz-linear-gradient(top, #9bb4d5 0%, #8fa6cb 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#9bb4d5), color-stop(100%,#8fa6cb)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #9bb4d5 0%,#8fa6cb 100%); /* IE10+ */ background: linear-gradient(to bottom, #9bb4d5 0%,#8fa6cb 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9bb4d5', endColorstr='#8fa6cb',GradientType=0 ); /* IE6-9 */ }
 
 .fr-nav-spacer { height: 350px; }

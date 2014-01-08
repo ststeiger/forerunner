@@ -2099,7 +2099,7 @@ $(function () {
 
             return null;
         },
-        applyServerData: function (applyData) {
+        applyServerData: function (applyData, lastAddedSetId) {
             var me = this;
             var id = null;
 
@@ -2132,6 +2132,12 @@ $(function () {
 
             // save the results
             me._saveModel();
+
+
+            // Set the current set and trigger the model changed event
+            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+                me.currentSetId = lastAddedSetId;
+            }
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
@@ -7744,6 +7750,8 @@ $(function () {
 
             // Create the rows from the server data
             me._createRows();
+
+            me.lastAddedSetId = null;
         },
         _createRows: function() {
             var me = this;
@@ -7868,7 +7876,7 @@ $(function () {
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
                 if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData);
+                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
                     me.closeDialog();
                 }
             });
@@ -7897,6 +7905,8 @@ $(function () {
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+
+            me.lastAddedSetId = newSet.id;
         },
         _onChangeInput: function(e) {
             var me = this;

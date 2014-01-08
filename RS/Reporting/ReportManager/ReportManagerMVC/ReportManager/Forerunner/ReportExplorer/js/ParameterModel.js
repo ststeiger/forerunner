@@ -79,7 +79,7 @@ $(function () {
 
             return null;
         },
-        applyServerData: function (applyData) {
+        applyServerData: function (applyData, lastAddedSetId) {
             var me = this;
             var id = null;
 
@@ -112,6 +112,12 @@ $(function () {
 
             // save the results
             me._saveModel();
+
+
+            // Set the current set and trigger the model changed event
+            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+                me.currentSetId = lastAddedSetId;
+            }
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {

@@ -30,6 +30,8 @@ $(function () {
 
             // Create the rows from the server data
             me._createRows();
+
+            me.lastAddedSetId = null;
         },
         _createRows: function() {
             var me = this;
@@ -154,7 +156,7 @@ $(function () {
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
                 if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData);
+                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
                     me.closeDialog();
                 }
             });
@@ -183,6 +185,8 @@ $(function () {
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+
+            me.lastAddedSetId = newSet.id;
         },
         _onChangeInput: function(e) {
             var me = this;

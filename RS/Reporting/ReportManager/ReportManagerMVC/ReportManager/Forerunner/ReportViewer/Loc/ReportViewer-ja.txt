@@ -48,7 +48,7 @@
     "zoom":"ズームを有効にする",
     "print":"刷る",
     "dsCredential":"データソースの資格情報",
-    "functions":"閲覧数",
+    "views":"閲覧",
     "addToFavorites":"お気に入りに追加"
   },
   "toolbar": {

@@ -1027,7 +1027,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-folders",
             imageClass: "fr-icons24x24-folders",
-            text: locData.toolPane.functions,
+            text: locData.toolPane.views,
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {

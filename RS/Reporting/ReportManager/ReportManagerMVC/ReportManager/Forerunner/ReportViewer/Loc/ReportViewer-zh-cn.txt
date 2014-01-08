@@ -48,7 +48,7 @@
     "zoom":"允许缩放",
     "print":"打印",
     "dsCredential":"数据源验证",
-    "functions":"文件夹",
+    "views":"浏览",
     "addToFavorites":"添加到收藏"
   },
   "toolbar": {

@@ -252,7 +252,9 @@ $(function () {
             var me = this;
             if (parameterList) {
                 me.parameterList = JSON.parse(parameterList);
-                me._initTBody();
+                // Before the dialog is opened the options should always be re-initialized
+                // so this call is not be needed any longer
+                //me._initTBody();
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
             }
         },

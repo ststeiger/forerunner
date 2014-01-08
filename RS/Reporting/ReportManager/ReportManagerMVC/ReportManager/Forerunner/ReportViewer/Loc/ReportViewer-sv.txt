@@ -48,7 +48,7 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
     "dsCredential":"Datasource credential",
-    "functions":"Översikter",
+    "views":"Översikter",
     "addToFavorites":"Lägg till i favoriter"
   },
   "toolbar": {

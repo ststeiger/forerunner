@@ -48,7 +48,7 @@
     "zoom":"Habilitar zoom",
     "print":"Imprimir",
     "dsCredential":"credenciales del origen de datos",
-    "functions":"Vistas",
+    "views":"Vistas",
     "addToFavorites":"Añadir a Favoritos"
   },
   "toolbar": {

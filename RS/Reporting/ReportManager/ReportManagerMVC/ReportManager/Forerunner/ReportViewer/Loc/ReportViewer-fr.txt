@@ -49,7 +49,7 @@
     "zoom":"Activer Zoom",
     "print":"Imprimer",
     "dsCredential":"source de données d'identification",
-    "functions":"dossiers",
+    "functions":"vues",
     "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {

@@ -48,8 +48,8 @@
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
     "dsCredential":"Datasource credential",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "functions":"Översikter",
+    "addToFavorites":"Lägg till i favoriter"
   },
   "toolbar": {
     "back":"bakåt",
@@ -77,7 +77,7 @@
     "parameterSets":"hantera uppsättningar",
     "selectSet":"välj set",
     "dsCredential":"Datasource Credential",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"Lägg till i favoriter"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -167,10 +167,10 @@
   },
   "dsCredential": {
     "title":"DataSource Credential",
-    "cancel":"Cancel",
-    "submit":"Submit",
-    "username":"Login name:",
-    "password":"Password:",
-    "reset":"Reset"
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "username":"Inloggningsnamn:",
+    "password":"lösenord:",
+    "reset":"Återställ"
   }
 }

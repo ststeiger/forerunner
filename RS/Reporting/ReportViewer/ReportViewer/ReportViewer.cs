@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Security;
 using Forerunner.Security;
 using Forerunner.Logging;
+using ForerunnerLicense;
 
 namespace Forerunner.SSRS.Viewer
 {
@@ -310,9 +311,10 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                 {
-                    throw new Exception("Report Server Rendering returns an empty stream.  Please contact your administrator.");
+                    LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
                 }
-
+                //this should never be called
+                return "";
             }
             catch (Exception e)
             {
@@ -321,6 +323,7 @@ namespace Forerunner.SSRS.Viewer
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 return JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name);
             }
+
         }
         public string GetDocMapJson(string SessionID)
         {

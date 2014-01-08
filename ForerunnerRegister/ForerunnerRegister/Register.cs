@@ -25,6 +25,7 @@ namespace ForerunnerRegister
             public string ID = "";
             public string LicenseID = "";
             public string PhoneNumber = "";
+            public string zip = "";  //This is bot check, if there is a zip it is a bot
 
             public RegistrationData(Stream XMLData)
             {
@@ -86,6 +87,9 @@ namespace ForerunnerRegister
                         case "phonenumber":
                             PhoneNumber = HttpUtility.UrlDecode(parts[++i]);
                             break;
+                        case "zipcode":
+                            zip = HttpUtility.UrlDecode(parts[++i]);
+                            break;
                     }
                 }
             }
@@ -120,6 +124,9 @@ namespace ForerunnerRegister
                         case "PhoneNumber":
                             PhoneNumber = XMLData.ReadElementContentAsString();
                             break;
+                        case "ZipCode":
+                            zip = XMLData.ReadElementContentAsString();
+                            break;
                         case "LicenseID":
                             LicenseID = XMLData.ReadElementContentAsString();
                             break;
@@ -139,6 +146,8 @@ namespace ForerunnerRegister
         private static string MailBody = ConfigurationManager.AppSettings["RegMailBody"];
         private static string RegMailFromAccount = ConfigurationManager.AppSettings["RegMailFromAccount"];
 
+        private static string SalesMailBody = ConfigurationManager.AppSettings["SalesNotifyMailBody"];
+
         private byte[] SetupFile = null;
   
         public string RegisterDownload(String Value)
@@ -154,6 +163,19 @@ namespace ForerunnerRegister
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
+            SqlCommand SQLComm;
+
+            //Check for bot
+            if (RegData.zip != "")
+            {
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT BotReg (email,CreateDate) SELECT @Email,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
+                return "";
+            }
+
             SqlDataReader SQLReader;
             Guid ID = Guid.NewGuid();
             RegData.LicenseID = ForerunnerDB.NewLicenseID();
@@ -166,7 +188,7 @@ namespace ForerunnerRegister
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
                            ";
             SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
+            SQLComm = new SqlCommand(SQL, SQLConn);
             SQLComm.Parameters.AddWithValue("@ID", ID);
             SQLComm.Parameters.AddWithValue("@Email", RegData.Email);
             SQLComm.Parameters.AddWithValue("@FirstName", RegData.FirstName);
@@ -230,7 +252,13 @@ namespace ForerunnerRegister
                 Domain = "localhost";
 #endif
             RegistrationData RegData = new RegistrationData(XMLReg);
-            string NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
+            string NewMailBody;
+            
+            
+            NewMailBody = String.Format(SalesMailBody, RegData.Email);
+            tw.SendMail(RegMailFromAccount, "Sales@forerunnersw.com", "New Trial Registration", NewMailBody);
+
+            NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);
             return tw.SendMail(RegMailFromAccount, RegData.Email, MailSubject, NewMailBody);
 
         }

@@ -16,13 +16,13 @@ namespace RegisterTest
         {
             TaskWorker tw = new TaskWorker();
 
-            tw.LoadPASSLeads();
+            //tw.LoadPASSLeads();
 
-            //while (true)
-            //{
-            //   tw.DoWork();
-            //    Thread.Sleep(1000);
-            //}
+            while (true)
+            {
+               tw.DoWork();
+                Thread.Sleep(1000);
+            }
         }
     }
 }

@@ -48,7 +48,7 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать",
     "dsCredential":"Источник данных учетных",
-    "functions":"Папки",
+    "functions":"Просмотров",
     "addToFavorites":"Добавить в избранное"
   },
   "toolbar": {

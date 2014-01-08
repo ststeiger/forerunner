@@ -48,7 +48,7 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "dsCredential":"credential Datasource",
-    "functions":"Fillteáin",
+    "functions":"Radhairc",
     "addToFavorites":"Add to Favorites"
   },
   "toolbar": {

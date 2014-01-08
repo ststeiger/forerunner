@@ -82,14 +82,14 @@ namespace Forerunner.RenderingExtensions
 
                     Stream outputStream = createAndRegisterStream(report.Name, "jpg", Encoding.Default, "image/JPEG", true, StreamOper.CreateAndRegister);
                     outputStream.Write(jpg, 0, jpg.Length);
-                    
+
                 }
                 return retval;
             }
             catch (Exception e)
             {
                 ExceptionLogGenerator.LogException(e);
-                return false;
+                throw e;
             }
         }
 

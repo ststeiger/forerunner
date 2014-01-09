@@ -48,7 +48,7 @@
     "zoom":"Enable Zoom",
     "print":"Напечатать",
     "dsCredential":"Источник данных учетных",
-    "functions":"Папки",
+    "views":"Просмотров",
     "addToFavorites":"Добавить в избранное"
   },
   "toolbar": {
@@ -162,7 +162,7 @@
     "defaultHeader":"дефолт",
     "allUsers":"все",
     "deleteHeader":"удалять",
-    "apply":"применять",
+    "apply":"скопить",
     "newSet":"Новый набор"
   },
   "dsCredential": {

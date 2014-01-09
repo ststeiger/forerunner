@@ -48,7 +48,7 @@
     "zoom":"ズームを有効にする",
     "print":"刷る",
     "dsCredential":"データソースの資格情報",
-    "functions":"フォルダ",
+    "views":"閲覧",
     "addToFavorites":"お気に入りに追加"
   },
   "toolbar": {
@@ -162,7 +162,7 @@
     "defaultHeader":"デフォルト",
     "allUsers":"すべて",
     "deleteHeader":"削除",
-    "apply":"適用する",
+    "apply":"除いて",
     "newSet":"新規セット"
   },
   "dsCredential": {

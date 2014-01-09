@@ -361,7 +361,7 @@ $(function () {
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
-            imageClass: "fr-icons24x24-setup",
+            imageClass: "fr-icons24x24-dataSourceCred",
             sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolbar.dsCredential,
             events: {
@@ -437,6 +437,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-firstpage",
             imageClass: "fr-icons24x24-firstpage",
+            tooltip: locData.toolbar.firstPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -449,6 +450,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-prev",
             imageClass: "fr-icons24x24-prev",
+            tooltip: locData.toolbar.previousPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -461,6 +463,7 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
             inputType: "number",
+            tooltip: locData.toolbar.reportPage,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -494,6 +497,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-next",
             imageClass: "fr-icons24x24-next",
+            tooltip: locData.toolbar.next,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -506,6 +510,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-lastpage",
             imageClass: "fr-icons24x24-lastpage",
+            tooltip: locData.toolbar.lastPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -662,6 +667,7 @@ $(function () {
         itemKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-keyword",
+            tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -688,6 +694,7 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
+            tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
@@ -713,7 +720,7 @@ $(function () {
         itemCredential: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-credential",
-            imageClass: "fr-icons24x24-setup",
+            imageClass: "fr-icons24x24-dataSourceCred",
             text: locData.toolPane.dsCredential,
             events: {
                 click: function (e) {
@@ -727,7 +734,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-id-home",
             sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-home",
+            imageClass: "fr-icons24x24-homeBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             toolStateClass: null,
             text: locData.toolPane.home,
@@ -741,7 +748,7 @@ $(function () {
         itemRecent: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-recent",
-            imageClass: "fr-icons24x24-recent",
+            imageClass: "fr-icons24x24-recentBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             text: locData.toolbar.recent,
             toolStateClass: null,
@@ -755,7 +762,7 @@ $(function () {
         itemFavorite: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-favorite",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favoritesBlue",
             itemTextClass: "fr-toolpane-dropdown-item-text",
             text: locData.toolPane.favorites,
             toolStateClass: null,
@@ -899,7 +906,7 @@ $(function () {
         btnFav: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-fav",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favorites",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
@@ -962,7 +969,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
             sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-favorite",
+            imageClass: "fr-icons24x24-favorites",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
@@ -1026,7 +1033,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-folders",
             imageClass: "fr-icons24x24-folders",
-            text: locData.toolPane.functions,
+            text: locData.toolPane.views,
             rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
             events: {
                 click: function (e) {

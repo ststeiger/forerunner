@@ -49,7 +49,7 @@
     "zoom":"Activer Zoom",
     "print":"Imprimer",
     "dsCredential":"source de données d'identification",
-    "functions":"dossiers",
+    "views":"vues",
     "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {
@@ -163,7 +163,7 @@
     "defaultHeader":"Par défaut",
     "allUsers":"tout",
     "deleteHeader":"Effacer",
-    "apply":"Appliquer",
+    "apply":"conserver",
     "newSet":"Nouveau jeu"
   },
   "dsCredential": {

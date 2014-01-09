@@ -48,7 +48,7 @@
 		"zoom": "Enable Zoom",
 		"print": "Print",
 		"dsCredential":"Datasource credential",
-		"functions":"Folders",
+		"views":"Views",
     "addToFavorites": "Add to Favorites"
     },
 	"toolbar": {
@@ -163,7 +163,7 @@
     "defaultHeader": "Default",
     "allUsers": "All",
     "deleteHeader": "Delete",
-    "apply": "Apply",
+    "apply": "Save",
     "newSet": "New Set"
   },
    "dsCredential": {

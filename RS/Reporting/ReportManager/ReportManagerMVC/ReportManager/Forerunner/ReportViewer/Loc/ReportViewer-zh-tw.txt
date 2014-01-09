@@ -48,8 +48,8 @@
     "zoom":"允許縮放",
     "print":"打印",
     "dsCredential":"數據源驗證",
-    "functions":"Folders",
-    "addToFavorites":"Add to Favorites"
+    "views":"瀏覽",
+    "addToFavorites":"添加到收藏"
   },
   "toolbar": {
     "back":"返回",
@@ -77,7 +77,7 @@
     "parameterSets":"管理參數集",
     "selectSet":"選擇參數集",
     "dsCredential":"數據源驗證",
-    "addToFavorites":"Add to Favorites"
+    "addToFavorites":"添加到收藏"
   },
   "print": {
     "title":"打印報表",
@@ -151,7 +151,7 @@
     "dayNamesShort":["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     "dayNamesMin":["日", "一", "二", "三", "四", "五", "六"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"默認"
   },
   "manageParamSets": {
     "manageSets":"管理參數集",
@@ -162,7 +162,7 @@
     "defaultHeader":"默認",
     "allUsers":"全部",
     "deleteHeader":"刪除",
-    "apply":"應用",
+    "apply":"保存",
     "newSet":"新參數集"
   },
   "dsCredential": {

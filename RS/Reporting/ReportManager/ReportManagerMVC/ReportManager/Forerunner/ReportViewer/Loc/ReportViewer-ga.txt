@@ -48,7 +48,7 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "dsCredential":"credential Datasource",
-    "functions":"Fillteáin",
+    "views":"Radhairc",
     "addToFavorites":"Add to Favorites"
   },
   "toolbar": {
@@ -162,7 +162,7 @@
     "defaultHeader":"Réamhshocrú",
     "allUsers":"Gach",
     "deleteHeader":"Scrios",
-    "apply":"Cuir iarratas isteach",
+    "apply":"sábháil",
     "newSet":"Socraigh Nua"
   },
   "dsCredential": {

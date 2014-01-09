@@ -48,7 +48,7 @@
     "zoom":"Permite Zoom",
     "print":"se tipări",
     "dsCredential":"DataSource acreditare",
-    "functions":"foldere",
+    "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite"
   },
   "toolbar": {

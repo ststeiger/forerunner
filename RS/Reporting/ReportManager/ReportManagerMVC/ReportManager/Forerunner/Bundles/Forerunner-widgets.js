@@ -1459,10 +1459,15 @@ $(function () {
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
-                        me._updateParameterData(data, submitForm, pageNum, renderParamArea);
-                        
+                        if (data.Exception) {
+                            me._renderPageError(me.$reportContainer, data);
+                            me.removeLoadingIndicator();
+                        }
+                        else {
+                            if (data.SessionID)
+                                me.sessionID = data.SessionID;
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                        }
                     }
                 });
             }
@@ -2099,7 +2104,7 @@ $(function () {
 
             return null;
         },
-        applyServerData: function (applyData) {
+        applyServerData: function (applyData, lastAddedSetId) {
             var me = this;
             var id = null;
 
@@ -2132,6 +2137,12 @@ $(function () {
 
             // save the results
             me._saveModel();
+
+
+            // Set the current set and trigger the model changed event
+            if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
+                me.currentSetId = lastAddedSetId;
+            }
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
@@ -3886,6 +3897,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -3978,7 +3990,12 @@ $(function () {
             $slider.addClass("fr-nav-container");
 
             var $close = $("<DIV />");
-            $close.addClass("fr-nav-close-button");
+            $close.addClass("fr-nav-close-container");
+
+            var $span = $("<SPAN>" + locData.paramPane.cancel + "</SPAN>");
+            $span.addClass("fr-nav-close");
+            $close.append($span);
+
             $close.on('click', function () {
                 me.options.$reportViewer.reportViewer("showNav");
             });
@@ -6270,7 +6287,7 @@ $(function () {
                           "<input name='Parameter_ViewReport' type='button' class='fr-param-viewreport fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.viewReport + "'/>" +
                        "</div>" +
                        "<div class='fr-param-cancel-container'>" +
-                          "<input type='button' class='fr-param-cancel fr-param-button' value='" + me.options.$reportViewer.locData.paramPane.cancel + "'/>" +
+                          "<span class='fr-param-cancel'>" + me.options.$reportViewer.locData.paramPane.cancel + "</span>" +
                        "</div>" +
                     "</div>" +
                 "</form>" +
@@ -7738,6 +7755,8 @@ $(function () {
 
             // Create the rows from the server data
             me._createRows();
+
+            me.lastAddedSetId = null;
         },
         _createRows: function() {
             var me = this;
@@ -7862,7 +7881,7 @@ $(function () {
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
                 if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData);
+                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
                     me.closeDialog();
                 }
             });
@@ -7891,6 +7910,8 @@ $(function () {
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
             $input.focus();
+
+            me.lastAddedSetId = newSet.id;
         },
         _onChangeInput: function(e) {
             var me = this;
@@ -7956,7 +7977,9 @@ $(function () {
             var me = this;
             if (parameterList) {
                 me.parameterList = JSON.parse(parameterList);
-                me._initTBody();
+                // Before the dialog is opened the options should always be re-initialized
+                // so this call is not be needed any longer
+                //me._initTBody();
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
             }
         },
@@ -8168,6 +8191,15 @@ $(function () {
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
+            var $viewer = me.options.$viewer;
+
+            // Re-initialize the options for the current report viewer, model, etc.
+            me._manageParamSetsDialog.manageParamSets({
+                $appContainer: me.options.$appContainer,
+                $reportViewer: $viewer,
+                $reportViewerInitializer: me,
+                model: me.parameterModel
+            });
             me._manageParamSetsDialog.manageParamSets("openDialog", parameterList);
         },
         setFavoriteState: function (path) {
@@ -8499,7 +8531,7 @@ $(function () {
             var me = this;
 
             me.element.html("");
-            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
+            var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
                     headerHtml +

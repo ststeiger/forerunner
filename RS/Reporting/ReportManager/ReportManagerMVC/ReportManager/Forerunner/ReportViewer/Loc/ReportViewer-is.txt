@@ -48,7 +48,7 @@
     "zoom":"Virkja Zoom",
     "print":"Prenta",
     "dsCredential":"DataSource persónuskilríki",
-    "functions":"möppur",
+    "views":"Views",
     "addToFavorites":"Bæta við uppáhöld"
   },
   "toolbar": {
@@ -80,7 +80,7 @@
     "addToFavorites":"Bæta við uppáhöld"
   },
   "print": {
-    "title":"Prenta Page Layout Valkostur",
+    "title":"Print Report",
     "pageHeight":"Hæð",
     "pageWidth":"breidd",
     "marginTop":"Top",
@@ -162,7 +162,7 @@
     "defaultHeader":"Default",
     "allUsers":"allt",
     "deleteHeader":"eyða",
-    "apply":"gilda",
+    "apply":"spara",
     "newSet":"nýtt sett"
   },
   "dsCredential": {

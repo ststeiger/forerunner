@@ -181,6 +181,8 @@ $(function () {
             dsCredential: "dsCredential",
             /** @constant */
             subscriptionModel: "subscriptionModel",
+            /** @constant */
+            manageSubscription: "manageSubscription",
 
             /** @constant */
             namespace: "forerunner",
@@ -406,7 +408,11 @@ $(function () {
      * @namespace
      */
     forerunner.config = {
-        _virtualRootBase : null,
+        _virtualRootBase: null,
+
+        _apiBase: null,
+
+        _forerunnerFolderPath: null,
 
         _endsWith : function(str, suffix) {
             return str.indexOf(suffix, str.length - suffix.length);
@@ -437,8 +443,16 @@ $(function () {
          */
         forerunnerFolder: function ()
         {
-            
+            if (this._forerunnerFolderPath) return this._forerunnerFolderPath;
             return this._getVirtualRootBase() + "/forerunner";
+        },
+        /**
+        * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
+        *
+        * @param {string} Forerunner folder path.
+        */
+        setForerunnerFolder : function(forerunnerFolderPath) {
+            this._forerunnerFolderPath = forerunnerFolderPath;
         },
         /**
          * Base path to the REST api controlers
@@ -446,7 +460,16 @@ $(function () {
          * @member
          */
         forerunnerAPIBase: function () {
+            if (this._apiBase) return this._apiBase;
             return this._getVirtualRootBase() + "/api/";
+        },
+        /**
+        * Override the api base.  By default, it is the vroot + /api.
+        *
+        * @param {string} API Base.
+        */
+        setAPIBase: function (apiBase) {
+            this._apiBase = apiBase;
         },
     };
 

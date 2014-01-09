@@ -452,7 +452,8 @@ $(function () {
             var $select = me.element.find("." + me.options.toolInfo.selectorClass);
             $select.html("");
             $.each(data.optionArray, function (index, option) {
-                $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {

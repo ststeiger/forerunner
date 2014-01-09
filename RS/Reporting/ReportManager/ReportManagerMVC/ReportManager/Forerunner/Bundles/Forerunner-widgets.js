@@ -2743,7 +2743,8 @@ $(function () {
             var $select = me.element.find("." + me.options.toolInfo.selectorClass);
             $select.html("");
             $.each(data.optionArray, function (index, option) {
-                $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {
@@ -7805,12 +7806,13 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + parameterSet.name + "'/><span class='fr-mps-error-span'/>";
+            var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
                 if (!me.serverData.canEditAllUsersSet) {
-                    textElement = parameterSet.name;
+                    textElement = encodedSetName;
                     deleteClass = "";
                 }
                 allUsersClass = "fr-mps-all-users-check-id ui-icon-check ui-icon ";
@@ -7825,7 +7827,7 @@ $(function () {
             var $row = $(
                 "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
                     // Name
-                    "<td title='" + parameterSet.name + "'>" + textElement + "</td>" +
+                    "<td title='" + encodedSetName + "'>" + textElement + "</td>" +
                     // Default
                     "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
                     // All Users

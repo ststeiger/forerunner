@@ -4225,14 +4225,16 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings;
+            var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    settings = data;
+                    if (data && data.responsiveUI != undefined) {
+                        settings = data;
+                    }
                 }
             });
 

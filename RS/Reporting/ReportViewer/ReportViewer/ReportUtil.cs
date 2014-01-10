@@ -294,9 +294,11 @@ namespace Forerunner
                     foreach (ValidValue item in parameter.ValidValues)
                     {
                         w.WriteStartObject();
-                        w.WriteMember("Key");
+                        //change key from 'Key' to 'label' to adapt jquery.ui auto complete
+                        w.WriteMember("label");
                         w.WriteString(item.Label);
-                        w.WriteMember("Value");
+                        //change key from 'Value' to 'value' to adapt jquery.ui auto complete
+                        w.WriteMember("value");
                         w.WriteString(item.Value);
                         w.WriteEndObject();
                     }

@@ -38,6 +38,7 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
+        _dropdownBaseCount: 10,
 
         _init: function () {
             var me = this;
@@ -335,7 +336,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
-                    $element = me._writeDropDownControl(param, dependenceDisable, pageNum);
+                    $element = param.ValidValues.length > me._dropdownBaseCount ? me._writeBigDropDown(param, dependenceDisable, pageNum) : me._writeDropDownControl(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
@@ -370,7 +371,7 @@ $(function () {
         _addNullableCheckBox: function (param, $control) {
             var me = this;
             if (param.Nullable === true) {
-                var $nullableSpan = new $("<Span />");
+                var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
@@ -513,6 +514,45 @@ $(function () {
             }
 
         },
+        _writeBigDropDown: function (param, dependenceDisable, pageNum) {
+            var me = this;
+            var canLoad = false;
+            var predefinedValue = me._getPredefinedValue(param);
+            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
+                + param.MultiValue + "' datatype='" + param.Type + "' />");
+            me._getParameterControlProperty(param, $control);
+
+            for (var i = 0; i < param.ValidValues.length; i++) {
+                if (predefinedValue === param.ValidValues[i].value) {
+                    $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
+                    canLoad = true;
+                    break;
+                }
+            }
+            if (!canLoad) me._loadedForDefault = false;
+
+            $control.autocomplete({
+                source: param.ValidValues,
+                minLength: 0,
+                delay: 100,
+                select: function (event, obj) {
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label);
+                    if (me._paramCount === 1) {
+                        me._submitForm(pageNum);
+                    }
+                    return false;
+                },
+                focus: function (event, obj) {
+                    return false;
+                }
+            });
+
+            $control.on("focus", function () {
+                $control.autocomplete("search", this.value);
+            });
+
+            return $control;
+        },
         _writeDropDownControl: function (param, dependenceDisable, pageNum) {
             var me = this;
             var canLoad = false;
@@ -530,12 +570,12 @@ $(function () {
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                var optionValue = param.ValidValues[i].Value;
-                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].Key + "</option>");
+                var optionValue = param.ValidValues[i].value;
+                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].label + "</option>");
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
-                    $control.attr("title", param.ValidValues[i].Key);
+                    $control.attr("title", param.ValidValues[i].label);
                     canLoad = true;
                 }
 
@@ -608,8 +648,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
-                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            if (param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
+                param.ValidValues.push({ label: "Select All", value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -622,8 +662,8 @@ $(function () {
                     value = SelectAll.Value;
                 }
                 else {
-                    key = param.ValidValues[i - 1].Key;
-                    value = param.ValidValues[i - 1].Value;
+                    key = param.ValidValues[i - 1].label;
+                    value = param.ValidValues[i - 1].value;
                 }
 
                 var $row = new $("<TR />");
@@ -914,7 +954,7 @@ $(function () {
             if (cb.attr("checked") === "checked" || param.value === "")
                 return null;
             else
-                return param.value;
+                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage

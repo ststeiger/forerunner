@@ -27,12 +27,12 @@
     "licenseErrorContent":"Vinsamlegast hafðu samband við kerfisstjóra. Ef þú ert stjórnandi vinsamlegast staðfesta leyfi þitt í Mobilizer stillingar tól."
   },
   "exportType": {
-    "xml":"XML skrá með gögn skýrslunnar",
-    "csv":"CSV (komma afmörkuð)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (vefur skjalasafn)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF skrá",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Næsta",
     "zoom":"Virkja Zoom",
     "print":"Prenta",
-    "dsCredential":"DataSource persónuskilríki",
+    "dsCredential":"Persónuskilríki",
     "views":"Views",
     "addToFavorites":"Bæta við uppáhöld"
   },

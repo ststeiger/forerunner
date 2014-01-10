@@ -27,12 +27,12 @@
     "licenseErrorContent":"Пожалуйста, обратитесь к системному администратору. Если вы являетесь администратором необходимо убедиться в наличии лицензии в инструменте конфигурации Mobilizer."
   },
   "exportType": {
-    "xml":"XML файл с данными отчета",
-    "csv":"CSV (запятая)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (веб-архив)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF файл",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,9 +47,9 @@
     "next":"Следующий",
     "zoom":"Enable Zoom",
     "print":"Напечатать",
-    "dsCredential":"Источник данных учетных",
+    "dsCredential":"учетных",
     "views":"Просмотров",
-    "addToFavorites":"Добавить в избранное"
+    "addToFavorites":"избранное"
   },
   "toolbar": {
     "back":"Назад",

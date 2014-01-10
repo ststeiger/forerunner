@@ -27,12 +27,12 @@
     "licenseErrorContent":"あなたのシステム管理者に連絡してください。あなたがいる場合は管理者がMobilizerは設定ツールで、ライセンスを確認してください。"
   },
   "exportType": {
-    "xml":"XML レポートデータを持つファイル",
-    "csv":"CSV (カンマ区切り)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (ウェブアーカイブ)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF ファイル",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"次",
     "zoom":"ズームを有効にする",
     "print":"刷る",
-    "dsCredential":"データソースの資格情報",
+    "dsCredential":"資格情報",
     "views":"閲覧",
     "addToFavorites":"お気に入りに追加"
   },

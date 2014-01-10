@@ -27,12 +27,12 @@
     "licenseErrorContent":"Por favor, contate o administrador do sistema. Se você é o administrador verifique sua licença na ferramenta de configuração mobilizador."
   },
   "exportType": {
-    "xml":"Arquivo XML com dados do relatório",
-    "csv":"CSV (delimitado por vírgula)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (arquivo da web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"Arquivo TIFF",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Próximo",
     "zoom":"Ativar Zoom",
     "print":"Impressão",
-    "dsCredential":"datasource credencial",
+    "dsCredential":"Credencial",
     "views":"Visualizações",
     "addToFavorites":"Adicionar aos favoritos"
   },

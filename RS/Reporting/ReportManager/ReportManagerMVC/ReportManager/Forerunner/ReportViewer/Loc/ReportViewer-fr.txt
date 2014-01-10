@@ -27,12 +27,12 @@
     "licenseErrorContent":"S'il vous plaît contacter votre administrateur système. Si vous êtes l'administrateur s'il vous plaît vérifier votre licence dans l'outil de configuration Mobilizer."
   },
   "exportType": {
-    "xml":"XML fichier avec les données du rapport",
-    "csv":"CSV (séparées par des virgules)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archive web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF fichier",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -43,12 +43,12 @@
     "back":"Réintégrer",
     "refresh":"Reprendre",
     "docMap":"Plan du document",
-    "exportMenu":"Explorateur de documents",
+    "exportMenu":"Exporter",
     "find":"Trouver",
     "next":"Suivant",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
-    "dsCredential":"source de données d'identification",
+    "dsCredential":"Lettres de créance",
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris"
   },

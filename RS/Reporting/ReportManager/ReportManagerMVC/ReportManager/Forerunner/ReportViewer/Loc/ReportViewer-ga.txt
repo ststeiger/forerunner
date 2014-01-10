@@ -27,12 +27,12 @@
     "licenseErrorContent":"Téigh i dteagmháil le riarthóir do chórais. Má tá tú ag an riarthóir do thoil fhíorú do cheadúnas san uirlis cumraíochta Mobilizer."
   },
   "exportType": {
-    "xml":"Comhad XML le sonraí tuarascáil",
-    "csv":"CSV (teormharcáilte le camóga)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (web archive)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"comhad TIFF",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Ar Aghaidh",
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
-    "dsCredential":"credential Datasource",
+    "dsCredential":"Dintiúir",
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites"
   },

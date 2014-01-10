@@ -27,12 +27,12 @@
     "licenseErrorContent":"Si prega di contattare l'amministratore di sistema. Se si è l'amministratore preghiamo verificare la licenza nello strumento di configurazione Mobilizer."
   },
   "exportType": {
-    "xml":"XML file con i dati del rapporto",
-    "csv":"CSV (delimitato da virgola)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archivio web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF file",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Successivo",
     "zoom":"Abilita Zoom",
     "print":"stampare",
-    "dsCredential":"datasource credenziale",
+    "dsCredential":"Credenziale",
     "views":"Visualizzazioni",
     "addToFavorites":"Aggiungi ai Preferiti"
   },

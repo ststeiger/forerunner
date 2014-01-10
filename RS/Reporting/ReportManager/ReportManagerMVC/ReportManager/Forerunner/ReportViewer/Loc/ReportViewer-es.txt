@@ -27,12 +27,12 @@
     "licenseErrorContent":"Por favor, póngase en contacto con el administrador del sistema. Si usted es el administrador, por favor verificar su licencia de la herramienta de configuración Movilizador."
   },
   "exportType": {
-    "xml":"XML archivo con los datos del informe",
-    "csv":"CSV (delimitado por comas)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archivo web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF expediente",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -42,12 +42,12 @@
     "favorites":"Favoritos",
     "back":"Retroceder",
     "refresh":"Reanudar",
-    "docMap":"Mapa de documento",
+    "docMap":"documento de mapa",
     "find":"Encontrar",
     "next":"Fespués",
     "zoom":"Habilitar zoom",
     "print":"Imprimir",
-    "dsCredential":"credenciales del origen de datos",
+    "dsCredential":"Credenciales",
     "views":"Vistas",
     "addToFavorites":"Añadir a Favoritos"
   },

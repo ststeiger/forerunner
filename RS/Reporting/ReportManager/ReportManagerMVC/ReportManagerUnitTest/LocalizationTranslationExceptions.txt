@@ -8,35 +8,43 @@
     "stackTrace": [],
     "targetSite": []
   },
+  "exportType": {
+    "xml": [],
+    "csv": [],
+    "pdf": [],
+    "mhtml": [],
+    "excel": [],
+    "tiff": [],
+    "word": []
+  },
   "toolPane": {
     "navigation":["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
-     "zoom": ["ru"],
-    "print": ["ro"]
+    "zoom": ["ru"],
+    "print": ["ro"],
+    "dsCredential":["de", "sv"],
+		"views":["is"],
+    "addToFavorites": ["ga"]
   },
   "toolbar": {
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
-     "lastPage": ["ga"],
+    "lastPage": ["ga"],
     "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],
     "firstPage": ["is"],
     "previousPage": ["fr"],
     "reportPage": ["fr", "is"],
-     "zoom": ["ru"]
-  },
-  "exportType": {
-    "pdf": [],
-    "mhtml": ["ga"],
-    "excel": [],
-    "tiff": ["it"],
-    "word": []
+    "zoom": ["ru"],
+ 		"dsCredential":["sv"],
+    "addToFavorites": ["ga"]
   },
   "print": {
+    "title": ["is"],
     "margin": ["de"],
-     "marginTop": ["is"],
+    "marginTop": ["is"],
     "marginBottom": ["is"]
   },
   "userSettings": {
@@ -65,6 +73,20 @@
     "dayNames": ["pt"], 
     "dayNamesShort": ["de", "is"],
     "dayNamesMin": ["de", "fr", "ga", "is", "it", "sv"]
+  },
+  "parameterModel":{
+    "defaultName": ["de", "es", "fr", "ga", "is", "it", "sv"]
+  },
+  "manageParamSets":{
+    "name": [],
+    "defaultHeader": []
+  },
+  "dsCredential": {
+    "title":["sv"],
+	  "username":["de", "it"],
+   	"password":["it"],
+  	"reset":["it"]
+
   }
 }
 

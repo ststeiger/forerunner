@@ -187,12 +187,6 @@
 	border-top: 0;
 	overflow: auto;
 }
-.ui-autocomplete {
-	position: absolute;
-	top: 0;
-	left: 0;
-	cursor: default;
-}
 .ui-button {
 	display: inline-block;
 	position: relative;
@@ -494,7 +488,7 @@ button.ui-button::-moz-focus-inner {
 	text-decoration: none;
 	display: block;
 	padding: 2px .4em;
-	line-height: 1.5;
+	line-height: 1.2;
 	min-height: 0; /* support: IE7 */
 	font-weight: normal;
 }
@@ -1117,4 +1111,20 @@ body .ui-tooltip {
 	opacity: .3;
 	filter: Alpha(Opacity=30);
 	border-radius: 8px;
+}
+
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+    background: #fff 50% 50% repeat-x;
+}
+.ui-autocomplete .ui-state-focus { 
+    background: #354468 50% 50% repeat-x; 
+    color: #fff;
+    cursor:pointer;
+}
+.ui-autocomplete .ui-menu-item {
+    font-size:medium;
 }

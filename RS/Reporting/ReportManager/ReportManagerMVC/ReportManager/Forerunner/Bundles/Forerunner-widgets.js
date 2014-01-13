@@ -193,7 +193,7 @@ $(function () {
         */
         getDataSourceCredential: function () {
             var me = this;
-            return me.datasourceCredentials ? me.datasourceCredentials : null
+            return me.datasourceCredentials ? me.datasourceCredentials : null;
         },
         /**
          * @function $.forerunner.reportViewer#triggerEvent
@@ -653,16 +653,17 @@ $(function () {
 
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
-                    me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
-                    me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                    if (me.$numOfVisibleParameters > 0) {
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    if (action.paramDefs) {
+                        me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
+                        me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                        if (me.$numOfVisibleParameters > 0) {
+                            me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        }
+                        else
+                            if (me.options.parameterModel)
+                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+                        me.paramLoaded = true;
                     }
-                    
-                    if (me.options.parameterModel)
-                        me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
-
-                    me.paramLoaded = true;
                    
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
@@ -2743,7 +2744,8 @@ $(function () {
             var $select = me.element.find("." + me.options.toolInfo.selectorClass);
             $select.html("");
             $.each(data.optionArray, function (index, option) {
-                $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                var encodedOptionName = forerunner.helper.htmlEncode(option.name);
+                $option = $("<option value=" + option.id + ">" + encodedOptionName + "</option>");
                 $select.append($option);
             });
             $select.children("option").each(function (index, option) {
@@ -3835,9 +3837,9 @@ $(function () {
             // We don't zoom in default android browser and Windows 8 always zoom anyways.
             if (forerunner.device.isMSIEAndTouch() || forerunner.device.isWindowsPhone() || (forerunner.device.isAndroid() && !forerunner.device.isChrome())) {
                 if (allButtons === true || allButtons === undefined)
-                    listOfItems = [tg.itemVCRGroup, mi.itemFolders, tg.itemFolderGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemReportBack, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
                 else
-                    listOfItems = [tg.itemVCRGroup, mi.itemFolders, tg.itemFolderGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
+                    listOfItems = [tg.itemVCRGroup, tp.itemCredential, tp.itemNav, tp.itemRefresh, tp.itemDocumentMap, tp.itemExport, tg.itemExportGroup, tp.itemPrint, tg.itemFindGroup];
             }
 
             return listOfItems;
@@ -4224,14 +4226,16 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings;
+            var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    settings = data;
+                    if (data && data.responsiveUI !== undefined) {
+                        settings = data;
+                    }
                 }
             });
 
@@ -5238,8 +5242,9 @@ $(function () {
             var NewImage = new Image();
             var me = this;
 
+            var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+            Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 
             var ImageName;
@@ -5247,6 +5252,10 @@ $(function () {
             var imageConsolidationOffset;
 
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+
+            //get the padding size
+            var padWidth = me._getPaddingSize(RIContext.CurrObj, "Left") + me._getPaddingSize(RIContext.CurrObj, "Right");
+            var padHeight = me._getPaddingSize(RIContext.CurrObj, "Top") + me._getPaddingSize(RIContext.CurrObj, "Bottom");
 
             if (RIContext.CurrObj.Type === "Image") {//for image
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
@@ -5283,7 +5292,7 @@ $(function () {
                     
                 me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
                 
-                me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
+                me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
             };
             NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
             $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
@@ -5307,8 +5316,15 @@ $(function () {
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
-            if (Action.HyperLink) {
-                Control.attr("href", Action.HyperLink);
+            if (Action.HyperLink) {               
+                Control.addClass("fr-core-cursorpointer");
+                Control.attr("href", "#");
+                Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
+                    me._stopDefaultEvent(e);
+                    location.href = e.data.HyperLink;
+                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
+                });
+
             }
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
@@ -6267,6 +6283,7 @@ $(function () {
         _defaultValueExist: false,
         _loadedForDefault: true,
         _reportDesignError: null,
+        _dropdownBaseCount: 10,
 
         _init: function () {
             var me = this;
@@ -6564,7 +6581,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
-                    $element = me._writeDropDownControl(param, dependenceDisable, pageNum);
+                    $element = param.ValidValues.length > me._dropdownBaseCount ? me._writeBigDropDown(param, dependenceDisable, pageNum) : me._writeDropDownControl(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
@@ -6599,7 +6616,7 @@ $(function () {
         _addNullableCheckBox: function (param, $control) {
             var me = this;
             if (param.Nullable === true) {
-                var $nullableSpan = new $("<Span />");
+                var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
@@ -6742,6 +6759,45 @@ $(function () {
             }
 
         },
+        _writeBigDropDown: function (param, dependenceDisable, pageNum) {
+            var me = this;
+            var canLoad = false;
+            var predefinedValue = me._getPredefinedValue(param);
+            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
+                + param.MultiValue + "' datatype='" + param.Type + "' />");
+            me._getParameterControlProperty(param, $control);
+
+            for (var i = 0; i < param.ValidValues.length; i++) {
+                if (predefinedValue === param.ValidValues[i].value) {
+                    $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
+                    canLoad = true;
+                    break;
+                }
+            }
+            if (!canLoad) me._loadedForDefault = false;
+
+            $control.autocomplete({
+                source: param.ValidValues,
+                minLength: 0,
+                delay: 100,
+                select: function (event, obj) {
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label);
+                    if (me._paramCount === 1) {
+                        me._submitForm(pageNum);
+                    }
+                    return false;
+                },
+                focus: function (event, obj) {
+                    return false;
+                }
+            });
+
+            $control.on("focus", function () {
+                $control.autocomplete("search", this.value);
+            });
+
+            return $control;
+        },
         _writeDropDownControl: function (param, dependenceDisable, pageNum) {
             var me = this;
             var canLoad = false;
@@ -6759,12 +6815,12 @@ $(function () {
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                var optionValue = param.ValidValues[i].Value;
-                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].Key + "</option>");
+                var optionValue = param.ValidValues[i].value;
+                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].label + "</option>");
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
-                    $control.attr("title", param.ValidValues[i].Key);
+                    $control.attr("title", param.ValidValues[i].label);
                     canLoad = true;
                 }
 
@@ -6837,8 +6893,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
-                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            if (param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
+                param.ValidValues.push({ label: "Select All", value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -6851,8 +6907,8 @@ $(function () {
                     value = SelectAll.Value;
                 }
                 else {
-                    key = param.ValidValues[i - 1].Key;
-                    value = param.ValidValues[i - 1].Value;
+                    key = param.ValidValues[i - 1].label;
+                    value = param.ValidValues[i - 1].value;
                 }
 
                 var $row = new $("<TR />");
@@ -7143,7 +7199,7 @@ $(function () {
             if (cb.attr("checked") === "checked" || param.value === "")
                 return null;
             else
-                return param.value;
+                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -7805,12 +7861,13 @@ $(function () {
                 allUsersTdClass = " fr-core-cursorpointer";
             }
 
-            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + parameterSet.name + "'/><span class='fr-mps-error-span'/>";
+            var encodedSetName = forerunner.helper.htmlEncode(parameterSet.name);
+            var textElement = "<input type='text' required='true' name=name" + index + " class='fr-mps-text-input' value='" + encodedSetName + "'/><span class='fr-mps-error-span'/>";
             var allUsersClass = "fr-mps-all-users-check-id ";
             var deleteClass = " class='ui-icon-circle-close ui-icon fr-core-center'";
             if (parameterSet.isAllUser) {
                 if (!me.serverData.canEditAllUsersSet) {
-                    textElement = parameterSet.name;
+                    textElement = encodedSetName;
                     deleteClass = "";
                 }
                 allUsersClass = "fr-mps-all-users-check-id ui-icon-check ui-icon ";
@@ -7825,7 +7882,7 @@ $(function () {
             var $row = $(
                 "<tr" + rowClass + " modelid='" + parameterSet.id + "'>" +
                     // Name
-                    "<td title='" + parameterSet.name + "'>" + textElement + "</td>" +
+                    "<td title='" + encodedSetName + "'>" + textElement + "</td>" +
                     // Default
                     "<td class='fr-mps-default-id fr-core-cursorpointer'><div class='" + defaultClass + "fr-core-center' /></td>" +
                     // All Users

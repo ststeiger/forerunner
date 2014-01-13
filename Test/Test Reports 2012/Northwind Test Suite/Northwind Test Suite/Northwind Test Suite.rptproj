@@ -7,16 +7,16 @@
       <FullPath>Northwind.rds</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>NorthwindParameterCredential.rds</Name>
-      <FullPath>NorthwindParameterCredential.rds</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>NorthwindContentCredential.rds</Name>
       <FullPath>NorthwindContentCredential.rds</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>NorthwindGenericCredential.rds</Name>
       <FullPath>NorthwindGenericCredential.rds</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>NorthwindParameterCredential.rds</Name>
+      <FullPath>NorthwindParameterCredential.rds</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>NorthwindParameterCredential.rds</Name>
@@ -34,6 +34,18 @@
       <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>A-ParamReportWithTwoDS.rdl</Name>
+      <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>B-ParamReportWithOneDS.rdl</Name>
+      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>B-ParamReportWithOneDS.rdl</Name>
+      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>B-ParamReportWithOneDS.rdl</Name>
       <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
     </ProjectItem>
@@ -46,12 +58,20 @@
       <FullPath>C-ParameterWithoutDataset.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>C-ParameterWithoutDataset.rdl</Name>
+      <FullPath>C-ParameterWithoutDataset.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Customer Data.rdl</Name>
       <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>D-NormalReportNeedCredential.rdl</Name>
+      <FullPath>D-NormalReportNeedCredential.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>D-NormalReportNeedCredential.rdl</Name>
@@ -88,10 +108,6 @@
     <ProjectItem>
       <Name>Parameter by Region.rdl</Name>
       <FullPath>Parameter by Region.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>A-ParamReportWithTwoDS.rdl</Name>
-      <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Rich text Report.rdl</Name>
@@ -141,18 +157,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>B-ParamReportWithOneDS.rdl</Name>
-      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>C-ParameterWithoutDataset.rdl</Name>
-      <FullPath>C-ParameterWithoutDataset.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>D-NormalReportNeedCredential.rdl</Name>
-      <FullPath>D-NormalReportNeedCredential.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -161,7 +165,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

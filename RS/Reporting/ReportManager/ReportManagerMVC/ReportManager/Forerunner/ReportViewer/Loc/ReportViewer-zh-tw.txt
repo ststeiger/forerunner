@@ -27,12 +27,12 @@
     "licenseErrorContent":"請聯繫您的系統管理員。如果您是管理員請使用Mobilizer附帶的配置工具驗證您的授權許可。"
   },
   "exportType": {
-    "xml":"XML 數據報表",
-    "csv":"CSV (以逗號分隔)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (web文檔)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF文件",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {

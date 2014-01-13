@@ -579,7 +579,35 @@ $(function () {
             }
             return $div;
         },
+        /*
+                 * Replaces special characters with the html escape character equivalents
+                 *
+                 * @member
+                 */
+        htmlEncode: function (str) {
+            return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+        },
+        /**
+         * Replaces html escape characters with the ASCII equivalents
+         *
+         * @member
+         */
+        htmlDecode: function (str) {
+            return String(str)
+                    .replace(/&amp;/g, '&')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>');
+        }
     },
+        
+
     /**
      * Defines utility methods used to update style sheets
      *

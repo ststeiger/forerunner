@@ -27,12 +27,12 @@
     "licenseErrorContent":"Vă rugăm să contactați administratorul de sistem. Dacă sunteți administratorul vă rugăm să verificați de licență în instrument de configurare mobilizator."
   },
   "exportType": {
-    "xml":"fișierul XML cu datele de raport",
-    "csv":"CSV (delimitat prin virgulă)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (arhiva web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"Fişier TIFF",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Înainte",
     "zoom":"Permite Zoom",
     "print":"se tipări",
-    "dsCredential":"DataSource acreditare",
+    "dsCredential":"Acreditare",
     "views":"Vizualizari",
     "addToFavorites":"Adauga la Favorite"
   },

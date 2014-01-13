@@ -27,12 +27,12 @@
     "licenseErrorContent":"Vänligen kontakta systemadministratören. Om du är administratör vänligen verifiera din licens i Mobilizer konfigurationsverktyg."
   },
   "exportType": {
-    "xml":"XML fil med rapportdata",
-    "csv":"CSV (kommaseparerad)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (webbarkiv)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF fil",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"nästa",
     "zoom":"Aktivera Zoom",
     "print":"Skriv ut",
-    "dsCredential":"Datasource credential",
+    "dsCredential":"Credential",
     "views":"Översikter",
     "addToFavorites":"Lägg till i favoriter"
   },

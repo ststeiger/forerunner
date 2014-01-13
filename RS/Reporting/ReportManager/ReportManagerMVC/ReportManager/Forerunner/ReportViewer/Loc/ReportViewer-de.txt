@@ -27,12 +27,12 @@
     "licenseErrorContent":"Bitte kontaktieren Sie Ihren Systemadministrator. Wenn Sie der Administrator überprüfen Sie bitte Ihre Lizenz in der Mobilizer Konfigurationstool."
   },
   "exportType": {
-    "xml":"XML-Datei mit Daten",
-    "csv":"CSV (Komma getrennt)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (Web-Archiv)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF Datei",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,9 +47,9 @@
     "next":"nächster",
     "zoom":"Zoomen",
     "print":"Drucken",
-    "dsCredential":"Datenquelle Credential",
+    "dsCredential":"Credential",
     "views":"Ansichten",
-    "addToFavorites":"Zu Favoriten hinzufügen"
+    "addToFavorites":"Zu Favoriten"
   },
   "toolbar": {
     "back":"Zurück",

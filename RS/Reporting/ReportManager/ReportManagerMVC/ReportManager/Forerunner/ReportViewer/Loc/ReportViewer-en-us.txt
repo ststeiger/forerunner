@@ -27,12 +27,12 @@
     "licenseErrorContent":"Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
   },
   "exportType": {
-    "xml":"XML file with report data",
-    "csv":"CSV (comma delimited)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (web archive)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF file",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -47,7 +47,7 @@
     "next":"Next",
     "zoom":"Enable Zoom",
     "print":"Print",
-    "dsCredential":"Datasource credential",
+    "dsCredential":"Credential",
     "views":"Views",
     "addToFavorites":"Add to Favorites"
   },

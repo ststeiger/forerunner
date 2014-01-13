@@ -183,6 +183,8 @@ $(function () {
             subscriptionModel: "subscriptionModel",
             /** @constant */
             manageSubscription: "manageSubscription",
+            /** @constant */
+            reportDeliveryOptions: "reportDeliveryOptions",
 
             /** @constant */
             namespace: "forerunner",
@@ -561,6 +563,19 @@ $(function () {
             });
                        
             return isContained;
+        },
+        /**
+         * Returns a new div of the specified classes.
+         *
+         * @params List of classes for the new div.
+         * @member
+         */
+        createDiv: function (listOfClasses) {
+            var $div = new $("<div />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $div.addClass(listOfClasses[i]);
+            }
+            return $div;
         },
     },
     /**

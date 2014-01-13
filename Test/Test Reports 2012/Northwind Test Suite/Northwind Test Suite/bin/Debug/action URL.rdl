@@ -41,11 +41,7 @@
                   <ActionInfo>
                     <Actions>
                       <Action>
-<<<<<<< HEAD
-                        <Hyperlink>www.msn.com</Hyperlink>
-=======
                         <Hyperlink>http://www.msn.com</Hyperlink>
->>>>>>> 833296870599e2c55a3601b90dea91e371eff29d
                       </Action>
                     </Actions>
                   </ActionInfo>
@@ -359,13 +355,6 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
-                  <ActionInfo>
-                    <Actions>
-                      <Action>
-                        <Hyperlink>www.yahoo.com</Hyperlink>
-                      </Action>
-                    </Actions>
-                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />
@@ -627,7 +616,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>0</AutoRefresh>
+  <AutoRefresh>5</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

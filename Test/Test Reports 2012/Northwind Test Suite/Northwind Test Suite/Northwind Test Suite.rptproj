@@ -46,6 +46,10 @@
       <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>B-ParamReportWithOneDS.rdl</Name>
+      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Checkin Test Report.rdl</Name>
       <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>

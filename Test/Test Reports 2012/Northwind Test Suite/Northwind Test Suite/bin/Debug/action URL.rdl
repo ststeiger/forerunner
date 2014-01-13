@@ -38,6 +38,13 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ActionInfo>
+                    <Actions>
+                      <Action>
+                        <Hyperlink>http://www.msn.com</Hyperlink>
+                      </Action>
+                    </Actions>
+                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Style />
@@ -292,6 +299,13 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox1</rd:DefaultName>
+        <ActionInfo>
+          <Actions>
+            <Action>
+              <Hyperlink>http://msn.com</Hyperlink>
+            </Action>
+          </Actions>
+        </ActionInfo>
         <Height>0.25in</Height>
         <Width>5.80208in</Width>
         <ZIndex>1</ZIndex>
@@ -602,7 +616,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>6</AutoRefresh>
+  <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

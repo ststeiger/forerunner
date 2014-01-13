@@ -185,6 +185,8 @@ $(function () {
             manageSubscription: "manageSubscription",
             /** @constant */
             reportDeliveryOptions: "reportDeliveryOptions",
+            /** @constant */
+            subscriptionProcessingOptions: "subscriptionProcessingOptions",
 
             /** @constant */
             namespace: "forerunner",

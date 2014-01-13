@@ -683,8 +683,9 @@ $(function () {
             var NewImage = new Image();
             var me = this;
 
+            var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+            Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 
             var ImageName;
@@ -692,6 +693,10 @@ $(function () {
             var imageConsolidationOffset;
 
             var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+
+            //get the padding size
+            var padWidth = me._getPaddingSize(RIContext.CurrObj, "Left") + me._getPaddingSize(RIContext.CurrObj, "Right");
+            var padHeight = me._getPaddingSize(RIContext.CurrObj, "Top") + me._getPaddingSize(RIContext.CurrObj, "Bottom");
 
             if (RIContext.CurrObj.Type === "Image") {//for image
                 ImageName = RIContext.CurrObj.Elements.NonSharedElements.ImageDataProperties.ImageName;
@@ -728,7 +733,7 @@ $(function () {
                     
                 me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
                 
-                me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height, RIContext.CurrLocation.Width);
+                me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
             };
             NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
             $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
@@ -753,13 +758,19 @@ $(function () {
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
             if (Action.HyperLink) {
-                Control.attr("href", Action.HyperLink);
+                Control.addClass("fr-core-cursorpointer");
+                Control.attr("href", "#");
+                Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
+                    me._stopDefaultEvent(e);
+                    location.href = e.data.HyperLink;
+                    me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
+                });
             }
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.attr("href", "#");
                 Control.addClass("fr-core-cursorpointer");
-                Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
+                Control.on("click", { BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });

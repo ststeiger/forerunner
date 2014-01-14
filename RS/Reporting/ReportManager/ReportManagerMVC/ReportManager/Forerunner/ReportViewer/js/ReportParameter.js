@@ -97,6 +97,21 @@ $(function () {
         },
 
         /**
+         * @function $.forerunner.reportParameter#resetToSavedParameters
+         * @Set the parameter panel to the given list
+         * @param {Object} paramDefs - Parameter definition.
+         * @param {string} paramsList - Parameter List.
+         * @param {int} pageNum - Current page number.
+        */
+        resetToSavedParameters: function (paramDefs, paramsList, pageNum) {
+            var me = this;
+            me.updateParameterPanel(paramDefs, false, pageNum, false);
+            me._submittedParamsList = paramsList;
+            this._hasPostedBackWithoutSubmitForm = false;
+            me.revertParameters();
+        },
+
+        /**
          * @function $.forerunner.reportParameter#writeParameterPanel
          * @Generate parameter html code and append to the dom tree
          * @param {String} data - original data get from server client
@@ -194,6 +209,16 @@ $(function () {
         },
 
         _submittedParamsList: null,
+
+        /*
+         * @function $.forerunner.reportParameter#setsubmittedParamsList
+         * @Set the submitted parameter list state to the parameter list.
+         * @param {String} paramList - Parameter List
+         */
+        setsubmittedParamsList: function (paramList) {
+            var me = this;
+            me._submittedParamsList = paramList;
+        },
 
         _submitForm: function (pageNum) {
             var me = this;
@@ -585,7 +610,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            param.ValidValues.push({ Key: "Select All", Value: "Select All" });
+            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -715,7 +741,8 @@ $(function () {
         _setMultipleInputValues: function (param) {
             var me = this;
             var newValue, oldValue;
-            var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            //var target = $(".fr-paramname-" + param.Name, me.$params).filter(":visible");
+            var target = $(".fr-paramname-" + param.Name, me.$params);
             oldValue = target.val();
 
             if (target.hasClass("fr-param-client")) {

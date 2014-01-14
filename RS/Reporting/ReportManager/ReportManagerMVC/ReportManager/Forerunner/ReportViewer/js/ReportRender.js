@@ -685,7 +685,7 @@ $(function () {
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();
-            var me = this;
+            var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);

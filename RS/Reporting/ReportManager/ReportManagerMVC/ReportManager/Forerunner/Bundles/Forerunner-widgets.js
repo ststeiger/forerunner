@@ -3057,7 +3057,7 @@ $(function () {
             $(me.$container).on("touchmove", function (e) {
                 if (me.$container.hasClass("fr-layout-container-noscroll")) {
 
-                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form", "fr-nav-container"]);
+                    var isScrollable = forerunner.helper.containElement(e.target, ["fr-layout-leftpane", "fr-layout-rightpane", "fr-core-dialog-form", "fr-nav-container", "ui-autocomplete"]);
 
                     if (!isScrollable)
                         e.preventDefault();
@@ -6282,8 +6282,7 @@ $(function () {
         _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
-        _reportDesignError: null,
-        _dropdownBaseCount: 10,
+        _reportDesignError: null,        
 
         _init: function () {
             var me = this;
@@ -6397,6 +6396,9 @@ $(function () {
                         error.appendTo(element.parent("div").next("span"));
                     else {
                         if ($(element).attr("IsMultiple") === "true") {
+                            error.appendTo(element.parent("div").next("span"));
+                        }
+                        else if ($(element).hasClass("ui-autocomplete-input")) {
                             error.appendTo(element.parent("div").next("span"));
                         }
                         else
@@ -6581,7 +6583,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
-                    $element = param.ValidValues.length > me._dropdownBaseCount ? me._writeBigDropDown(param, dependenceDisable, pageNum) : me._writeDropDownControl(param, dependenceDisable, pageNum);
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
@@ -6607,9 +6609,14 @@ $(function () {
         },
         _getParameterControlProperty: function (param, $control) {
             var me = this;
+            
             $control.attr("AllowBlank", param.AllowBlank);
             if (param.Nullable === false && param.AllowBlank === false) {
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required);
+                //For IE browser when set placeholder browser will trigger an input event if it's Chinese
+                //to avoid conflict (like auto complete) with other widget not use placeholder to do it
+                //Anyway IE native support placeholder property from IE10 on, so not big deal
+                var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -6746,6 +6753,7 @@ $(function () {
                     }
                     break;
             }
+
             return $control;
         },
         _setSelectedIndex: function (s, v) {
@@ -6763,9 +6771,34 @@ $(function () {
             var me = this;
             var canLoad = false;
             var predefinedValue = me._getPredefinedValue(param);
+
+            var $container = me._createDiv(["fr-param-element-container"]);
             var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
+
             me._getParameterControlProperty(param, $control);
+
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
+            $openDropDown.append($dropdownicon);
+            $openDropDown.on("click", function () {
+                if ($control.autocomplete("widget").is(":visible")) {
+                    $control.autocomplete("close");
+                    return;
+                }
+                else {
+                    //ui-autocomplete is not append to parameter pane so here used $appContainer to do search
+                    $(".ui-autocomplete", me.options.$appContainer).hide();
+                    //pass an empty string to show all values
+                    $control.autocomplete("search", "");
+                }
+            });
+
+            if (dependenceDisable) {
+                me._disabledSubSequenceControl($multipleCheckBox);
+                $control.append($multipleCheckBox).append($openDropDown);
+                return $control;
+            }
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if (predefinedValue === param.ValidValues[i].value) {
@@ -6779,7 +6812,7 @@ $(function () {
             $control.autocomplete({
                 source: param.ValidValues,
                 minLength: 0,
-                delay: 100,
+                delay: 0,
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label);
                     if (me._paramCount === 1) {
@@ -6793,10 +6826,11 @@ $(function () {
             });
 
             $control.on("focus", function () {
-                $control.autocomplete("search", this.value);
+                $(".ui-autocomplete", me.options.$appContainer).hide();
             });
 
-            return $control;
+            $container.append($control).append($openDropDown);
+            return $container;
         },
         _writeDropDownControl: function (param, dependenceDisable, pageNum) {
             var me = this;
@@ -6903,8 +6937,8 @@ $(function () {
                 var value;
                 if (i === 0) {
                     var SelectAll = param.ValidValues[param.ValidValues.length - 1];                    
-                    key = SelectAll.Key;
-                    value = SelectAll.Value;
+                    key = SelectAll.label;
+                    value = SelectAll.value;
                 }
                 else {
                     key = param.ValidValues[i - 1].label;
@@ -7100,6 +7134,8 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
+            //clsoe auto complete dropdown
+            $(".ui-autocomplete", me.options.$appContainer).hide();
         },
         _checkExternalClick: function (e) {
             var me = this;
@@ -7111,7 +7147,9 @@ $(function () {
                 !$target.hasClass("fr-param-dropdown-label") &&
                 !$target.hasClass("fr-param-dropdown-checkbox") &&
                 !$target.hasClass("fr-param-dropdown-icon") &&
-                !$target.hasClass("fr-param-dropdown-textarea")) {
+                !$target.hasClass("fr-param-dropdown-textarea") &&
+                !$target.hasClass("ui-autocomplete") &&
+                !$target.hasClass("ui-autocomplete-input")) {
                 me._closeAllDropdown();
             }
         },

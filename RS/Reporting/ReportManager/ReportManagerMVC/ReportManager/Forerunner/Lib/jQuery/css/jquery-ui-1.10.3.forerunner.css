@@ -1118,6 +1118,13 @@ body .ui-tooltip {
 	top: 0;
 	left: 0;
 	cursor: default;
+    margin-left:1px;
+    max-height:200px;
+    max-width:176px;
+    overflow-y:auto;    
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    -ms-word-wrap:break-word;   
     background: #fff 50% 50% repeat-x;
 }
 .ui-autocomplete .ui-state-focus { 

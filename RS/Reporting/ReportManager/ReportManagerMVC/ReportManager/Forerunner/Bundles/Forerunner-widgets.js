@@ -611,7 +611,7 @@ $(function () {
 
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
-                    me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
+                    me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                     me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0) {
                         me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -6048,13 +6048,13 @@ $(function () {
         },
 
         /**
-         * @function $.forerunner.reportParameter#resetToSavedParameters
+         * @function $.forerunner.reportParameter#setParametersAndUpdate
          * @Set the parameter panel to the given list
          * @param {Object} paramDefs - Parameter definition.
          * @param {string} paramsList - Parameter List.
          * @param {int} pageNum - Current page number.
         */
-        resetToSavedParameters: function (paramDefs, paramsList, pageNum) {
+        setParametersAndUpdate: function (paramDefs, paramsList, pageNum) {
             var me = this;
             me.updateParameterPanel(paramDefs, false, pageNum, false);
             me._submittedParamsList = paramsList;

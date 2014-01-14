@@ -300,7 +300,7 @@ namespace ForerunnerLicense
         {
             string url = "https://forerunnersw.com/register/api/License";
 #if (DEBUG)
-            url = "http://localhost:13149/api/License";
+//            url = "http://localhost:13149/api/License";
 #endif
             WebRequest request = WebRequest.Create (url);
             request.Method = "POST";

@@ -5022,8 +5022,12 @@ $(function () {
 
             Style += "display:table;";
             Style += "table-layout: fixed;";  //This fixes FF and IE word break
+            
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
+
+            //This fixed an IE bug for borders being hidden by background color.  It makes no sence becasue it is poorly formed CSS, no ; but that is necessery
+            Style += "z-index:-1"
             Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += "position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);

@@ -616,7 +616,7 @@
     <BottomMargin>1in</BottomMargin>
     <Style />
   </Page>
-  <AutoRefresh>0</AutoRefresh>
+  <AutoRefresh>5</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>

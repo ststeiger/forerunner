@@ -37,11 +37,13 @@ namespace ReportManager.Controllers
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
+        
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];
             return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
         }
+        
         private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
             //Put application security here

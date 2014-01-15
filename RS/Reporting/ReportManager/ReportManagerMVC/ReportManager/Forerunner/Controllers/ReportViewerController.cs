@@ -28,11 +28,23 @@ namespace ReportManager.Controllers
     public class ReportViewerController :ApiController
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
+        private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
+        
+        static private bool GetAppSetting(string key, bool defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
+        }
+        static private int GetAppSetting(string key, int defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : int.Parse(value);
+        }
 
         private ReportViewer GetReportViewer()
         {
             //Put application security here
-            ReportViewer rep = new ReportViewer(url);
+            ReportViewer rep = new ReportViewer(url, ReportServerTimeout);
             return rep;
         }
 

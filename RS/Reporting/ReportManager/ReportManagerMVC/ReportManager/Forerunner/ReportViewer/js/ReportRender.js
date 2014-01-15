@@ -469,9 +469,9 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
-            //This fixed an IE bug for borders being hidden by background color.  It makes no sence becasue it is poorly formed CSS, no ; but that is necessery
-            Style += "z-index:-1";
-            Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            //This fixed an IE bug for borders being hidden by background color.  Non duplicate background color
+            if (RIContext.CurrObjParent.Type !== "Tablix")
+                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += "position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);
 
@@ -551,7 +551,7 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right";  //fixed padding problem in table cells
+                Style += "float: right;";  //fixed padding problem in table cells
                 Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     

@@ -35,16 +35,19 @@ namespace Forerunner.SSRS.Viewer
         private bool MHTMLRendering = false;
         private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
+        private int RSTimeOut = 100000;
 
-        public ReportViewer(String ReportServerURL, Credentials Credentials)
+        public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
         {
             this.ReportServerURL = ReportServerURL;
+            RSTimeOut = TimeOut;
             SetRSURL();
             GetServerRendering();
         }
         private void SetRSURL()
         {
             rs.Url = ReportServerURL + "/ReportExecution2005.asmx";
+            rs.Timeout = RSTimeOut;
         }
 
         internal void SetImpersonator(CurrentUserImpersonator impersonator)
@@ -52,9 +55,10 @@ namespace Forerunner.SSRS.Viewer
             this.impersonator = impersonator;
         }
 
-        public ReportViewer(String ReportServerURL)
+        public ReportViewer(String ReportServerURL, int TimeOut = 100000)
         {
             this.ReportServerURL = ReportServerURL;
+            RSTimeOut = TimeOut;
             SetRSURL();
         }
 

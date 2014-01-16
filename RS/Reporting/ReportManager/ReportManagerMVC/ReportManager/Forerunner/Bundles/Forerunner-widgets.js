@@ -689,7 +689,7 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.unmask();
+                me.element.unmask(function() { me.showNav.call(me);});
             }
             else {//open nav
                 me.pageNavOpen = true;
@@ -698,7 +698,7 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.mask();
+                me.element.mask(function() { me.showNav.call(me);});
             }
 
             if (me.options.pageNavArea){
@@ -3961,6 +3961,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/ajax-loader1.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -4037,7 +4038,7 @@ $(function () {
             me._makeVisible(!me.element.is(":visible"));
             $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
             $container = $('ul.fr-nav-container', $(me.element));
-            $(".lazy", me.$list).lazyload({ container: $container });
+            $(".lazy", me.$list).lazyload({ container: $container, threshold : 200});
             if (forerunner.device.isMSIE()) {
                 me._ScrolltoPage();
             }

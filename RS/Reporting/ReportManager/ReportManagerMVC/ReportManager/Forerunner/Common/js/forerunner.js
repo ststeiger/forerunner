@@ -69,7 +69,7 @@ jQuery.fn.extend({
             $(this).show("slide", { direction: "left", easing: "easeInCubic" }, delay);
         });
     },
-    mask: function () {
+    mask: function (onClick) {
         var $mask = $(this).find(".fr-core-mask");
 
         if ($mask.length === 0) {
@@ -77,10 +77,17 @@ jQuery.fn.extend({
             $mask.height($(this).height() + 38);
             $(this).append($mask);
         }
+        if (onClick !== undefined)
+            $mask.on("click", onClick);
         return $(this);
     },
-    unmask: function () {
-        $(this).find(".fr-core-mask").remove();
+    unmask: function (onClick) {
+
+        var $mask = $(this).find(".fr-core-mask");
+        if (onClick !== undefined)
+            $mask.on("click", onClick);
+        $mask.remove();
+
         return $(this);
     },
     multiLineEllipsis: function () {

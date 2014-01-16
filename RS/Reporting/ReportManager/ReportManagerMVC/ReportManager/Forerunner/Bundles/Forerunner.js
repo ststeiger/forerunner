@@ -951,7 +951,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
-            return ua.match(/(MSIE)/);
+            return (ua.match(/(MSIE)/) || ua.match(/(like Gecko)/));  //Handle IE11
         },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {

@@ -4852,8 +4852,13 @@ $(function () {
                 RIContext.$HTMLParent.append($LocDiv);
             });
 
-            Style = "position:relative;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getFullBorderStyle(RIContext.CurrObj);
+            Style = "position:relative;";
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                //me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                Style += me._getFullBorderStyle(RIContext.CurrObj);
+            }
 
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
@@ -4977,7 +4982,7 @@ $(function () {
                                 layout.ReportItems[j].IndexAbove = curRI.Index;                        
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left <= layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
                             curRI.IndexAbove = layout.ReportItems[j].Index;
                     }
                 }
@@ -5026,9 +5031,11 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
-            //This fixed an IE bug for borders being hidden by background color.  Non duplicate background color
+            //This fixed an IE bug for duplicate syyles
             if (RIContext.CurrObjParent.Type !== "Tablix")
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+
+
             Style += "position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);
 
@@ -5111,7 +5118,7 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right;";  //fixed padding problem in table cells
+                //Style += "float: right;";  //fixed padding problem in table cells
                 Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
@@ -5247,7 +5254,14 @@ $(function () {
             var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;";
+
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix")
+                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            //+me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+
+
             Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 
@@ -5493,7 +5507,8 @@ $(function () {
             //var wbordersize = 0;
             var me = this;
     
-            Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
+            Style = "vertical-align:top;padding:0;margin:0;";
+            Style += "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
             Style += me._getFullBorderStyle(Obj.Cell.ReportItem);
             var ColIndex = Obj.ColumnIndex;
 
@@ -5509,8 +5524,7 @@ $(function () {
 
             //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
             if (forerunner.device.isMSIE()) {                
-                Style += "height:" + height + "mm;";
-
+                Style += "height:" + (height) + "mm;";
             }
             else
                 Style += "height:" + height + "mm;";
@@ -5549,6 +5563,7 @@ $(function () {
             
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+            
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);

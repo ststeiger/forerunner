@@ -701,12 +701,13 @@ $(function () {
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;";
 
+            //Get padding
+            Style += me._getTextStyle(RIContext.CurrObj.Elements);
+
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix")
-                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            //+me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-
-
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            
             Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 

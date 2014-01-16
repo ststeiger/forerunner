@@ -300,8 +300,7 @@ $(function () {
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
-                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-                //me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
                 Style += me._getFullBorderStyle(RIContext.CurrObj);
             }
 

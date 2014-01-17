@@ -147,6 +147,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\DSCredential.css"
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\page-loading.gif"
   
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"

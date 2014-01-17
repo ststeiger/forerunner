@@ -142,6 +142,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportParameter.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\PageNav.css"
+  SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\page-loading.gif"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"

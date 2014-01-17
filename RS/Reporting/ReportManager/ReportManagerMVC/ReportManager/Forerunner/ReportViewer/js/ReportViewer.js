@@ -645,7 +645,7 @@ $(function () {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
                
-                me.element.unmask();
+                me.element.unmask(function () { me.showNav.call(me); });
             }
             else {//open nav
                 me.pageNavOpen = true;
@@ -655,7 +655,7 @@ $(function () {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
                 
-                me.element.mask();
+                me.element.mask(function () { me.showNav.call(me); });
             }
 
             if (me.options.pageNavArea){

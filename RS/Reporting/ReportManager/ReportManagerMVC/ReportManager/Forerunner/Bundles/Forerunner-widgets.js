@@ -6201,7 +6201,7 @@ $(function () {
             if (!fontSize)
                 return "";
     
-            if (!forerunner.device.isMSIE() && !forerunner.device.isFF())
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
                 return fontSize;
 
 

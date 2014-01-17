@@ -190,6 +190,10 @@ $(function () {
             subscriptionModel: "subscriptionModel",
             /** @constant */
             manageSubscription: "manageSubscription",
+            /** @constant */
+            reportDeliveryOptions: "reportDeliveryOptions",
+            /** @constant */
+            subscriptionProcessingOptions: "subscriptionProcessingOptions",
 
             /** @constant */
             namespace: "forerunner",
@@ -570,10 +574,23 @@ $(function () {
             return isContained;
         },
         /**
-         * Replaces special characters with the html escape character equivalents
+         * Returns a new div of the specified classes.
          *
+         * @params List of classes for the new div.
          * @member
          */
+        createDiv: function (listOfClasses) {
+            var $div = new $("<div />");
+            for (var i = 0; i < listOfClasses.length; i++) {
+                $div.addClass(listOfClasses[i]);
+            }
+            return $div;
+        },
+        /*
+                 * Replaces special characters with the html escape character equivalents
+                 *
+                 * @member
+                 */
         htmlEncode: function (str) {
             return String(str)
                     .replace(/&/g, '&amp;')
@@ -588,14 +605,16 @@ $(function () {
          * @member
          */
         htmlDecode: function (str) {
-        return String(str)
-                .replace(/&amp;/g, '&')
-                .replace(/&quot;/g, '"')
-                .replace(/&#39;/g, "'")
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>');
-    }
-},
+            return String(str)
+                    .replace(/&amp;/g, '&')
+                    .replace(/&quot;/g, '"')
+                    .replace(/&#39;/g, "'")
+                    .replace(/&lt;/g, '<')
+                    .replace(/&gt;/g, '>');
+        }
+    },
+        
+
     /**
      * Defines utility methods used to update style sheets
      *
@@ -961,7 +980,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
-            return (ua.match(/(MSIE)/) || ua.match(/(like Gecko)/));  //Handle IE11
+            return (ua.match(/(MSIE)/) || ua.match(/(.NET)/));  //Handle IE11
         },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {

@@ -3961,7 +3961,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
-                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/ajax-loader1.gif");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -4234,7 +4234,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data && data.responsiveUI != undefined) {
+                    if (data && data.responsiveUI !== undefined) {
                         settings = data;
                     }
                 }
@@ -5974,7 +5974,7 @@ $(function () {
             if (CurrObj.FontFamily !== undefined)
                 Style += "font-family:" + CurrObj.FontFamily + ";";
             if (CurrObj.FontSize !== undefined)
-                Style += "font-size:" + CurrObj.FontSize + ";";
+                Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)
                 Style += "text-decoration:" + me._getTextDecoration(CurrObj.TextDecoration) + ";";
             if (CurrObj.Color !== undefined)
@@ -6195,6 +6195,24 @@ $(function () {
 
             //This is an error
             return value;
+        },
+
+        _getFontSize:function (fontSize){
+            if (!fontSize)
+                return "";
+    
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+                return fontSize;
+
+
+            var unit = fontSize.match(/\D+$/);  // get the existing unit
+            var value = fontSize.match(/\d+/);  // get the numeric component
+
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
+
+           //This is an error
+            return (value*.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

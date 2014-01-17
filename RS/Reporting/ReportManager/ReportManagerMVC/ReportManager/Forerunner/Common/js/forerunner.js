@@ -601,6 +601,7 @@ $(function () {
      * @namespace
      */
     forerunner.styleSheet = {
+        //obsolete, we don't use css imported
         _findImportedSheet: function (name, inSheet) {
             var rules = (inSheet.cssRules || inSheet.rules);
             var returnSheet = null;
@@ -622,6 +623,7 @@ $(function () {
 
             return returnSheet;
         },
+        //obsolete, after enable MVC bundle, specific file name is gone.
         _findSheet: function (name) {
             var returnSheet = null;
 
@@ -661,16 +663,16 @@ $(function () {
          *
          *  updateDynamicRules([isTouchRule]);
          */
-        updateDynamicRules: function (dynamicRules, sheetname) {
-            var sheet = forerunner.styleSheet._findSheet(sheetname);
-            if (sheet) {
+        updateDynamicRules: function (dynamicRules) {
+            //Enumerate the styleSheets
+            $.each(document.styleSheets, function (sheetsIndex, sheet) {
                 var rules = (sheet.cssRules || sheet.rules);
                 var rulesLength = rules.length;
 
                 // Enumerate the rules
                 for (var ruleIndex = 0; ruleIndex < rulesLength; ruleIndex++) {
                     var rule = rules[ruleIndex];
-                    /*jshint loopfunc: true */
+                    
                     // Check each rule and see if it matches the desired dynamic rule
                     $.each(dynamicRules, function (dynamicIndex, dynamicRule) {
                         var lowerSelector = dynamicRule.selector.toLowerCase();
@@ -685,11 +687,12 @@ $(function () {
                                     rule.style.removeProperty(prop);
                                 }
                             }
+                            return false;
                         }
                     });
                     /*jshint loopfunc: false */
                 }
-            }
+            });
         },
     },
     /**
@@ -1251,8 +1254,8 @@ $(function () {
     };
     $(document).ready(function () {
         // Update all dynamic styles
-        var isTouchRule = {
-            selector: ".fr-toolbase-hide-if-not-touch",
+        var touchShowRule = {
+            selector: ".fr-toolbase-show-if-touch",
             properties: function () {
                 var pairs = { display: "none" };
                 if (forerunner.device.isTouch()) {
@@ -1261,6 +1264,40 @@ $(function () {
                 return pairs;
             }
         };
-        forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+        //specific rule for toolpane
+        var touchShowRuleTp = {
+            selector: ".fr-toolpane .fr-toolbase-show-if-touch",
+            properties: function () {
+                var pairs = { display: "none" };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = null;
+                }
+                return pairs;
+            }
+        };
+
+        var touchHideRule = {
+            selector: ".fr-toolbase-hide-if-touch",
+            properties: function () {
+                var pairs = { display: null };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = "none";
+                }
+                return pairs;
+            }
+        }
+        //specific rule for toolpane
+        var touchHideRuleTp = {
+            selector: ".fr-toolpane .fr-toolbase-hide-if-touch",
+            properties: function () {
+                var pairs = { display: null };
+                if (forerunner.device.isTouch()) {
+                    pairs.display = "none";
+                }
+                return pairs;
+            }
+        }
+        
+        forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
     });
 });

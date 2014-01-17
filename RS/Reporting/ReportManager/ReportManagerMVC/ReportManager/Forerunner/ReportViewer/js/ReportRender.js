@@ -1418,7 +1418,7 @@ $(function () {
             if (CurrObj.FontFamily !== undefined)
                 Style += "font-family:" + CurrObj.FontFamily + ";";
             if (CurrObj.FontSize !== undefined)
-                Style += "font-size:" + CurrObj.FontSize + ";";
+                Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)
                 Style += "text-decoration:" + me._getTextDecoration(CurrObj.TextDecoration) + ";";
             if (CurrObj.Color !== undefined)
@@ -1639,6 +1639,24 @@ $(function () {
 
             //This is an error
             return value;
+        },
+
+        _getFontSize:function (fontSize){
+            if (!fontSize)
+                return "";
+    
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+                return fontSize;
+
+
+            var unit = fontSize.match(/\D+$/);  // get the existing unit
+            var value = fontSize.match(/\d+/);  // get the numeric component
+
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
+
+           //This is an error
+            return (value*.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

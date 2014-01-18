@@ -14,27 +14,6 @@ namespace ReportManager.Util.Logging
 
     public class Logger
     {
-        //private static string logPath = ConfigurationManager.AppSettings["ForeRunner.LogPath"];
-        //private static string logPath = string.Empty;
-
-        //public static string LogPath
-        //{
-        //    get
-        //    {
-        //        if (logPath == string.Empty)
-        //            logPath = AppDomain.CurrentDomain.BaseDirectory + @"bin\Logs\" + DateTime.Now.ToString("yyyy-MM-dd") + @"\";
-        //        return logPath;
-        //    }
-        //    set { logPath = value; }
-        //}
-
-        //private static string logFilePrefix = string.Empty;
-        //public static string LogFilePrefix
-        //{
-        //    get { return logFilePrefix; }
-        //    set { logFilePrefix = value; }
-        //}
-
         static private TraceSource ts = new TraceSource("ForerunnerMobilizer", SourceLevels.All);
         static private bool isInit = false;
 

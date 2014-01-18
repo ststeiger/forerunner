@@ -610,16 +610,16 @@ $(function () {
 
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
-                    me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
-                    me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
-                    if (me.$numOfVisibleParameters > 0) {
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    if (action.paramDefs) {
+                        me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
+                        me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
+                        if (me.$numOfVisibleParameters > 0) {
+                                me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                        }
+                        else if (me.options.parameterModel)
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+                        me.paramLoaded = true;
                     }
-                    
-                    if (me.options.parameterModel)
-                        me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
-
-                    me.paramLoaded = true;
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });

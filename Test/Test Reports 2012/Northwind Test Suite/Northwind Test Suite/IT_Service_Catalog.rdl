@@ -1,0 +1,1642 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>IMPM</DataSourceReference>
+      <rd:DataSourceID>8aac32f0-e6de-468c-8a7e-f2e1477d42a3</rd:DataSourceID>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Fields>
+        <Field Name="Segment">
+          <DataField>Segment</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Portfolio">
+          <DataField>Portfolio</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServiceName">
+          <DataField>ServiceName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServiceComponent">
+          <DataField>ServiceComponent</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServiceOwnerName">
+          <DataField>ServiceOwnerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PortfolioOwnerName">
+          <DataField>PortfolioOwnerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SegmentOwnerName">
+          <DataField>SegmentOwnerName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServicePhase">
+          <DataField>ServicePhase</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PortfolioOwnerWWID">
+          <DataField>PortfolioOwnerWWID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SegmentOwnerWWID">
+          <DataField>SegmentOwnerWWID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServiceType">
+          <DataField>ServiceType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ServicePhaseDescription">
+          <DataField>ServicePhaseDescription</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Num">
+          <DataField>Num</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="NoComponent">
+          <DataField>NoComponent</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="PortfolioPhase">
+          <DataField>PortfolioPhase</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TaxonomyServicePhase">
+          <DataField>TaxonomyServicePhase</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DomainAddress">
+          <DataField>DomainAddress</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT 
+                         ISNULL(s.SegmentName, N'None') AS Segment, ISNULL(s.Portfolio, N'None') AS Portfolio, ISNULL(s.ServiceName, N'None') AS ServiceName, s.ServiceComponent, 
+                         e.ccMailName AS ServiceOwnerName, e1.ccMailName AS PortfolioOwnerName, e2.ccMailName AS SegmentOwnerName,
+                             (SELECT        TaxonomyServicePhase
+                               FROM            DimPortfolioService AS c
+                               WHERE        (ServiceComponent LIKE '%(S)') AND (ServiceName = s.ServiceName)) AS ServicePhase, s.PortfolioOwnerWWID, s.SegmentOwnerWWID, 
+                         ISNULL(s.ServiceType, N'None') AS ServiceType, c_1.Num, s.TaxonomyServicePhase AS ServicePhaseDescription, 
+                         CASE WHEN ServiceComponent LIKE '%(s)' THEN 'N' ELSE 'Y' END AS NoComponent, s.PortfolioPhase, s.TaxonomyServicePhase, wo.DomainAddress
+FROM            DimPortfolioService AS s LEFT OUTER JOIN
+                         GlobalData.dbo.tbl_EmployeeInfo AS e ON e.WWID = s.ServiceOwnerWWID LEFT OUTER JOIN
+                         GlobalData.dbo.vw_WorkerOrgLevel AS wo ON s.ServiceOwnerWWID = wo.WWID LEFT OUTER JOIN
+                         GlobalData.dbo.tbl_EmployeeInfo AS e1 ON e1.WWID = s.PortfolioOwnerWWID LEFT OUTER JOIN
+                         GlobalData.dbo.tbl_EmployeeInfo AS e2 ON e2.WWID = s.SegmentOwnerWWID LEFT OUTER JOIN
+                             (SELECT DISTINCT ServiceName, COUNT(ServiceComponent) AS Num
+                               FROM            DimPortfolioService
+                               GROUP BY ServiceName) AS c_1 ON c_1.ServiceName = s.ServiceName
+WHERE        (ISNULL(s.ServiceType, 'None') IN (@ServiceType)) AND (ISNULL(s.SegmentName, N'None') IN (@Segment)) AND (ISNULL(s.Portfolio, N'None') IN (@Portfolio)) AND 
+                         (ISNULL(s.ServiceName, N'None') IN (@Service)) AND (s.Portfolio &lt;&gt; 'Manufacturing Computing') AND (s.PortfolioPhase IN (@PortfolioPhase)) AND 
+                         (s.TaxonomyServicePhase IN (@Status)) AND (s.ServiceName IN
+                             (SELECT        ServiceName
+                               FROM            DimPortfolioService AS DimPortfolioService_1
+                               WHERE        (TaxonomyServicePhase IN (@ServicePhase)) AND (ServiceComponent LIKE '%(S)'))) AND (s.ServiceComponent IN (@Component))
+ORDER BY Segment, Portfolio, ServiceName, NoComponent DESC, s.ServiceComponent</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@ServiceType">
+            <Value>=Parameters!ServiceType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Segment">
+            <Value>=Parameters!Segment.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Portfolio">
+            <Value>=Parameters!Portfolio.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Service">
+            <Value>=Parameters!Service.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@PortfolioPhase">
+            <Value>=Parameters!PortfolioPhase.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ServicePhase">
+            <Value>=Parameters!ServicePhase.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Component">
+            <Value>=Parameters!Component.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="Status">
+      <Fields>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        'Active' AS Status
+UNION
+SELECT        'IPRO' AS Status
+UNION
+SELECT        'Pending' AS Status
+UNION
+SELECT        'Retired' AS Status</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="ServiceType">
+      <Fields>
+        <Field Name="ServiceType">
+          <DataField>ServiceType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT ISNULL(ServiceType, 'None') AS ServiceType
+FROM            DimPortfolioService AS s
+WHERE        (ISNULL(ServiceType, 'None') &lt;&gt; 'Non IT Service')
+ORDER BY ServiceType</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="Segment">
+      <Fields>
+        <Field Name="Segment">
+          <DataField>Segment</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT SegmentName AS Segment
+FROM            DimPortfolioService AS s
+WHERE        (SegmentName IS NOT NULL) AND (ServiceType &lt;&gt; 'Non IT Service')
+ORDER BY Segment</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="Portfolio">
+      <Fields>
+        <Field Name="Portfolio">
+          <DataField>Portfolio</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT ISNULL(Portfolio, N'None') AS Portfolio
+FROM            DimPortfolioService AS s
+WHERE        (ISNULL(SegmentName, 'None') IN (@Segment)) AND (Portfolio &lt;&gt; 'Manufacturing Computing') AND (PortfolioPhase IN (@PortfolioPhase)) AND 
+                         (ServiceType &lt;&gt; 'Non IT Service')
+ORDER BY Portfolio</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Segment">
+            <Value>=Parameters!Segment.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@PortfolioPhase">
+            <Value>=Parameters!PortfolioPhase.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="Service">
+      <Fields>
+        <Field Name="Service">
+          <DataField>Service</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT ISNULL(ServiceName, N'None') AS Service
+FROM            DimPortfolioService AS s
+WHERE        (ISNULL(SegmentName, 'None') IN (@Segment)) AND (ISNULL(Portfolio, N'None') IN (@Portfolio)) AND (TaxonomyServicePhase IN (@ServicePhase)) AND 
+                         (ServiceType &lt;&gt; 'Non IT Service')
+ORDER BY Service</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Segment">
+            <Value>=Parameters!Segment.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Portfolio">
+            <Value>=Parameters!Portfolio.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ServicePhase">
+            <Value>=Parameters!ServicePhase.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="DefaultStatus">
+      <Fields>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        'Active' AS Status
+UNION
+SELECT        'Pending' AS Status
+UNION
+SELECT        'IPRO' AS Status</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="Extract">
+      <Fields>
+        <Field Name="Extract_Date">
+          <DataField>Extract_Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        TOP (1) Extract_Date
+FROM            IMPMStaging.dbo.MasterData_prtfl</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="ServiceComponent">
+      <Fields>
+        <Field Name="ServiceComponent">
+          <DataField>ServiceComponent</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT ISNULL(ServiceComponent, N'None') AS ServiceComponent
+FROM            DimPortfolioService 
+WHERE ISNULL(SegmentName, 'None') IN (@Segment)
+AND ISNULL(Portfolio, N'None') IN (@Portfolio)
+AND PortfolioPhase in (@PortfolioPhase)
+AND  (ServiceName IN (select ServiceName from DimPortfolioService where TaxonomyServicePhase in (@ServicePhase) and ServiceComponent LIKE '%(S)'))
+
+AND ServiceName in (@Service)
+
+AND TaxonomyServicePhase IN (@Status)
+and ServiceType &lt;&gt; 'Non IT Service'
+ORDER BY ServiceComponent</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Segment">
+            <Value>=Parameters!Segment.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Portfolio">
+            <Value>=Parameters!Portfolio.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@PortfolioPhase">
+            <Value>=Parameters!PortfolioPhase.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ServicePhase">
+            <Value>=Parameters!ServicePhase.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Service">
+            <Value>=Parameters!Service.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+    <DataSet Name="Footer">
+      <Fields>
+        <Field Name="Value">
+          <DataField>Value</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Code">
+          <DataField>Code</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT Value, Code
+FROM            GlobalData.dbo.tbl_Config
+WHERE        (Code = 'SSRS-Footer')</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <Body>
+    <ReportItems>
+      <Tablix Name="Tablix1">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>3.75in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.32292in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox3">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Service Component</Value>
+                              <Style>
+                                <FontFamily>verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Silver</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox41">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Component Phase</Value>
+                              <Style>
+                                <FontFamily>verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox41</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>Silver</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ServiceComponent">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=iif(Fields!NoComponent.Value="N","",Fields!ServiceComponent.Value)</Value>
+                              <Style>
+                                <FontFamily>verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ServiceComponent</rd:DefaultName>
+                      <Visibility>
+                        <Hidden>=iif(Fields!NoComponent.Value="N" AND Fields!Num.Value&gt;1,True,False)</Hidden>
+                      </Visibility>
+                      <Style>
+                        <Border>
+                          <Color>Silver</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=iif(Fields!NoComponent.Value="N" AND Fields!Num.Value=1,"LightGrey","Transparent")</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ServicePhaseDescription">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=iif(Fields!NoComponent.Value="N","",Fields!ServicePhaseDescription.Value)</Value>
+                              <Style>
+                                <FontFamily>verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ServicePhaseDescription</rd:DefaultName>
+                      <Visibility>
+                        <Hidden>=iif(Fields!NoComponent.Value="N" AND Fields!Num.Value&gt;1,True,False)</Hidden>
+                      </Visibility>
+                      <Style>
+                        <Border>
+                          <Color>Silver</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <BackgroundColor>=iif(Fields!NoComponent.Value="N" AND Fields!Num.Value=1,"LightGrey","Transparent")</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Visibility>
+                <ToggleItem>Textbox7</ToggleItem>
+              </Visibility>
+            </TablixMember>
+            <TablixMember>
+              <Visibility>
+                <ToggleItem>Textbox7</ToggleItem>
+              </Visibility>
+            </TablixMember>
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <TablixHeader>
+                <Size>2.5in</Size>
+                <CellContents>
+                  <Textbox Name="Textbox11">
+                    <CanGrow>true</CanGrow>
+                    <KeepTogether>true</KeepTogether>
+                    <Paragraphs>
+                      <Paragraph>
+                        <TextRuns>
+                          <TextRun>
+                            <Value>Segment</Value>
+                            <Style>
+                              <FontFamily>verdana</FontFamily>
+                              <FontWeight>Bold</FontWeight>
+                              <Color>White</Color>
+                            </Style>
+                          </TextRun>
+                        </TextRuns>
+                        <Style>
+                          <TextAlign>Center</TextAlign>
+                        </Style>
+                      </Paragraph>
+                    </Paragraphs>
+                    <rd:DefaultName>Textbox11</rd:DefaultName>
+                    <Style>
+                      <Border>
+                        <Color>Silver</Color>
+                        <Style>Solid</Style>
+                      </Border>
+                      <BackgroundColor>#004280</BackgroundColor>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                      <PaddingTop>2pt</PaddingTop>
+                      <PaddingBottom>2pt</PaddingBottom>
+                    </Style>
+                  </Textbox>
+                </CellContents>
+              </TablixHeader>
+              <TablixMembers>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>2.5in</Size>
+                    <CellContents>
+                      <Textbox Name="Textbox9">
+                        <CanGrow>true</CanGrow>
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Portfolio</Value>
+                                <Style>
+                                  <FontFamily>verdana</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Textbox9</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>Silver</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#004280</BackgroundColor>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember>
+                      <TablixHeader>
+                        <Size>2.5in</Size>
+                        <CellContents>
+                          <Textbox Name="Textbox7">
+                            <CanGrow>true</CanGrow>
+                            <ToggleImage>
+                              <InitialState>true</InitialState>
+                            </ToggleImage>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Service</Value>
+                                    <Style>
+                                      <FontFamily>verdana</FontFamily>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Center</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox7</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>Silver</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#004280</BackgroundColor>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember />
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+            <TablixMember>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="Group3">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Segment.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!Segment.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>2.5in</Size>
+                    <CellContents>
+                      <Textbox Name="Group3">
+                        <CanGrow>true</CanGrow>
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>=Fields!Segment.Value &amp; vbcrlf &amp;  vbcrlf &amp; "  Segment Owner: "  &amp; vbcrlf &amp; "  " &amp; iif(IsNothing(Fields!SegmentOwnerName.Value),"TBD",Fields!SegmentOwnerName.Value)</Value>
+                                <Style>
+                                  <FontFamily>Verdana</FontFamily>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style />
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Group3</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>Silver</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="Group2">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Portfolio.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!Portfolio.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>2.5in</Size>
+                        <CellContents>
+                          <Textbox Name="Group2">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!Portfolio.Value  &amp; vbcrlf &amp; vbcrlf &amp; 
+"Portfolio Owner: "  &amp;  iif(IsNothing(Fields!PortfolioOwnerName.Value),"TBD",Fields!PortfolioOwnerName.Value)  &amp; vbcrlf &amp;
+"Portfolio Phase: "  &amp;  Fields!PortfolioPhase.Value</Value>
+                                    <Style>
+                                      <FontFamily>Verdana</FontFamily>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Group2</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>Silver</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="Group1">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!ServiceName.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!ServiceName.Value</Value>
+                            </SortExpression>
+                          </SortExpressions>
+                          <TablixHeader>
+                            <Size>2.5in</Size>
+                            <CellContents>
+                              <Textbox Name="Group1">
+                                <CanGrow>true</CanGrow>
+                                <KeepTogether>true</KeepTogether>
+                                <Paragraphs>
+                                  <Paragraph>
+                                    <TextRuns>
+                                      <TextRun>
+                                        <Label>ServiceName</Label>
+                                        <Value>=Fields!ServiceName.Value</Value>
+                                        <ActionInfo>
+                                          <Actions>
+                                            <Action>
+                                              <Drillthrough>
+                                                <ReportName>MasterData-ServiceCatalog</ReportName>
+                                                <Parameters>
+                                                  <Parameter Name="Portfolio">
+                                                    <Value>=Fields!Portfolio.Value</Value>
+                                                  </Parameter>
+                                                  <Parameter Name="Service">
+                                                    <Value>=Fields!ServiceName.Value</Value>
+                                                  </Parameter>
+                                                  <Parameter Name="TaxonomyServicePhase">
+                                                    <Value>=Parameters!Status.Value</Value>
+                                                  </Parameter>
+                                                </Parameters>
+                                              </Drillthrough>
+                                            </Action>
+                                          </Actions>
+                                        </ActionInfo>
+                                        <Style>
+                                          <FontFamily>Verdana</FontFamily>
+                                          <FontWeight>Bold</FontWeight>
+                                          <Color>#0071c5</Color>
+                                        </Style>
+                                      </TextRun>
+                                      <TextRun>
+                                        <Label>LineBreak</Label>
+                                        <Value>=vbcrlf &amp;  vbcrlf</Value>
+                                        <Style>
+                                          <FontFamily>verdana</FontFamily>
+                                        </Style>
+                                      </TextRun>
+                                      <TextRun>
+                                        <Label>ServiceOwner</Label>
+                                        <Value>="Service Owner: " &amp; iif(IsNothing(Fields!ServiceOwnerName.Value),"TBD",Fields!ServiceOwnerName.Value) &amp; vbcrlf</Value>
+                                        <ActionInfo>
+                                          <Actions>
+                                            <Action>
+                                              <Hyperlink>="mailto://"+Fields!DomainAddress.Value</Hyperlink>
+                                            </Action>
+                                          </Actions>
+                                        </ActionInfo>
+                                        <ToolTip>=Fields!DomainAddress.Value</ToolTip>
+                                        <Style>
+                                          <FontFamily>Verdana</FontFamily>
+                                          <TextDecoration>None</TextDecoration>
+                                          <Color>#0071c5</Color>
+                                        </Style>
+                                      </TextRun>
+                                      <TextRun>
+                                        <Label>Phase</Label>
+                                        <Value>="Service Phase: " &amp; Fields!ServicePhase.Value</Value>
+                                        <Style>
+                                          <FontFamily>Verdana</FontFamily>
+                                        </Style>
+                                      </TextRun>
+                                    </TextRuns>
+                                    <Style />
+                                  </Paragraph>
+                                </Paragraphs>
+                                <rd:DefaultName>Group1</rd:DefaultName>
+                                <Style>
+                                  <Border>
+                                    <Color>Silver</Color>
+                                    <Style>Solid</Style>
+                                  </Border>
+                                  <PaddingLeft>2pt</PaddingLeft>
+                                  <PaddingRight>2pt</PaddingRight>
+                                  <PaddingTop>2pt</PaddingTop>
+                                  <PaddingBottom>2pt</PaddingBottom>
+                                </Style>
+                              </Textbox>
+                            </CellContents>
+                          </TablixHeader>
+                          <TablixMembers>
+                            <TablixMember>
+                              <Group Name="Details" />
+                            </TablixMember>
+                          </TablixMembers>
+                        </TablixMember>
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>DataSet1</DataSetName>
+        <Top>1.09194in</Top>
+        <Left>0.15666in</Left>
+        <Height>0.5in</Height>
+        <Width>12.57292in</Width>
+        <Visibility>
+          <Hidden>=iif(Parameters!Display.Value="Report",False,True)</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+      <Textbox Name="Textbox6">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Phase Legend:</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <FontSize>11pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Active:</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value> Currently released and deployed in Service-Now or ready for deployment.</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>IPRO:</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value> Currently released and deployed in IPRO or ready for deployment.</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Pending:</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value> Planned or in development but not yet available to service consumers.</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Retired:</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value> No longer active.</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#004280</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <Top>1.61972in</Top>
+        <Left>0.15666in</Left>
+        <Height>1.05556in</Height>
+        <Width>12.59709in</Width>
+        <ZIndex>1</ZIndex>
+        <Visibility>
+          <Hidden>=iif(Parameters!Display.Value="Report",False,True)</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox16">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Service Catalog Hierarchy</Value>
+                <Style>
+                  <FontStyle>Normal</FontStyle>
+                  <FontFamily>verdana</FontFamily>
+                  <FontSize>16pt</FontSize>
+                  <Format>f</Format>
+                  <Color>DimGray</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>="Data is current as of: "</Value>
+                <Style>
+                  <FontStyle>Italic</FontStyle>
+                  <FontFamily>verdana</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <Format>f</Format>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>=First(Fields!Extract_Date.Value, "Extract")</Value>
+                <Style>
+                  <FontStyle>Italic</FontStyle>
+                  <FontFamily>verdana</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <Format>f</Format>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox16</rd:DefaultName>
+        <Top>0.36111in</Top>
+        <Left>0.05583in</Left>
+        <Height>0.48083in</Height>
+        <Width>12.67375in</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox2">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Go To Excel Format  </Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <TextDecoration>Underline</TextDecoration>
+                  <Color>#0071c5</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox2</rd:DefaultName>
+        <ActionInfo>
+          <Actions>
+            <Action>
+              <Drillthrough>
+                <ReportName>IT_Service_Catalog_Excel</ReportName>
+                <Parameters>
+                  <Parameter Name="Segment">
+                    <Value>=Parameters!Segment.Value</Value>
+                  </Parameter>
+                  <Parameter Name="ServiceType">
+                    <Value>=Parameters!ServiceType.Value</Value>
+                  </Parameter>
+                  <Parameter Name="PortfolioPhase">
+                    <Value>=Parameters!PortfolioPhase.Value</Value>
+                  </Parameter>
+                  <Parameter Name="Portfolio">
+                    <Value>=Parameters!Portfolio.Value</Value>
+                  </Parameter>
+                  <Parameter Name="ServicePhase">
+                    <Value>=Parameters!ServicePhase.Value</Value>
+                  </Parameter>
+                  <Parameter Name="Service">
+                    <Value>=Parameters!Service.Value</Value>
+                  </Parameter>
+                  <Parameter Name="Status">
+                    <Value>=Parameters!Status.Value</Value>
+                  </Parameter>
+                  <Parameter Name="Component">
+                    <Value>=Parameters!Component.Value</Value>
+                  </Parameter>
+                </Parameters>
+              </Drillthrough>
+            </Action>
+          </Actions>
+        </ActionInfo>
+        <Top>0.85583in</Top>
+        <Left>0.05583in</Left>
+        <Height>0.20833in</Height>
+        <Width>2.18764in</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <VerticalAlign>Top</VerticalAlign>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Rectangle Name="TabContainer">
+        <ReportItems>
+          <Textbox Name="Textbox37">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Our Products</Value>
+                    <Style>
+                      <FontFamily>Verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>MasterData-ServiceProducts</ReportName>
+                    <Parameters>
+                      <Parameter Name="Service">
+                        <Value>=Parameters!Service.Value</Value>
+                      </Parameter>
+                      <Parameter Name="ServicePhase">
+                        <Value>=Parameters!Status.Value</Value>
+                      </Parameter>
+                    </Parameters>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Left>4.11222in</Left>
+            <Height>0.33333in</Height>
+            <Width>2.15333in</Width>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>#0071c5</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox36">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Our Service Team</Value>
+                    <Style>
+                      <FontFamily>verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <Left>6.26556in</Left>
+            <Height>0.33333in</Height>
+            <Width>2.3171in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>#0071c5</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox42">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Service Map</Value>
+                    <Style>
+                      <FontFamily>verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <Left>10.73598in</Left>
+            <Height>0.33333in</Height>
+            <Width>2.09778in</Width>
+            <ZIndex>2</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>LightGrey</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox39">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>About Us</Value>
+                    <Style>
+                      <FontFamily>verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <Left>8.58265in</Left>
+            <Height>0.33333in</Height>
+            <Width>2.15333in</Width>
+            <ZIndex>3</ZIndex>
+            <Visibility>
+              <Hidden>true</Hidden>
+            </Visibility>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>LightGrey</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox35">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Service Hierarchy</Value>
+                    <Style>
+                      <FontFamily>verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <Height>0.33333in</Height>
+            <Width>2.01444in</Width>
+            <ZIndex>4</ZIndex>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>#00aeef</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox38">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Our Service</Value>
+                    <Style>
+                      <FontFamily>Verdana</FontFamily>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>White</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox35</rd:DefaultName>
+            <ActionInfo>
+              <Actions>
+                <Action>
+                  <Drillthrough>
+                    <ReportName>MasterData-ServiceCatalog</ReportName>
+                    <Parameters>
+                      <Parameter Name="Portfolio">
+                        <Value>=Parameters!Portfolio.Value</Value>
+                      </Parameter>
+                      <Parameter Name="Service">
+                        <Value>=Parameters!Service.Value</Value>
+                      </Parameter>
+                      <Parameter Name="TaxonomyServicePhase">
+                        <Value>=Parameters!Status.Value</Value>
+                      </Parameter>
+                    </Parameters>
+                  </Drillthrough>
+                </Action>
+              </Actions>
+            </ActionInfo>
+            <Left>2.01444in</Left>
+            <Height>0.33333in</Height>
+            <Width>2.09778in</Width>
+            <ZIndex>5</ZIndex>
+            <Style>
+              <Border>
+                <Color>White</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BackgroundColor>#0071c5</BackgroundColor>
+              <VerticalAlign>Middle</VerticalAlign>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <KeepTogether>true</KeepTogether>
+        <Height>0.33333in</Height>
+        <Width>12.86515in</Width>
+        <ZIndex>4</ZIndex>
+        <Visibility>
+          <Hidden>true</Hidden>
+        </Visibility>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <BottomBorder>
+            <Style>None</Style>
+          </BottomBorder>
+        </Style>
+      </Rectangle>
+      <Textbox Name="textbox6">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Label>Footer</Label>
+                <Value>=First(Fields!Value.Value, "Footer")</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#939598</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Copyright © Intel Corporation. All rights reserved.</Value>
+                <Style>
+                  <FontFamily>verdana</FontFamily>
+                  <Color>#939598</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Left</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <Top>2.71695in</Top>
+        <Left>0.00749in</Left>
+        <Height>0.45139in</Height>
+        <Width>12.3507in</Width>
+        <ZIndex>5</ZIndex>
+        <Style>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+    </ReportItems>
+    <Height>3.62833in</Height>
+    <Style />
+  </Body>
+  <ReportParameters>
+    <ReportParameter Name="Display">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Report</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Display Type</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+    <ReportParameter Name="ServiceType">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>ServiceType</DataSetName>
+          <ValueField>ServiceType</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Service Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ServiceType</DataSetName>
+          <ValueField>ServiceType</ValueField>
+          <LabelField>ServiceType</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Segment">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Segment</DataSetName>
+          <ValueField>Segment</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Segment</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Segment</DataSetName>
+          <ValueField>Segment</ValueField>
+          <LabelField>Segment</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="PortfolioPhase">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultStatus</DataSetName>
+          <ValueField>Status</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Portfolio Phase</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Status</ValueField>
+          <LabelField>Status</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Portfolio">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Portfolio</DataSetName>
+          <ValueField>Portfolio</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Portfolio</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Portfolio</DataSetName>
+          <ValueField>Portfolio</ValueField>
+          <LabelField>Portfolio</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ServicePhase">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultStatus</DataSetName>
+          <ValueField>Status</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Service Phase</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Status</ValueField>
+          <LabelField>Status</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Service">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Service</DataSetName>
+          <ValueField>Service</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Service</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Service</DataSetName>
+          <ValueField>Service</ValueField>
+          <LabelField>Service</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Status">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultStatus</DataSetName>
+          <ValueField>Status</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Component Phase</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Status</ValueField>
+          <LabelField>Status</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Component">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>ServiceComponent</DataSetName>
+          <ValueField>ServiceComponent</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Component</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ServiceComponent</DataSetName>
+          <ValueField>ServiceComponent</ValueField>
+          <LabelField>ServiceComponent</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+  </ReportParameters>
+  <Width>12.86515in</Width>
+  <Page>
+    <InteractiveHeight>0in</InteractiveHeight>
+    <InteractiveWidth>8.5in</InteractiveWidth>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <rd:ReportID>24135aea-936d-446e-9f87-ca2455ee93ad</rd:ReportID>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>

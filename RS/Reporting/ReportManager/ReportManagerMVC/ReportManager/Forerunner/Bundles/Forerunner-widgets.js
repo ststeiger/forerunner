@@ -3912,9 +3912,10 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
+            var $li;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                var $li = me.listItems[me.currentPageNum - 1];
+                $li = me.listItems[me.currentPageNum - 1];
                 $li.removeClass("fr-nav-selected");
                 $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
@@ -3922,7 +3923,7 @@ $(function () {
             me.currentPageNum = currentPageNum;
             me._ScrolltoPage();
 
-            var $li = me.listItems[me.currentPageNum - 1];
+            $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
             $li.find("img").addClass("fr-nav-page-thumb-selected");
         },
@@ -3999,7 +4000,7 @@ $(function () {
             $span.addClass("fr-nav-close");
             $close.append($span);
 
-            $close.on('click', function () {
+            $close.on("click", function () {
                 me.options.$reportViewer.reportViewer("showNav");
             });
 
@@ -4036,8 +4037,8 @@ $(function () {
             }
 
             me._makeVisible(!me.element.is(":visible"));
-            $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
-            $container = $('ul.fr-nav-container', $(me.element));
+            $(".fr-nav-container", $(me.element)).css("position", me.element.css("position"));
+            var $container = $("ul.fr-nav-container", $(me.element));
             $(".lazy", me.$list).lazyload({ container: $container, threshold : 200});
             if (forerunner.device.isMSIE()) {
                 me._ScrolltoPage();
@@ -6212,7 +6213,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*.95) + unit ;
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

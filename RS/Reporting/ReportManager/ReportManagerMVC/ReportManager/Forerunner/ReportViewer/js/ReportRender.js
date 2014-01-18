@@ -1656,7 +1656,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*.95) + unit ;
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

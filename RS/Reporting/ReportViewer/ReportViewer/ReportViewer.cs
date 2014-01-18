@@ -227,7 +227,7 @@ namespace Forerunner.SSRS.Viewer
             string extension;
             Warning[] warnings = null;
             string[] streamIDs = null;
-            string NewSession = "1234";
+            string NewSession = "DebugPlaceholderSession";
             ReportJSONWriter rw;
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();

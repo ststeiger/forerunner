@@ -298,12 +298,9 @@ $(function () {
             });
 
             Style = "position:relative;";
-
-            //Get padding
-            Style += me._getTextStyle(RIContext.CurrObj.Elements);
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
-                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
                 Style += me._getFullBorderStyle(RIContext.CurrObj);
             }
 
@@ -474,12 +471,16 @@ $(function () {
             var me = this;
 
             Style += "display:table;";
+            Style += "table-layout: fixed;";  //This fixes FF and IE word break
+            
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
-            //This fixed an IE bug for duplicate styles.
+            //This fixed an IE bug for duplicate syyles
             if (RIContext.CurrObjParent.Type !== "Tablix")
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+
+
             Style += "position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);
 
@@ -524,7 +525,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;";
+            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;-ms-word-break:break-word;";
             Style += "margin:0;display: table-cell;";            
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
@@ -536,8 +537,11 @@ $(function () {
                 Style += "left:" + nLeft + "mm;top:" + nTop + "mm;";
                 $TextObj.addClass(dirClass);
             }
-            else
+            else {
+                //Needs to be 100% to handle center align
                 Style += "width:100%;height:100%;";
+            }
+               
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
                 if (RIContext.CurrObj.Elements.SharedElements.Value) {
@@ -693,14 +697,18 @@ $(function () {
         },
         _writeImage: function (RIContext) {
             var NewImage = new Image();
-            var me = this;
+            var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;";
+
+            //Get padding
+            Style += me._getTextStyle(RIContext.CurrObj.Elements);
+
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix")
-                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            //+me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            
             Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 
@@ -774,7 +782,7 @@ $(function () {
         },
         _writeAction: function (RIContext, Action, Control) {
             var me = this;
-            if (Action.HyperLink) {
+            if (Action.HyperLink) {               
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
                 Control.on("click", { HyperLink: Action.HyperLink }, function (e) {
@@ -782,12 +790,13 @@ $(function () {
                     location.href = e.data.HyperLink;
                     me.options.reportViewer.navigateDrillthrough(e.data.DrillthroughId);
                 });
+
             }
             else if (Action.BookmarkLink) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.attr("href", "#");
                 Control.addClass("fr-core-cursorpointer");
-                Control.on("click", { BookmarkID: Action.BookmarkLink }, function (e) {
+                Control.on("click", {BookmarkID: Action.BookmarkLink }, function (e) {
                     me._stopDefaultEvent(e);
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });
@@ -946,8 +955,8 @@ $(function () {
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
             Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
 
-            //MSIE Hack
-            if (forerunner.device.isMSIE()) {
+            //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
+            if (forerunner.device.isMSIE()) {                
                 Style += "height:" + (height) + "mm;";
             }
             else
@@ -968,7 +977,7 @@ $(function () {
                 Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
             $Cell.attr("Style", Style);
-            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;overflow:hidden;width:100%;height:100%;", new tempMeasurement(height, width))));
+            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;width:100%;height:100%;", new tempMeasurement(height, width))));
             return $Cell;
         },
         _writeTablix: function (RIContext) {
@@ -987,6 +996,7 @@ $(function () {
             
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+            
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);
@@ -1067,8 +1077,10 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
+
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
@@ -1115,12 +1127,13 @@ $(function () {
 
             RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
             return RIContext.$HTMLParent;
+
         },
         _writeBookMark: function (RIContext) {
             var $node = $("<a/>"),
-            CurrObj = RIContext.CurrObj.Elements,
-            bookmark = CurrObj.SharedElements.Bookmark || CurrObj.NonSharedElements.Bookmark;
-            
+                CurrObj = RIContext.CurrObj.Elements,
+                bookmark = CurrObj.SharedElements.Bookmark || CurrObj.NonSharedElements.Bookmark;
+
             if (bookmark) {
                 $node.attr("name", bookmark).attr("id", bookmark);
                 RIContext.$HTMLParent.append($node);
@@ -1128,7 +1141,8 @@ $(function () {
         },
         _writeTooltip: function (RIContext) {
             var CurrObj = RIContext.CurrObj.Elements,
-            tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
+                tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
+
             if (tooltip)
                 RIContext.$HTMLParent.attr("title", tooltip).attr("alt", tooltip);
         },
@@ -1633,13 +1647,15 @@ $(function () {
 
             //This is an error
             return value;
-        }, 
+        },
+
         _getFontSize:function (fontSize){
             if (!fontSize)
                 return "";
     
             if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
                 return fontSize;
+
 
             var unit = fontSize.match(/\D+$/);  // get the existing unit
             var value = fontSize.match(/\d+/);  // get the numeric component
@@ -1648,7 +1664,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*.95) + unit ;
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

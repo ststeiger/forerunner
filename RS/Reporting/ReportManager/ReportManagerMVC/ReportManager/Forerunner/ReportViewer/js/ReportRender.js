@@ -323,6 +323,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
@@ -585,7 +586,8 @@ $(function () {
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
-            me._writeBookMark(RIContext);            
+            me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
 
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
@@ -764,6 +766,7 @@ $(function () {
             
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -928,21 +931,6 @@ $(function () {
                 }
             }
         },
-        _writeBookMark: function (RIContext) {
-            var $node = $("<a/>");
-            //var me = this;
-
-            if (RIContext.CurrObj.Elements.SharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-            }
-            else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-            }
-            if ($node.attr("id"))
-                RIContext.$HTMLParent.append($node);
-        },
         _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex) {
             var $Cell = new $("<TD/>");
             var Style = "";
@@ -1089,7 +1077,10 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
+
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
@@ -1099,6 +1090,7 @@ $(function () {
             RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
             RIContext.CurrObj = RIContext.CurrObj.BodyElements;
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return me._writeRectangle(RIContext);
     
         },
@@ -1130,13 +1122,29 @@ $(function () {
                 RIContext.$HTMLParent.append($line);
             }
 
-            
-
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
             return RIContext.$HTMLParent;
 
+        },
+        _writeBookMark: function (RIContext) {
+            var $node = $("<a/>"),
+                CurrObj = RIContext.CurrObj.Elements,
+                bookmark = CurrObj.SharedElements.Bookmark || CurrObj.NonSharedElements.Bookmark;
+
+            if (bookmark) {
+                $node.attr("name", bookmark).attr("id", bookmark);
+                RIContext.$HTMLParent.append($node);
+            }   
+        },
+        _writeTooltip: function (RIContext) {
+            var CurrObj = RIContext.CurrObj.Elements,
+                tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
+
+            if (tooltip)
+                RIContext.$HTMLParent.attr("title", tooltip).attr("alt", tooltip);
         },
         //Helper fucntions
         _getHeight: function ($obj) {
@@ -1418,7 +1426,7 @@ $(function () {
             if (CurrObj.FontFamily !== undefined)
                 Style += "font-family:" + CurrObj.FontFamily + ";";
             if (CurrObj.FontSize !== undefined)
-                Style += "font-size:" + CurrObj.FontSize + ";";
+                Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)
                 Style += "text-decoration:" + me._getTextDecoration(CurrObj.TextDecoration) + ";";
             if (CurrObj.Color !== undefined)
@@ -1639,6 +1647,24 @@ $(function () {
 
             //This is an error
             return value;
+        },
+
+        _getFontSize:function (fontSize){
+            if (!fontSize)
+                return "";
+    
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+                return fontSize;
+
+
+            var unit = fontSize.match(/\D+$/);  // get the existing unit
+            var value = fontSize.match(/\d+/);  // get the numeric component
+
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
+
+           //This is an error
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

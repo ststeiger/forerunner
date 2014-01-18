@@ -85,7 +85,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data && data.responsiveUI != undefined) {
+                    if (data && data.responsiveUI !== undefined) {
                         settings = data;
                     }
                 }

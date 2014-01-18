@@ -576,11 +576,11 @@ $(function () {
          */
         htmlEncode: function (str) {
             return String(str)
-                    .replace(/&/g, '&amp;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
+                    .replace(/&/g, "&amp;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#39;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
         },
         /**
          * Replaces html escape characters with the ASCII equivalents
@@ -589,11 +589,11 @@ $(function () {
          */
         htmlDecode: function (str) {
         return String(str)
-                .replace(/&amp;/g, '&')
-                .replace(/&quot;/g, '"')
+                .replace(/&amp;/g, "&")
+                .replace(/&quot;/g, "\"")
                 .replace(/&#39;/g, "'")
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>');
+                .replace(/&lt;/g, "<")
+                .replace(/&gt;/g, ">");
     }
 },
     /**
@@ -958,7 +958,7 @@ $(function () {
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
-            return (ua.match(/(MSIE)/) || ua.match(/(like Gecko)/));  //Handle IE11
+            return (ua.match(/(MSIE)/) || ua.match(/(.NET)/));  //Handle IE11
         },
         /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -36,6 +37,7 @@ namespace Forerunner.SSRS.Viewer
         private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
+        static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
 
         public ReportViewer(String ReportServerURL, Credentials Credentials, int TimeOut = 100000)
         {
@@ -225,68 +227,87 @@ namespace Forerunner.SSRS.Viewer
             string extension;
             Warning[] warnings = null;
             string[] streamIDs = null;
-            string NewSession;
+            string NewSession = "DebugPlaceholderSession";
             ReportJSONWriter rw;
-
-            rs.Credentials = GetCredentials();
-            GetServerRendering();
-            if (this.ServerRendering)
-                format = "ForerunnerJSON";
-            else
-                format = "RPL";
-
-            if (SessionID == null)
-                NewSession = "";
-            else
-                NewSession = SessionID;
-
-            //Device Info
-            string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
-            //Page number   
-            devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
-            //End Device Info
-            devInfo += @"</DeviceInfo>";
-
             ExecutionInfo execInfo = new ExecutionInfo();
             ExecutionHeader execHeader = new ExecutionHeader();
-
-            rs.ExecutionHeaderValue = execHeader;
+            int numPages = 1;
+            bool hasDocMap = false;
 
             try
             {
-                if (NewSession != "")
-                {
-                    rs.ExecutionHeaderValue.ExecutionID = SessionID;
-                    execInfo = rs.GetExecutionInfo();
-                }
+
+                //This is for debug from customer log files
+                if (IsDebug == "JSON")
+                    return File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"]);
+                else if (IsDebug == "RPL")
+                    result = Convert.FromBase64String(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.RPLFile"]));
                 else
                 {
-                    execInfo = rs.LoadReport(reportPath, historyID);
-                }
 
-                NewSession = rs.ExecutionHeaderValue.ExecutionID;
+                    rs.Credentials = GetCredentials();
+                    GetServerRendering();
 
-                if (execInfo.CredentialsRequired)
-                {
-                    if (credentials != null)
+                    //Use local to get RPL for debug, will through an error
+                    if (this.ServerRendering && (IsDebug != "WRPL"))
+                        format = "ForerunnerJSON";
+                    else
+                        format = "RPL";
+
+                    if (SessionID == null)
+                        NewSession = "";
+                    else
+                        NewSession = SessionID;
+
+                    //Device Info
+                    string devInfo = @"<DeviceInfo><MeasureItems>true</MeasureItems><SecondaryStreams>Server</SecondaryStreams><StreamNames>true</StreamNames><RPLVersion>10.6</RPLVersion><ImageConsolidation>true</ImageConsolidation>";
+                    //Page number   
+                    devInfo += @"<StartPage>" + PageNum + "</StartPage><EndPage>" + PageNum + "</EndPage>";
+                    //End Device Info
+                    devInfo += @"</DeviceInfo>";
+
+                    rs.ExecutionHeaderValue = execHeader;
+                    if (NewSession != "")
                     {
-                        execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                        rs.ExecutionHeaderValue.ExecutionID = SessionID;
+                        execInfo = rs.GetExecutionInfo();
                     }
                     else
                     {
-                        return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum);
+                        execInfo = rs.LoadReport(reportPath, historyID);
                     }
-                }
 
-                if (execInfo.Parameters.Length != 0 && parametersList != null)
-                {
-                    execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
-                }
+                    NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
-                execInfo = rs.GetExecutionInfo();
+                    if (execInfo.CredentialsRequired)
+                    {
+                        if (credentials != null)
+                        {
+                            execInfo = rs.SetExecutionCredentials(JsonUtility.GetDataSourceCredentialsFromString(credentials));
+                        }
+                        else
+                        {
+                            return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum);
+                        }
+                    }
+
+                    if (execInfo.Parameters.Length != 0 && parametersList != null)
+                    {
+                        execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
+                    }
+
+                    result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
+                    execInfo = rs.GetExecutionInfo();
+                    numPages = execInfo.NumPages;
+                    hasDocMap = execInfo.HasDocumentMap;
+
+                }
                 if (result.Length != 0)
                 {
+                    //Write the RPL and throw
+                    if (IsDebug == "WRPL")
+                         ExceptionLogGenerator.LogExceptionWithRPL("Debug", new MemoryStream(result)); 
+
                     rw = new ReportJSONWriter(new MemoryStream(result));
                     JsonWriter w = new JsonTextWriter();
                     JsonReader r;
@@ -300,17 +321,26 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportPath");
                     w.WriteString(reportPath);
                     w.WriteMember("HasDocMap");
-                    w.WriteBoolean(execInfo.HasDocumentMap);
+                    w.WriteBoolean(hasDocMap);
                     w.WriteMember("ReportContainer");
                     if (this.ServerRendering)
                         r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
                     else
-                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(execInfo.NumPages)));
+                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(numPages)));
                     w.WriteFromReader(r);
                     w.WriteEndObject();
 
                     Debug.WriteLine(w.ToString());
-                    return w.ToString();
+                    string JSON = w.ToString();
+
+                    // If debug write JSON flag
+                    if (IsDebug == "WJSON")
+                    {
+                        string error = string.Format("[Time: {0}]\r\n[Type: {1}]\r\n[Message: {2}]\r\n[StackTrace:\r\n{3}]\r\n[JSON: {4}]",
+                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", JSON);
+                        Logger.Trace(LogType.Error, "Debug:\r\n{0}", new object[] { error });                        
+                    }
+                    return JSON;
 
                 }
                 else
@@ -320,6 +350,7 @@ namespace Forerunner.SSRS.Viewer
                 //this should never be called
                 return "";
             }
+
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);

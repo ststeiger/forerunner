@@ -9,6 +9,8 @@
   .fr-toolpane .fr-item-folders-group { display: block; }
   .fr-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
   .fr-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
+    .fr-toolpane .fr-toolbase-hide-if-touch {  }
+    .fr-toolpane .fr-toolbase-show-if-touch { display:none; }
 
 .fr-toolpane-dropdown-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }
 
@@ -49,18 +51,18 @@
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */

@@ -48,6 +48,6 @@ if ($("#zip")) {
     $("#zip").hide();
 }
 
-var page = $(document).attr('title');
+var page = $(document).attr("title");
 $("#"+page).addClass("TopNavSelected");
 

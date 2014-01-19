@@ -8,9 +8,9 @@
 .fr-rotate-270 { -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -ms-transform: rotate(270deg); -o-transform: rotate(270deg); transform: rotate(270deg); }
 .fr-render-error-details { cursor: pointer; color: blue; }
 
-.fr-render-drilldown-collapse { background-image: url('../../reportviewer/Images/Drilldown_Collapse.gif'); display: inline; background-repeat: no-repeat; padding: 2px 7px 2px 7px; background-position: center; cursor: pointer; float: left; }
+.fr-render-drilldown-collapse { background-image: url('../../reportviewer/Images/Drilldown_Collapse.gif'); display: table-cell;width:15px; background-repeat: no-repeat; padding: 2px 2px 2px 2px; background-position: center; cursor: pointer;background-position:2px 2px; }
 
-.fr-render-drilldown-expand { background-image: url('../../reportviewer/Images/Drilldown_Expand.gif'); display: inline; background-repeat: no-repeat; padding: 2px 7px 2px 7px; background-position: center; cursor: pointer; float: left; }
+.fr-render-drilldown-expand { background-image: url('../../reportviewer/Images/Drilldown_Expand.gif');display: table-cell;width:15px; background-repeat: no-repeat; padding: 2px 2px 2px 2px; background-position: center; cursor: pointer;background-position:2px 2px; }
 
 .fr-render-list-circle { list-style-type: circle; }
 .fr-render-list-square { list-style-type: square; }

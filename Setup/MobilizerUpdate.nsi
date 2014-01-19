@@ -117,6 +117,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\css\icons24x24.css"
   File "${LOCALROOT}\Forerunner\Common\css\icons25x31.css"
   File "${LOCALROOT}\Forerunner\Common\css\DefaultAppTemplate.css"
+  SetOutPath "$INSTDIR\Forerunner\Common\Images"
+  File "${LOCALROOT}\Forerunner\Common\Images\icons24x24.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"

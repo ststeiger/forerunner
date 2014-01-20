@@ -536,24 +536,24 @@ $(function () {
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
             $openDropDown.append($dropdownicon);
+
+            if (dependenceDisable) {
+                me._disabledSubSequenceControl($control);
+                $container.append($control).append($openDropDown);
+                return $container;
+            }
+
             $openDropDown.on("click", function () {
                 if ($control.autocomplete("widget").is(":visible")) {
                     $control.autocomplete("close");
                     return;
                 }
                 else {
-                    //ui-autocomplete is not append to parameter pane so here used $appContainer to do search
-                    $(".ui-autocomplete", me.options.$appContainer).hide();
+                    me._closeAllDropdown();
                     //pass an empty string to show all values
                     $control.autocomplete("search", "");
                 }
             });
-
-            if (dependenceDisable) {
-                me._disabledSubSequenceControl($multipleCheckBox);
-                $control.append($multipleCheckBox).append($openDropDown);
-                return $control;
-            }
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if (predefinedValue === param.ValidValues[i].value) {
@@ -569,19 +569,28 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label);
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+
                     if (me._paramCount === 1) {
                         me._submitForm(pageNum);
                     }
+
                     return false;
                 },
                 focus: function (event, obj) {
                     return false;
-                }
+                },
             });
 
             $control.on("focus", function () {
                 $(".ui-autocomplete", me.options.$appContainer).hide();
+            });
+
+            $control.on("change", function (event, obj) {
+                // Keeps the rest of the handlers (get cascading parameter here) 
+                //from being executed when input value is not valid.
+                if (!obj && $control.val() !== "")
+                    event.stopImmediatePropagation();
             });
 
             $container.append($control).append($openDropDown);
@@ -889,7 +898,7 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown
+            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
         },
         _checkExternalClick: function (e) {
@@ -1065,7 +1074,7 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.change(function () { me.refreshParameters(); });
+                    $targetElement.on("change", function () { me.refreshParameters(); });
                     //if dependence control don't have any value then disabled current one
                     if ($targetElement.val() === "") disabled = true;
                 });

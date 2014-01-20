@@ -133,6 +133,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\ManageSubscription.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\css"
   File "${LOCALROOT}\Forerunner\ReportViewer\css\ToolPane.css"

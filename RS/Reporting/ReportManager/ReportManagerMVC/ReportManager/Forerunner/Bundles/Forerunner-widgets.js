@@ -6329,7 +6329,7 @@ $(function () {
         _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
-        _reportDesignError: null,        
+        _reportDesignError: null,
 
         _init: function () {
             var me = this;
@@ -6611,6 +6611,8 @@ $(function () {
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
+            //if any element disable exist then not submit form auto
+            if (!dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
@@ -6657,7 +6659,8 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
             
-            $control.attr("AllowBlank", param.AllowBlank);
+            $control.attr("allowblank", param.AllowBlank);
+            $control.attr("nullable", param.Nullable);
             if (param.Nullable === false && param.AllowBlank === false) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
@@ -6690,7 +6693,7 @@ $(function () {
                         if (param.Type === "Boolean")
                             $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
                         else
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").val(null);
                     }
                 });
 
@@ -6820,9 +6823,7 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
-                + param.MultiValue + "' datatype='" + param.Type + "' />");
-
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
@@ -6983,7 +6984,7 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
                 param.ValidValues.push({ label: "Select All", value: "Select All" });
 
             var keys = "";
@@ -7232,7 +7233,8 @@ $(function () {
                     if ($(this).attr("ismultiple") === "false") {
                         a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                     } else {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                        var value = me._isParamNullable(this);
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
                     }
                 });
                 //dropdown
@@ -7283,17 +7285,26 @@ $(function () {
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
 
                 var paramsObject = { "ParamsList": a };
+                console.log(a);
                 return JSON.stringify(paramsObject);
             } else {
                 return null;
             }
         },
         _isParamNullable: function (param) {
-            var cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.Name).first();
-            if (cb.attr("checked") === "checked" || param.value === "")
+            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var $element = $(".fr-paramname-" + param.name, this.$params);
+            
+            //check nullable
+            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
                 return null;
-            else
+            }//check allow blank
+            else if ($element.attr("allowblank") === "true" && param.value === "") {
+                return "";
+            }
+            else {
                 return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            }
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -7367,8 +7378,9 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.on("change", function () { me.refreshParameters(); });
-                    //if dependence control don't have any value then disabled current one
-                    if ($targetElement.val() === "") disabled = true;
+                    //if dependence control don't have any value and not allow blank, then disabled current one
+                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
+                        disabled = true;
                 });
             }
 
@@ -7377,6 +7389,7 @@ $(function () {
         refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
+            
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back

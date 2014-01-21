@@ -993,7 +993,6 @@ $(function () {
                 //var parameterList = '{ "ParamsList": [{ "Parameter": "CategoryID","IsMultiple":"True", "Value":"'+ $("#CategoryID").val()+'" }] }';
 
                 var paramsObject = { "ParamsList": a };
-                console.log(a);
                 return JSON.stringify(paramsObject);
             } else {
                 return null;

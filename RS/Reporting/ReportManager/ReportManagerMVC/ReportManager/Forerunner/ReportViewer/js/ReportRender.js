@@ -1003,7 +1003,7 @@ $(function () {
 
             var colgroup = $("<colgroup/>");
             for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
-                colgroup.append($("<col/>").css("width", me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width) + "mm"));
+                colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
             }
             $Tablix.append(colgroup);
             if (!forerunner.device.isFirefox()) {
@@ -1048,7 +1048,8 @@ $(function () {
 
                 if (Obj.Type === "BodyRow") {
                     $.each(Obj.Cells, function (BRIndex, BRObj) {
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                        if (BRObj.Cell)
+                            $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
                     });
                 }
                 else {

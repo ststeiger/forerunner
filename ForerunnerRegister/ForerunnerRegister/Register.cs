@@ -26,6 +26,7 @@ namespace ForerunnerRegister
             public string LicenseID = "";
             public string PhoneNumber = "";
             public string zip = "";  //This is bot check, if there is a zip it is a bot
+            public string referrer = "";
 
             public RegistrationData(Stream XMLData)
             {
@@ -90,6 +91,9 @@ namespace ForerunnerRegister
                         case "zipcode":
                             zip = HttpUtility.UrlDecode(parts[++i]);
                             break;
+                        case "referrer":
+                            referrer = HttpUtility.UrlDecode(parts[++i]);
+                            break;
                     }
                 }
             }
@@ -126,6 +130,9 @@ namespace ForerunnerRegister
                             break;
                         case "ZipCode":
                             zip = XMLData.ReadElementContentAsString();
+                            break;
+                        case "referrer":
+                            referrer = XMLData.ReadElementContentAsString();
                             break;
                         case "LicenseID":
                             LicenseID = XMLData.ReadElementContentAsString();
@@ -182,7 +189,7 @@ namespace ForerunnerRegister
 
             string SQL = @" 
                             IF NOT EXISTS (SELECT * FROM TrialRegistration WHERE Email = @Email)
-                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber
+                                INSERT TrialRegistration (DownloadID, Email,FirstName,LastName,CompanyName,RegisterDate,DownloadAttempts,RegistrationAttempts,MaxDownloadAttempts,LicenseID,PhoneNumber,Referrer) SELECT @ID,@Email,@FirstName,@LastName,@CompanyName,GetDate(),0,1,3,@LicenseID,@PhoneNumber,@Referrer
                             ELSE
                                 UPDATE TrialRegistration SET RegistrationAttempts = RegistrationAttempts+1 WHERE Email = @Email
                             SELECT DownloadID,LicenseID FROM TrialRegistration WHERE Email = @Email
@@ -196,6 +203,7 @@ namespace ForerunnerRegister
             SQLComm.Parameters.AddWithValue("@CompanyName", RegData.CompanyName);
             SQLComm.Parameters.AddWithValue("@PhoneNumber", RegData.PhoneNumber);
             SQLComm.Parameters.AddWithValue("@LicenseID", RegData.LicenseID);
+            SQLComm.Parameters.AddWithValue("@Referrer", RegData.referrer);
             
 
             SQLReader = SQLComm.ExecuteReader();

@@ -239,7 +239,7 @@ namespace Forerunner.SSRS.Viewer
 
                 //This is for debug from customer log files
                 if (IsDebug == "JSON")
-                    return File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"]);
+                    return File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"], Encoding.UTF8);
                 else if (IsDebug == "RPL")
                     result = Convert.FromBase64String(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.RPLFile"]));
                 else

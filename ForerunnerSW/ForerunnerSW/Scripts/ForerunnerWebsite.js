@@ -33,6 +33,29 @@ function ReSizeFooter() {
         }
     }
 }
+
+function GetURLParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split("&");
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split("=");
+        if (sParameterName[0] === sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
+function GetRef()
+{
+    var ref = GetURLParameter("ref");
+    if (ref === undefined)
+        ref = document.referrer;
+    return ref;
+}
+
 ReSizeFooter();
 $(window).resize(ReSizeFooter);
 
@@ -47,6 +70,17 @@ if ($("#image")) {
 if ($("#zip")) {
     $("#zip").hide();
 }
+
+var iref = $("#referer");
+if (iref) {
+    iref.val(GetRef());
+    iref.hide();
+}
+
+if ($("#register")) {
+    $("#register").attr("href", "../home/register?ref=" + GetRef());
+}
+
 
 var page = $(document).attr("title");
 $("#"+page).addClass("TopNavSelected");

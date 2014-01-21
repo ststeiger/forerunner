@@ -56,6 +56,7 @@ namespace ReportManager.Controllers
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
                 if (fileName != null)

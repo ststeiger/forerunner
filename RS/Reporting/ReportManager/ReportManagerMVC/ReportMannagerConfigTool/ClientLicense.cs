@@ -174,6 +174,7 @@ namespace ForerunnerLicense
                 }
                 catch
                 {
+                    Logger.Trace(LogType.Info, "ClientLicense failed to load or parse LastServerValidation");
                     MobV1Key.DeleteValue(LicenseTimestampKey);
                 }
             }
@@ -338,6 +339,7 @@ namespace ForerunnerLicense
                         }
                         catch
                         {
+                            Logger.Trace(LogType.Info, "Could not communicate with license Service");
                             //This is a network error give us 14 days to fix
                             if (LastSucess.TotalDays > 14)
                                 LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");

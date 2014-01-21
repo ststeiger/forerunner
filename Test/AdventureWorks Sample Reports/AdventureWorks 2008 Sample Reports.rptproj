@@ -41,6 +41,10 @@
       <Name>Territory Sales Drilldown 2008.rdl</Name>
       <FullPath>Territory Sales Drilldown 2008.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Product Line Sales 2008 - Cascading Test.rdl</Name>
+      <FullPath>Product Line Sales 2008 - Cascading Test.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -49,7 +53,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://baotongdesk-pc:8080/ReportServer_MSSQL2012</TargetServerURL>
         <TargetFolder>AdventureWorks 2008 Sample Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <StartItem>Company Sales 2008.rdl</StartItem>

@@ -94,6 +94,10 @@
       <FullPath>Image table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>IT_Service_Catalog.rdl</Name>
+      <FullPath>IT_Service_Catalog.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multi chart with go to report action.rdl</Name>
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>
@@ -165,7 +169,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

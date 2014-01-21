@@ -265,11 +265,12 @@
         <Source>Embedded</Source>
         <Value>PB012221</Value>
         <Sizing>FitProportional</Sizing>
-        <Top>0.68625in</Top>
-        <Left>1.0925in</Left>
+        <Top>0.51958in</Top>
+        <Left>0.98833in</Left>
         <Height>1.60417in</Height>
         <Width>2.14583in</Width>
         <ZIndex>2</ZIndex>
+        <ToolTip>=Globals!PageNumber</ToolTip>
         <Style>
           <Border>
             <Style>None</Style>

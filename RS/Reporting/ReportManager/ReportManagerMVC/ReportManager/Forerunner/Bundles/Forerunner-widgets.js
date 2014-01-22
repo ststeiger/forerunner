@@ -3016,8 +3016,10 @@ $(function () {
             me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
                 me.showModal = false;
-                me.$container.removeClass("fr-layout-container-noscroll");
-                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible")) {
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                }
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();
@@ -6613,7 +6615,7 @@ $(function () {
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
             //if any element disable exist then not submit form auto
-            if (!dependenceDisable) me._loadedForDefault = false;
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");

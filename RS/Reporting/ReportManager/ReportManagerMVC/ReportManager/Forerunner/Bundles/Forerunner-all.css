@@ -967,7 +967,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-dropdown-icon { height: 18px; width: 18px; background-image: url(../Images/OpenDropDown.png); background-repeat: no-repeat; }
 .fr-param-dropdown-iconcontainer { position: absolute; right: 8px; top: 8px; }
 .fr-param-dropdown-textarea { width: 95%; height: 80px; overflow: auto; padding: 2px; }
-.fr-param-checkbox-container { display: inline-block; width: 176px; margin: 2px 4px; padding: 1px; }
+.fr-param-checkbox-container { display: inline-block; min-width: 176px; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-error { border-width: thin; border-color: red; }

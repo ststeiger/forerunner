@@ -320,7 +320,7 @@ $(function () {
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
             //if any element disable exist then not submit form auto
-            if (!dependenceDisable) me._loadedForDefault = false;
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");

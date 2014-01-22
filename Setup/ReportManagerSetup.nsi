@@ -342,23 +342,36 @@ Function un.onInit
 FunctionEnd
 
 Function IsDotNETInstalled
+	Push $0
+	
     ReadRegDWORD $0 HKEY_LOCAL_MACHINE "Software\Microsoft\NET Framework Setup\NDP\v3.5" "Install"
     StrCmp $0 "1" 0 noNotNET35
 
     ;detect .net framework 4.5
-    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"	
-    StrCmp $0 "378389" Continue noNotNET45
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Install"
+    ;firstly detect v4\Full install=1
+    StrCmp $0 "1" +1 noNotNET45
+
+    ;detect .net framework 4.5
+    ReadRegDWORD $0 HKLM "SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" "Release"
+    ;secondly detect release node exist in v4\Full
+    StrCmp $0 "" noNotNET45 Continue
 
     noNotNET35:
-        MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 3.5 or above on your machine. Installtion will abort.$\n$\nIf you don't have it on your PC,click OK to download it from official website. click Cancel to abort the installation." IDOK Download
+        MessageBox MB_OKCANCEL|MB_ICONSTOP "To work with this software, you will need .NET Framework 3.5 or above on your machine. Installtion will abort.$\n$\nIf you don't have it on your PC,click OK to download it from official website. click Cancel to abort the installation." IDOK Download35
         abort
     noNotNET45:
-        MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found on your computer. Mobilizer requires .Net Framework 4.5 to function. Do you want to continue? $\n$\nClick Yes to continue the installation without installing .Net Framework 4.5 first.$\n$\nClick No to take you to Microsoft to download .Net Framework 4.5 and install it before you re-run the Mobilizer setup.$\n$\nClick Cancel to exit." IDYES Continue IDNO Download
+        MessageBox MB_YESNOCANCEL|MB_ICONQUESTION ".Net Framework 4.5 is not found on your computer. Mobilizer requires .Net Framework 4.5 to function. Do you want to continue? $\n$\nClick Yes to continue the installation without installing .Net Framework 4.5 first.$\n$\nClick No to take you to Microsoft to download .Net Framework 4.5 and install it before you re-run the Mobilizer setup.$\n$\nClick Cancel to exit." IDYES Continue IDNO Download45
         abort
-    Download:
+    Download35:
+        ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=21"
+        abort
+    Download45:
         ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=30653"
         abort
     Continue:
+	
+	Pop $0
 FunctionEnd
 
 Function fun_ApplicationConfig_RunRegister

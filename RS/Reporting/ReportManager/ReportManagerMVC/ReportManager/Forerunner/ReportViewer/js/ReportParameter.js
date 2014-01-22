@@ -375,6 +375,7 @@ $(function () {
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
+                $control.addClass("fr-param-required");
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -742,7 +743,7 @@ $(function () {
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
                 $label.attr("value", value);
 
-                $label.html(key);
+                $label.text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);

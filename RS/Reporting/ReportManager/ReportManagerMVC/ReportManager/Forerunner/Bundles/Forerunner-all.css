@@ -973,6 +973,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-placeholder { margin-left: 4px; }
 .fr-param-nullable { display:inline-block; }
+.fr-param-required{}
+
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }
 .fr-param-form{}

@@ -29,6 +29,7 @@
 .fr-param-error-placeholder { margin-left: 4px; }
 .fr-param-nullable { display:inline-block; }
 .fr-param-required{}
+.fr-param-watermark {color:lightgray;}
 
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }

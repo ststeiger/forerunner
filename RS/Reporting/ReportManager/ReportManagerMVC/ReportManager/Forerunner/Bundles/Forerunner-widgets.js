@@ -6671,7 +6671,7 @@ $(function () {
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
-                $control.addClass("fr-param-required");
+                $control.addClass("fr-param-required"); 
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -7130,7 +7130,7 @@ $(function () {
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
                         hiddenValue.push( this.value );
                     }
                 });

@@ -1781,6 +1781,7 @@ $(function () {
 
             me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
             me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
 
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();

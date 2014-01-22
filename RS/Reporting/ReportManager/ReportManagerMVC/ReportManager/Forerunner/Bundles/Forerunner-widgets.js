@@ -1782,6 +1782,7 @@ $(function () {
 
             me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
             me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
 
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();
@@ -8684,11 +8685,12 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _credentialData: null,
         create: function () {
-
         },
         _init: function () {
-                        
+            var me = this;
+            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -8719,6 +8721,7 @@ $(function () {
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
                 me.closeDialog();
+                me.writeDialog();
             });
 
             me.element.find(".fr-dsc-reset-id").on("click", function () {
@@ -8800,10 +8803,10 @@ $(function () {
         },
         writeDialog: function (credentials) {
             var me = this;
-            if (credentials) {
-                me._initBody();
-                me._createRows(credentials);
-                forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me._credentialData = credentials || me._credentialData;
+
+            if (me._credentialData) {
+                me._createRows(me._credentialData);
             }
         },
         closeDialog: function () {

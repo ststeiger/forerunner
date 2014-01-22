@@ -1782,6 +1782,7 @@ $(function () {
 
             me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
             me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
 
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();
@@ -3015,8 +3016,10 @@ $(function () {
             me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
                 me.showModal = false;
-                me.$container.removeClass("fr-layout-container-noscroll");
-                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible")) {
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                }
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();
@@ -6613,7 +6616,7 @@ $(function () {
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
             //if any element disable exist then not submit form auto
-            if (!dependenceDisable) me._loadedForDefault = false;
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
@@ -6666,8 +6669,8 @@ $(function () {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
-                var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
+                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required");
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
@@ -7611,22 +7614,18 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _printData: null,
         _create: function () {
             
         },
         _init: function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me._initBody();
         },
-        /**
-         * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
-         */
-        setPrint: function (pageLayout) {
+        _initBody: function () {
             var me = this;
             var print = me.locData.print;
-            var unit = print.unit;
 
             me.element.html("");
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
@@ -7663,8 +7662,40 @@ $(function () {
                 "</form>" +
             "</div>");
 
-            
             me.element.append($printForm);
+            me.$form = me.element.find(".fr-print-form");
+            me._resetValidateMessage();
+
+            me.element.find(".fr-print-submit-id").on("click", function (e) {
+                var printPropertyList = me._generatePrintProperty();
+                if (printPropertyList !== null) {
+                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                    me.closeDialog();
+                }
+            });
+
+            me.element.find(".fr-print-cancel").on("click", function (e) {
+                me.closeDialog();
+                me.setPrint();
+            });
+        },
+        /**
+         * @function $.forerunner.reportPrint#setPrint
+         * @Generate print pane html code and append to the dom tree
+         * @param {String} pageLayout - default loaded page layout data from RPL
+         */
+        setPrint: function (pageLayout) {
+            var me = this;
+            me._printData = pageLayout || me._printData;
+
+            if (me._printData) {
+                me._createItems(me._printData);
+            }
+        },
+        _createItems: function (pageLayout) {
+            var me = this;
+            var print = me.locData.print;
+            var unit = print.unit;
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
                 label1: print.pageHeight,
@@ -7704,20 +7735,7 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
-            me._resetValidateMessage();
-            me._validateForm(me.element.find(".fr-print-form"));
-
-            me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
-            });
-
-            me.element.find(".fr-print-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
+            me._validateForm(me.$form);
 
             me.$pageWidth = me.element.find("[name=PageWidth]");
             me.$pageHeight = me.element.find("[name=PageHeight]");
@@ -8686,11 +8704,12 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _credentialData: null,
         create: function () {
-
         },
         _init: function () {
-                        
+            var me = this;
+            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -8721,6 +8740,7 @@ $(function () {
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
                 me.closeDialog();
+                me.writeDialog();
             });
 
             me.element.find(".fr-dsc-reset-id").on("click", function () {
@@ -8802,10 +8822,10 @@ $(function () {
         },
         writeDialog: function (credentials) {
             var me = this;
-            if (credentials) {
-                me._initBody();
-                me._createRows(credentials);
-                forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me._credentialData = credentials || me._credentialData;
+
+            if (me._credentialData) {
+                me._createRows(me._credentialData);
             }
         },
         closeDialog: function () {

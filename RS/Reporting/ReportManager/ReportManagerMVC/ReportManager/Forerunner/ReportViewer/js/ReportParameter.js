@@ -320,7 +320,7 @@ $(function () {
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
             //if any element disable exist then not submit form auto
-            if (!dependenceDisable) me._loadedForDefault = false;
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
@@ -373,8 +373,8 @@ $(function () {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
-                var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
+                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required");
             }
             $control.attr("ErrorMessage", param.ErrorMessage);

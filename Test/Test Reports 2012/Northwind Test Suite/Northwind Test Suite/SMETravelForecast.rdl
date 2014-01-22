@@ -1,0 +1,3217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
+  <DataSources>
+    <DataSource Name="DataSource1">
+      <DataSourceReference>PPData</DataSourceReference>
+      <rd:DataSourceID>124aa8f7-b76a-4a05-b6fd-7d407b2665ff</rd:DataSourceID>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet1">
+      <Fields>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SME_WWID">
+          <DataField>SME_WWID</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SMEName">
+          <DataField>SMEName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SMEeMail">
+          <DataField>SMEeMail</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GeoManager">
+          <DataField>GeoManager</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TravelRequired">
+          <DataField>TravelRequired</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TravelPrimary">
+          <DataField>TravelPrimary</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Travel_Funded_By_Intel">
+          <DataField>Travel_Funded_By_Intel</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VenueState">
+          <DataField>VenueState</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Travel_Info">
+          <DataField>Travel_Info</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="VenueCity">
+          <DataField>VenueCity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Venue_Country">
+          <DataField>Venue_Country</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Venue_Geo">
+          <DataField>Venue_Geo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Quarter">
+          <DataField>Quarter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="TravelType">
+          <DataField>TravelType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Requestor">
+          <DataField>Requestor</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RequestorType">
+          <DataField>RequestorType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="OpsLevel1">
+          <DataField>OpsLevel1</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GM">
+          <DataField>GM</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Manager">
+          <DataField>Manager</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Activity">
+          <DataField>Activity</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT 
+                         ID, Name, Status, SME_WWID, SMEName, DomainAddress AS SMEeMail, GeoManager, TravelRequired, TravelPrimary, Travel_Funded_By_Intel, Travel_Info, 
+                         ISNULL(Venue_City, 'None') AS VenueCity, ISNULL(Venue_State, 'None') AS VenueState, ISNULL(Country, 'None') AS Venue_Country, ISNULL(Geo, 'None') 
+                         AS Venue_Geo, Date, Quarter, ISNULL(TravelType, 'None') AS TravelType, Type, Requestor, ISNULL(RequestorType, 'None') AS RequestorType, OpsLevel1, GM, 
+                         Manager, Activity
+FROM            (SELECT DISTINCT 
+e.ID, e.[Account Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 'None') 
+AS GeoManager, CASE WHEN Travel_Required IS NULL 
+THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+CASE WHEN Travel_Funded_By_Intel IS NULL 
+THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Actual Meeting Date] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+sme.Travel_Type_ID, a.Value AS TravelType, 'Engagement' AS Type, e.Requestor, e.[Requestor Type] AS RequestorType, ei.GL_COST_CENTER_CODE, 
+CASE WHEN lvl_1_dsc IS NOT NULL AND ei.LEVEL3=86486 THEN lvl_1_dsc WHEN  ei.LEVEL3&lt;&gt;86486 THEN 'Non-IT' END AS OpsLevel1, 
+ISNULL(m.Description, 'N/A') AS GM, 
+ei.MANAGER_NAME AS Manager, STUFF
+((SELECT DISTINCT '; ' + WO1.ActivityGoalName AS Expr1
+FROM            vw_ITatIntel_Engagement_ActivityGoal AS S LEFT OUTER JOIN
+(SELECT DISTINCT t.EngagementID, et.ActivityGoalName
+FROM            vw_ITatIntel_Engagement_ActivityGoal AS t INNER JOIN
+vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO1 ON 
+S.EngagementID = WO1.EngagementID
+WHERE        (S.EngagementID = e.ID) FOR XML Path('')), 1, 9, '') AS Activity
+FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN 
+vw_ITWork_GLOpsHierarchy AS gl ON ei.GL_COST_CENTER_CODE =SUBSTRING(cost_centr_cd,6,5) LEFT OUTER JOIN
+GlobalData.dbo.tbl_Config_WorkerMapping AS m ON gl.lvl_1_lbl_cd = m.OpsLevel1Code LEFT OUTER JOIN
+GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate
+WHERE        (sme.Travel_Required = 1) AND  e.[Requestor Type] IN (@RequestorType)
+UNION
+SELECT DISTINCT 
+e.Event_ID AS ID, e.[Event Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 
+'None') AS GeoManager, CASE WHEN Travel_Required IS NULL 
+THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+CASE WHEN Travel_Funded_By_Intel IS NULL 
+THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Date of Event] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+sme.Travel_Type_ID, a.Value AS TravelType, 'Event' AS Type, e.Requestor, e.Requestor_Type AS RequestorType, ei.GL_COST_CENTER_CODE, 
+CASE WHEN lvl_1_dsc IS NOT NULL AND ei.LEVEL3=86486 THEN lvl_1_dsc WHEN  ei.LEVEL3&lt;&gt;86486 THEN 'Non-IT' END AS OpsLevel1,
+ ISNULL(m.Description, 'N/A') AS GM, 
+ei.MANAGER_NAME AS Manager, STUFF
+((SELECT DISTINCT '; ' + WO2.ActivityGoalName AS Expr1
+FROM            vw_ITatIntel_Event_ActivityGoal AS S LEFT OUTER JOIN
+(SELECT DISTINCT t.EventID, et.ActivityGoalName
+FROM            vw_ITatIntel_Event_ActivityGoal AS t INNER JOIN
+vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO2 ON S.EventID = WO2.EventID
+WHERE        (S.EventID = e.Event_ID) FOR XML Path('')), 1, 9, '') AS Activity
+FROM            vw_ITatIntel_Events AS e INNER JOIN
+vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID  LEFT OUTER JOIN 
+vw_ITWork_GLOpsHierarchy AS gl ON ei.GL_COST_CENTER_CODE =SUBSTRING(cost_centr_cd,6,5) LEFT OUTER JOIN
+GlobalData.dbo.tbl_Config_WorkerMapping AS m ON gl.lvl_1_lbl_cd = m.OpsLevel1Code LEFT OUTER JOIN
+GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate
+WHERE        (sme.Travel_Required = 1) AND e.Requestor_Type IN (@RequestorType)) AS Temp
+WHERE        (TravelRequired = 'Yes') AND (Quarter IN (@Quarter)) AND (Status IN (@Status)) AND (Geo IN (@Geo)) AND (Type IN (@Type)) AND (ISNULL(SMEName, 'N/A') 
+                         LIKE '%' + @SME + '%') AND (GeoManager IN (@GeoMgr)) AND ISNULL(TravelType,'None') IN (@TravelType)</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@RequestorType">
+            <Value>=Parameters!RequestorType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Geo">
+            <Value>=Parameters!Geo.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@SME">
+            <Value>=Parameters!SME.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@GeoMgr">
+            <Value>=Parameters!GeoMgr.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@TravelType">
+            <Value>=Parameters!TravelType.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+    <DataSet Name="Status">
+      <Fields>
+        <Field Name="Status">
+          <DataField>Status</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT Status
+FROM            (SELECT DISTINCT e.Status, ISNULL(cl.QuarterNo, 'None') AS Quarter, 'Engagement' AS Type
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+                                                    GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                    vw_ITatIntel_Engagement_ActivityGoal AS eag ON eag.EngagementID = e.ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_ActivityGoal AS ag ON ag.ActivityGoalID = eag.ActivityGoalID
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT e.Status, ISNULL(cl.QuarterNo, 'None') AS Quarter, 'Event' AS Type
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+                                                   GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                   vw_ITatIntel_Event_ActivityGoal AS eag ON eag.EventID = e.Event_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_ActivityGoal AS ag ON ag.ActivityGoalID = eag.ActivityGoalID
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (Quarter IN (@Quarter)) AND (Type IN (@Type))</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="Quarter">
+      <Fields>
+        <Field Name="Quarter">
+          <DataField>Quarter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT Quarter
+FROM            (SELECT DISTINCT e.[Actual Meeting Date] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 'Engagement' AS Type
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT e.[Date of Event] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 'Event' AS Type
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (Type IN (@Type))</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="Extract">
+      <Fields>
+        <Field Name="ExtractDate">
+          <DataField>ExtractDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        TOP (1) ExtractDate
+FROM            vw_ITatIntel_Engagements AS e</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="Geo">
+      <Fields>
+        <Field Name="Geo">
+          <DataField>Geo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT Geo
+FROM            (SELECT DISTINCT e.Status, ISNULL(cl.QuarterNo, 'None') AS Quarter, geo.Value AS Geo, 'Engagement' AS Type
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+                                                    GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT e.Status, ISNULL(cl.QuarterNo, 'None') AS Quarter, geo.Value AS Geo, 'Event' AS Type
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+                                                   GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (Quarter IN (@Quarter)) AND (Status IN (@Status)) AND (Type IN (@Type))</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="GeoManager">
+      <Fields>
+        <Field Name="GeoManager">
+          <DataField>GeoManager</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT GeoManager
+FROM            (SELECT DISTINCT 
+                                                    e.Status, ei.ccMailName AS SMEName, ISNULL(e.[Staff Assigned], 'None') AS GeoManager, geo.Value AS Geo, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                    'Engagement' AS Type
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+                                                    GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                    GlobalData.dbo.vw_GLOpsLevelConversion AS gl ON ei.GL_COST_CENTER_CODE = gl.CostCenter LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_Config_WorkerMapping AS m ON m.Value = gl.GLOpsLevel1 LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT 
+                                                   e.Status, ei.ccMailName AS SMEName, ISNULL(e.[Staff Assigned], 'None') AS GeoManager, geo.Value AS Geo, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                   'Event' AS Type
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+                                                   GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                   GlobalData.dbo.vw_GLOpsLevelConversion AS gl ON ei.GL_COST_CENTER_CODE = gl.CostCenter LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_Config_WorkerMapping AS m ON m.Value = gl.GLOpsLevel1 LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (Quarter IN (@Quarter)) AND (Status IN (@Status)) AND (Geo IN (@Geo)) AND (Type IN (@Type))</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Geo">
+            <Value>=Parameters!Geo.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="DefaultQtr">
+      <Fields>
+        <Field Name="CurrentQtr">
+          <DataField>CurrentQtr</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT QuarterNo AS CurrentQtr
+FROM            GlobalData.dbo.tbl_WW_Calendar
+WHERE        (GETDATE() BETWEEN StartDate AND EndDate)</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="Type">
+      <Fields>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT        'Event' AS Type
+UNION
+SELECT        'Engagement' AS Type
+ORDER BY Type</CommandText>
+      </Query>
+    </DataSet>
+    <DataSet Name="TravelType">
+      <Fields>
+        <Field Name="TravelType">
+          <DataField>TravelType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT ISNULL(TravelType, 'None') AS TravelType
+FROM            (SELECT DISTINCT 
+                                                    e.ID, e.[Account Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 'None') 
+                                                    AS GeoManager, CASE WHEN Travel_Required IS NULL 
+                                                    THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+                                                     THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+                                                    CASE WHEN Travel_Funded_By_Intel IS NULL 
+                                                    THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+                                                    e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Actual Meeting Date] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                    sme.Travel_Type_ID, a.Value AS TravelType, 'Engagement' AS Type, e.Requestor, e.[Requestor Type] AS RequestorType, ei.GL_COST_CENTER_CODE, 
+                                                    CASE WHEN m.Value IS NOT NULL THEN m.Value WHEN ei.LVLDESCR5 IS NOT NULL AND 
+                                                    ei.LEVEL3 = 86486 THEN ei.LVLDESCR5 WHEN ei.LEVEL3 &lt;&gt; 86486 THEN 'Non-IT' END AS OpsLevel1, ISNULL(M1.Description, 'N/A') AS GM, 
+                                                    ei.MANAGER_NAME AS Manager, STUFF
+                                                        ((SELECT DISTINCT '; ' + WO1.ActivityGoalName AS Expr1
+                                                            FROM            vw_ITatIntel_Engagement_ActivityGoal AS S LEFT OUTER JOIN
+                                                                                         (SELECT DISTINCT t.EngagementID, et.ActivityGoalName
+                                                                                           FROM            vw_ITatIntel_Engagement_ActivityGoal AS t INNER JOIN
+                                                                                                                     vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO1 ON 
+                                                                                     S.EngagementID = WO1.EngagementID
+                                                            WHERE        (S.EngagementID = e.ID) FOR XML Path('')), 1, 9, '') AS Activity
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+                                                    GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_Config_WorkerMapping AS M ON sme.SME_WWID = M.WWID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_Config_WorkerMapping AS M1 ON M1.Level5ID = ei.LEVEL5
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT 
+                                                   e.Event_ID AS ID, e.[Event Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 
+                                                   'None') AS GeoManager, CASE WHEN Travel_Required IS NULL 
+                                                   THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+                                                    THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+                                                   CASE WHEN Travel_Funded_By_Intel IS NULL 
+                                                   THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+                                                   e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Date of Event] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                   sme.Travel_Type_ID, a.Value AS TravelType, 'Event' AS Type, e.Requestor, e.Requestor_Type AS RequestorType, ei.GL_COST_CENTER_CODE, 
+                                                   CASE WHEN m.Value IS NOT NULL THEN m.Value WHEN ei.LVLDESCR5 IS NOT NULL AND 
+                                                   ei.LEVEL3 = 86486 THEN ei.LVLDESCR5 WHEN ei.LEVEL3 &lt;&gt; 86486 THEN 'Non-IT' END AS OpsLevel1, ISNULL(M1.Description, 'N/A') AS GM, 
+                                                   ei.MANAGER_NAME AS Manager, STUFF
+                                                       ((SELECT DISTINCT '; ' + WO2.ActivityGoalName AS Expr1
+                                                           FROM            vw_ITatIntel_Event_ActivityGoal AS S LEFT OUTER JOIN
+                                                                                        (SELECT DISTINCT t.EventID, et.ActivityGoalName
+                                                                                          FROM            vw_ITatIntel_Event_ActivityGoal AS t INNER JOIN
+                                                                                                                    vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO2 ON S.EventID = WO2.EventID
+                                                           WHERE        (S.EventID = e.Event_ID) FOR XML Path('')), 1, 9, '') AS Activity
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+                                                   GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_Config_WorkerMapping AS M ON sme.SME_WWID = M.WWID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_Config_WorkerMapping AS M1 ON M1.Level5ID = ei.LEVEL5
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (TravelRequired = 'Yes') AND (Quarter IN (@Quarter)) AND (Status IN (@Status)) AND (Geo IN (@Geo)) AND (Type IN (@Type)) AND (ISNULL(SMEName, 'N/A') 
+                         LIKE '%' + @SME + '%') AND (GeoManager IN (@GeoMgr))
+ORDER BY TravelType</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Geo">
+            <Value>=Parameters!Geo.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@SME">
+            <Value>=Parameters!SME.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@GeoMgr">
+            <Value>=Parameters!GeoMgr.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+      </Query>
+    </DataSet>
+    <DataSet Name="RequestType">
+      <Fields>
+        <Field Name="RequestorType">
+          <DataField>RequestorType</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource1</DataSourceName>
+        <CommandText>SELECT DISTINCT RequestorType
+FROM            (SELECT DISTINCT 
+                                                    e.ID, e.[Account Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 'None') 
+                                                    AS GeoManager, CASE WHEN Travel_Required IS NULL 
+                                                    THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+                                                     THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+                                                    CASE WHEN Travel_Funded_By_Intel IS NULL 
+                                                    THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+                                                    e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Actual Meeting Date] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                    sme.Travel_Type_ID, a.Value AS TravelType, 'Engagement' AS Type, e.Requestor, e.[Requestor Type] AS RequestorType, ei.GL_COST_CENTER_CODE, 
+                                                    CASE WHEN m.Value IS NOT NULL THEN m.Value WHEN ei.LVLDESCR5 IS NOT NULL AND 
+                                                    ei.LEVEL3 = 86486 THEN ei.LVLDESCR5 WHEN ei.LEVEL3 &lt;&gt; 86486 THEN 'Non-IT' END AS OpsLevel1, ISNULL(M1.Description, 'N/A') AS GM, 
+                                                    ei.MANAGER_NAME AS Manager, STUFF
+                                                        ((SELECT DISTINCT '; ' + WO1.ActivityGoalName AS Expr1
+                                                            FROM            vw_ITatIntel_Engagement_ActivityGoal AS S LEFT OUTER JOIN
+                                                                                         (SELECT DISTINCT t.EngagementID, et.ActivityGoalName
+                                                                                           FROM            vw_ITatIntel_Engagement_ActivityGoal AS t INNER JOIN
+                                                                                                                     vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO1 ON 
+                                                                                     S.EngagementID = WO1.EngagementID
+                                                            WHERE        (S.EngagementID = e.ID) FOR XML Path('')), 1, 9, '') AS Activity
+                          FROM            vw_ITatIntel_Engagements AS e INNER JOIN
+                                                    vw_ITatIntel_EngagementSME AS sme ON e.ID = sme.Engagement_ID INNER JOIN
+                                                    GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                    vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_Config_WorkerMapping AS M ON sme.SME_WWID = M.WWID LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Actual Meeting Date] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                    GlobalData.dbo.tbl_Config_WorkerMapping AS M1 ON M1.Level5ID = ei.LEVEL5
+                          WHERE        (sme.Travel_Required = 1)
+                          UNION
+                          SELECT DISTINCT 
+                                                   e.Event_ID AS ID, e.[Event Name] AS Name, e.Status, sme.SME_WWID, ei.ccMailName AS SMEName, ei.DomainAddress, ISNULL(e.[Staff Assigned], 
+                                                   'None') AS GeoManager, CASE WHEN Travel_Required IS NULL 
+                                                   THEN 'N/A' WHEN Travel_Required = 0 THEN 'No' WHEN Travel_Required = 1 THEN 'Yes' END AS TravelRequired, CASE WHEN Travel_Primary IS NULL
+                                                    THEN 'N/A' WHEN Travel_Primary = 0 THEN 'No' WHEN Travel_Primary = 1 THEN 'Yes' END AS TravelPrimary, e.Travel_Info, 
+                                                   CASE WHEN Travel_Funded_By_Intel IS NULL 
+                                                   THEN 'N/A' WHEN Travel_Funded_By_Intel = 0 THEN 'No' WHEN Travel_Funded_By_Intel = 1 THEN 'Yes' END AS Travel_Funded_By_Intel, 
+                                                   e.Venue_City, e.Venue_State, c.Value AS Country, geo.Value AS Geo, e.[Date of Event] AS Date, ISNULL(cl.QuarterNo, 'None') AS Quarter, 
+                                                   sme.Travel_Type_ID, a.Value AS TravelType, 'Event' AS Type, e.Requestor, e.Requestor_Type AS RequestorType, ei.GL_COST_CENTER_CODE, 
+                                                   CASE WHEN m.Value IS NOT NULL THEN m.Value WHEN ei.LVLDESCR5 IS NOT NULL AND 
+                                                   ei.LEVEL3 = 86486 THEN ei.LVLDESCR5 WHEN ei.LEVEL3 &lt;&gt; 86486 THEN 'Non-IT' END AS OpsLevel1, ISNULL(M1.Description, 'N/A') AS GM, 
+                                                   ei.MANAGER_NAME AS Manager, STUFF
+                                                       ((SELECT DISTINCT '; ' + WO2.ActivityGoalName AS Expr1
+                                                           FROM            vw_ITatIntel_Event_ActivityGoal AS S LEFT OUTER JOIN
+                                                                                        (SELECT DISTINCT t.EventID, et.ActivityGoalName
+                                                                                          FROM            vw_ITatIntel_Event_ActivityGoal AS t INNER JOIN
+                                                                                                                    vw_ITatIntel_ActivityGoal AS et ON t.ActivityGoalID = et.ActivityGoalID) AS WO2 ON S.EventID = WO2.EventID
+                                                           WHERE        (S.EventID = e.Event_ID) FOR XML Path('')), 1, 9, '') AS Activity
+                          FROM            vw_ITatIntel_Events AS e INNER JOIN
+                                                   vw_ITatIntel_EventSME AS sme ON e.Event_ID = sme.Event_ID INNER JOIN
+                                                   GlobalData.dbo.vw_WorkerOrgLevel AS ei ON sme.SME_WWID = ei.WWID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS c ON c.AttributeID = e.Venue_Country_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS a ON a.AttributeID = sme.Travel_Type_ID LEFT OUTER JOIN
+                                                   vw_ITatIntel_Attribute AS geo ON geo.AttributeID = c.ParentID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_Config_WorkerMapping AS M ON sme.SME_WWID = M.WWID LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_WW_Calendar AS cl ON e.[Date of Event] BETWEEN cl.StartDate AND cl.EndDate LEFT OUTER JOIN
+                                                   GlobalData.dbo.tbl_Config_WorkerMapping AS M1 ON M1.Level5ID = ei.LEVEL5
+                          WHERE        (sme.Travel_Required = 1)) AS Temp
+WHERE        (TravelRequired = 'Yes') AND (Quarter IN (@Quarter)) AND (Status IN (@Status)) AND (Geo IN (@Geo)) AND (Type IN (@Type)) AND (ISNULL(SMEName, 'N/A') 
+                         LIKE '%' + @SME + '%') AND (GeoManager IN (@GeoMgr)) AND ISNULL(TravelType, 'None') IN (@TravelType)
+ORDER BY RequestorType</CommandText>
+        <QueryParameters>
+          <QueryParameter Name="@Quarter">
+            <Value>=Parameters!Quarter.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Status">
+            <Value>=Parameters!Status.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Geo">
+            <Value>=Parameters!Geo.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Type">
+            <Value>=Parameters!Type.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@SME">
+            <Value>=Parameters!SME.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@GeoMgr">
+            <Value>=Parameters!GeoMgr.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@TravelType">
+            <Value>=Parameters!TravelType.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+    </DataSet>
+  </DataSets>
+  <Body>
+    <ReportItems>
+      <Tablix Name="Tablix1">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>1.45833in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.64583in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.58333in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.14583in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.4375in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2.40625in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1in</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.71875in</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>0.53125in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox10">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>GM</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox9</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox8">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>SME Manager</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox5</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>SME Name</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox3">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>SME WWID</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox3</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox7">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Ops Level 1</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox7</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox11">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Geo Manager</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox11</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox13">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Event or Engagement</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox13</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox15">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>ID</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox15</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox17">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Name of Activity</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox17</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox33">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Requestor</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox33</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox35">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Requestor Type</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox35</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox19">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Status</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox19</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox37">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Date</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox37</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox4">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Travel Type</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox4</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox21">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Travel Primary</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox21</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox23">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Travel Funded By Intel</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox23</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Travel Info</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox2</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox25">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Venue City</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox25</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox27">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Venue State</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox27</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox29">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Venue Country</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox29</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox31">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Venue Geo</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox31</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox41">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>Activity</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                                <Color>White</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox41</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <BackgroundColor>#004280</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.25in</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="GM2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=iif(Fields!GM.Value="N/A" AND Fields!OpsLevel1.Value&lt;&gt;"Non-IT",Fields!SMEName.Value,Fields!GM.Value)</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>GM</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Manager2">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Manager.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Manager</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="SMEName">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!SMEName.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <TextDecoration>Underline</TextDecoration>
+                                <Color>#0071c5</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>SMEName</rd:DefaultName>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>="mailto:" &amp; Fields!SMEeMail.Value &amp; "?Subject=Questions About Your Travel Plans"</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="SME_WWID">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!SME_WWID.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>SME_WWID</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="OpsLevel1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!OpsLevel1.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>OpsLevel1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="GeoManager">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!GeoManager.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>GeoManager</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Type">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Type.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Type</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="ID">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!ID.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <TextDecoration>Underline</TextDecoration>
+                                <Color>#0071c5</Color>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>ID</rd:DefaultName>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>=iif(Fields!Type.Value="Event","http://itapps.intel.com/itatintel/engagementtool/EventRequest.aspx?EventID=" &amp; Fields!ID.Value,"http://itapps.intel.com/itatintel/engagementtool/EngagementRequest.aspx?EngagementID=" &amp; Fields!ID.Value)</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Name">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Name.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Name</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Requestor">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Requestor.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Requestor</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="RequestorType">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!RequestorType.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>RequestorType</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Status">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Status.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Status</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Date">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Date.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                                <Format>M/d/yy</Format>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Date</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="TravelType">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!TravelType.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>TravelType</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="TravelPrimary">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!TravelPrimary.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>TravelPrimary</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Travel_Funded_By_Intel">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Travel_Funded_By_Intel.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Travel_Funded_By_Intel</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Travel_Info">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Travel_Info.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Travel_Info</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="VenueCity">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!VenueCity.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>VenueCity</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="VenueState">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!VenueState.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>VenueState</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Venue_Country">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Venue_Country.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Venue_Country</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Venue_Geo">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Venue_Geo.Value</Value>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Venue_Geo</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Activity">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!Activity.Value</Value>
+                              <MarkupType>HTML</MarkupType>
+                              <Style>
+                                <FontFamily>Verdana</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Activity</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Color>LightGrey</Color>
+                          <Style>Solid</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <LeftBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </LeftBorder>
+                        <RightBorder>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <KeepWithGroup>After</KeepWithGroup>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="Details" />
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <DataSetName>DataSet1</DataSetName>
+        <SortExpressions>
+          <SortExpression>
+            <Value>=Fields!GM.Value</Value>
+          </SortExpression>
+        </SortExpressions>
+        <Top>0.35417in</Top>
+        <Height>0.78125in</Height>
+        <Width>26.39582in</Width>
+        <Style>
+          <Border>
+            <Color>LightGrey</Color>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Tablix>
+      <Textbox Name="Textbox39">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>SME Travel Forecast   </Value>
+                <Style>
+                  <FontFamily>Neo Sans Intel</FontFamily>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>Bold</FontWeight>
+                  <Color>DimGray</Color>
+                </Style>
+              </TextRun>
+              <TextRun>
+                <Value>="Data as of: " &amp; First(Fields!ExtractDate.Value, "Extract")</Value>
+                <Style>
+                  <FontFamily>Verdana</FontFamily>
+                  <Color>DimGray</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox39</rd:DefaultName>
+        <Height>0.29862in</Height>
+        <Width>26.39582in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+    </ReportItems>
+    <Height>1.13542in</Height>
+    <Style />
+  </Body>
+  <ReportParameters>
+    <ReportParameter Name="Type">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Type</DataSetName>
+          <ValueField>Type</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Type</DataSetName>
+          <ValueField>Type</ValueField>
+          <LabelField>Type</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Quarter">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DefaultQtr</DataSetName>
+          <ValueField>CurrentQtr</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Quarter</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Quarter</DataSetName>
+          <ValueField>Quarter</ValueField>
+          <LabelField>Quarter</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Status">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>="Assigned"</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Status</DataSetName>
+          <ValueField>Status</ValueField>
+          <LabelField>Status</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Geo">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>Geo</DataSetName>
+          <ValueField>Geo</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Geo</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Geo</DataSetName>
+          <ValueField>Geo</ValueField>
+          <LabelField>Geo</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="GeoMgr">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>GeoManager</DataSetName>
+          <ValueField>GeoManager</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Geo Manager</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>GeoManager</DataSetName>
+          <ValueField>GeoManager</ValueField>
+          <LabelField>GeoManager</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="SME">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=""</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Enter Partial SME Name (or leave blank for all)</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="TravelType">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>TravelType</DataSetName>
+          <ValueField>TravelType</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Travel Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>TravelType</DataSetName>
+          <ValueField>TravelType</ValueField>
+          <LabelField>TravelType</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="RequestorType">
+      <DataType>String</DataType>
+      <Prompt>Requestor Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>RequestType</DataSetName>
+          <ValueField>RequestorType</ValueField>
+          <LabelField>RequestorType</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+  </ReportParameters>
+  <Width>26.39582in</Width>
+  <Page>
+    <LeftMargin>1in</LeftMargin>
+    <RightMargin>1in</RightMargin>
+    <TopMargin>1in</TopMargin>
+    <BottomMargin>1in</BottomMargin>
+    <Style />
+  </Page>
+  <rd:ReportID>7fe18510-c54e-4533-93de-0dff681138bc</rd:ReportID>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+</Report>

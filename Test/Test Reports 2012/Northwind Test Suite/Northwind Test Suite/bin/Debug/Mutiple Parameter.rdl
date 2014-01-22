@@ -243,8 +243,6 @@
             </FilterValues>
           </Filter>
         </Filters>
-        <Top>0.16542in</Top>
-        <Left>0.13417in</Left>
         <Height>0.5in</Height>
         <Width>4.95834in</Width>
         <Style>
@@ -257,7 +255,7 @@
     <Height>2in</Height>
     <Style />
   </Body>
-  <Width>6.5in</Width>
+  <Width>9.41791in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>
@@ -380,6 +378,10 @@ ORDER BY CategoryID </CommandText>
           <ParameterValue>
             <Value>4</Value>
             <Label>Test4</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>selected</Value>
+            <Label>&lt;ALL SERVICES&gt;</Label>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>

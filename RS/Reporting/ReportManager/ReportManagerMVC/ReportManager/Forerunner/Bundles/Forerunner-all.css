@@ -929,6 +929,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-placeholder { margin-left: 4px; }
+.fr-param-required{}
+.fr-param-watermark {color:lightgray;}
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }
 

@@ -6372,6 +6372,7 @@ $(function () {
             $control.attr("AllowBlank", param.AllowBlank);
             if (param.Nullable === false && param.AllowBlank === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, {useNative : false, className: "fr-param-watermark" });
+                $control.addClass("fr-param-required");
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -6664,7 +6665,7 @@ $(function () {
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
                 $label.attr("value", value);
 
-                $label.html(key);
+                $label.text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);

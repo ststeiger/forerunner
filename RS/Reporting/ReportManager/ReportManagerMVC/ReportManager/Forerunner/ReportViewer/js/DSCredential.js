@@ -28,8 +28,6 @@ $(function () {
         create: function () {
         },
         _init: function () {
-            var me = this;
-            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -60,7 +58,9 @@ $(function () {
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
                 me.closeDialog();
-                me.writeDialog();
+                if (me._credentialData) {
+                    me._createRows();
+                }
             });
 
             me.element.find(".fr-dsc-reset-id").on("click", function () {
@@ -70,9 +70,14 @@ $(function () {
             me.element.find(".fr-dsc-submit-id").on("click", function () {
                 me._submitCredential();
             });
+
+            if (me.options.$reportViewer) {
+                me._initCallback();
+            }
         },
         _createRows: function (credentials) {
             var me = this;
+            credentials = credentials || me._credentialData;
             me.$container.html("");
 
             $.each(credentials, function (index, credential) {
@@ -107,26 +112,19 @@ $(function () {
             });
 
             me._validateForm(me.$form);
-
-            if (me.options.$reportViewer) {
-                me._initCallback();
-            }
         },
         _initCallback: function () {
             var me = this;
 
-            me.options.$reportViewer.on(events.reportViewerRenderError(), me._exceptionMatch);
-        },
-        _exceptionMatch: function (event, data) {
-            var me = this;
-            
-            //highlight error datasource label by change color to red
-            var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
-            if (error && me._credentialData) {
-                var datasourceID = error[0].replace(/["“”']/g, '');
-                me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
-                me.openDialog();
-            }
+            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
+                //highlight error datasource label by change color to red
+                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
+                if (error && me._credentialData) {
+                    var datasourceID = error[0].replace(/["“”']/g, '');
+                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                    me.openDialog();
+                }
+            });
         },
         _submitCredential: function () {
             var me = this;
@@ -145,8 +143,9 @@ $(function () {
         },
         writeDialog: function (credentials) {
             var me = this;
+            me._initBody();
             me._credentialData = credentials || me._credentialData;
-
+            
             if (me._credentialData) {
                 me._createRows(me._credentialData);
             }
@@ -222,7 +221,6 @@ $(function () {
         destroy: function () {
             var me = this;
             me._credentialData = null;
-            me.options.$reportViewer.off(events.reportViewerRenderError(), me._exceptionMatch);
 
             this._destroy();
         },

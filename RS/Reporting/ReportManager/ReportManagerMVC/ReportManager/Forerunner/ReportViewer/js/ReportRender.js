@@ -590,6 +590,10 @@ $(function () {
             me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
 
+            //Make room for the sort image
+            if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
+                $TextObj.css("padding-right", "15px");
+            }
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
            
             RIContext.$HTMLParent.append($TextObj);
@@ -1047,8 +1051,12 @@ $(function () {
                     }
                     if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
                         HasFixedRows = true;
-                    if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
-                        HasFixedCols = true;
+
+                    //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
+                    if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]){
+                        if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
+                            HasFixedCols = true;
+                    }                  
 
                     if (Obj.Type === "BodyRow") {
                         $.each(Obj.Cells, function (BRIndex, BRObj) {

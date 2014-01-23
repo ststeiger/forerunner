@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,8 +18,8 @@ namespace Forerunner.SSRS.JSONRender
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
-        RPLReader RPL;        
-
+        RPLReader RPL;
+        
         struct TempProperty
         {
             public string Name;
@@ -207,7 +208,7 @@ namespace Forerunner.SSRS.JSONRender
                 if (RPLPropBagCode == 0xFF)
                 {
                     byte isEnd = r.RPL.ReadByte();
-                    while (isEnd != EndCode && isEnd != 0xFF)
+                    while (isEnd != EndCode && isEnd !=0xFF)
                     {
                         WriteMemeber(isEnd, r);
                         isEnd = r.RPL.ReadByte();
@@ -247,13 +248,16 @@ namespace Forerunner.SSRS.JSONRender
                 LicenseException.Throw(LicenseException.FailReason.InitializationFailure, "License Initialization failed");                
             }
 //#endif
+            
+            LicenseData License = ClientLicense.GetLicense();
+
             RPL.position = 0;
             w.WriteStartObject();
             
             w.WriteMember("SKU");
-            w.WriteString(ClientLicense.License.SKU);
+            w.WriteString(License.SKU);
             w.WriteMember("Trial");
-            w.WriteNumber(ClientLicense.License.IsTrial);
+            w.WriteNumber(License.IsTrial);
 
             w.WriteMember("RPLStamp");
             w.WriteString(RPL.ReadString());
@@ -306,15 +310,15 @@ namespace Forerunner.SSRS.JSONRender
 
         private void ThrowParseError()
         {
-            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(string.Empty, RPL.RPLStream);
+            ExceptionLogGenerator.LogExceptionWithRPL(string.Empty, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg)
         {
-            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream);
+            ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg, Exception e)
         {
-            ReportManager.Util.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream, e);
+            ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream, e);
         }
 
         private Boolean LoopObjectArray(string ArrayName, byte Code, Func<Boolean> f)
@@ -2150,7 +2154,7 @@ namespace Forerunner.SSRS.JSONRender
             if (Len > 127)
             {
                 retval = Len - 128;
-                retval += GetLength(Depth + 1) * 128;
+                retval += GetLength(Depth + 1) *  128;
             }
             else
                 retval = Len;

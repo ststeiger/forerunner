@@ -703,7 +703,10 @@ $(function () {
                                     rule.style[prop] = value;
                                 }
                                 else {
-                                    rule.style.removeProperty(prop);
+                                    if (forerunner.device.isMSIE8())
+                                        rule.style.removeAttribute(prop);
+                                    else
+                                        rule.style.removeProperty(prop);
                                 }
                             }
                             return false;

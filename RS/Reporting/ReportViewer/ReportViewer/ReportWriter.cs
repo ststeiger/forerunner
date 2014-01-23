@@ -208,7 +208,7 @@ namespace Forerunner.SSRS.JSONRender
                 if (RPLPropBagCode == 0xFF)
                 {
                     byte isEnd = r.RPL.ReadByte();
-                    while (isEnd != EndCode)
+                    while (isEnd != EndCode && isEnd !=0xFF)
                     {
                         WriteMemeber(isEnd, r);
                         isEnd = r.RPL.ReadByte();
@@ -2154,7 +2154,7 @@ namespace Forerunner.SSRS.JSONRender
             if (Len > 127)
             {
                 retval = Len - 128;
-                retval += GetLength(Depth + 1) * (Depth + 1) * 128;
+                retval += GetLength(Depth + 1) *  128;
             }
             else
                 retval = Len;

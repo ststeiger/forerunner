@@ -5270,63 +5270,69 @@ $(function () {
             Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);
 
-            var colgroup = $("<colgroup/>");
-            for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
-                colgroup.append($("<col/>").css("width", me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width) + "mm"));
+            //If there are columns
+            if (RIContext.CurrObj.ColumnWidths) {
+                var colgroup = $("<colgroup/>");
+                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                }
+                $Tablix.append(colgroup);
+                if (!forerunner.device.isFirefox()) {
+                    $FixedColHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                    $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                }
             }
-            $Tablix.append(colgroup);
-            if (!forerunner.device.isFirefox()) {
-                $FixedColHeader.append(colgroup.clone(true,true));  //Need to allign fixed header on chrome, makes FF fail
-                $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
-            }
 
-            $Row = new $("<TR/>");
-            $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
+            if (RIContext.CurrObj.TablixRows) {
+                $Row = new $("<TR/>");
+                $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
 
-                if (Obj.RowIndex !== LastRowIndex) {
-                    $Tablix.append($Row);
-
-                    //Handle fixed col header
-                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
-                        $FixedColHeader.append($Row.clone(true, true));
-
-                    $Row = new $("<TR/>");
-
-                    //Handle missing rows
-                    for (var ri = LastRowIndex+1; ri < Obj.RowIndex ; ri++) {
+                    if (Obj.RowIndex !== LastRowIndex) {
                         $Tablix.append($Row);
+
+                        //Handle fixed col header
+                        if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
+                            $FixedColHeader.append($Row.clone(true, true));
+
                         $Row = new $("<TR/>");
+
+                        //Handle missing rows
+                        for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
+                            $Tablix.append($Row);
+                            $Row = new $("<TR/>");
+                        }
+                        LastRowIndex = Obj.RowIndex;
                     }
-                    LastRowIndex = Obj.RowIndex;
-                }
 
-                if (Obj.UniqueName)
-                    me._writeUniqueName($Row, Obj.UniqueName);
+                    if (Obj.UniqueName)
+                        me._writeUniqueName($Row, Obj.UniqueName);
 
-                //Handle fixed row header
-                if (Obj.Type !== "Corner" && LastObjType === "Corner") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
-                    HasFixedRows = true;
-                if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
-                    HasFixedCols = true;
+                    //Handle fixed row header
+                    if (Obj.Type !== "Corner" && LastObjType === "Corner") {
+                        $FixedRowHeader.append($Row.clone(true, true));
+                    }
+                    if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
+                        $FixedRowHeader.append($Row.clone(true, true));
+                    }
+                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+                        HasFixedRows = true;
+                    if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
+                        HasFixedCols = true;
 
-                if (Obj.Type === "BodyRow") {
-                    $.each(Obj.Cells, function (BRIndex, BRObj) {
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
-                    });
-                }
-                else {
-                    if (Obj.Cell)
-                        $Row.append(me._writeTablixCell(RIContext, Obj, Index));
-                }
-                LastObjType = Obj.Type;
-            });
-            $Tablix.append($Row);
+                    if (Obj.Type === "BodyRow") {
+                        $.each(Obj.Cells, function (BRIndex, BRObj) {
+                            if (BRObj.Cell)
+                                $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                        });
+                    }
+                    else {
+                        if (Obj.Cell)
+                            $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    }
+                    LastObjType = Obj.Type;
+                });
+                $Tablix.append($Row);
+            }
 
             if (HasFixedRows) {
                 $FixedColHeader.hide();
@@ -5412,8 +5418,18 @@ $(function () {
             var CurrObj = RIContext.CurrObj.Elements,
                 tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
 
-            if (tooltip)
-                RIContext.$HTMLParent.attr("title", tooltip).attr("alt", tooltip);
+            if (tooltip) {
+                if (RIContext.CurrObjParent.Type === "Image")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Chart")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Gauge")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Map")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else
+                    RIContext.$HTMLParent.attr("title", tooltip);
+            }
         },
         //Helper fucntions
         _getHeight: function ($obj) {

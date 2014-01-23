@@ -1320,8 +1320,9 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            me._printDialog.reportPrint("openDialog");
-            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            if (me.$printDialog) {
+                me.$printDialog.reportPrint("openDialog");
+            }
         },
         /**
         * print current reprot in custom PDF format
@@ -1335,13 +1336,10 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
-
-        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
-            $dlg.reportPrint("setPrint", pageLayout);
-            me._printDialog = $dlg;
+            me.$printDialog = me.options.$appContainer.find(".fr-print-section");
+            me.$printDialog.reportPrint("setPrint", pageLayout);
         },
        
         //Page Loading
@@ -2011,6 +2009,12 @@ $(function () {
 
             me._removeSetTimeout();
             me.autoRefreshID = undefined;
+
+            if (me.$credentialDialog)
+                me.$credentialDialog.dsCredential("destroy");
+
+            if (me.$printDialog)
+                me.$printDialog.reportPrint("destroy");
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -7900,6 +7904,12 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
@@ -8748,23 +8758,6 @@ $(function () {
             me.element.find(".fr-dsc-submit-id").on("click", function () {
                 me._submitCredential();
             });
-
-            if (me.options.$reportViewer) {
-                me._initCallback();
-            }
-        },
-        _initCallback: function () {
-            var me = this;
-
-            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
-                //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
-                if (error) {
-                    var datasourceID = error[0].replace(/["“”']/g, '');
-                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
-                }
-                me.openDialog();
-            });
         },
         _createRows: function (credentials) {
             var me = this;
@@ -8802,6 +8795,26 @@ $(function () {
             });
 
             me._validateForm(me.$form);
+
+            if (me.options.$reportViewer) {
+                me._initCallback();
+            }
+        },
+        _initCallback: function () {
+            var me = this;
+
+            me.options.$reportViewer.on(events.reportViewerRenderError(), me._exceptionMatch);
+        },
+        _exceptionMatch: function (event, data) {
+            var me = this;
+            
+            //highlight error datasource label by change color to red
+            var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
+            if (error && me._credentialData) {
+                var datasourceID = error[0].replace(/["“”']/g, '');
+                me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                me.openDialog();
+            }
         },
         _submitCredential: function () {
             var me = this;
@@ -8893,6 +8906,13 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
+        },
+        destroy: function () {
+            var me = this;
+            me._credentialData = null;
+            me.options.$reportViewer.off(events.reportViewerRenderError(), me._exceptionMatch);
+
+            this._destroy();
         },
     }); //$.widget
 }); // $(function())

@@ -360,5 +360,11 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });

@@ -951,9 +951,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; }
-.fr-param-radio { width: 36px; }
+.fr-param-radio { width: 18px; }
 .fr-param-radio-label { color: #ffffff; }
-.fr-param-checkbox { margin-left: 5px; margin-right: 2px; padding: 2px; display:inline-block; }
+.fr-param-checkbox { margin-left: 4px; margin-right: 2px; padding: 2px; display:inline-block; }
 .fr-param-select { width: 180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .fr-param-submit-container { display: inline-block; }
 .fr-param-cancel-container { display: inline-block; }

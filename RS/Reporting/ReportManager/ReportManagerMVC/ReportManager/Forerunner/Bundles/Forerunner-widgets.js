@@ -6636,6 +6636,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
+                    bindingEnter = false;
                     $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
@@ -6681,9 +6682,6 @@ $(function () {
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
-
-                //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
-                //    $checkbox.attr('checked', 'true');
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {

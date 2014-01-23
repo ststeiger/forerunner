@@ -79,7 +79,6 @@ $(function () {
         _init: function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -134,7 +133,9 @@ $(function () {
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
                 me.closeDialog();
-                me.setPrint();
+                if (me._printData) {
+                    me._createItems();
+                }
             });
         },
         /**
@@ -144,6 +145,7 @@ $(function () {
          */
         setPrint: function (pageLayout) {
             var me = this;
+            me._initBody();
             me._printData = pageLayout || me._printData;
 
             if (me._printData) {
@@ -154,6 +156,7 @@ $(function () {
             var me = this;
             var print = me.locData.print;
             var unit = print.unit;
+            pageLayout = pageLayout || me._printData;
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
                 label1: print.pageHeight,
@@ -360,5 +363,11 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });

@@ -1320,8 +1320,9 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            me._printDialog.reportPrint("openDialog");
-            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            if (me.$printDialog) {
+                me.$printDialog.reportPrint("openDialog");
+            }
         },
         /**
         * print current reprot in custom PDF format
@@ -1335,13 +1336,10 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
-
-        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
-            $dlg.reportPrint("setPrint", pageLayout);
-            me._printDialog = $dlg;
+            me.$printDialog = me.options.$appContainer.find(".fr-print-section");
+            me.$printDialog.reportPrint("setPrint", pageLayout);
         },
        
         //Page Loading
@@ -2011,6 +2009,12 @@ $(function () {
 
             me._removeSetTimeout();
             me.autoRefreshID = undefined;
+
+            if (me.$credentialDialog)
+                me.$credentialDialog.dsCredential("destroy");
+
+            if (me.$printDialog)
+                me.$printDialog.reportPrint("destroy");
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -6651,6 +6655,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
+                    bindingEnter = false;
                     $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
@@ -6696,9 +6701,6 @@ $(function () {
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
-
-                //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
-                //    $checkbox.attr('checked', 'true');
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
@@ -7636,7 +7638,6 @@ $(function () {
         _init: function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
-            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -7691,7 +7692,9 @@ $(function () {
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
                 me.closeDialog();
-                me.setPrint();
+                if (me._printData) {
+                    me._createItems();
+                }
             });
         },
         /**
@@ -7701,6 +7704,7 @@ $(function () {
          */
         setPrint: function (pageLayout) {
             var me = this;
+            me._initBody();
             me._printData = pageLayout || me._printData;
 
             if (me._printData) {
@@ -7711,6 +7715,7 @@ $(function () {
             var me = this;
             var print = me.locData.print;
             var unit = print.unit;
+            pageLayout = pageLayout || me._printData;
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
                 label1: print.pageHeight,
@@ -7917,6 +7922,12 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
@@ -8723,8 +8734,6 @@ $(function () {
         create: function () {
         },
         _init: function () {
-            var me = this;
-            me._initBody();
         },
         _initBody: function () {
             var me = this;
@@ -8755,7 +8764,9 @@ $(function () {
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
                 me.closeDialog();
-                me.writeDialog();
+                if (me._credentialData) {
+                    me._createRows();
+                }
             });
 
             me.element.find(".fr-dsc-reset-id").on("click", function () {
@@ -8770,21 +8781,9 @@ $(function () {
                 me._initCallback();
             }
         },
-        _initCallback: function () {
-            var me = this;
-
-            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
-                //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
-                if (error) {
-                    var datasourceID = error[0].replace(/["“”']/g, '');
-                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
-                }
-                me.openDialog();
-            });
-        },
         _createRows: function (credentials) {
             var me = this;
+            credentials = credentials || me._credentialData;
             me.$container.html("");
 
             $.each(credentials, function (index, credential) {
@@ -8820,6 +8819,19 @@ $(function () {
 
             me._validateForm(me.$form);
         },
+        _initCallback: function () {
+            var me = this;
+
+            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
+                //highlight error datasource label by change color to red
+                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
+                if (error && me._credentialData) {
+                    var datasourceID = error[0].replace(/["“”']/g, '');
+                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                    me.openDialog();
+                }
+            });
+        },
         _submitCredential: function () {
             var me = this;
 
@@ -8837,8 +8849,9 @@ $(function () {
         },
         writeDialog: function (credentials) {
             var me = this;
+            me._initBody();
             me._credentialData = credentials || me._credentialData;
-
+            
             if (me._credentialData) {
                 me._createRows(me._credentialData);
             }
@@ -8910,6 +8923,12 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
+        },
+        destroy: function () {
+            var me = this;
+            me._credentialData = null;
+
+            this._destroy();
         },
     }); //$.widget
 }); // $(function())

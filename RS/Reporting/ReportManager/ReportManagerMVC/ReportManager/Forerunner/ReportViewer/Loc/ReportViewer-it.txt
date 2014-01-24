@@ -132,7 +132,7 @@
   "placeholders": {
     "Username":"nome utente",
     "Password":"parola d'ordine",
-    "Login":"Accedi"
+    "Login":"Entra"
   },
   "datepicker": {
     "closeText":"fatto",

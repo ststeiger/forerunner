@@ -311,6 +311,7 @@ ORDER BY CategoryID </CommandText>
           <Value>1</Value>
         </Values>
       </DefaultValue>
+      <AllowBlank>true</AllowBlank>
       <Prompt>CategoryID</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -348,6 +349,7 @@ ORDER BY CategoryID </CommandText>
     </ReportParameter>
     <ReportParameter Name="IntegerTest">
       <DataType>Integer</DataType>
+      <Nullable>true</Nullable>
       <Prompt>IntegerTest</Prompt>
     </ReportParameter>
     <ReportParameter Name="FloatTest">

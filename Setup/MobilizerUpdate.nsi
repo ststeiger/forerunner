@@ -231,7 +231,7 @@ FunctionEnd
 Function IsMobilizerInstalled
 	Push $0
 	
-	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV2" ""
+	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV1" ""
 	StrCmp $0 "" 0 +3
 	MessageBox MB_OK "Mobilizer is not found, please install Mobilizer first then do update!"
 	Abort

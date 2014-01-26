@@ -751,6 +751,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
+  Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"

@@ -66,7 +66,7 @@ namespace Forerunner.SSRS.Viewer
 
         private ICredentials credentials = null;
 
-        internal void SetCredentials(ICredentials credentials)
+        public void SetCredentials(ICredentials credentials)
         {
             this.credentials = credentials;
         }

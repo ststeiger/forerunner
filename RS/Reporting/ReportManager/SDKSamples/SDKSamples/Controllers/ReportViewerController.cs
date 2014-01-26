@@ -12,7 +12,7 @@ using Forerunner;
 using System.IO;
 using Forerunner.Logging;
 
-namespace SDKSamples.Controllers
+namespace ReportManager.Controllers
 {
     public class ParametersPostBack
     {
@@ -44,8 +44,14 @@ namespace SDKSamples.Controllers
 
         private ReportViewer GetReportViewer()
         {
-            //Put application security here
+            // Put application security here
             ReportViewer rep = new ReportViewer(url, ReportServerTimeout);
+
+            // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
+            // and password is not considered secure so hard coding it here is ok.
+            ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
+            rep.SetCredentials(credentials);
+
             return rep;
         }
 
@@ -57,6 +63,7 @@ namespace SDKSamples.Controllers
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
                 if (fileName != null)

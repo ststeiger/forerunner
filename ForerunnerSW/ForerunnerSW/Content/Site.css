@@ -69,6 +69,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .SupportTDBorder{border-right:1px solid #cccccc;}
 .SupportTR{color:#666666;text-align:center;align-content:center;}
 
+.DeveloperTD{width:50%;}
+
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1026px) {
  

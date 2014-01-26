@@ -43,5 +43,9 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Developers()
+        {
+            return View();
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
+        private ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
         
         static private bool GetAppSetting(string key, bool defaultValue)
         {
@@ -48,8 +49,7 @@ namespace ReportManager.Controllers
             ReportViewer rep = new ReportViewer(url, ReportServerTimeout);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
-            // and password is not considered secure so hard coding it here is ok.
-            ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
+            // and password is not considered secure so hard code it here is ok.
             rep.SetCredentials(credentials);
 
             return rep;

@@ -38,6 +38,7 @@ namespace ReportManager.Controllers
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
+        private ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
         
         static private bool GetAppSetting(string key, bool defaultValue)
         {
@@ -53,8 +54,7 @@ namespace ReportManager.Controllers
             Forerunner.SSRS.Manager.ReportManager rm =  new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
-            // and password is not considered secure so it is ok to hard coding it here
-            ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
+            // and password is not considered secure so it is ok to hard code it here
             rm.SetCredentials(credentials);
 
             return rm;

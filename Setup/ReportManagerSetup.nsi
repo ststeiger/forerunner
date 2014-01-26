@@ -25,7 +25,6 @@
 !define MUI_ICON "${RESOURCEROOT}\Mobilizer_32.ico"
 !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
-
 ; Welcome page
 !define MUI_WELCOMEPAGE_TITLE_3LINES
 !define MUI_FINISHPAGE_TITLE_3LINES
@@ -36,6 +35,7 @@
 !define MUI_LICENSEPAGE_CHECKBOX
 !insertmacro MUI_PAGE_LICENSE "${RESOURCEROOT}\License.rtf"
 ; Directory page
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE "CheckSelectedDir"
 !insertmacro MUI_PAGE_DIRECTORY
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
@@ -79,7 +79,7 @@ RequestExecutionLevel admin
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "ForerunnerMobilizerSetup.exe"
-InstallDir "$PROGRAMFILES\Forerunner\MobilizerV1"
+InstallDir "$PROGRAMFILES\Forerunner\MobilizerV2"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -95,7 +95,7 @@ ${EndIf}
 !macroend
 
 Section "ReportManager" SEC01
-  ;Here is to get MobilizerV1 parent folder
+  ;Here is to get Mobilizer parent folder
   Push "$INSTDIR"
   Call GetParent
   Pop $R0
@@ -176,6 +176,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
+  File "${LOCALROOT}\Forerunner\ReportExplorer\css\ManageSubscription.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\images"
   File "${LOCALROOT}\Forerunner\ReportExplorer\images\Report-icon.png"
@@ -218,6 +219,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\page-loading.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\calendar.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\print_landscape.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\print_landscape_1.png"
@@ -301,10 +303,10 @@ Section "ReportManager" SEC01
 SectionEnd
 
 Section -AdditionalIcons
-  CreateDirectory "$SMPROGRAMS\ForerunnerMobilizer"
-  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  CreateDirectory "$SMPROGRAMS\ForerunnerMobilizerV2"
+  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk" "$INSTDIR\uninst.exe"
   SetOutPath "$INSTDIR\Config"
-  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizer\MobilizerConfigTool.lnk" "$INSTDIR\Config\MobilizerConfigTool.exe"
+  CreateShortCut "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk" "$INSTDIR\Config\MobilizerConfigTool.exe"
 SectionEnd
 
 Section -Post
@@ -345,6 +347,8 @@ Function un.onInit
 FunctionEnd
 
 Function IsDotNETInstalled
+	Push $0
+	
     ReadRegDWORD $0 HKEY_LOCAL_MACHINE "Software\Microsoft\NET Framework Setup\NDP\v3.5" "Install"
     StrCmp $0 "1" 0 noNotNET35
 
@@ -371,10 +375,157 @@ Function IsDotNETInstalled
         ExecShell open "http://www.microsoft.com/en-us/download/details.aspx?id=30653"
         abort
     Continue:
+	
+	Pop $0
 FunctionEnd
 
-Function fun_ApplicationConfig_RunRegister
-  ExecWait "$INSTDIR\Config\SetupUtil.exe"
+Function CheckSelectedDir
+    IfFileExists $INSTDIR\bin\Forerunner.ReportManager.dll Installed Continue
+		Installed:
+			Call VersionDetect
+		Continue:
+FunctionEnd
+
+Function VersionDetect   
+    Push $R0
+	Push $R1
+    
+	Call GetVersion
+	Pop $R0
+	
+	StrCmp $R0 "" VersionEmpty Compare
+		
+		VersionEmpty: ; no exist version build
+			Goto Continue
+		Compare:
+			Push "$R0" ; installer build version number
+			Push "${BUILD_VERSION}" ; setup build version number
+			StrLen $R5 "$R0"
+			StrLen $R6 "${BUILD_VERSION}"
+			MessageBox MB_OK "$R0"
+			MessageBox MB_OK "$R5"
+			MessageBox MB_OK "${BUILD_VERSION}"
+			MessageBox MB_OK "$R6"
+			
+			Call VersionCompare
+			Pop $R1
+			
+			IntCmp $R1 1 is1 is0 is2
+				is0: ; equal
+					Goto done		
+				is1: ; exist build number newer
+					MessageBox MB_ICONSTOP "Forerunner Mobilizer ${BUILD_VERSION} can't continue because you have $R0 installed. $\n$\nIf you want to install this version please uninstall mobilizer $R0 and try again."
+					Quit
+				is2: ; setup build number newer
+					Goto done
+				done:
+			Goto Continue
+		Continue:
+	
+	Pop $R1
+	Pop $R0
+FunctionEnd
+
+Function GetVersion
+    Push $0
+	Push $1
+	Push $2
+	
+	IfFileExists $INSTDIR\Forerunner\version.txt Exist Error
+	Exist:
+		ClearErrors
+		FileOpen $0 $INSTDIR\Forerunner\version.txt r
+		IfErrors Error 0
+		FileRead $0 $1
+		StrCpy $2 $1 -2
+		Goto Final
+	Error:
+		StrCpy $2 ""
+		Goto Final
+	Final:
+		FileClose $0
+	
+	Exch
+	Pop $1
+	Exch
+	Pop $0
+	Exch $2
+FunctionEnd
+
+Function VersionCompare
+	Exch $1 ; keep version 1
+	Exch
+	Exch $0 ; keep version 2
+	Exch
+	Push $2
+	Push $3
+	Push $4
+	Push $5
+	Push $6
+	Push $7
+ 
+	begin:
+	StrCpy $2 -1
+	IntOp $2 $2 + 1
+	StrCpy $3 $0 1 $2
+	StrCmp $3 '' +2
+	StrCmp $3 '.' 0 -3 ; loop -> back
+	StrCpy $4 $0 $2
+	IntOp $2 $2 + 1
+	StrCpy $0 $0 '' $2
+ 
+	StrCpy $2 -1
+	IntOp $2 $2 + 1
+	StrCpy $3 $1 1 $2
+	StrCmp $3 '' +2
+	StrCmp $3 '.' 0 -3
+	StrCpy $5 $1 $2
+	IntOp $2 $2 + 1
+	StrCpy $1 $1 '' $2
+ 
+	StrCmp $4$5 '' equal
+ 
+	StrCpy $6 -1
+	IntOp $6 $6 + 1
+	StrCpy $3 $4 1 $6
+	StrCmp $3 '0' -2
+	StrCmp $3 '' 0 +2
+	StrCpy $4 0
+ 
+	StrCpy $7 -1
+	IntOp $7 $7 + 1
+	StrCpy $3 $5 1 $7
+	StrCmp $3 '0' -2
+	StrCmp $3 '' 0 +2
+	StrCpy $5 0
+ 
+	StrCmp $4 0 0 +2
+	StrCmp $5 0 begin newer2
+	StrCmp $5 0 newer1
+	IntCmp $6 $7 0 newer1 newer2
+ 
+	StrCpy $4 '1$4'
+	StrCpy $5 '1$5'
+	IntCmp $4 $5 begin newer2 newer1
+ 
+	equal:
+	StrCpy $0 0
+	goto end
+	newer1:
+	StrCpy $0 1
+	goto end
+	newer2:
+	StrCpy $0 2
+ 
+	end:
+	Pop $7
+	Pop $6
+	Pop $5
+	Pop $4
+	Pop $3
+	Pop $2
+	Pop $1
+	Exch $0
 FunctionEnd
 
 ;To call function in uninstall section function must prefixed with un. 
@@ -480,6 +631,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\ajax-loader1.gif"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\page-loading.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Collapse.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\DocMap_Expand.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\Drilldown_Collapse.gif"
@@ -524,6 +676,7 @@ Section Uninstall
 
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer-all.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\ReportExplorer.css"
+  Delete "$INSTDIR\Forerunner\ReportExplorer\css\ManageSubscription.css"
   Delete "$INSTDIR\Forerunner\ReportExplorer\css\UserSettings.css"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.hammer.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\jquery.lazyload.min.js"
@@ -597,12 +750,13 @@ Section Uninstall
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
+  Delete "$INSTDIR\Config\Mobilizer License.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
-  Delete "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk"
-  Delete "$SMPROGRAMS\ForerunnerMobilizer\MobilizerConfigTool.lnk"
-  RMDir "$SMPROGRAMS\ForerunnerMobilizer"
+  Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
+  Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"
+  RMDir "$SMPROGRAMS\ForerunnerMobilizerV2"
   
   RMDir "$INSTDIR\Forerunner\ReportViewer\Loc"
   RMDir "$INSTDIR\Views\Shared"
@@ -639,10 +793,10 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
-   ;$INSTDIR is the folder where uninst.exe belong to which is MolibizerV1
+   ;$INSTDIR is the folder where uninst.exe belong to which is Molibizer
   RMDir "$INSTDIR"
   
-  ;Here is to get MobilizerV1 parent folder
+  ;Here is to get Mobilizer parent folder
   Push "$INSTDIR"
   Call un.GetParent
   Pop $R0

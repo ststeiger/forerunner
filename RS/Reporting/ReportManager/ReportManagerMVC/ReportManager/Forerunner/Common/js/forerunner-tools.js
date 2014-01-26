@@ -233,7 +233,7 @@ $(function () {
             selectorClass: "fr-button-exportXML-id",
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
-            sharedClass: "fr-toolbase-dropdown-item",
+            sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.xml,
             events: {
@@ -278,7 +278,7 @@ $(function () {
             selectorClass: "fr-button-exportMHTML-id",
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
-            sharedClass: "fr-toolbase-dropdown-item",
+            sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {
@@ -337,7 +337,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-hide-if-not-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbase-show-if-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolPane.zoom,
             events: {
                 click: function (e) {
@@ -396,7 +396,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-zoom",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-hide-if-not-touch",
+            sharedClass: "fr-toolbase-show-if-touch",
             text: locData.toolPane.zoom,
             events: {
                 click: function (e) {                
@@ -539,6 +539,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            sharedClass: "fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.xml,
             events: {
@@ -587,6 +588,7 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
             itemTextClass: "fr-toolpane-dropdown-item-text",
+            sharedClass: "fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {

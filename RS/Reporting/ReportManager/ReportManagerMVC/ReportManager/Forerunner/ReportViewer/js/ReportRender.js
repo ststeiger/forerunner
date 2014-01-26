@@ -297,8 +297,12 @@ $(function () {
                 RIContext.$HTMLParent.append($LocDiv);
             });
 
-            Style = "position:relative;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getFullBorderStyle(RIContext.CurrObj);
+            Style = "position:relative;";
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
+                Style += me._getFullBorderStyle(RIContext.CurrObj);
+            }
 
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
@@ -319,6 +323,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
@@ -422,7 +427,7 @@ $(function () {
                                 layout.ReportItems[j].IndexAbove = curRI.Index;                        
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left <= layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
                             curRI.IndexAbove = layout.ReportItems[j].Index;
                     }
                 }
@@ -471,9 +476,11 @@ $(function () {
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
-            //This fixed an IE bug for borders being hidden by background color.  It makes no sence becasue it is poorly formed CSS, no ; but that is necessery
-            Style += "z-index:-1"
-            Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            //This fixed an IE bug for duplicate syyles
+            if (RIContext.CurrObjParent.Type !== "Tablix")
+                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+
+
             Style += "position:relative;";
             RIContext.$HTMLParent.attr("Style", Style);
 
@@ -556,7 +563,7 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right";  //fixed padding problem in table cells
+                //Style += "float: right;";  //fixed padding problem in table cells
                 Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
@@ -579,9 +586,14 @@ $(function () {
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
-            me._writeBookMark(RIContext);            
+            me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
 
+            //Make room for the sort image
+            if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
+                $TextObj.css("padding-right", "15px");
+            }
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
            
             RIContext.$HTMLParent.append($TextObj);
@@ -692,7 +704,15 @@ $(function () {
             var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;";
+
+            //Get padding
+            Style += me._getTextStyle(RIContext.CurrObj.Elements);
+
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix")
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            
             Style += me._getMeasurements(measurement, true);
             Style += "overflow:hidden;";
 
@@ -750,6 +770,7 @@ $(function () {
             
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -914,21 +935,6 @@ $(function () {
                 }
             }
         },
-        _writeBookMark: function (RIContext) {
-            var $node = $("<a/>");
-            //var me = this;
-
-            if (RIContext.CurrObj.Elements.SharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-            }
-            else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-            }
-            if ($node.attr("id"))
-                RIContext.$HTMLParent.append($node);
-        },
         _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex) {
             var $Cell = new $("<TD/>");
             var Style = "";
@@ -938,7 +944,8 @@ $(function () {
             //var wbordersize = 0;
             var me = this;
     
-            Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
+            Style = "vertical-align:top;padding:0;margin:0;";
+            Style += "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
             Style += me._getFullBorderStyle(Obj.Cell.ReportItem);
             var ColIndex = Obj.ColumnIndex;
 
@@ -954,8 +961,7 @@ $(function () {
 
             //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
             if (forerunner.device.isMSIE()) {                
-                Style += "height:" + height + "mm;";
-
+                Style += "height:" + (height) + "mm;";
             }
             else
                 Style += "height:" + height + "mm;";
@@ -994,67 +1000,78 @@ $(function () {
             
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+            
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
             Style += me._getFullBorderStyle(RIContext.CurrObj);
             $Tablix.attr("Style", Style);
 
-            var colgroup = $("<colgroup/>");
-            for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
-                colgroup.append($("<col/>").css("width", me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width) + "mm"));
+            //If there are columns
+            if (RIContext.CurrObj.ColumnWidths) {
+                var colgroup = $("<colgroup/>");
+                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                }
+                $Tablix.append(colgroup);
+                if (!forerunner.device.isFirefox()) {
+                    $FixedColHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                    $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                }
             }
-            $Tablix.append(colgroup);
-            if (!forerunner.device.isFirefox()) {
-                $FixedColHeader.append(colgroup.clone(true,true));  //Need to allign fixed header on chrome, makes FF fail
-                $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
-            }
 
-            $Row = new $("<TR/>");
-            $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
+            if (RIContext.CurrObj.TablixRows) {
+                $Row = new $("<TR/>");
+                $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
 
-                if (Obj.RowIndex !== LastRowIndex) {
-                    $Tablix.append($Row);
-
-                    //Handle fixed col header
-                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
-                        $FixedColHeader.append($Row.clone(true, true));
-
-                    $Row = new $("<TR/>");
-
-                    //Handle missing rows
-                    for (var ri = LastRowIndex+1; ri < Obj.RowIndex ; ri++) {
+                    if (Obj.RowIndex !== LastRowIndex) {
                         $Tablix.append($Row);
+
+                        //Handle fixed col header
+                        if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
+                            $FixedColHeader.append($Row.clone(true, true));
+
                         $Row = new $("<TR/>");
+
+                        //Handle missing rows
+                        for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
+                            $Tablix.append($Row);
+                            $Row = new $("<TR/>");
+                        }
+                        LastRowIndex = Obj.RowIndex;
                     }
-                    LastRowIndex = Obj.RowIndex;
-                }
 
-                if (Obj.UniqueName)
-                    me._writeUniqueName($Row, Obj.UniqueName);
+                    if (Obj.UniqueName)
+                        me._writeUniqueName($Row, Obj.UniqueName);
 
-                //Handle fixed row header
-                if (Obj.Type !== "Corner" && LastObjType === "Corner") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
-                    HasFixedRows = true;
-                if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
-                    HasFixedCols = true;
+                    //Handle fixed row header
+                    if (Obj.Type !== "Corner" && LastObjType === "Corner") {
+                        $FixedRowHeader.append($Row.clone(true, true));
+                    }
+                    if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
+                        $FixedRowHeader.append($Row.clone(true, true));
+                    }
+                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+                        HasFixedRows = true;
 
-                if (Obj.Type === "BodyRow") {
-                    $.each(Obj.Cells, function (BRIndex, BRObj) {
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
-                    });
-                }
-                else {
-                    if (Obj.Cell)
-                        $Row.append(me._writeTablixCell(RIContext, Obj, Index));
-                }
-                LastObjType = Obj.Type;
-            });
-            $Tablix.append($Row);
+                    //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
+                    if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]){
+                        if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
+                            HasFixedCols = true;
+                    }                  
+
+                    if (Obj.Type === "BodyRow") {
+                        $.each(Obj.Cells, function (BRIndex, BRObj) {
+                            if (BRObj.Cell)
+                                $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                        });
+                    }
+                    else {
+                        if (Obj.Cell)
+                            $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    }
+                    LastObjType = Obj.Type;
+                });
+                $Tablix.append($Row);
+            }
 
             if (HasFixedRows) {
                 $FixedColHeader.hide();
@@ -1074,7 +1091,10 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
+
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
@@ -1084,6 +1104,7 @@ $(function () {
             RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
             RIContext.CurrObj = RIContext.CurrObj.BodyElements;
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return me._writeRectangle(RIContext);
     
         },
@@ -1115,13 +1136,39 @@ $(function () {
                 RIContext.$HTMLParent.append($line);
             }
 
-            
-
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
             return RIContext.$HTMLParent;
 
+        },
+        _writeBookMark: function (RIContext) {
+            var $node = $("<a/>"),
+                CurrObj = RIContext.CurrObj.Elements,
+                bookmark = CurrObj.SharedElements.Bookmark || CurrObj.NonSharedElements.Bookmark;
+
+            if (bookmark) {
+                $node.attr("name", bookmark).attr("id", bookmark);
+                RIContext.$HTMLParent.append($node);
+            }   
+        },
+        _writeTooltip: function (RIContext) {
+            var CurrObj = RIContext.CurrObj.Elements,
+                tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
+
+            if (tooltip) {
+                if (RIContext.CurrObjParent.Type === "Image")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Chart")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Gauge")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Map")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else
+                    RIContext.$HTMLParent.attr("title", tooltip);
+            }
         },
         //Helper fucntions
         _getHeight: function ($obj) {
@@ -1403,7 +1450,7 @@ $(function () {
             if (CurrObj.FontFamily !== undefined)
                 Style += "font-family:" + CurrObj.FontFamily + ";";
             if (CurrObj.FontSize !== undefined)
-                Style += "font-size:" + CurrObj.FontSize + ";";
+                Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)
                 Style += "text-decoration:" + me._getTextDecoration(CurrObj.TextDecoration) + ";";
             if (CurrObj.Color !== undefined)
@@ -1624,6 +1671,24 @@ $(function () {
 
             //This is an error
             return value;
+        },
+
+        _getFontSize:function (fontSize){
+            if (!fontSize)
+                return "";
+    
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+                return fontSize;
+
+
+            var unit = fontSize.match(/\D+$/);  // get the existing unit
+            var value = fontSize.match(/\d+/);  // get the numeric component
+
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
+
+           //This is an error
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

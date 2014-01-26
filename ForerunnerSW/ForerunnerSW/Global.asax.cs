@@ -23,5 +23,14 @@ namespace ForerunnerSW
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+        protected void Application_BeginRequest()
+        {
+            if (!Request.IsSecureConnection && Request.Url.AbsoluteUri.IndexOf("localhost") <0)
+            {
+                Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+            }
+        }
     }
+
+
 }

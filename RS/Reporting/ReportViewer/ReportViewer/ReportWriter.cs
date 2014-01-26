@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -17,8 +18,8 @@ namespace Forerunner.SSRS.JSONRender
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
-        RPLReader RPL;        
-
+        RPLReader RPL;
+        
         struct TempProperty
         {
             public string Name;
@@ -207,7 +208,7 @@ namespace Forerunner.SSRS.JSONRender
                 if (RPLPropBagCode == 0xFF)
                 {
                     byte isEnd = r.RPL.ReadByte();
-                    while (isEnd != EndCode)
+                    while (isEnd != EndCode && isEnd !=0xFF)
                     {
                         WriteMemeber(isEnd, r);
                         isEnd = r.RPL.ReadByte();
@@ -247,6 +248,7 @@ namespace Forerunner.SSRS.JSONRender
                 LicenseException.Throw(LicenseException.FailReason.InitializationFailure, "License Initialization failed");                
             }
 //#endif
+            
             LicenseData License = ClientLicense.GetLicense();
 
             RPL.position = 0;
@@ -2152,7 +2154,7 @@ namespace Forerunner.SSRS.JSONRender
             if (Len > 127)
             {
                 retval = Len - 128;
-                retval += GetLength(Depth + 1) * (Depth + 1) * 128;
+                retval += GetLength(Depth + 1) *  128;
             }
             else
                 retval = Len;

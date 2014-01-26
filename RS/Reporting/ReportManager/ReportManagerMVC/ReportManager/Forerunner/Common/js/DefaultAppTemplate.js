@@ -168,8 +168,10 @@ $(function () {
             me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
                 me.showModal = false;
-                me.$container.removeClass("fr-layout-container-noscroll");
-                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible")) {
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                }
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();

@@ -72,6 +72,7 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _printData: null,
         _create: function () {
             
         },
@@ -79,15 +80,9 @@ $(function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
         },
-        /**
-         * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
-         */
-        setPrint: function (pageLayout) {
+        _initBody: function () {
             var me = this;
             var print = me.locData.print;
-            var unit = print.unit;
 
             me.element.html("");
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
@@ -124,8 +119,44 @@ $(function () {
                 "</form>" +
             "</div>");
 
-            
             me.element.append($printForm);
+            me.$form = me.element.find(".fr-print-form");
+            me._resetValidateMessage();
+
+            me.element.find(".fr-print-submit-id").on("click", function (e) {
+                var printPropertyList = me._generatePrintProperty();
+                if (printPropertyList !== null) {
+                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                    me.closeDialog();
+                }
+            });
+
+            me.element.find(".fr-print-cancel").on("click", function (e) {
+                me.closeDialog();
+                if (me._printData) {
+                    me._createItems();
+                }
+            });
+        },
+        /**
+         * @function $.forerunner.reportPrint#setPrint
+         * @Generate print pane html code and append to the dom tree
+         * @param {String} pageLayout - default loaded page layout data from RPL
+         */
+        setPrint: function (pageLayout) {
+            var me = this;
+            me._initBody();
+            me._printData = pageLayout || me._printData;
+
+            if (me._printData) {
+                me._createItems(me._printData);
+            }
+        },
+        _createItems: function (pageLayout) {
+            var me = this;
+            var print = me.locData.print;
+            var unit = print.unit;
+            pageLayout = pageLayout || me._printData;
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
                 label1: print.pageHeight,
@@ -165,20 +196,7 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
-            me._resetValidateMessage();
-            me._validateForm(me.element.find(".fr-print-form"));
-
-            me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
-            });
-
-            me.element.find(".fr-print-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
+            me._validateForm(me.$form);
 
             me.$pageWidth = me.element.find("[name=PageWidth]");
             me.$pageHeight = me.element.find("[name=PageHeight]");
@@ -345,5 +363,11 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });

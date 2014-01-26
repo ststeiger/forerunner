@@ -94,6 +94,10 @@
       <FullPath>Image table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>IT_Service_Catalog.rdl</Name>
+      <FullPath>IT_Service_Catalog.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multi chart with go to report action.rdl</Name>
       <FullPath>multi chart with go to report action.rdl</FullPath>
     </ProjectItem>

@@ -37,7 +37,7 @@ $(function () {
         _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
-        _reportDesignError: null,        
+        _reportDesignError: null,
 
         _init: function () {
             var me = this;
@@ -319,6 +319,8 @@ $(function () {
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
+            //if any element disable exist then not submit form auto
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
@@ -338,6 +340,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
+                    bindingEnter = false;
                     $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
@@ -365,13 +368,15 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
             
-            $control.attr("AllowBlank", param.AllowBlank);
+            $control.attr("allowblank", param.AllowBlank);
+            $control.attr("nullable", param.Nullable);
             if (param.Nullable === false && param.AllowBlank === false) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
-                var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
+                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
+                $control.addClass("fr-param-required"); 
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -381,9 +386,6 @@ $(function () {
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
-
-                //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
-                //    $checkbox.attr('checked', 'true');
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
@@ -398,7 +400,7 @@ $(function () {
                         if (param.Type === "Boolean")
                             $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
                         else
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").val(null);
                     }
                 });
 
@@ -528,32 +530,30 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
-                + param.MultiValue + "' datatype='" + param.Type + "' />");
-
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
             $openDropDown.append($dropdownicon);
+
+            if (dependenceDisable) {
+                me._disabledSubSequenceControl($control);
+                $container.append($control).append($openDropDown);
+                return $container;
+            }
+
             $openDropDown.on("click", function () {
                 if ($control.autocomplete("widget").is(":visible")) {
                     $control.autocomplete("close");
                     return;
                 }
                 else {
-                    //ui-autocomplete is not append to parameter pane so here used $appContainer to do search
-                    $(".ui-autocomplete", me.options.$appContainer).hide();
+                    me._closeAllDropdown();
                     //pass an empty string to show all values
                     $control.autocomplete("search", "");
                 }
             });
-
-            if (dependenceDisable) {
-                me._disabledSubSequenceControl($multipleCheckBox);
-                $control.append($multipleCheckBox).append($openDropDown);
-                return $control;
-            }
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if (predefinedValue === param.ValidValues[i].value) {
@@ -569,19 +569,28 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label);
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+
                     if (me._paramCount === 1) {
                         me._submitForm(pageNum);
                     }
+
                     return false;
                 },
                 focus: function (event, obj) {
                     return false;
-                }
+                },
             });
 
             $control.on("focus", function () {
                 $(".ui-autocomplete", me.options.$appContainer).hide();
+            });
+
+            $control.on("change", function (event, obj) {
+                // Keeps the rest of the handlers (get cascading parameter here) 
+                //from being executed when input value is not valid.
+                if (!obj && $control.val() !== "")
+                    event.stopImmediatePropagation();
             });
 
             $container.append($control).append($openDropDown);
@@ -682,7 +691,7 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
                 param.ValidValues.push({ label: "Select All", value: "Select All" });
 
             var keys = "";
@@ -732,7 +741,7 @@ $(function () {
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
                 $label.attr("value", value);
 
-                $label.html(key);
+                $label.text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);
@@ -823,7 +832,7 @@ $(function () {
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
                         hiddenValue.push( this.value );
                     }
                 });
@@ -889,7 +898,7 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown
+            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
         },
         _checkExternalClick: function (e) {
@@ -931,7 +940,8 @@ $(function () {
                     if ($(this).attr("ismultiple") === "false") {
                         a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                     } else {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                        var value = me._isParamNullable(this);
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
                     }
                 });
                 //dropdown
@@ -988,11 +998,19 @@ $(function () {
             }
         },
         _isParamNullable: function (param) {
-            var cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.Name).first();
-            if (cb.attr("checked") === "checked" || param.value === "")
+            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var $element = $(".fr-paramname-" + param.name, this.$params);
+            
+            //check nullable
+            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
                 return null;
-            else
+            }//check allow blank
+            else if ($element.attr("allowblank") === "true" && param.value === "") {
+                return "";
+            }
+            else {
                 return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            }
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -1065,9 +1083,10 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.change(function () { me.refreshParameters(); });
-                    //if dependence control don't have any value then disabled current one
-                    if ($targetElement.val() === "") disabled = true;
+                    $targetElement.on("change", function () { me.refreshParameters(); });
+                    //if dependence control don't have any value and not allow blank, then disabled current one
+                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
+                        disabled = true;
                 });
             }
 
@@ -1076,6 +1095,7 @@ $(function () {
         refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
+            
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back

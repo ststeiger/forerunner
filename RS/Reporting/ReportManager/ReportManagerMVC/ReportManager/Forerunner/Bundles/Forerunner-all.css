@@ -754,14 +754,14 @@ table, td, tr {
 .fr-toolbase-item-text-container { margin: 5px; display: inline-block; }
 .fr-toolbase-item-text { height: 31px; display: table-cell; vertical-align: middle; }
 .fr-toolbase-disabled { opacity: 0.3; filter: alpha(opacity='30'); }
-.fr-toolbase-hide-if-not-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
 .fr-toolbase-rightimage { float: right; }
 .fr-toolbase-dropdown-container { display: none; position: absolute; z-index: 1; }
 .fr-toolbase-dropdown { padding: 1px; background-color: #354468; border: 1px solid darkgray; }
 .fr-toolbase-dropdown-item { display: block; border-top-width: 1px; border-top-color: lightblue; font-size: 13pt; color: #ffffff; text-align: left; }
 .fr-toolbase-state { background-color: transparent; }
 .fr-toolbase-persistent-active-state { background: #496b94; /* Old browsers */ background: -moz-linear-gradient(top, #496b94 0%, #354469 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#496b94), color-stop(100%,#354469)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #496b94 0%,#354469 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #496b94 0%,#354469 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #496b94 0%,#354469 100%); /* IE10+ */ background: linear-gradient(to bottom, #496b94 0%,#354469 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#496b94', endColorstr='#354469',GradientType=0 ); /* IE6-9 */ }
-
+.fr-toolbase-hide-if-touch {  }
+.fr-toolbase-show-if-touch { /* Note: After the document is ready, this "display: none" will be removed if the device is a touch device.  */ display: none; }
 /* Desktops and laptops ----------- */
 @media only screen and (min-width : 1224px) {
   .fr-toolbase-state:hover { background: #4f73a6; /* Old browsers */ background: -moz-linear-gradient(top, #4f73a6 0%, #32508a 100%); /* FF3.6+ */ background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4f73a6), color-stop(100%,#32508a)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #4f73a6 0%,#32508a 100%); /* IE10+ */ background: linear-gradient(to bottom, #4f73a6 0%,#32508a 100%); /* W3C */ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4f73a6', endColorstr='#32508a',GradientType=0 ); /* IE6-9 */ }
@@ -951,9 +951,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-item-container { margin-bottom: 5px; }
 .fr-param-element-container { display: inline-block; position: relative; }
 .fr-param-label { margin: 4px; display: inline-block; }
-.fr-param-radio { width: 36px; }
+.fr-param-radio { width: 18px; }
 .fr-param-radio-label { color: #ffffff; }
-.fr-param-checkbox { margin-left: 5px; margin-right: 2px; padding: 2px; display:inline-block; }
+.fr-param-checkbox { margin-left: 4px; margin-right: 2px; padding: 2px; display:inline-block; }
 .fr-param-select { width: 180px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .fr-param-submit-container { display: inline-block; }
 .fr-param-cancel-container { display: inline-block; }
@@ -967,12 +967,15 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-param-dropdown-icon { height: 18px; width: 18px; background-image: url(../Images/OpenDropDown.png); background-repeat: no-repeat; }
 .fr-param-dropdown-iconcontainer { position: absolute; right: 8px; top: 8px; }
 .fr-param-dropdown-textarea { width: 95%; height: 80px; overflow: auto; padding: 2px; }
-.fr-param-checkbox-container { display: inline-block; width: 176px; margin: 2px 4px; padding: 1px; }
+.fr-param-checkbox-container { display: inline-block; min-width: 176px; margin: 2px 4px; padding: 1px; }
 .ui-datepicker-trigger { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-dropdown-img { vertical-align: middle; margin-bottom: 4px; }
 .fr-param-error { border-width: thin; border-color: red; }
 .fr-param-error-placeholder { margin-left: 4px; }
 .fr-param-nullable { display:inline-block; }
+.fr-param-required{}
+.fr-param-watermark {color:lightgray;}
+
 /*this is for jquery validate default class style, seems static*/
 .error { color: #E80C4D; }
 .fr-param-form{}
@@ -1240,6 +1243,8 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
   .fr-toolpane .fr-item-folders-group { display: block; }
   .fr-toolpane .fr-toolbase-toolcontainer { border-width: 0px; vertical-align: top; border-radius: 2px; color: white; display: inline-block; }
   .fr-toolpane .fr-toolbase-groupcontainer { position: relative; border-top-width: 1px; border-top-style: groove; border-top-color: lightblue; vertical-align: top; padding: 12px 1px 12px 5px; color: white; display: block; }
+    .fr-toolpane .fr-toolbase-hide-if-touch {  }
+    .fr-toolpane .fr-toolbase-show-if-touch { display:none; }
 
 .fr-toolpane-dropdown-item-text { height: 31px; padding-left: 7px; display: table-cell; vertical-align: middle; font-size: 13pt; color: #456191; }
 
@@ -1280,19 +1285,19 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 
 /* iPads (landscape) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */
 
 /* iPads (portrait) ----------- */
 @media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */
 
 /* iPhone 4 ----------- */
 @media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
-  .fr-item-exportXML, .fr-item-exportMHTML { display: none; }
+  /*.fr-item-exportXML, .fr-item-exportMHTML { display: none; }*/
 }
 /* @media */
 

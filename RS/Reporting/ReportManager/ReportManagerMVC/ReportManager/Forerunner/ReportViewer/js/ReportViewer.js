@@ -688,7 +688,7 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.unmask();
+                me.element.unmask(function() { me.showNav.call(me);});
             }
             else {//open nav
                 me.pageNavOpen = true;
@@ -697,7 +697,7 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.mask();
+                me.element.mask(function() { me.showNav.call(me);});
             }
 
             if (me.options.pageNavArea){
@@ -1319,8 +1319,9 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            me._printDialog.reportPrint("openDialog");
-            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            if (me.$printDialog) {
+                me.$printDialog.reportPrint("openDialog");
+            }
         },
         /**
         * print current reprot in custom PDF format
@@ -1334,13 +1335,10 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
-
-        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
-            $dlg.reportPrint("setPrint", pageLayout);
-            me._printDialog = $dlg;
+            me.$printDialog = me.options.$appContainer.find(".fr-print-section");
+            me.$printDialog.reportPrint("setPrint", pageLayout);
         },
        
         //Page Loading
@@ -1781,6 +1779,7 @@ $(function () {
 
             me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
             me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
 
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();
@@ -2009,6 +2008,12 @@ $(function () {
 
             me._removeSetTimeout();
             me.autoRefreshID = undefined;
+
+            if (me.$credentialDialog)
+                me.$credentialDialog.dsCredential("destroy");
+
+            if (me.$printDialog)
+                me.$printDialog.reportPrint("destroy");
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx

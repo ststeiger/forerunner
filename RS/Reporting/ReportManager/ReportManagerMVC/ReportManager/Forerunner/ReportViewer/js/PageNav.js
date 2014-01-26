@@ -20,9 +20,10 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
+            var $li;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                var $li = me.listItems[me.currentPageNum - 1];
+                $li = me.listItems[me.currentPageNum - 1];
                 $li.removeClass("fr-nav-selected");
                 $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
@@ -30,7 +31,7 @@ $(function () {
             me.currentPageNum = currentPageNum;
             me._ScrolltoPage();
 
-            var $li = me.listItems[me.currentPageNum - 1];
+            $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
             $li.find("img").addClass("fr-nav-page-thumb-selected");
         },
@@ -69,6 +70,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -106,7 +108,7 @@ $(function () {
             $span.addClass("fr-nav-close");
             $close.append($span);
 
-            $close.on('click', function () {
+            $close.on("click", function () {
                 me.options.$reportViewer.reportViewer("showNav");
             });
 
@@ -143,9 +145,9 @@ $(function () {
             }
 
             me._makeVisible(!me.element.is(":visible"));
-            $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
-            $container = $('ul.fr-nav-container', $(me.element));
-            $(".lazy", me.$list).lazyload({ container: $container });
+            $(".fr-nav-container", $(me.element)).css("position", me.element.css("position"));
+            var $container = $("ul.fr-nav-container", $(me.element));
+            $(".lazy", me.$list).lazyload({ container: $container, threshold : 200});
             if (forerunner.device.isMSIE()) {
                 me._ScrolltoPage();
             }

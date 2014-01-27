@@ -166,7 +166,7 @@
     "newSet":"New Set"
   },
   "dsCredential": {
-    "title":"DataSource Credential",
+    "title":"Data Source Credential",
     "cancel":"Cancel",
     "submit":"Submit",
     "username":"Login name:",

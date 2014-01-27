@@ -258,24 +258,6 @@ Function un.onInit
   Abort
 FunctionEnd
 
-Function IsMobilizerInstalled
-	Push $0
-	
-	ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV2" ""
-	StrCmp $0 "" 0 +3
-	MessageBox MB_OK "Mobilizer is not found, please install Mobilizer first then do update!"
-	Abort
-	;Verify it is old version or new version, if it's new version $1 will be 1:not found
-	${WordReplace} "$0" "\ForerunnerMobilizer" "" "E-1" $1
-	
-	StrCmp $1 1 0 +3
-           StrCpy $INSTDIR $0 ; ForerunnerMobilizer not found - new build
-           goto +2
-           StrCpy $INSTDIR $1 ; old build
-	
-	Pop $0
-FunctionEnd
-
 Function IsDotNETInstalled
 	Push $0
 	
@@ -367,7 +349,7 @@ Function CheckSelectedDir
 			Call VersionDetect
 			Goto Continue
 		NoInstalled:
-			MessageBox MB_OK "Path $INSTDIR is not correct, no mobilizer installed."
+			MessageBox MB_OK "Path $INSTDIR is not correct, mobilizer is not found on your selected folder."
 			Abort
 		Continue:
 FunctionEnd
@@ -678,6 +660,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
+  Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"

@@ -321,6 +321,8 @@ $(function () {
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
 
+            //if any element disable exist then not submit form auto
+            if (dependenceDisable) me._loadedForDefault = false
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
@@ -365,7 +367,8 @@ $(function () {
         },
         _getParameterControlProperty: function (param, $control) {
             var me = this;
-            $control.attr("AllowBlank", param.AllowBlank);
+            $control.attr("allowblank", param.AllowBlank);
+            $control.attr("nullable", param.Nullable);
             if (param.Nullable === false && param.AllowBlank === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, {useNative : false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required");
@@ -611,7 +614,7 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
                 param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
@@ -752,7 +755,7 @@ $(function () {
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
                         hiddenValue.push( this.value );
                     }
                 });
@@ -856,7 +859,8 @@ $(function () {
                     if ($(this).attr("ismultiple") === "false") {
                         a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                     } else {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                        var value = me._isParamNullable(this);
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
                     }
                 });
                 //dropdown
@@ -913,11 +917,19 @@ $(function () {
             }
         },
         _isParamNullable: function (param) {
-            var cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.Name).first();
-            if (cb.attr("checked") === "checked" || param.value === "")
+            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var $element = $(".fr-paramname-" + param.name, this.$params);
+
+            //check nullable
+            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
                 return null;
-            else
-                return param.value;
+            }//check allow blank
+            else if ($element.attr("allowblank") === "true" && param.value === "") {
+                return "";
+            }
+            else {
+                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            }
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -991,8 +1003,9 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.change(function () { me.refreshParameters(); });
-                    //if dependence control don't have any value then disabled current one
-                    if ($targetElement.val() === "") disabled = true;
+                    //if dependence control don't have any value and not allow blank, then disabled current one
+                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
+                        disabled = true;
                 });
             }
 

@@ -123,7 +123,8 @@
     "rangelength":"Sláðu inn gildið á milli {0} og {1} charaters löng",
     "range":"Sláðu inn gildið á milli {0} og {1}",
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
-    "min":"Sláðu inn gildið stærra en eða jafnt og {0}"
+    "min":"Sláðu inn gildið stærra en eða jafnt og {0}",
+    "autoCompleteDropdown":"Invalid"
   },
   "dialog": {
     "title":"hvetja",

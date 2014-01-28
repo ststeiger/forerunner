@@ -6855,6 +6855,8 @@ $(function () {
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
+            //add auto complete selected item check
+            $control.attr("autoCompleteDropdown", "true");
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
@@ -6903,6 +6905,25 @@ $(function () {
                 focus: function (event, obj) {
                     return false;
                 },
+                response: function (event, obj) {
+                    //obj.content.length will equal = 0 if no item match.
+                    if (obj.content.length === 0) {
+                        $control.addClass("fr-param-autocomplete-error");
+                    }
+                    else {
+                        $control.removeClass("fr-param-autocomplete-error");
+                    }
+                },
+                change: function (event, obj) {
+                    if (!obj.item)
+                        $control.addClass("fr-param-autocomplete-error");
+
+                    //if this control don't required, then empty is a valid value
+                    if (!$control.attr("required") && $control.val() === "")
+                        $control.removeClass("fr-param-autocomplete-error");
+
+                    $control.valid();
+                }
             });
 
             $control.on("focus", function () {
@@ -7342,6 +7363,7 @@ $(function () {
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
+            me.extendValidate();
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -7357,7 +7379,17 @@ $(function () {
                 rangelength: $.validator.format(error.rangelength),
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
-                min: $.validator.format(error.min)
+                min: $.validator.format(error.min),
+                autoCompleteDropdown: error.autoCompleteDropdown
+            });
+        },
+        extendValidate: function () {
+            //add auto complete dropdown value validata, only allow select from dropdown
+            jQuery.validator.addMethod("autoCompleteDropdown", function (value, element, param) {
+                if ($(element).hasClass("fr-param-autocomplete-error"))
+                    return false;
+                else
+                    return true;
             });
         },
         /**

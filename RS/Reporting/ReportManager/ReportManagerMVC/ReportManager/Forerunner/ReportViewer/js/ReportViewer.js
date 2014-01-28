@@ -36,8 +36,9 @@ $(function () {
      * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {String} options.toolbarHeight - Height of the toolbar.
      * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
-     * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
-     * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {String} options.paramArea - jQuery selector object that defines the report parameter widget
+     * @prop {String} options.DocMapArea - jQuery selector object that defines the Document Map widget
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -55,6 +56,7 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             userSettings: null,
+            savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null
@@ -1288,10 +1290,16 @@ $(function () {
                 me.refreshParameters(savedParams, true, pageNum);
             }
         },
+        _getSavedParams : function(orderedList) {
+            for(var i = 0; i < orderedList.length; i++) {
+                if (orderedList[i]) return orderedList[i];
+            }
+            return null;
+        },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
-            var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.options.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null]);
 
             if (savedParams) {
                 if (me.options.paramArea) {
@@ -1325,7 +1333,7 @@ $(function () {
                     ParameterList: null
                 },
                 dataType: "json",
-                async: true,
+                async: false,
                 success: function (data) {
                     if (data.SessionID)
                         me.sessionID = data.SessionID;

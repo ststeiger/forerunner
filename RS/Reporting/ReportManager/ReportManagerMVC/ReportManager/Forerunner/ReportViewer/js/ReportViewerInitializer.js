@@ -61,6 +61,7 @@ $(function () {
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer
             });
 

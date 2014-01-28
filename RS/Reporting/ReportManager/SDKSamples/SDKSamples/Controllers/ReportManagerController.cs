@@ -7,12 +7,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Security.Principal;
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
 using Forerunner.Logging;
 
-namespace ReportManager.Controllers
+namespace SDKSamples.Controllers
 {
     public class SaveParameters
     {
@@ -38,7 +39,7 @@ namespace ReportManager.Controllers
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
-        private ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
+        private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
         
         static private bool GetAppSetting(string key, bool defaultValue)
         {
@@ -54,8 +55,11 @@ namespace ReportManager.Controllers
             Forerunner.SSRS.Manager.ReportManager rm =  new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
-            // and password is not considered secure so it is ok to hard code it here
+            // and password are not considered secure so it is ok to hard code it here
             rm.SetCredentials(credentials);
+            GenericPrincipal principal = new GenericPrincipal(new GenericIdentity(credentials.UserName), null);
+            System.Threading.Thread.CurrentPrincipal = principal;
+            System.Web.HttpContext.Current.User = principal;
 
             return rm;
         }
@@ -79,7 +83,6 @@ namespace ReportManager.Controllers
         [HttpGet]
         public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
-            
             return GetReportManager().GetItems(view, path);
         }
 

@@ -21,5 +21,15 @@ namespace SDKSamples.Controllers
             return View();
         }
 
+        public ActionResult ReportExplorerEZ()
+        {
+            return View();
+        }
+
+        public ActionResult AddButton()
+        {
+            return View();
+        }
+
     }
 }

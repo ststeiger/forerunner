@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "ReportExplorerEZ Sample";
+    Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section scripts {
+<script>
+    $(function () {
+        // This sample is full page so the container will be the body
+        var $container = $('body');
+
+        // NavigateTo gets called whenever the user wants to navigate away from the current context
+        var navigateTo = function (action, path) {
+            if (action == "favorites" || action == "recent") {
+                $container.reportExplorerEZ("transitionToReportManager", path, action);
+            }
+            else if (action == "home" || action == "explore") {
+                $container.reportExplorerEZ("transitionToReportManager", path, null);
+            }
+            else if (action == "back") {
+                window.history.back();
+            }
+            else if (action == "browse") {
+                $container.reportExplorerEZ("transitionToReportViewer", path);
+            }
+        };
+
+        // Create the report explorer widget
+        $(document).ready(function () {
+            $container.reportExplorerEZ({
+                navigateTo: navigateTo,
+                historyBack: null
+            });
+
+            // Transition to the home catalog view
+            $container.reportExplorerEZ("transitionToReportManager", "/", null);
+        });
+
+
+    })  // function ()
+</script>
+}
+
+

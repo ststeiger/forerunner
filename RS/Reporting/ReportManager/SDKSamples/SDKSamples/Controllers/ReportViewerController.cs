@@ -7,12 +7,13 @@ using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
+using System.IO;
+using System.Security.Principal;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
-using System.IO;
 using Forerunner.Logging;
 
-namespace ReportManager.Controllers
+namespace SDKSamples.Controllers
 {
     public class ParametersPostBack
     {
@@ -30,7 +31,7 @@ namespace ReportManager.Controllers
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
-        private ICredentials credentials = new NetworkCredential("TestAccount", "TestPWD!");
+        private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
         
         static private bool GetAppSetting(string key, bool defaultValue)
         {
@@ -49,8 +50,11 @@ namespace ReportManager.Controllers
             ReportViewer rep = new ReportViewer(url, ReportServerTimeout);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
-            // and password is not considered secure so hard code it here is ok.
+            // and password are not considered secure so it is ok to hard code it here
             rep.SetCredentials(credentials);
+            GenericPrincipal principal = new GenericPrincipal(new GenericIdentity(credentials.UserName), null);
+            System.Threading.Thread.CurrentPrincipal = principal;
+            System.Web.HttpContext.Current.User = principal;
 
             return rep;
         }

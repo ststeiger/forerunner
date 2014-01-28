@@ -1,37 +1,21 @@
 ﻿@{
     ViewBag.Title = "ReportViewerEZ Sample";
-}
-
-@section styles {
-    <link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
-    <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+    Layout = "../Shared/_SamplesLayout.cshtml";
 }
 
 @section scripts {
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-widgets.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            $('body').reportViewerEZ({
-                DefaultAppTemplate: null,
-                path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
-                navigateTo: null,
-                historyBack: null,
-                isReportManager: false,
-                isFullScreen: true
-            });
+<script>
+    $(document).ready(function () {
+        $('body').reportViewerEZ({
+            DefaultAppTemplate: null,
+            path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+            navigateTo: null,
+            historyBack: null,
+            isReportManager: false,
+            isFullScreen: true
         });
-    </script>
+    });
+</script>
 }
 
 

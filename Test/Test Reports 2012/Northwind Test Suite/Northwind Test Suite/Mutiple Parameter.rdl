@@ -279,12 +279,9 @@
           <QueryParameter Name="@CategoryID">
             <Value>=Parameters!CategoryID.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ProductName">
-            <Value>=Parameters!ProductName.Value</Value>
-          </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT  CategoryID, ProductName, UnitPrice FROM Products 
-WHERE CategoryID=@CategoryID or ProductName like @ProductName
+WHERE CategoryID=@CategoryID 
 ORDER BY CategoryID </CommandText>
       </Query>
       <Fields>
@@ -306,12 +303,6 @@ ORDER BY CategoryID </CommandText>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
       <Prompt>CategoryID</Prompt>
       <ValidValues>
         <ParameterValues>
@@ -329,13 +320,26 @@ ORDER BY CategoryID </CommandText>
           </ParameterValue>
         </ParameterValues>
       </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="ProductName">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>ProductName</ValueField>
+        </DataSetReference>
+      </DefaultValue>
       <AllowBlank>true</AllowBlank>
       <Prompt>ProductName</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>DataSet1</DataSetName>
+          <ValueField>ProductName</ValueField>
+          <LabelField>ProductName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <UsedInQuery>True</UsedInQuery>
     </ReportParameter>
     <ReportParameter Name="IsCheap">
       <DataType>Boolean</DataType>

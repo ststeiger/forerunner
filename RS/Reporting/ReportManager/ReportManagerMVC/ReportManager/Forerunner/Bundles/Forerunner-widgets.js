@@ -39,6 +39,7 @@ $(function () {
      * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -56,6 +57,7 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             userSettings: null,
+            savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
@@ -1350,10 +1352,16 @@ $(function () {
                 me.refreshParameters(savedParams, true, pageNum);
             }
         },
+        _getSavedParams : function(orderedList) {
+            for(var i = 0; i < orderedList.length; i++) {
+                    if (orderedList[i]) return orderedList[i];
+                }
+            return null;
+        },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
-            var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.options.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null]);
 
             if (submitForm === undefined)
                 submitForm = true;
@@ -1392,7 +1400,7 @@ $(function () {
                     DSCredentials: me.getDataSourceCredential()
                 },
                 dataType: "json",
-                async: true,
+                async: false,
                 success: function (data) {
                     if (data.SessionID)
                         me.sessionID = data.SessionID;
@@ -8303,6 +8311,7 @@ $(function () {
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer
             });
 
@@ -8604,6 +8613,7 @@ $(function () {
      * @prop {String} options.path - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
@@ -8623,7 +8633,8 @@ $(function () {
             historyBack: null,
             isReportManager: false,
             isFullScreen: true,
-            userSettings: null
+            userSettings: null,
+            savedParameters: null
         },
         _render: function () {
             var me = this;
@@ -8661,6 +8672,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container
             });
 

@@ -8803,14 +8803,14 @@ $(function () {
                       "<div class='fr-dsc-username'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.username + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='text' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
+                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +
                       "<div class='fr-dsc-password'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.password + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='password' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
+                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +

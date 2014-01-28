@@ -123,7 +123,8 @@
     "rangelength":"輸入介於{0}和{1}個字",
     "range":"輸入介於 {0}的{1} 值",
     "max":"輸入小於等於{0}的數",
-    "min":"輸入大於等於{0}的數"
+    "min":"輸入大於等於{0}的數",
+    "autoCompleteDropdown":"無效"
   },
   "dialog": {
     "title":"提示",

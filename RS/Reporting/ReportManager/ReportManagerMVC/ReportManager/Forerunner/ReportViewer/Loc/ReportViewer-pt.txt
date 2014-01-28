@@ -123,7 +123,8 @@
     "rangelength":"Insira um valor entre {0} e {1} caracteres longa",
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
-    "min":"Insira um valor maior ou igual a {0}"
+    "min":"Insira um valor maior ou igual a {0}",
+    "autoCompleteDropdown":"Invalid"
   },
   "dialog": {
     "title":"incitar",

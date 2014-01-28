@@ -6937,7 +6937,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].label + "</option>");
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");

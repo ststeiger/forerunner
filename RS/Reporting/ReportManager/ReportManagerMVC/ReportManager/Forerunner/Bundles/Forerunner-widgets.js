@@ -1336,10 +1336,15 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data.SessionID)
-                        me.sessionID = data.SessionID;
-                    me._addLoadingIndicator();
-                    me._showParameters(pageNum, data);
+                    if (data.Exception) {
+                        me._renderPageError(me.$reportContainer, data);
+                        me.removeLoadingIndicator();
+                    } else {
+                        if (data.SessionID)
+                            me.sessionID = data.SessionID;
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    }
                 },
                 error: function (data) {
                     console.log("error");
@@ -1399,10 +1404,15 @@ $(function () {
                     dataType: "json",
                     async: false,
                     success: function (data) {
-                        if (data.SessionID)
-                            me.sessionID = data.SessionID;
+                        if (data.Exception) {
+                            me._renderPageError(me.$reportContainer, data);
+                            me.removeLoadingIndicator();
+                        } else {
+                            if (data.SessionID)
+                                me.sessionID = data.SessionID;
 
-                        me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                        }
                     }
                 });
             }
@@ -6959,12 +6969,13 @@ $(function () {
             //check nullable
             if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
                 return null;
-            }//check allow blank
-            else if ($element.attr("allowblank") === "true" && param.value === "") {
+            } else if ($element.attr("allowblank") === "true" && param.value === "") {
+                //check allow blank
                 return "";
-            }
-            else {
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            } else if (param.value && param.value !== "") {
+                return param.value;
+            } else {
+                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : null;
             }
         },
         /**

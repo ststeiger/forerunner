@@ -923,12 +923,13 @@ $(function () {
             //check nullable
             if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
                 return null;
-            }//check allow blank
-            else if ($element.attr("allowblank") === "true" && param.value === "") {
+            } else if ($element.attr("allowblank") === "true" && param.value === "") {
+                //check allow blank
                 return "";
-            }
-            else {
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            } else if (param.value && param.value !== "") {
+                return param.value;
+            } else {
+                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : null;
             }
         },
         /**

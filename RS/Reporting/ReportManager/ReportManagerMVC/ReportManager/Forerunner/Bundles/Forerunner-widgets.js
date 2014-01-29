@@ -6882,8 +6882,29 @@ $(function () {
                 me._closeAllDropdown();
             }
         },
+        _shouldInclude: function (param, noValid) {
+            if (!noValid) return true;
+            var me = this;
+
+            var isString = $(param).attr("datatype") === "String";
+            var allowBlank = $(param).attr("allowblank") === "true";
+
+            // If it is a string type
+            if (isString && allowBlank) return true;
+
+            if (param.value == "") {
+                return me._isNullChecked(param);
+            }
+
+            var required = !!$(param).attr("required");
+            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+                return false;
+            }
+
+            return true;
+        },
         /**
-         * @function $.forerunner.reportParameter#getParamList
+         * @function $.forerunner.reportParameter#getParamsList
          * @generate parameter list base on the user input and return
          */
         getParamsList: function (noValid) {
@@ -6893,20 +6914,24 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var jsonValues = $(this).attr("jsonValues");
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var jsonValues = $(this).attr("jsonValues");
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                        }
                     }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var value = me._isParamNullable(this);
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var value = me._isParamNullable(this);
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                        }
                     }
                 });
                 //dropdown
@@ -6962,20 +6987,26 @@ $(function () {
                 return null;
             }
         },
+        _isNullChecked: function (param) {
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+        },
         _isParamNullable: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var me = this;
             var $element = $(".fr-paramname-" + param.name, this.$params);
 
             //check nullable
-            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
+            if (me._isNullChecked(param) && param.value === "") {
                 return null;
             } else if ($element.attr("allowblank") === "true" && param.value === "") {
                 //check allow blank
                 return "";
-            } else if (param.value && param.value !== "") {
-                return param.value;
+            } else if (param.attributes.backendValue) {
+                //Take care of the big dropdown list
+                return param.attributes.backendValue.nodeValue;
             } else {
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : null;
+                //Otherwise handle the case where the parameter has not been touched
+                return param.value !== "" ? param.value : null;
             }
         },
         /**

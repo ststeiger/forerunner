@@ -766,7 +766,8 @@ $(function () {
 
             return this.loginUrl;
         },
-        _handleRedirect : function(data) {
+        _handleRedirect: function (data) {
+            var me = this;
             if (data.status === 401 || data.status === 302) {
                 var loginUrl = me._getLoginUrl();
                 var urlParts = document.URL.split("#");

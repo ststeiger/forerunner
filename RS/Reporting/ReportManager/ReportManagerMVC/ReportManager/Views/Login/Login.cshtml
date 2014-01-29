@@ -10,7 +10,8 @@
 }
 
 <section id="loginForm">
-@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl})) {
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+{
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
     <div class="loginForm">
@@ -49,6 +50,26 @@
           else
               $('#password').attr('placeholder', locData.placeholders.Password);
           $('#login').attr('value', locData.placeholders.Login);
+
+          $form = $("form");
+          // Fix up the ReturnUrl
+          var urlParts = document.URL.split("ReturnUrl=");
+          if (urlParts.length > 1) {
+              var returnUrl = urlParts[1];
+              urlParts = returnUrl.split("#");
+              returnUrl = urlParts[0];
+              var hashTag = null;
+              if (urlParts.length > 1) {
+                  hashTag = urlParts[1];
+                  hashTag.replace("//", "/%2f");
+              }
+              var action = $form.attr("action");
+              urlParts = action.split("ReturnUrl=");
+              action = urlParts[0] + "ReturnUrl=" + returnUrl;
+              if (hashTag)
+                  action += "&HashTag=" + hashTag;
+              $form.attr("action", action);
+          }
       });
   </script>
 }

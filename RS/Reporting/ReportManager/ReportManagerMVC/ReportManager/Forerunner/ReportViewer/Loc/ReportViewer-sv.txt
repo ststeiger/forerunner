@@ -124,7 +124,7 @@
     "range":"Ange ett värde mellan {0} och {1}",
     "max":"Ange ett värde mindre än eller lika med {0}",
     "min":"Ange ett värde som är större än eller lika med {0}",
-    "autoCompleteDropdown":"Invalid"
+    "autoCompleteDropdown":"Ogiltig"
   },
   "dialog": {
     "title":"föranleda",

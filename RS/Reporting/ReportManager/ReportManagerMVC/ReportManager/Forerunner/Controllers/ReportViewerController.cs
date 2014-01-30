@@ -50,11 +50,16 @@ namespace ReportManager.Controllers
 
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
+            return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);
+        }
+
+        private HttpResponseMessage GetResponseFromBytes(Stream result, string mimeType, bool cache = false, string fileName = null)
+        {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
             if (result != null)
             {
-                resp.Content = new ByteArrayContent(result); ;
+                resp.Content = new StreamContent(result);               
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
 
                 if (cache)
@@ -72,6 +77,42 @@ namespace ReportManager.Controllers
             byte[] result = null;
             result = Encoding.UTF8.GetBytes(Forerunner.JsonUtility.WriteExceptionJSON(e));
             return GetResponseFromBytes(result, "text/JSON");
+        }
+
+        private Stream GetUTF8Bytes(StringWriter result)
+        {
+            MemoryStream mem = new MemoryStream();     
+            int bufsiz = 1024*1000;
+            char[] c = new char[bufsiz];            
+            StringBuilder sb;
+            byte[] b;
+            sb = result.GetStringBuilder();
+            
+            int len = sb.Length;
+            int offset = 0;
+
+            while(len >=0)
+            {
+                if (len >=bufsiz)
+                {
+                    sb.CopyTo(offset,c,0,bufsiz);
+                    b = Encoding.UTF8.GetBytes(c,0,bufsiz);
+                    mem.Write(b,0,b.Length);
+                    len -=bufsiz;
+                    offset+=bufsiz;
+                }
+                else
+                {
+                    sb.CopyTo(offset, c, 0, len);
+                    b = Encoding.UTF8.GetBytes(c, 0, len);
+                    mem.Write(b, 0, b.Length);
+                    break;
+                }
+    
+            }
+            return mem;
+
+
         }
 
         [AllowAnonymous]
@@ -134,8 +175,9 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials).ToString());
                 return GetResponseFromBytes(result, "text/JSON");
+                //return GetResponseFromBytes(GetUTF8Bytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials)), "text/JSON");
             }
             catch (Exception e)
             {

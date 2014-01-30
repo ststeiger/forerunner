@@ -217,7 +217,7 @@ namespace Forerunner.SSRS.Viewer
             return w.ToString();
         }
 
-        public string GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
+        public StringWriter GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
         {
             byte[] result = null;
             string format;
@@ -233,13 +233,17 @@ namespace Forerunner.SSRS.Viewer
             ExecutionHeader execHeader = new ExecutionHeader();
             int numPages = 1;
             bool hasDocMap = false;
+            StringWriter JSON = new StringWriter();
 
             try
             {
 
                 //This is for debug from customer log files
                 if (IsDebug == "JSON")
-                    return File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"], Encoding.UTF8);
+                {
+                    JSON.Write(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"], Encoding.UTF8));
+                    return JSON;
+                }
                 else if (IsDebug == "RPL")
                     result = Convert.FromBase64String(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.RPLFile"]));
                 else
@@ -287,7 +291,8 @@ namespace Forerunner.SSRS.Viewer
                         }
                         else
                         {
-                            return JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum);
+                            JSON.Write(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum));
+                            return JSON;
                         }
                     }
 
@@ -308,10 +313,8 @@ namespace Forerunner.SSRS.Viewer
                     if (IsDebug == "WRPL")
                          ExceptionLogGenerator.LogExceptionWithRPL("Debug", new MemoryStream(result)); 
 
-                    rw = new ReportJSONWriter(new MemoryStream(result));
                     JsonWriter w = new JsonTextWriter();
-                    JsonReader r;
-
+  
                     //Read Report Object
                     w.WriteStartObject();
                     w.WriteMember("SessionID");
@@ -323,19 +326,25 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("HasDocMap");
                     w.WriteBoolean(hasDocMap);
                     w.WriteMember("ReportContainer");
+
                     if (this.ServerRendering)
-                        r = new JsonBufferReader(JsonBuffer.From(Encoding.UTF8.GetString(result)));
+                    {
+                        JSON.Write(w.ToString());
+                        JSON.Write(Encoding.UTF8.GetString(result));
+                    }
                     else
-                        r = new JsonBufferReader(JsonBuffer.From(rw.RPLToJSON(numPages)));
-                    w.WriteFromReader(r);
-                    w.WriteEndObject();
+                    {
+                        rw = new ReportJSONWriter(new MemoryStream(result));
+                        JSON = new StringWriter(rw.RPLToJSON(numPages).GetStringBuilder());
+                        JSON.GetStringBuilder().Insert(0, w.ToString());
+                    }
 
-                    Debug.WriteLine(w.ToString());
-                    string JSON = w.ToString();
-
+                    JSON.Write("}");
+                    
                     // If debug write JSON flag
                     if (IsDebug == "WJSON")
                     {
+                        //File.WriteAllText("c:\\test\\BigReport.txt",JSON, Encoding.UTF8);
                         string error = string.Format("[Time: {0}]\r\n[Type: {1}]\r\n[Message: {2}]\r\n[StackTrace:\r\n{3}]\r\n[JSON: {4}]",
                             DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", JSON);
                         Logger.Trace(LogType.Error, "Debug:\r\n{0}", new object[] { error });                        
@@ -348,7 +357,7 @@ namespace Forerunner.SSRS.Viewer
                     LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
                 }
                 //this should never be called
-                return "";
+                return JSON;
             }
 
             catch (Exception e)
@@ -356,7 +365,8 @@ namespace Forerunner.SSRS.Viewer
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
-                return JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name);
+                JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
+                return JSON;
             }
 
         }

@@ -1362,7 +1362,7 @@ $(function () {
                 }
                 return pairs;
             }
-        }
+        };
         //specific rule for toolpane
         var touchHideRuleTp = {
             selector: ".fr-toolpane .fr-toolbase-hide-if-touch",
@@ -1373,7 +1373,7 @@ $(function () {
                 }
                 return pairs;
             }
-        }
+        };
         
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
     });

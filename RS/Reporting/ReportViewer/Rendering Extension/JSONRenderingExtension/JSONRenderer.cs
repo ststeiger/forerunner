@@ -56,7 +56,7 @@ namespace Forerunner.RenderingExtensions
 
                 RegisteredStream.Position = 0;
                 JSON = new ReportJSONWriter(RegisteredStream);
-                byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())));
+                byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())).ToString());
                 outputStream.Write(UTF8JSON, 0, UTF8JSON.Length);
                 return retval;
             }

@@ -1065,6 +1065,15 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-render-error-license-link { width: 200px; margin: 8px; padding: 6px 0px 6px 18px; }
 .fr-render-error-license-link a { text-decoration: none; color: white; font-size: 1.2em; }
 
+.fr-render-rec {display:table;border-collapse:collapse;}
+.fr-render-richText{display:table;table-layout: fixed;position:relative;}
+.fr-render-text{white-space:pre-wrap;word-break:break-word;word-wrap:break-word;-ms-word-break:break-word;margin:0;display: table-cell; }
+.fr-render-paragraphList{width:100%;height:100%;}
+.fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;}
+.fr-render-tablixCell{vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;overflow:hidden;}
+.fr-render-tablixCellItem{margin:0;width:100%;height:100%;}
+.fr-render-tablix{border-collapse:collapse;padding:0;margin:0;}
+.fr-render-fullSize{width:100%;height:100%;}
 .fr-report-container {
   position:relative;
   width:100%;

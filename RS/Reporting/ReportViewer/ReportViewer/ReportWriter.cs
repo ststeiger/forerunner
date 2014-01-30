@@ -15,11 +15,16 @@ namespace Forerunner.SSRS.JSONRender
     internal class ReportJSONWriter : IDisposable
     {       
         JsonWriter w = new JsonTextWriter();
+        JsonWriter s = new JsonTextWriter();
+        JsonWriter tmpWriter = new JsonTextWriter();
+        string LastID = null;
+
         byte majorVersion;
         byte minorVersion;
         Dictionary<string, TempProperty> TempPropertyBag = new Dictionary<string, TempProperty>();
         RPLReader RPL;
-        
+        Dictionary<string, string> SharedStyles = new Dictionary<string, string>();
+
         struct TempProperty
         {
             public string Name;
@@ -100,11 +105,9 @@ namespace Forerunner.SSRS.JSONRender
                 NumProp++;
             }
 
-            internal void WriteMemeber(byte Code, ReportJSONWriter r)
+            internal void WriteMemeber(byte Code, ReportJSONWriter r,JsonWriter w)
             {
                 int i;
-                JsonWriter w = r.w;
-
 
                 for (i = 0; i < NumProp; i++)
                 {
@@ -137,7 +140,11 @@ namespace Forerunner.SSRS.JSONRender
                             if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadInt16(); else w.WriteNumber(r.RPL.ReadInt16());
                             break;
                         case "String":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadString(); else w.WriteString(r.RPL.ReadString());
+                            //Total hack for shareed Style ID.  Much faster than searching later
+                            string value =  r.RPL.ReadString();
+                            if (PropArray[i].Name == "SID")
+                                r.LastID = value;
+                            if (PropArray[i].MakeTemp) tmp.Value =value; else w.WriteString(value);
                             break;
                         case "Float":
                             if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadFloat(); else w.WriteNumber(r.RPL.ReadFloat());
@@ -202,15 +209,20 @@ namespace Forerunner.SSRS.JSONRender
                 throw new Exception();
             }
 
-            public void Write(ReportJSONWriter r, Byte EndCode = 0xFF)
+            public void Write(ReportJSONWriter r,  Byte EndCode = 0xFF)
             {
+                Write(r, r.w, EndCode);
+            }
+            public void Write(ReportJSONWriter r, JsonWriter w, Byte EndCode = 0xFF)
+            {
+
                 //If RPLPRopertyBagCode is 0xFF then there is no Object code just arbitrary properties
                 if (RPLPropBagCode == 0xFF)
                 {
                     byte isEnd = r.RPL.ReadByte();
                     while (isEnd != EndCode && isEnd !=0xFF)
                     {
-                        WriteMemeber(isEnd, r);
+                        WriteMemeber(isEnd, r,w);
                         isEnd = r.RPL.ReadByte();
                     }
                 }
@@ -219,7 +231,7 @@ namespace Forerunner.SSRS.JSONRender
                     byte isEnd = r.RPL.ReadByte();
                     while (isEnd != EndCode)
                     {
-                        WriteMemeber(isEnd, r);
+                        WriteMemeber(isEnd, r,w);
                         isEnd = r.RPL.ReadByte();
                     }
                 }
@@ -234,7 +246,7 @@ namespace Forerunner.SSRS.JSONRender
             this.RPL = new RPLReader(RPL);
         }
 
-        public string RPLToJSON(int NumPages)
+        public StringWriter RPLToJSON(int NumPages)
         {
 
 //#if !DEBUG           
@@ -252,6 +264,11 @@ namespace Forerunner.SSRS.JSONRender
             LicenseData License = ClientLicense.GetLicense();
 
             RPL.position = 0;
+
+            //CreateStyle object           
+            s.WriteStartObject();
+
+
             w.WriteStartObject();
             
             w.WriteMember("SKU");
@@ -292,9 +309,34 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteEndObject();
             }
 
-            //End RPL
-            w.WriteEndObject();            
-            return w.ToString();
+            
+            //close Style object
+            //s.WriteEndArray();
+            s.WriteEndObject();
+
+            
+            w.WriteMember("SharedElements");
+            //JsonReader r = new JsonBufferReader(JsonBuffer.From(s.ToString()));
+            //w.WriteFromReader(r);
+            
+            StringWriter sw = (w as JsonTextWriter).InnerWriter as StringWriter;
+            
+            //Write shared Styles
+            StringWriter styles = new StringWriter();
+            styles.Write("{");
+            int count = 0;
+            foreach (KeyValuePair<string, string> entry in SharedStyles)
+            {                
+                styles.Write( "\"" + entry.Key + "\":" + entry.Value);
+                if (++count < SharedStyles.Count)
+                    styles.Write(",");
+            }
+
+            //Add styles to reports and and object
+            sw.Write(styles);
+            sw.Write("}}");
+            return sw;
+            
 
         }
 
@@ -560,7 +602,7 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("PageName", "String", 0x30);
             prop.Add("Columns", "Int32", 0x17, true);
             prop.Add("ColumnSpacing", "Single", 0x16, true);
-            prop.Add("PageStyle", "Object", 0x06, this.WriteJSONStyle);
+            prop.Add("PageStyle", "Object", 0x06, this.WriteJSONNonSharedStyle);
 
             prop.Write(this);
 
@@ -706,6 +748,27 @@ namespace Forerunner.SSRS.JSONRender
 
             return true;
         }
+
+        private void SaveSharedStyle()
+        {
+
+           string ID = LastID;
+
+            if (!SharedStyles.ContainsKey(ID))
+                SharedStyles.Add(ID, tmpWriter.ToString());
+            
+            //Add ID reference to report
+            w.WriteMember("SharedElements");
+            w.WriteStartObject();
+            w.WriteMember("SID");
+            w.WriteString(ID);
+            w.WriteEndObject();
+            
+            //reset temp writer
+            tmpWriter.Close();
+            tmpWriter = new JsonTextWriter();
+            
+        }
         private Boolean WriteJSONElements(byte ObjectType = 0x00, int DeRef = 0)
         {
             // ObjectType is used to handle dublicate values
@@ -714,7 +777,7 @@ namespace Forerunner.SSRS.JSONRender
 
             //Def ref is used for share propoerties that need to be deferenced
             // 0 means normal
-            // 1 mean Shared property only
+            // 1 means Shared property only
             // 2 means non sharred only
 
 
@@ -728,20 +791,18 @@ namespace Forerunner.SSRS.JSONRender
             if (RPL.InspectByte() == 0x00 || (RPL.InspectByte() == 0x01 && DeRef == 2))
             {
                 if (DeRef == 1 || DeRef == 0)
-                {
-                    //w.WriteMember("Elements");
-                    w.WriteStartObject();
-                    //Shared Properties
-                    w.WriteMember("SharedElements");
+                {        
+                    //Writeout shared style
+                    tmpWriter.WriteStartObject();
                     w.WriteStartObject();
                     prop = new RPLProperties(0x00);
-                    prop.Add("ID", "String", 0x01);
+                    prop.Add("SID", "String", 0x01);
                     if (ObjectType != 0x14) prop.Add("Label", "String", 0x03);
                     else prop.Add("Label", "String", 0x08);
                     prop.Add("Name", "String", 0x02);
                     prop.Add("Bookmark", "String", 0x04);
                     prop.Add("Tooltip", "String", 0x05);
-                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONSharedStyle);
                     if (ObjectType != 0x13) prop.Add("ToggleItem", "String", 0x08);
                     prop.Add("Slant", "Byte", 0x18);
                     prop.Add("CanGrow", "Boolean", 0x19);
@@ -769,12 +830,13 @@ namespace Forerunner.SSRS.JSONRender
                     prop.Add("HangingIndent", "String", 0x0B);
                     prop.Add("SpaceBefore", "String", 0x0C);
                     prop.Add("SpaceAfter", "String", 0x0D);
-                    prop.Write(this);
-                    w.WriteEndObject();
+                    prop.Write(this,tmpWriter);
+                    tmpWriter.WriteEndObject();
+                    SaveSharedStyle();
                 }
 
                 if (DeRef == 2 || DeRef == 0)
-                {
+                {                    
                     //NonShared Properties
                     w.WriteMember("NonSharedElements");
                     w.WriteStartObject();
@@ -784,7 +846,7 @@ namespace Forerunner.SSRS.JSONRender
                     else prop.Add("UniqueName", "String", 0x00);
                     prop.Add("Bookmark", "String", 0x04);
                     prop.Add("Tooltip", "String", 0x05);
-                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONNonSharedStyle);
                     if (ObjectType != 0x14) prop.Add("ActionInfo", "Object", 0x07, this.WriteJSONActionInfo);
                     else prop.Add("ActionInfo", "Object", 0x0B, this.WriteJSONActionInfo);
                     if (ObjectType != 0x14) prop.Add("Value", "String", 0x1B);
@@ -1705,11 +1767,11 @@ namespace Forerunner.SSRS.JSONRender
                     break;
                 case 0x00:
                     //Shared Properties
-                    w.WriteMember("SharedElements");
-                    w.WriteStartObject();
+                    //w.WriteMember("SharedElements");                    
+                    tmpWriter.WriteStartObject();
                     prop = new RPLProperties(0x00);
-                    prop.Add("ID", "String", 0x05);
-                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    prop.Add("SID", "String", 0x05);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONSharedStyle);
                     prop.Add("ListStyle", "Byte", 0x07);
                     prop.Add("ListLevel", "Int32", 0x08);
                     prop.Add("LeftIndent", "String", 0x09);
@@ -1718,8 +1780,9 @@ namespace Forerunner.SSRS.JSONRender
                     prop.Add("SpaceBefore", "String", 0x0C);
                     prop.Add("SpaceAfter", "String", 0x0D);
                     prop.Add("ContentHeight", "Single", 0x03);
-                    prop.Write(this);
-                    w.WriteEndObject();
+                    prop.Write(this, tmpWriter);
+                    tmpWriter.WriteEndObject();
+                    SaveSharedStyle();
 
                     break;
             }
@@ -1731,7 +1794,7 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteMember("NonSharedElements");
                 w.WriteStartObject();
                 prop.Add("UniqueName", "String", 0x04);
-                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONNonSharedStyle);
                 prop.Add("ListStyle", "Byte", 0x07);
                 prop.Add("ListLevel", "Int32", 0x08);
                 prop.Add("LeftIndent", "String", 0x09);
@@ -1799,19 +1862,21 @@ namespace Forerunner.SSRS.JSONRender
                     break;
                 case 0x00:
                     //Shared Properties
-                    w.WriteMember("SharedElements");
-                    w.WriteStartObject();
+                    //w.WriteMember("SharedElements");
+                    
+                    tmpWriter.WriteStartObject();
                     prop = new RPLProperties(0x00);
-                    prop.Add("ID", "String", 0x05);
-                    prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                    prop.Add("SID", "String", 0x05);
+                    prop.Add("Style", "Object", 0x06, this.WriteJSONSharedStyle);
                     prop.Add("Markup", "Byte", 0x07);
                     prop.Add("Label", "String", 0x08);
                     prop.Add("Tooltip", "String", 0x09);
                     prop.Add("Value", "String", 0x0A);
                     prop.Add("Formula", "String", 0x0C);
                     prop.Add("ContentHeight", "Single", 0x03);
-                    prop.Write(this);
-                    w.WriteEndObject();
+                    prop.Write(this, tmpWriter);
+                    tmpWriter.WriteEndObject();
+                    SaveSharedStyle();
                     break;
                 default:
                     // Write empty shared element if there is no shared element.
@@ -1830,7 +1895,7 @@ namespace Forerunner.SSRS.JSONRender
                 w.WriteStartObject();
                 prop.Add("UniqueName", "String", 0x04);
                 prop.Add("Markup", "Byte", 0x07);
-                prop.Add("Style", "Object", 0x06, this.WriteJSONStyle);
+                prop.Add("Style", "Object", 0x06, this.WriteJSONNonSharedStyle);
                 prop.Add("Label", "String", 0x08);
                 prop.Add("Tooltip", "String", 0x09);
                 prop.Add("Value", "String", 0x0A);
@@ -1942,7 +2007,16 @@ namespace Forerunner.SSRS.JSONRender
                 ThrowParseError("No End Tag");
 
         }
-        private Boolean WriteJSONStyle()
+
+        private Boolean WriteJSONSharedStyle()
+        {
+            return WriteJSONStyle(tmpWriter);
+        }
+        private Boolean WriteJSONNonSharedStyle()
+        {
+            return WriteJSONStyle(w);
+        }
+        private Boolean WriteJSONStyle(JsonWriter jw)
         {
             if (RPL.ReadByte() != 0x06)                
                 ThrowParseError("Not a Style Element");
@@ -1994,7 +2068,7 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("NumeralVariant", "Int32", 0x25);
             prop.Add("Calendar", "Byte", 0x26);
 
-            prop.Write(this);
+            prop.Write(this, jw);
             return true;
         }
         private void WriteJSONRepProp()

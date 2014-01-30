@@ -132,7 +132,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
-                if (param.Prompt !== "") {
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }

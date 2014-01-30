@@ -3418,7 +3418,7 @@ $(function () {
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
             } else {
@@ -3443,7 +3443,7 @@ $(function () {
                 topdiv.addClass(className, delay);
                 me.$mainheadersection.toolbar("hideAllTools");
 
-                if (me.$viewer !== undefined) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
                 } else {
@@ -6467,7 +6467,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
-                if (param.Prompt !== "") {
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }

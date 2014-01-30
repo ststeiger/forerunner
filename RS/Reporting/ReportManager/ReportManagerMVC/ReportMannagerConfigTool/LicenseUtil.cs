@@ -79,44 +79,48 @@ namespace ForerunnerLicense
             Logger.Trace(LogType.Info, "LicenseUtil.Verify");
             byte[] signedBytes = null;
             byte[] dataBytes = null;
+            System.Security.Cryptography.RSACryptoServiceProvider.UseMachineKeyStore = true;
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
             {
                 Logger.Trace(LogType.Info, "LicenseUtil.Verify Decrypt");
-                rsa.PersistKeyInCsp = false;
-                rsa.FromXmlString(key);
-
-                XMLReq.Read();
-                if (XMLReq.Name != "Signed")
-                    LicenseException.Throw(LicenseException.FailReason.InvalidKey, "License is Not Signed");
-                XMLReq.Read();
-
-                while (!XMLReq.EOF)
+                lock (rsa)
                 {
+                    rsa.PersistKeyInCsp = false;
+                    rsa.FromXmlString(key);
 
-                    switch (XMLReq.Name)
+                    XMLReq.Read();
+                    if (XMLReq.Name != "Signed")
+                        LicenseException.Throw(LicenseException.FailReason.InvalidKey, "License is Not Signed");
+                    XMLReq.Read();
+
+                    while (!XMLReq.EOF)
                     {
-                        case "Signature":
-                            signedBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
+
+                        switch (XMLReq.Name)
+                        {
+                            case "Signature":
+                                signedBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
+                                break;
+                            case "Value":
+                                dataBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
+                                break;
+                        }
+                        if (XMLReq.Name == "Signed")
                             break;
-                        case "Value":
-                            dataBytes = Convert.FromBase64String(XMLReq.ReadElementContentAsString());
-                            break;
+
                     }
-                    if (XMLReq.Name == "Signed")
-                        break;
 
-                }
-
-                if (rsa.VerifyData(dataBytes, CryptoConfig.MapNameToOID("SHA512"), signedBytes))
-                {
-                    Logger.Trace(LogType.Info, "LicenseUtil.Verify Ends");
-                    return Encoding.UTF8.GetString(dataBytes);
-                }
-                else
-                {
-                    Logger.Trace(LogType.Error, "LicenseUtil.Verify Invalid License Signature");
-                    LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Signature");
-                    return null;
+                    if (rsa.VerifyData(dataBytes, CryptoConfig.MapNameToOID("SHA512"), signedBytes))
+                    {
+                        Logger.Trace(LogType.Info, "LicenseUtil.Verify Ends");
+                        return Encoding.UTF8.GetString(dataBytes);
+                    }
+                    else
+                    {
+                        Logger.Trace(LogType.Error, "LicenseUtil.Verify Invalid License Signature");
+                        LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Signature");
+                        return null;
+                    }
                 }
             }
         }

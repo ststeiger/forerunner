@@ -116,7 +116,7 @@
     "email":"Email Invalide",
     "url":"URL Invalide",
     "date":"date invalide",
-    "dateISO":"Invalid Date (aaaa-mm-jj)",
+    "dateISO":"date invalide (aaaa-mm-jj)",
     "number":"Nombre non valide",
     "digits":"Seuls les chiffres",
     "maxlength":"Pas plus que {0} caractères",
@@ -124,7 +124,8 @@
     "rangelength":"Entrez une valeur comprise entre {0} et {1} caractères",
     "range":"Entrez une valeur comprise entre {0} et {1}",
     "max":"Entrez une valeur inférieure ou égale à {0}",
-    "min":"Entrez une valeur supérieure ou égale à {0}"
+    "min":"Entrez une valeur supérieure ou égale à {0}",
+    "autoCompleteDropdown":"invalide"
   },
   "dialog": {
     "title":"invite",

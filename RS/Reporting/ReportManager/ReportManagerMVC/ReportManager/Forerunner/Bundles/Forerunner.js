@@ -586,6 +586,60 @@ $(function () {
             }
             return $div;
         },
+        /**
+        * Returns a dropdown for the valid values
+        *
+        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        */
+        createDropDownForValidValues: function (validValues) {
+            var $select = new $("<SELECT />");
+            for (var i = 0; i < validValues.length; i++) {
+                var $option = new $("<OPTION />");
+                $option.attr("value", validValues[i].Value);
+                $option.append(validValues[i].Label);
+                $select.append($option);
+            }
+            return $select;
+        },
+        /**
+        * Returns a div filled with radio buttons for the valid values.
+        *
+        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        * @param identifier - An identifier for that option.
+        * @param callback -- event handler for the onclick
+        */
+        createRadioButtonsForValidValues: function (validValues, identifier, callback) {
+            return this._createInput(validValues, identifier, "radio", callback);
+        },
+        /**
+        * Returns a div filled with radio buttons for the valid values.
+        *
+        * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
+        * @param identifier - An identifier for that option.
+        */
+        createCheckBoxForValidValues: function (validValues, identifier) {
+            return this._createInput(validValues, identifier, "checkbox");
+        },
+        _createInput: function (validValues, identifier, inputType, callback) {
+            var $div = new $("<DIV />");
+            for (var i = 0; i < validValues.length; i++) {
+                var $option = new $("<INPUT />");
+                var id = forerunner.helper.guidGen();
+                $option.attr("type", inputType);
+                $option.attr("id", id);
+                $option.attr("value", validValues[i].Value);
+                $option.attr("name", identifier);
+                if (callback) {
+                    $option.on("click", callback);
+                }
+                var $label = new $("<LABEL />");
+                $label.attr("for", id);
+                $label.append(validValues[i].Label);
+                $div.append($option);
+                $div.append($label);
+            }
+            return $div;
+        },
         /*
                  * Replaces special characters with the html escape character equivalents
                  *
@@ -850,6 +904,19 @@ $(function () {
             return this.loginUrl;
         },
 
+        _handleRedirect: function (data) {
+            var me = this;
+            if (data.status === 401 || data.status === 302) {
+                var loginUrl = me._getLoginUrl();
+                var urlParts = document.URL.split("#");
+                var redirectTo = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + urlParts[0];
+                if (urlParts.length > 1) {
+                    redirectTo += "&HashTag=";
+                    redirectTo += urlParts[1];
+                }
+                window.location.href = redirectTo;
+            }
+        },
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
@@ -860,10 +927,7 @@ $(function () {
             var errorCallback = options.error;
             var me = this;
             options.error = function (data) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 if (errorCallback)
                     errorCallback(data);
             };
@@ -886,10 +950,7 @@ $(function () {
                     done(data);
             })
             .fail(function (data) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 console.log(data);
                 if (fail)
                     fail(data);
@@ -911,10 +972,7 @@ $(function () {
                     success(data);
                 }
             }).fail(function(data, textStatus, jqXHR) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 console.log(jqXHR);
                 if (fail)
                     fail(data);

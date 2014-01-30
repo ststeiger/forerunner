@@ -132,7 +132,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
-                if (param.Prompt !== "") {
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }
@@ -532,6 +532,8 @@ $(function () {
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
+            //add auto complete selected item check
+            $control.attr("autoCompleteDropdown", "true");
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
@@ -580,6 +582,25 @@ $(function () {
                 focus: function (event, obj) {
                     return false;
                 },
+                response: function (event, obj) {
+                    //obj.content.length will equal = 0 if no item match.
+                    if (obj.content.length === 0) {
+                        $control.addClass("fr-param-autocomplete-error");
+                    }
+                    else {
+                        $control.removeClass("fr-param-autocomplete-error");
+                    }
+                },
+                change: function (event, obj) {
+                    if (!obj.item)
+                        $control.addClass("fr-param-autocomplete-error");
+
+                    //if this control don't required, then empty is a valid value
+                    if (!$control.attr("required") && $control.val() === "")
+                        $control.removeClass("fr-param-autocomplete-error");
+
+                    $control.valid();
+                }
             });
 
             $control.on("focus", function () {
@@ -614,7 +635,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].label + "</option>");
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
@@ -917,8 +938,29 @@ $(function () {
                 me._closeAllDropdown();
             }
         },
+        _shouldInclude: function (param, noValid) {
+            if (!noValid) return true;
+            var me = this;
+            
+            var isString = $(param).attr("datatype") === "String";
+            var allowBlank = $(param).attr("allowblank") === "true";
+
+            // If it is a string type
+            if (isString && allowBlank) return true;
+
+            if (param.value == "") {
+                return me._isNullChecked(param);
+            }
+
+            var required = !!$(param).attr("required");
+            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+                return false;
+            }
+
+            return true;
+        },
         /**
-         * @function $.forerunner.reportParameter#getParamList
+         * @function $.forerunner.reportParameter#getParamsList
          * @generate parameter list base on the user input and return
          */
         getParamsList: function (noValid) {
@@ -928,20 +970,24 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var jsonValues = $(this).attr("jsonValues");
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var jsonValues = $(this).attr("jsonValues");
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                        }
                     }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var value = me._isParamNullable(this);
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var value = me._isParamNullable(this);
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                        }
                     }
                 });
                 //dropdown
@@ -997,19 +1043,26 @@ $(function () {
                 return null;
             }
         },
+        _isNullChecked: function (param) {
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+        },
         _isParamNullable: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var me = this;
             var $element = $(".fr-paramname-" + param.name, this.$params);
-            
+
             //check nullable
-            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
+            if (me._isNullChecked(param) && param.value === "") {
                 return null;
-            }//check allow blank
-            else if ($element.attr("allowblank") === "true" && param.value === "") {
+            } else if ($element.attr("allowblank") === "true" && param.value === "") {
+                //check allow blank
                 return "";
-            }
-            else {
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            } else if (param.attributes.backendValue) {
+                //Take care of the big dropdown list
+                return param.attributes.backendValue.nodeValue;
+            } else {
+                //Otherwise handle the case where the parameter has not been touched
+                return param.value !== "" ? param.value : null;
             }
         },
         /**
@@ -1019,6 +1072,7 @@ $(function () {
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
+            me.extendValidate();
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -1034,7 +1088,17 @@ $(function () {
                 rangelength: $.validator.format(error.rangelength),
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
-                min: $.validator.format(error.min)
+                min: $.validator.format(error.min),
+                autoCompleteDropdown: error.autoCompleteDropdown
+            });
+        },
+        extendValidate: function () {
+            //add auto complete dropdown value validata, only allow select from dropdown
+            jQuery.validator.addMethod("autoCompleteDropdown", function (value, element, param) {
+                if ($(element).hasClass("fr-param-autocomplete-error"))
+                    return false;
+                else
+                    return true;
             });
         },
         /**

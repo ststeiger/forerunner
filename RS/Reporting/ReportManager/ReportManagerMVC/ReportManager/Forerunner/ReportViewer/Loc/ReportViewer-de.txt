@@ -115,7 +115,7 @@
     "email":"Ungültige E-Mail",
     "url":"Ungültige URL",
     "date":"Ungültiges Datum",
-    "dateISO":"Ungültiges Datum (yyyy-mm-dd)",
+    "dateISO":"Ungültiges Datum (jjjj-mm-dd)",
     "number":"Ungültige Nummer",
     "digits":"Nur Ziffern",
     "maxlength":"Nicht mehr als {0} Zeichen",
@@ -123,7 +123,8 @@
     "rangelength":"Geben Sie einen Wert zwischen {0} und {1} Zeichen lang",
     "range":"Geben Sie einen Wert zwischen {0} und {1}",
     "max":"Geben Sie einen Wert kleiner oder gleich {0}",
-    "min":"Geben Sie einen Wert größer oder gleich {0}"
+    "min":"Geben Sie einen Wert größer oder gleich {0}",
+    "autoCompleteDropdown":"ungültig"
   },
   "dialog": {
     "title":"Eingabeaufforderung",

@@ -571,7 +571,7 @@ $(function () {
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
             } else {
@@ -596,7 +596,7 @@ $(function () {
                 topdiv.addClass(className, delay);
                 me.$mainheadersection.toolbar("hideAllTools");
 
-                if (me.$viewer !== undefined) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
                 } else {

@@ -31,5 +31,10 @@ namespace SDKSamples.Controllers
             return View();
         }
 
+        public ActionResult RemoveButton()
+        {
+            return View();
+        }
+
     }
 }

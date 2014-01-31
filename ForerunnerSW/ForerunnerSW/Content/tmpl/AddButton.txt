@@ -1,0 +1,16 @@
+﻿<div  class="SamplesContent">
+    Add Button Detail:
+    <p>
+    The Add Button sample shows how to add a new button to an instance of the reportViewerEZ widget. It does this
+    by calling the toolbar widget "addtools" function.
+    </p>
+    <p>
+        <a onclick="NavigateToSDKSamplesURL('Samples/AddButton')">Click here to see the sample</a>
+    </p>
+    <p>
+        <a onclick="ShowSourceCode('Bundles/AddButton.cshtml.txt', 'ReportViewerEZID')">Click here to see the source code</a>
+    </p>
+    <p>
+        <pre id="ReportViewerEZID" class="prettyprint"></pre>
+    </p>
+</div>

@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "ReportViewerEZ Sample";
+    Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section styles {
+<style>
+    .fr-toolbar .fr-toolbar-documentmap-button { display: none; }
+</style>
+}
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('body').reportViewerEZ({
+            DefaultAppTemplate: null,
+            path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+            navigateTo: null,
+            historyBack: null,
+            isReportManager: false,
+            isFullScreen: true
+        });
+    });
+
+
+</script>
+}
+
+
+

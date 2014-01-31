@@ -140,6 +140,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bundles\AddButton.cshtml.txt">
+      <DependentUpon>AddButton.cshtml.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\RemoveButton.cshtml.txt">
+      <DependentUpon>RemoveButton.cshtml.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\ReportExplorerEZ.cshtml.txt">
+      <DependentUpon>ReportExplorerEZ.cshtml.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
+      <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
+    </Content>
     <Content Include="Content\images\MyHome.png" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
@@ -294,6 +306,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Samples\RemoveButton.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\ReportViewerEZ.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\ReportExplorerEZ.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\AddButton.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\RemoveButton.cshtml.bundle" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

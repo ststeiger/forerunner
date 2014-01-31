@@ -1,0 +1,16 @@
+﻿<div  class="SamplesContent">
+    Report Explorer EZ Detail:
+    <p>
+    The reportExplorerEZ widget provides a fully functional report explorer user experience. This includes
+    defining layout for, instanciating and hooking up event handlers for all associated widgets such as the toolBar.
+    </p>
+    <p>
+        <a onclick="NavigateToSDKSamplesURL('Samples/ReportExplorerEZ')">Click here to see the sample</a>
+    </p>
+    <p>
+        <a onclick="ShowSourceCode('Bundles/ReportExplorerEZ.cshtml.txt', 'ReportViewerEZID')">Click here to see the source code</a>
+    </p>
+    <p>
+        <pre id="ReportViewerEZID" class="prettyprint"></pre>
+    </p>
+</div>

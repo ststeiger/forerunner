@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "ReportViewerEZ Sample";
+    ViewBag.Title = "Remove Button Sample";
     Layout = "../Shared/_SamplesLayout.cshtml";
 }
 

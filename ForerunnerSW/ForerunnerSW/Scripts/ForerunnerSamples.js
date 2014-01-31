@@ -55,22 +55,27 @@ function htmlEncode (str) {
 };
 
 
-function ShowSourceCode(filename, id) {
+function ToggleSourceCode(filename, id) {
+    var $div = $("#" + id);
+    if ($div.html().trim().length > 0) {
+        $div.html("");
+        return;
+    }
     $.ajax({
         url: GetSDKSamplesURL(filename),
         dataType: "text",
         async: false,
         success: function (data) {
             var html = htmlEncode(data);
-            var $div = $("#" + id);
             $div.html(html);
             $div.removeClass("prettyprinted");
         },
         fail: function () {
-            console.warn("ShowSourceCode()" + "Failed");
+            console.warn("ToggleSourceCode()" + "Failed");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.warn("ShowSourceCode()" + "error: " + errorThrown);
+
+            console.warn("ToggleSourceCode()" + "error: " + errorThrown);
         },
     });
     prettyPrint();

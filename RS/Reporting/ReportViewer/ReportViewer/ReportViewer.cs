@@ -217,7 +217,42 @@ namespace Forerunner.SSRS.Viewer
             return w.ToString();
         }
 
-        public StringWriter GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
+        private Stream GetUTF8Bytes(StringWriter result)
+        {
+            MemoryStream mem = new MemoryStream();
+            int bufsiz = 1024 * 1000;
+            char[] c = new char[bufsiz];
+            StringBuilder sb;
+            byte[] b;
+            sb = result.GetStringBuilder();
+
+            int len = sb.Length;
+            int offset = 0;
+
+            while (len >= 0)
+            {
+                if (len >= bufsiz)
+                {
+                    sb.CopyTo(offset, c, 0, bufsiz);
+                    b = Encoding.UTF8.GetBytes(c, 0, bufsiz);
+                    mem.Write(b, 0, b.Length);
+                    len -= bufsiz;
+                    offset += bufsiz;
+                }
+                else
+                {
+                    sb.CopyTo(offset, c, 0, len);
+                    b = Encoding.UTF8.GetBytes(c, 0, len);
+                    mem.Write(b, 0, b.Length);
+                    break;
+                }
+
+            }
+            return mem;
+
+
+        }
+        public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList, string credentials)
         {
             byte[] result = null;
             string format;
@@ -241,8 +276,22 @@ namespace Forerunner.SSRS.Viewer
                 //This is for debug from customer log files
                 if (IsDebug == "JSON")
                 {
-                    JSON.Write(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.JSONFile"], Encoding.UTF8));
-                    return JSON;
+                    
+                    int bufsiz = 1024*1024;
+                    byte[] fb = new byte[bufsiz];
+                    int len = 0;
+                    int rs = 0;
+                    MemoryStream ms = new MemoryStream();
+                    FileStream fs = File.Open(ConfigurationManager.AppSettings["Forerunner.JSONFile"], FileMode.Open);
+                    while (len < fs.Length)
+                    {
+                        rs = fs.Read(fb, 0, bufsiz);
+                        ms.Write(fb, 0, rs);
+                        len += rs;
+                    }
+                    fs.Close();
+                    
+                    return ms;
                 }
                 else if (IsDebug == "RPL")
                     result = Convert.FromBase64String(File.ReadAllText(ConfigurationManager.AppSettings["Forerunner.RPLFile"]));
@@ -292,7 +341,7 @@ namespace Forerunner.SSRS.Viewer
                         else
                         {
                             JSON.Write(JsonUtility.GetDataSourceCredentialJSON(execInfo.DataSourcePrompts, reportPath, NewSession, PageNum));
-                            return JSON;
+                            return GetUTF8Bytes(JSON);
                         }
                     }
 
@@ -349,7 +398,7 @@ namespace Forerunner.SSRS.Viewer
                             DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", JSON);
                         Logger.Trace(LogType.Error, "Debug:\r\n{0}", new object[] { error });                        
                     }
-                    return JSON;
+                    return GetUTF8Bytes(JSON);
 
                 }
                 else
@@ -357,7 +406,7 @@ namespace Forerunner.SSRS.Viewer
                     LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
                 }
                 //this should never be called
-                return JSON;
+                return GetUTF8Bytes(JSON);
             }
 
             catch (Exception e)
@@ -366,7 +415,7 @@ namespace Forerunner.SSRS.Viewer
                 ExceptionLogGenerator.LogException(e);
                 Console.WriteLine("Current user:" + HttpContext.Current.User.Identity.Name);
                 JSON.Write(JsonUtility.WriteExceptionJSON(e, HttpContext.Current.User.Identity.Name));
-                return JSON;
+                return GetUTF8Bytes(JSON);
             }
 
         }

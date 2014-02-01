@@ -111,9 +111,9 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+               // $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on("scroll", function () { me._updateTableHeaders(me); });
+               // $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change

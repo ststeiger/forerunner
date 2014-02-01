@@ -71,8 +71,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .DeveloperTD{width:33%;}
 
-.SamplesItem {color:#1ba0da;font-size:20px;display:block;margin: 0 0 5px 0;}
-.SamplesDescription{width: 200px;padding:0 20px 0 0;vertical-align: top;}
+.SamplesItem {color:#1ba0da;font-size:20px;display:block;margin: 0 0 10px 0;}
+.SamplesDescription{min-width: 200px;padding:0 20px 0 0;vertical-align: top;}
 .SamplesDetail{width:auto;vertical-align: top;}
 .SamplesContent{font-size:18px;}
 

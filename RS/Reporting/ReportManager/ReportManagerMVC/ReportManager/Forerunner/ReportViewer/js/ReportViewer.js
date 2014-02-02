@@ -1144,11 +1144,13 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            //Save and removed shared styles
             var CSS;
             var sty = $("head").find("style");
             for (var i = 0; i < sty.length; i++) {
                 if (sty[i].id === me.viewerID.toString()) {
                     CSS = sty[i];                    
+                    CSS.parentNode.removeChild(CSS);
                 }
             }
 

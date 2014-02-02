@@ -1145,11 +1145,13 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            //Save and removed shared styles
             var CSS;
             var sty = $("head").find("style");
             for (var i = 0; i < sty.length; i++) {
                 if (sty[i].id === me.viewerID.toString()) {
                     CSS = sty[i];                    
+                    CSS.parentNode.removeChild(CSS);
                 }
             }
 
@@ -4654,7 +4656,8 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
             me.reportObj = reportObj;
-            
+            me._tablixStream = {};
+
             me._createStyles(reportViewer);
            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
@@ -5742,9 +5745,9 @@ $(function () {
             for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
                 var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
                 Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
-                if (Tablix.State.HasFixedRows = true)
+                if (Tablix.State.HasFixedRows === true)
                     Tablix.HasFixedRows = true;
-                if (Tablix.State.HasFixedCols = true)
+                if (Tablix.State.HasFixedCols === true)
                     Tablix.HasFixedCols = true;
             }
             //me.options.reportViewer.removeLoadingIndicator(true);
@@ -5797,8 +5800,10 @@ $(function () {
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = "position:relative;width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
             
-            if (measurement.Width === 0 || measurement.Height === 0)
+            if (measurement.Width === 0 || measurement.Height === 0) {
                 Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+            }
             else {
                 var $line = $("<Div/>");
                 var newWidth = Math.sqrt(Math.pow(measurement.Height, 2) + Math.pow(measurement.Width, 2));
@@ -5810,6 +5815,8 @@ $(function () {
 
                 var lineStyle = "position:absolute;top:" + newTop + "mm;left:" + newLeft + "mm;";
                 lineStyle += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                $line.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+
                 lineStyle += "width:" + newWidth + "mm;height:0;";
                 lineStyle += "-moz-transform: rotate(" + rotate + "rad);";
                 lineStyle += "-webkit-transform: rotate(" + rotate + "rad);";

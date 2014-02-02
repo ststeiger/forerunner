@@ -640,6 +640,14 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
                 
+                var CSS;
+                var sty = $("head").find("style");
+                for (var i = 0; i < sty.length; i++) {
+                    if (sty[i].id === me.viewerID.toString()) {
+                        CSS = sty[i];
+                        CSS.parentNode.removeChild(CSS);
+                    }
+                }
                 $(action.CSS).appendTo("head");
 
                 if (action.credentialDefs !== null) {

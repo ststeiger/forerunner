@@ -54,6 +54,6 @@
         </ul>
     </ul>
     <p>
-        <a onclick="NavigateToSiteURL(app.GettingStarted)">Click here to see the sample</a>
+        <a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample</a>
     </p>
 </div>

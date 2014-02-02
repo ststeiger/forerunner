@@ -71,10 +71,12 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 
 .DeveloperTD{width:33%;}
 
-.SamplesItem {color:#1ba0da;font-size:20px;display:block;margin: 0 0 10px 0;}
-.SamplesDescription{min-width: 200px;padding:0 20px 0 0;vertical-align: top;}
+.SamplesItem {color:#1ba0da;font-size:15px;display:block;margin: 0 0 10px 0;}
+.SamplesDescription{min-width: 200px;padding:0 15px 0 0;vertical-align: top;}
 .SamplesDetail{width:auto;vertical-align: top;}
-.SamplesContent{font-size:18px;}
+.SamplesTab1{margin-left:2em;}
+.SamplesContent{font-size:18px;background-color: #EAEAEA;padding:18px 18px 18px 18px;}
+  .SamplesContent ul { display: block; padding-left: 2em; margin: 0 0 1em 0;}
 
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1026px) {

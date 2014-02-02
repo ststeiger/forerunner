@@ -195,6 +195,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\tmpl\AddButton.txt" />
+    <Content Include="Content\tmpl\GettingStarted.txt" />
     <Content Include="Content\tmpl\RemoveButton.txt" />
     <Content Include="Content\tmpl\ReportExplorerEZ.txt" />
     <Content Include="Global.asax" />

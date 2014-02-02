@@ -1,36 +1,47 @@
-﻿var demoServerURL = "http://demo.forerunnersw.com/SDKSamples/";
-var demoLocalURL = "http://localhost:18228/";
+﻿var forerunnerswURL = "http://forerunnersw.com/Mobilizer/";
+var forerunnerswLocalURL = "http://localhost:31921//";
 
-var forerunnerswServerURL = "http://forerunnersw.com/Mobilizer/";
-var forerunnerLocalURL = "http://localhost:31921//";
+var SDKSamplesURL = "http://demo.forerunnersw.com/SDKSamples/";
+var SDKSamplesLocalURL = "http://localhost:18228/";
 
-function GetSDKSamplesURL(filename) {
+var gettingStartedURL = "http://demo.forerunnersw.com/GettingStarted/";
+var gettingStartedLocalURL = "http://localhost:55087/";
+
+var app = {
+    SDKSamples: 1,
+    GettingStarted: 2,
+    Forerunnersw: 3
+}
+
+function GetSiteURL(site, filename) {
     var url = null;
     if (window.location.hostname == "localhost") {
-        url = demoLocalURL + filename;
+        if (site === app.SDKSamples) {
+            url = SDKSamplesLocalURL + filename;
+        } else if (site === app.GettingStarted) {
+            url = gettingStartedLocalURL + filename;
+        } else {
+            url = forerunnerswLocalURL + filename;
+        }
     } else {
-        url = demoServerURL + filename;
+        if (site === app.SDKSamples) {
+            url = SDKSamplesURL + filename;
+        } else if (site === app.GettingStarted) {
+            url = gettingStartedURL + filename;
+        } else {
+            url = forerunnerswURL + filename;
+        }
     }
     return url;
 }
 
-function GetForerunnerswURL(filename) {
-    var url = null;
-    if (window.location.hostname == "localhost") {
-        url = forerunnerLocalURL + filename;
-    } else {
-        url = forerunnerswServerURL + filename;
-    }
-    return url;
-}
-
-function NavigateToSDKSamplesURL(sampleName) {
-    window.location.href = GetSDKSamplesURL(sampleName);
+function NavigateToSiteURL(site, sampleName) {
+    window.location.href = GetSiteURL(site, sampleName);
 }
 
 function ShowSampleDetail(filename, id) {
     $.ajax({
-        url: GetForerunnerswURL(filename),
+        url: GetSiteURL(app.Forerunnersw, filename),
         dataType: "text",
         async: false,
         success: function (data) {
@@ -54,15 +65,14 @@ function htmlEncode (str) {
             .replace(/>/g, "&gt;");
 };
 
-
-function ToggleSourceCode(filename, id) {
+function ToggleSourceCode(site, filename, id) {
     var $div = $("#" + id);
     if ($div.html().trim().length > 0) {
         $div.html("");
         return;
     }
     $.ajax({
-        url: GetSDKSamplesURL(filename),
+        url: GetSiteURL(site, filename),
         dataType: "text",
         async: false,
         success: function (data) {

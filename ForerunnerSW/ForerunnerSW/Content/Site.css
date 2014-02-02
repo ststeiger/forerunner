@@ -78,6 +78,9 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .SamplesContent{font-size:18px;background-color: #EAEAEA;padding:18px 18px 18px 18px;}
   .SamplesContent ul { display: block; padding-left: 2em; margin: 0 0 1em 0;}
 
+.sample-error { margin: 4px; left: 10px; }
+  .sample-error .sample-error-text { color: red; font-weight: bold; }
+
 /* 4.1 - Desktop Slim */
 @media only screen and (min-width: 768px) and (max-width: 1026px) {
  

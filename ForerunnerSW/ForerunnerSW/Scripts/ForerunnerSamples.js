@@ -40,8 +40,9 @@ function NavigateToSiteURL(site, sampleName) {
 }
 
 function ShowSampleDetail(filename, id) {
+    var url = GetSiteURL(app.Forerunnersw, filename);
     $.ajax({
-        url: GetSiteURL(app.Forerunnersw, filename),
+        url: url,
         dataType: "text",
         async: false,
         success: function (data) {
@@ -51,7 +52,7 @@ function ShowSampleDetail(filename, id) {
             console.warn("ShowSampleDetail()" + "Failed");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            console.warn("ShowSampleDetail()" + "error: " + errorThrown);
+            showError($div, errorThrown, url)
         },
     });
 }
@@ -67,12 +68,14 @@ function htmlEncode (str) {
 
 function ToggleSourceCode(site, filename, id) {
     var $div = $("#" + id);
+    var url = GetSiteURL(site, filename);
     if ($div.html().trim().length > 0) {
         $div.html("");
         return;
     }
+    var noError = true;
     $.ajax({
-        url: GetSiteURL(site, filename),
+        url: url,
         dataType: "text",
         async: false,
         success: function (data) {
@@ -81,12 +84,36 @@ function ToggleSourceCode(site, filename, id) {
             $div.removeClass("prettyprinted");
         },
         fail: function () {
+            noError = false;
             console.warn("ToggleSourceCode()" + "Failed");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-
-            console.warn("ToggleSourceCode()" + "error: " + errorThrown);
+            noError = false;
+            showError($div, errorThrown, url);
         },
     });
-    prettyPrint();
+    if (noError) {
+        prettyPrint();
+    }
+}
+
+function showError($div, errorThrown, url) {
+    var me = this;
+
+    $div.html($(
+        "<div class='sample-error'>" +
+            "<div class='sample-error-text'>An unexpected error occured. Please try again later.</div><br/>" +
+            "<div class='sample-error-text'>Name: " + errorThrown.name + "</div>" +
+            "<div class='sample-error-text'>Message: " + errorThrown.message + "</div>" +
+            "<div class='sample-error-text'>URL: <a href='" + url + "'>" + url + "</a></div>" +
+            "<div class='sample-error-text'>Code: " + errorThrown.code + "</div>" +
+            "<a class='sample-error-stack'>StackTrace</a>" +
+            "<div class='sample-error-stack-details sample-error-text'>" + errorThrown.stack + "</div>" +
+        "</div>"));
+
+    var $stackDetails = $div.find(".sample-error-stack-details");
+    $stackDetails.hide();
+
+    $stackTrack = $div.find(".sample-error-stack");
+    $stackTrack.on("click", { $Detail: $stackDetails }, function (e) { e.data.$Detail.toggle() });
 }

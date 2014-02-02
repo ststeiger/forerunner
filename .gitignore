@@ -633,3 +633,5 @@ Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/build
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/Mutiple Parameter.rdl
 RS/Reporting/ReportManager/GettingStarted/GettingStarted/obj/Debug/*
 RS/Reporting/ReportManager/GettingStarted/GettingStarted/obj/Release/*
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/*
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/bin/GettingStarted.dll

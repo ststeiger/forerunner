@@ -124,6 +124,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SampleDetailController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -194,10 +195,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Content\tmpl\AddButton.txt" />
-    <Content Include="Content\tmpl\GettingStarted.txt" />
-    <Content Include="Content\tmpl\RemoveButton.txt" />
-    <Content Include="Content\tmpl\ReportExplorerEZ.txt" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <None Include="BundleTransformer.Configuration.xsd">
@@ -243,7 +240,12 @@
     <Content Include="Views\Home\Support.cshtml" />
     <Content Include="Views\Home\Developers.cshtml" />
     <Content Include="Views\Home\Samples.cshtml" />
-    <Content Include="Content\tmpl\ReportViewerEZ.txt" />
+    <Content Include="Views\Shared\_SampleDetailLayout.cshtml" />
+    <Content Include="Views\SampleDetail\AddButton.cshtml" />
+    <Content Include="Views\SampleDetail\ReportViewerEZ.cshtml" />
+    <Content Include="Views\SampleDetail\ReportExplorerEZ.cshtml" />
+    <Content Include="Views\SampleDetail\GettingStarted.cshtml" />
+    <Content Include="Views\SampleDetail\RemoveButton.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

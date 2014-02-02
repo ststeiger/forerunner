@@ -60,7 +60,8 @@ $(function () {
             onInputFocus: null,
             $appContainer: null,
             parameterModel: null,
-            savePosition: null
+            savePosition: null,
+            viewerID: Math.random(),
         },
 
         _destroy: function () {
@@ -70,7 +71,7 @@ $(function () {
         _create: function () {
             var me = this;
 
-            setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
+            setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
@@ -108,13 +109,16 @@ $(function () {
             me.paramDefs = null;
             me.credentialDefs = null;
             me.datasourceCredentials = null;
+            me.viewerID = me.options.viewerID;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-               // $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-               // $(window).on("scroll", function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstart", function () { me._hideTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                //$(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change
@@ -230,9 +234,9 @@ $(function () {
 
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();            
-            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
-                $rowHeader.fadeIn("fast");
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
+                $rowHeader.show();
             }
             else {
                 $rowHeader.hide();
@@ -250,15 +254,21 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#showLoadingIndictator
          */
-        showLoadingIndictator: function (me) {
-            if (me.loadLock === 1) {
+        showLoadingIndictator: function (me,force) {
+            if (me.loadLock === 1 || force===true) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
-                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                if (force === true) {
+                    me.$loadingIndicator.css("top",$(window).scrollTop() + 100 + "px")
+                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
+                else {
+                    me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                        .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
 
                 me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
@@ -269,9 +279,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#removeLoadingIndicator
          */
-        removeLoadingIndicator: function () {
+        removeLoadingIndicator: function (force) {
             var me = this;
-            if (me.loadLock === 1) {
+            if (me.loadLock === 1 || force === true) {
                 me.loadLock = 0;
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
@@ -631,6 +641,8 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
                 
+                $(action.CSS).appendTo("head");
+
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
                     me.datasourceCredentials = action.savedCredential;
@@ -670,6 +682,8 @@ $(function () {
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
+                me.flushCache();
+                me._resetViewer(false);
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
@@ -1131,11 +1145,19 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            var CSS;
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    CSS = sty[i];                    
+                }
+            }
+
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,CSS:CSS
             });
 
             me._clearReportViewerForDrill();
@@ -4617,6 +4639,14 @@ $(function () {
         },
         // Constructor
         _create: function () {
+            var me = this;
+            var isTouch = forerunner.device.isTouch();
+            // For touch device, update the header only on scrollstop.
+            if (isTouch) {
+                $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
+            } else {
+                $(window).on("scroll", function () { me._lazyLoadTablix(me); });
+            }
         },
          
         render: function (reportObj) {
@@ -4624,7 +4654,7 @@ $(function () {
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
             me.reportObj = reportObj;
-           
+            
             me._createStyles(reportViewer);
            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
@@ -4844,10 +4874,10 @@ $(function () {
                 Style = "";
 
                 //Determin height and location
-                //if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
+                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                //else
-                //    RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                else
+                    RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
 
                 if (RecLayout.ReportItems[Index].IndexAbove === null)
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
@@ -4870,7 +4900,9 @@ $(function () {
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
-                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
                 Style += me._getFullBorderStyle(RIContext.CurrObj);
             }
 
@@ -5118,9 +5150,12 @@ $(function () {
                 if (val) {
                     $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    Style += "display:table-cell;";
                 }
-                else
+                else {
                     $TextObj.html("&nbsp");
+                    Style += "text-decoration:none;";
+                }
                 $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             }
             else {
@@ -5157,6 +5192,7 @@ $(function () {
             me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
             $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            $TextObj.addClass("fr-r-t");
 
             //Make room for the sort image
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
@@ -5255,7 +5291,7 @@ $(function () {
         },
         _writeUniqueName: function($item,uniqueName){
             
-            //$item.attr("name",uniqueName);
+            $item.attr("name",uniqueName);
            
         },
         _getImageURL: function (RS, ImageName) {
@@ -5383,7 +5419,7 @@ $(function () {
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });
             }
-            else {
+            else if (Action.DrillthroughId) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
@@ -5536,8 +5572,8 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
-            //Style += "height:" + height + "mm;";
+            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            Style += "height:" + height + "mm;";
             
             //Row and column span
             if (Obj.RowSpan !== undefined)
@@ -5596,9 +5632,16 @@ $(function () {
                 }
             }
 
-            me._writeTablixRows(RIContext, $Tablix, $FixedColHeader, $FixedRowHeader);
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
-            
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text("Loading ...");
+            me._writeTablixRowBatch(TS);
+
+            HasFixedRows = TS.HasFixedRows;
+            HasFixedCols = TS.HasFixedCols;
             if (HasFixedRows) {
                 $FixedColHeader.hide();
             }
@@ -5632,7 +5675,10 @@ $(function () {
             var me = this;
             var LastRowIndex = State.LastRowIndex;
             var LastObjType = State.LastObjType;
-            $Row = State.Row;
+            var $Row = State.Row;
+            var HasFixedCols = false;
+            var HasFixedRows = false;
+
             if (Obj.RowIndex !== LastRowIndex) {
                 $Tablix.append($Row);
 
@@ -5675,39 +5721,59 @@ $(function () {
                     if (BRObj.Cell)
                         $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
                 });
+                State.CellCount += Obj.Cells.length;
             }
             else {
-                if (Obj.Cell)
+                if (Obj.Cell){
                     $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    State.CellCount += 1;
+                    }
             }
             LastObjType = Obj.Type;
-            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row };
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
         },
-        _batchSize: 2000,
-        _writeTablixRowBatch: function (RIContext, $Tablix, $FixedColHeader, $FixedRowHeader, State) {
+        _batchSize: 3000,
+        _tablixStream: {},
+        _writeTablixRowBatch: function (Tablix) {
             var me = this;
-            var count = 0;
-            for (var Index = State.StartIndex; Index < RIContext.CurrObj.TablixRows.length && count < me._batchSize; Index++, count++) {
-            //for (var Index = State.StartIndex; Index < RIContext.CurrObj.TablixRows.length ; Index++, count++) {
-                var Obj = RIContext.CurrObj.TablixRows[Index];
-                State = me._writeSingleTablixRow(RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State);
-            }
-            State.StartIndex = Index;
+            
+            //me.options.reportViewer.showLoadingIndictator(me.options.reportViewer,true);
 
-            if (State.StartIndex < RIContext.CurrObj.TablixRows.length) {
-                //setTimeout(function () { me._writeTablixRowBatch(RIContext, $Tablix, $FixedColHeader, $FixedRowHeader, State) }, 100);
-            } //else {
-                $Tablix.append(State.Row);
-            //}
-        },
-        _writeTablixRows: function (RIContext, $Tablix, $FixedColHeader, $FixedRowHeader) {
-            var me = this;
-            var State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0 };
-            if (RIContext.CurrObj.TablixRows) {
-                me._writeTablixRowBatch(RIContext, $Tablix, $FixedColHeader, $FixedRowHeader, State);
+            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
+                var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
+                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
+                if (Tablix.State.HasFixedRows = true)
+                    Tablix.HasFixedRows = true;
+                if (Tablix.State.HasFixedCols = true)
+                    Tablix.HasFixedCols = true;
+            }
+            //me.options.reportViewer.removeLoadingIndicator(true);
+            Tablix.State.StartIndex = Index;
+            Tablix.State.CellCount = 0;
+            if (Tablix.State.StartIndex < Tablix.RIContext.CurrObj.TablixRows.length) {                
+                Tablix.$Tablix.append(Tablix.EndRow);                
+            } else {
+                Tablix.$Tablix.append(Tablix.State.Row);
             }
         },
 
+        _lazyLoadTablix: function (me) {
+
+            var viewport_left = $(window).scrollLeft();
+            var viewport_top =$(window).scrollTop();
+            var viewport_width = $(window).innerWidth();
+            var viewport_height = $(window).innerHeight();
+
+            for (var name in me._tablixStream) {
+                offset = me._tablixStream[name].EndRow.offset();
+                if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
+                    me._tablixStream[name].EndRow.detach();
+                    me._writeTablixRowBatch(me._tablixStream[name]);
+                }
+
+            }
+
+        },
 
 
 
@@ -5818,6 +5884,8 @@ $(function () {
 
             //Style += me._getStyle(RS, me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+            //Background Image maybe at root
+            Style += me._getStyle(RS, CurrObj, CurrObj);
             return Style;
         },
         _getElementsTextStyle: function (CurrObj) {
@@ -6390,7 +6458,7 @@ $(function () {
         },
         _createStyles: function(RS){
             var me = this;
-            var CSS = "<style type='text/css' id='"+ me.reportObj.SessionID + "'>";
+            var CSS = "<style type='text/css' id='" + me.options.reportViewer.viewerID + "'>";
             var styles = me.reportObj.ReportContainer.SharedElements;
 
             for (var key in styles) {                
@@ -6402,7 +6470,14 @@ $(function () {
                 CSS += ".fr-n-" + styles[key].SID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
             }
 
-            $("#" + me.reportObj.SessionID, "head").remove();
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.options.reportViewer.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
+            
             $(CSS + "</style>").appendTo("head");
         },
         _getClassName: function (name, obj) {

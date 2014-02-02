@@ -47,6 +47,7 @@ namespace Forerunner.SSRS.JSONRender
                 public Func<Boolean> ObjFunction;
                 public Func<Byte, Boolean> ObjFunction2;
                 public Boolean MakeTemp = false;
+                public Boolean UnShare = false;
             }
 
 
@@ -76,7 +77,7 @@ namespace Forerunner.SSRS.JSONRender
                 NumProp++;
             }
 
-            public void Add(string Name, string Type, byte Code, Func<Boolean> f = null, Boolean MakeTemp = false)
+            public void Add(string Name, string Type, byte Code, Func<Boolean> f = null, Boolean MakeTemp = false, bool UnShare = false)
             {
                 if (NumProp == PropArray.GetUpperBound(0))
                     //Need to Grow, throw for now
@@ -88,6 +89,7 @@ namespace Forerunner.SSRS.JSONRender
                 PropArray[NumProp].RPLCode = Code;
                 PropArray[NumProp].ObjFunction = f;
                 PropArray[NumProp].MakeTemp = MakeTemp;
+                PropArray[NumProp].UnShare = UnShare;
                 NumProp++;
             }
 
@@ -105,10 +107,10 @@ namespace Forerunner.SSRS.JSONRender
                 NumProp++;
             }
 
-            internal void WriteMemeber(byte Code, ReportJSONWriter r,JsonWriter w)
+            internal void WriteMemeber(byte Code, ReportJSONWriter r,JsonWriter jw)
             {
                 int i;
-
+                JsonWriter w = jw;
                 for (i = 0; i < NumProp; i++)
                 {
                     if (PropArray[i].RPLCode == Code)
@@ -117,6 +119,10 @@ namespace Forerunner.SSRS.JSONRender
 
                 if (i < NumProp)
                 {
+                    if (PropArray[i].UnShare)
+                    {
+                        w = r.w;
+                    }
                     TempProperty tmp = new TempProperty();
                     if (PropArray[i].MakeTemp)
                     {
@@ -2061,7 +2067,7 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("WritingMode", "Byte", 0x1E);
             prop.Add("UnicodeBiDi", "Byte", 0x1F);
             prop.Add("Language", "String", 0x20);
-            prop.Add("BackgroundImage", "Object", 0x21, WriteJSONImageDataProperties);
+            prop.Add("BackgroundImage", "Object", 0x21, WriteJSONImageDataProperties,false,true);
             prop.Add("BackgroundColor", "String", 0x22);
             prop.Add("BackgroundRepeat", "Byte", 0x23);
             prop.Add("NumeralLanguage", "String", 0x24);

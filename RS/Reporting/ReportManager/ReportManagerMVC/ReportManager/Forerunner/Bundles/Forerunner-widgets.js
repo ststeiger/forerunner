@@ -39,6 +39,7 @@ $(function () {
      * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -56,6 +57,7 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             userSettings: null,
+            savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
@@ -1382,10 +1384,16 @@ $(function () {
                 me.refreshParameters(savedParams, true, pageNum);
             }
         },
+        _getSavedParams : function(orderedList) {
+            for(var i = 0; i < orderedList.length; i++) {
+                    if (orderedList[i]) return orderedList[i];
+                }
+            return null;
+        },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
-            var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.options.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null]);
 
             if (submitForm === undefined)
                 submitForm = true;
@@ -1424,12 +1432,17 @@ $(function () {
                     DSCredentials: me.getDataSourceCredential()
                 },
                 dataType: "json",
-                async: true,
+                async: false,
                 success: function (data) {
-                    if (data.SessionID)
-                        me.sessionID = data.SessionID;
-                    me._addLoadingIndicator();
-                    me._showParameters(pageNum, data);
+                    if (data.Exception) {
+                        me._renderPageError(me.$reportContainer, data);
+                        me.removeLoadingIndicator();
+                    } else {
+                        if (data.SessionID)
+                            me.sessionID = data.SessionID;
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    }
                 },
                 error: function (data) {
                     console.log("error");
@@ -1493,8 +1506,7 @@ $(function () {
                         if (data.Exception) {
                             me._renderPageError(me.$reportContainer, data);
                             me.removeLoadingIndicator();
-                        }
-                        else {
+                        } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
                             me._updateParameterData(data, submitForm, pageNum, renderParamArea);
@@ -3438,7 +3450,7 @@ $(function () {
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
             } else {
@@ -3463,7 +3475,7 @@ $(function () {
                 topdiv.addClass(className, delay);
                 me.$mainheadersection.toolbar("hideAllTools");
 
-                if (me.$viewer !== undefined) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
                 } else {
@@ -6643,7 +6655,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
-                if (param.Prompt !== "") {
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }
@@ -7449,8 +7461,29 @@ $(function () {
                 me._closeAllDropdown();
             }
         },
+        _shouldInclude: function (param, noValid) {
+            if (!noValid) return true;
+            var me = this;
+            
+            var isString = $(param).attr("datatype") === "String";
+            var allowBlank = $(param).attr("allowblank") === "true";
+
+            // If it is a string type
+            if (isString && allowBlank) return true;
+
+            if (param.value == "") {
+                return me._isNullChecked(param);
+            }
+
+            var required = !!$(param).attr("required");
+            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+                return false;
+            }
+
+            return true;
+        },
         /**
-         * @function $.forerunner.reportParameter#getParamList
+         * @function $.forerunner.reportParameter#getParamsList
          * @generate parameter list base on the user input and return
          */
         getParamsList: function (noValid) {
@@ -7460,20 +7493,24 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var jsonValues = $(this).attr("jsonValues");
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var jsonValues = $(this).attr("jsonValues");
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                        }
                     }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var value = me._isParamNullable(this);
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var value = me._isParamNullable(this);
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                        }
                     }
                 });
                 //dropdown
@@ -7529,19 +7566,26 @@ $(function () {
                 return null;
             }
         },
+        _isNullChecked: function (param) {
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+        },
         _isParamNullable: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.name).first();
+            var me = this;
             var $element = $(".fr-paramname-" + param.name, this.$params);
-            
+
             //check nullable
-            if ($cb.length !== 0 && $cb.attr("checked") === "checked" && param.value === "") {
+            if (me._isNullChecked(param) && param.value === "") {
                 return null;
-            }//check allow blank
-            else if ($element.attr("allowblank") === "true" && param.value === "") {
+            } else if ($element.attr("allowblank") === "true" && param.value === "") {
+                //check allow blank
                 return "";
-            }
-            else {
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            } else if (param.attributes.backendValue) {
+                //Take care of the big dropdown list
+                return param.attributes.backendValue.nodeValue;
+            } else {
+                //Otherwise handle the case where the parameter has not been touched
+                return param.value !== "" ? param.value : null;
             }
         },
         /**
@@ -8501,8 +8545,11 @@ $(function () {
             $.extend(me.options, options);
         }
 
-        // Create the parameter model object for this report
-        me.parameterModel = $({}).parameterModel();
+        me.parameterModel = null;
+        if (me.options.isReportManager) {
+            // Create the parameter model object for this report
+            me.parameterModel = $({}).parameterModel();
+        }
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -8523,6 +8570,7 @@ $(function () {
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer
             });
 
@@ -8607,18 +8655,20 @@ $(function () {
             }
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-mps-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.manageParamSets({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer,
-                    $reportViewerInitializer: me,
-                    model: me.parameterModel
-                });
-                me.options.$appContainer.append($dlg);
+            if (me.parameterModel) {
+                $dlg = me.options.$appContainer.find(".fr-mps-section");
+                if ($dlg.length === 0) {
+                    $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.manageParamSets({
+                        $appContainer: me.options.$appContainer,
+                        $reportViewer: $viewer,
+                        $reportViewerInitializer: me,
+                        model: me.parameterModel
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._manageParamSetsDialog = $dlg;
             }
-            me._manageParamSetsDialog = $dlg;
 
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
@@ -8769,12 +8819,15 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
-            });
-            me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
-            });
+
+            if (me.parameterModel) {
+                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+            }
         },
         _init: function () {
             var me = this;
@@ -8824,6 +8877,7 @@ $(function () {
      * @prop {String} options.path - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
@@ -8843,7 +8897,8 @@ $(function () {
             historyBack: null,
             isReportManager: false,
             isFullScreen: true,
-            userSettings: null
+            userSettings: null,
+            savedParameters: null
         },
         _render: function () {
             var me = this;
@@ -8881,6 +8936,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container
             });
 

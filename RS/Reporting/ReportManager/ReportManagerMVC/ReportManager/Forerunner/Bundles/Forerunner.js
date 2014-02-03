@@ -904,6 +904,19 @@ $(function () {
             return this.loginUrl;
         },
 
+        _handleRedirect: function (data) {
+            var me = this;
+            if (data.status === 401 || data.status === 302) {
+                var loginUrl = me._getLoginUrl();
+                var urlParts = document.URL.split("#");
+                var redirectTo = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + urlParts[0];
+                if (urlParts.length > 1) {
+                    redirectTo += "&HashTag=";
+                    redirectTo += urlParts[1];
+                }
+                window.location.href = redirectTo;
+            }
+        },
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
@@ -914,10 +927,7 @@ $(function () {
             var errorCallback = options.error;
             var me = this;
             options.error = function (data) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 if (errorCallback)
                     errorCallback(data);
             };
@@ -940,10 +950,7 @@ $(function () {
                     done(data);
             })
             .fail(function (data) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 console.log(data);
                 if (fail)
                     fail(data);
@@ -965,10 +972,7 @@ $(function () {
                     success(data);
                 }
             }).fail(function(data, textStatus, jqXHR) {
-                if (data.status === 401 || data.status === 302) {
-                    var loginUrl = me._getLoginUrl();
-                    window.location.href = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + document.URL;
-                }
+                me._handleRedirect(data);
                 console.log(jqXHR);
                 if (fail)
                     fail(data);

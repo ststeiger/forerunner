@@ -43,5 +43,13 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Developers()
+        {
+            return View();
+        }
+        public ActionResult Samples()
+        {
+            return View();
+        }
     }
 }

@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+    <b>Getting Started Detail:</b>
+    <p>
+        This sample will guide you through all the steps needed to create a Forerunner enabled web application. This sample
+        was created with "Microsoft Visual Studio 2012". The forerunner SDK does not require a Microsoft MVC 4 Web Application
+        but the samples were developed in that environment.
+    </p>
+    <p>
+        If you already have a web application you can skip directly to the the section on enabling Forerunner support below.
+    </p>
+    <p><b>Step 1: Install Mobilizer</b></p>
+    <p>If you don't have Mobilizer installed yet, you can get our trial version here:</p>
+    <div class="DownloadButton Rounded" style="margin-bottom: 15px;"><a id="register" style="padding-top: 2px;" href="../home/register?"><strong>DOWNLOAD TRIAL NOW!</strong></a></div>
+
+    <p><b>Step 2: Create a New Visual Studio Web Application</b></p>
+    <ul>
+        <li>Select the menu items:</li>
+            <ul><li>"File" > "New" > "Project..."</li></ul>
+        <li>In the "New Project" dialog, select:</li>
+            <ul><li>"Visual C#" > "Web" > "ASP.NET MVC 4 Web Application"</li></ul>
+        <li>Enter your folder location and select the "OK" button.</li>
+        <li>In the "New ASP.NET MVC 4 Project" dialog select:</li>
+            <ul><li>the "Internet Application" Template</li></ul>
+    </ul>
+    <p>
+        At this point, you will have a running MVC Web Application. This application will use forms based authentication
+        and will have stubbed pages for "Home", "About" and "Contact".
+    </p>
+
+    <p><b>Step 3: Enabling Forerunner SDK Support</b></p>
+    <ul>
+        <li>Copy the forerunner folder from your Mobilizer installation into the root folder in your project. Typically the install point would be something like:</li>
+        <ul><li>C:\Program Files (x86)\Forerunner\MobilizerV1</li></ul>
+        <p>and the root folder of your application contains the Web.config file.</p>
+        <li>In the Forerunner\Controllers forder, rename the namespace of the controllers from "ReportManager" to your namespace</li>
+        <li>Copy the following files from your installation bin folder to your project bin folder:</li>
+        <ul>
+            <li>Forerunner.SQLReporting.dll</li>
+            <li>Forerunner.Json.dll</li>
+        </ul>
+        <li>In the file: App_Start\WebApiConfig.cs change the following line:</li>
+        <ul>
+            <p>routeTemplate: "api/{controller}/{id}",</p>
+            <p>to:</p>
+            <p>routeTemplate: "api/{controller}/<b>{action}</b>/{id}",</p>
+        </ul>
+        <li>Make the following changes to your Web.config file</li>
+        <ul>
+            <p>Copy the Forerunner
+                &lt;appsettings&gt;
+                from the installed Mobilized Web.config</p>
+            <p>Set the authentication tag to:</p>
+            <p>&lt;authentication mode="Forms"&gt;</p>
+        </ul>
+    </ul>
+    <p>
+        <a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample</a>
+    </p>
+}

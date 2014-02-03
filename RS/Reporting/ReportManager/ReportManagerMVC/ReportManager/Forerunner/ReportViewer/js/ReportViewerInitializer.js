@@ -40,8 +40,11 @@ $(function () {
             $.extend(me.options, options);
         }
 
-        // Create the parameter model object for this report
-        me.parameterModel = $({}).parameterModel();
+        me.parameterModel = null;
+        if (me.options.isReportManager) {
+            // Create the parameter model object for this report
+            me.parameterModel = $({}).parameterModel();
+        }
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -62,6 +65,7 @@ $(function () {
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer
             });
 
@@ -146,18 +150,20 @@ $(function () {
             }
             $dlg.dsCredential({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-mps-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.manageParamSets({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer,
-                    $reportViewerInitializer: me,
-                    model: me.parameterModel
-                });
-                me.options.$appContainer.append($dlg);
+            if (me.parameterModel) {
+                $dlg = me.options.$appContainer.find(".fr-mps-section");
+                if ($dlg.length === 0) {
+                    $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.manageParamSets({
+                        $appContainer: me.options.$appContainer,
+                        $reportViewer: $viewer,
+                        $reportViewerInitializer: me,
+                        model: me.parameterModel
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._manageParamSetsDialog = $dlg;
             }
-            me._manageParamSetsDialog = $dlg;
 
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
@@ -308,12 +314,15 @@ $(function () {
         },
         _initCallbacks: function () {
             var me = this;
-            me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
-            });
-            me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
-            });
+
+            if (me.parameterModel) {
+                me.parameterModel.on(events.parameterModelChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+                me.parameterModel.on(events.parameterModelSetChanged(), function (e, data) {
+                    me._onModelChange.call(me, e, data);
+                });
+            }
         },
         _init: function () {
             var me = this;

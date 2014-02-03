@@ -17,6 +17,7 @@ $(function () {
      * @prop {String} options.path - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
@@ -36,7 +37,8 @@ $(function () {
             historyBack: null,
             isReportManager: false,
             isFullScreen: true,
-            userSettings: null
+            userSettings: null,
+            savedParameters: null
         },
         _render: function () {
             var me = this;
@@ -74,6 +76,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container
             });
 

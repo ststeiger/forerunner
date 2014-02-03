@@ -1,36 +1,26 @@
-﻿var forerunnerswURL = "http://forerunnersw.com/Mobilizer/";
-var forerunnerswLocalURL = "http://localhost:31921//";
-
-var SDKSamplesURL = "http://demo.forerunnersw.com/SDKSamples/";
-var SDKSamplesLocalURL = "http://localhost:18228/";
-
-var gettingStartedURL = "http://demo.forerunnersw.com/GettingStarted/";
-var gettingStartedLocalURL = "http://localhost:55087/";
-
-var app = {
-    SDKSamples: 1,
-    GettingStarted: 2,
-    Forerunnersw: 3
+﻿var app = {
+    SDKSamples: 0,
+    GettingStarted: 1,
+    Forerunnersw: 2
 }
+
+var appURL = [
+    // SDKSamples
+    { local: "http://localhost:18228/", remote: "http://demo.forerunnersw.com/SDKSamples/" },
+
+    // GettingStarted
+    { local: "http://localhost:55087/", remote: "http://demo.forerunnersw.com/GettingStarted/" },
+
+    // Forerunnersw
+    { local: "http://localhost:31921/", remote: "http://forerunnersw.com/Mobilizer/" },
+]
 
 function GetSiteURL(site, filename) {
     var url = null;
     if (window.location.hostname == "localhost") {
-        if (site === app.SDKSamples) {
-            url = SDKSamplesLocalURL + filename;
-        } else if (site === app.GettingStarted) {
-            url = gettingStartedLocalURL + filename;
-        } else {
-            url = forerunnerswLocalURL + filename;
-        }
+        url = appURL[site].local + filename;
     } else {
-        if (site === app.SDKSamples) {
-            url = SDKSamplesURL + filename;
-        } else if (site === app.GettingStarted) {
-            url = gettingStartedURL + filename;
-        } else {
-            url = forerunnerswURL + filename;
-        }
+        url = appURL[site].remote + filename;
     }
     return url;
 }

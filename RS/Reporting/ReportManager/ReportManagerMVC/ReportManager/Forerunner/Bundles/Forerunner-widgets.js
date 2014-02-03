@@ -4899,8 +4899,13 @@ $(function () {
                 //Determin height and location
                 if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                else
-                    RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                else {
+                    if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
+                        RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                    }
+                    else
+                        RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                }
 
                 if (RecLayout.ReportItems[Index].IndexAbove === null)
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
@@ -5774,8 +5779,10 @@ $(function () {
             Tablix.State.StartIndex = Index;
             Tablix.State.CellCount = 0;
             if (Tablix.State.StartIndex < Tablix.RIContext.CurrObj.TablixRows.length) {                
-                Tablix.$Tablix.append(Tablix.EndRow);                
-            } else {
+                Tablix.$Tablix.append(Tablix.EndRow);
+                Tablix.BigTablix = true;
+            }
+            else {
                 Tablix.$Tablix.append(Tablix.State.Row);
             }
         },

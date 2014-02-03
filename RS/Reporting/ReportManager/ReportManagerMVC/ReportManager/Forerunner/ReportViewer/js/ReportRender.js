@@ -980,8 +980,11 @@ $(function () {
             var me = this;
     
             Style = "";
-            Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
-            $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
+
+            if (Obj.Cell){
+                Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
+                $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
+            }
 
             var ColIndex = Obj.ColumnIndex;
 
@@ -994,7 +997,7 @@ $(function () {
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
             Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
-            Style += "height:" + height + "mm;";
+            Style += "min-height:" + height + "mm;";
             
             //Row and column span
             if (Obj.RowSpan !== undefined)
@@ -1004,15 +1007,19 @@ $(function () {
                 
             }
                
-            //Background color goes on the cell
-            if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
-                Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+            if (Obj.Cell){
+                //Background color goes on the cell
+                if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
+                    Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
-            $Cell.attr("Style", Style);
-            $Cell.addClass("fr-r-tC");
-            var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
-            RI.addClass("fr-r-tCI");
-            $Cell.append(RI);
+                $Cell.attr("Style", Style);
+                $Cell.addClass("fr-r-tC");
+                var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
+                RI.addClass("fr-r-tCI");
+                $Cell.append(RI);
+            }
+            else
+                $Cell.html("&nbsp");
             return $Cell;
         },
         _writeTablix: function (RIContext) {
@@ -1138,9 +1145,8 @@ $(function () {
             }
 
             if (Obj.Type === "BodyRow") {
-                $.each(Obj.Cells, function (BRIndex, BRObj) {
-                    if (BRObj.Cell)
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
+                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
                 });
                 State.CellCount += Obj.Cells.length;
             }

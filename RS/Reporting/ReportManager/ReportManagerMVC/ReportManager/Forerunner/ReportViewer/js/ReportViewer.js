@@ -23,6 +23,7 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
+        this.CSS = {};
     }
 
     /**
@@ -60,7 +61,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
-            viewerID: Math.random(),
+            viewerID: Math.floor((Math.random() * 100) + 1),
         },
 
         _destroy: function () {
@@ -113,8 +114,7 @@ $(function () {
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change
@@ -288,6 +288,17 @@ $(function () {
                 me._setPage(me.curPage);
             }
         },
+        _removeCSS: function () {
+            var me = this;
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
+        },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
@@ -310,6 +321,9 @@ $(function () {
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
             }
                        
+            me._removeCSS();
+            me.pages[pageNum].CSS.appendTo("head");
+
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
 
@@ -609,8 +623,6 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
 
-                $(action.CSS).appendTo("head");
-              
                 //Trigger Change Report, disables buttons.  Differnt than pop
                 me._trigger(events.drillBack, null, { path: me.options.reportPath });
                 
@@ -1095,19 +1107,11 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
-            var CSS;
-            var sty = $("head").find("style");
-            for (var i = 0; i < sty.length; i++) {
-                if (sty[i].id === me.viewerID.toString()) {
-                    CSS = sty[i];                    
-                }
-            }
- 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                renderError: me.renderError, CSS:CSS
+                renderError: me.renderError
             });
             me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
@@ -1639,7 +1643,7 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
             }
             else
                 me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);

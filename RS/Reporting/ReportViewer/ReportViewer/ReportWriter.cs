@@ -156,7 +156,7 @@ namespace Forerunner.SSRS.JSONRender
                             if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadFloat(); else w.WriteNumber(r.RPL.ReadFloat());
                             break;
                         case "Single":
-                            if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadSingle(); else w.WriteNumber(r.RPL.ReadSingle());
+                            if (PropArray[i].MakeTemp) tmp.Value = Math.Round(r.RPL.ReadSingle(), 2); else w.WriteNumber(Math.Round(r.RPL.ReadSingle(), 2));
                             break;
                         case "Char":
                             if (PropArray[i].MakeTemp) tmp.Value = r.RPL.ReadChar().ToString(); else w.WriteString(r.RPL.ReadChar().ToString());
@@ -1158,13 +1158,13 @@ namespace Forerunner.SSRS.JSONRender
 
             w.WriteStartObject();
             w.WriteMember("Left");
-            w.WriteNumber(RPL.ReadSingle());
+            w.WriteNumber(Math.Round(RPL.ReadSingle(),2));
             w.WriteMember("Top");
-            w.WriteNumber(RPL.ReadSingle());
+            w.WriteNumber(Math.Round(RPL.ReadSingle(), 2));
             w.WriteMember("Width");
-            w.WriteNumber(RPL.ReadSingle());
+            w.WriteNumber(Math.Round(RPL.ReadSingle(), 2));
             w.WriteMember("Height");
-            w.WriteNumber(RPL.ReadSingle());
+            w.WriteNumber(Math.Round(RPL.ReadSingle(), 2));
             w.WriteMember("zIndex");
             w.WriteNumber(RPL.ReadInt32());
             w.WriteMember("State");
@@ -1175,6 +1175,7 @@ namespace Forerunner.SSRS.JSONRender
             w.WriteEndObject();
 
         }
+        
         private string VerifyMeasurementType()
         {
             string retval = "";
@@ -1647,7 +1648,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 w.WriteStartObject();
                 w.WriteMember("Width");
-                w.WriteNumber(RPL.ReadSingle());
+                w.WriteNumber(Math.Round(RPL.ReadSingle(), 2));
                 w.WriteMember("FixColumn");
                 w.WriteNumber(RPL.ReadByte());
                 w.WriteEndObject();
@@ -1673,7 +1674,7 @@ namespace Forerunner.SSRS.JSONRender
             {
                 w.WriteStartObject();
                 w.WriteMember("Height");
-                w.WriteNumber(RPL.ReadSingle());
+                w.WriteNumber(Math.Round(RPL.ReadSingle(), 2));
                 w.WriteMember("FixRows");
                 w.WriteNumber(RPL.ReadByte());
                 w.WriteEndObject();
@@ -1696,7 +1697,7 @@ namespace Forerunner.SSRS.JSONRender
             prop.Add("ContentTop", "Singe", 0x00);
             prop.Add("ContentLeft", "Singe", 0x01);
             prop.Add("ContentWidth", "String", 0x02);
-            prop.Add("ContentHeight", "Singe", 0x03);
+            prop.Add("ContentHeight", "Single", 0x03);
             prop.Write(this);
 
             w.WriteEndObject();
@@ -2016,13 +2017,13 @@ namespace Forerunner.SSRS.JSONRender
 
         private Boolean WriteJSONSharedStyle()
         {
-            return WriteJSONStyle(tmpWriter);
+            return WriteJSONStyle(tmpWriter,true);
         }
         private Boolean WriteJSONNonSharedStyle()
         {
-            return WriteJSONStyle(w);
+            return WriteJSONStyle(w,false);
         }
-        private Boolean WriteJSONStyle(JsonWriter jw)
+        private Boolean WriteJSONStyle(JsonWriter jw,Boolean shared)
         {
             if (RPL.ReadByte() != 0x06)                
                 ThrowParseError("Not a Style Element");

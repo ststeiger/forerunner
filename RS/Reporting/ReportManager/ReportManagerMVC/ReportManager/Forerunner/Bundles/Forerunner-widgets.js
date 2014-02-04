@@ -24,6 +24,7 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
+        this.CSS = {};
     }
 
     /**
@@ -61,7 +62,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
-            viewerID: Math.random(),
+            viewerID: Math.floor((Math.random() * 100) + 1),
         },
 
         _destroy: function () {
@@ -114,8 +115,7 @@ $(function () {
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change
@@ -289,6 +289,17 @@ $(function () {
                 me._setPage(me.curPage);
             }
         },
+        _removeCSS: function () {
+            var me = this;
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
+        },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
@@ -311,6 +322,9 @@ $(function () {
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
             }
                        
+            me._removeCSS();
+            me.pages[pageNum].CSS.appendTo("head");
+
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
 
@@ -610,8 +624,6 @@ $(function () {
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
 
-                $(action.CSS).appendTo("head");
-              
                 //Trigger Change Report, disables buttons.  Differnt than pop
                 me._trigger(events.drillBack, null, { path: me.options.reportPath });
                 
@@ -1096,19 +1108,11 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
-            var CSS;
-            var sty = $("head").find("style");
-            for (var i = 0; i < sty.length; i++) {
-                if (sty[i].id === me.viewerID.toString()) {
-                    CSS = sty[i];                    
-                }
-            }
- 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                renderError: me.renderError, CSS:CSS
+                renderError: me.renderError
             });
             me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
@@ -1640,7 +1644,7 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
             }
             else
                 me._renderPageError(me.pages[pageNum].$container, me.pages[pageNum].reportObj);
@@ -4375,18 +4379,19 @@ $(function () {
             }
         },
          
-        render: function (reportObj) {
+        render: function (Page) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-            me.reportObj = reportObj;
+            me.reportObj = Page.reportObj;
+            me.Page = Page;
             me._tablixStream = {};
 
             me._createStyles(reportViewer);
-           $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
-                me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+            $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+               me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
-           me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, reportObj);
+            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
           
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
@@ -4591,7 +4596,7 @@ $(function () {
                 }
 
                 $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
-                if (Obj.Type !== "Line") {
+                if (Obj.Type !== "Line" && Obj.Type !== "Tablix") {
                     $RI.addClass("fr-render-rec");
                     $RI.addClass(me._getClassName("fr-b-",Obj));                    
                 }
@@ -4615,7 +4620,7 @@ $(function () {
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
                 else
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
-                Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
+                Style += "position:absolute;top:" + me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm;left:" + me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm;";
 
                 if (Measurements[Index].zIndex)
                     Style += "z-index:" + Measurements[Index].zIndex + ";";
@@ -4642,7 +4647,7 @@ $(function () {
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
-                    Style += "height:" + (RIContext.CurrLocation.Height + 1) + "mm;";
+                    Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
                 else {
                     var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
                                        parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
@@ -4650,7 +4655,7 @@ $(function () {
                                             (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                             parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                        1;
-                    Style += "height:" + parentHeight + "mm;";
+                    Style += "height:" + me._roundToTwo(parentHeight) + "mm;";
                 }
         
             }
@@ -4811,14 +4816,14 @@ $(function () {
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
             //This fixed an IE bug for duplicate syyles
-            if (RIContext.CurrObjParent.Type !== "Tablix")
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            }
             
             RIContext.$HTMLParent.attr("Style", Style);
             RIContext.$HTMLParent.addClass("fr-r-rT");
-            RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
-
-
+            
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -4883,6 +4888,9 @@ $(function () {
                 if (val) {
                     $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode) {
+                        Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
+                    }
                     Style += "display:table-cell;";
                 }
                 else {
@@ -5287,9 +5295,7 @@ $(function () {
             var Style = "";
             var width;
             var height;
-            //var hbordersize = 0;
-            //var wbordersize = 0;
-            var me = this;
+             var me = this;
     
             Style = "";
 
@@ -5309,7 +5315,10 @@ $(function () {
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
             Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
-            Style += "min-height:" + height + "mm;";
+            if (forerunner.device.isMSIE())
+                Style += "min-height:" + height + "mm;";
+            else
+                Style += "height:" + height + "mm;";
             
             //Row and column span
             if (Obj.RowSpan !== undefined)
@@ -5323,6 +5332,7 @@ $(function () {
                 //Background color goes on the cell
                 if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
                     Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+                $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
                 $Cell.attr("Style", Style);
                 $Cell.addClass("fr-r-tC");
@@ -5506,7 +5516,7 @@ $(function () {
             var viewport_height = $(window).innerHeight();
 
             for (var name in me._tablixStream) {
-                offset = me._tablixStream[name].EndRow.offset();
+                var offset = me._tablixStream[name].EndRow.offset();
                 if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
                     me._tablixStream[name].EndRow.detach();
                     me._writeTablixRowBatch(me._tablixStream[name]);
@@ -5727,15 +5737,15 @@ $(function () {
             Obj = CurrObj;            
             if (Obj !== undefined) {
                 if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + "!important;";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + "!important;";
                 if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + ";";
+                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + "!important;";
                 if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + "!important;";
                 if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + "!important;";
                 if (Obj.BackgroundColor)
                     Style += "background-color:" + Obj.BackgroundColor + ";";
             }
@@ -5978,7 +5988,7 @@ $(function () {
                     //Default is string, need to handle direction, 15 seems to be decimal not datetime
                     if (TypeCodeObj === undefined  || TypeCodeObj.TypeCode === undefined)
                         return "Left";
-                    switch (TypeCodeObj.TypeCode) {
+                    switch (TypeCodeObj.TypeCode) {                        
                         case 3:
                         case 6:
                         case 7:
@@ -6210,20 +6220,14 @@ $(function () {
                 //CSS += ".fr-border-" + styles[key].SID + "-" + me.reportObj.SessionID  + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
                 //CSS += ".fr-text-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getTextStyle(styles[key].Style) + "} ";
                 //CSS += ".fr-nonText-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
-                CSS += ".fr-b-" + styles[key].SID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
-                CSS += ".fr-t-" + styles[key].SID + "{" + me._getTextStyle(styles[key].Style) + "} ";
-                CSS += ".fr-n-" + styles[key].SID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
+                CSS += ".fr-b-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
+                CSS += ".fr-t-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getTextStyle(styles[key].Style, styles[key]) + "} ";
+                CSS += ".fr-n-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
             }
 
-            var sty = $("head").find("style");
-            for (var i = 0; i < sty.length; i++) {
-                if (sty[i].id === me.options.reportViewer.viewerID.toString()) {
-                    var e = sty[i];
-                    e.parentNode.removeChild(e);
-                }
-            }
             
-            $(CSS + "</style>").appendTo("head");
+            me.Page.CSS = $(CSS + "</style>");
+            
         },
         _getClassName: function (name, obj) {
             var me = this;
@@ -6231,10 +6235,13 @@ $(function () {
             var cName = "";
 
             if (obj.Elements && obj.Elements.SharedElements)
-                return name + obj.Elements.SharedElements.SID;//  + "-" + me.reportObj.SessionID;
+                return name + obj.Elements.SharedElements.SID + "-" + me.options.reportViewer.viewerID;
             if (obj.SharedElements)
-                return name + obj.SharedElements.SID;// + "-" + me.reportObj.SessionID;
+                return name + obj.SharedElements.SID + "-" + me.options.reportViewer.viewerID;
             return cName;
+        },
+        _roundToTwo: function (num) {    
+            return +(Math.round(num + "e+2")  + "e-2");
         },
     });  // $.widget
 });

@@ -5671,7 +5671,6 @@ $(function () {
                 }
             }
 
-            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]

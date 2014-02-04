@@ -41,18 +41,19 @@ function NavigateToSiteURL(site, sampleName) {
 
 function ShowSampleDetail(filename, id) {
     var url = GetSiteURL(app.Forerunnersw, filename);
+    var $div = $("#" + id);
     $.ajax({
         url: url,
         dataType: "text",
         async: false,
         success: function (data) {
-            $("#" + id).html(data);
+            $div.html(data);
         },
         fail: function () {
             console.warn("ShowSampleDetail()" + "Failed");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            showError($div, errorThrown, url)
+            showError($div, errorThrown, jqXHR, url)
         },
     });
 }
@@ -89,7 +90,7 @@ function ToggleSourceCode(site, filename, id) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             noError = false;
-            showError($div, errorThrown, url);
+            showError($div, errorThrown, jqXHR, url);
         },
     });
     if (noError) {
@@ -97,23 +98,33 @@ function ToggleSourceCode(site, filename, id) {
     }
 }
 
-function showError($div, errorThrown, url) {
+function showError($div, errorThrown, jqXHR, url) {
     var me = this;
 
-    $div.html($(
-        "<div class='sample-error'>" +
-            "<div class='sample-error-text'>An unexpected error occured. Please try again later.</div><br/>" +
-            "<div class='sample-error-text'>Name: " + errorThrown.name + "</div>" +
-            "<div class='sample-error-text'>Message: " + errorThrown.message + "</div>" +
-            "<div class='sample-error-text'>URL: <a href='" + url + "'>" + url + "</a></div>" +
-            "<div class='sample-error-text'>Code: " + errorThrown.code + "</div>" +
-            "<a class='sample-error-stack'>StackTrace</a>" +
-            "<div class='sample-error-stack-details sample-error-text'>" + errorThrown.stack + "</div>" +
-        "</div>"));
+    var html = "<div class='sample-error'>" +
+               "<div class='sample-error-text'>An unexpected error occured. Please try again later.</div><br/>" +
+               "<div class='sample-error-text'>Status: " + jqXHR.status + "</div>" +
+               "<div class='sample-error-text'>Status Text: " + jqXHR.statusText + "</div>";
 
-    var $stackDetails = $div.find(".sample-error-stack-details");
-    $stackDetails.hide();
+    if (errorThrown && errorThrown.message) {
+        html = html + "<div class='sample-error-text'>Message: " + errorThrown.message + "</div>";
+    }
 
-    $stackTrack = $div.find(".sample-error-stack");
-    $stackTrack.on("click", { $Detail: $stackDetails }, function (e) { e.data.$Detail.toggle() });
+    html = html + "<div class='sample-error-text'>URL: <a href='" + url + "'>" + url + "</a></div>";
+
+    if (errorThrown && errorThrown.stack) {
+        html = html + "<a class='sample-error-stack'>StackTrace</a>" +
+                      "<div class='sample-error-stack-details sample-error-text'>" + errorThrown.stack + "</div>" +
+                      "</div>";
+    }
+
+    $div.html($(html));
+
+    if (errorThrown && errorThrown.stack) {
+        var $stackDetails = $div.find(".sample-error-stack-details");
+        $stackDetails.hide();
+
+        $stackTrack = $div.find(".sample-error-stack");
+        $stackTrack.on("click", { $Detail: $stackDetails }, function (e) { e.data.$Detail.toggle() });
+    }
 }

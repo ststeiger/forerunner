@@ -23,6 +23,7 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
+        this.CSS = {};
     }
 
     /**
@@ -62,7 +63,7 @@ $(function () {
             $appContainer: null,
             parameterModel: null,
             savePosition: null,
-            viewerID: Math.random(),
+            viewerID: Math.floor((Math.random()*100)+1),
         },
 
         _destroy: function () {
@@ -117,9 +118,9 @@ $(function () {
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
-                //$(window).on("scroll", function () { me._updateTableHeaders(me); });
+                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
+                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change
@@ -302,6 +303,17 @@ $(function () {
                 me._setPage(me.curPage);
             }
         },
+        _removeCSS: function () {
+            var me = this;
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
+        },
         _setPage: function (pageNum) {
             //  Load a new page into the screen and udpate the toolbar
             var me = this;
@@ -322,8 +334,12 @@ $(function () {
             else {
                 me.$reportAreaContainer.find(".Page").detach();
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
+               
             }
-                       
+
+            me._removeCSS();
+            me.pages[pageNum].CSS.appendTo("head");
+
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
 
@@ -641,16 +657,7 @@ $(function () {
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
-                
-                var CSS;
-                var sty = $("head").find("style");
-                for (var i = 0; i < sty.length; i++) {
-                    if (sty[i].id === me.viewerID.toString()) {
-                        CSS = sty[i];
-                        CSS.parentNode.removeChild(CSS);
-                    }
-                }
-                $(action.CSS).appendTo("head");
+                               
 
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
@@ -1154,21 +1161,11 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
-            //Save and removed shared styles
-            var CSS;
-            var sty = $("head").find("style");
-            for (var i = 0; i < sty.length; i++) {
-                if (sty[i].id === me.viewerID.toString()) {
-                    CSS = sty[i];                    
-                    CSS.parentNode.removeChild(CSS);
-                }
-            }
-
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,CSS:CSS
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
             });
 
             me._clearReportViewerForDrill();
@@ -1796,7 +1793,7 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
             }
 
             me.pages[pageNum].isRendered = true;

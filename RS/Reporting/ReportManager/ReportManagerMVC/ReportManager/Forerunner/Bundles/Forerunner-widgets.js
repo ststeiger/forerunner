@@ -24,7 +24,6 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
-        this.CSS = {};
     }
 
     /**
@@ -339,7 +338,8 @@ $(function () {
             }
 
             me._removeCSS();
-            me.pages[pageNum].CSS.appendTo("head");
+            if (!$.isEmptyObject(me.pages[pageNum].CSS))
+                me.pages[pageNum].CSS.appendTo("head");
 
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });

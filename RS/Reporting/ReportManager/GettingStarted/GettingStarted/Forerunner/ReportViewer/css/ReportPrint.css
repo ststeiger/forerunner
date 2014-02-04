@@ -1,0 +1,43 @@
+﻿.fr-print-section { display: none; }
+
+.fr-print-form { }
+
+.fr-print-options-label { width: 100%; margin: 0 11px 16px 0; display: block; }
+
+.fr-print-margins-label { width: 100%; margin: 12px 0 16px 0; display: block; }
+
+.fr-print-settings-pair-widget { vertical-align: top; display: inline-block; }
+
+.fr-print-form .fr-print-settings { display: inline-table; vertical-align: top; padding: 0; margin: 0 16px 0 0; }
+
+.fr-print-settings td { padding-bottom: 10px; vertical-align: top; }
+
+.fr-print-orientation-container { display: inline-block; margin-right: 11px; }
+
+.fr-print-landscape { width: 44px; height: 31px; display: inline-block; }
+
+.fr-print-landscape-icon { background-image: url(../images/print_landscape.png); }
+
+.fr-print-landscape-icon-active { background-image: url(../images/print_landscape_1.png); }
+
+.fr-print-portrait { width: 31px; height: 37px; margin-right: 14px; display: inline-block; }
+
+.fr-print-portrait-icon { background-image: url(../images/print_portrait.png); }
+
+.fr-print-portrait-icon-active { background-image: url(../images/print_portrait_1.png); }
+
+.fr-print-setting { margin-bottom: 10px; }
+
+.fr-print-label { height: 20px; margin: 0 5px 0px 0; display: inline-block; }
+
+.fr-print-text { width: 50px; height: 20px; font-size: 13pt; font-weight: bold; color: #666666; text-align: right; padding: 0 6px 0 0; border: 1px solid #c6d1e1; }
+
+.fr-print-error-span { margin: 2px 0 0 4px; text-align: right; font-size: 10pt; }
+
+.fr-print-error-position { display: inline-block; }
+
+.fr-print-error { border-width: thin; border-color: red; }
+
+
+.fr-print-unit-label { width: 20px; font-size: 10pt; color: #999999; margin-left: 4px; }
+

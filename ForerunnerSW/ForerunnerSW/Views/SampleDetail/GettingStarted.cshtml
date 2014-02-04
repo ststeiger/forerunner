@@ -33,30 +33,49 @@
 
     <p><b>Step 3: Enabling Forerunner SDK Support</b></p>
     <ul>
-        <li>Copy the forerunner folder from your Mobilizer installation into the root folder in your project. Typically the install point would be something like:</li>
-        <ul><li>C:\Program Files (x86)\Forerunner\MobilizerV1</li></ul>
-        <p>and the root folder of your application contains the Web.config file.</p>
+        <li>
+            Copy the forerunner folder from your Mobilizer installation into the root folder in your project. Typically
+            the Forerunner folder folder path would be something like:
+        </li><br />
+        <ul><li>C:\Program Files (x86)\Forerunner\MobilizerV2\Forerunner</li></ul>
+        <p>and the root folder of your application will contain your Web.config file.</p>
         <li>In the Forerunner\Controllers forder, rename the namespace of the controllers from "ReportManager" to your namespace</li>
-        <li>Copy the following files from your installation bin folder to your project bin folder:</li>
+        <li>Copy the following files from your installation bin folder to your project bin folder and add references:</li>
         <ul>
-            <li>Forerunner.SQLReporting.dll</li>
             <li>Forerunner.Json.dll</li>
+            <li>Forerunner.SQLReporting.dll</li>
         </ul>
         <li>In the file: App_Start\WebApiConfig.cs change the following line:</li>
         <ul>
             <p>routeTemplate: "api/{controller}/{id}",</p>
             <p>to:</p>
-            <p>routeTemplate: "api/{controller}/<b>{action}</b>/{id}",</p>
+            <p>routeTemplate: "api/{controller}<b>/{action}</b>/{id}",</p>
         </ul>
         <li>Make the following changes to your Web.config file</li>
         <ul>
-            <p>Copy the Forerunner
+            <p>Copy the Forerunner specific
                 &lt;appsettings&gt;
                 from the installed Mobilized Web.config</p>
-            <p>Set the authentication tag to:</p>
-            <p>&lt;authentication mode="Forms"&gt;</p>
         </ul>
     </ul>
+    <p><b>Step 4: Add a page that shows a report</b></p>
+    <ul>
+        <li>In the "Solution Explorer" view, right click the "Views" > "Home" folder and select the menu items:</li>
+            <ul><li>"Add" > "View..."</li></ul>
+        <li>In the "Add View" dialog:</li>
+        <ul>
+            <li>Add a new view named "Report"</li>
+            <li>Select the  "Add" button</li>
+            <p>
+                <a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/Report.cshtml.txt', 'ReportPageSourceID')">Click here to see the source code</a>
+            </p>
+            <p>
+                <pre id="ReportPageSourceID" class="prettyprint"></pre>
+            </p>
+        </ul>
+    </ul>
+
+
     <p>
         <a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample</a>
     </p>

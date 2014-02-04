@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="true" runOnBuild="true" output="Forerunner-widgets.js">
+  <!--The order of the <file> elements determines the order of them when bundled.-->
+  <file>/Forerunner/ReportViewer/js/ReportViewer.js</file>
+  <file>/Forerunner/ReportExplorer/js/ParameterModel.js</file>
+  <file>/Forerunner/Common/js/Toolbase.js</file>
+  <file>/Forerunner/Common/js/MessageBox.js</file>
+  <file>/Forerunner/Common/js/DefaultAppTemplate.js</file>
+  <file>/Forerunner/ReportViewer/js/Toolbar.js</file>
+  <file>/Forerunner/ReportViewer/js/ToolPane.js</file>
+  <file>/Forerunner/ReportViewer/js/PageNav.js</file>
+  <file>/Forerunner/ReportExplorer/js/ReportExplorerToolbar.js</file>
+  <file>/Forerunner/ReportExplorer/js/ReportExplorer.js</file>
+  <file>/Forerunner/ReportExplorer/js/UserSettings.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportRender.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportParameter.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportDocumentMap.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportPrint.js</file>
+  <file>/Forerunner/ReportViewer/js/ManageParamSets.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportViewerInitializer.js</file>
+  <file>/Forerunner/ReportViewer/js/ReportViewerEZ.js</file>
+  <file>/Forerunner/ReportViewer/js/DSCredential.js</file>
+  <file>/Forerunner/ReportExplorer/js/ReportExplorerEZ.js</file>
+</bundle>

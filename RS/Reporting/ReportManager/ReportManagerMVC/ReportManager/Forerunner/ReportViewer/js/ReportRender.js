@@ -1071,7 +1071,7 @@ $(function () {
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
             TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
-            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text("Loading ...");
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
             me._writeTablixRowBatch(TS);
 
             HasFixedRows = TS.HasFixedRows;

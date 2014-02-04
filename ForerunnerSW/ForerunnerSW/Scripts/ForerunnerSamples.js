@@ -108,6 +108,12 @@ function showError($div, errorThrown, jqXHR, url) {
                       "</div>";
     }
 
+    if (jqXHR.responseText && jqXHR.responseText.length > 0) {
+        html = html + "<a class='sample-error-responsetext'>Response Text:</a>" +
+                      "<div class='sample-error-responsetext-details sample-error-text'>" + jqXHR.responseText + "</div>" +
+                      "</div>";
+    }
+
     $div.html($(html));
 
     if (errorThrown && errorThrown.stack) {
@@ -116,5 +122,13 @@ function showError($div, errorThrown, jqXHR, url) {
 
         $stackTrack = $div.find(".sample-error-stack");
         $stackTrack.on("click", { $Detail: $stackDetails }, function (e) { e.data.$Detail.toggle() });
+    }
+
+    if (jqXHR.responseText && jqXHR.responseText.length > 0) {
+        var $responseTextDetails = $div.find(".sample-error-responsetext-details");
+        $responseTextDetails.hide();
+
+        $responseText = $div.find(".sample-error-responsetext");
+        $responseText.on("click", { $Detail: $responseTextDetails }, function (e) { e.data.$Detail.toggle() });
     }
 }

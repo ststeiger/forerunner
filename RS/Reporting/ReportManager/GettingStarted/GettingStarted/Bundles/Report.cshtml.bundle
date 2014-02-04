@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="false" runOnBuild="true" output="Report.cshtml.txt">
+  <file>/Views/Home/Report.cshtml</file>
+</bundle>

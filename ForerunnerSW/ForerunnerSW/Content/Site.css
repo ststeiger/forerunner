@@ -77,6 +77,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .SamplesTab1{margin-left:2em;}
 .SamplesContent{font-size:18px;background-color: #EAEAEA;padding:18px 18px 18px 18px;}
   .SamplesContent ul { display: block; padding-left: 2em; margin: 0 0 1em 0;}
+  .SamplesContent pre { font-size:18px;}
 
 .sample-error { margin: 4px; left: 10px; }
   .sample-error .sample-error-text { color: red; font-weight: bold; }

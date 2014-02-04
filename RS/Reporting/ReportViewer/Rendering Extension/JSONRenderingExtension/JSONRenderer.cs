@@ -11,8 +11,8 @@ using System.Collections;
 using Microsoft.ReportingServices.OnDemandReportRendering;
 using Forerunner.SSRS.JSONRender;
 using Forerunner.RenderingExtensions;
-using ForerunnerLicense;
 using ReportManager.Util.Logging;
+using ForerunnerLicense;
 
 namespace Forerunner.RenderingExtensions
 {
@@ -43,7 +43,7 @@ namespace Forerunner.RenderingExtensions
         {
             RPL.GetRenderingResource(createAndRegisterStreamCallback, deviceInfo);
         }
-
+        
         public bool Render(Microsoft.ReportingServices.OnDemandReportRendering.Report report, NameValueCollection reportServerParameters, NameValueCollection deviceInfo, NameValueCollection clientCapabilities, ref Hashtable renderProperties, CreateAndRegisterStream createAndRegisterStream)
         {
             try
@@ -56,14 +56,14 @@ namespace Forerunner.RenderingExtensions
 
                 RegisteredStream.Position = 0;
                 JSON = new ReportJSONWriter(RegisteredStream);
-                byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())));
+                byte[] UTF8JSON = Encoding.UTF8.GetBytes(JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString())).ToString());
                 outputStream.Write(UTF8JSON, 0, UTF8JSON.Length);
                 return retval;
             }
             catch (LicenseException e)
             {
                 ExceptionLogGenerator.LogException(e);
-                return false;
+                return false;                
             }
             catch (Exception e)
             {
@@ -102,10 +102,10 @@ namespace Forerunner.RenderingExtensions
             }
 
             return RenderStreams(name, extension, encoding, mimeType, willSeek, operation);
-
-        }
+            
+        }   
     }
 
-
+   
 
 }

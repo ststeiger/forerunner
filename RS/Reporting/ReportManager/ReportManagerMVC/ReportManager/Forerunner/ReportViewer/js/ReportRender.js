@@ -53,17 +53,29 @@ $(function () {
         },
         // Constructor
         _create: function () {
+            var me = this;
+            var isTouch = forerunner.device.isTouch();
+            // For touch device, update the header only on scrollstop.
+            if (isTouch) {
+                $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
+            } else {
+                $(window).on("scroll", function () { me._lazyLoadTablix(me); });
+            }
         },
          
         render: function (reportObj) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-             
+            me.reportObj = reportObj;
+            me._tablixStream = {};
+
+            me._createStyles(reportViewer);
            $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
                 me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
            me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, reportObj);
+          
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -261,11 +273,16 @@ $(function () {
         
                 Style = "";
                 if (Obj.Type !== "Line") {
-                    Style = "display:table;border-collapse:collapse;";
-                    Style += me._getFullBorderStyle(Obj);
+                    //Style = "display:table;border-collapse:collapse;";
+                    if (Obj.Elements)
+                        Style += me._getFullBorderStyle(Obj.Elements.NonSharedElements.Style);
                 }
 
                 $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
+                if (Obj.Type !== "Line") {
+                    $RI.addClass("fr-render-rec");
+                    $RI.addClass(me._getClassName("fr-b-",Obj));                    
+                }
                        
                 $LocDiv = new $("<Div/>");
                 $LocDiv.append($RI);
@@ -274,8 +291,13 @@ $(function () {
                 //Determin height and location
                 if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                else
-                    RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                else {
+                    if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
+                        RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                    }
+                    else
+                        RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                }
 
                 if (RecLayout.ReportItems[Index].IndexAbove === null)
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
@@ -287,9 +309,7 @@ $(function () {
                     Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                 //Background color goes on container
-                if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
-                    Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
-                else if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
+                 if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
         
                 $LocDiv.attr("Style", Style);
@@ -300,8 +320,11 @@ $(function () {
             Style = "position:relative;";
             //This fixed an IE bug dublicate styles
             if (RIContext.CurrObjParent.Type !== "Tablix") {
-                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
-                Style += me._getFullBorderStyle(RIContext.CurrObj);
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+                Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
             }
 
             if (RIContext.CurrLocation) {
@@ -470,8 +493,7 @@ $(function () {
             var $Sort = null;
             var me = this;
 
-            Style += "display:table;";
-            Style += "table-layout: fixed;";  //This fixes FF and IE word break
+            Style += "";
             
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
@@ -479,12 +501,13 @@ $(function () {
             //This fixed an IE bug for duplicate syyles
             if (RIContext.CurrObjParent.Type !== "Tablix")
                 Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-
-
-            Style += "position:relative;";
+            
             RIContext.$HTMLParent.attr("Style", Style);
+            RIContext.$HTMLParent.addClass("fr-r-rT");
+            RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
 
-            if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
+
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $Drilldown.html("&nbsp");
@@ -498,7 +521,7 @@ $(function () {
                 $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
-            if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
                 $Sort = $("<div/>");
                 $Sort.html("&nbsp");
                 var Direction = "None";
@@ -525,8 +548,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;-ms-word-break:break-word;";
-            Style += "margin:0;display: table-cell;";            
+            Style = "";            
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
@@ -539,23 +561,23 @@ $(function () {
             }
             else {
                 //Needs to be 100% to handle center align
-                Style += "width:100%;height:100%;";
+                //Style += "width:100%;height:100%;";
+                $TextObj.addClass("fr-r-fS");
             }
                
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.SharedElements.Value));
+                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                if (val) {
+                    $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    Style += "display:table-cell;";
                 }
-                else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.NonSharedElements.Value));
-                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-                }
-                else
+                else {
                     $TextObj.html("&nbsp");
+                    Style += "text-decoration:none;";
+                }
+                $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             }
             else {
                 //Handle each paragraphs
@@ -569,19 +591,20 @@ $(function () {
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
 
+                    var listLevel = me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel;
                     if (LowIndex === null)
-                        LowIndex = Obj.Paragraph.SharedElements.ListLevel;
-                    if (!ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel])
-                        ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
-                    ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
+                        LowIndex = listLevel;
+                    if (!ParagraphContainer[listLevel])
+                        ParagraphContainer[listLevel] = [];
+                    ParentName[listLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
 
                     var item;
-                    if (!ParentName[Obj.Paragraph.SharedElements.ListLevel - 1])
+                    if (!ParentName[listLevel - 1])
                         item = "Root";
                     else
-                        item = ParentName[Obj.Paragraph.SharedElements.ListLevel - 1];
+                        item = ParentName[listLevel - 1];
                     item = { Parent: item, Value: Obj };
-                    ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel].push(item);
+                    ParagraphContainer[listLevel].push(item);
                 });
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
@@ -589,9 +612,11 @@ $(function () {
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
+            $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            $TextObj.addClass("fr-r-t");
 
             //Make room for the sort image
-            if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
                 $TextObj.css("padding-right", "15px");
             }
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
@@ -610,16 +635,16 @@ $(function () {
                     var ParagraphStyle = "font-size:small;"; //needed for paragraph spacing 
                     Obj = Obj.Value;
 
-                    if (Obj.Paragraph.SharedElements.ListStyle === 1) {
+                    if (me._getSharedElements(Obj.Paragraph.SharedElements).ListStyle === 1) {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
-                        $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._getListStyle(1, me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel));
                         $ParagraphItem = new $("<LI />");
                     }
-                    else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
+                    else if (me._getSharedElements(Obj.Paragraph.SharedElements).ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
                             $ParagraphList = new $("<UL />");
-                        $ParagraphList.addClass(me._getListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._getListStyle(2, me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel));
                         $ParagraphItem = new $("<LI />");
                     }
                     else {
@@ -632,6 +657,9 @@ $(function () {
                     ParagraphStyle += me._getMeasurements(me._getMeasurmentsObj(Obj, Index));
                     ParagraphStyle += me._getElementsStyle(RIContext.RS, Obj.Paragraph);
                     $ParagraphItem.attr("Style", ParagraphStyle);
+                    $ParagraphItem.addClass(me._getClassName("fr-n-", Obj.Paragraph));
+                    $ParagraphItem.addClass(me._getClassName("fr-t-", Obj.Paragraph));
+
                     $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
                     //Handle each TextRun
@@ -647,8 +675,8 @@ $(function () {
                             me._writeActions(RIContext, Obj.TextRuns[i].Elements.NonSharedElements, $TextRun);
                         }
 
-                        if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.SharedElements.Value));
+                        if (me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value && me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value !== "") {
+                            $TextRun.text(me._getNewLineFormatText(me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value));
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
                             $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.NonSharedElements.Value));
@@ -665,6 +693,8 @@ $(function () {
                             TextRunStyle += me._getMeasurements(me._getMeasurmentsObj(Obj.TextRuns[i], i));
                             TextRunStyle += me._getElementsTextStyle(Obj.TextRuns[i].Elements);
                             $TextRun.attr("Style", TextRunStyle);
+                            $TextRun.addClass(me._getClassName("fr-t-", Obj.TextRuns[i]));                            
+
                         }
 
                         $ParagraphItem.append($TextRun);
@@ -673,7 +703,8 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    $ParagraphList.attr("style","width:100%;height:100%;");
+                    //$ParagraphList.attr("style", "width:100%;height:100%;");
+                    $ParagraphList.addClass("fr-r-pL");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
@@ -704,23 +735,27 @@ $(function () {
             var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;";
+            var Style = RIContext.Style ;
+            RIContext.$HTMLParent.addClass("fr-render-image");
 
             //Get padding
             Style += me._getTextStyle(RIContext.CurrObj.Elements);
+            RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
 
             //This fixed an IE bug dublicate styles
-            if (RIContext.CurrObjParent.Type !== "Tablix")
-                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            }
             
             Style += me._getMeasurements(measurement, true);
-            Style += "overflow:hidden;";
+ 
 
             var ImageName;
             var imageStyle = "";
             var imageConsolidationOffset;
 
-            var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+            var sizingType = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Sizing;
 
             //get the padding size
             var padWidth = me._getPaddingSize(RIContext.CurrObj, "Left") + me._getPaddingSize(RIContext.CurrObj, "Right");
@@ -805,7 +840,7 @@ $(function () {
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });
             }
-            else {
+            else if (Action.DrillthroughId) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
@@ -944,9 +979,13 @@ $(function () {
             //var wbordersize = 0;
             var me = this;
     
-            Style = "vertical-align:top;padding:0;margin:0;";
-            Style += "-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
-            Style += me._getFullBorderStyle(Obj.Cell.ReportItem);
+            Style = "";
+
+            if (Obj.Cell){
+                Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
+                $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
+            }
+
             var ColIndex = Obj.ColumnIndex;
 
             var RowIndex;
@@ -957,14 +996,8 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
-
-            //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
-            if (forerunner.device.isMSIE()) {                
-                Style += "height:" + (height) + "mm;";
-            }
-            else
-                Style += "height:" + height + "mm;";
+            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            Style += "min-height:" + height + "mm;";
             
             //Row and column span
             if (Obj.RowSpan !== undefined)
@@ -974,20 +1007,25 @@ $(function () {
                 
             }
                
-            //Background color goes on the cell
-            if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
-                Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
-            else if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
-                Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+            if (Obj.Cell){
+                //Background color goes on the cell
+                if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
+                    Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
 
-            $Cell.attr("Style", Style);
-            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;width:100%;height:100%;", new tempMeasurement(height, width))));
+                $Cell.attr("Style", Style);
+                $Cell.addClass("fr-r-tC");
+                var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
+                RI.addClass("fr-r-tCI");
+                $Cell.append(RI);
+            }
+            else
+                $Cell.html("&nbsp");
             return $Cell;
         },
         _writeTablix: function (RIContext) {
             var me = this;
             var $Tablix = me._getDefaultHTMLTable();
-            var Style = "border-collapse:collapse;padding:0;margin:0;";
+            var Style = "";
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
@@ -1002,8 +1040,12 @@ $(function () {
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
             
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getFullBorderStyle(RIContext.CurrObj);
+            Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
             $Tablix.attr("Style", Style);
+            $Tablix.addClass("fr-render-tablix");
+            $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            $Tablix.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
 
             //If there are columns
             if (RIContext.CurrObj.ColumnWidths) {
@@ -1018,61 +1060,16 @@ $(function () {
                 }
             }
 
-            if (RIContext.CurrObj.TablixRows) {
-                $Row = new $("<TR/>");
-                $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
-                    if (Obj.RowIndex !== LastRowIndex) {
-                        $Tablix.append($Row);
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
+            me._writeTablixRowBatch(TS);
 
-                        //Handle fixed col header
-                        if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
-                            $FixedColHeader.append($Row.clone(true, true));
-
-                        $Row = new $("<TR/>");
-
-                        //Handle missing rows
-                        for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
-                            $Tablix.append($Row);
-                            $Row = new $("<TR/>");
-                        }
-                        LastRowIndex = Obj.RowIndex;
-                    }
-
-                    if (Obj.UniqueName)
-                        me._writeUniqueName($Row, Obj.UniqueName);
-
-                    //Handle fixed row header
-                    if (Obj.Type !== "Corner" && LastObjType === "Corner") {
-                        $FixedRowHeader.append($Row.clone(true, true));
-                    }
-                    if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
-                        $FixedRowHeader.append($Row.clone(true, true));
-                    }
-                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
-                        HasFixedRows = true;
-
-                    //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
-                    if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]){
-                        if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
-                            HasFixedCols = true;
-                    }                  
-
-                    if (Obj.Type === "BodyRow") {
-                        $.each(Obj.Cells, function (BRIndex, BRObj) {
-                            if (BRObj.Cell)
-                                $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
-                        });
-                    }
-                    else {
-                        if (Obj.Cell)
-                            $Row.append(me._writeTablixCell(RIContext, Obj, Index));
-                    }
-                    LastObjType = Obj.Type;
-                });
-                $Tablix.append($Row);
-            }
-
+            HasFixedRows = TS.HasFixedRows;
+            HasFixedCols = TS.HasFixedCols;
             if (HasFixedRows) {
                 $FixedColHeader.hide();
             }
@@ -1099,6 +1096,122 @@ $(function () {
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
         },
+
+
+
+        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State) {
+            var me = this;
+            var LastRowIndex = State.LastRowIndex;
+            var LastObjType = State.LastObjType;
+            var $Row = State.Row;
+            var HasFixedCols = false;
+            var HasFixedRows = false;
+
+            if (Obj.RowIndex !== LastRowIndex) {
+                $Tablix.append($Row);
+
+                //Handle fixed col header
+                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
+                   $FixedColHeader.append($Row.clone(true, true));
+                }
+
+                $Row = new $("<TR/>");
+
+                //Handle missing rows
+                for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
+                    $Tablix.append($Row);
+                    $Row = new $("<TR/>");
+                }
+                LastRowIndex = Obj.RowIndex;
+            }
+
+            if (Obj.UniqueName)
+                me._writeUniqueName($Row, Obj.UniqueName);
+
+            //Handle fixed row header
+            if (Obj.Type !== "Corner" && LastObjType === "Corner") {
+                $FixedRowHeader.append($Row.clone(true, true));
+            }
+            if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
+                $FixedRowHeader.append($Row.clone(true, true));
+            }
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+                HasFixedRows = true;
+
+            //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
+            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
+                if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
+                    HasFixedCols = true;
+            }
+
+            if (Obj.Type === "BodyRow") {
+                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
+                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                });
+                State.CellCount += Obj.Cells.length;
+            }
+            else {
+                if (Obj.Cell){
+                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    State.CellCount += 1;
+                    }
+            }
+            LastObjType = Obj.Type;
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+        },
+        _batchSize: 3000,
+        _tablixStream: {},
+        _writeTablixRowBatch: function (Tablix) {
+            var me = this;
+            
+            //me.options.reportViewer.showLoadingIndictator(me.options.reportViewer,true);
+
+            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
+                var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
+                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
+                if (Tablix.State.HasFixedRows === true)
+                    Tablix.HasFixedRows = true;
+                if (Tablix.State.HasFixedCols === true)
+                    Tablix.HasFixedCols = true;
+            }
+            //me.options.reportViewer.removeLoadingIndicator(true);
+            Tablix.State.StartIndex = Index;
+            Tablix.State.CellCount = 0;
+            if (Tablix.State.StartIndex < Tablix.RIContext.CurrObj.TablixRows.length) {                
+                Tablix.$Tablix.append(Tablix.EndRow);
+                Tablix.BigTablix = true;
+            }
+            else {
+                Tablix.$Tablix.append(Tablix.State.Row);
+            }
+        },
+
+        _lazyLoadTablix: function (me) {
+
+            var viewport_left = $(window).scrollLeft();
+            var viewport_top =$(window).scrollTop();
+            var viewport_width = $(window).innerWidth();
+            var viewport_height = $(window).innerHeight();
+
+            for (var name in me._tablixStream) {
+                offset = me._tablixStream[name].EndRow.offset();
+                if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
+                    me._tablixStream[name].EndRow.detach();
+                    me._writeTablixRowBatch(me._tablixStream[name]);
+                }
+
+            }
+
+        },
+
+
+
+
+
+
+
+
+
         _writeSubreport: function (RIContext) {
             var me = this;
             RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
@@ -1113,19 +1226,23 @@ $(function () {
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = "position:relative;width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
             
-            if (measurement.Width === 0 || measurement.Height === 0)
-                Style += me._getFullBorderStyle(RIContext.CurrObj);
+            if (measurement.Width === 0 || measurement.Height === 0) {
+                Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+            }
             else {
                 var $line = $("<Div/>");
                 var newWidth = Math.sqrt(Math.pow(measurement.Height, 2) + Math.pow(measurement.Width, 2));
                 var rotate = Math.atan(measurement.Height / measurement.Width);
                 var newTop = (newWidth / 2) * Math.sin(rotate);
                 var newLeft = (newWidth / 2) - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
-                if (!(RIContext.CurrObj.Elements.SharedElements.Slant === undefined || RIContext.CurrObj.Elements.SharedElements.Slant === 0))
+                if (!(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Slant === undefined || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Slant === 0))
                     rotate = rotate - (2 * rotate);
 
                 var lineStyle = "position:absolute;top:" + newTop + "mm;left:" + newLeft + "mm;";
-                lineStyle += me._getFullBorderStyle(RIContext.CurrObj);
+                lineStyle += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                $line.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+
                 lineStyle += "width:" + newWidth + "mm;height:0;";
                 lineStyle += "-moz-transform: rotate(" + rotate + "rad);";
                 lineStyle += "-webkit-transform: rotate(" + rotate + "rad);";
@@ -1144,9 +1261,10 @@ $(function () {
 
         },
         _writeBookMark: function (RIContext) {
+            var me = this;
             var $node = $("<a/>"),
                 CurrObj = RIContext.CurrObj.Elements,
-                bookmark = CurrObj.SharedElements.Bookmark || CurrObj.NonSharedElements.Bookmark;
+                bookmark = me._getSharedElements(CurrObj.SharedElements).Bookmark || CurrObj.NonSharedElements.Bookmark;
 
             if (bookmark) {
                 $node.attr("name", bookmark).attr("id", bookmark);
@@ -1154,8 +1272,10 @@ $(function () {
             }   
         },
         _writeTooltip: function (RIContext) {
+            var me = this;
+
             var CurrObj = RIContext.CurrObj.Elements,
-                tooltip = CurrObj.SharedElements.Tooltip || CurrObj.NonSharedElements.Tooltip;
+                tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
 
             if (tooltip) {
                 if (RIContext.CurrObjParent.Type === "Image")
@@ -1195,15 +1315,17 @@ $(function () {
             var Style = "";
             var me = this;
 
-            Style += me._getStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getStyle(RS, me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+            //Background Image maybe at root
+            Style += me._getStyle(RS, CurrObj, CurrObj);
             return Style;
         },
         _getElementsTextStyle: function (CurrObj) {
             var Style = "";
             var me = this;
 
-            Style += me._getTextStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getTextStyle(me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
             return Style;
         },
@@ -1211,7 +1333,7 @@ $(function () {
             var Style = "";
             var me = this;
 
-            Style += me._getNonTextStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getNonTextStyle(RS, me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getNonTextStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
             return Style;
         },
@@ -1224,7 +1346,7 @@ $(function () {
             var SideSize;
 
             //Need left, top, right bottom border
-            Obj = CurrObj.Elements.SharedElements.Style;
+            Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
             if (Obj) {
                 DefaultStyle = Obj.BorderStyle;
                 SideStyle = Obj["BorderStyle" + Side];
@@ -1256,7 +1378,7 @@ $(function () {
             var SideSize;
 
     
-            Obj = CurrObj.Elements.SharedElements.Style;
+            Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
             if (Obj) {
                 SideSize = Obj["Padding" + Side];
             }
@@ -1273,35 +1395,37 @@ $(function () {
             var Style = "";
             var Obj;
 
-            if (!CurrObj.Elements)
+            if (!CurrObj)
                 return "";
 
             //Need left, top, right bottom border
-            Obj = CurrObj.Elements.SharedElements.Style;
-            if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
-                if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
-                if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
-                if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
-                if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
-            }
-            Obj = CurrObj.Elements.NonSharedElements.Style;
+            //Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
+            //if (Obj !== undefined) {
+            //    if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
+            //        Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+            //    if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
+            //        Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+            //    if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
+            //        Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+            //    if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
+            //        Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+            //    if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
+            //        Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+            //}
+            Obj = CurrObj;            
             if (Obj !== undefined) {
                 if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
                     Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
                     Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
                 if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + ";";
                 if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
                     Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
                 if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
                     Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+                if (Obj.BackgroundColor)
+                    Style += "background-color:" + Obj.BackgroundColor + ";";
             }
 
             return Style;
@@ -1400,11 +1524,12 @@ $(function () {
         },
         _getTextDirection:function(CurrObj){
             var Dirclass = "";
+            var me = this;
 
-            if (CurrObj.SharedElements.Style && CurrObj.SharedElements.Style.WritingMode !== undefined){
-                if (CurrObj.SharedElements.Style.WritingMode === 1)
+            if (me._getSharedElements(CurrObj.SharedElements).Style && me._getSharedElements(CurrObj.SharedElements).Style.WritingMode !== undefined){
+                if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 1)
                     Dirclass = "fr-rotate-90";
-                if (CurrObj.SharedElements.Style.WritingMode === 2)
+            if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 2)
                     Dirclass = "fr-rotate-270";
             }
             if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
@@ -1539,7 +1664,7 @@ $(function () {
             switch (RPLCode) {
                 case 0:
                     //Default is string, need to handle direction, 15 seems to be decimal not datetime
-                    if (TypeCodeObj.TypeCode === undefined)
+                    if (TypeCodeObj === undefined  || TypeCodeObj.TypeCode === undefined)
                         return "Left";
                     switch (TypeCodeObj.TypeCode) {
                         case 3:
@@ -1642,6 +1767,16 @@ $(function () {
             if (CurrObj.Measurement)
                 retval = CurrObj.Measurement.Measurements[Index];
             return retval;
+        },
+        _getSharedElements: function(sharedElements){
+            var me = this;
+            
+            if (sharedElements.SID) {
+                return me.reportObj.ReportContainer.SharedElements[sharedElements.SID];
+            }
+            else
+                return sharedElements;
+
         },
         _convertToMM: function (convertFrom) {
     
@@ -1753,6 +1888,41 @@ $(function () {
         },
         _getNewLineFormatText: function (Value) {
             return Value.replace(/\r\n+/g, "\n");
+        },
+        _createStyles: function(RS){
+            var me = this;
+            var CSS = "<style type='text/css' id='" + me.options.reportViewer.viewerID + "'>";
+            var styles = me.reportObj.ReportContainer.SharedElements;
+
+            for (var key in styles) {                
+                //CSS += ".fr-border-" + styles[key].SID + "-" + me.reportObj.SessionID  + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
+                //CSS += ".fr-text-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getTextStyle(styles[key].Style) + "} ";
+                //CSS += ".fr-nonText-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
+                CSS += ".fr-b-" + styles[key].SID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
+                CSS += ".fr-t-" + styles[key].SID + "{" + me._getTextStyle(styles[key].Style) + "} ";
+                CSS += ".fr-n-" + styles[key].SID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
+            }
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.options.reportViewer.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
+            }
+            
+            $(CSS + "</style>").appendTo("head");
+        },
+        _getClassName: function (name, obj) {
+            var me = this;
+
+            var cName = "";
+
+            if (obj.Elements && obj.Elements.SharedElements)
+                return name + obj.Elements.SharedElements.SID;//  + "-" + me.reportObj.SessionID;
+            if (obj.SharedElements)
+                return name + obj.SharedElements.SID;// + "-" + me.reportObj.SessionID;
+            return cName;
         },
     });  // $.widget
 });

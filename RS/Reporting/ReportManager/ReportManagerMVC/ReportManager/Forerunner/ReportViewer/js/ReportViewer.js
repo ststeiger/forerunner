@@ -59,7 +59,8 @@ $(function () {
             savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
-            $appContainer: null
+            $appContainer: null,
+            viewerID: Math.random(),
         },
 
         _destroy: function () {
@@ -69,7 +70,7 @@ $(function () {
         _create: function () {
             var me = this;
 
-            setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
+            setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
@@ -105,13 +106,15 @@ $(function () {
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             me.renderTime = new Date().getTime();
             me.paramDefs = null;
+            me.viewerID = me.options.viewerID;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
-                $(window).on("scroll", function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstart", function () { me._hideTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             }
 
             //setup orientation change
@@ -218,10 +221,10 @@ $(function () {
                 return;
 
             var offset = $tablix.offset();
-            var scrollTop = $(window).scrollTop();            
-            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
-                $rowHeader.fadeIn("fast");
+            var scrollTop = $(window).scrollTop();
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
+                $rowHeader.show();
             }
             else {
                 $rowHeader.hide();
@@ -239,16 +242,21 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#showLoadingIndictator
          */
-        showLoadingIndictator: function (me) {
-            if (me.loadLock === 1) {
+        showLoadingIndictator: function (me, force) {
+            if (me.loadLock === 1 || force === true) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                if (force === true) {
+                    me.$loadingIndicator.css("top",$(window).scrollTop() + 100 + "px")
                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
-
+                } else {
+                    me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
+ 
                 me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
             }
@@ -258,9 +266,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#removeLoadingIndicator
          */
-        removeLoadingIndicator: function () {
+        removeLoadingIndicator: function (force) {
             var me = this;
-            if (me.loadLock === 1) {
+            if (me.loadLock === 1||force === true) {
                 me.loadLock = 0;
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
@@ -599,6 +607,9 @@ $(function () {
                 me.scrollTop = action.ScrollTop;
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
+                me.renderError = action.renderError;
+
+                $(action.CSS).appendTo("head");
               
                 //Trigger Change Report, disables buttons.  Differnt than pop
                 me._trigger(events.drillBack, null, { path: me.options.reportPath });
@@ -627,6 +638,8 @@ $(function () {
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
+                me.flushCache();
+                me._resetViewer(false);
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
@@ -1001,6 +1014,7 @@ $(function () {
                         me.lock = 0;
                     }
                     else {
+                        me.renderError = false;
                         me.sessionID = data.SessionID;
                         if (me.origionalReportPath === "")
                             me.origionalReportPath = me.options.reportPath;
@@ -1081,9 +1095,19 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            var CSS;
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    CSS = sty[i];                    
+                }
+            }
+ 
             me.actionHistory.push({
                 ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
-                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams, reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs
+                ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
+                reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
+                renderError: me.renderError, CSS:CSS
             });
             me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
         },
@@ -1605,6 +1629,7 @@ $(function () {
                 return;
 
             if (!me.pages[pageNum].reportObj.Exception) {
+                me.renderError = false;
                 me.hasDocMap = me.pages[pageNum].reportObj.HasDocMap;
 
                 //Render responsive if set

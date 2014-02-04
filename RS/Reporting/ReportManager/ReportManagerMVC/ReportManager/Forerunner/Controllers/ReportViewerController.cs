@@ -49,12 +49,19 @@ namespace ReportManager.Controllers
 
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
+            return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);
+        }
+
+        private HttpResponseMessage GetResponseFromBytes(Stream result, string mimeType, bool cache = false, string fileName = null)
+        {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
             if (result != null)
             {
-                resp.Content = new ByteArrayContent(result); ;
+                result.Position = 0;
+                resp.Content = new StreamContent(result);               
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
+
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=3600");  //1 hour
                 if (fileName != null)
@@ -71,7 +78,7 @@ namespace ReportManager.Controllers
             result = Encoding.UTF8.GetBytes(Forerunner.JsonUtility.WriteExceptionJSON(e));
             return GetResponseFromBytes(result, "text/JSON");
         }
-
+     
         [AllowAnonymous]
         [HttpGet]
         [ActionName("AcceptLanguage")]
@@ -97,7 +104,7 @@ namespace ReportManager.Controllers
                 byte[] result = null;
                 string mimeType;
                 result = GetReportViewer().GetImage(SessionID, ImageID, out mimeType);
-                return GetResponseFromBytes(result, mimeType, true);
+                return GetResponseFromBytes(result, mimeType,true);
             }
             catch(Exception e)
             {
@@ -131,9 +138,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-                byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList));
-                return GetResponseFromBytes(result, "text/JSON");
+                return GetResponseFromBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList), "text/JSON");
             }
             catch (Exception e)
             {

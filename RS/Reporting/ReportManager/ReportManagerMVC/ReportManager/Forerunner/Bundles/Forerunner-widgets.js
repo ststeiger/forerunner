@@ -7137,13 +7137,17 @@ $(function () {
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                    var shouldInclude = this.value !== null && this.value !== "" && me._shouldInclude(this, noValid);
+                    if (shouldInclude)
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
                 $(".fr-param", me.$params).filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
-                        radioList[this.name] = null;
+                        if (noValid && me._isNullChecked(this)) {
+                            radioList[this.name] = null;
+                        }
                     }
                     if (this.checked === true) {
                         radioList[this.name] = me._isParamNullable(this);

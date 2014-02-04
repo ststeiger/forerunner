@@ -24,6 +24,7 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
+        this.CSS = {};
     }
 
     /**
@@ -39,6 +40,7 @@ $(function () {
      * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -56,11 +58,13 @@ $(function () {
             paramArea: null,
             DocMapArea: null,
             userSettings: null,
+            savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
             parameterModel: null,
-            savePosition: null
+            savePosition: null,
+            viewerID: Math.floor((Math.random()*100)+1),
         },
 
         _destroy: function () {
@@ -70,7 +74,7 @@ $(function () {
         _create: function () {
             var me = this;
 
-            setInterval(function () { me._sessionPing(); }, this.options.pingInterval);
+            setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
@@ -108,12 +112,15 @@ $(function () {
             me.paramDefs = null;
             me.credentialDefs = null;
             me.datasourceCredentials = null;
+            me.viewerID = me.options.viewerID;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
             } else {
+                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
+                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
@@ -230,9 +237,9 @@ $(function () {
 
             var offset = $tablix.offset();
             var scrollTop = $(window).scrollTop();            
-            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.height())) {
-                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.height())) + me.options.toolbarHeight) + "px");                
-                $rowHeader.fadeIn("fast");
+            if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
+                $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
+                $rowHeader.show();
             }
             else {
                 $rowHeader.hide();
@@ -250,15 +257,21 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#showLoadingIndictator
          */
-        showLoadingIndictator: function (me) {
-            if (me.loadLock === 1) {
+        showLoadingIndictator: function (me,force) {
+            if (me.loadLock === 1 || force===true) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.addClass("fr-layout-mainviewport-fullheight");
                 //212 is static value for loading indicator width
                 var scrollLeft = me.$reportContainer.width() - 212;
 
-                me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
-                    .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                if (force === true) {
+                    me.$loadingIndicator.css("top",$(window).scrollTop() + 100 + "px")
+                     .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
+                else {
+                    me.$loadingIndicator.css("top", me.$reportContainer.scrollTop() + 100 + "px")
+                        .css("left", scrollLeft > 0 ? scrollLeft / 2 : 0 + "px");
+                }
 
                 me.$reportContainer.addClass("fr-report-container-translucent");
                 me.$loadingIndicator.show();
@@ -269,9 +282,9 @@ $(function () {
          *
          * @function $.forerunner.reportViewer#removeLoadingIndicator
          */
-        removeLoadingIndicator: function () {
+        removeLoadingIndicator: function (force) {
             var me = this;
-            if (me.loadLock === 1) {
+            if (me.loadLock === 1 || force === true) {
                 me.loadLock = 0;
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.removeClass("fr-layout-mainviewport-fullheight");
@@ -289,6 +302,17 @@ $(function () {
                     me.pages[i].$container.html("");
                 }
                 me._setPage(me.curPage);
+            }
+        },
+        _removeCSS: function () {
+            var me = this;
+
+            var sty = $("head").find("style");
+            for (var i = 0; i < sty.length; i++) {
+                if (sty[i].id === me.viewerID.toString()) {
+                    var e = sty[i];
+                    e.parentNode.removeChild(e);
+                }
             }
         },
         _setPage: function (pageNum) {
@@ -311,8 +335,12 @@ $(function () {
             else {
                 me.$reportAreaContainer.find(".Page").detach();
                 me.$reportAreaContainer.append(me.pages[pageNum].$container);
+               
             }
-                       
+
+            me._removeCSS();
+            me.pages[pageNum].CSS.appendTo("head");
+
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
 
@@ -630,7 +658,8 @@ $(function () {
                 me.reportStates = action.reportStates;
                 me.renderTime = action.renderTime;
                 me.renderError = action.renderError;
-                
+                               
+
                 if (action.credentialDefs !== null) {
                     me.credentialDefs = action.credentialDefs;
                     me.datasourceCredentials = action.savedCredential;
@@ -670,6 +699,8 @@ $(function () {
                 me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
             }
             else {
+                me.flushCache();
+                me._resetViewer(false);
                 me._trigger(events.back, null, { path: me.options.reportPath });
             }
         },
@@ -689,7 +720,7 @@ $(function () {
                 else {
                     window.detachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.unmask();
+                me.element.unmask(function() { me.showNav.call(me);});
             }
             else {//open nav
                 me.pageNavOpen = true;
@@ -698,7 +729,7 @@ $(function () {
                 } else {
                     window.attachEvent("orientationchange", me._handleOrientation);
                 }
-                me.element.mask();
+                me.element.mask(function() { me.showNav.call(me);});
             }
 
             if (me.options.pageNavArea){
@@ -1320,8 +1351,9 @@ $(function () {
          */
         showPrint: function () {
             var me = this;
-            me._printDialog.reportPrint("openDialog");
-            //forerunner.dialog.showReportPrintDialog(me.options.$appContainer);
+            if (me.$printDialog) {
+                me.$printDialog.reportPrint("openDialog");
+            }
         },
         /**
         * print current reprot in custom PDF format
@@ -1335,13 +1367,10 @@ $(function () {
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
             window.open(url);
         },
-
-        _printDialog : null,
         _setPrint: function (pageLayout) {
             var me = this;
-            var $dlg = me.options.$appContainer.find(".fr-print-section");
-            $dlg.reportPrint("setPrint", pageLayout);
-            me._printDialog = $dlg;
+            me.$printDialog = me.options.$appContainer.find(".fr-print-section");
+            me.$printDialog.reportPrint("setPrint", pageLayout);
         },
        
         //Page Loading
@@ -1352,10 +1381,16 @@ $(function () {
                 me.refreshParameters(savedParams, true, pageNum);
             }
         },
+        _getSavedParams : function(orderedList) {
+            for(var i = 0; i < orderedList.length; i++) {
+                    if (orderedList[i]) return orderedList[i];
+                }
+            return null;
+        },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
-            var savedParams = savedParamFromHistory ? savedParamFromHistory :
-                (me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null);
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.options.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null]);
 
             if (submitForm === undefined)
                 submitForm = true;
@@ -1394,12 +1429,17 @@ $(function () {
                     DSCredentials: me.getDataSourceCredential()
                 },
                 dataType: "json",
-                async: true,
+                async: false,
                 success: function (data) {
-                    if (data.SessionID)
-                        me.sessionID = data.SessionID;
-                    me._addLoadingIndicator();
-                    me._showParameters(pageNum, data);
+                    if (data.Exception) {
+                        me._renderPageError(me.$reportContainer, data);
+                        me.removeLoadingIndicator();
+                    } else {
+                        if (data.SessionID)
+                            me.sessionID = data.SessionID;
+                        me._addLoadingIndicator();
+                        me._showParameters(pageNum, data);
+                    }
                 },
                 error: function (data) {
                     console.log("error");
@@ -1463,8 +1503,7 @@ $(function () {
                         if (data.Exception) {
                             me._renderPageError(me.$reportContainer, data);
                             me.removeLoadingIndicator();
-                        }
-                        else {
+                        } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
                             me._updateParameterData(data, submitForm, pageNum, renderParamArea);
@@ -1755,7 +1794,7 @@ $(function () {
                 }
 
                 me.pages[pageNum].$container.reportRender({ reportViewer: me, responsive: responsiveUI, renderTime: me.renderTime });
-                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum].reportObj);
+                me.pages[pageNum].$container.reportRender("render", me.pages[pageNum]);
             }
 
             me.pages[pageNum].isRendered = true;
@@ -1782,6 +1821,7 @@ $(function () {
 
             me.$credentialDialog = me.options.$appContainer.find(".fr-dsc-section");
             me.$credentialDialog.dsCredential("writeDialog", data.CredentialsList);
+            me.showDSCredential();
 
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();
@@ -2010,6 +2050,12 @@ $(function () {
 
             me._removeSetTimeout();
             me.autoRefreshID = undefined;
+
+            if (me.$credentialDialog)
+                me.$credentialDialog.dsCredential("destroy");
+
+            if (me.$printDialog)
+                me.$printDialog.reportPrint("destroy");
             //console.log('report viewer destory is invoked')
 
             //comment from MSDN: http://msdn.microsoft.com/en-us/library/hh404085.aspx
@@ -3015,8 +3061,10 @@ $(function () {
             me.$container.on(events.closeModalDialog, function () {
                 //me.$viewer.reportViewer("allowZoom", false);
                 me.showModal = false;
-                me.$container.removeClass("fr-layout-container-noscroll");
-                me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                if (!me.$leftpane.is(":visible") && !me.$rightpane.is(":visible")) {
+                    me.$container.removeClass("fr-layout-container-noscroll");
+                    me.$pagesection.removeClass("fr-layout-pagesection-noscroll");
+                }
                 // me.$container.css("overflow", "").unmask();
                 //me.scrollLock = false;
                 //me.restoreScroll();
@@ -3399,7 +3447,7 @@ $(function () {
         showSlideoutPane: function (isLeftPane) {
             var me = this;
 
-            if (me.$viewer !== undefined) {
+            if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("allowZoom", false);
                 me.$viewer.reportViewer("allowSwipe", false);
             } else {
@@ -3424,7 +3472,7 @@ $(function () {
                 topdiv.addClass(className, delay);
                 me.$mainheadersection.toolbar("hideAllTools");
 
-                if (me.$viewer !== undefined) {
+                if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                     me.$viewer.reportViewer("allowZoom", false);
                     me.$viewer.reportViewer("allowSwipe", false);
                 } else {
@@ -3912,9 +3960,10 @@ $(function () {
         },
         _setCurrentPage: function (currentPageNum) {
             var me = this;
+            var $li;
 
             if (me.currentPageNum !== null && me.currentPageNum !== currentPageNum) {
-                var $li = me.listItems[me.currentPageNum - 1];
+                $li = me.listItems[me.currentPageNum - 1];
                 $li.removeClass("fr-nav-selected");
                 $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
@@ -3922,7 +3971,7 @@ $(function () {
             me.currentPageNum = currentPageNum;
             me._ScrolltoPage();
 
-            var $li = me.listItems[me.currentPageNum - 1];
+            $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
             $li.find("img").addClass("fr-nav-page-thumb-selected");
         },
@@ -3961,6 +4010,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -3998,7 +4048,7 @@ $(function () {
             $span.addClass("fr-nav-close");
             $close.append($span);
 
-            $close.on('click', function () {
+            $close.on("click", function () {
                 me.options.$reportViewer.reportViewer("showNav");
             });
 
@@ -4035,9 +4085,9 @@ $(function () {
             }
 
             me._makeVisible(!me.element.is(":visible"));
-            $('.fr-nav-container', $(me.element)).css("position", me.element.css("position"));
-            $container = $('ul.fr-nav-container', $(me.element));
-            $(".lazy", me.$list).lazyload({ container: $container });
+            $(".fr-nav-container", $(me.element)).css("position", me.element.css("position"));
+            var $container = $("ul.fr-nav-container", $(me.element));
+            $(".lazy", me.$list).lazyload({ container: $container, threshold : 200});
             if (forerunner.device.isMSIE()) {
                 me._ScrolltoPage();
             }
@@ -4233,7 +4283,7 @@ $(function () {
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    if (data && data.responsiveUI != undefined) {
+                    if (data && data.responsiveUI !== undefined) {
                         settings = data;
                     }
                 }
@@ -4608,17 +4658,30 @@ $(function () {
         },
         // Constructor
         _create: function () {
+            var me = this;
+            var isTouch = forerunner.device.isTouch();
+            // For touch device, update the header only on scrollstop.
+            if (isTouch) {
+                $(window).on("scrollstop", function () { me._lazyLoadTablix(me); });
+            } else {
+                $(window).on("scroll", function () { me._lazyLoadTablix(me); });
+            }
         },
          
-        render: function (reportObj) {
+        render: function (Page) {
             var me = this;
             var reportDiv = me.element;
             var reportViewer = me.options.reportViewer;
-             
-           $.each(reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
-                me._writeSection(new reportItemContext(reportViewer, Obj, Index, reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
+            me.reportObj = Page.reportObj;
+            me.Page = Page;
+            me._tablixStream = {};
+
+            me._createStyles(reportViewer);
+            $.each(me.reportObj.ReportContainer.Report.PageContent.Sections, function (Index, Obj) {
+               me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
-           me._addPageStyle(reportViewer, reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, reportObj);
+            me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
+          
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -4816,11 +4879,16 @@ $(function () {
         
                 Style = "";
                 if (Obj.Type !== "Line") {
-                    Style = "display:table;border-collapse:collapse;";
-                    Style += me._getFullBorderStyle(Obj);
+                    //Style = "display:table;border-collapse:collapse;";
+                    if (Obj.Elements)
+                        Style += me._getFullBorderStyle(Obj.Elements.NonSharedElements.Style);
                 }
 
                 $RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj, Index, RIContext.CurrObj, new $("<Div/>"), Style, Measurements[Index]));
+                if (Obj.Type !== "Line" && Obj.Type !== "Tablix") {
+                    $RI.addClass("fr-render-rec");
+                    $RI.addClass(me._getClassName("fr-b-",Obj));                    
+                }
                        
                 $LocDiv = new $("<Div/>");
                 $LocDiv.append($RI);
@@ -4829,22 +4897,25 @@ $(function () {
                 //Determin height and location
                 if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
-                else
-                    RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                else {
+                    if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
+                        RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
+                    }
+                    else
+                        RecLayout.ReportItems[Index].NewHeight = me._getHeight($RI);
+                }
 
                 if (RecLayout.ReportItems[Index].IndexAbove === null)
                     RecLayout.ReportItems[Index].NewTop = Measurements[Index].Top;
                 else
                     RecLayout.ReportItems[Index].NewTop = parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewTop) + parseFloat(RecLayout.ReportItems[RecLayout.ReportItems[Index].IndexAbove].NewHeight) + parseFloat(RecLayout.ReportItems[Index].TopDelta);
-                Style += "position:absolute;top:" + RecLayout.ReportItems[Index].NewTop + "mm;left:" + RecLayout.ReportItems[Index].Left + "mm;";
+                Style += "position:absolute;top:" + me._roundToTwo(RecLayout.ReportItems[Index].NewTop) + "mm;left:" + me._roundToTwo(RecLayout.ReportItems[Index].Left) + "mm;";
 
                 if (Measurements[Index].zIndex)
                     Style += "z-index:" + Measurements[Index].zIndex + ";";
 
                 //Background color goes on container
-                if (RIContext.CurrObj.ReportItems[Index].Element && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor)
-                    Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.SharedElements.Style.BackgroundColor + ";";
-                else if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
+                 if (RIContext.CurrObj.ReportItems[Index].Element  && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style && RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor)
                     Style += "background-color:" + RIContext.CurrObj.ReportItems[Index].Elements.NonSharedElements.Style.BackgroundColor + ";";
         
                 $LocDiv.attr("Style", Style);
@@ -4852,13 +4923,20 @@ $(function () {
                 RIContext.$HTMLParent.append($LocDiv);
             });
 
-            Style = "position:relative;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getFullBorderStyle(RIContext.CurrObj);
+            Style = "position:relative;";
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+                Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements.Style);
+            }
 
             if (RIContext.CurrLocation) {
                 Style += "width:" + me._getWidth(RIContext.CurrLocation.Width) + "mm;";
                 if (RIContext.CurrObj.ReportItems.length === 0)
-                    Style += "height:" + (RIContext.CurrLocation.Height + 1) + "mm;";
+                    Style += "height:" + me._roundToTwo((RIContext.CurrLocation.Height + 1)) + "mm;";
                 else {
                     var parentHeight = parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewTop) +
                                        parseFloat(RecLayout.ReportItems[RecLayout.LowestIndex].NewHeight) +
@@ -4866,7 +4944,7 @@ $(function () {
                                             (parseFloat(Measurements[RecLayout.LowestIndex].Top) +
                                             parseFloat(Measurements[RecLayout.LowestIndex].Height))) +
                                        1;
-                    Style += "height:" + parentHeight + "mm;";
+                    Style += "height:" + me._roundToTwo(parentHeight) + "mm;";
                 }
         
             }
@@ -4874,6 +4952,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName(RIContext.$HTMLParent, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return RIContext.$HTMLParent;
         },
         _getRectangleLayout: function (Measurements) {
@@ -4977,7 +5056,7 @@ $(function () {
                                 layout.ReportItems[j].IndexAbove = curRI.Index;                        
                         }
                         // If we now overlap move me down
-                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left <= layout.ReportItems[j].Left + Measurements[j].Width)
+                        if (curRI.IndexAbove === layout.ReportItems[j].IndexAbove && curRI.Left >= Measurements[j].Left && curRI.Left < layout.ReportItems[j].Left + Measurements[j].Width)
                             curRI.IndexAbove = layout.ReportItems[j].Index;
                     }
                 }
@@ -5020,19 +5099,21 @@ $(function () {
             var $Sort = null;
             var me = this;
 
-            Style += "display:table;";
-            Style += "table-layout: fixed;";  //This fixes FF and IE word break
+            Style += "";
             
             if (me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true) !== "")
                 Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex), true);
 
-            //This fixed an IE bug for borders being hidden by background color.  It makes no sence becasue it is poorly formed CSS, no ; but that is necessery
-            Style += "z-index:-1"
-            Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += "position:relative;";
+            //This fixed an IE bug for duplicate syyles
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsNonTextStyle(RIContext.RS, RIContext.CurrObj.Elements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            }
+            
             RIContext.$HTMLParent.attr("Style", Style);
-
-            if (RIContext.CurrObj.Elements.SharedElements.IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
+            RIContext.$HTMLParent.addClass("fr-r-rT");
+            
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
                 $Drilldown.html("&nbsp");
@@ -5046,7 +5127,7 @@ $(function () {
                 $Drilldown.addClass("fr-core-cursorpointer");
                 RIContext.$HTMLParent.append($Drilldown);
             }
-            if (RIContext.CurrObj.Elements.SharedElements.CanSort !== undefined) {
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
                 $Sort = $("<div/>");
                 $Sort.html("&nbsp");
                 var Direction = "None";
@@ -5073,8 +5154,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "white-space:pre-wrap;word-break:break-word;word-wrap:break-word;-ms-word-break:break-word;";
-            Style += "margin:0;display: table-cell;";            
+            Style = "";            
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
@@ -5087,23 +5167,26 @@ $(function () {
             }
             else {
                 //Needs to be 100% to handle center align
-                Style += "width:100%;height:100%;";
+                //Style += "width:100%;height:100%;";
+                $TextObj.addClass("fr-r-fS");
             }
                
 
             if (RIContext.CurrObj.Paragraphs.length === 0) {
-                if (RIContext.CurrObj.Elements.SharedElements.Value) {
-                    //$TextObj.html(RIContext.CurrObj.Elements.SharedElements.Value);
-                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.SharedElements.Value));
+                var val = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value ? me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Value : RIContext.CurrObj.Elements.NonSharedElements.Value;
+                if (val) {
+                    $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
+                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode) {
+                        Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
+                    }
+                    Style += "display:table-cell;";
                 }
-                else if (RIContext.CurrObj.Elements.NonSharedElements.Value) {
-                    //$TextObj.html(RIContext.CurrObj.Elements.NonSharedElements.Value);
-                    $TextObj.text(me._getNewLineFormatText(RIContext.CurrObj.Elements.NonSharedElements.Value));
-                    Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-                }
-                else
+                else {
                     $TextObj.html("&nbsp");
+                    Style += "text-decoration:none;";
+                }
+                $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             }
             else {
                 //Handle each paragraphs
@@ -5111,32 +5194,40 @@ $(function () {
                 var ParentName = {};
                 var ParagraphContainer = {};
                 ParagraphContainer.Root = "";
-                Style += "float: right";  //fixed padding problem in table cells
+                //Style += "float: right;";  //fixed padding problem in table cells
                 Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
                 $.each(RIContext.CurrObj.Paragraphs, function (Index, Obj) {
 
+                    var listLevel = me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel;
                     if (LowIndex === null)
-                        LowIndex = Obj.Paragraph.SharedElements.ListLevel;
-                    if (!ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel])
-                        ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel] = [];
-                    ParentName[Obj.Paragraph.SharedElements.ListLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
+                        LowIndex = listLevel;
+                    if (!ParagraphContainer[listLevel])
+                        ParagraphContainer[listLevel] = [];
+                    ParentName[listLevel] = Obj.Paragraph.NonSharedElements.UniqueName;
 
                     var item;
-                    if (!ParentName[Obj.Paragraph.SharedElements.ListLevel - 1])
+                    if (!ParentName[listLevel - 1])
                         item = "Root";
                     else
-                        item = ParentName[Obj.Paragraph.SharedElements.ListLevel - 1];
+                        item = ParentName[listLevel - 1];
                     item = { Parent: item, Value: Obj };
-                    ParagraphContainer[Obj.Paragraph.SharedElements.ListLevel].push(item);
+                    ParagraphContainer[listLevel].push(item);
                 });
 
                 me._writeRichTextItem(RIContext, ParagraphContainer, LowIndex, "Root", $TextObj);
             }
-            me._writeBookMark(RIContext);            
+            me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             $TextObj.attr("Style", Style);
+            $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            $TextObj.addClass("fr-r-t");
 
+            //Make room for the sort image
+            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
+                $TextObj.css("padding-right", "15px");
+            }
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
            
             RIContext.$HTMLParent.append($TextObj);
@@ -5153,16 +5244,16 @@ $(function () {
                     var ParagraphStyle = "font-size:small;"; //needed for paragraph spacing 
                     Obj = Obj.Value;
 
-                    if (Obj.Paragraph.SharedElements.ListStyle === 1) {
+                    if (me._getSharedElements(Obj.Paragraph.SharedElements).ListStyle === 1) {
                         if (!$ParagraphList || !$ParagraphList.is("ol"))
                             $ParagraphList = new $("<OL />");
-                        $ParagraphList.addClass(me._getListStyle(1, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._getListStyle(1, me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel));
                         $ParagraphItem = new $("<LI />");
                     }
-                    else if (Obj.Paragraph.SharedElements.ListStyle === 2) {
+                    else if (me._getSharedElements(Obj.Paragraph.SharedElements).ListStyle === 2) {
                         if (!$ParagraphList || !$ParagraphList.is("ul"))
                             $ParagraphList = new $("<UL />");
-                        $ParagraphList.addClass(me._getListStyle(2, Obj.Paragraph.SharedElements.ListLevel));
+                        $ParagraphList.addClass(me._getListStyle(2, me._getSharedElements(Obj.Paragraph.SharedElements).ListLevel));
                         $ParagraphItem = new $("<LI />");
                     }
                     else {
@@ -5175,6 +5266,9 @@ $(function () {
                     ParagraphStyle += me._getMeasurements(me._getMeasurmentsObj(Obj, Index));
                     ParagraphStyle += me._getElementsStyle(RIContext.RS, Obj.Paragraph);
                     $ParagraphItem.attr("Style", ParagraphStyle);
+                    $ParagraphItem.addClass(me._getClassName("fr-n-", Obj.Paragraph));
+                    $ParagraphItem.addClass(me._getClassName("fr-t-", Obj.Paragraph));
+
                     $ParagraphItem.attr("name", Obj.Paragraph.NonSharedElements.UniqueName);
 
                     //Handle each TextRun
@@ -5190,8 +5284,8 @@ $(function () {
                             me._writeActions(RIContext, Obj.TextRuns[i].Elements.NonSharedElements, $TextRun);
                         }
 
-                        if (Obj.TextRuns[i].Elements.SharedElements.Value && Obj.TextRuns[i].Elements.SharedElements.Value !== "") {
-                            $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.SharedElements.Value));
+                        if (me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value && me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value !== "") {
+                            $TextRun.text(me._getNewLineFormatText(me._getSharedElements(Obj.TextRuns[i].Elements.SharedElements).Value));
                         }
                         else if (Obj.TextRuns[i].Elements.NonSharedElements.Value && Obj.TextRuns[i].Elements.NonSharedElements.Value !== "") {
                             $TextRun.text(me._getNewLineFormatText(Obj.TextRuns[i].Elements.NonSharedElements.Value));
@@ -5208,6 +5302,8 @@ $(function () {
                             TextRunStyle += me._getMeasurements(me._getMeasurmentsObj(Obj.TextRuns[i], i));
                             TextRunStyle += me._getElementsTextStyle(Obj.TextRuns[i].Elements);
                             $TextRun.attr("Style", TextRunStyle);
+                            $TextRun.addClass(me._getClassName("fr-t-", Obj.TextRuns[i]));                            
+
                         }
 
                         $ParagraphItem.append($TextRun);
@@ -5216,7 +5312,8 @@ $(function () {
                     if (Paragraphs[Index + 1])
                         me._writeRichTextItem(RIContext, Paragraphs, Index + 1, Obj.Paragraph.NonSharedElements.UniqueName, $ParagraphItem);
 
-                    $ParagraphList.attr("style","width:100%;height:100%;");
+                    //$ParagraphList.attr("style", "width:100%;height:100%;");
+                    $ParagraphList.addClass("fr-r-pL");
                     $ParagraphList.append($ParagraphItem);
                     ParentContainer.append($ParagraphList);
                 }
@@ -5247,15 +5344,27 @@ $(function () {
             var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
-            var Style = RIContext.Style + "display:block;max-height:100%;max-width:100%;" + me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
+            var Style = RIContext.Style ;
+            RIContext.$HTMLParent.addClass("fr-render-image");
+
+            //Get padding
+            Style += me._getTextStyle(RIContext.CurrObj.Elements);
+            RIContext.$HTMLParent.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+
+            //This fixed an IE bug dublicate styles
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);                
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            }
+            
             Style += me._getMeasurements(measurement, true);
-            Style += "overflow:hidden;";
+ 
 
             var ImageName;
             var imageStyle = "";
             var imageConsolidationOffset;
 
-            var sizingType = RIContext.CurrObj.Elements.SharedElements.Sizing;
+            var sizingType = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Sizing;
 
             //get the padding size
             var padWidth = me._getPaddingSize(RIContext.CurrObj, "Left") + me._getPaddingSize(RIContext.CurrObj, "Right");
@@ -5305,6 +5414,7 @@ $(function () {
             
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -5339,7 +5449,7 @@ $(function () {
                     me.options.reportViewer.navigateBookmark(e.data.BookmarkID);
                 });
             }
-            else {
+            else if (Action.DrillthroughId) {
                 //HRef needed for ImageMap, Class needed for non image map
                 Control.addClass("fr-core-cursorpointer");
                 Control.attr("href", "#");
@@ -5469,32 +5579,20 @@ $(function () {
                 }
             }
         },
-        _writeBookMark: function (RIContext) {
-            var $node = $("<a/>");
-            //var me = this;
-
-            if (RIContext.CurrObj.Elements.SharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.SharedElements.Bookmark);
-            }
-            else if (RIContext.CurrObj.Elements.NonSharedElements.Bookmark) {
-                $node.attr("name", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-                $node.attr("id", RIContext.CurrObj.Elements.NonSharedElements.Bookmark);
-            }
-            if ($node.attr("id"))
-                RIContext.$HTMLParent.append($node);
-        },
         _writeTablixCell: function (RIContext, Obj, Index, BodyCellRowIndex) {
             var $Cell = new $("<TD/>");
             var Style = "";
             var width;
             var height;
-            //var hbordersize = 0;
-            //var wbordersize = 0;
-            var me = this;
+             var me = this;
     
-            Style = "vertical-align:top;padding:0;margin:0;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;-ms-box-sizing: border-box;";
-            Style += me._getFullBorderStyle(Obj.Cell.ReportItem);
+            Style = "";
+
+            if (Obj.Cell){
+                Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
+                $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
+            }
+
             var ColIndex = Obj.ColumnIndex;
 
             var RowIndex;
@@ -5505,13 +5603,9 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "overflow:hidden;width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
-
-            //MSIE Hack  - Not sure why I needed this it was minn-height.  Min height messed up allignment in Tablix cells in IE.
-            if (forerunner.device.isMSIE()) {                
-                Style += "height:" + height + "mm;";
-
-            }
+            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            if (forerunner.device.isMSIE())
+                Style += "min-height:" + height + "mm;";
             else
                 Style += "height:" + height + "mm;";
             
@@ -5523,20 +5617,26 @@ $(function () {
                 
             }
                
-            //Background color goes on the cell
-            if ((Obj.Cell.ReportItem.Elements.SharedElements.Style) && Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor)
-                Style += "background-color:" + Obj.Cell.ReportItem.Elements.SharedElements.Style.BackgroundColor + ";";
-            else if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
-                Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+            if (Obj.Cell){
+                //Background color goes on the cell
+                if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
+                    Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+                $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
-            $Cell.attr("Style", Style);
-            $Cell.append(me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "margin:0;width:100%;height:100%;", new tempMeasurement(height, width))));
+                $Cell.attr("Style", Style);
+                $Cell.addClass("fr-r-tC");
+                var RI = me._writeReportItems(new reportItemContext(RIContext.RS, Obj.Cell.ReportItem, Index, RIContext.CurrObj, new $("<Div/>"), "", new tempMeasurement(height, width)));
+                RI.addClass("fr-r-tCI");
+                $Cell.append(RI);
+            }
+            else
+                $Cell.html("&nbsp");
             return $Cell;
         },
         _writeTablix: function (RIContext) {
             var me = this;
             var $Tablix = me._getDefaultHTMLTable();
-            var Style = "border-collapse:collapse;padding:0;margin:0;";
+            var Style = "";
             var $Row;
             var LastRowIndex = 0;
             var $FixedColHeader = new $("<TABLE/>").css({ display: "table", position: "absolute", top: "0px", left: "0px", padding: "0", margin: "0", "border-collapse": "collapse" });
@@ -5549,68 +5649,38 @@ $(function () {
             
 
             Style += me._getMeasurements(me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex));
+            
             Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.Elements);
-            Style += me._getFullBorderStyle(RIContext.CurrObj);
+            Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
             $Tablix.attr("Style", Style);
+            $Tablix.addClass("fr-render-tablix");
+            $Tablix.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+            $Tablix.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+            $Tablix.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
 
-            var colgroup = $("<colgroup/>");
-            for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount;cols++ ){
-                colgroup.append($("<col/>").css("width", me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width) + "mm"));
+            //If there are columns
+            if (RIContext.CurrObj.ColumnWidths) {
+                var colgroup = $("<colgroup/>");
+                for (var cols = 0; cols < RIContext.CurrObj.ColumnWidths.ColumnCount; cols++) {
+                    colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
+                }
+                $Tablix.append(colgroup);
+                if (!forerunner.device.isFirefox()) {
+                    $FixedColHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                    $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                }
             }
-            $Tablix.append(colgroup);
-            if (!forerunner.device.isFirefox()) {
-                $FixedColHeader.append(colgroup.clone(true,true));  //Need to allign fixed header on chrome, makes FF fail
-                $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
-            }
 
-            $Row = new $("<TR/>");
-            $.each(RIContext.CurrObj.TablixRows, function (Index, Obj) {
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
-                if (Obj.RowIndex !== LastRowIndex) {
-                    $Tablix.append($Row);
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
+            TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
+            me._writeTablixRowBatch(TS);
 
-                    //Handle fixed col header
-                    if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1)
-                        $FixedColHeader.append($Row.clone(true, true));
-
-                    $Row = new $("<TR/>");
-
-                    //Handle missing rows
-                    for (var ri = LastRowIndex+1; ri < Obj.RowIndex ; ri++) {
-                        $Tablix.append($Row);
-                        $Row = new $("<TR/>");
-                    }
-                    LastRowIndex = Obj.RowIndex;
-                }
-
-                if (Obj.UniqueName)
-                    me._writeUniqueName($Row, Obj.UniqueName);
-
-                //Handle fixed row header
-                if (Obj.Type !== "Corner" && LastObjType === "Corner") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
-                    $FixedRowHeader.append($Row.clone(true, true));
-                }
-                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
-                    HasFixedRows = true;
-                if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
-                    HasFixedCols = true;
-
-                if (Obj.Type === "BodyRow") {
-                    $.each(Obj.Cells, function (BRIndex, BRObj) {
-                        $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
-                    });
-                }
-                else {
-                    if (Obj.Cell)
-                        $Row.append(me._writeTablixCell(RIContext, Obj, Index));
-                }
-                LastObjType = Obj.Type;
-            });
-            $Tablix.append($Row);
-
+            HasFixedRows = TS.HasFixedRows;
+            HasFixedCols = TS.HasFixedCols;
             if (HasFixedRows) {
                 $FixedColHeader.hide();
             }
@@ -5629,16 +5699,136 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
+
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
+
             ret.append($Tablix);
             RIContext.RS.floatingHeaders.push(new floatingHeader(ret, $FixedColHeader, $FixedRowHeader));
             return ret;
         },
+
+
+
+        _writeSingleTablixRow: function (RIContext, $Tablix, Index, Obj, $FixedColHeader, $FixedRowHeader, State) {
+            var me = this;
+            var LastRowIndex = State.LastRowIndex;
+            var LastObjType = State.LastObjType;
+            var $Row = State.Row;
+            var HasFixedCols = false;
+            var HasFixedRows = false;
+
+            if (Obj.RowIndex !== LastRowIndex) {
+                $Tablix.append($Row);
+
+                //Handle fixed col header
+                if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex - 1].FixRows === 1) {
+                   $FixedColHeader.append($Row.clone(true, true));
+                }
+
+                $Row = new $("<TR/>");
+
+                //Handle missing rows
+                for (var ri = LastRowIndex + 1; ri < Obj.RowIndex ; ri++) {
+                    $Tablix.append($Row);
+                    $Row = new $("<TR/>");
+                }
+                LastRowIndex = Obj.RowIndex;
+            }
+
+            if (Obj.UniqueName)
+                me._writeUniqueName($Row, Obj.UniqueName);
+
+            //Handle fixed row header
+            if (Obj.Type !== "Corner" && LastObjType === "Corner") {
+                $FixedRowHeader.append($Row.clone(true, true));
+            }
+            if (Obj.Type !== "RowHeader" && LastObjType === "RowHeader") {
+                $FixedRowHeader.append($Row.clone(true, true));
+            }
+            if (RIContext.CurrObj.RowHeights.Rows[Obj.RowIndex].FixRows === 1)
+                HasFixedRows = true;
+
+            //There seems to be a bug in RPL, it can return a colIndex that is greater than the number of columns
+            if (Obj.Type !== "BodyRow" && RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex]) {
+                if (RIContext.CurrObj.ColumnWidths.Columns[Obj.ColumnIndex].FixColumn === 1)
+                    HasFixedCols = true;
+            }
+
+            if (Obj.Type === "BodyRow") {
+                $.each(Obj.Cells, function (BRIndex, BRObj) {                  
+                    $Row.append(me._writeTablixCell(RIContext, BRObj, BRIndex, Obj.RowIndex));
+                });
+                State.CellCount += Obj.Cells.length;
+            }
+            else {
+                if (Obj.Cell){
+                    $Row.append(me._writeTablixCell(RIContext, Obj, Index));
+                    State.CellCount += 1;
+                    }
+            }
+            LastObjType = Obj.Type;
+            return { "LastRowIndex": LastRowIndex, "LastObjType": LastObjType, "Row": $Row, HasFixedCols: HasFixedCols, HasFixedRows: HasFixedRows ,CellCount:State.CellCount  };
+        },
+        _batchSize: 3000,
+        _tablixStream: {},
+        _writeTablixRowBatch: function (Tablix) {
+            var me = this;
+            
+            //me.options.reportViewer.showLoadingIndictator(me.options.reportViewer,true);
+
+            for (var Index = Tablix.State.StartIndex; Index < Tablix.RIContext.CurrObj.TablixRows.length && Tablix.State.CellCount < me._batchSize; Index++) {
+                var Obj = Tablix.RIContext.CurrObj.TablixRows[Index];
+                Tablix.State = me._writeSingleTablixRow(Tablix.RIContext, Tablix.$Tablix, Index, Obj, Tablix.$FixedColHeader, Tablix.$FixedRowHeader, Tablix.State);
+                if (Tablix.State.HasFixedRows === true)
+                    Tablix.HasFixedRows = true;
+                if (Tablix.State.HasFixedCols === true)
+                    Tablix.HasFixedCols = true;
+            }
+            //me.options.reportViewer.removeLoadingIndicator(true);
+            Tablix.State.StartIndex = Index;
+            Tablix.State.CellCount = 0;
+            if (Tablix.State.StartIndex < Tablix.RIContext.CurrObj.TablixRows.length) {                
+                Tablix.$Tablix.append(Tablix.EndRow);
+                Tablix.BigTablix = true;
+            }
+            else {
+                Tablix.$Tablix.append(Tablix.State.Row);
+            }
+        },
+
+        _lazyLoadTablix: function (me) {
+
+            var viewport_left = $(window).scrollLeft();
+            var viewport_top =$(window).scrollTop();
+            var viewport_width = $(window).innerWidth();
+            var viewport_height = $(window).innerHeight();
+
+            for (var name in me._tablixStream) {
+                var offset = me._tablixStream[name].EndRow.offset();
+                if (offset.top > viewport_top && offset.top+100 < viewport_top + viewport_height) {
+                    me._tablixStream[name].EndRow.detach();
+                    me._writeTablixRowBatch(me._tablixStream[name]);
+                }
+
+            }
+
+        },
+
+
+
+
+
+
+
+
+
         _writeSubreport: function (RIContext) {
             var me = this;
             RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
             RIContext.CurrObj = RIContext.CurrObj.BodyElements;
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
             return me._writeRectangle(RIContext);
     
         },
@@ -5647,19 +5837,23 @@ $(function () {
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
             var Style = "position:relative;width:" + measurement.Width + "mm;height:" + measurement.Height + "mm;";
             
-            if (measurement.Width === 0 || measurement.Height === 0)
-                Style += me._getFullBorderStyle(RIContext.CurrObj);
+            if (measurement.Width === 0 || measurement.Height === 0) {
+                Style += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                RIContext.$HTMLParent.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+            }
             else {
                 var $line = $("<Div/>");
                 var newWidth = Math.sqrt(Math.pow(measurement.Height, 2) + Math.pow(measurement.Width, 2));
                 var rotate = Math.atan(measurement.Height / measurement.Width);
                 var newTop = (newWidth / 2) * Math.sin(rotate);
                 var newLeft = (newWidth / 2) - Math.sqrt(Math.pow(newWidth / 2, 2) + Math.pow(newTop, 2));
-                if (!(RIContext.CurrObj.Elements.SharedElements.Slant === undefined || RIContext.CurrObj.Elements.SharedElements.Slant === 0))
+                if (!(me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Slant === undefined || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Slant === 0))
                     rotate = rotate - (2 * rotate);
 
                 var lineStyle = "position:absolute;top:" + newTop + "mm;left:" + newLeft + "mm;";
-                lineStyle += me._getFullBorderStyle(RIContext.CurrObj);
+                lineStyle += me._getFullBorderStyle(RIContext.CurrObj.Elements.NonSharedElements);
+                $line.addClass(me._getClassName("fr-b-", RIContext.CurrObj));
+
                 lineStyle += "width:" + newWidth + "mm;height:0;";
                 lineStyle += "-moz-transform: rotate(" + rotate + "rad);";
                 lineStyle += "-webkit-transform: rotate(" + rotate + "rad);";
@@ -5670,13 +5864,42 @@ $(function () {
                 RIContext.$HTMLParent.append($line);
             }
 
-            
-
             me._writeBookMark(RIContext);
+            me._writeTooltip(RIContext);
 
             RIContext.$HTMLParent.attr("Style", Style + RIContext.Style);
             return RIContext.$HTMLParent;
 
+        },
+        _writeBookMark: function (RIContext) {
+            var me = this;
+            var $node = $("<a/>"),
+                CurrObj = RIContext.CurrObj.Elements,
+                bookmark = me._getSharedElements(CurrObj.SharedElements).Bookmark || CurrObj.NonSharedElements.Bookmark;
+
+            if (bookmark) {
+                $node.attr("name", bookmark).attr("id", bookmark);
+                RIContext.$HTMLParent.append($node);
+            }   
+        },
+        _writeTooltip: function (RIContext) {
+            var me = this;
+
+            var CurrObj = RIContext.CurrObj.Elements,
+                tooltip = me._getSharedElements(CurrObj.SharedElements).Tooltip || CurrObj.NonSharedElements.Tooltip;
+
+            if (tooltip) {
+                if (RIContext.CurrObjParent.Type === "Image")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Chart")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Gauge")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else if (RIContext.CurrObjParent.Type === "Map")
+                    RIContext.$HTMLParent.attr("alt", tooltip);
+                else
+                    RIContext.$HTMLParent.attr("title", tooltip);
+            }
         },
         //Helper fucntions
         _getHeight: function ($obj) {
@@ -5703,15 +5926,17 @@ $(function () {
             var Style = "";
             var me = this;
 
-            Style += me._getStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getStyle(RS, me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
+            //Background Image maybe at root
+            Style += me._getStyle(RS, CurrObj, CurrObj);
             return Style;
         },
         _getElementsTextStyle: function (CurrObj) {
             var Style = "";
             var me = this;
 
-            Style += me._getTextStyle(CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getTextStyle(me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getTextStyle(CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
             return Style;
         },
@@ -5719,7 +5944,7 @@ $(function () {
             var Style = "";
             var me = this;
 
-            Style += me._getNonTextStyle(RS, CurrObj.SharedElements.Style, CurrObj.NonSharedElements);
+            //Style += me._getNonTextStyle(RS, me._getSharedElements(CurrObj.SharedElements).Style, CurrObj.NonSharedElements);
             Style += me._getNonTextStyle(RS, CurrObj.NonSharedElements.Style, CurrObj.NonSharedElements);
             return Style;
         },
@@ -5732,7 +5957,7 @@ $(function () {
             var SideSize;
 
             //Need left, top, right bottom border
-            Obj = CurrObj.Elements.SharedElements.Style;
+            Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
             if (Obj) {
                 DefaultStyle = Obj.BorderStyle;
                 SideStyle = Obj["BorderStyle" + Side];
@@ -5764,7 +5989,7 @@ $(function () {
             var SideSize;
 
     
-            Obj = CurrObj.Elements.SharedElements.Style;
+            Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
             if (Obj) {
                 SideSize = Obj["Padding" + Side];
             }
@@ -5781,35 +6006,37 @@ $(function () {
             var Style = "";
             var Obj;
 
-            if (!CurrObj.Elements)
+            if (!CurrObj)
                 return "";
 
             //Need left, top, right bottom border
-            Obj = CurrObj.Elements.SharedElements.Style;
-            if (Obj !== undefined) {
-                if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
-                if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
-                if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
-                if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
-                if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
-            }
-            Obj = CurrObj.Elements.NonSharedElements.Style;
+            //Obj = me._getSharedElements(CurrObj.Elements.SharedElements).Style;
+            //if (Obj !== undefined) {
+            //    if (Obj.BorderStyle !== undefined && Obj.BorderStyle !==0 )
+            //        Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+            //    if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
+            //        Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+            //    if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
+            //        Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+            //    if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
+            //        Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+            //    if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
+            //        Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+            //}
+            Obj = CurrObj;            
             if (Obj !== undefined) {
                 if (Obj.BorderStyle !== undefined && Obj.BorderStyle !== 0)
-                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + ";";
+                    Style += "border:" + Obj.BorderWidth + " " + me._getBorderStyle(Obj.BorderStyle) + " " + Obj.BorderColor + "!important;";
                 if (Obj.BorderStyleLeft !== undefined || Obj.BorderWidthLeft !== undefined || Obj.BorderColorLeft !== undefined)
-                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + ";";
+                    Style += "border-left:" + ((Obj.BorderWidthLeft === undefined) ? Obj.BorderWidth : Obj.BorderWidthLeft) + " " + ((Obj.BorderStyleLeft === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleLeft)) + " " + ((Obj.BorderColorLeft === undefined) ? Obj.BorderColor : Obj.BorderColorLeft) + "!important;";
                 if (Obj.BorderStyleRight !== undefined || Obj.BorderWidthRight !== undefined || Obj.BorderColorRight !== undefined)
-                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColr : Obj.BorderColorRight) + ";";
+                    Style += "border-right:" + ((Obj.BorderWidthRight === undefined) ? Obj.BorderWidth : Obj.BorderWidthRight) + " " + ((Obj.BorderStyleRight === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleRight)) + " " + ((Obj.BorderColorRight === undefined) ? Obj.BorderColor : Obj.BorderColorRight) + "!important;";
                 if (Obj.BorderStyleTop !== undefined || Obj.BorderWidthTop !== undefined || Obj.BorderColorTop !== undefined)
-                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + ";";
+                    Style += "border-top:" + ((Obj.BorderWidthTop === undefined) ? Obj.BorderWidth : Obj.BorderWidthTop) + " " + ((Obj.BorderStyleTop === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleTop)) + " " + ((Obj.BorderColorTop === undefined) ? Obj.BorderColor : Obj.BorderColorTop) + "!important;";
                 if (Obj.BorderStyleBottom !== undefined || Obj.BorderWidthBottom !== undefined || Obj.BorderColorBottom !== undefined)
-                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + ";";
+                    Style += "border-bottom:" + ((Obj.BorderWidthBottom === undefined) ? Obj.BorderWidth : Obj.BorderWidthBottom) + " " + ((Obj.BorderStyleBottom === undefined) ? me._getBorderStyle(Obj.BorderStyle) : me._getBorderStyle(Obj.BorderStyleBottom)) + " " + ((Obj.BorderColorBottom === undefined) ? Obj.BorderColor : Obj.BorderColorBottom) + "!important;";
+                if (Obj.BackgroundColor)
+                    Style += "background-color:" + Obj.BackgroundColor + ";";
             }
 
             return Style;
@@ -5908,11 +6135,12 @@ $(function () {
         },
         _getTextDirection:function(CurrObj){
             var Dirclass = "";
+            var me = this;
 
-            if (CurrObj.SharedElements.Style && CurrObj.SharedElements.Style.WritingMode !== undefined){
-                if (CurrObj.SharedElements.Style.WritingMode === 1)
+            if (me._getSharedElements(CurrObj.SharedElements).Style && me._getSharedElements(CurrObj.SharedElements).Style.WritingMode !== undefined){
+                if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 1)
                     Dirclass = "fr-rotate-90";
-                if (CurrObj.SharedElements.Style.WritingMode === 2)
+            if (me._getSharedElements(CurrObj.SharedElements).Style.WritingMode === 2)
                     Dirclass = "fr-rotate-270";
             }
             if (CurrObj.NonSharedElements.Style && CurrObj.NonSharedElements.Style.WritingMode !== undefined) {
@@ -5958,7 +6186,7 @@ $(function () {
             if (CurrObj.FontFamily !== undefined)
                 Style += "font-family:" + CurrObj.FontFamily + ";";
             if (CurrObj.FontSize !== undefined)
-                Style += "font-size:" + CurrObj.FontSize + ";";
+                Style += "font-size:" + me._getFontSize(CurrObj.FontSize) + ";";
             if (CurrObj.TextDecoration !== undefined)
                 Style += "text-decoration:" + me._getTextDecoration(CurrObj.TextDecoration) + ";";
             if (CurrObj.Color !== undefined)
@@ -6047,9 +6275,9 @@ $(function () {
             switch (RPLCode) {
                 case 0:
                     //Default is string, need to handle direction, 15 seems to be decimal not datetime
-                    if (TypeCodeObj.TypeCode === undefined)
+                    if (TypeCodeObj === undefined  || TypeCodeObj.TypeCode === undefined)
                         return "Left";
-                    switch (TypeCodeObj.TypeCode) {
+                    switch (TypeCodeObj.TypeCode) {                        
                         case 3:
                         case 6:
                         case 7:
@@ -6151,6 +6379,16 @@ $(function () {
                 retval = CurrObj.Measurement.Measurements[Index];
             return retval;
         },
+        _getSharedElements: function(sharedElements){
+            var me = this;
+            
+            if (sharedElements.SID) {
+                return me.reportObj.ReportContainer.SharedElements[sharedElements.SID];
+            }
+            else
+                return sharedElements;
+
+        },
         _convertToMM: function (convertFrom) {
     
             if (!convertFrom)
@@ -6179,6 +6417,24 @@ $(function () {
 
             //This is an error
             return value;
+        },
+
+        _getFontSize:function (fontSize){
+            if (!fontSize)
+                return "";
+    
+            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+                return fontSize;
+
+
+            var unit = fontSize.match(/\D+$/);  // get the existing unit
+            var value = fontSize.match(/\d+/);  // get the numeric component
+
+            if (unit.length === 1) unit = unit[0];
+            if (value.length === 1) value = value[0];
+
+           //This is an error
+            return (value*0.95) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;
@@ -6244,6 +6500,38 @@ $(function () {
         _getNewLineFormatText: function (Value) {
             return Value.replace(/\r\n+/g, "\n");
         },
+        _createStyles: function(RS){
+            var me = this;
+            var CSS = "<style type='text/css' id='" + me.options.reportViewer.viewerID + "'>";
+            var styles = me.reportObj.ReportContainer.SharedElements;
+
+            for (var key in styles) {                
+                //CSS += ".fr-border-" + styles[key].SID + "-" + me.reportObj.SessionID  + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
+                //CSS += ".fr-text-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getTextStyle(styles[key].Style) + "} ";
+                //CSS += ".fr-nonText-" + styles[key].SID + "-" + me.reportObj.SessionID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
+                CSS += ".fr-b-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getFullBorderStyle(styles[key].Style) + "} ";
+                CSS += ".fr-t-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getTextStyle(styles[key].Style, styles[key]) + "} ";
+                CSS += ".fr-n-" + styles[key].SID + "-" + me.options.reportViewer.viewerID + "{" + me._getNonTextStyle(RS, styles[key].Style) + "} ";
+            }
+
+            
+            me.Page.CSS = $(CSS + "</style>");
+            
+        },
+        _getClassName: function (name, obj) {
+            var me = this;
+
+            var cName = "";
+
+            if (obj.Elements && obj.Elements.SharedElements)
+                return name + obj.Elements.SharedElements.SID + "-" + me.options.reportViewer.viewerID;
+            if (obj.SharedElements)
+                return name + obj.SharedElements.SID + "-" + me.options.reportViewer.viewerID;
+            return cName;
+        },
+        _roundToTwo: function (num) {    
+            return +(Math.round(num + "e+2")  + "e-2");
+        },
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportParameter.js
@@ -6286,7 +6574,7 @@ $(function () {
         _paramCount: 0,
         _defaultValueExist: false,
         _loadedForDefault: true,
-        _reportDesignError: null,        
+        _reportDesignError: null,
 
         _init: function () {
             var me = this;
@@ -6381,7 +6669,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
-                if (param.Prompt !== "") {
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
                 }
@@ -6568,6 +6856,8 @@ $(function () {
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
+            //if any element disable exist then not submit form auto
+            if (dependenceDisable) me._loadedForDefault = false;
 
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
@@ -6587,6 +6877,7 @@ $(function () {
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
+                    bindingEnter = false;
                     $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
                 }
                 else if (param.Type === "Boolean") {
@@ -6614,13 +6905,15 @@ $(function () {
         _getParameterControlProperty: function (param, $control) {
             var me = this;
             
-            $control.attr("AllowBlank", param.AllowBlank);
+            $control.attr("allowblank", param.AllowBlank);
+            $control.attr("nullable", param.Nullable);
             if (param.Nullable === false && param.AllowBlank === false) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
-                var watermarkOption = forerunner.device.isMSIE() ? { useNative: false } : undefined;
-                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, watermarkOption);
+                //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
+                $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
+                $control.addClass("fr-param-required"); 
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -6630,9 +6923,6 @@ $(function () {
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
-
-                //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
-                //    $checkbox.attr('checked', 'true');
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
@@ -6647,7 +6937,7 @@ $(function () {
                         if (param.Type === "Boolean")
                             $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
                         else
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").val(null);
                     }
                 });
 
@@ -6777,32 +7067,32 @@ $(function () {
             var predefinedValue = me._getPredefinedValue(param);
 
             var $container = me._createDiv(["fr-param-element-container"]);
-            var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' ismultiple='"
-                + param.MultiValue + "' datatype='" + param.Type + "' />");
-
+            var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
             me._getParameterControlProperty(param, $control);
+            //add auto complete selected item check
+            $control.attr("autoCompleteDropdown", "true");
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
             $openDropDown.append($dropdownicon);
+
+            if (dependenceDisable) {
+                me._disabledSubSequenceControl($control);
+                $container.append($control).append($openDropDown);
+                return $container;
+            }
+
             $openDropDown.on("click", function () {
                 if ($control.autocomplete("widget").is(":visible")) {
                     $control.autocomplete("close");
                     return;
                 }
                 else {
-                    //ui-autocomplete is not append to parameter pane so here used $appContainer to do search
-                    $(".ui-autocomplete", me.options.$appContainer).hide();
+                    me._closeAllDropdown();
                     //pass an empty string to show all values
                     $control.autocomplete("search", "");
                 }
             });
-
-            if (dependenceDisable) {
-                me._disabledSubSequenceControl($multipleCheckBox);
-                $control.append($multipleCheckBox).append($openDropDown);
-                return $control;
-            }
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if (predefinedValue === param.ValidValues[i].value) {
@@ -6818,19 +7108,47 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 select: function (event, obj) {
-                    $control.attr("backendValue", obj.item.value).val(obj.item.label);
+                    $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
+
                     if (me._paramCount === 1) {
                         me._submitForm(pageNum);
                     }
+
                     return false;
                 },
                 focus: function (event, obj) {
                     return false;
+                },
+                response: function (event, obj) {
+                    //obj.content.length will equal = 0 if no item match.
+                    if (obj.content.length === 0) {
+                        $control.addClass("fr-param-autocomplete-error");
+                    }
+                    else {
+                        $control.removeClass("fr-param-autocomplete-error");
+                    }
+                },
+                change: function (event, obj) {
+                    if (!obj.item)
+                        $control.addClass("fr-param-autocomplete-error");
+
+                    //if this control don't required, then empty is a valid value
+                    if (!$control.attr("required") && $control.val() === "")
+                        $control.removeClass("fr-param-autocomplete-error");
+
+                    $control.valid();
                 }
             });
 
             $control.on("focus", function () {
                 $(".ui-autocomplete", me.options.$appContainer).hide();
+            });
+
+            $control.on("change", function (event, obj) {
+                // Keeps the rest of the handlers (get cascading parameter here) 
+                //from being executed when input value is not valid.
+                if (!obj && $control.val() !== "")
+                    event.stopImmediatePropagation();
             });
 
             $container.append($control).append($openDropDown);
@@ -6854,7 +7172,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + param.ValidValues[i].label + "</option>");
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
                 if (predefinedValue && predefinedValue === optionValue) {
                     $option.attr("selected", "true");
@@ -6931,7 +7249,7 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
                 param.ValidValues.push({ label: "Select All", value: "Select All" });
 
             var keys = "";
@@ -6981,7 +7299,7 @@ $(function () {
                 $label.attr("for", param.Name + "_DropDown_" + i.toString());
                 $label.attr("value", value);
 
-                $label.html(key);
+                $label.text(key);
 
                 $span.append($checkbox).append($label);
                 $col.append($span);
@@ -7072,7 +7390,7 @@ $(function () {
 
                 $(".fr-paramname-" + param.Name + "-dropdown-cb", me.$params).each(function (index) {
                     if (this.checked && this.value !== "Select All") {
-                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).html() + ",";
+                        showValue += $(".fr-paramname-" + param.Name + "-dropdown-" + index.toString() + "-label", me.$params).text() + ",";
                         hiddenValue.push( this.value );
                     }
                 });
@@ -7138,7 +7456,7 @@ $(function () {
             $(".fr-param-dropdown-show", me.$params).filter(":visible").each(function (index, param) {
                 me._closeDropDownPanel({ Name: $(param).attr("value") });
             });
-            //clsoe auto complete dropdown
+            //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
         },
         _checkExternalClick: function (e) {
@@ -7157,8 +7475,29 @@ $(function () {
                 me._closeAllDropdown();
             }
         },
+        _shouldInclude: function (param, noValid) {
+            if (!noValid) return true;
+            var me = this;
+            
+            var isString = $(param).attr("datatype") === "String";
+            var allowBlank = $(param).attr("allowblank") === "true";
+
+            // If it is a string type
+            if (isString && allowBlank) return true;
+
+            if (param.value == "") {
+                return me._isNullChecked(param);
+            }
+
+            var required = !!$(param).attr("required");
+            if (required && param.value === me.options.$reportViewer.locData.paramPane.required) {
+                return false;
+            }
+
+            return true;
+        },
         /**
-         * @function $.forerunner.reportParameter#getParamList
+         * @function $.forerunner.reportParameter#getParamsList
          * @generate parameter list base on the user input and return
          */
         getParamsList: function (noValid) {
@@ -7168,19 +7507,24 @@ $(function () {
                 var a = [];
                 //Text
                 $(".fr-param", me.$params).filter(":text").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        var jsonValues = $(this).attr("jsonValues");
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var jsonValues = $(this).attr("jsonValues");
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(jsonValues ? jsonValues : null) });
+                        }
                     }
                 });
                 //Hidden
                 $(".fr-param", me.$params).filter("[type='hidden']").each(function () {
-                    if ($(this).attr("ismultiple") === "false") {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
-                    } else {
-                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(me._isParamNullable(this)) });
+                    if (me._shouldInclude(this, noValid)) {
+                        if ($(this).attr("ismultiple") === "false") {
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        } else {
+                            var value = me._isParamNullable(this);
+                            a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: JSON.parse(value ? value : null) });
+                        }
                     }
                 });
                 //dropdown
@@ -7236,12 +7580,27 @@ $(function () {
                 return null;
             }
         },
+        _isNullChecked: function (param) {
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            return $cb.length !== 0 && $cb.attr("checked") === "checked";
+        },
         _isParamNullable: function (param) {
-            var cb = $(".fr-param-checkbox", this.$params).filter(".fr-paramname-" + param.Name).first();
-            if (cb.attr("checked") === "checked" || param.value === "")
+            var me = this;
+            var $element = $(".fr-paramname-" + param.name, this.$params);
+
+            //check nullable
+            if (me._isNullChecked(param) && param.value === "") {
                 return null;
-            else
-                return param.attributes.backendValue ? param.attributes.backendValue.nodeValue : param.value;
+            } else if ($element.attr("allowblank") === "true" && param.value === "") {
+                //check allow blank
+                return "";
+            } else if (param.attributes.backendValue) {
+                //Take care of the big dropdown list
+                return param.attributes.backendValue.nodeValue;
+            } else {
+                //Otherwise handle the case where the parameter has not been touched
+                return param.value !== "" ? param.value : null;
+            }
         },
         /**
         * @function $.forerunner.reportParameter#resetValidateMessage
@@ -7250,6 +7609,7 @@ $(function () {
         resetValidateMessage: function () {
             var me = this;
             var error = me.options.$reportViewer.locData.validateError;
+            me.extendValidate();
 
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -7265,7 +7625,17 @@ $(function () {
                 rangelength: $.validator.format(error.rangelength),
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
-                min: $.validator.format(error.min)
+                min: $.validator.format(error.min),
+                autoCompleteDropdown: error.autoCompleteDropdown
+            });
+        },
+        extendValidate: function () {
+            //add auto complete dropdown value validata, only allow select from dropdown
+            jQuery.validator.addMethod("autoCompleteDropdown", function (value, element, param) {
+                if ($(element).hasClass("fr-param-autocomplete-error"))
+                    return false;
+                else
+                    return true;
             });
         },
         /**
@@ -7314,9 +7684,10 @@ $(function () {
             if ($.isArray(param.Dependencies) && param.Dependencies.length) {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
-                    $targetElement.change(function () { me.refreshParameters(); });
-                    //if dependence control don't have any value then disabled current one
-                    if ($targetElement.val() === "") disabled = true;
+                    $targetElement.on("change", function () { me.refreshParameters(); });
+                    //if dependence control don't have any value and not allow blank, then disabled current one
+                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
+                        disabled = true;
                 });
             }
 
@@ -7325,6 +7696,7 @@ $(function () {
         refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
+            
             var paramList = savedParams ? savedParams : me.getParamsList(true);
             if (paramList) {
                 // Ask viewer to refresh parameter, but not automatically post back
@@ -7545,6 +7917,7 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _printData: null,
         _create: function () {
             
         },
@@ -7552,15 +7925,9 @@ $(function () {
             var me = this;
             me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
         },
-        /**
-         * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
-         */
-        setPrint: function (pageLayout) {
+        _initBody: function () {
             var me = this;
             var print = me.locData.print;
-            var unit = print.unit;
 
             me.element.html("");
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
@@ -7597,8 +7964,44 @@ $(function () {
                 "</form>" +
             "</div>");
 
-            
             me.element.append($printForm);
+            me.$form = me.element.find(".fr-print-form");
+            me._resetValidateMessage();
+
+            me.element.find(".fr-print-submit-id").on("click", function (e) {
+                var printPropertyList = me._generatePrintProperty();
+                if (printPropertyList !== null) {
+                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                    me.closeDialog();
+                }
+            });
+
+            me.element.find(".fr-print-cancel").on("click", function (e) {
+                me.closeDialog();
+                if (me._printData) {
+                    me._createItems();
+                }
+            });
+        },
+        /**
+         * @function $.forerunner.reportPrint#setPrint
+         * @Generate print pane html code and append to the dom tree
+         * @param {String} pageLayout - default loaded page layout data from RPL
+         */
+        setPrint: function (pageLayout) {
+            var me = this;
+            me._initBody();
+            me._printData = pageLayout || me._printData;
+
+            if (me._printData) {
+                me._createItems(me._printData);
+            }
+        },
+        _createItems: function (pageLayout) {
+            var me = this;
+            var print = me.locData.print;
+            var unit = print.unit;
+            pageLayout = pageLayout || me._printData;
 
             me.element.find(".fr-print-height-width-id").settingsPairWidget({
                 label1: print.pageHeight,
@@ -7638,20 +8041,7 @@ $(function () {
                 $(this).parent().addClass("fr-print-item").append($("<span class='fr-print-error-span'/>").clone());
             });
 
-            me._resetValidateMessage();
-            me._validateForm(me.element.find(".fr-print-form"));
-
-            me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
-            });
-
-            me.element.find(".fr-print-cancel").on("click", function (e) {
-                me.closeDialog();
-            });
+            me._validateForm(me.$form);
 
             me.$pageWidth = me.element.find("[name=PageWidth]");
             me.$pageHeight = me.element.find("[name=PageHeight]");
@@ -7818,6 +8208,12 @@ $(function () {
                 return source;
             }
         },
+        destroy: function () {
+            var me = this;
+            me._printData = null;
+
+            this._destroy();
+        }
     }); //$.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ManageParamSets.js
@@ -8188,6 +8584,7 @@ $(function () {
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer
             });
 
@@ -8494,6 +8891,7 @@ $(function () {
      * @prop {String} options.path - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
+     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
@@ -8513,7 +8911,8 @@ $(function () {
             historyBack: null,
             isReportManager: false,
             isFullScreen: true,
-            userSettings: null
+            userSettings: null,
+            savedParameters: null
         },
         _render: function () {
             var me = this;
@@ -8551,6 +8950,7 @@ $(function () {
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
+                savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container
             });
 
@@ -8628,11 +9028,10 @@ $(function () {
             $reportViewer: null,
             $appContainer: null
         },
+        _credentialData: null,
         create: function () {
-
         },
         _init: function () {
-                        
         },
         _initBody: function () {
             var me = this;
@@ -8663,6 +9062,9 @@ $(function () {
 
             me.element.find(".fr-dsc-cancel").on("click", function () {
                 me.closeDialog();
+                if (me._credentialData) {
+                    me._createRows();
+                }
             });
 
             me.element.find(".fr-dsc-reset-id").on("click", function () {
@@ -8677,21 +9079,9 @@ $(function () {
                 me._initCallback();
             }
         },
-        _initCallback: function () {
-            var me = this;
-
-            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
-                //highlight error datasource label by change color to right
-                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
-                if (error) {
-                    var datasourceID = error[0].replace(/["“”']/g, '');
-                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
-                }
-                me.openDialog();
-            });
-        },
         _createRows: function (credentials) {
             var me = this;
+            credentials = credentials || me._credentialData;
             me.$container.html("");
 
             $.each(credentials, function (index, credential) {
@@ -8703,14 +9093,14 @@ $(function () {
                       "<div class='fr-dsc-username'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.username + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='text' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
+                              "<input type='text' autocomplete='off' name='" + credential.Name + "-username' required='true' class='fr-dsc-text-input fr-dsc-username-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +
                       "<div class='fr-dsc-password'>" +
                           "<label class='fr-dsc-label' >" + dsCredential.password + "</label>" +
                           "<div class='fr-dsc-input-container'>" +
-                              "<input type='password' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
+                              "<input type='password' autocomplete='off' name='" + credential.Name + "-password' required='true' class='fr-dsc-text-input fr-dsc-password-input' />" +
                               "<span class='fr-dsc-error-span' />" +
                           "</div>" +
                       "</div>" +
@@ -8726,6 +9116,19 @@ $(function () {
             });
 
             me._validateForm(me.$form);
+        },
+        _initCallback: function () {
+            var me = this;
+
+            me.options.$reportViewer.on(events.reportViewerRenderError(), function (e, data) {
+                //highlight error datasource label by change color to red
+                var error = data.Exception.Message.match(/[“"']([^"“”']*)["”']/);
+                if (error && me._credentialData) {
+                    var datasourceID = error[0].replace(/["“”']/g, '');
+                    me.element.find("[name='" + datasourceID + "']").find(".fr-dsc-label").addClass("fr-dsc-label-error");
+                    me.openDialog();
+                }
+            });
         },
         _submitCredential: function () {
             var me = this;
@@ -8744,10 +9147,11 @@ $(function () {
         },
         writeDialog: function (credentials) {
             var me = this;
-            if (credentials) {
-                me._initBody();
-                me._createRows(credentials);
-                forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+            me._initBody();
+            me._credentialData = credentials || me._credentialData;
+            
+            if (me._credentialData) {
+                me._createRows(me._credentialData);
             }
         },
         closeDialog: function () {
@@ -8817,6 +9221,12 @@ $(function () {
                 number: error.number,
                 digits: error.digits
             });
+        },
+        destroy: function () {
+            var me = this;
+            me._credentialData = null;
+
+            this._destroy();
         },
     }); //$.widget
 }); // $(function())

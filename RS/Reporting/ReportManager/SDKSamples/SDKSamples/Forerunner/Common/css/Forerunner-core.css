@@ -26,7 +26,7 @@
 @media only screen and (max-height : 340px) {
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
   .fr-core-dialog-form { margin:4px 0px 25px 8px; max-height:250px; }
-  .fr-core-dialog-innerPage { margin-top:50px; } 
+  .fr-core-dialog-innerPage { margin-top:50px; }
 }
 
 /* (E.g., for phones, potrait) */
@@ -34,6 +34,7 @@
   .fr-core-dialog-submit-container { margin: 5px 0 0 0; }
   .fr-core-dialog-form { margin:4px 0px 25px 4px; max-height:300px; }
   .fr-core-dialog-innerPage { margin-top:50px; }
+  .fr-core-dialog-header .fr-core-dialog-title{ max-width:150px; }
 }
 
 /* Smartphones (landscape) ----------- */

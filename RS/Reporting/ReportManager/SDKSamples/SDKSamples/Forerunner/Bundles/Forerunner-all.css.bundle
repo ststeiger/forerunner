@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="true" runOnBuild="true" output="Forerunner-all.css">
+  <!--The order of the <file> elements determines the order of them when bundled.-->
+  <file>/Forerunner/Common/css/DefaultAppTemplate.css</file>
+  <file>/Forerunner/Common/css/Forerunner-core.css</file>
+  <file>/Forerunner/Common/css/icons24x24.css</file>
+  <file>/Forerunner/Common/css/icons25x31.css</file>
+  <file>/Forerunner/Common/css/Login.css</file>
+  <file>/Forerunner/Common/css/MessageBox.css</file>
+  <file>/Forerunner/Common/css/ReportManager.css</file>
+  <file>/Forerunner/Common/css/ToolBase.css</file>
+  <file>/Forerunner/ReportExplorer/css/ReportExplorer.css</file>
+  <file>/Forerunner/ReportExplorer/css/UserSettings.css</file>
+  <file>/Forerunner/ReportExplorer/css/ManageSubscription.css</file>
+  <file>/Forerunner/ReportViewer/css/ManageParamSets.css</file>
+  <file>/Forerunner/ReportViewer/css/PageNav.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportDocumentMap.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportParameter.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportPrint.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportRender.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportViewer.css</file>
+  <file>/Forerunner/ReportViewer/css/ReportViewerEZ.css</file>
+  <file>/Forerunner/ReportViewer/css/Toolbar.css</file>
+  <file>/Forerunner/ReportViewer/css/ToolPane.css</file>
+  <file>/Forerunner/ReportViewer/css/DSCredential.css</file>
+</bundle>

@@ -13,7 +13,7 @@ using Forerunner.SSRS.Manager;
 using Forerunner;
 using Forerunner.Logging;
 
-namespace SDKSamples.Controllers
+namespace ReportManager.Controllers
 {
     public class SaveParameters
     {
@@ -21,7 +21,7 @@ namespace SDKSamples.Controllers
         public string parameters { get; set; }
     }
 
-    //[ExceptionLog]
+    [ExceptionLog]
     //[Authorize]
     [AllowAnonymous]
     public class ReportManagerController : ApiController
@@ -52,7 +52,7 @@ namespace SDKSamples.Controllers
             //Put application security here
             Credentials WSCred = null;
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-            Forerunner.SSRS.Manager.ReportManager rm =  new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
+            Forerunner.SSRS.Manager.ReportManager rm = new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
             // and password are not considered secure so it is ok to hard code it here
@@ -83,6 +83,7 @@ namespace SDKSamples.Controllers
         [HttpGet]
         public IEnumerable<CatalogItem> GetItems(string view, string path)
         {
+            
             return GetReportManager().GetItems(view, path);
         }
 

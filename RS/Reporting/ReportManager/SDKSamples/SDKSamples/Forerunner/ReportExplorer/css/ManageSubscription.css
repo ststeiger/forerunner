@@ -1,0 +1,5 @@
+﻿.fr-sub-list {list-style-type: none; border:0px; margin:0px;padding:0px;}
+.fr-sub-listitem {display: inline-block; border-bottom: 1px solid #000000; width: 100%;}
+.fr-sub-delete-icon { float: left; }
+.fr-sub-edit-icon { float: left; }
+

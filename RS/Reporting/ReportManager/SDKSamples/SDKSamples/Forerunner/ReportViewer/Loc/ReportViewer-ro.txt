@@ -123,7 +123,8 @@
     "rangelength":"Introduceti o valoare între {0} și {1} caractere lung",
     "range":"Introduceti o valoare între {0} şi {1}",
     "max":"Introduceti o valoare mai mică decât sau egală cu a {0}",
-    "min":"Introduceti o valoare mai mare sau egal cu {0}"
+    "min":"Introduceti o valoare mai mare sau egal cu {0}",
+    "autoCompleteDropdown":"Invalid"
   },
   "dialog": {
     "title":"prompt",

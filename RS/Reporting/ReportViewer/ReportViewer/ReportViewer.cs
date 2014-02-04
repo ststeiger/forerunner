@@ -252,6 +252,21 @@ namespace Forerunner.SSRS.Viewer
 
 
         }
+
+        private Stream GetUTF8Bytes(byte[] result, string preString, string postString)
+        {
+            MemoryStream mem = new MemoryStream(result.Length + 512);
+            
+    
+            mem.Write(Encoding.UTF8.GetBytes(preString), 0, Encoding.UTF8.GetByteCount(preString));
+            mem.Write(result, 0, result.Length);
+            mem.Write(Encoding.UTF8.GetBytes(postString), 0, Encoding.UTF8.GetByteCount(postString));
+            return mem;
+
+
+        }
+
+
         public Stream GetReportJson(string reportPath, string SessionID, string PageNum, string parametersList)
         {
             byte[] result = null;
@@ -363,29 +378,31 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteBoolean(hasDocMap);
                     w.WriteMember("ReportContainer");
 
+                    MemoryStream ms;
                     if (this.ServerRendering)
                     {
-                        JSON.Write(w.ToString());
-                        JSON.Write(Encoding.UTF8.GetString(result));
+                        ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
                     }
                     else
                     {
                         rw = new ReportJSONWriter(new MemoryStream(result));
                         JSON = new StringWriter(rw.RPLToJSON(numPages).GetStringBuilder());
                         JSON.GetStringBuilder().Insert(0, w.ToString());
+                        JSON.Write("}");
+                        ms = GetUTF8Bytes(JSON) as MemoryStream;
                     }
 
-                    JSON.Write("}");
+                    
                     
                     // If debug write JSON flag
                     if (IsDebug == "WJSON")
                     {
                         //File.WriteAllText("c:\\test\\BigReport.txt",JSON, Encoding.UTF8);
                         string error = string.Format("[Time: {0}]\r\n[Type: {1}]\r\n[Message: {2}]\r\n[StackTrace:\r\n{3}]\r\n[JSON: {4}]",
-                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", JSON);
+                            DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss "),"Debug", "JSON Debug", "", Encoding.UTF8.GetString(ms.ToArray()));
                         Logger.Trace(LogType.Error, "Debug:\r\n{0}", new object[] { error });                        
                     }
-                    return GetUTF8Bytes(JSON);
+                    return ms;
 
                 }
                 else

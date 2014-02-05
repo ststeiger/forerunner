@@ -7536,7 +7536,7 @@ $(function () {
                 //radio-group by radio name, default value: null
                 $(".fr-param", me.$params).filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
-                        if (noValid && me._isNullChecked(this)) {
+                        if (!noValid || me._isNullChecked(this)) {
                             radioList[this.name] = null;
                         }
                     }

@@ -208,6 +208,12 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
   SetOutPath "$INSTDIR\Config"
 
+  SetOutPath "$INSTDIR\Custom"
+  File "${LOCALROOT}\Custom\Explorer.css"
+  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
+  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
+
 SectionEnd
 
 Section -AdditionalIcons
@@ -630,6 +636,11 @@ Section Uninstall
   
   Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
   Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
+
+  Delete "$INSTDIR\Custom\Explorer.css"
+  Delete "$INSTDIR\Custom\Explorer_Examples.css"
+  Delete "$INSTDIR\Custom\ExplorerSettings.txt"
+  Delete "$INSTDIR\Custom\ExplorerSettings_Examples.txt"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
@@ -702,6 +713,7 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
+  RMDir "$INSTDIR\Custom"
    ;$INSTDIR is the folder where uninst.exe belong to which is Molibizer
   RMDir "$INSTDIR"
   

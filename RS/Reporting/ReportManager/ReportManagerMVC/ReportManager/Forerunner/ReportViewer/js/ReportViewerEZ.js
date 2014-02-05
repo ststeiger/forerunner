@@ -20,7 +20,7 @@ $(function () {
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
-     * $("#reportExplorerEZId").reportExplorerEZ({
+     * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
      *  path: path,
      *  navigateTo: me.navigateTo,

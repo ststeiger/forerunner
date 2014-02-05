@@ -148,7 +148,7 @@ $(function () {
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
-                        error.appendTo(element.parent("div").next("span"));
+                        error.appendTo(element.parent("div").next("div").next("span"));
                     else {
                         if ($(element).attr("IsMultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
@@ -370,7 +370,7 @@ $(function () {
             
             $control.attr("allowblank", param.AllowBlank);
             $control.attr("nullable", param.Nullable);
-            if (param.Nullable === false && param.AllowBlank === false) {
+            if ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
@@ -390,17 +390,25 @@ $(function () {
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
-                        if (param.Type === "Boolean")
-                            $(".fr-paramname-" + param.Name, me.$params).removeAttr("disabled");
-                        else
+                        if (param.Type === "Boolean") {
+                            $(".fr-paramname-" + param.Name, $control).removeAttr("disabled")
+                            $(".fr-paramname-" + param.Name, $control).attr("required", "true");
+                        } else {
                             $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
+                            if ($control.attr("allowblank") !== "true") {
+                                $control.attr("required", "True");
+                            }
+                        }
                     }
                     else {
                         $checkbox.attr("checked", "true");
-                        if (param.Type === "Boolean")
-                            $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
-                        else
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").val(null);
+                        if (param.Type === "Boolean") {
+                            $(".fr-paramname-" + param.Name, $control).attr("disabled", "true")
+                            $(".fr-paramname-" + param.Name, $control).removeAttr("required");
+                        } else {
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                            $control.removeAttr("required");
+                        }
                     }
                 });
 
@@ -1056,7 +1064,7 @@ $(function () {
             var $element = $(".fr-paramname-" + param.name, this.$params);
 
             //check nullable
-            if (me._isNullChecked(param) && param.value === "") {
+            if (me._isNullChecked(param)) {
                 return null;
             } else if ($element.attr("allowblank") === "true" && param.value === "") {
                 //check allow blank

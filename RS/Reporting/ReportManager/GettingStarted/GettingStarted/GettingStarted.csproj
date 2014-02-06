@@ -17,7 +17,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
@@ -202,11 +202,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bundles\HomeController.cs.txt">
+      <DependentUpon>HomeController.cs.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\Report.cshtml.txt">
       <DependentUpon>Report.cshtml.bundle</DependentUpon>
     </Content>
     <Content Include="Bundles\_Layout.cshtml.txt">
       <DependentUpon>_Layout.cshtml.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\_ReportLayout.cshtml.txt">
+      <DependentUpon>_ReportLayout.cshtml.bundle</DependentUpon>
     </Content>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -377,6 +383,8 @@
     <Content Include="Global.asax" />
     <Content Include="Bundles\_Layout.cshtml.bundle" />
     <Content Include="Bundles\Report.cshtml.bundle" />
+    <Content Include="Bundles\_ReportLayout.cshtml.bundle" />
+    <Content Include="Bundles\HomeController.cs.bundle" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -434,6 +442,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Report.cshtml" />
+    <Content Include="Views\Shared\_ReportLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

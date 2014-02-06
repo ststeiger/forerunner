@@ -24,7 +24,6 @@ $(function () {
         this.reportObj = reportObj;
         this.$container = $container;
         this.isRendered = false;
-        this.CSS = {};
     }
 
     /**
@@ -339,7 +338,8 @@ $(function () {
             }
 
             me._removeCSS();
-            me.pages[pageNum].CSS.appendTo("head");
+            if (!$.isEmptyObject(me.pages[pageNum].CSS))
+                me.pages[pageNum].CSS.appendTo("head");
 
             me.curPage = pageNum;
             me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
@@ -4219,6 +4219,7 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
@@ -4237,7 +4238,8 @@ $(function () {
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null,
-            $appContainer: null
+            $appContainer: null,
+            explorerSettings: null
         },
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -4335,6 +4337,10 @@ $(function () {
                 
                 var innerImage = new $("<img />");                
                 $imageblock.append(innerImage);
+                var corner = new $("<div />");
+                $imageblock.append(corner);
+                corner.addClass("fr-explorer-item-earcorner");
+                corner.css("background-color", me.$UL.css("background-color"));
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
                 var imageSrc =  reportThumbnailPath;
@@ -4397,6 +4403,9 @@ $(function () {
             var me = this;
             me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
+            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
+                $('.fr-report-explorer', me.element).addClass(me.colorOverrideSettings.explorer);
+            }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
@@ -4429,15 +4438,37 @@ $(function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
         },
+        _initOverrides: function () {
+            var me = this;
+            if (me.options.explorerSettings.CustomColors) {
+                var decodedPath = decodeURIComponent(me.options.path);
+                var colorOverrideSettings = me.options.explorerSettings.CustomColors[decodedPath];
+                if (colorOverrideSettings) {
+                    me.colorOverrideSettings = colorOverrideSettings;
+                    // Optimize for an exact match
+                    return;
+                }
+                for (var key in me.options.explorerSettings.CustomColors) {
+                    if (decodedPath.indexOf(key, 0) == 0) {
+                        me.colorOverrideSettings = me.options.explorerSettings.CustomColors[key];
+                        return;
+                    }
+                }
+            }
+        },
         _init: function () {
             var me = this;
             me.$RMList = null;
             me.$UL = null;
             me.rmListItems = null;
+            me.colorOverrideSettings = null;
             me.selectedItem = 0;
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
+            if (me.options.explorerSettings) {
+                me._initOverrides();
+            }
             me._fetch(me.options.view, me.options.path);
 
             me.userSettings = {
@@ -5177,7 +5208,7 @@ $(function () {
                 if (val) {
                     $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode) {
+                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
                     }
                     Style += "display:table-cell;";
@@ -5671,7 +5702,6 @@ $(function () {
                 }
             }
 
-            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
@@ -6685,7 +6715,7 @@ $(function () {
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
-                        error.appendTo(element.parent("div").next("span"));
+                        error.appendTo(element.parent("div").next("div").next("span"));
                     else {
                         if ($(element).attr("IsMultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
@@ -6907,7 +6937,7 @@ $(function () {
             
             $control.attr("allowblank", param.AllowBlank);
             $control.attr("nullable", param.Nullable);
-            if (param.Nullable === false && param.AllowBlank === false) {
+            if ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false) {
                 //For IE browser when set placeholder browser will trigger an input event if it's Chinese
                 //to avoid conflict (like auto complete) with other widget not use placeholder to do it
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
@@ -6927,17 +6957,25 @@ $(function () {
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
-                        if (param.Type === "Boolean")
-                            $(".fr-paramname-" + param.Name, me.$params).removeAttr("disabled");
-                        else
+                        if (param.Type === "Boolean") {
+                            $(".fr-paramname-" + param.Name, $control).removeAttr("disabled")
+                            $(".fr-paramname-" + param.Name, $control).attr("required", "true");
+                        } else {
                             $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
+                            if ($control.attr("allowblank") !== "true") {
+                                $control.attr("required", "True");
+                            }
+                        }
                     }
                     else {
                         $checkbox.attr("checked", "true");
-                        if (param.Type === "Boolean")
-                            $(".fr-paramname-" + param.Name, me.$params).attr("disabled", "true");
-                        else
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").val(null);
+                        if (param.Type === "Boolean") {
+                            $(".fr-paramname-" + param.Name, $control).attr("disabled", "true")
+                            $(".fr-paramname-" + param.Name, $control).removeAttr("required");
+                        } else {
+                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                            $control.removeAttr("required");
+                        }
                     }
                 });
 
@@ -7529,13 +7567,17 @@ $(function () {
                 });
                 //dropdown
                 $(".fr-param", me.$params).filter("select").each(function () {
+                    var shouldInclude = this.value !== null && this.value !== "" && me._shouldInclude(this, noValid);
+                    if (shouldInclude)
                     a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
                 $(".fr-param", me.$params).filter(":radio").each(function () {
                     if (!(this.name in radioList)) {
-                        radioList[this.name] = null;
+                        if (!noValid || me._isNullChecked(this)) {
+                            radioList[this.name] = null;
+                        }
                     }
                     if (this.checked === true) {
                         radioList[this.name] = me._isParamNullable(this);
@@ -7589,7 +7631,7 @@ $(function () {
             var $element = $(".fr-paramname-" + param.name, this.$params);
 
             //check nullable
-            if (me._isNullChecked(param) && param.value === "") {
+            if (me._isNullChecked(param)) {
                 return null;
             } else if ($element.attr("allowblank") === "true" && param.value === "") {
                 //check allow blank
@@ -8894,7 +8936,7 @@ $(function () {
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @example
-     * $("#reportExplorerEZId").reportExplorerEZ({
+     * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
      *  path: path,
      *  navigateTo: me.navigateTo,
@@ -9267,7 +9309,8 @@ $(function () {
         options: {
             navigateTo: null,
             historyBack: null,
-            isFullScreen: true
+            isFullScreen: true,
+            explorerSettings: null
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -9293,7 +9336,8 @@ $(function () {
                 view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                explorerSettings: me.options.explorerSettings
             });
         },
         /**
@@ -9334,7 +9378,8 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                me.element.addClass("fr-Explorer-background");
+                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
         /**
@@ -9370,8 +9415,8 @@ $(function () {
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);
-            me.element.addClass("fr-Explorer-background");
-            me.element.removeClass("fr-Explorer-background");
+
+            me.element.css("background-color", "");
         },
         _init: function () {
             var me = this;

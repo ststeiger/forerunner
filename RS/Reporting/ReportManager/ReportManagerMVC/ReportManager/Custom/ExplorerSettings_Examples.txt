@@ -1,0 +1,5 @@
+{
+	"CustomColors" : {
+		"/AdventureWorks 2008R2" : { "explorer": "custom-explorer", "item-selected": "custom-item-selected" }
+	}
+}

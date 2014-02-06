@@ -572,7 +572,7 @@ $(function () {
                 if (val) {
                     $TextObj.text(me._getNewLineFormatText(val));
                     Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
-                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode) {
+                    if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
                     }
                     Style += "display:table-cell;";
@@ -1066,7 +1066,6 @@ $(function () {
                 }
             }
 
-            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
             var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]

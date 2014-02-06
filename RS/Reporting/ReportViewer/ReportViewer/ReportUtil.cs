@@ -200,6 +200,7 @@ namespace Forerunner
                     else
                         curMess = mes.Substring(start);
                     
+                    curMess = curMess.Trim(new char[] {' ', '\n'});
                     if (curMess != lastMess)
                         message += curMess;
                     lastMess = curMess;

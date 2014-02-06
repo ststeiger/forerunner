@@ -12,7 +12,7 @@ var appURL = [
     { local: "http://localhost:55087/", remote: "http://demo.forerunnersw.com/GettingStarted/" },
 
     // Forerunnersw
-    { local: "http://localhost:31921/", remote: "http://forerunnersw.com/Mobilizer/" },
+    { local: "http://localhost:31921/", remote: "http://forerunnersw.com/Mobilizer/" }
 ]
 
 function GetSiteURL(site, filename) {
@@ -104,17 +104,25 @@ function showError($div, errorThrown, jqXHR, url) {
 
     if (errorThrown && errorThrown.stack) {
         html = html + "<a class='sample-error-stack'>StackTrace</a>" +
-                      "<div class='sample-error-stack-details sample-error-text'>" + errorThrown.stack + "</div>" +
+                      "<div class='sample-error-stack-details sample-error-text'>" + errorThrown.stack +
                       "</div>";
     }
 
     if (jqXHR.responseText && jqXHR.responseText.length > 0) {
         html = html + "<a class='sample-error-responsetext'>Response Text:</a>" +
-                      "<div class='sample-error-responsetext-details sample-error-text'>" + jqXHR.responseText + "</div>" +
+                      "<div class='sample-error-responsetext-details sample-error-text'>" +
+                      "<iframe class='sample-error-responsetext-details-iframe' sandbox='allow-same-origin'></iframe>" +
                       "</div>";
     }
 
+    html = html + "</div>";
+
     $div.html($(html));
+
+    if (jqXHR.responseText && jqXHR.responseText.length > 0) {
+        var $iframe = $div.find(".sample-error-responsetext-details-iframe");
+        $iframe.contents().find("html").html(jqXHR.responseText);
+    }
 
     if (errorThrown && errorThrown.stack) {
         var $stackDetails = $div.find(".sample-error-stack-details");
@@ -129,6 +137,10 @@ function showError($div, errorThrown, jqXHR, url) {
         $responseTextDetails.hide();
 
         $responseText = $div.find(".sample-error-responsetext");
-        $responseText.on("click", { $Detail: $responseTextDetails }, function (e) { e.data.$Detail.toggle() });
+        $responseText.on("click", { $Detail: $responseTextDetails }, function (e) {
+            var $iframe = $div.find(".sample-error-responsetext-details-iframe");
+            $iframe.contents().find("html").html(jqXHR.responseText);
+            e.data.$Detail.toggle()
+        });
     }
 }

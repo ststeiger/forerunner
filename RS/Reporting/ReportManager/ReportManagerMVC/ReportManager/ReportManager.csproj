@@ -147,6 +147,10 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Custom\Explorer.css" />
+    <Content Include="Custom\ExplorerSettings.txt" />
+    <Content Include="Custom\ExplorerSettings_Examples.txt" />
+    <Content Include="Custom\Explorer_Examples.css" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css">
       <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
     </Content>

@@ -79,9 +79,27 @@ var ApplicationRouter = Backbone.Router.extend({
         },
     
         initialize: function () {
+
+             var explorerSettings;
+             $.ajax({
+                url: "Custom/ExplorerSettings.txt",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    explorerSettings = data;
+                },
+                fail: function () {
+                    console.log("Load explorer settings failed");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Load explorer settings failed.  " + textStatus);
+                },
+            });
+   
             this.explorer = $("body").reportExplorerEZ({
                 navigateTo: this.navigateTo,
-                historyBack: this.historyBack
+                historyBack: this.historyBack,
+                explorerSettings: explorerSettings
             });
         }
     });

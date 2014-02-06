@@ -196,6 +196,11 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
+  SetOutPath "$INSTDIR\Custom"
+  File "${LOCALROOT}\Custom\Explorer.css"
+  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
+  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR\Config"
 
 SectionEnd

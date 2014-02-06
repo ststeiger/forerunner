@@ -3958,6 +3958,7 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
@@ -3976,7 +3977,8 @@ $(function () {
             selectedItemPath: null,
             $scrollBarOwner: null,
             navigateTo: null,
-            $appContainer: null
+            $appContainer: null,
+            explorerSettings: null
         },
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -4015,14 +4017,16 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings;
+            var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
                 async: false,
                 success: function (data) {
-                    settings = data;
+                    if (data && data.responsiveUI !== undefined) {
+                        settings = data;
+                    }
                 }
             });
 
@@ -4072,6 +4076,10 @@ $(function () {
                 
                 var innerImage = new $("<img />");                
                 $imageblock.append(innerImage);
+                var corner = new $("<div />");
+                $imageblock.append(corner);
+                corner.addClass("fr-explorer-item-earcorner");
+                corner.css("background-color", me.$UL.css("background-color"));
                 var EarImage = new $("<div />");
                 $imageblock.append(EarImage);
                 var imageSrc =  reportThumbnailPath;
@@ -4105,6 +4113,7 @@ $(function () {
             $caption.addClass("fr-explorer-caption");
             var $captiontext = new $("<div />");
             $captiontext.addClass("fr-explorer-item-title");
+            $captiontext.attr("title", catalogItem.Name);
             $captiontext.html(catalogItem.Name);
             $caption.append($captiontext);
             $item.append($caption);            
@@ -4132,6 +4141,9 @@ $(function () {
             var me = this;
             me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
+            if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
+                $('.fr-report-explorer', me.element).addClass(me.colorOverrideSettings.explorer);
+            }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
                 setTimeout(function () { me.$explorer.scrollTop(me.$selectedItem.offset().top - 50); }, 100);  //This is a hack for now
@@ -4141,7 +4153,6 @@ $(function () {
                 setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
-      
         _fetch: function (view,path) {
             var me = this;
             forerunner.ajax.ajax({
@@ -4165,15 +4176,37 @@ $(function () {
             var me = this;
             // Hook up any / all custom events that the report viewer may trigger
         },
+        _initOverrides: function () {
+            var me = this;
+            if (me.options.explorerSettings.CustomColors) {
+                var decodedPath = decodeURIComponent(me.options.path);
+                var colorOverrideSettings = me.options.explorerSettings.CustomColors[decodedPath];
+                if (colorOverrideSettings) {
+                    me.colorOverrideSettings = colorOverrideSettings;
+                    // Optimize for an exact match
+                    return;
+                }
+                for (var key in me.options.explorerSettings.CustomColors) {
+                    if (decodedPath.indexOf(key, 0) == 0) {
+                        me.colorOverrideSettings = me.options.explorerSettings.CustomColors[key];
+                        return;
+                    }
+                }
+            }
+        },
         _init: function () {
             var me = this;
             me.$RMList = null;
             me.$UL = null;
             me.rmListItems = null;
+            me.colorOverrideSettings = null;
             me.selectedItem = 0;
             me.isRendered = false;
             me.$explorer = me.options.$scrollBarOwner ? me.options.$scrollBarOwner : $(window);
             me.$selectedItem = null;
+            if (me.options.explorerSettings) {
+                me._initOverrides();
+            }
             me._fetch(me.options.view, me.options.path);
 
             me.userSettings = {
@@ -8585,13 +8618,14 @@ $(function () {
         options: {
             navigateTo: null,
             historyBack: null,
-            isFullScreen: true
+            isFullScreen: true,
+            explorerSettings: null
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-
+            
             if (!path)
                 path = "/";
             if (!view)
@@ -8611,7 +8645,8 @@ $(function () {
                 view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                explorerSettings: me.options.explorerSettings
             });
         },
         /**
@@ -8652,7 +8687,8 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                me.element.addClass("fr-Explorer-background");
+                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
         /**
@@ -8688,8 +8724,8 @@ $(function () {
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);
-            me.element.addClass("fr-Explorer-background");
-            me.element.removeClass("fr-Explorer-background");
+
+            me.element.css("background-color", "");
         },
         _init: function () {
             var me = this;

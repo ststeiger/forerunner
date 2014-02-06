@@ -34,13 +34,14 @@ $(function () {
         options: {
             navigateTo: null,
             historyBack: null,
-            isFullScreen: true
+            isFullScreen: true,
+            explorerSettings: null
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-
+            
             if (!path)
                 path = "/";
             if (!view)
@@ -60,7 +61,8 @@ $(function () {
                 view: view,
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                explorerSettings: me.options.explorerSettings
             });
         },
         /**
@@ -101,7 +103,8 @@ $(function () {
                 layout.$leftheaderspacer.height(layout.$topdiv.height());
 
                 layout._selectedItemPath = path0; //me._selectedItemPath = path0;
-                me.element.addClass("fr-Explorer-background");
+                var explorer = $('.fr-report-explorer', me.$reportExplorer);
+                me.element.css("background-color", explorer.css("background-color"));
             }, timeout);
         },
         /**
@@ -137,8 +140,8 @@ $(function () {
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);
-            me.element.addClass("fr-Explorer-background");
-            me.element.removeClass("fr-Explorer-background");
+
+            me.element.css("background-color", "");
         },
         _init: function () {
             var me = this;

@@ -289,6 +289,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\Manual Activation.rtf"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
   File "${RESOURCEROOT}\UltiDev.WebServer.msi"
+  SetOutPath "$INSTDIR\Custom"
+  File "${LOCALROOT}\Custom\Explorer.css"
+  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
+  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
@@ -567,6 +572,11 @@ Section Uninstall
   
   Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
   Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
+
+  Delete "$INSTDIR\Custom\Explorer.css"
+  Delete "$INSTDIR\Custom\Explorer_Examples.css"
+  Delete "$INSTDIR\Custom\ExplorerSettings.txt"
+  Delete "$INSTDIR\Custom\ExplorerSettings_Examples.txt"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
@@ -638,6 +648,7 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
+  RMDir "$INSTDIR\Custom"
    ;$INSTDIR is the folder where uninst.exe belong to which is MolibizerV1
   RMDir "$INSTDIR"
   

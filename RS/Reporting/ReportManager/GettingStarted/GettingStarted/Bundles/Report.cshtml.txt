@@ -1,6 +1,20 @@
 ﻿@{
     ViewBag.Title = "Report";
+    Layout = "../Shared/_ReportLayout.cshtml";
 }
 
-<h2>Report</h2>
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('body').reportViewerEZ({
+            DefaultAppTemplate: null,
+            path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+            navigateTo: null,
+            historyBack: null,
+            isReportManager: false,
+            isFullScreen: true
+        });
+    });
+</script>
+}
 

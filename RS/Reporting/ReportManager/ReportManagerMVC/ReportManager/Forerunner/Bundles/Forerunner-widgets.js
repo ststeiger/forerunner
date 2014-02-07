@@ -6453,8 +6453,9 @@ $(function () {
             if (!fontSize)
                 return "";
     
-            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
-                return fontSize;
+            //Not needed anymore with fixed table,  leaving in just in case.
+            //if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+            return fontSize;
 
 
             var unit = fontSize.match(/\D+$/);  // get the existing unit

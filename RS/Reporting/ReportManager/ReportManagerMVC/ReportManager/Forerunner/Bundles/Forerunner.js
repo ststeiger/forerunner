@@ -1211,7 +1211,7 @@ $(function () {
         };
         forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
         // Add custom date validator rule
-        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
         var format = locData.datepicker.dateFormat;
         var momentFormat = format.toUpperCase();
         momentFormat = momentFormat.replace("YY", "YYYY");

@@ -134,7 +134,7 @@
     "nextText":"Ar Aghaidh",
     "currentText":"Sa lá atá inniu",
     "weekHeader":"Wk",
-    "dateFormat":"mm / ll / bb",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

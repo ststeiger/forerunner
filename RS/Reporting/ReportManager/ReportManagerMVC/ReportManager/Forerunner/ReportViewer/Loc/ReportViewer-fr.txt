@@ -135,7 +135,7 @@
     "nextText":"Suivant",
     "currentText":"aujourd'hui",
     "weekHeader":"sem",
-    "dateFormat":"jj/mm/aa",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

@@ -691,7 +691,6 @@ $(function () {
                 langData = this._loadFile(locFileLocation, "en");
 
             return langData;
-            
         },
         _getLanguages: function () {
             var returnValue = null;
@@ -1211,6 +1210,18 @@ $(function () {
             }
         };
         forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
+        // Add custom date validator rule
+        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+        var format = locData.datepicker.dateFormat;
+        var momentFormat = format.toUpperCase();
+        momentFormat = momentFormat.replace("YY", "YYYY");
+        $.validator.addMethod(
+            "formattedDate",
+            function (value, element) {
+                return moment(value, momentFormat).isValid();
+            },
+            locData.validateError.date
+        );
     });
 });
 

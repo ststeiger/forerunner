@@ -126,6 +126,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\moment.min.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
@@ -196,6 +197,11 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
+  SetOutPath "$INSTDIR\Custom"
+  File "${LOCALROOT}\Custom\Explorer.css"
+  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
+  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR\Config"
 
 SectionEnd

@@ -171,6 +171,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\moment.min.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"
@@ -261,7 +262,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Scripts\Util\underscore.js"
   File "${LOCALROOT}\Scripts\Util\modernizr-2.5.3.js"
   File "${LOCALROOT}\Scripts\Util\laconic.js"  
-  File "${LOCALROOT}\Scripts\Util\jquery.hammer.min.js"
   File "${LOCALROOT}\Scripts\Util\collection_view.js"
   File "${LOCALROOT}\Scripts\Util\backbone_ui.js"
   File "${LOCALROOT}\Scripts\Util\backbone.js"
@@ -289,6 +289,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\Manual Activation.rtf"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
   File "${RESOURCEROOT}\UltiDev.WebServer.msi"
+  SetOutPath "$INSTDIR\Custom"
+  File "${LOCALROOT}\Custom\Explorer.css"
+  File "${LOCALROOT}\Custom\Explorer_Examples.css"
+  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
+  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR"
   File "${LOCALROOT}\iPhoneMobilizer.png"
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
@@ -452,7 +457,6 @@ Section Uninstall
   Delete "$INSTDIR\Scripts\Util\_references.js"
   Delete "$INSTDIR\Scripts\Util\backbone_ui.js"
   Delete "$INSTDIR\Scripts\Util\collection_view.js"
-  Delete "$INSTDIR\Scripts\Util\jquery.hammer.min.js"
   Delete "$INSTDIR\Scripts\Util\modernizr-2.5.3.js"
   Delete "$INSTDIR\Scripts\Util\laconic.js"
   Delete "$INSTDIR\Scripts\Util\underscore.js"
@@ -530,6 +534,7 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\Placeholders.min.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\json2.js"
   Delete "$INSTDIR\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
+  Delete "$INSTDIR\Forerunner\Lib\Misc\js\moment.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery.watermark.min.js"
   Delete "$INSTDIR\Forerunner\Lib\jQuery\js\jquery-1.9.1.js"
@@ -567,6 +572,11 @@ Section Uninstall
   
   Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
   Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
+
+  Delete "$INSTDIR\Custom\Explorer.css"
+  Delete "$INSTDIR\Custom\Explorer_Examples.css"
+  Delete "$INSTDIR\Custom\ExplorerSettings.txt"
+  Delete "$INSTDIR\Custom\ExplorerSettings_Examples.txt"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"
@@ -638,6 +648,7 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
+  RMDir "$INSTDIR\Custom"
    ;$INSTDIR is the folder where uninst.exe belong to which is MolibizerV1
   RMDir "$INSTDIR"
   

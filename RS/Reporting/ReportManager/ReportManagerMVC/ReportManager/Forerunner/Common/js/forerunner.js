@@ -483,7 +483,11 @@ $(function () {
         * @param {string} API Base.
         */
         setAPIBase: function (apiBase) {
-            this._apiBase = apiBase;
+            if (_endsWith(apiBase, "/") === -1) {
+                this._apiBase = apiBase + "/";
+            } else {
+                this._apiBase = apiBase;
+            }
         },
     };
 
@@ -1384,7 +1388,7 @@ $(function () {
         
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
         // Add custom date validator rule
-        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
         var format = locData.datepicker.dateFormat;
         var momentFormat = format.toUpperCase();
         momentFormat = momentFormat.replace("YY", "YYYY");

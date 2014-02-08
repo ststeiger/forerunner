@@ -7307,7 +7307,12 @@ $(function () {
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
-            return new Date(defaultDatetime);
+            if (!defaultDatetime) {
+                return null;
+            }
+
+            var m = moment(defaultDatetime);
+            return m.isValid() ? new Date(defaultDatetime) : null;
         },
         _checkDependencies: function (param) {
             var me = this;

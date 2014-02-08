@@ -73,7 +73,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};

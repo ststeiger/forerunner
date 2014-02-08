@@ -9,7 +9,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.

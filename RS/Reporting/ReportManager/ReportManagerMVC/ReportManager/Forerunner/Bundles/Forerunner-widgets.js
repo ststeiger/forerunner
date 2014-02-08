@@ -5634,7 +5634,7 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
             if (forerunner.device.isMSIE())
                 Style += "min-height:" + height + "mm;";
             else

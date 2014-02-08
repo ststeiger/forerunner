@@ -147,12 +147,6 @@
     <Compile Include="Util\Logging\CustomAPIFilters.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Forerunner\Bundles\Forerunner-all.css">
-      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
-    </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-all.min.css">
-      <DependentUpon>Forerunner-all.css.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Bundles\Forerunner-tools.js">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>

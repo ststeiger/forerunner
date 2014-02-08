@@ -43,7 +43,7 @@
   <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/Placeholders.min.js"></script>
   <script type="text/javascript">
       $(document).ready(function () {
-          var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + '/ReportViewer/loc/ReportViewer');
+          var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + 'ReportViewer/loc/ReportViewer');
           $('#username').attr('placeholder', locData.placeholders.Username);
           if (forerunner.device.isMSIE8())
               $('#password').attr('placeholder', '').attr("data-placeholder-value", '').val('');

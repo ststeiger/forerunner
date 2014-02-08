@@ -34,7 +34,7 @@ $(function () {
         _init: function () {
             var me = this;
 
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
                  "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                      "<div class='fr-messagebox-innerpage'>" +

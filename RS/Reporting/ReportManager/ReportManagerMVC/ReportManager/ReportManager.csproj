@@ -212,6 +212,7 @@
     <Content Include="Forerunner\Lib\Misc\js\css3-mediaqueries.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.min.js" />
+    <Content Include="Forerunner\Lib\Misc\js\moment.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />

@@ -141,7 +141,7 @@
     "nextText":"Successivo",
     "currentText":"oggi",
     "weekHeader":"Wk",
-    "dateFormat":"mm / gg / aa",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

@@ -141,7 +141,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"дд / мм / гг",
+    "dateFormat":"yy / mm / dd",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

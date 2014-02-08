@@ -6887,6 +6887,7 @@ $(function () {
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
+            var predefinedValue = me._getPredefinedValue(param);
             //if any element disable exist then not submit form auto
             if (dependenceDisable) me._loadedForDefault = false;
 
@@ -6898,25 +6899,25 @@ $(function () {
             if (param.MultiValue === true) { // Allow multiple values in one textbox
 
                 if (param.ValidValues !== "") { // Dropdown with checkbox
-                    $element = me._writeDropDownWithCheckBox(param, dependenceDisable);
+                    $element = me._writeDropDownWithCheckBox(param, dependenceDisable, predefinedValue);
                 }
-                else {//if (param.DefaultValues !== "") { // Dropdown with editable textarea
+                else {// Dropdown with editable textarea
                     bindingEnter = false;
-                    $element = me._writeDropDownWithTextArea(param, dependenceDisable);
+                    $element = me._writeDropDownWithTextArea(param, dependenceDisable, predefinedValue);
                 }
             }
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) : me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
-                    $element = me._writeRadioButton(param, dependenceDisable, pageNum);
+                    $element = me._writeRadioButton(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else { // Textbox
-                    $element = me._writeTextArea(param, dependenceDisable, pageNum);
+                    $element = me._writeTextArea(param, dependenceDisable, pageNum, predefinedValue);
                 }
             }
 
@@ -6928,7 +6929,7 @@ $(function () {
                 });
             }
 
-            $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
+            $container.append($element).append(me._addNullableCheckBox(param, $element, predefinedValue)).append($errorMsg);
             $parent.append($label).append($container);
 
             return $parent;
@@ -6948,37 +6949,36 @@ $(function () {
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
-        _addNullableCheckBox: function (param, $control) {
+        _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;
             if (param.Nullable === true) {
+                var $paramControl = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") : $control;
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
-
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
                         if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $control).removeAttr("disabled")
-                            $(".fr-paramname-" + param.Name, $control).attr("required", "true");
+                            $(".fr-paramname-" + param.Name, $paramControl).removeAttr("disabled").attr("required", "true");
                         } else {
-                            $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
-                            if ($control.attr("allowblank") !== "true") {
-                                $control.attr("required", "True");
+                            $paramControl.removeAttr("disabled").removeClass("fr-param-disable");
+                            if ($paramControl.attr("allowblank") !== "true") {
+                                $paramControl.attr("required", "True");
                             }
                         }
                     }
                     else {
                         $checkbox.attr("checked", "true");
                         if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $control).attr("disabled", "true")
-                            $(".fr-paramname-" + param.Name, $control).removeAttr("required");
+                            $(".fr-paramname-" + param.Name, $paramControl).attr("disabled", "true").removeAttr("required");
                         } else {
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
-                            $control.removeAttr("required");
+                            $paramControl.attr("disabled", "true").addClass("fr-param-disable").removeAttr("required");
                         }
                     }
                 });
+
+                if (predefinedValue === null) $checkbox.trigger("click");
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
@@ -6998,9 +6998,8 @@ $(function () {
                 }
             }
         },
-        _writeRadioButton: function (param, dependenceDisable, pageNum) {
+        _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
@@ -7019,11 +7018,8 @@ $(function () {
                 else {
                     me._getParameterControlProperty(param, $radioItem);
 
-                    if (predefinedValue) {
-                        if (param.Nullable === true)
-                            $radioItem.attr("disabled", "true");
-                        else if (predefinedValue === radioValues[i].value)
-                            $radioItem.attr("checked", "true");
+                    if (predefinedValue && predefinedValue === radioValues[i].value) {
+                        $radioItem.attr("checked", "true");
                     }
 
                     if (me._paramCount === 1)
@@ -7037,9 +7033,8 @@ $(function () {
 
             return $control;
         },
-        _writeTextArea: function (param, dependenceDisable, pageNum) {
+        _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
@@ -7067,7 +7062,7 @@ $(function () {
                             $control.attr("disabled", true);
                         },
                     });
-                    $control.attr(formattedDate, "true");
+                    $control.attr("formattedDate", "true");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -7099,10 +7094,9 @@ $(function () {
             }
 
         },
-        _writeBigDropDown: function (param, dependenceDisable, pageNum) {
+        _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var predefinedValue = me._getPredefinedValue(param);
 
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -7121,6 +7115,8 @@ $(function () {
             }
 
             $openDropDown.on("click", function () {
+                if ($control.attr("disabled")) return;
+
                 if ($control.autocomplete("widget").is(":visible")) {
                     $control.autocomplete("close");
                     return;
@@ -7133,13 +7129,13 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if (predefinedValue === param.ValidValues[i].value) {
+                if (predefinedValue && predefinedValue === param.ValidValues[i].value) {
                     $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
                     canLoad = true;
                     break;
                 }
             }
-            if (!canLoad) me._loadedForDefault = false;
+            if (!canLoad && param.Nullable !== true) me._loadedForDefault = false;
 
             $control.autocomplete({
                 source: param.ValidValues,
@@ -7192,10 +7188,9 @@ $(function () {
             $container.append($control).append($openDropDown);
             return $container;
         },
-        _writeDropDownControl: function (param, dependenceDisable, pageNum) {
+        _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<select class='fr-param fr-param-select fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
                 param.MultiValue + "' datatype='" + param.Type + "' readonly='true'>");
 
@@ -7260,9 +7255,8 @@ $(function () {
             }
             return $label;
         },
-        _writeDropDownWithCheckBox: function (param, dependenceDisable) {
+        _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = me._createDiv(["fr-param-element-container"]);
 
             var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
@@ -7355,9 +7349,8 @@ $(function () {
 
             return $control;
         },
-        _writeDropDownWithTextArea: function (param, dependenceDisable) {
+        _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
             var $control = me._createDiv(["fr-param-element-container"]);
 

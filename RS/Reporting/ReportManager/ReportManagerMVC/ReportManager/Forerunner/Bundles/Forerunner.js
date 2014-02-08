@@ -463,7 +463,7 @@ $(function () {
         * @param {string} Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
-            if (!_endsWith(forerunnerFolderPath, "/")) {
+            if (_endsWith(forerunnerFolderPath, "/") === -1) {
                 this._forerunnerFolderPath = forerunnerFolderPath + "/";
             } else {
                 this._forerunnerFolderPath = forerunnerFolderPath;

@@ -419,7 +419,11 @@ $(function () {
         * @param {string} API Base.
         */
         setAPIBase: function (apiBase) {
-            this._apiBase = apiBase;
+            if (_endsWith(apiBase, "/") === -1) {
+                this._apiBase = apiBase + "/";
+            } else {
+                this._apiBase = apiBase;
+            }
         },
     };
 

@@ -78,7 +78,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
         },
         _initBody: function () {
             var me = this;

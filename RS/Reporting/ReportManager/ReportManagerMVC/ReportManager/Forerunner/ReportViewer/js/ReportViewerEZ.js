@@ -70,7 +70,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
-                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
+                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
                 ReportPath: path,
                 jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,

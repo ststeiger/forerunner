@@ -8,7 +8,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -25,7 +25,7 @@ $(function () {
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
-     *  forerunnerPath: "./forerunner",
+     *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
      *  navigateTo: navigateTo
@@ -161,7 +161,7 @@ $(function () {
                
                 innerImage.attr("src", imageSrc);
                 innerImage.error(function () {
-                    $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
+                    $(this).attr("src", me.options.forerunnerPath + "ReportExplorer/images/Report-icon.png");
                 });
                 
                 innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.

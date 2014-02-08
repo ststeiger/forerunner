@@ -76,7 +76,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -2083,7 +2083,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
@@ -2841,7 +2841,7 @@ $(function () {
         _init: function () {
             var me = this;
 
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     "<div class='fr-messagebox-innerpage'>" +
@@ -3947,7 +3947,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -4010,7 +4010,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
-                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -4206,7 +4206,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -4223,7 +4223,7 @@ $(function () {
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
-     *  forerunnerPath: "./forerunner",
+     *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
      *  navigateTo: navigateTo
@@ -4359,7 +4359,7 @@ $(function () {
                
                 innerImage.attr("src", imageSrc);
                 innerImage.error(function () {
-                    $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
+                    $(this).attr("src", me.options.forerunnerPath + "ReportExplorer/images/Report-icon.png");
                 });
                 
                 innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.
@@ -4533,7 +4533,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
@@ -4576,7 +4576,7 @@ $(function () {
         },
         _getBuildVersion: function () {
             var me = this;
-            var url = forerunner.config.forerunnerFolder() + "/version.txt";
+            var url = forerunner.config.forerunnerFolder() + "version.txt";
             var buildVersion = null;
             $.ajax({
                 url: url,
@@ -6865,7 +6865,7 @@ $(function () {
                 $.datepicker.setDefaults(dpLoc);
             
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
                 $(datePicker).datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
             });
@@ -7965,7 +7965,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
         },
         _initBody: function () {
             var me = this;
@@ -8273,7 +8273,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var manageParamSets = locData.manageParamSets;
 
     $.widget(widgets.getFullname(widgets.manageParamSets), {
@@ -8570,7 +8570,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -8986,7 +8986,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
-                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
+                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
                 ReportPath: path,
                 jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,
@@ -9058,7 +9058,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dsCredential = locData.dsCredential;
     /**
    * Widget used to show datasource credential dialog

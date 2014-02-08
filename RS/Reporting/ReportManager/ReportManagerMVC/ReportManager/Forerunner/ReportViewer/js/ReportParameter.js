@@ -298,7 +298,7 @@ $(function () {
                 $.datepicker.setDefaults(dpLoc);
             
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
                 $(datePicker).datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
             });

@@ -454,15 +454,19 @@ $(function () {
         forerunnerFolder: function ()
         {
             if (this._forerunnerFolderPath) return this._forerunnerFolderPath;
-            return this._getVirtualRootBase() + "/forerunner";
+            return this._getVirtualRootBase() + "forerunner/";
         },
         /**
         * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
         *
         * @param {string} Forerunner folder path.
         */
-        setForerunnerFolder : function(forerunnerFolderPath) {
-            this._forerunnerFolderPath = forerunnerFolderPath;
+        setForerunnerFolder: function (forerunnerFolderPath) {
+            if (!_endsWith(forerunnerFolderPath, "/")) {
+                this._forerunnerFolderPath = forerunnerFolderPath + "/";
+            } else {
+                this._forerunnerFolderPath = forerunnerFolderPath;
+            }
         },
         /**
          * Base path to the REST api controlers
@@ -471,7 +475,7 @@ $(function () {
          */
         forerunnerAPIBase: function () {
             if (this._apiBase) return this._apiBase;
-            return this._getVirtualRootBase() + "/api/";
+            return this._getVirtualRootBase() + "api/";
         },
         /**
         * Override the api base.  By default, it is the vroot + /api.
@@ -827,7 +831,7 @@ $(function () {
         _getLanguages: function () {
             var returnValue = null;
             $.ajax({
-                url: forerunner.config.forerunnerAPIBase() + "/reportViewer/AcceptLanguage",
+                url: forerunner.config.forerunnerAPIBase() + "reportViewer/AcceptLanguage",
                 dataType: "json",
                 async: false,
                 success: function (data) {
@@ -881,7 +885,7 @@ $(function () {
             if (!this.loginUrl) {
                 var returnValue = null;
                 $.ajax({
-                    url: forerunner.config.forerunnerAPIBase() + "/reportViewer/LoginUrl",
+                    url: forerunner.config.forerunnerAPIBase() + "reportViewer/LoginUrl",
                     dataType: "json",
                     async: false,
                     success: function (data) {
@@ -908,7 +912,7 @@ $(function () {
             if (data.status === 401 || data.status === 302) {
                 var loginUrl = me._getLoginUrl();
                 var urlParts = document.URL.split("#");
-                var redirectTo = forerunner.config.forerunnerFolder() + "/../" + loginUrl + "?ReturnUrl=" + urlParts[0];
+                var redirectTo = forerunner.config.forerunnerFolder() + "../" + loginUrl + "?ReturnUrl=" + urlParts[0];
                 if (urlParts.length > 1) {
                     redirectTo += "&HashTag=";
                     redirectTo += urlParts[1];

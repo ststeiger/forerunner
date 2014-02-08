@@ -29,13 +29,14 @@ namespace GettingStarted.Controllers
 
         //
         // POST: /Account/Login
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            //if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            if (ModelState.IsValid &&
+                Forerunner.Security.FormsAuthenticationHelper.Login(model.UserName, model.Password, 30))
             {
                 return RedirectToLocal(returnUrl);
             }

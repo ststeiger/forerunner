@@ -134,7 +134,7 @@
     "nextText":"Weiter",
     "currentText":"Heute",
     "weekHeader":"Wk",
-    "dateFormat":"mm / tt / jj",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

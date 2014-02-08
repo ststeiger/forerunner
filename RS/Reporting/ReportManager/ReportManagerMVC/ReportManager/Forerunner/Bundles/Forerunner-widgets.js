@@ -6763,7 +6763,6 @@ $(function () {
                 case "DateTime":
                     $control.datepicker({
                         showOn: "button",
-                        dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
@@ -6778,10 +6777,10 @@ $(function () {
                             $control.attr("disabled", true);
                         },
                     });
-                    $control.attr("dateISO", "true");
+                    $control.attr("formattedDate", "true");
 
                     if (predefinedValue)
-                        $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
+                        $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue) );
                     break;
                 case "Integer":
                 case "Float":
@@ -7308,16 +7307,7 @@ $(function () {
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
-            if (!defaultDatetime || defaultDatetime.length < 9)
-                return null;
-
-            //dateISO: yyyy-mm-dd
-            if (/^(\d{4})-(0\d{1}|1[0-2])-(0\d{1}|[12]\d{1}|3[01])$/.test(defaultDatetime))
-                return defaultDatetime;
-
-            var date = new Date(defaultDatetime.substr(0, defaultDatetime.indexOf(" ")));
-
-            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            return new Date(defaultDatetime);
         },
         _checkDependencies: function (param) {
             var me = this;

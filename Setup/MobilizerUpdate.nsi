@@ -126,6 +126,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\Placeholders.min.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\json2.js"
   File "${LOCALROOT}\Forerunner\Lib\Misc\js\css3-mediaqueries.js"
+  File "${LOCALROOT}\Forerunner\Lib\Misc\js\moment.min.js"
   SetOutPath "$INSTDIR\Forerunner\ReportExplorer\css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\ReportExplorer.css"
   File "${LOCALROOT}\Forerunner\ReportExplorer\css\UserSettings.css"

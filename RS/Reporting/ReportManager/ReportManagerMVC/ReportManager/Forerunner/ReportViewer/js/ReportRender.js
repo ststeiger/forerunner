@@ -1818,8 +1818,8 @@ $(function () {
                 return "";
     
             //Not needed anymore with fixed table,  leaving in just in case.
-            //if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
-            return fontSize;
+            if (!forerunner.device.isMSIE())
+                return fontSize;
 
 
             var unit = fontSize.match(/\D+$/);  // get the existing unit
@@ -1829,7 +1829,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*0.95) + unit ;
+            return (value*0.98) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

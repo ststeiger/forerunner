@@ -157,6 +157,9 @@
     <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
       <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\_SamplesLayout.cshtml.txt">
+      <DependentUpon>_SamplesLayout.cshtml.bundle</DependentUpon>
+    </Content>
     <Content Include="Content\images\MyHome.png" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css" />
     <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
@@ -320,6 +323,9 @@
     <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

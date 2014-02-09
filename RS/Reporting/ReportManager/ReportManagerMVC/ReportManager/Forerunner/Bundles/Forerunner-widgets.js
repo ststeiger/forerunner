@@ -6432,7 +6432,7 @@ $(function () {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("span"));
                     else {
-                        if ($(element).attr("IsMultiple") === "True")
+                        if ($(element).attr("ismultiple") === "true")
                             error.appendTo(element.parent("div").next("span"));
                         else
                             error.appendTo(element.nextAll(".fr-param-error-placeholder"));
@@ -6654,6 +6654,11 @@ $(function () {
             if ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, {useNative : false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required");
+            } else if (param.MultiValue) {
+                if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
+                    $control.attr("required", "true");
+                    $control.addClass("fr-param-required");
+                }
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },

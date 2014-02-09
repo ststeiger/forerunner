@@ -17,7 +17,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication>disabled</IISExpressAnonymousAuthentication>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
@@ -42,6 +42,10 @@
     <Reference Include="Forerunner.Json, Version=0.9.12915.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Forerunner.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Forerunner.SQLReporting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -130,11 +134,11 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CustomAPIFilters.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SamplesController.cs" />
     <Compile Include="Controllers\ReportManagerController.cs" />
     <Compile Include="Controllers\ReportViewerController.cs" />
-    <Compile Include="Forerunner\Controllers\CustomAPIFilters.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -153,14 +157,15 @@
     <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
       <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\_SamplesLayout.cshtml.txt">
+      <DependentUpon>_SamplesLayout.cshtml.bundle</DependentUpon>
+    </Content>
     <Content Include="Content\images\MyHome.png" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css" />
     <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
-    <Content Include="Forerunner\Bundles\Forerunner.js" />
     <Content Include="Forerunner\Bundles\Forerunner.min.js" />
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />
@@ -174,11 +179,6 @@
     <Content Include="Forerunner\Common\images\ForerunnerLogo.png" />
     <Content Include="Forerunner\Common\images\icons24x24.png" />
     <Content Include="Forerunner\Common\images\icons25x31.png" />
-    <Content Include="Forerunner\Common\js\DefaultAppTemplate.js" />
-    <Content Include="Forerunner\Common\js\forerunner-tools.js" />
-    <Content Include="Forerunner\Common\js\forerunner.js" />
-    <Content Include="Forerunner\Common\js\MessageBox.js" />
-    <Content Include="Forerunner\Common\js\Toolbase.js" />
     <Content Include="Forerunner\Lib\jQuery\css\images\animated-overlay.gif" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-bg_flat_75_416ca3_40x100.png" />
@@ -205,9 +205,9 @@
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
+    <Content Include="Forerunner\Lib\Misc\js\moment.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
-    <Content Include="Forerunner\ReportExplorer\css\ManageSubscription.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
@@ -220,13 +220,6 @@
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
-    <Content Include="Forerunner\ReportExplorer\js\ParameterModel.js" />
-    <Content Include="Forerunner\ReportExplorer\js\ReportExplorer.js" />
-    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerEZ.js" />
-    <Content Include="Forerunner\ReportExplorer\js\ReportExplorerToolbar.js" />
-    <Content Include="Forerunner\ReportExplorer\js\SubscriptionModel.js" />
-    <Content Include="Forerunner\ReportExplorer\js\UserSettings.js" />
-    <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -245,7 +238,6 @@
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Collapse.gif" />
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="Forerunner\ReportViewer\Images\EmptyIndent.gif" />
-    <Content Include="Forerunner\ReportViewer\Images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\Images\NotSorted.gif" />
     <Content Include="Forerunner\ReportViewer\Images\OpenDropDown.png" />
     <Content Include="Forerunner\ReportViewer\Images\page-loading.GIF" />
@@ -261,18 +253,6 @@
     <Content Include="Forerunner\ReportViewer\Images\Toolbar\bkg_toolbar.jpg" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png" />
-    <Content Include="Forerunner\ReportViewer\js\DSCredential.js" />
-    <Content Include="Forerunner\ReportViewer\js\ManageParamSets.js" />
-    <Content Include="Forerunner\ReportViewer\js\PageNav.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportDocumentMap.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportParameter.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportPrint.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportRender.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportViewer.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportViewerEZ.js" />
-    <Content Include="Forerunner\ReportViewer\js\ReportViewerInitializer.js" />
-    <Content Include="Forerunner\ReportViewer\js\Toolbar.js" />
-    <Content Include="Forerunner\ReportViewer\js\ToolPane.js" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en-us.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-en.txt" />
@@ -290,7 +270,6 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
-    <Content Include="Forerunner\version.txt" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -317,12 +296,6 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj">
-      <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
-      <Name>Forerunner.SSRS</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Shared\_SamplesLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -347,20 +320,12 @@
     <Content Include="Bundles\RemoveButton.cshtml.bundle" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Forerunner\Bundles\Forerunner-all.css.bundle" />
-    <Content Include="Forerunner\Bundles\Forerunner-tools.js.bundle" />
-    <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.js.bundle" />
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map" />
-    <Content Include="Forerunner\Bundles\Forerunner.js.bundle" />
-    <Content Include="Forerunner\Bundles\Forerunner.min.js.map" />
-    <Content Include="Forerunner\Common\css\Thumbs.db" />
-    <Content Include="Forerunner\Common\images\Thumbs.db" />
     <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
-    <Content Include="Forerunner\ReportExplorer\images\Thumbs.db" />
-    <Content Include="Forerunner\ReportViewer\Images\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

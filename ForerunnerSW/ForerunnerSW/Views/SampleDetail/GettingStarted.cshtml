@@ -7,7 +7,8 @@
     <p>
         This sample will guide you through all the steps needed to create a Forerunner enabled web application. This sample
         was created with "Microsoft Visual Studio 2012". The forerunner SDK does not require a Microsoft MVC 4 Web Application
-        but the samples were developed in that environment.
+        but the samples were developed in that environment. When finished, you will have a running MVC 4 Web application based
+        upon the "Internet Application" template with one additional page that shows a report using the Forerunner SDK.
     </p>
     <p>
         If you already have a web application you can skip directly to the the section on enabling Forerunner support below.
@@ -34,12 +35,17 @@
     <p><b>Step 3: Enabling Forerunner SDK Support</b></p>
     <ul>
         <li>
-            Copy the forerunner folder from your Mobilizer installation into the root folder in your project. Typically
+            Copy the "forerunner" folder from your Mobilizer installation into the root folder in your project. Typically
             the Forerunner folder folder path would be something like:
         </li><br />
         <ul><li>C:\Program Files (x86)\Forerunner\MobilizerV2\Forerunner</li></ul>
         <p>and the root folder of your application will contain your Web.config file.</p>
-        <li>In the Forerunner\Controllers forder, rename the namespace of the controllers from "ReportManager" to your namespace</li>
+        <li>
+            Copy the "sdk" folder from your Mobilizer installation. This folder contains the controllers and related .cs files you
+            will need to run the Forerunner SDK. You can create a project folder named "sdk" or you can choose to copy these files
+            into your own project folder hierarchy if you prefer.
+        </li>
+        <br />
         <li>Copy the following files from your installation bin folder to your project bin folder and add references:</li>
         <ul>
             <li>Forerunner.Json.dll</li>
@@ -60,7 +66,7 @@
     </ul>
     <p><b>Step 4: Add a page that shows a report</b></p>
     <ul>
-        <p><i>Add a Report view</i></p>
+        <p><i>Add a Report view that contains a <a href="~/Docs/$.forerunner.reportViewerEZ.html">reportViewerEZ</a> widget</i></p>
         <li>In the "Solution Explorer" view, right click the "Views" > "Home" folder and select the menu items:</li>
             <ul><li>"Add" > "View..."</li></ul>
         <li>In the "Add View" dialog:</li>
@@ -68,20 +74,12 @@
             <li>Add a new view named "Report"</li>
             <li>Select the  "Add" button</li>
         </ul>
-        <p>
-            <a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/Report.cshtml.txt', 'ReportPageSourceID')">Click here to see the source code</a>
-        </p>
-        <p>
-            <pre id="ReportPageSourceID" class="prettyprint"></pre>
-        </p>
+        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/Report.cshtml.txt', 'ReportPageSourceID')">Click here to see the source code</a></p>
+        <p><pre id="ReportPageSourceID" class="prettyprint"></pre></p>
 
         <p><i>Add a new action method to the HomeController.cs file</i></p>
-        <p>
-            <a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/HomeController.cs.txt', 'HomeControllerSourceID')">Click here to see the source code</a>
-        </p>
-        <p>
-            <pre id="HomeControllerSourceID" class="prettyprint"></pre>
-        </p>
+        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/HomeController.cs.txt', 'HomeControllerSourceID')">Click here to see the source code</a></p>
+        <p><pre id="HomeControllerSourceID" class="prettyprint"></pre></p>
 
         <p><i>Add a new report layout</i></p>
         <li>In the "Solution Explorer" view, right click the "Views" > "Shared" folder and select the menu items:</li>
@@ -91,17 +89,28 @@
             <li>Add a new view named "_ReportLayout.cshtml"</li>
             <li>Select the  "Add" button</li>
         </ul>
-        <p>
-            <a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/_ReportLayout.cshtml.txt', 'ReportLayoutSourceID')">Click here to see the source code</a>
-        </p>
-        <p>
-            <pre id="ReportLayoutSourceID" class="prettyprint"></pre>
-        </p>
-
+        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/_ReportLayout.cshtml.txt', 'ReportLayoutSourceID')">Click here to see the source code</a></p>
+        <p><pre id="ReportLayoutSourceID" class="prettyprint"></pre></p>
+        <li>Add a link to the new report page into the _Layout.cshtml page</li>
+        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/_Layout.cshtml.txt', 'LayoutSourceID')">Click here to see the source code</a></p>
+        <p><pre id="LayoutSourceID" class="prettyprint"></pre></p>
     </ul>
 
+    <p><b>Step 5: Setup authentication</b></p>
+    <p><i>Add the Forerunner authentication support</i></p>
+    <ul>
+        <li>Open the file "Controllers" > "AccountController.cs></li>
+        <li>Change the following refernece from:</li>
+        <p>WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)</p>
+        <p>in the Login action to:</p>
+        <p>Forerunner.Security.FormsAuthenticationHelper.Login(model.UserName, model.Password, 30)</p>
+    </ul>
+    <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/AccountController.cs.txt', 'AccountContrpollerSourceID')">Click here to see the source code</a></p>
+    <p><pre id="AccountContrpollerSourceID" class="prettyprint"></pre></p>
 
     <p>
-        <a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample</a>
+        You can run the sample and see the "Report" page. The "Report" page requires authentication, so login using the user
+        name "TestAccount" and password "TestPWD!".
     </p>
+    <p><a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample run</a></p>
 }

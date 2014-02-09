@@ -39,6 +39,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Forerunner.Json, Version=0.9.12915.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Forerunner.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Forerunner.SQLReporting.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -182,11 +190,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CustomAPIFilters.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ReportManagerController.cs" />
+    <Compile Include="Controllers\ReportViewerController.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
-    <Compile Include="Forerunner\Controllers\CustomAPIFilters.cs" />
-    <Compile Include="Forerunner\Controllers\ReportManagerController.cs" />
-    <Compile Include="Forerunner\Controllers\ReportViewerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -194,6 +202,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bundles\AccountController.cs.txt">
+      <DependentUpon>AccountController.cs.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\HomeController.cs.txt">
       <DependentUpon>HomeController.cs.bundle</DependentUpon>
     </Content>
@@ -261,6 +272,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
+    <Content Include="Forerunner\Bundles\Forerunner-all.css" />
+    <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
@@ -303,15 +316,14 @@
     <Content Include="Forerunner\Lib\Misc\js\jquery.hammer.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\jquery.lazyload.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\json2.js" />
+    <Content Include="Forerunner\Lib\Misc\js\moment.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
-    <Content Include="Forerunner\ReportExplorer\css\ManageSubscription.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
     <Content Include="Forerunner\ReportExplorer\images\accent.png" />
     <Content Include="Forerunner\ReportExplorer\images\bullet.png" />
-    <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\heroAccent.png" />
@@ -319,7 +331,6 @@
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
-    <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -338,7 +349,6 @@
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Collapse.gif" />
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="Forerunner\ReportViewer\Images\EmptyIndent.gif" />
-    <Content Include="Forerunner\ReportViewer\Images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\Images\NotSorted.gif" />
     <Content Include="Forerunner\ReportViewer\Images\OpenDropDown.png" />
     <Content Include="Forerunner\ReportViewer\Images\page-loading.GIF" />
@@ -351,7 +361,7 @@
     <Content Include="Forerunner\ReportViewer\Images\search.png" />
     <Content Include="Forerunner\ReportViewer\Images\SortAccending.gif" />
     <Content Include="Forerunner\ReportViewer\Images\SortDecending.gif" />
-    <Content Include="Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg" />
+    <Content Include="Forerunner\ReportViewer\Images\Toolbar\bkg_toolbar.jpg" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
@@ -371,12 +381,15 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
-    <Content Include="Forerunner\version.txt" />
     <Content Include="Global.asax" />
     <Content Include="Bundles\_Layout.cshtml.bundle" />
     <Content Include="Bundles\Report.cshtml.bundle" />
     <Content Include="Bundles\_ReportLayout.cshtml.bundle" />
     <Content Include="Bundles\HomeController.cs.bundle" />
+    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
+    <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
+    <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
+    <Content Include="Bundles\AccountController.cs.bundle" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -441,16 +454,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\ReportViewer\JSON\src\Jayrock.Json\Forerunner.Json.csproj">
-      <Project>{f10a6a7d-b8e4-4f8b-8bd9-5b42ace5520e}</Project>
-      <Name>Forerunner.Json</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj">
-      <Project>{b5b587bb-5963-4114-854f-d1ecd5e77336}</Project>
-      <Name>Forerunner.SSRS</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

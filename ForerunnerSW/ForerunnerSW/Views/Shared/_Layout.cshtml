@@ -4,20 +4,25 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
     <meta name="viewport" content="width=device-width" />
+    <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW, ARCHIVE" />
     <title>@ViewBag.Title</title>
+    
+    <meta name="description=" content="@ViewBag.Description">
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="/content/site.css" rel="stylesheet">
      <script>
          
-         if (window.location.hostname !== "localhost") {
 
-             if (window.location.protocol != "https:") {
-                 var oldURL = window.location.href
-                 var newURL = oldURL.replace("http:", "https:");
-                 window.location = newURL;
-             }
-         }
+         //if (window.location.hostname !== "localhost") {
+         //    if (window.location.protocol != "https:") {
+         //        var oldURL = window.location.href
+         //        var newURL = oldURL.replace("http:", "https:") + "?ref=" + document.referrer;
+         //        //window.location = newURL;
+         //        location.replace(newURL);
+         //    }
+         //}
          
          (function (i, s, o, g, r, a, m) {
              i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
@@ -51,7 +56,7 @@
                                     <li id="About" class="Navitem TopNavitem"><a href="../home/about">About</a></li>
                                     <li id="Support" class="Navitem TopNavitem"><a href="../home/support">Support</a></li>
                                     <li id="Demo" class="Navitem TopNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem"><a href="../Docs/index.html">Developers</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem"><a href="../home/developers">Developers</a></li>
                                     <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
                                     <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
                                 </ul>

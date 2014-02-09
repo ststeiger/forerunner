@@ -202,6 +202,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Bundles\AccountController.cs.txt">
+      <DependentUpon>AccountController.cs.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\HomeController.cs.txt">
       <DependentUpon>HomeController.cs.bundle</DependentUpon>
     </Content>
@@ -386,6 +389,7 @@
     <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
+    <Content Include="Bundles\AccountController.cs.bundle" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />

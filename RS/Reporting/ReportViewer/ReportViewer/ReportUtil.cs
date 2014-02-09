@@ -253,7 +253,7 @@ namespace Forerunner
                         Object obj = proInfo.GetValue(parameter, null);
 
                         if (obj == null)
-                            w.WriteString("");
+                            w.WriteNull();
                         else if (obj.GetType().ToString().Contains("Boolean"))
                             w.WriteBoolean(bool.Parse(obj.ToString()));
                         else
@@ -270,7 +270,10 @@ namespace Forerunner
                     w.WriteStartArray();
                     foreach (string item in parameter.DefaultValues)
                     {
-                        w.WriteString(item);
+                        if (item == null)
+                            w.WriteNull();
+                        else
+                            w.WriteString(item);
                     }
                     w.WriteEndArray();
                 }

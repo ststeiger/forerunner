@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettingStarted", "GettingStarted\GettingStarted.csproj", "{1792A306-4E13-4438-ACC6-8E3CF75317D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.Json", "..\..\ReportViewer\JSON\src\Jayrock.Json\Forerunner.Json.csproj", "{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.SSRS", "..\..\ReportViewer\ReportViewer\Forerunner.SSRS.csproj", "{B5B587BB-5963-4114-854F-D1ECD5E77336}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{1792A306-4E13-4438-ACC6-8E3CF75317D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1792A306-4E13-4438-ACC6-8E3CF75317D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1792A306-4E13-4438-ACC6-8E3CF75317D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F10A6A7D-B8E4-4F8B-8BD9-5B42ACE5520E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5B587BB-5963-4114-854F-D1ECD5E77336}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

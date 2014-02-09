@@ -76,7 +76,7 @@ $(function () {
             setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
@@ -2083,7 +2083,7 @@ $(function () {
     var ssr = forerunner.ssr;
     var events = ssr.constants.events;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
@@ -2841,7 +2841,7 @@ $(function () {
         _init: function () {
             var me = this;
 
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
                     "<div class='fr-messagebox-innerpage'>" +
@@ -3947,7 +3947,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -4010,7 +4010,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
-                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {
@@ -4206,7 +4206,7 @@ forerunner.ssr = forerunner.ssr || {};
 
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     /**
      * Widget used to explore available reports and launch the Report Viewer
      *
@@ -4223,7 +4223,7 @@ $(function () {
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
-     *  forerunnerPath: "./forerunner",
+     *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
      *  navigateTo: navigateTo
@@ -4359,7 +4359,7 @@ $(function () {
                
                 innerImage.attr("src", imageSrc);
                 innerImage.error(function () {
-                    $(this).attr("src", me.options.forerunnerPath + "/ReportExplorer/images/Report-icon.png");
+                    $(this).attr("src", me.options.forerunnerPath + "ReportExplorer/images/Report-icon.png");
                 });
                 
                 innerImage.removeAttr("height"); //JQuery adds height for IE8, remove.
@@ -4533,7 +4533,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             var userSettings = locData.userSettings;
             var unit = locData.unit;
 
@@ -4576,7 +4576,7 @@ $(function () {
         },
         _getBuildVersion: function () {
             var me = this;
-            var url = forerunner.config.forerunnerFolder() + "/version.txt";
+            var url = forerunner.config.forerunnerFolder() + "version.txt";
             var buildVersion = null;
             $.ajax({
                 url: url,
@@ -5634,7 +5634,7 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
             if (forerunner.device.isMSIE())
                 Style += "min-height:" + height + "mm;";
             else
@@ -6453,7 +6453,8 @@ $(function () {
             if (!fontSize)
                 return "";
     
-            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+            //Not needed anymore with fixed table,  leaving in just in case.
+            if (!forerunner.device.isMSIE())
                 return fontSize;
 
 
@@ -6464,7 +6465,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*0.95) + unit ;
+            return (value*0.98) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;
@@ -6865,7 +6866,7 @@ $(function () {
                 $.datepicker.setDefaults(dpLoc);
             
             $.each(me.element.find(".hasDatepicker"), function (index, datePicker) {
-                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "/reportviewer/Images/calendar.png");
+                $(datePicker).datepicker("option", "buttonImage", forerunner.config.forerunnerFolder() + "reportviewer/Images/calendar.png");
                 $(datePicker).datepicker("option", "buttonImageOnly", true);
                 $(datePicker).datepicker("option", "buttonText", me.options.$reportViewer.locData.paramPane.datePicker);
             });
@@ -6886,6 +6887,7 @@ $(function () {
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
             var dependenceDisable = me._checkDependencies(param);
+            var predefinedValue = me._getPredefinedValue(param);
             //if any element disable exist then not submit form auto
             if (dependenceDisable) me._loadedForDefault = false;
 
@@ -6897,25 +6899,25 @@ $(function () {
             if (param.MultiValue === true) { // Allow multiple values in one textbox
 
                 if (param.ValidValues !== "") { // Dropdown with checkbox
-                    $element = me._writeDropDownWithCheckBox(param, dependenceDisable);
+                    $element = me._writeDropDownWithCheckBox(param, dependenceDisable, predefinedValue);
                 }
-                else {//if (param.DefaultValues !== "") { // Dropdown with editable textarea
+                else {// Dropdown with editable textarea
                     bindingEnter = false;
-                    $element = me._writeDropDownWithTextArea(param, dependenceDisable);
+                    $element = me._writeDropDownWithTextArea(param, dependenceDisable, predefinedValue);
                 }
             }
             else { // Only one value allowed
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum) : me._writeBigDropDown(param, dependenceDisable, pageNum);
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) : me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
-                    $element = me._writeRadioButton(param, dependenceDisable, pageNum);
+                    $element = me._writeRadioButton(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else { // Textbox
-                    $element = me._writeTextArea(param, dependenceDisable, pageNum);
+                    $element = me._writeTextArea(param, dependenceDisable, pageNum, predefinedValue);
                 }
             }
 
@@ -6927,7 +6929,7 @@ $(function () {
                 });
             }
 
-            $container.append($element).append(me._addNullableCheckBox(param, $element)).append($errorMsg);
+            $container.append($element).append(me._addNullableCheckBox(param, $element, predefinedValue)).append($errorMsg);
             $parent.append($label).append($container);
 
             return $parent;
@@ -6947,37 +6949,36 @@ $(function () {
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
-        _addNullableCheckBox: function (param, $control) {
+        _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;
             if (param.Nullable === true) {
+                var $paramControl = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") : $control;
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
-
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
                         if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $control).removeAttr("disabled")
-                            $(".fr-paramname-" + param.Name, $control).attr("required", "true");
+                            $(".fr-paramname-" + param.Name, $paramControl).removeAttr("disabled").attr("required", "true");
                         } else {
-                            $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
-                            if ($control.attr("allowblank") !== "true") {
-                                $control.attr("required", "True");
+                            $paramControl.removeAttr("disabled").removeClass("fr-param-disable");
+                            if ($paramControl.attr("allowblank") !== "true") {
+                                $paramControl.attr("required", "True");
                             }
                         }
                     }
                     else {
                         $checkbox.attr("checked", "true");
                         if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $control).attr("disabled", "true")
-                            $(".fr-paramname-" + param.Name, $control).removeAttr("required");
+                            $(".fr-paramname-" + param.Name, $paramControl).attr("disabled", "true").removeAttr("required");
                         } else {
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
-                            $control.removeAttr("required");
+                            $paramControl.attr("disabled", "true").addClass("fr-param-disable").removeAttr("required");
                         }
                     }
                 });
+
+                if (predefinedValue === null) $checkbox.trigger("click");
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
@@ -6997,9 +6998,8 @@ $(function () {
                 }
             }
         },
-        _writeRadioButton: function (param, dependenceDisable, pageNum) {
+        _writeRadioButton: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var paramPane = me.options.$reportViewer.locData.paramPane;
             var radioValues = [];
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
@@ -7018,11 +7018,8 @@ $(function () {
                 else {
                     me._getParameterControlProperty(param, $radioItem);
 
-                    if (predefinedValue) {
-                        if (param.Nullable === true)
-                            $radioItem.attr("disabled", "true");
-                        else if (predefinedValue === radioValues[i].value)
-                            $radioItem.attr("checked", "true");
+                    if (predefinedValue && predefinedValue === radioValues[i].value) {
+                        $radioItem.attr("checked", "true");
                     }
 
                     if (me._paramCount === 1)
@@ -7036,9 +7033,8 @@ $(function () {
 
             return $control;
         },
-        _writeTextArea: function (param, dependenceDisable, pageNum) {
+        _writeTextArea: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<input class='fr-param fr-paramname-" + param.Name + "' name='" + param.Name + "' type='text' size='100' ismultiple='"
                 + param.MultiValue + "' datatype='" + param.Type + "' />");
 
@@ -7052,7 +7048,6 @@ $(function () {
                 case "DateTime":
                     $control.datepicker({
                         showOn: "button",
-                        dateFormat: "yy-mm-dd", //Format: ISO8601
                         changeMonth: true,
                         changeYear: true,
                         showButtonPanel: true,
@@ -7067,7 +7062,7 @@ $(function () {
                             $control.attr("disabled", true);
                         },
                     });
-                    $control.attr("dateISO", "true");
+                    $control.attr("formattedDate", "true");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -7099,10 +7094,9 @@ $(function () {
             }
 
         },
-        _writeBigDropDown: function (param, dependenceDisable, pageNum) {
+        _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var predefinedValue = me._getPredefinedValue(param);
 
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -7121,6 +7115,8 @@ $(function () {
             }
 
             $openDropDown.on("click", function () {
+                if ($control.attr("disabled")) return;
+
                 if ($control.autocomplete("widget").is(":visible")) {
                     $control.autocomplete("close");
                     return;
@@ -7133,13 +7129,13 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if (predefinedValue === param.ValidValues[i].value) {
+                if (predefinedValue && predefinedValue === param.ValidValues[i].value) {
                     $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
                     canLoad = true;
                     break;
                 }
             }
-            if (!canLoad) me._loadedForDefault = false;
+            if (!canLoad && param.Nullable !== true) me._loadedForDefault = false;
 
             $control.autocomplete({
                 source: param.ValidValues,
@@ -7192,10 +7188,9 @@ $(function () {
             $container.append($control).append($openDropDown);
             return $container;
         },
-        _writeDropDownControl: function (param, dependenceDisable, pageNum) {
+        _writeDropDownControl: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = new $("<select class='fr-param fr-param-select fr-paramname-" + param.Name + "' name='" + param.Name + "' ismultiple='" +
                 param.MultiValue + "' datatype='" + param.Type + "' readonly='true'>");
 
@@ -7260,9 +7255,8 @@ $(function () {
             }
             return $label;
         },
-        _writeDropDownWithCheckBox: function (param, dependenceDisable) {
+        _writeDropDownWithCheckBox: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             var $control = me._createDiv(["fr-param-element-container"]);
 
             var $multipleCheckBox = me._createInput(param, "text", true, ["fr-param-client", "fr-param-dropdown-textbox", "fr-paramname-" + param.Name]);
@@ -7355,9 +7349,8 @@ $(function () {
 
             return $control;
         },
-        _writeDropDownWithTextArea: function (param, dependenceDisable) {
+        _writeDropDownWithTextArea: function (param, dependenceDisable, predefinedValue) {
             var me = this;
-            var predefinedValue = me._getPredefinedValue(param);
             //me._getTextAreaValue(predefinedValue);
             var $control = me._createDiv(["fr-param-element-container"]);
 
@@ -7708,16 +7701,12 @@ $(function () {
             return me._defaultValueExist && $.isArray(param.DefaultValues);//&& param.DefaultValues[0];
         },
         _getDateTimeFromDefault: function (defaultDatetime) {
-            if (!defaultDatetime || defaultDatetime.length < 9)
+            if (!defaultDatetime) {
                 return null;
+            }
 
-            //dateISO: yyyy-mm-dd
-            if (/^(\d{4})-(0\d{1}|1[0-2])-(0\d{1}|[12]\d{1}|3[01])$/.test(defaultDatetime))
-                return defaultDatetime;
-
-            var date = new Date(defaultDatetime.substr(0, defaultDatetime.indexOf(" ")));
-
-            return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+            var m = moment(defaultDatetime);
+            return m.isValid() ? new Date(defaultDatetime) : null;
         },
         _checkDependencies: function (param) {
             var me = this;
@@ -7965,7 +7954,7 @@ $(function () {
         },
         _init: function () {
             var me = this;
-            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+            me.locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
         },
         _initBody: function () {
             var me = this;
@@ -8273,7 +8262,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var manageParamSets = locData.manageParamSets;
 
     $.widget(widgets.getFullname(widgets.manageParamSets), {
@@ -8570,7 +8559,7 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = ssr.constants.toolTypes;
     var widgets = forerunner.ssr.constants.widgets;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // This is the helper class that would initialize a viewer.
     // This is currently private.  But this could be turned into a sample.
@@ -8986,7 +8975,7 @@ $(function () {
                 $lefttoolbar: layout.$leftheader,
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
-                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "/ReportViewer",
+                ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
                 ReportPath: path,
                 jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,
@@ -9058,7 +9047,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dsCredential = locData.dsCredential;
     /**
    * Widget used to show datasource credential dialog

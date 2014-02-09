@@ -100,7 +100,7 @@
     <p><i>Add the Forerunner authentication support</i></p>
     <ul>
         <li>Open the file "Controllers" > "AccountController.cs></li>
-        <li>Change the refernece to:</li>
+        <li>Change the following refernece from:</li>
         <p>WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe)</p>
         <p>in the Login action to:</p>
         <p>Forerunner.Security.FormsAuthenticationHelper.Login(model.UserName, model.Password, 30)</p>
@@ -112,5 +112,5 @@
         You can run the sample and see the "Report" page. The "Report" page requires authentication, so login using the user
         name "TestAccount" and password "TestPWD!".
     </p>
-    <p><a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample</a></p>
+    <p><a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample run</a></p>
 }

@@ -553,6 +553,7 @@ FROM            Categories</CommandText>
                               <TextRuns>
                                 <TextRun>
                                   <Value>=Fields!ProductSales.Value</Value>
+                                  <ToolTip>=Parameters!Category.Value</ToolTip>
                                   <Style>
                                     <Format>'$'#,0,.00;('$'#,0,.00)</Format>
                                     <rd:FormatSymbolCulture>en-US</rd:FormatSymbolCulture>

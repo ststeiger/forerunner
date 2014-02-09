@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Add Button Sample";
+    Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section styles {
+<style>
+.my-icon24x24 { 
+    width:24px;
+    height:24px;
+    margin:5px;
+    display:inline-block;
+    background-image:url('../content/images/MyHome.png');
+}
+.my-icon24x24-home { 
+    background-position: 0 0;
+}
+</style>
+}
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        $('body').reportViewerEZ({
+            DefaultAppTemplate: null,
+            path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+            navigateTo: null,
+            historyBack: null,
+            isReportManager: false,
+            isFullScreen: true
+        });
+
+        var myBtn = {
+            toolType: "button",
+            selectorClass: "myNewHome",
+            sharedClass: "fr-toolbase-no-disable-id",
+            imageClass: "my-icon24x24-home",
+            iconClass: "my-icon24x24",
+            tooltip: "foo dee doo",
+            events: {
+                click: function (e) {
+                    alert('myButton');
+                }
+            }
+        };
+
+        var $toolbar = $(".fr-layout-mainheadersection");
+        $toolbar.toolbar("addTools", 3, true, [myBtn]);
+    });
+</script>
+}
+

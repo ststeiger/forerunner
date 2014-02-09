@@ -1,0 +1,71 @@
+﻿.fr-report-container {
+  position:relative;
+  width:100%;
+}
+.fr-report-areacontainer {
+    display:table-cell; 
+}
+.fr-report-container-translucent
+{
+    opacity:0.5;
+    filter:alpha(opacity=50);
+}
+.fr-report-loading-indicator  {
+  border: solid 2px #86A5AD;
+  background: white url(../../reportviewer/Images/ajax-loader1.gif) no-repeat 10px 10px;
+  width: 148px; 
+  height: 28px; 
+  position: absolute; 
+  margin-left: auto;
+  margin-right:auto;
+  padding: 10px 10px 10px 50px;
+  text-align: left; 
+  line-height: 27px; 
+  font-weight: bold; 
+  z-index: 2010;
+  display:none;
+}
+
+.fr-report-center { 
+  display: block; 
+  margin-left: auto; 
+  margin-right: auto;
+}
+
+.fr-report-centertext {
+  text-align:center;
+}
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (max-height : 320px) and (min-width : 400px) and (orientation : landscape) {
+    /* Styles */
+
+
+}
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+    /* Styles */
+ 
+}
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+    /* Styles */
+ 
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) {
+    /* Styles */
+}
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) {
+    /* Styles */
+}
+
+/* iPhone 4 ----------- */
+@media only screen and (-webkit-min-device-pixel-ratio : 1.5), only screen and (min-device-pixel-ratio : 1.5) {
+    /* Styles */
+}

@@ -105,6 +105,13 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.SQLReporting.dll"
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
+
+  SetOutPath "$INSTDIR\sdk"
+  File "${LOCALROOT}\sdk\ReportManagerController.cs"
+  File "${LOCALROOT}\sdk\ReportViewerController.cs"
+  File "${LOCALROOT}\sdk\CustomAPIFilters.cs"
+  File "${LOCALROOT}\sdk\readme.docx"
+
   SetOutPath "$INSTDIR\Forerunner\Common\css"
   File "${LOCALROOT}\Forerunner\Common\css\Login.css"
   File "${LOCALROOT}\Forerunner\Common\css\ReportManager.css"
@@ -171,10 +178,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.min.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-widgets.min.js"
-  
-  SetOutPath "$INSTDIR\Forerunner\Controllers"
-  File "${LOCALROOT}\Forerunner\Controllers\ReportManagerController.cs"
-  File "${LOCALROOT}\Forerunner\Controllers\ReportViewerController.cs"
   
   SetOutPath "$INSTDIR\Scripts\App"
   File "${LOCALROOT}\Scripts\App\router.js"

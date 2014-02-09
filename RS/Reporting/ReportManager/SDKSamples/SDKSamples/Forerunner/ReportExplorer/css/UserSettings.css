@@ -1,0 +1,9 @@
+﻿.fr-us-section { display: none; }
+
+.fr-us-form { }
+
+.fr-us-setting-container { height: 30px; width: 100%; text-align: left; display: table-cell; }
+
+.fr-us-label { height: 20px; display: inline-block; }
+
+.fr-us-checkbox { display: inline-block; margin: 0 6px 0 12px; }

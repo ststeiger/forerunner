@@ -9,7 +9,7 @@ var appURL = [
     { local: "http://localhost:18228/", remote: "http://demo.forerunnersw.com/SDKSamples/" },
 
     // GettingStarted
-    { local: "http://localhost:55087/", remote: "http://demo.forerunnersw.com/GettingStarted/" },
+    { local: "http://localhost:55086/", remote: "http://demo.forerunnersw.com/GettingStarted/" },
 
     // Forerunnersw
     { local: "http://localhost:31921/", remote: "http://forerunnersw.com/Mobilizer/" }

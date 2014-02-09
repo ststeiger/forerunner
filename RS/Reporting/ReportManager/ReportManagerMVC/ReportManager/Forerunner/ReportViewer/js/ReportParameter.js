@@ -100,7 +100,14 @@ $(function () {
             this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
-        resetToSavedParameters: function (paramDefs, savedParams, pageNum) {
+        /**
+        * @function $.forerunner.reportParameter#setParametersAndUpdate
+        * @Set the parameter panel to the given list
+        * @param {Object} paramDefs - Parameter definition.
+        * @param {string} paramsList - Parameter List.
+        * @param {int} pageNum - Current page number.
+        */
+        setParametersAndUpdate: function (paramDefs, savedParams, pageNum) {
             var me = this;
             me.updateParameterPanel(paramDefs, false, pageNum, false);
             me._submittedParamsList = savedParams;
@@ -242,7 +249,7 @@ $(function () {
          */
         revertParameters: function () {
             var me = this;
-            if (me.getParamsList() === me._submittedParamsList) {
+            if (me.getParamsList(true) === me._submittedParamsList) {
                 return;
             }
             if (me._submittedParamsList !== null) {

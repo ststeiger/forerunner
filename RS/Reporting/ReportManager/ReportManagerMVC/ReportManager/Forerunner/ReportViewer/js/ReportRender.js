@@ -998,7 +998,7 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
             if (forerunner.device.isMSIE())
                 Style += "min-height:" + height + "mm;";
             else
@@ -1817,7 +1817,8 @@ $(function () {
             if (!fontSize)
                 return "";
     
-            if (!forerunner.device.isMSIE() && !forerunner.device.isFirefox())
+            //Not needed anymore with fixed table,  leaving in just in case.
+            if (!forerunner.device.isMSIE())
                 return fontSize;
 
 
@@ -1828,7 +1829,7 @@ $(function () {
             if (value.length === 1) value = value[0];
 
            //This is an error
-            return (value*0.95) + unit ;
+            return (value*0.98) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

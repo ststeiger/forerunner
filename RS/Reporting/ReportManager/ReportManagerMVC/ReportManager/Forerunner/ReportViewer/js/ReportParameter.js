@@ -567,7 +567,7 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if (predefinedValue && predefinedValue === param.ValidValues[i].value) {
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].value) || (!predefinedValue && i === 0)) {
                     $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
                     canLoad = true;
                     break;
@@ -645,7 +645,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].value;
                 var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
-                if (predefinedValue && predefinedValue === optionValue) {
+                if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].label);
                     canLoad = true;
@@ -954,7 +954,7 @@ $(function () {
             // If it is a string type
             if (isString && allowBlank) return true;
 
-            if (param.value == "") {
+            if (param.value === "") {
                 return me._isNullChecked(param);
             }
 

@@ -6525,7 +6525,7 @@ $(function () {
          */
         revertParameters: function () {
             var me = this;
-            if (me.getParamsList() === me._submittedParamsList) {
+            if (me.getParamsList(true) === me._submittedParamsList) {
                 return;
             }
             if (me._submittedParamsList !== null) {

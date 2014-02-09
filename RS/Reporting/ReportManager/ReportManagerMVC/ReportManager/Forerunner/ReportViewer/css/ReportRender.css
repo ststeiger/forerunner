@@ -38,7 +38,7 @@
 .fr-render-error-license-link a { text-decoration: none; color: white; font-size: 1.2em; }
 
 .fr-render-rec {display:table;border-collapse:collapse;}
-.fr-r-rT{display:table;table-layout: fixed;position:relative;}
+.fr-r-rT{display:table;table-layout: fixed;position:relative;overflow:hidden;}
 .fr-r-t{white-space:pre-wrap;margin:0;display: table-cell; }
 .fr-r-pL{width:100%;height:100%;}
 .fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;}

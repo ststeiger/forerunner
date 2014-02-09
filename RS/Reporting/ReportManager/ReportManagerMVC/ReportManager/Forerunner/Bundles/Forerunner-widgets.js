@@ -6964,7 +6964,7 @@ $(function () {
                         } else {
                             $paramControl.removeAttr("disabled").removeClass("fr-param-disable");
                             if ($paramControl.attr("allowblank") !== "true") {
-                                $paramControl.attr("required", "True");
+                                $paramControl.attr("required", "true");
                             }
                         }
                     }
@@ -6978,7 +6978,8 @@ $(function () {
                     }
                 });
 
-                if (predefinedValue === null) $checkbox.trigger("click");
+                // Check it only if it is really null, not because nobody touched it
+                if (predefinedValue === null  && param.State !== "MissingValidValue") $checkbox.trigger("click");
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);

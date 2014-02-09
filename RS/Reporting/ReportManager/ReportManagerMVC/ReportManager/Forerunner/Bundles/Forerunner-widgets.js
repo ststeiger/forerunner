@@ -6831,7 +6831,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].Value;
                 var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
-                if (predefinedValue && predefinedValue === optionValue) {
+                if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
@@ -7136,7 +7136,7 @@ $(function () {
             // If it is a string type
             if (isString && allowBlank) return true;
 
-            if (param.value == "") {
+            if (param.value === "") {
                 return me._isNullChecked(param);
             }
 

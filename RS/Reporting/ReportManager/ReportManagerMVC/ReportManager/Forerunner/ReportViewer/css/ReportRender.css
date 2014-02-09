@@ -43,7 +43,7 @@
 .fr-r-pL{width:100%;height:100%;}
 .fr-render-image{display:block;max-height:100%;max-width:100%;overflow:hidden;}
 .fr-r-tC{vertical-align:top;padding:0;margin:0;}
-.fr-r-tCI{margin:0;width:100%;height:100%;}
+.fr-r-tCI{margin:0;width:100%;height:100%;overflow:hidden;}
 .fr-render-tablix{border-collapse:collapse;padding:0;margin:0;table-layout:fixed;}
 .fr-r-fS{width:100%;height:100%;}
 .fr-lazyNext{color:blue;font-size:large;}

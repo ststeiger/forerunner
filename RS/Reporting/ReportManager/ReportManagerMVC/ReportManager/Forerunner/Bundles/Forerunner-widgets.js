@@ -5634,7 +5634,7 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
             if (forerunner.device.isMSIE())
                 Style += "min-height:" + height + "mm;";
             else
@@ -5696,10 +5696,17 @@ $(function () {
                     colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                 }
                 $Tablix.append(colgroup);
-                if (!forerunner.device.isFirefox()) {
-                    $FixedColHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
                 }
+                $FixedColHeader.append(colgroup.clone(true, true));  
+                $FixedRowHeader.addClass("fr-render-tablix");
+                $FixedColHeader.addClass("fr-render-tablix");
+                $FixedColHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                
             }
 
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
@@ -5726,6 +5733,7 @@ $(function () {
             var ret = $("<div style='position:relative'></div");
             $Tablix.append($FixedColHeader);
             $Tablix.append($FixedRowHeader);
+                       
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
@@ -6454,7 +6462,7 @@ $(function () {
                 return "";
     
             //Not needed anymore with fixed table,  leaving in just in case.
-            if (!forerunner.device.isMSIE())
+            //if (!forerunner.device.isMSIE())
                 return fontSize;
 
 
@@ -6547,6 +6555,7 @@ $(function () {
 
             
             me.Page.CSS = $(CSS + "</style>");
+            me.Page.CSS.appendTo("head");
             
         },
         _getClassName: function (name, obj) {

@@ -683,7 +683,7 @@ $(function () {
                     me.numPages = action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages ? action.reportPages[action.CurrentPage].reportObj.ReportContainer.NumPages : 0;
 
                     if (action.paramDefs) {
-                        me.options.paramArea.reportParameter("resetToSavedParameters", action.paramDefs, action.savedParams, action.CurrentPage);
+                        me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
@@ -5634,7 +5634,7 @@ $(function () {
 
             width = me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[ColIndex].Width);
             height = RIContext.CurrObj.RowHeights.Rows[RowIndex].Height;
-            //Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
+            Style += "width:" + width + "mm;" + "max-width:" + width + "mm;"  ;
             if (forerunner.device.isMSIE())
                 Style += "min-height:" + height + "mm;";
             else
@@ -5696,10 +5696,17 @@ $(function () {
                     colgroup.append($("<col/>").css("width", (me._getWidth(RIContext.CurrObj.ColumnWidths.Columns[cols].Width)) + "mm"));
                 }
                 $Tablix.append(colgroup);
-                if (!forerunner.device.isFirefox()) {
-                    $FixedColHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
+                if (!forerunner.device.isFirefox()) {                
                     $FixedRowHeader.append(colgroup.clone(true, true));  //Need to allign fixed header on chrome, makes FF fail
                 }
+                $FixedColHeader.append(colgroup.clone(true, true));  
+                $FixedRowHeader.addClass("fr-render-tablix");
+                $FixedColHeader.addClass("fr-render-tablix");
+                $FixedColHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                $FixedRowHeader.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
+                $FixedColHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                $FixedRowHeader.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
+                
             }
 
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
@@ -5726,6 +5733,7 @@ $(function () {
             var ret = $("<div style='position:relative'></div");
             $Tablix.append($FixedColHeader);
             $Tablix.append($FixedRowHeader);
+                       
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($Tablix, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             RIContext.$HTMLParent = ret;
@@ -6454,7 +6462,7 @@ $(function () {
                 return "";
     
             //Not needed anymore with fixed table,  leaving in just in case.
-            if (!forerunner.device.isMSIE())
+            //if (!forerunner.device.isMSIE())
                 return fontSize;
 
 
@@ -6547,6 +6555,7 @@ $(function () {
 
             
             me.Page.CSS = $(CSS + "</style>");
+            me.Page.CSS.appendTo("head");
             
         },
         _getClassName: function (name, obj) {
@@ -6668,7 +6677,14 @@ $(function () {
             this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
         },
 
-        resetToSavedParameters: function (paramDefs, savedParams, pageNum) {
+        /**
+        * @function $.forerunner.reportParameter#setParametersAndUpdate
+        * @Set the parameter panel to the given list
+        * @param {Object} paramDefs - Parameter definition.
+        * @param {string} paramsList - Parameter List.
+        * @param {int} pageNum - Current page number.
+        */
+        setParametersAndUpdate: function (paramDefs, savedParams, pageNum) {
             var me = this;
             me.updateParameterPanel(paramDefs, false, pageNum, false);
             me._submittedParamsList = savedParams;
@@ -6718,7 +6734,7 @@ $(function () {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("div").next("span"));
                     else {
-                        if ($(element).attr("IsMultiple") === "true") {
+                        if ($(element).attr("ismultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
                         }
                         else if ($(element).hasClass("ui-autocomplete-input")) {
@@ -6810,7 +6826,7 @@ $(function () {
          */
         revertParameters: function () {
             var me = this;
-            if (me.getParamsList() === me._submittedParamsList) {
+            if (me.getParamsList(true) === me._submittedParamsList) {
                 return;
             }
             if (me._submittedParamsList !== null) {
@@ -6946,6 +6962,11 @@ $(function () {
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required"); 
+            } else if (param.MultiValue) {
+                if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
+                    $control.attr("required", "true");
+                    $control.addClass("fr-param-required");
+                }
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },
@@ -6964,7 +6985,7 @@ $(function () {
                         } else {
                             $paramControl.removeAttr("disabled").removeClass("fr-param-disable");
                             if ($paramControl.attr("allowblank") !== "true") {
-                                $paramControl.attr("required", "True");
+                                $paramControl.attr("required", "true");
                             }
                         }
                     }
@@ -6978,7 +6999,8 @@ $(function () {
                     }
                 });
 
-                if (predefinedValue === null) $checkbox.trigger("click");
+                // Check it only if it is really null, not because nobody touched it
+                if (predefinedValue === null  && param.State !== "MissingValidValue") $checkbox.trigger("click");
 
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
@@ -7129,7 +7151,7 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if (predefinedValue && predefinedValue === param.ValidValues[i].value) {
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].value) || (!predefinedValue && i === 0)) {
                     $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
                     canLoad = true;
                     break;
@@ -7207,7 +7229,7 @@ $(function () {
                 var optionValue = param.ValidValues[i].value;
                 var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
-                if (predefinedValue && predefinedValue === optionValue) {
+                if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");
                     $control.attr("title", param.ValidValues[i].label);
                     canLoad = true;
@@ -7516,7 +7538,7 @@ $(function () {
             // If it is a string type
             if (isString && allowBlank) return true;
 
-            if (param.value == "") {
+            if (param.value === "") {
                 return me._isNullChecked(param);
             }
 

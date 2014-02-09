@@ -868,7 +868,7 @@ namespace Forerunner.SSRS.Viewer
             {
                 Console.WriteLine(e.Message);
                 ExceptionLogGenerator.LogException(e);
-                return null;
+                throw e;                
             }
             finally
             {

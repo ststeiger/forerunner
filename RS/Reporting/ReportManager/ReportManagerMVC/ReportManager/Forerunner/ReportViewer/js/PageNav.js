@@ -7,7 +7,7 @@ forerunner.ssr = forerunner.ssr || {};
 $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
@@ -70,7 +70,7 @@ $(function () {
                 // Instead of stating the src, use data-original and add the lazy class so that
                 // we will use lazy loading.
                 $thumbnail.addClass("lazy");
-                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "/reportviewer/Images/page-loading.gif");
+                $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "reportviewer/Images/page-loading.gif");
                 $thumbnail.attr("data-original", url);
                 $thumbnail.data("pageNumber", i);
                 this._on($thumbnail, {

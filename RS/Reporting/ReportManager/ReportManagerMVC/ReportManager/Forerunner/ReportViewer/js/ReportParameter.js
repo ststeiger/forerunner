@@ -150,7 +150,7 @@ $(function () {
                     if ($(element).is(":radio"))
                         error.appendTo(element.parent("div").next("div").next("span"));
                     else {
-                        if ($(element).attr("IsMultiple") === "true") {
+                        if ($(element).attr("ismultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
                         }
                         else if ($(element).hasClass("ui-autocomplete-input")) {
@@ -378,6 +378,11 @@ $(function () {
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required"); 
+            } else if (param.MultiValue) {
+                if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
+                    $control.attr("required", "true");
+                    $control.addClass("fr-param-required");
+                }
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
         },

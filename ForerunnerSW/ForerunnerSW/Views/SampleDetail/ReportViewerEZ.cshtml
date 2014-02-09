@@ -1,0 +1,25 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+    <b>Report Viewer EZ Detail:</b>
+    <p>
+    The reportViewerEZ widget provides a fully functional report viewer user experience. This includes
+    defining layout for, instanciating and hooking up event handlers for all associated widgets such as the toolPane,
+    toolBar, reportParameter, reportDocumentMap, etc. on your page. You can have more than a single instance of
+    reportViewerEZ on a single page.
+    </p>
+    <p>
+        This sample will demonstrate a single instance of the reportViewerEZ widget that takes up the full screen.
+    </p>
+    <p>
+        <a onclick="NavigateToSiteURL(app.SDKSamples, 'Samples/ReportViewerEZ')">Click here to see the sample</a>
+    </p>
+    <p>
+        <a onclick="ToggleSourceCode(app.SDKSamples, 'Bundles/ReportViewerEZ.cshtml.txt', 'ReportViewerEZID')">Click here to see the source code</a>
+    </p>
+    <p>
+        <pre id="ReportViewerEZID" class="prettyprint"></pre>
+    </p>
+}

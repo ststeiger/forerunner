@@ -35,7 +35,7 @@
                                     <li id="About" class="Navitem TopNavitem"><a href="../home/about">About</a></li>
                                     <li id="Support" class="Navitem TopNavitem"><a href="../home/support">Support</a></li>
                                     <li id="Demo" class="Navitem TopNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li id="Developers" class="Navitem TopNavitem TopNavSelected"><a href="../Docs/index.html">Developers</a></li>
+                                    <li id="Developers" class="Navitem TopNavitem TopNavSelected"><a href="../home/Developers">Developers</a></li>
                                     <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
                                     <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
                                 </ul>
@@ -304,7 +304,7 @@
             
             
             
-            <td class="description last">jQuery selector object that defineds the report parameter widget</td>
+            <td class="description last">jQuery selector object that defines the report parameter widget</td>
         </tr>
 	
 	
@@ -327,7 +327,30 @@
             
             
             
-            <td class="description last">jQuery selector object that defineds the Document Map widget</td>
+            <td class="description last">jQuery selector object that defines the Document Map widget</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>savedParameters</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.</td>
         </tr>
 	
 	
@@ -400,7 +423,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="back"><span class="type-signature"></span>back<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="actionHistoryDepth"><span class="type-signature"></span>actionHistoryDepth<span class="signature">()</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -408,7 +431,7 @@
     
     
     <div class="description">
-        Either: Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event
+        Returns the number of actions in history for the back event
     </div>
     
 
@@ -441,7 +464,76 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 552
+        ReportViewer/js/ReportViewer.js, line 595
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="back"><span class="type-signature"></span>back<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        ReportViewer/js/ReportViewer.js, line 603
     </li></ul></dd>
     
     
@@ -524,7 +616,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1005
+        ReportViewer/js/ReportViewer.js, line 1085
     </li></ul></dd>
     
     
@@ -641,7 +733,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1189
+        ReportViewer/js/ReportViewer.js, line 1269
     </li></ul></dd>
     
     
@@ -811,7 +903,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1040
+        ReportViewer/js/ReportViewer.js, line 1123
     </li></ul></dd>
     
     
@@ -928,7 +1020,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1114
+        ReportViewer/js/ReportViewer.js, line 1197
     </li></ul></dd>
     
     
@@ -997,7 +1089,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 632
+        ReportViewer/js/ReportViewer.js, line 706
     </li></ul></dd>
     
     
@@ -1062,7 +1154,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 128
+        ReportViewer/js/ReportViewer.js, line 141
     </li></ul></dd>
     
     
@@ -1149,7 +1241,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 168
+        ReportViewer/js/ReportViewer.js, line 181
     </li></ul></dd>
     
     
@@ -1236,7 +1328,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 136
+        ReportViewer/js/ReportViewer.js, line 149
     </li></ul></dd>
     
     
@@ -1323,7 +1415,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 152
+        ReportViewer/js/ReportViewer.js, line 165
     </li></ul></dd>
     
     
@@ -1410,7 +1502,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 144
+        ReportViewer/js/ReportViewer.js, line 157
     </li></ul></dd>
     
     
@@ -1497,7 +1589,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 160
+        ReportViewer/js/ReportViewer.js, line 173
     </li></ul></dd>
     
     
@@ -1584,7 +1676,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 121
+        ReportViewer/js/ReportViewer.js, line 134
     </li></ul></dd>
     
     
@@ -1675,7 +1767,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 500
+        ReportViewer/js/ReportViewer.js, line 541
     </li></ul></dd>
     
     
@@ -1744,7 +1836,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 911
+        ReportViewer/js/ReportViewer.js, line 988
     </li></ul></dd>
     
     
@@ -1884,7 +1976,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1360
+        ReportViewer/js/ReportViewer.js, line 1490
     </li></ul></dd>
     
     
@@ -2024,7 +2116,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1376
+        ReportViewer/js/ReportViewer.js, line 1505
     </li></ul></dd>
     
     
@@ -2141,7 +2233,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 870
+        ReportViewer/js/ReportViewer.js, line 947
     </li></ul></dd>
     
     
@@ -2258,7 +2350,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 975
+        ReportViewer/js/ReportViewer.js, line 1055
     </li></ul></dd>
     
     
@@ -2375,7 +2467,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 924
+        ReportViewer/js/ReportViewer.js, line 1001
     </li></ul></dd>
     
     
@@ -2492,7 +2584,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 428
+        ReportViewer/js/ReportViewer.js, line 467
     </li></ul></dd>
     
     
@@ -2609,7 +2701,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1211
+        ReportViewer/js/ReportViewer.js, line 1292
     </li></ul></dd>
     
     
@@ -2795,7 +2887,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1294
+        ReportViewer/js/ReportViewer.js, line 1408
     </li></ul></dd>
     
     
@@ -2864,7 +2956,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 405
+        ReportViewer/js/ReportViewer.js, line 440
     </li></ul></dd>
     
     
@@ -2933,7 +3025,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 245
+        ReportViewer/js/ReportViewer.js, line 263
     </li></ul></dd>
     
     
@@ -3002,7 +3094,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1177
+        ReportViewer/js/ReportViewer.js, line 1257
     </li></ul></dd>
     
     
@@ -3119,7 +3211,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1157
+        ReportViewer/js/ReportViewer.js, line 1239
     </li></ul></dd>
     
     
@@ -3188,7 +3280,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 516
+        ReportViewer/js/ReportViewer.js, line 557
     </li></ul></dd>
     
     
@@ -3257,7 +3349,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 226
+        ReportViewer/js/ReportViewer.js, line 239
     </li></ul></dd>
     
     
@@ -3326,7 +3418,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 584
+        ReportViewer/js/ReportViewer.js, line 658
     </li></ul></dd>
     
     
@@ -3395,7 +3487,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 1202
+        ReportViewer/js/ReportViewer.js, line 1282
     </li></ul></dd>
     
     
@@ -3558,7 +3650,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 694
+        ReportViewer/js/ReportViewer.js, line 769
     </li></ul></dd>
     
     
@@ -3682,7 +3774,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 802
+        ReportViewer/js/ReportViewer.js, line 879
     </li></ul></dd>
     
     
@@ -3747,7 +3839,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        ReportViewer/js/ReportViewer.js, line 176
+        ReportViewer/js/ReportViewer.js, line 189
     </li></ul></dd>
     
     
@@ -3787,7 +3879,7 @@
 
 		</div>
 		<nav>
-		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.models.html">models</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-GettingStarted.html">GettingStarted</a></li></ul>
+		<h2><a href="index.html">Index</a></h2><h3>Namespaces</h3><ul><li><a href="$.html">$</a></li><li><a href="$.forerunner.html">forerunner</a></li><li><a href="$.forerunner.messageBox.html">messageBox</a></li><li><a href="$.forerunner.reportDocumentMap.html">reportDocumentMap</a></li><li><a href="$.forerunner.reportExplorer.html">reportExplorer</a></li><li><a href="$.forerunner.reportExplorerEZ.html">reportExplorerEZ</a></li><li><a href="$.forerunner.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="$.forerunner.reportParameter.html">reportParameter</a></li><li><a href="$.forerunner.reportViewer.html">reportViewer</a></li><li><a href="$.forerunner.reportViewerEZ.html">reportViewerEZ</a></li><li><a href="$.forerunner.toolbar.html">toolbar</a></li><li><a href="$.forerunner.toolBase.html">toolBase</a></li><li><a href="$.forerunner.toolPane.html">toolPane</a></li><li><a href="$.forerunner.userSettings.html">userSettings</a></li><li><a href="forerunner.html">forerunner</a></li><li><a href="forerunner.ajax.html">ajax</a></li><li><a href="forerunner.config.html">config</a></li><li><a href="forerunner.device.html">device</a></li><li><a href="forerunner.dialog.html">dialog</a></li><li><a href="forerunner.helper.html">helper</a></li><li><a href="forerunner.localize.html">localize</a></li><li><a href="forerunner.ssr.html">ssr</a></li><li><a href="forerunner.ssr.constants.html">constants</a></li><li><a href="forerunner.ssr.constants.events.html">events</a></li><li><a href="forerunner.ssr.constants.widgets.html">widgets</a></li><li><a href="forerunner.ssr.tools.html">tools</a></li><li><a href="forerunner.ssr.tools.groups.html">groups</a></li><li><a href="forerunner.ssr.tools.leftToolbar.html">leftToolbar</a></li><li><a href="forerunner.ssr.tools.mergedButtons.html">mergedButtons</a></li><li><a href="forerunner.ssr.tools.mergedItems.html">mergedItems</a></li><li><a href="forerunner.ssr.tools.reportExplorerToolbar.html">reportExplorerToolbar</a></li><li><a href="forerunner.ssr.tools.rightToolbar.html">rightToolbar</a></li><li><a href="forerunner.ssr.tools.toolbar.html">toolbar</a></li><li><a href="forerunner.ssr.tools.toolpane.html">toolpane</a></li><li><a href="forerunner.styleSheet.html">styleSheet</a></li></ul><h3>Tutorials</h3><ul><li><a href="tutorial-GettingStarted.html">GettingStarted</a></li></ul>
 		</nav>
 	</div>
 </div>
@@ -3811,7 +3903,7 @@
                                     <li class="Navitem BottomNavitem"><a href="../home/about">About</a></li>
                                     <li class="Navitem BottomNavitem"><a href="../home/support">Support</a></li>
                                     <li class="Navitem BottomNavitem"><a href="../home/demo">Demo</a></li>
-                                    <li class="Navitem BottomNavitem"><a href="../Docs/index.html">Developers</a></li>
+                                    <li class="Navitem BottomNavitem"><a href="../home/Developers">Developers</a></li>
                                     <li class="Navitem BottomNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
                                     <li class="Navitem BottomNavitem"><a href="../Home">Home</a></li>
                                 </ul>

@@ -1,7 +1,4 @@
-﻿
-.fr-Explorer-background { background: #d5e1f2; }
-
-.fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
+﻿.fr-report-explorer { /*background: rgb(87, 112, 138);*/ background: rgb(210,223,237); height: 100%; display: block; min-height: 200px; padding-bottom:60px; }
 
 .fr-explorer-item { display: inline-block; margin: 20px; padding: 28px 28px 28px 28px; cursor: pointer; width: 200px; height: 250px; }
 
@@ -25,9 +22,11 @@
 
 .fr-report-item-outer-image-selected { background-image: url(../../reportexplorer/Images/report_bkg.png); }
 
-.fr-report-item-ear-image { background-image: url(../../reportexplorer/Images/report_ear.png); }
+.fr-report-item-ear-image { background-image: url(../../reportexplorer/Images/report_ear.png); z-index:5; position: absolute;  top: 0px; right: 0px;}
 
 .fr-explorer-item-ear-selcted { background-image: url(../../reportexplorer/Images/report_ear_selected.png); }
+
+.fr-explorer-item-earcorner { width: 60px; height: 60px; z-index: 4; position: absolute;  top: 0px; right: 0px;}
 
 .fr-report-item-inner-image { height: 170px; width: 125px; position: absolute; top: 40px; left: 25px; padding-left: 10px; padding-right: 10px; margin: 4px; }
 

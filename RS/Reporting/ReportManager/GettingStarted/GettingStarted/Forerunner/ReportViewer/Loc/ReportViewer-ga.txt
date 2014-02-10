@@ -27,12 +27,12 @@
     "licenseErrorContent":"Téigh i dteagmháil le riarthóir do chórais. Má tá tú ag an riarthóir do thoil fhíorú do cheadúnas san uirlis cumraíochta Mobilizer."
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"Comhad XML le sonraí tuarascáil",
+    "csv":"CSV (teormharcáilte le camóga)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (web archive)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"comhad TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"Faigh",
     "next":"Ar Aghaidh",
     "zoom":"Cumasaigh Zoom",
-    "print":"Priontáil",
-    "dsCredential":"Dintiúir",
-    "views":"Radhairc",
-    "addToFavorites":"Add to Favorites"
+    "print":"Priontáil"
   },
   "toolbar": {
     "back":"ar ais",
@@ -74,10 +71,8 @@
     "print":"Priontáil",
     "userSettings":"Socruithe",
     "saveParam":"Sábháil Paraiméadair",
-    "parameterSets":"Socraigh Bainistigh",
-    "selectSet":"roghnaigh Socraigh",
-    "dsCredential":"credential Datasource",
-    "addToFavorites":"Add to Favorites"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprimir páxina de opción de esquema",
@@ -88,7 +83,7 @@
     "marginLeft":"Clé",
     "marginRight":"ceart",
     "print":"imprimir",
-    "cancel":"Cancelar",
+    "cancel":"cancelar",
     "unit":"mm",
     "margin":"Imill",
     "pageLayoutOptions":"Leathanach roghanna leagan amach"
@@ -104,10 +99,9 @@
     "isTrue":"True",
     "isFalse":"bréagach",
     "required":"Riachtanach",
-    "viewReport":"Féach",
-    "cancel":"Cancelar",
-    "datePicker":"Dáta",
-    "select":"Roghnaigh"
+    "viewReport":"Féach Tuarascáil",
+    "cancel":"cancelar",
+    "datePicker":"Dáta"
   },
   "validateError": {
     "required":"Riachtanach",
@@ -123,8 +117,7 @@
     "rangelength":"Iontráil luach idir {0} agus {1} carachtair fada",
     "range":"Iontráil luach idir {0} agus {1}",
     "max":"Iontráil luach níos lú ná nó cothrom le {0}",
-    "min":"Iontráil luach níos mó ná nó cothrom le {0}",
-    "autoCompleteDropdown":"neamhbhailí"
+    "min":"Iontráil luach níos mó ná nó cothrom le {0}"
   },
   "dialog": {
     "title":"incitar",
@@ -141,7 +134,7 @@
     "nextText":"Ar Aghaidh",
     "currentText":"Sa lá atá inniu",
     "weekHeader":"Wk",
-    "dateFormat":"mm / ll / bb",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -155,23 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Socraigh Bainistigh",
-    "cancel":"Cealaigh",
-    "add":"Cuir",
-    "addNewSet":"Cuir Socraigh Nua",
-    "name":"Ainm",
-    "defaultHeader":"Réamhshocrú",
-    "allUsers":"Gach",
-    "deleteHeader":"Scrios",
-    "apply":"sábháil",
-    "newSet":"Socraigh Nua"
-  },
-  "dsCredential": {
-    "title":"credential Datasource",
-    "cancel":"Cealaigh",
-    "submit":"Cuir",
-    "username":"ainm Logáil isteach:",
-    "password":"Pasfhocal:",
-    "reset":"Athshocraigh"
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

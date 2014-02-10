@@ -6,13 +6,13 @@
 
 var appURL = [
     // SDKSamples
-    { local: "http://localhost:18228/", remote: "http://demo.forerunnersw.com/SDKSamples/" },
+    { local: "http://localhost:18228/", remote: "http://demo.forerunnersw.com/V1Samples/" },
 
     // GettingStarted
-    { local: "http://localhost:55086/", remote: "http://demo.forerunnersw.com/GettingStarted/" },
+    { local: "http://localhost:55086/", remote: "http://demo.forerunnersw.com/V1GettingStarted/" },
 
     // Forerunnersw
-    { local: "http://localhost:31921/", remote: "http://forerunnersw.com/Mobilizer/" }
+    { local: "http://localhost:31921/", remote: "https://forerunnersw.com/" }
 ]
 
 function GetSiteURL(site, filename) {
@@ -26,7 +26,7 @@ function GetSiteURL(site, filename) {
 }
 
 function NavigateToSiteURL(site, sampleName) {
-    window.location.href = GetSiteURL(site, sampleName);
+    window.open(GetSiteURL(site, sampleName), '_blank');
 }
 
 function ShowSampleDetail(filename, id) {

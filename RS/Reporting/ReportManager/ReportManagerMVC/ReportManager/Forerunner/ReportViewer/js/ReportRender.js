@@ -1075,7 +1075,7 @@ $(function () {
 
             me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName] = { $Tablix: $Tablix, $FixedColHeader: $FixedColHeader, $FixedRowHeader: $FixedRowHeader, HasFixedRows: HasFixedRows, HasFixedCols: HasFixedCols, RIContext: RIContext };
 
-            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName]
+            var TS = me._tablixStream[RIContext.CurrObj.Elements.NonSharedElements.UniqueName];
             TS.State = { "LastRowIndex": 0, "LastObjType": "", "Row": new $("<TR/>"), "StartIndex": 0, CellCount: 0 };
             TS.EndRow = $("<TR/>").addClass("fr-lazyNext").css("visible", false).text(me.options.reportViewer.locData.messages.loading);
             me._writeTablixRowBatch(TS);
@@ -1827,7 +1827,7 @@ $(function () {
     
             //Not needed anymore with fixed table,  leaving in just in case.
             //if (!forerunner.device.isMSIE())
-                return fontSize;
+            return fontSize;
 
 
             var unit = fontSize.match(/\D+$/);  // get the existing unit

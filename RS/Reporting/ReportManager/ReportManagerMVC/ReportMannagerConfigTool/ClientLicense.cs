@@ -159,15 +159,21 @@ namespace ForerunnerLicense
                     license = new LicenseData(LicenseUtil.Verify(LicenseString, LicenseUtil.pubkey));
                 }
             }
-            else if (forceCheck)
+            else 
             {
-                license = null;
-                LicenseString = null;
+                Logger.Trace(LogType.Info, "ClientLicense.Load Failed to load License Data from reg");
+                if (forceCheck)
+                {
+                    license = null;
+                    LicenseString = null;
+                }
             }
+            
 
             value = MobV1Key.GetValue(LicenseTimestampKey);
             if (value != null && (!forceCheck || LastServerValidation == DateTime.MinValue) )
             {
+                Logger.Trace(LogType.Info, "ClientLicense get Last Server Validation time");
                 try
                 {
                     LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(MobV1Key.GetValue(LicenseTimestampKey).ToString(), LicenseUtil.pubkey)), DateTimeKind.Utc);

@@ -82,7 +82,7 @@ var ApplicationRouter = Backbone.Router.extend({
 
              var explorerSettings;
              $.ajax({
-                url: "Custom/ExplorerSettings.txt",
+                url: forerunner.config.forerunnerFolder() + "../Custom/ExplorerSettings.txt",
                 dataType: "json",
                 async: false,
                 success: function (data) {

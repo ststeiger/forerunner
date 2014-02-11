@@ -124,7 +124,7 @@
     "range":"Immettere un valore compreso tra {0} e {1}",
     "max":"Immettere un valore inferiore o uguale a {0}",
     "min":"Immettere un valore maggiore o uguale a {0}",
-    "autoCompleteDropdown":"non valido"
+    "invalid":"non valido"
   },
   "dialog": {
     "title":"promt",

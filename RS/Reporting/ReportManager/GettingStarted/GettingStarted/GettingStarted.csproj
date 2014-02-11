@@ -41,11 +41,11 @@
   <ItemGroup>
     <Reference Include="Forerunner.Json, Version=0.9.12915.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Forerunner.Json.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Forerunner\MobilizerV1Test\bin\Forerunner.Json.dll</HintPath>
     </Reference>
     <Reference Include="Forerunner.SQLReporting, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7872e3fd9cc2b569, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Forerunner.SQLReporting.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\Forerunner\MobilizerV1Test\bin\Forerunner.SQLReporting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />

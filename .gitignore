@@ -636,3 +636,6 @@ RS/Reporting/ReportManager/GettingStarted/GettingStarted/obj/Release/*
 RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/*
 RS/Reporting/ReportManager/GettingStarted/GettingStarted/bin/GettingStarted.dll
 RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/*
+ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/aspnet-GettingStarted-20140131174105.mdf
+RS/Reporting/ReportManager/GettingStarted/GettingStarted/App_Data/aspnet-GettingStarted-20140131174105_log.ldf

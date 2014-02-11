@@ -1,31 +1,65 @@
 ﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
 
-    <link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
-    <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
+        <link href="~/Forerunner/Common/css/Forerunner-all.css" rel="stylesheet"/>
+        <link href="~/Forerunner/Lib/jQuery/css/jquery-ui-1.10.3.forerunner.css" rel="stylesheet"/>
 
-    @RenderSection("styles", required: false)
-</head>
-<body>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/moment.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-widgets.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
-    <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js"></script>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+        <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.hammer.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/json2.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/scroll-startstop.events.jquery.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/jquery.lazyload.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/Misc/js/moment.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Bundles/forerunner.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-tools.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Bundles/forerunner-widgets.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.watermark.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery.validate1.11.1.min.js"></script>
+        <script type="text/javascript" src="~/Forerunner/Lib/jQuery/js/jquery-ui-1.10.3.forerunner.js"></script>
 
-    @RenderSection("scripts", required: false)
-    @RenderBody()
-</body>
+        @RenderSection("scripts", required: false)
+
+        <header>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
+                </div>
+                <div class="float-right">
+                    <section id="login">
+                        @Html.Partial("_LoginPartial")
+                    </section>
+                    <nav>
+                        <ul id="menu">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Report", "Report", "Home")</li>
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        <div id="body">
+            <section class="content-wrapper main-content clear-fix">
+            </section>
+        </div>
+        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
+                </div>
+            </div>
+        </footer>
+    </body>
 </html>
+
 

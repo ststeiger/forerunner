@@ -6,13 +6,13 @@
 @section scripts {
 <script>
     $(document).ready(function () {
-        $('body').reportViewerEZ({
+        $(".main-content").reportViewerEZ({
             DefaultAppTemplate: null,
             path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
-            isFullScreen: true
+            isFullScreen: false
         });
     });
 </script>

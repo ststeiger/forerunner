@@ -30,12 +30,20 @@
       <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
+      <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Go To Report Action Test.rdl</Name>
       <FullPath>Go To Report Action Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Header footer indicator report.rdl</Name>
       <FullPath>Header footer indicator report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ICAllocation.rdl.rdl</Name>
+      <FullPath>ICAllocation.rdl.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image Report 2.rdl</Name>
@@ -141,14 +149,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
-      <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>ICAllocation.rdl.rdl</Name>
-      <FullPath>ICAllocation.rdl.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -157,7 +157,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Reports</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

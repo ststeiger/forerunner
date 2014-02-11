@@ -111,7 +111,7 @@
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Center</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
@@ -160,9 +160,10 @@
                               <Style>Solid</Style>
                             </Border>
                             <BackgroundColor>Silver</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
                           </Style>
                         </Textbox>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -507,7 +508,7 @@
             <Top>0.73833in</Top>
             <Left>0.26958in</Left>
             <Height>0.5in</Height>
-            <Width>5.625in</Width>
+            <Width>5.62501in</Width>
             <ZIndex>1</ZIndex>
             <Style>
               <Border>

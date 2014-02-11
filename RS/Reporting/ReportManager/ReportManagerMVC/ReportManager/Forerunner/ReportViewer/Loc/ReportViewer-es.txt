@@ -125,7 +125,7 @@
     "range":"Introduzca un valor entre {0} y {1}",
     "max":"Introduzca un valor menor o igual a {0}",
     "min":"Introduzca un valor mayor o igual a {0}",
-    "autoCompleteDropdown":"Inválido"
+    "invalid":"Inválido"
   },
   "dialog": {
     "title":"pronto",

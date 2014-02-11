@@ -1130,7 +1130,7 @@ $(function () {
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
                 min: $.validator.format(error.min),
-                autoCompleteDropdown: error.autoCompleteDropdown
+                autoCompleteDropdown: error.invalid
             });
         },
         extendValidate: function () {

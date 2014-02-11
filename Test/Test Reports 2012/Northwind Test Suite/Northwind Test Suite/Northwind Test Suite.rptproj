@@ -138,6 +138,10 @@
       <FullPath>SingleMap.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>StubbedRipley.rdl</Name>
+      <FullPath>StubbedRipley.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ThreeGuages.rdl</Name>
       <FullPath>ThreeGuages.rdl</FullPath>
     </ProjectItem>
@@ -162,8 +166,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>StubbedRipley.rdl</Name>
-      <FullPath>StubbedRipley.rdl</FullPath>
+      <Name>Customer Information2.rdl</Name>
+      <FullPath>Customer Information2.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -173,7 +177,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.20:9000/reportserver</TargetServerURL>
+        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

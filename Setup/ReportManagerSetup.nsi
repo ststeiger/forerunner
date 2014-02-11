@@ -125,6 +125,13 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Json.dll"
   File "${LOCALROOT}\bin\EntityFramework.dll"
   File "${LOCALROOT}\bin\Antlr3.Runtime.dll"
+
+  SetOutPath "$INSTDIR\sdk"
+  File "${LOCALROOT}\sdk\ReportManagerController.cs"
+  File "${LOCALROOT}\sdk\ReportViewerController.cs"
+  File "${LOCALROOT}\sdk\CustomAPIFilters.cs"
+  File "${LOCALROOT}\sdk\readme.docx"
+
   SetOutPath "$INSTDIR\Forerunner"
   File "${LOCALROOT}\Forerunner\version.txt"
   SetOutPath "$INSTDIR\Forerunner\Common\css"
@@ -256,10 +263,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-tools.min.js"
   File "${LOCALROOT}\Forerunner\Bundles\forerunner-widgets.min.js"
-  
-  SetOutPath "$INSTDIR\Forerunner\Controllers"
-  File "${LOCALROOT}\Forerunner\Controllers\ReportManagerController.cs"
-  File "${LOCALROOT}\Forerunner\Controllers\ReportViewerController.cs"
   
   SetOutPath "$INSTDIR\Scripts\App"
   File "${LOCALROOT}\Scripts\App\router.js"
@@ -610,6 +613,12 @@ Section Uninstall
   Delete "$INSTDIR\Scripts\Util\modernizr-2.5.3.js"
   Delete "$INSTDIR\Scripts\Util\laconic.js"
   Delete "$INSTDIR\Scripts\Util\underscore.js"
+
+  Delete "$INSTDIR\sdk\ReportManagerController.cs"
+  Delete "$INSTDIR\sdk\ReportViewerController.cs"
+  Delete "$INSTDIR\sdk\CustomAPIFilters.cs"
+  Delete "$INSTDIR\sdk\readme.docx"
+
   Delete "$INSTDIR\Forerunner\version.txt"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner.min.js"
   Delete "$INSTDIR\Forerunner\Bundles\forerunner-tools.js"
@@ -724,9 +733,6 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\Common\images\icons25x31.png"
   Delete "$INSTDIR\Forerunner\Common\images\ForerunnerLogo.png"
   
-  Delete "$INSTDIR\Forerunner\Controllers\ReportManagerController.cs"
-  Delete "$INSTDIR\Forerunner\Controllers\ReportViewerController.cs"
-
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"
   Delete "$INSTDIR\Custom\ExplorerSettings.txt"

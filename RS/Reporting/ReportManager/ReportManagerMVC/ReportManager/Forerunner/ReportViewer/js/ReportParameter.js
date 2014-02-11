@@ -139,6 +139,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
+                me._parameterDefinitions[param.Name].ValidatorAttrs = [];
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
@@ -155,13 +156,13 @@ $(function () {
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
                     if ($(element).is(":radio"))
-                        error.appendTo(element.parent("div").next("div").next("span"));
+                        error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
                     else {
                         if ($(element).attr("ismultiple") === "true") {
                             error.appendTo(element.parent("div").next("span"));
                         }
                         else if ($(element).hasClass("ui-autocomplete-input")) {
-                            error.appendTo(element.parent("div").next("span"));
+                            error.appendTo(element.parent("div").nextAll(".fr-param-error-placeholder"));
                         }
                         else
                             error.appendTo(element.nextAll(".fr-param-error-placeholder"));
@@ -225,6 +226,14 @@ $(function () {
             me._submittedParamsList = paramList;
         },
 
+        _setNullCheckList:function(){
+            var me = this;
+            
+            $.each(me.element.find(".fr-param-checkbox"), function (index, nullCheck) {
+                me._parameterDefinitions[nullCheck.name].nullCheckStatus = me._isNullChecked(nullCheck);
+            });
+        },
+
         _submitForm: function (pageNum) {
             var me = this;
             me._closeAllDropdown();
@@ -238,6 +247,7 @@ $(function () {
             if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum);
                 me._submittedParamsList = paramList;
+                me._setNullCheckList();
                 me._trigger(events.submit);
             }
             me._hasPostedBackWithoutSubmitForm = false;
@@ -286,6 +296,11 @@ $(function () {
                         } else {
                             $control.val(savedParam.Value);
                         }
+                    }
+
+                    if (paramDefinition.Nullable === true && me._isNullChecked(paramDefinition.Name) !== paramDefinition.nullCheckStatus) {
+                        var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                        $cb.trigger("click");
                     }
                 }
             }
@@ -384,11 +399,13 @@ $(function () {
                 //Anyway IE native support placeholder property from IE10 on, so not big deal
                 //Also, we are letting the devs style it.  So we have to make userNative: false for everybody now.
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, { useNative: false, className: "fr-param-watermark" });
-                $control.addClass("fr-param-required"); 
+                $control.addClass("fr-param-required");
+                me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
             } else if (param.MultiValue) {
                 if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
                     $control.attr("required", "true");
                     $control.addClass("fr-param-required");
+                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
                 }
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
@@ -396,29 +413,30 @@ $(function () {
         _addNullableCheckBox: function (param, $control, predefinedValue) {
             var me = this;
             if (param.Nullable === true) {
-                var $paramControl = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") : $control;
+                $control = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") :
+                    param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
+
                 var $nullableSpan = new $("<div class='fr-param-nullable' />");
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
-                        if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $paramControl).removeAttr("disabled").attr("required", "true");
-                        } else {
-                            $paramControl.removeAttr("disabled").removeClass("fr-param-disable");
-                            if ($paramControl.attr("allowblank") !== "true") {
-                                $paramControl.attr("required", "true");
-                            }
-                        }
+                        $control.removeAttr("disabled").removeClass("fr-param-disable");
+                       
+                        //add validate arrtibutes to control when uncheck null checkbox
+                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                            $control.attr(attribute, "true");
+                        });
                     }
                     else {
                         $checkbox.attr("checked", "true");
-                        if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $paramControl).attr("disabled", "true").removeAttr("required");
-                        } else {
-                            $paramControl.attr("disabled", "true").addClass("fr-param-disable").removeAttr("required");
-                        }
+                        $control.attr("disabled", "true").addClass("fr-param-disable");
+
+                        //remove validate arrtibutes
+                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                            $control.removeAttr(attribute);
+                        });
                     }
                 });
 
@@ -508,6 +526,7 @@ $(function () {
                         },
                     });
                     $control.attr("formattedDate", "true");
+                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("formattedDate");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
@@ -515,6 +534,8 @@ $(function () {
                 case "Integer":
                 case "Float":
                     $control.attr("number", "true");
+                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("number");
+
                     if (predefinedValue) {
                         $control.val(predefinedValue);
                     }
@@ -548,6 +569,7 @@ $(function () {
             me._getParameterControlProperty(param, $control);
             //add auto complete selected item check
             $control.attr("autoCompleteDropdown", "true");
+            me._parameterDefinitions[param.Name].ValidatorAttrs.push("autoCompleteDropdown");
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
             var $dropdownicon = me._createDiv(["fr-param-dropdown-icon"]);
@@ -586,6 +608,7 @@ $(function () {
                 source: param.ValidValues,
                 minLength: 0,
                 delay: 0,
+                autoFocus: true,
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
 
@@ -1007,7 +1030,7 @@ $(function () {
                 $(".fr-param", me.$params).filter("select").each(function () {
                     var shouldInclude = this.value !== null && this.value !== "" && me._shouldInclude(this, noValid);
                     if (shouldInclude)
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
@@ -1061,7 +1084,8 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            var paramName = typeof param === "string" ? param : param.name;
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramName + "']").first();
             return $cb.length !== 0 && $cb.attr("checked") === "checked";
         },
         _isParamNullable: function (param) {
@@ -1106,7 +1130,7 @@ $(function () {
                 range: $.validator.format(error.range),
                 max: $.validator.format(error.max),
                 min: $.validator.format(error.min),
-                autoCompleteDropdown: error.autoCompleteDropdown
+                autoCompleteDropdown: error.invalid
             });
         },
         extendValidate: function () {

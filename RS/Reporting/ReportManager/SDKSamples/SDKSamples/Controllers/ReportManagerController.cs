@@ -7,11 +7,14 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Security.Principal;
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
-using Forerunner.Logging;
+using ReportManager.Util.Logging;
+
+// Changed...
+using System.Security.Principal;
+// ...Changed
 
 namespace ReportManager.Controllers
 {
@@ -39,16 +42,19 @@ namespace ReportManager.Controllers
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
 
+        // Changed...
         private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
-        
+        // ...Changed
+
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];
             return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
         }
-        
         private Forerunner.SSRS.Manager.ReportManager GetReportManager()
         {
+            // Changed...
+
             //Put application security here
             Credentials WSCred = null;
             Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
@@ -62,6 +68,7 @@ namespace ReportManager.Controllers
             System.Web.HttpContext.Current.User = principal;
 
             return rm;
+            // ...Changed
         }
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
@@ -129,70 +136,6 @@ namespace ReportManager.Controllers
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserSettings(settings)), "text/JSON");
         }
 
-        [HttpPost]
-        public HttpResponseMessage CreateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info)
-        {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().CreateSubscription(info)), "text/JSON");
-        }
 
-        [HttpGet]
-        public HttpResponseMessage GetSubscription(string subscriptionID)
-        {
-            Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info = GetReportManager().GetSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(info)), "text/JSON"); 
-        }
-
-        [HttpPost]
-        public HttpResponseMessage UpdateSubscription(Forerunner.SSRS.Manager.ReportManager.SubscriptionInfo info)
-        {
-           
-            GetReportManager().SetSubscription(info);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(info.SubscriptionID), "text/JSON");
-        }
-
-        [HttpGet]
-        public HttpResponseMessage DeleteSubscription(string subscriptionID)
-        {
-            GetReportManager().DeleteSubscription(subscriptionID);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes("Success"), "text/JSON");
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListSubscriptions(string reportPath)
-        {
-            /// Need to pass in current owner.
-            Subscription[] subscriptions = GetReportManager().ListSubscriptions(reportPath, null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(subscriptions)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListDeliveryExtensions()
-        {
-            Extension[] extensions = GetReportManager().ListDeliveryExtensions();
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensions)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage GetExtensionSettings(string extension)
-        {
-            ExtensionParameter[] extensionSettings = GetReportManager().GetExtensionSettings(extension);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(extensionSettings)), "text/JSON"); 
-        }
-
-        [HttpGet]
-        public HttpResponseMessage ListSchedules()
-        {
-            Schedule[] schedules = GetReportManager().ListSchedules(null);
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(ToString(schedules)), "text/JSON"); 
-        }
-
-        private string ToString<T>(T value)
-        {
-            StringBuilder buffer = new StringBuilder();
-            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
-            serializer.Serialize(value, buffer);
-
-            return buffer.ToString();
-        }
     }
 }

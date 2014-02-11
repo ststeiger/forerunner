@@ -27,12 +27,12 @@
     "licenseErrorContent":"Por favor, contate o administrador do sistema. Se você é o administrador verifique sua licença na ferramenta de configuração mobilizador."
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"Arquivo XML com dados do relatório",
+    "csv":"CSV (delimitado por vírgula)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (arquivo da web)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"Arquivo TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"Procurar",
     "next":"Próximo",
     "zoom":"Ativar Zoom",
-    "print":"Impressão",
-    "dsCredential":"Credencial",
-    "views":"Visualizações",
-    "addToFavorites":"Adicionar aos favoritos"
+    "print":"Impressão"
   },
   "toolbar": {
     "back":"Volta",
@@ -74,29 +71,27 @@
     "print":"Impressão",
     "userSettings":"configurações",
     "saveParam":"Salvar Parâmetros",
-    "parameterSets":"Gerenciar conjuntos",
-    "selectSet":"Selecione Definir",
-    "dsCredential":"DataSource Credencial",
-    "addToFavorites":"Adicionar aos favoritos"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
     "pageHeight":"Altura",
     "pageWidth":"Largura",
-    "marginTop":"Superior",
-    "marginBottom":"Inferior",
+    "marginTop":"superior",
+    "marginBottom":"inferior",
     "marginLeft":"Esquerda",
     "marginRight":"Direita",
-    "print":"Imprimir",
-    "cancel":"Cancelar",
+    "print":"imprimir",
+    "cancel":"cancelar",
     "unit":"mm",
-    "margin":"Margens",
+    "margin":"margens",
     "pageLayoutOptions":"Página Opções de layout"
   },
   "userSettings": {
     "title":"Configurações do Usuário",
     "submit":"Ok",
-    "cancel":"Cancelar",
+    "cancel":"cancelar",
     "ResponsiveUI":"UI Responsive"
   },
   "paramPane": {
@@ -104,10 +99,9 @@
     "isTrue":"Verdade",
     "isFalse":"Falso",
     "required":"Necessário",
-    "viewReport":"Exibir",
-    "cancel":"Cancelar",
-    "datePicker":"Data",
-    "select":"Selecionar"
+    "viewReport":"Exibir relatório",
+    "cancel":"cancelar",
+    "datePicker":"Data"
   },
   "validateError": {
     "required":"Necessário",
@@ -115,7 +109,7 @@
     "email":"E-mail inválido",
     "url":"URL inválido",
     "date":"Data inválida",
-    "dateISO":"Data inválida (aaaa-mm-dd)",
+    "dateISO":"Data inválida (yyyy-mm-dd)",
     "number":"Número inválido",
     "digits":"Somente dígitos",
     "maxlength":"Não mais de {0} caracteres",
@@ -123,8 +117,7 @@
     "rangelength":"Insira um valor entre {0} e {1} caracteres longa",
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
-    "min":"Insira um valor maior ou igual a {0}",
-    "autoCompleteDropdown":"inválido"
+    "min":"Insira um valor maior ou igual a {0}"
   },
   "dialog": {
     "title":"incitar",
@@ -141,7 +134,7 @@
     "nextText":"próximo",
     "currentText":"hoje",
     "weekHeader":"Wk",
-    "dateFormat":"dd/mm/aa",
+    "dateFormat":"mm/dd/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -152,26 +145,18 @@
     "dayNamesShort":["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
-    "defaultName":"revelia"
+    "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Gerenciar conjuntos",
-    "cancel":"cancelar",
-    "add":"adicionar",
-    "addNewSet":"Adicionar Novo Set",
-    "name":"nome",
-    "defaultHeader":"omissão",
-    "allUsers":"tudo",
-    "deleteHeader":"excluir",
-    "apply":"amealhar",
-    "newSet":"Novo conjunto"
-  },
-  "dsCredential": {
-    "title":"DataSource Credencial",
-    "cancel":"cancelar",
-    "submit":"submeter",
-    "username":"nome de login:",
-    "password":"senha:",
-    "reset":"restabelecer"
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

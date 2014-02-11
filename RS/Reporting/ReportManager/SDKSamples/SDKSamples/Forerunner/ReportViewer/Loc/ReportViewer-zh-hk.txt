@@ -27,12 +27,12 @@
     "licenseErrorContent":"請聯繫您的系統管理員。如果您是管理員請使用Mobilizer附帶的配置工具驗證您的授權許可。"
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"XML 數據報表",
+    "csv":"CSV (以逗號分隔)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (web文檔)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"TIFF文件",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"尋找",
     "next":"下一個",
     "zoom":"允許縮放",
-    "print":"打印",
-    "dsCredential":"數據源驗證",
-    "views":"瀏覽",
-    "addToFavorites":"添加到收藏"
+    "print":"打印"
   },
   "toolbar": {
     "back":"返回",
@@ -74,10 +71,8 @@
     "print":"打印",
     "userSettings":"設置",
     "saveParam":"保存參數",
-    "parameterSets":"管理參數集",
-    "selectSet":"選擇參數集",
-    "dsCredential":"數據源驗證",
-    "addToFavorites":"添加到收藏"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"打印報表",
@@ -104,10 +99,9 @@
     "isTrue":"是",
     "isFalse":"否",
     "required":"必填",
-    "viewReport":"加載",
+    "viewReport":"加載報告",
     "cancel":"取消",
-    "datePicker":"日期",
-    "select":"選擇"
+    "datePicker":"日期"
   },
   "validateError": {
     "required":"必填",
@@ -123,8 +117,7 @@
     "rangelength":"輸入介於{0}和{1}個字",
     "range":"輸入介於 {0}的{1} 值",
     "max":"輸入小於等於{0}的數",
-    "min":"輸入大於等於{0}的數",
-    "autoCompleteDropdown":"無效"
+    "min":"輸入大於等於{0}的數"
   },
   "dialog": {
     "title":"提示",
@@ -152,26 +145,18 @@
     "dayNamesShort":["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
     "dayNamesMin":["日", "一", "二", "三", "四", "五", "六"]},
   "parameterModel": {
-    "defaultName":"默認"
+    "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"管理參數集",
-    "cancel":"取消",
-    "add":"添加",
-    "addNewSet":"添加參數集",
-    "name":"名稱",
-    "defaultHeader":"默認",
-    "allUsers":"全部",
-    "deleteHeader":"刪除",
-    "apply":"保存",
-    "newSet":"新參數集"
-  },
-  "dsCredential": {
-    "title":"數據源驗證",
-    "cancel":"取消",
-    "submit":"提交",
-    "username":"登錄名:",
-    "password":"密碼:",
-    "reset":"重置"
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

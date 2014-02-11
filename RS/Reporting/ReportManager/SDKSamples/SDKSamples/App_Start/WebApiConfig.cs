@@ -11,9 +11,25 @@ namespace SDKSamples
         {
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}/{id}",
+                routeTemplate: "api/{controller}/{action}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+                name: "MobilizerManagerAPI",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { controller = @"ReportManager"  }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "MobilizerViewerAPI",
+                routeTemplate: "api/{controller}/{action}/{id}",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: new { controller = @"ReportViewer" }
+            );
+
+
         }
     }
 }

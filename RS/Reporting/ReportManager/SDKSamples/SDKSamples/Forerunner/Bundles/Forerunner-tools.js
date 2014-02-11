@@ -18,7 +18,7 @@ forerunner.ssr.tools = forerunner.ssr.tools || {};
 $(function () {
     var events = forerunner.ssr.constants.events;
     var toolTypes = forerunner.ssr.constants.toolTypes;
-    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "/ReportViewer/loc/ReportViewer");
+    var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var exportType = forerunner.ssr.constants.exportType;
 
     /**
@@ -234,7 +234,7 @@ $(function () {
             selectorClass: "fr-button-exportXML-id",
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
-            sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
+            sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.xml,
             events: {
@@ -279,7 +279,7 @@ $(function () {
             selectorClass: "fr-button-exportMHTML-id",
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
-            sharedClass: "fr-toolbase-dropdown-item fr-toolbase-hide-if-touch",
+            sharedClass: "fr-toolbase-dropdown-item",
             toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {
@@ -338,7 +338,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-zoom-button",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-show-if-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
+            sharedClass: "fr-toolbase-hide-if-not-touch fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
             tooltip: locData.toolPane.zoom,
             events: {
                 click: function (e) {
@@ -356,18 +356,6 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("showPrint");
-                }
-            }
-        },
-        btnCredential: {
-            toolType: toolTypes.button,
-            selectorClass: "fr-toolbar-credential-button",
-            imageClass: "fr-icons24x24-dataSourceCred",
-            sharedClass: "fr-toolbar-hidden-on-small fr-toolbar-hidden-on-medium fr-toolbar-hidden-on-large",
-            tooltip: locData.toolbar.dsCredential,
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showDSCredential");
                 }
             }
         }
@@ -397,7 +385,7 @@ $(function () {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-zoom",
             imageClass: "fr-icons24x24-zoom",
-            sharedClass: "fr-toolbase-show-if-touch",
+            sharedClass: "fr-toolbase-hide-if-not-touch",
             text: locData.toolPane.zoom,
             events: {
                 click: function (e) {                
@@ -438,7 +426,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-firstpage",
             imageClass: "fr-icons24x24-firstpage",
-            tooltip: locData.toolbar.firstPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", 1);
@@ -451,7 +438,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-prev",
             imageClass: "fr-icons24x24-prev",
-            tooltip: locData.toolbar.previousPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") - 1);
@@ -464,7 +450,6 @@ $(function () {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-reportpage",
             inputType: "number",
-            tooltip: locData.toolbar.reportPage,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -498,7 +483,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-next",
             imageClass: "fr-icons24x24-next",
-            tooltip: locData.toolbar.next,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getCurPage") + 1);
@@ -511,7 +495,6 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-id-lastpage",
             imageClass: "fr-icons24x24-lastpage",
-            tooltip: locData.toolbar.lastPage,
             events: {
                 click: function (e) {
                     e.data.$reportViewer.reportViewer("navToPage", e.data.$reportViewer.reportViewer("getNumPages"));
@@ -540,7 +523,6 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportXML",
             itemTextClass: "fr-toolpane-dropdown-item-text",
-            sharedClass: "fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.xml,
             events: {
@@ -589,7 +571,6 @@ $(function () {
             iconClass: "fr-icons25x31",
             imageClass: "fr-icons25x31-exportMHT",
             itemTextClass: "fr-toolpane-dropdown-item-text",
-            sharedClass: "fr-toolbase-hide-if-touch",
             toolStateClass: null,
             text: locData.exportType.mhtml,
             events: {
@@ -656,7 +637,7 @@ $(function () {
             events: {
                 click: function (e) {
                     var toolInfo = e.data.me.allTools["fr-item-export"];
-                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
+                    var $rightIcon = e.data.me.element.find("." + "fr-toolpane-icon16x16");
                     $rightIcon.toggleClass("fr-toolpane-down-icon");
                     $rightIcon.toggleClass("fr-toolpane-up-icon");
 
@@ -670,7 +651,6 @@ $(function () {
         itemKeyword: {
             toolType: toolTypes.input,
             selectorClass: "fr-item-textbox-keyword",
-            tooltip: locData.toolbar.keyword,
             events: {
                 keydown: function (e) {
                     if (e.keyCode === 13 || e.keyCode === 9) {
@@ -697,7 +677,6 @@ $(function () {
             toolStateClass: null,
             imageClass: "fr-item-search-icon",
             text: locData.toolPane.find,
-            tooltip: locData.toolbar.find,
             events: {
                 click: function (e) {
                     var value = $.trim(e.data.me.element.find(".fr-item-textbox-keyword").val());
@@ -718,63 +697,7 @@ $(function () {
                     e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-printreport"]);
                 }
             }
-        },
-        /** @member */
-        itemCredential: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-credential",
-            imageClass: "fr-icons24x24-dataSourceCred",
-            text: locData.toolPane.dsCredential,
-            events: {
-                click: function (e) {
-                    e.data.$reportViewer.reportViewer("showDSCredential");
-                    e.data.me._trigger(events.actionStarted, null, e.data.me.allTools["fr-item-credential"]);
-                }
-            }
-        },
-        /** @member */
-        itemHome: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-id-home",
-            sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-homeBlue",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
-            toolStateClass: null,
-            text: locData.toolPane.home,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
-                }
-            }
-        },
-        /** @member */
-        itemRecent: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-recent",
-            imageClass: "fr-icons24x24-recentBlue",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
-            text: locData.toolbar.recent,
-            toolStateClass: null,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("recent", null);
-                }
-            }
-        },
-        /** @member */
-        itemFavorite: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-favorite",
-            imageClass: "fr-icons24x24-favoritesBlue",
-            itemTextClass: "fr-toolpane-dropdown-item-text",
-            text: locData.toolPane.favorites,
-            toolStateClass: null,
-            events: {
-                click: function (e) {
-                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("favorites", null);
-                }
-            }
-        },
+        }
     };
 
     /**
@@ -823,8 +746,7 @@ $(function () {
             tooltip: locData.toolbar.parameterSets,
             events: {
                 click: function (e) {
-                    var parameterList = e.data.me.options.$ReportViewerInitializer.options.$paramarea.reportParameter("getParamsList");
-                    e.data.me.options.$ReportViewerInitializer.showManageParamSetsDialog(parameterList);
+                    e.data.me.options.$ReportViewerInitializer.showManageParamSetsDialog();
                     //forerunner.dialog.showUserManageParamSetsDialog(e.data.me.options.$appContainer);
                 }
             }
@@ -909,7 +831,7 @@ $(function () {
         btnFav: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-fav",
-            imageClass: "fr-icons24x24-favorites",
+            imageClass: "fr-icons24x24-favorite",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
@@ -960,7 +882,7 @@ $(function () {
             selectorClass: "fr-button-update-fav",
             sharedClass: "fr-toolbar-hidden-on-small",
             imageClass: "fr-icons24x24-favorite-minus",
-            tooltip: locData.toolbar.addToFavorites,
+            tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickBtnFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
@@ -972,7 +894,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-button-favorite",
             sharedClass: "fr-toolbase-no-disable-id",
-            imageClass: "fr-icons24x24-favorites",
+            imageClass: "fr-icons24x24-favorite",
             tooltip: locData.toolbar.favorites,
             events: {
                 click: function (e) {
@@ -1008,9 +930,6 @@ $(function () {
         },
     };
 
-    var tb = forerunner.ssr.tools.toolbar;
-    var tp = forerunner.ssr.tools.toolpane;
-
     /**
      * Defines all the tools that are merged into the Report Viewer Toolpane
      * when the Report Viewer is created via the report Explorer. If the Report
@@ -1020,40 +939,35 @@ $(function () {
      */
     forerunner.ssr.tools.mergedItems = {
         /** @member */
+        itemHome: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-id-home",
+            sharedClass: "fr-toolbase-no-disable-id",
+            imageClass: "fr-icons24x24-home",
+            text: locData.toolPane.home,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
         itemFav: {
             toolType: toolTypes.containerItem,
             selectorClass: "fr-item-update-fav",
             imageClass: "fr-icons24x24-favorite-minus",
-            text: locData.toolPane.addToFavorites,
+            text: locData.toolPane.favorites,
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.onClickItemFavorite.call(e.data.me.options.$ReportViewerInitializer, e);
                 }
             }
         },
-        /** @member */
-        itemFolders: {
-            toolType: toolTypes.containerItem,
-            selectorClass: "fr-item-folders",
-            imageClass: "fr-icons24x24-folders",
-            text: locData.toolPane.views,
-            rightImageClass: "fr-toolpane-icon16x16 fr-toolpane-down-icon",
-            events: {
-                click: function (e) {
-                    var toolInfo = e.data.me.allTools["fr-item-folders"];
-                    var $rightIcon = e.data.me.element.find("." + toolInfo.selectorClass).find("." + "fr-toolpane-icon16x16");
-                    $rightIcon.toggleClass("fr-toolpane-down-icon");
-                    $rightIcon.toggleClass("fr-toolpane-up-icon");
 
-                    var accordionGroup = toolInfo.accordionGroup;
-                    var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
-                    $accordionGroup.toggle();
-                }
-            }
-        }
     };
 
-    var mi = forerunner.ssr.tools.mergedItems;
+    var tb = forerunner.ssr.tools.toolbar;
+    var tp = forerunner.ssr.tools.toolpane;
 
     /**
      * Defines all the tool groups and dropdowns used in UI.
@@ -1130,20 +1044,11 @@ $(function () {
             tools: [tp.itemKeyword,
                     tp.itemFind]
         },
-        /** @member */
-        itemFolderGroup: {
-            toolType: toolTypes.toolGroup,
-            visible: false,
-            selectorClass: "fr-item-folders-group",
-            groupContainerClass: "fr-toolpane-dropdown-group-container",
-            tools: [tp.itemFavorite, tp.itemRecent, tp.itemHome]
-        }
     };
 
     // Dynamically add in any / all accordionGroup definitions into the associate items
     var tg = forerunner.ssr.tools.groups;
     tp.itemExport.accordionGroup = tg.itemExportGroup;
-    mi.itemFolders.accordionGroup = tg.itemFolderGroup;
 
     /** @member */
     tg.itemFindGroup = {

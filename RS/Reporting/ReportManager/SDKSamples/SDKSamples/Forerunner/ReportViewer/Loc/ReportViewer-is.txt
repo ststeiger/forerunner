@@ -27,12 +27,12 @@
     "licenseErrorContent":"Vinsamlegast hafðu samband við kerfisstjóra. Ef þú ert stjórnandi vinsamlegast staðfesta leyfi þitt í Mobilizer stillingar tól."
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"XML skrá með gögn skýrslunnar",
+    "csv":"CSV (komma afmörkuð)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (vefur skjalasafn)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"TIFF skrá",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"finna",
     "next":"Næsta",
     "zoom":"Virkja Zoom",
-    "print":"Prenta",
-    "dsCredential":"Persónuskilríki",
-    "views":"Views",
-    "addToFavorites":"Bæta við uppáhöld"
+    "print":"Prenta"
   },
   "toolbar": {
     "back":"Til baka",
@@ -74,13 +71,11 @@
     "print":"Prenta",
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
-    "parameterSets":"stjórna Leikmynd",
-    "selectSet":"valið er Stilla",
-    "dsCredential":"DataSource persónuskilríki",
-    "addToFavorites":"Bæta við uppáhöld"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
-    "title":"Print Report",
+    "title":"Prenta Page Layout Valkostur",
     "pageHeight":"Hæð",
     "pageWidth":"breidd",
     "marginTop":"Top",
@@ -88,7 +83,7 @@
     "marginLeft":"vinstri",
     "marginRight":"hægri",
     "print":"Prenta",
-    "cancel":"Hætta",
+    "cancel":"hætta",
     "unit":"mm",
     "margin":"framlegð",
     "pageLayoutOptions":"Útlit síðunnar"
@@ -96,7 +91,7 @@
   "userSettings": {
     "title":"notandi Stillingar",
     "submit":"Ok",
-    "cancel":"Hætta",
+    "cancel":"hætta",
     "ResponsiveUI":"móttækilegur HÍ"
   },
   "paramPane": {
@@ -104,10 +99,9 @@
     "isTrue":"True",
     "isFalse":"False",
     "required":"krafist",
-    "viewReport":"Skoða",
-    "cancel":"Hætta",
-    "datePicker":"dagsetning",
-    "select":"Velja"
+    "viewReport":"Skoða skýrslu",
+    "cancel":"hætta",
+    "datePicker":"dagsetning"
   },
   "validateError": {
     "required":"krafist",
@@ -123,8 +117,7 @@
     "rangelength":"Sláðu inn gildið á milli {0} og {1} charaters löng",
     "range":"Sláðu inn gildið á milli {0} og {1}",
     "max":"Sláðu inn gildið minna en eða jafnt og {0}",
-    "min":"Sláðu inn gildið stærra en eða jafnt og {0}",
-    "autoCompleteDropdown":"ógild"
+    "min":"Sláðu inn gildið stærra en eða jafnt og {0}"
   },
   "dialog": {
     "title":"hvetja",
@@ -141,7 +134,7 @@
     "nextText":"Næsta",
     "currentText":"í dag",
     "weekHeader":"WK",
-    "dateFormat":"mm / dd / áá",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -155,23 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"stjórna Leikmynd",
-    "cancel":"Hætta",
-    "add":"Bæta",
-    "addNewSet":"Bæta nýtt sett",
-    "name":"nafn",
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
     "defaultHeader":"Default",
-    "allUsers":"allt",
-    "deleteHeader":"eyða",
-    "apply":"spara",
-    "newSet":"nýtt sett"
-  },
-  "dsCredential": {
-    "title":"DataSource persónuskilríki",
-    "cancel":"hætta",
-    "submit":"leggja",
-    "username":"notandanafn:",
-    "password":"lykilorð:",
-    "reset":"endurstilla"
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

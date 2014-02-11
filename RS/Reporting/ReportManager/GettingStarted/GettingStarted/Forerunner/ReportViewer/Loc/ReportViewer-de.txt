@@ -27,12 +27,12 @@
     "licenseErrorContent":"Bitte kontaktieren Sie Ihren Systemadministrator. Wenn Sie der Administrator überprüfen Sie bitte Ihre Lizenz in der Mobilizer Konfigurationstool."
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"XML-Datei mit Daten",
+    "csv":"CSV (Komma getrennt)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (Web-Archiv)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"TIFF Datei",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"Finden",
     "next":"nächster",
     "zoom":"Zoomen",
-    "print":"Drucken",
-    "dsCredential":"Credential",
-    "views":"Ansichten",
-    "addToFavorites":"Zu Favoriten"
+    "print":"Drucken"
   },
   "toolbar": {
     "back":"Zurück",
@@ -68,19 +65,17 @@
     "paramarea":"Parameter",
     "previousPage":"vorhergehend",
     "recent":"Kürzlich",
-    "refresh":"erfrischen",
+    "refresh":"Dieses Seite neu laden",
     "reportPage":"Seite",
     "zoom":"Aktivieren Zoomen",
     "print":"Drucken",
     "userSettings":"Fixierung",
     "saveParam":"Parameter speichern",
-    "parameterSets":"Sätze verwalten",
-    "selectSet":"wählen Sätze",
-    "dsCredential":"Datenquelle Credential",
-    "addToFavorites":"Zu Favoriten hinzufügen"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
-    "title":"Bericht drucken",
+    "title":"Drucken Seitenlayout Option",
     "pageHeight":"Höhe",
     "pageWidth":"Breite",
     "marginTop":"Oberteil",
@@ -88,15 +83,15 @@
     "marginLeft":"Links",
     "marginRight":"Richtig",
     "print":"Drucken",
-    "cancel":"Abbestellen",
+    "cancel":"Stornieren",
     "unit":"mm",
-    "margin":"Margen",
-    "pageLayoutOptions":"Seitenlayout-Optionen"
+    "margin":"Margins",
+    "pageLayoutOptions":"Seitenlayoutoptionen"
   },
   "userSettings": {
     "title":"Benutzereinstellungen",
     "submit":"Ok",
-    "cancel":"Abbestellen",
+    "cancel":"Stornieren",
     "ResponsiveUI":"Responsive UI"
   },
   "paramPane": {
@@ -104,10 +99,9 @@
     "isTrue":"Wahr",
     "isFalse":"Falsch",
     "required":"Erforderlich",
-    "viewReport":"Anzeigen",
-    "cancel":"Abbestellen",
-    "datePicker":"Datum",
-    "select":"Wählen"
+    "viewReport":"Bericht anzeigen",
+    "cancel":"stornieren",
+    "datePicker":"Datum"
   },
   "validateError": {
     "required":"Erforderlich",
@@ -115,7 +109,7 @@
     "email":"Ungültige E-Mail",
     "url":"Ungültige URL",
     "date":"Ungültiges Datum",
-    "dateISO":"Ungültiges Datum (jjjj-mm-dd)",
+    "dateISO":"Ungültiges Datum (yyyy-mm-dd)",
     "number":"Ungültige Nummer",
     "digits":"Nur Ziffern",
     "maxlength":"Nicht mehr als {0} Zeichen",
@@ -123,8 +117,7 @@
     "rangelength":"Geben Sie einen Wert zwischen {0} und {1} Zeichen lang",
     "range":"Geben Sie einen Wert zwischen {0} und {1}",
     "max":"Geben Sie einen Wert kleiner oder gleich {0}",
-    "min":"Geben Sie einen Wert größer oder gleich {0}",
-    "autoCompleteDropdown":"ungültig"
+    "min":"Geben Sie einen Wert größer oder gleich {0}"
   },
   "dialog": {
     "title":"Eingabeaufforderung",
@@ -141,7 +134,7 @@
     "nextText":"Weiter",
     "currentText":"Heute",
     "weekHeader":"Wk",
-    "dateFormat":"tt/mm/jj",
+    "dateFormat":"mm / dd / yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -155,23 +148,15 @@
     "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Sets verwalten",
-    "cancel":"Abbestellen",
-    "add":"ergänzen",
-    "addNewSet":"Neue Set",
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
     "name":"Name",
     "defaultHeader":"Default",
-    "allUsers":"Alle",
-    "deleteHeader":"Löschen",
-    "apply":"speichern",
-    "newSet":"Neues Set"
-  },
-  "dsCredential": {
-    "title":"Datenquelle Credential",
-    "cancel":"Abbestellen",
-    "submit":"einreichen",
-    "username":"Login name:",
-    "password":"Passwort:",
-    "reset":"rücksetzen"
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

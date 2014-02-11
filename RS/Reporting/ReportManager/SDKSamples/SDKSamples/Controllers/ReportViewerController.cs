@@ -7,11 +7,14 @@ using System.Web.Http;
 using System.Web;
 using System.Net.Http.Headers;
 using System.Text;
-using System.IO;
-using System.Security.Principal;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
-using Forerunner.Logging;
+using System.IO;
+using ReportManager.Util.Logging;
+
+// Changed...
+using System.Security.Principal;
+// ...Changed
 
 namespace ReportManager.Controllers
 {
@@ -21,7 +24,6 @@ namespace ReportManager.Controllers
         public string ReportPath { get; set; }
         public string ParameterList { get; set; }
         public int PageNumber {get; set;}
-        public string DSCredentials { get; set; }
     }
 
     [ExceptionLog]
@@ -32,7 +34,10 @@ namespace ReportManager.Controllers
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
 
+        // Changed...
         private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
+        // ...Changed
+
         
         static private bool GetAppSetting(string key, bool defaultValue)
         {
@@ -47,6 +52,8 @@ namespace ReportManager.Controllers
 
         private ReportViewer GetReportViewer()
         {
+            // Changed...
+
             // Put application security here
             ReportViewer rep = new ReportViewer(url, ReportServerTimeout);
 
@@ -58,6 +65,7 @@ namespace ReportManager.Controllers
             System.Web.HttpContext.Current.User = principal;
 
             return rep;
+            // ...Changed
         }
 
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
@@ -151,10 +159,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-                //byte[] result = null;
-                //result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials).ToString());
-                //return GetResponseFromBytes(result, "text/JSON");
-                return GetResponseFromBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
+                return GetResponseFromBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList), "text/JSON");
             }
             catch (Exception e)
             {
@@ -170,7 +175,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
+                result = Encoding.UTF8.GetBytes(GetReportViewer().GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)

@@ -27,12 +27,12 @@
     "licenseErrorContent":"Пожалуйста, обратитесь к системному администратору. Если вы являетесь администратором необходимо убедиться в наличии лицензии в инструменте конфигурации Mobilizer."
   },
   "exportType": {
-    "xml":"XML",
-    "csv":"CSV",
+    "xml":"XML файл с данными отчета",
+    "csv":"CSV (запятая)",
     "pdf":"PDF",
-    "mhtml":"MHTML",
+    "mhtml":"MHTML (веб-архив)",
     "excel":"Excel",
-    "tiff":"TIFF",
+    "tiff":"TIFF файл",
     "word":"Word"
   },
   "toolPane": {
@@ -46,10 +46,7 @@
     "find":"Поиск",
     "next":"Следующий",
     "zoom":"Enable Zoom",
-    "print":"Напечатать",
-    "dsCredential":"учетных",
-    "views":"Просмотров",
-    "addToFavorites":"избранное"
+    "print":"Напечатать"
   },
   "toolbar": {
     "back":"Назад",
@@ -74,10 +71,8 @@
     "print":"Напечатать",
     "userSettings":"окружение",
     "saveParam":"Сохранить параметры",
-    "parameterSets":"управлять наборами",
-    "selectSet":"Выбор набора",
-    "dsCredential":"источник данных учетных",
-    "addToFavorites":"Добавить в избранное"
+    "parameterSets":"Manage Sets",
+    "selectSet":"Select Set"
   },
   "print": {
     "title":"Печать отчета",
@@ -88,7 +83,7 @@
     "marginLeft":"левый",
     "marginRight":"правый",
     "print":"печатать",
-    "cancel":"Oтменить",
+    "cancel":"отменить",
     "unit":"mm",
     "margin":"край",
     "pageLayoutOptions":"Параметры макета страницы"
@@ -96,7 +91,7 @@
   "userSettings": {
     "title":"Настройки пользователя",
     "submit":"Оклахома",
-    "cancel":"Oтменить",
+    "cancel":"отменить",
     "ResponsiveUI":"Отзывчивый интерфейс"
   },
   "paramPane": {
@@ -104,10 +99,9 @@
     "isTrue":"Верно",
     "isFalse":"Неверно",
     "required":"Необходимый",
-    "viewReport":"Показать",
-    "cancel":"Oтменить",
-    "datePicker":"дата",
-    "select":"выбирать"
+    "viewReport":"Показать отчет",
+    "cancel":"отменить",
+    "datePicker":"дата"
   },
   "validateError": {
     "required":"Необходимый",
@@ -115,7 +109,7 @@
     "email":"Неверный email",
     "url":"Неверный URL",
     "date":"Неверные данные",
-    "dateISO":"неверная дата (гггг-мм-дд)",
+    "dateISO":"неверная дата (yyyy-mm-dd)",
     "number":"Неверный номер",
     "digits":"Только цифры",
     "maxlength":"Не больше, чем {0} символов",
@@ -123,8 +117,7 @@
     "rangelength":"Введите значение от {0} и {1} символов",
     "range":"Введите значение от {0} и {1}",
     "max":"Введите значение меньше или равно {0}",
-    "min":"Введите значение больше или равно {0}",
-    "autoCompleteDropdown":"инвалид"
+    "min":"Введите значение больше или равно {0}"
   },
   "dialog": {
     "title":"побуждать",
@@ -141,7 +134,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"дд / мм / гг",
+    "dateFormat":"mm/dd/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -152,26 +145,18 @@
     "dayNamesShort":["BCK", "PND", "VTR", "SRD", "ChTV", "PTN", "SBT"],
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
-    "defaultName":"невыполнение обязательств"
+    "defaultName":"Default"
   },
   "manageParamSets": {
-    "manageSets":"Управление наборы",
-    "cancel":"отменить",
-    "add":"добавлять",
-    "addNewSet":"Добавить новый набор",
-    "name":"название",
-    "defaultHeader":"дефолт",
-    "allUsers":"все",
-    "deleteHeader":"удалять",
-    "apply":"скопить",
-    "newSet":"Новый набор"
-  },
-  "dsCredential": {
-    "title":"источник данных учетных",
-    "cancel":"отменить",
-    "submit":"представлять",
-    "username":"Войти название:",
-    "password":"пароль:",
-    "reset":"сброс"
+    "manageSets":"Manage Sets",
+    "cancel":"Cancel",
+    "add":"Add",
+    "addNewSet":"Add New Set",
+    "name":"Name",
+    "defaultHeader":"Default",
+    "allUsers":"All",
+    "deleteHeader":"Delete",
+    "apply":"Apply",
+    "newSet":"New Set"
   }
 }

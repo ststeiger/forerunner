@@ -27,12 +27,12 @@
 		"licenseErrorContent": "Please contact your system administrator.  If you are the administrator please verify your license in the Mobilizer configuration tool."
     },
     "exportType": {
-        "xml": "XML",
-        "csv": "CSV",
+        "xml": "XML file with report data",
+        "csv": "CSV (comma delimited)",
         "pdf": "PDF",
-        "mhtml": "MHTML",
+        "mhtml": "MHTML (web archive)",
         "excel": "Excel",
-        "tiff": "TIFF",
+        "tiff": "TIFF file",
         "word": "Word"
     },
 	"toolPane": {
@@ -46,10 +46,7 @@
     "find": "Find",
     "next": "Next",
 		"zoom": "Enable Zoom",
-		"print": "Print",
-		"dsCredential":"Credential",
-		"views":"Views",
-    "addToFavorites": "Add to Favorites"
+		"print": "Print"
     },
 	"toolbar": {
     "back": "Back",
@@ -75,9 +72,7 @@
 		"userSettings": "Settings",
 		"saveParam": "Save Parameters",
     "parameterSets": "Manage Sets",
-    "selectSet": "Select Set",
-		"dsCredential":"Datasource Credential",
-    "addToFavorites": "Add to Favorites"
+    "selectSet": "Select Set"
     },
     "print":{
     "title": "Print Report",
@@ -104,10 +99,9 @@
     "isTrue": "True",
     "isFalse": "False",
     "required": "Required",
-    "viewReport": "View",
-		"cancel": "Cancel",
-		"datePicker":"Date",
-		"select":"Select"
+    "viewReport": "View Report",
+		"cancel": "cancel",
+		"datePicker":"Date"
     },
 	"validateError": {
 		"required": "Required",
@@ -123,8 +117,7 @@
 		"rangelength": "Enter a value between {0} and {1} charaters long",
 		"range": "Enter a value between {0} and {1}",
 		"max": "Enter a value less than or equal to {0}",
-		"min": "Enter a value greater than or equal to {0}",
-		"autoCompleteDropdown":"Invalid"
+		"min": "Enter a value greater than or equal to {0}"
 	},
 	"dialog":{
     "title":"Prompt",
@@ -164,16 +157,8 @@
     "defaultHeader": "Default",
     "allUsers": "All",
     "deleteHeader": "Delete",
-    "apply": "Save",
+    "apply": "Apply",
     "newSet": "New Set"
-  },
-   "dsCredential": {
-    "title":"Data Source Credential",
-	"cancel":"Cancel",
-	"submit":"Submit",
-	"username":"Login name:",
-	"password":"Password:",
-	"reset":"Reset"
   }
 }
 

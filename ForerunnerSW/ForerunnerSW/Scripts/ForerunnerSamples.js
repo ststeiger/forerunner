@@ -12,7 +12,7 @@ var appURL = [
     { local: "http://localhost:55086/", remote: "http://demo.forerunnersw.com/V1GettingStarted/" },
 
     // Forerunnersw
-    { local: "http://localhost:31921/", remote: "https://forerunnersw.com/" }
+    { local: "../", remote: "../" }
 ]
 
 function GetSiteURL(site, filename) {

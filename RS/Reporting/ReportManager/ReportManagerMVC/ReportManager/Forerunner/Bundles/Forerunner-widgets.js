@@ -6802,6 +6802,14 @@ $(function () {
             me._submittedParamsList = paramList;
         },
 
+        _setNullCheckList:function(){
+            var me = this;
+            
+            $.each(me.element.find(".fr-param-checkbox"), function (index, nullCheck) {
+                me._parameterDefinitions[nullCheck.name].nullCheckStatus = me._isNullChecked(nullCheck);
+            });
+        },
+
         _submitForm: function (pageNum) {
             var me = this;
             me._closeAllDropdown();
@@ -6815,6 +6823,7 @@ $(function () {
             if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum);
                 me._submittedParamsList = paramList;
+                me._setNullCheckList();
                 me._trigger(events.submit);
             }
             me._hasPostedBackWithoutSubmitForm = false;
@@ -6863,6 +6872,11 @@ $(function () {
                         } else {
                             $control.val(savedParam.Value);
                         }
+                    }
+
+                    if (paramDefinition.Nullable === true && me._isNullChecked(paramDefinition.Name) !== paramDefinition.nullCheckStatus) {
+                        var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                        $cb.trigger("click");
                     }
                 }
             }
@@ -7584,7 +7598,7 @@ $(function () {
                 $(".fr-param", me.$params).filter("select").each(function () {
                     var shouldInclude = this.value !== null && this.value !== "" && me._shouldInclude(this, noValid);
                     if (shouldInclude)
-                    a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
+                        a.push({ Parameter: this.name, IsMultiple: $(this).attr("ismultiple"), Type: $(this).attr("datatype"), Value: me._isParamNullable(this) });
                 });
                 var radioList = {};
                 //radio-group by radio name, default value: null
@@ -7638,7 +7652,8 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
+            var paramName = typeof param === "string" ? param : param.name;
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramName + "']").first();
             return $cb.length !== 0 && $cb.attr("checked") === "checked";
         },
         _isParamNullable: function (param) {

@@ -60,7 +60,7 @@ $(function () {
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
-            viewerID: Math.floor((Math.random() * 100) + 1),
+            viewerID: null,
         },
 
         _destroy: function () {
@@ -106,7 +106,7 @@ $(function () {
             me.reportStates = { toggleStates: new forerunner.ssr.map(), sortStates: [] };
             me.renderTime = new Date().getTime();
             me.paramDefs = null;
-            me.viewerID = me.options.viewerID;
+            me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.

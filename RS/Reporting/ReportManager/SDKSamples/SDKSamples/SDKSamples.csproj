@@ -19,6 +19,7 @@
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
     <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -147,6 +148,9 @@
   <ItemGroup>
     <Content Include="Bundles\AddButton.cshtml.txt">
       <DependentUpon>AddButton.cshtml.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\Dashboard.cshtml.txt">
+      <DependentUpon>Dashboard.cshtml.bundle</DependentUpon>
     </Content>
     <Content Include="Bundles\RemoveButton.cshtml.txt">
       <DependentUpon>RemoveButton.cshtml.bundle</DependentUpon>
@@ -327,6 +331,12 @@
   <ItemGroup>
     <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Samples\Dashboard.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\Dashboard.cshtml.bundle" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -345,7 +355,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>23505</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:18228/</IISUrl>
+          <IISUrl>http://localhost:55089/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

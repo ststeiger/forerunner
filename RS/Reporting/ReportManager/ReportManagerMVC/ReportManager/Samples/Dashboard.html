@@ -36,26 +36,36 @@
   <script type="text/javascript" src="Forerunner/ReportViewer/js/ReportViewerEZ.js"></script>
   <script>
       $(document).ready(function () {
-          $('#pane1').reportViewerEZ({
-              path: '/AdventureWorks 2008R2/Sales_Order_Detail_2008R2',
+          $('#Report1').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByCountry',
               isFullScreen: false
           });
-          $('#pane2').reportViewerEZ({
-              path: '/AdventureWorks 2008 Sample Reports/Employee Sales Summary 2008',
+          $('#Report2').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByYear',
+              isFullScreen: false
+          });
+          $('#Report3').reportViewerEZ({
+              path: '/Northwind Test Suite/SalesByEmployee',
               isFullScreen: false
           });
       });
-  </script>
-    <h1>This is a bunch of HTML</h1>
-    <table>
-        <tr>
-            <td>
-                <div id="pane1" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-            <td>
-                <div id="pane2" style="width:800px;height:800px;overflow:auto"/>
-            </td>
-        </tr>
-     </table>
+</script>
+
+<h1>This is a Dashboard sample showing 3 reports on a page</h1>
+<table>
+    <tr>
+        <td>
+            <div id="Report1" style="min-width:300px;min-height:300px;" />
+        </td>
+        <td>
+            <div id="Report2" style="min-width:300px;min-height:300px;"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="Report3" />
+        </td>
+    </tr>
+</table>
 </body>
 </html>

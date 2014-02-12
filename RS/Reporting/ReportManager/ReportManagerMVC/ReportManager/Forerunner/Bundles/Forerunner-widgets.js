@@ -63,7 +63,7 @@ $(function () {
             $appContainer: null,
             parameterModel: null,
             savePosition: null,
-            viewerID: Math.floor((Math.random()*100)+1),
+            viewerID: null,
         },
 
         _destroy: function () {
@@ -111,7 +111,7 @@ $(function () {
             me.paramDefs = null;
             me.credentialDefs = null;
             me.datasourceCredentials = null;
-            me.viewerID = me.options.viewerID;
+            me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -4404,7 +4404,7 @@ $(function () {
             me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
-                $('.fr-report-explorer', me.element).addClass(me.colorOverrideSettings.explorer);
+                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -4449,7 +4449,7 @@ $(function () {
                     return;
                 }
                 for (var key in me.options.explorerSettings.CustomColors) {
-                    if (decodedPath.indexOf(key, 0) == 0) {
+                    if (decodedPath.indexOf(key, 0) === 0) {
                         me.colorOverrideSettings = me.options.explorerSettings.CustomColors[key];
                         return;
                     }

@@ -35,6 +35,9 @@ namespace SDKSamples.Controllers
         {
             return View();
         }
-
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
     }
 }

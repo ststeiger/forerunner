@@ -149,6 +149,9 @@
     <Content Include="Bundles\AddButton.cshtml.txt">
       <DependentUpon>AddButton.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\Dashboard.cshtml.txt">
+      <DependentUpon>Dashboard.cshtml.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\RemoveButton.cshtml.txt">
       <DependentUpon>RemoveButton.cshtml.bundle</DependentUpon>
     </Content>
@@ -327,6 +330,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Samples\Dashboard.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\Dashboard.cshtml.bundle" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

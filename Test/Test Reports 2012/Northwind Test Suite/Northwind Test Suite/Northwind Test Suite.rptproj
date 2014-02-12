@@ -66,6 +66,10 @@
       <FullPath>Customer Data.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Customer Information2.rdl</Name>
+      <FullPath>Customer Information2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
@@ -166,8 +170,16 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Customer Information2.rdl</Name>
-      <FullPath>Customer Information2.rdl</FullPath>
+      <Name>SalesByEmployee.rdl</Name>
+      <FullPath>SalesByEmployee.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SalesByCountry.rdl</Name>
+      <FullPath>SalesByCountry.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>SalesByYear.rdl</Name>
+      <FullPath>SalesByYear.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -177,7 +189,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

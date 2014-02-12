@@ -428,6 +428,10 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.attr(attribute, "true");
                         });
+
+                        if (param.Type === "DateTime") {
+                            $control.datepicker("enable");
+                        }
                     }
                     else {
                         $checkbox.attr("checked", "true");
@@ -437,6 +441,11 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.removeAttr(attribute);
                         });
+
+                        if (param.Type === "DateTime") {
+                            //set delay to 100 since datepicker need time to generate image for the first time
+                            setTimeout(function () { $control.datepicker("disable"); }, 100);
+                        }
                     }
                 });
 

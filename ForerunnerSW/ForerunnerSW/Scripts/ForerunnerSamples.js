@@ -6,7 +6,7 @@
 
 var appURL = [
     // SDKSamples
-    { local: "http://localhost:18228/", remote: "http://demo.forerunnersw.com/V1Samples/" },
+    { local: "http://localhost:55089/", remote: "http://demo.forerunnersw.com/V1Samples/" },
 
     // GettingStarted
     { local: "http://localhost:55086/", remote: "http://demo.forerunnersw.com/V1GettingStarted/" },

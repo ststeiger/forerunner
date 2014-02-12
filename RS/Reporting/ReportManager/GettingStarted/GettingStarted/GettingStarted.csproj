@@ -211,6 +211,9 @@
     <Content Include="Bundles\Report.cshtml.txt">
       <DependentUpon>Report.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\WebApiConfig.cs.txt">
+      <DependentUpon>WebApiConfig.cs.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\_Layout.cshtml.txt">
       <DependentUpon>_Layout.cshtml.bundle</DependentUpon>
     </Content>

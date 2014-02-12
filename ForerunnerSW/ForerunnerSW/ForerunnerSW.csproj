@@ -306,6 +306,7 @@
     <Content Include="Views\SampleDetail\ReportExplorerEZ.cshtml" />
     <Content Include="Views\SampleDetail\GettingStarted.cshtml" />
     <Content Include="Views\SampleDetail\RemoveButton.cshtml" />
+    <Content Include="Views\SampleDetail\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

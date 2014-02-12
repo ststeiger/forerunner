@@ -51,12 +51,9 @@
             <li>Forerunner.Json.dll</li>
             <li>Forerunner.SQLReporting.dll</li>
         </ul>
-        <li>In the file: App_Start\WebApiConfig.cs change the following line:</li>
-        <ul>
-            <p>routeTemplate: "api/{controller}/{id}",</p>
-            <p>to:</p>
-            <p>routeTemplate: "api/{controller}<b>/{action}</b>/{id}",</p>
-        </ul>
+        <li>In the file: App_Start\WebApiConfig.cs add a second route template named MobilizerAPI</li>
+        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/WebApiConfig.cs.txt', 'WebApiConfigID')">Click here to see the source code</a></p>
+        <p><pre id="WebApiConfigID" class="prettyprint"></pre></p>
         <li>Make the following changes to your Web.config file</li>
         <ul>
             <p>Copy the Forerunner specific

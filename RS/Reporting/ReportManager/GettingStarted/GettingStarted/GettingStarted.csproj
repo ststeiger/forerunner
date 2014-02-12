@@ -390,6 +390,7 @@
     <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
     <Content Include="Bundles\AccountController.cs.bundle" />
+    <Content Include="Bundles\WebApiConfig.cs.bundle" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />

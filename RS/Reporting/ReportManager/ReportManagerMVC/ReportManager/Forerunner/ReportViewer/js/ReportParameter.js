@@ -1050,6 +1050,8 @@ $(function () {
                 });
             }
 
+            if (param.State === "HasOutstandingDependencies") disabled = true;
+
             return disabled;
         },
         refreshParameters: function (savedParams) {

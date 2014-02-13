@@ -6564,7 +6564,11 @@ $(function () {
                         }
                     } else {
                         $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                        if (paramDefinition.ValidValues !== "") {
+                        if (paramDefinition.Nullable && savedParam.Value === null) {
+                            var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                            if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                                $cb.trigger("click");
+                        } else if (paramDefinition.ValidValues !== "") {
                             me._setSelectedIndex($control, savedParam.Value);
                         } else if (paramDefinition.Type === "Boolean") {
                             me._setRadioButton($control, savedParam.Value);
@@ -7334,9 +7338,6 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.change(function () { me.refreshParameters(); });
-                    //if dependence control don't have any value and not allow blank, then disabled current one
-                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
-                        disabled = true;
                 });
             }
 

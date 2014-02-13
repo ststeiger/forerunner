@@ -507,7 +507,8 @@ $(function () {
             
             RIContext.$HTMLParent.attr("Style", Style);
             RIContext.$HTMLParent.addClass("fr-r-rT");
-            
+            Style = "";
+
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).IsToggleParent === true || RIContext.CurrObj.Elements.NonSharedElements.IsToggleParent === true) {
                 var $Drilldown = $("<div/>");
                 $Drilldown.attr("id", RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
@@ -537,19 +538,22 @@ $(function () {
                     Direction = sortDirection.asc;
                 }
                 else
-                    $Sort.attr("class", "fr-render-sort-unsorted");
+                    $Sort.attr("class", "fr-render-sort-unsorted");                
 
                 $Sort.on("click", { Viewer: RIContext.RS, SortID: RIContext.CurrObj.Elements.NonSharedElements.UniqueName, Direction: Direction },
                     function (e) {
                         e.data.Viewer.sort(e.data.Direction, e.data.SortID, !(e.shiftKey));
                     });
+
+                //subtract out the sort image cell
+                Style += "width:" + (me._getWidth(RIContext.CurrLocation.Width) - 6) + "mm;";
                 RIContext.$HTMLParent.append($Sort);
             }
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $TextObj);
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($TextObj, RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
 
-            Style = "";            
+                     
             
             var dirClass =me._getTextDirection(RIContext.CurrObj.Elements);
             if (dirClass !== "") {
@@ -561,8 +565,7 @@ $(function () {
                 $TextObj.addClass(dirClass);
             }
             else {
-                //Needs to be 100% to handle center align
-                //Style += "width:100%;height:100%;";
+                //Needs to be 100% to handle center align                
                 $TextObj.addClass("fr-r-fS");
             }
                
@@ -575,7 +578,6 @@ $(function () {
                     if (RIContext.CurrObj.Elements.NonSharedElements.TypeCode && (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).TextAlign === 0 || me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Style.TextAlign === 0)) {
                         Style += "text-align:" + me._getTextAlign(0, RIContext.CurrObj.Elements.NonSharedElements) + ";";
                     }
-                    Style += "display:table-cell;";
                 }
                 else {
                     $TextObj.html("&nbsp");
@@ -588,8 +590,7 @@ $(function () {
                 var LowIndex = null;
                 var ParentName = {};
                 var ParagraphContainer = {};
-                ParagraphContainer.Root = "";
-                //Style += "float: right;";  //fixed padding problem in table cells
+                ParagraphContainer.Root = "";                
                 Style += me._getElementsTextStyle(RIContext.CurrObj.Elements);
                 //Build paragraph tree
     
@@ -621,7 +622,7 @@ $(function () {
 
             //Make room for the sort image
             if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
-                $TextObj.css("padding-right", "15px");
+               // $TextObj.css("padding-right", "15px");
             }
             //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
            

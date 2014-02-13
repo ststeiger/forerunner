@@ -6425,6 +6425,7 @@ $(function () {
             var $eleBorder = $(".fr-param-element-border", me.$params);
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
+                me._parameterDefinitions[param.Name].ValidatorAttrs = [];
                 if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
                     $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                     me.$numVisibleParams += 1;
@@ -6668,10 +6669,12 @@ $(function () {
             if ((param.Nullable === false || !me._isNullChecked($control)) && param.AllowBlank === false) {
                 $control.attr("required", "true").watermark(me.options.$reportViewer.locData.paramPane.required, {useNative : false, className: "fr-param-watermark" });
                 $control.addClass("fr-param-required");
+                me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
             } else if (param.MultiValue) {
                 if (param.ValidValues || (!param.ValidValues && param.AllowBlank)) {
                     $control.attr("required", "true");
                     $control.addClass("fr-param-required");
+                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("required");
                 }
             }
             $control.attr("ErrorMessage", param.ErrorMessage);
@@ -6680,7 +6683,8 @@ $(function () {
             var me = this;
             
             if (param.Nullable === true) {
-                var $paramControl = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") : $control;
+                $control = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") :
+                    param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
                 var $nullableSpan = new $("<Span />");
 
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
@@ -6691,21 +6695,27 @@ $(function () {
                 $checkbox.on("click", function () {
                     if ($checkbox.attr("checked") === "checked") {
                         $checkbox.removeAttr("checked");
-                        if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $paramControl).removeAttr("disabled").attr("required", "true");
-                        } else {
-                            $paramControl.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
-                            if ($paramControl.attr("allowblank") !== "true") {
-                                $paramControl.attr("required", "true");
-                            }
+                        $control.removeAttr("disabled").removeClass("fr-param-disable").addClass("fr-param-enable");
+                        //add validate arrtibutes to control when uncheck null checkbox
+                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                            $control.attr(attribute, "true");
+                        });
+
+                        if (param.Type === "DateTime") {
+                            $control.datepicker("enable");
                         }
                     }
                     else {
                         $checkbox.attr("checked", "true");
-                        if (param.Type === "Boolean") {
-                            $(".fr-paramname-" + param.Name, $control).removeAttr("required").attr("disabled", "true");
-                        } else {
-                            $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable").removeAttr("required");
+                        $control.attr("disabled", "true").removeClass("fr-param-enable").addClass("fr-param-disable");
+                        //remove validate arrtibutes
+                        $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
+                            $control.removeAttr(attribute);
+                        });
+
+                        if (param.Type === "DateTime") {
+                            //set delay to 100 since datepicker need time to generate image for the first time
+                            setTimeout(function () { $control.datepicker("disable"); }, 100);
                         }
                     }
                 });
@@ -6798,6 +6808,7 @@ $(function () {
                         },
                     });
                     $control.attr("formattedDate", "true");
+                    me._parameterDefinitions[param.Name].ValidatorAttrs.push("formattedDate");
 
                     if (predefinedValue)
                         $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue) );

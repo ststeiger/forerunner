@@ -1,0 +1,42 @@
+﻿@{
+  ViewBag.Title = "Report Selector Sample";
+  Layout = "../Shared/_SamplesLayout.cshtml";
+}
+
+@section styles {
+  <style>
+    body { background-color: rgb(210, 223, 237); }
+    h2 { text-align: center; }
+
+    .sample-container { background-color: rgb(210, 223, 237); margin: 10px 10px 10px 10px; }
+    .report-list-cell { vertical-align: top; font-size: 14pt;}
+    .report-list-container { margin-right: 10px; background-color: #dddddd; box-shadow: 0 0 7px #545454; min-width: 354px; max-width: 354px; overflow-x: hidden; }
+    .report-list-catalog-container { border: 1px solid #8c9eba; background: #5e96cf; background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); cursor: pointer; }
+      .report-list-catalog-container:hover { background: #efefef; }
+    .report-list-catalog { padding-right:10px; }
+    .report-list-item { list-style-image:url("../../Content/images/reporticon.png"); vertical-align: top; cursor: pointer; }
+      .report-list-item:hover { background: #efefef; }
+    .report-view-cell { vertical-align: top; }
+    .report-view-container { background-color: white; box-shadow: 0 0 7px #545454; margin: 0 10px 10px 0;}
+  </style>
+}
+
+@section scripts {
+  <script type="text/javascript" src="~/Scripts/ReportSelector.js"></script>
+}
+
+<h2>Report Selector Sample</h2>
+
+<div class="sample-container">
+  <table>
+    <tbody>
+      <tr>
+        <td class="report-list-cell">
+          <div class="report-list-container"></div>
+          </td>
+        <td class="report-view-cell">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -158,12 +158,16 @@
     <Content Include="Bundles\ReportExplorerEZ.cshtml.txt">
       <DependentUpon>ReportExplorerEZ.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\ReportSelector.cshtml.txt">
+      <DependentUpon>ReportSelector.cshtml.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
       <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
     </Content>
     <Content Include="Bundles\_SamplesLayout.cshtml.txt">
       <DependentUpon>_SamplesLayout.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Content\images\reporticon.png" />
     <Content Include="Content\images\MyHome.png" />
     <Content Include="Forerunner\Bundles\Forerunner-all.css" />
     <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
@@ -275,6 +279,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\ReportSelector.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -294,7 +299,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -336,6 +340,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bundles\Dashboard.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Samples\ReportSelector.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\ReportSelector.cshtml.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\ReportSelector.js.bundle" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

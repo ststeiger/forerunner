@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle minify="false" runOnBuild="true" output="ReportSelector.js.txt">
+  <file>/Scripts/ReportSelector.js</file>
+</bundle>

@@ -39,5 +39,9 @@ namespace SDKSamples.Controllers
         {
             return View();
         }
+        public ActionResult ReportSelector()
+        {
+            return View();
+        }
     }
 }

@@ -23,10 +23,10 @@
 <table>
     <tr>
         <td>
-            <div id="Report1" />
+            <div id="Report1" style="min-width:300px;min-height:300px;" />
         </td>
         <td>
-            <div id="Report2" />
+            <div id="Report2" style="min-width:300px;min-height:300px;"/>
         </td>
     </tr>
     <tr>

@@ -227,14 +227,6 @@ $(function () {
             me._submittedParamsList = paramList;
         },
 
-        _setNullCheckList:function(){
-            var me = this;
-            
-            $.each(me.element.find(".fr-param-checkbox"), function (index, nullCheck) {
-                me._parameterDefinitions[nullCheck.name].nullCheckStatus = me._isNullChecked(nullCheck);
-            });
-        },
-
         _submitForm: function (pageNum) {
             var me = this;
             me._closeAllDropdown();
@@ -248,7 +240,6 @@ $(function () {
             if (paramList) {
                 me.options.$reportViewer.loadReportWithNewParameters(paramList, pageNum);
                 me._submittedParamsList = paramList;
-                me._setNullCheckList();
                 me._trigger(events.submit);
             }
             me._hasPostedBackWithoutSubmitForm = false;
@@ -290,18 +281,18 @@ $(function () {
                         }
                     } else {
                         $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                        if (paramDefinition.ValidValues !== "") {
+                        // Only non-multi-value parameters can be nullable.
+                        if (paramDefinition.Nullable && savedParam.Value === null) {
+                            var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                            if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                                $cb.trigger("click");
+                        } else if (paramDefinition.ValidValues !== "") {
                             me._setSelectedIndex($control, savedParam.Value);
                         } else if (paramDefinition.Type === "Boolean") {
                             me._setRadioButton($control, savedParam.Value);
                         } else {
                             $control.val(savedParam.Value);
                         }
-                    }
-
-                    if (paramDefinition.Nullable === true && me._isNullChecked(paramDefinition.Name) !== paramDefinition.nullCheckStatus) {
-                        var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                        $cb.trigger("click");
                     }
                 }
             }
@@ -486,7 +477,7 @@ $(function () {
                 var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
                     "' datatype='" + param.Type + "' />");
                 if (dependenceDisable) {
-                    me._disabledSubSequenceControl($control);
+                    $radioItem.attr("disabled", "true");
                 }
                 else {
                     me._getParameterControlProperty(param, $radioItem);
@@ -1094,8 +1085,7 @@ $(function () {
             }
         },
         _isNullChecked: function (param) {
-            var paramName = typeof param === "string" ? param : param.name;
-            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + paramName + "']").first();
+            var $cb = $(".fr-param-checkbox", this.$params).filter("[name*='" + param.name + "']").first();
             return $cb.length !== 0 && $cb.attr("checked") === "checked";
         },
         _isParamNullable: function (param) {
@@ -1195,11 +1185,10 @@ $(function () {
                 $.each(param.Dependencies, function (index, dependence) {
                     var $targetElement = $(".fr-paramname-" + dependence, me.$params);
                     $targetElement.on("change", function () { me.refreshParameters(); });
-                    //if dependence control don't have any value and not allow blank, then disabled current one
-                    if ($targetElement.attr("allowblank") === "false" && $targetElement.attr("allowblank") === "false" && $targetElement.val() === "")
-                        disabled = true;
                 });
             }
+
+            if (param.State === "HasOutstandingDependencies") disabled = true;
 
             return disabled;
         },

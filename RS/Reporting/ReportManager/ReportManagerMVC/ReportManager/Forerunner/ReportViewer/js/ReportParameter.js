@@ -92,7 +92,8 @@ $(function () {
          * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
          * @param {String} data - original data get from server client
          * @param {boolean} submitForm - submit form when parameters are satisfied.
-         * @param {boolean} Whether to make parameter area visible.
+         * @param {int} pageNum - Current page number.
+         * @param {boolean} renderParamArea - Whether to make parameter area visible.
          */
         updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
@@ -122,7 +123,7 @@ $(function () {
          * @param {String} data - original data get from server client
          * @param {int} pageNum - current page num
          * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
-         * @param {boolean} Whether to make parameter area visible.
+         * @param {boolean} renderParamArea - Whether to make parameter area visible.
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;

@@ -161,7 +161,7 @@
                                           <Paragraph>
                                             <TextRuns>
                                               <TextRun>
-                                                <Value>=Fields!CategoryName.Value</Value>
+                                                <Value>=Fields!CategoryName.Value + "asdasdasdasdasd"</Value>
                                                 <Style>
                                                   <FontFamily>Tahoma</FontFamily>
                                                   <FontWeight>Bold</FontWeight>

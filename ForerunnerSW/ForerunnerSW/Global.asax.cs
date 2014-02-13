@@ -25,10 +25,17 @@ namespace ForerunnerSW
         }
         protected void Application_BeginRequest()
         {
-            if (!Request.IsSecureConnection && Request.Url.AbsoluteUri.IndexOf("localhost") <0)
+
+            if (Request.Url.AbsoluteUri.IndexOf("/Sample", StringComparison.CurrentCultureIgnoreCase) > 0)
             {
-                Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+                if (Request.IsSecureConnection)
+                    Response.Redirect(Request.Url.AbsoluteUri.Replace("https://", "http://"));
             }
+            else if (!Request.IsSecureConnection && Request.Url.AbsoluteUri.IndexOf("localhost") < 0)
+                Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
+            
+           
+            
         }
     }
 

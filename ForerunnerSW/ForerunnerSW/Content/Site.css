@@ -23,7 +23,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .Footer{background-color:#333333;width:100%;color:white;min-height:100px;}
 
 .FooterContent{float:left;padding-top:20px;padding-right:10px;}
-.Navbar {display:inline-block; margin-left:50px;}
+.Navbar {display:inline-block; }
 .Navbar a{padding:8px;}
 .Navbar ul{-webkit-padding-start: 0px;-moz-padding-start: 0px;-ms-padding-start: 0px;list-style:none;padding:0;list-style-type:none;}
 .Navitem{line-height: 30px;float:right; }

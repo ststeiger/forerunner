@@ -82,6 +82,7 @@ if ($("#register")) {
 }
 
 
-var page = $(document).attr("title");
-$("#"+page).addClass("TopNavSelected");
+//var page = $(document).attr("title");
+//if ($("#"+page))
+//    $("#"+page).addClass("TopNavSelected");
 

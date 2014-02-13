@@ -161,6 +161,12 @@
     <Content Include="Bundles\ReportSelector.cshtml.txt">
       <DependentUpon>ReportSelector.cshtml.bundle</DependentUpon>
     </Content>
+    <Content Include="Bundles\ReportSelector.js.min.txt">
+      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Bundles\ReportSelector.js.txt">
+      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
+    </Content>
     <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
       <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
     </Content>
@@ -351,6 +357,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bundles\ReportSelector.js.bundle" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bundles\ReportSelector.js.min.txt.map">
+      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

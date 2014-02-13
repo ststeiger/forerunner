@@ -142,7 +142,7 @@
     "nextText":"próximo",
     "currentText":"hoy",
     "weekHeader":"sem",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

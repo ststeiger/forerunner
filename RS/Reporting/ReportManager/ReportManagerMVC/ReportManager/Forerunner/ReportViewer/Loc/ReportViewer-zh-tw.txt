@@ -141,7 +141,7 @@
     "nextText":"下月",
     "currentText":"今天",
     "weekHeader":"周",
-    "dateFormat":"yy/mm/dd",
+    "dateFormat":"yy-mm-dd",
     "firstDay":1,
     "isRTL":false,
     "showMonthAfterYear":true,

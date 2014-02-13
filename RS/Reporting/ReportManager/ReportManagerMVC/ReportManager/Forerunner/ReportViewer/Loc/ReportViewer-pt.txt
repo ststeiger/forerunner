@@ -141,7 +141,7 @@
     "nextText":"próximo",
     "currentText":"hoje",
     "weekHeader":"Wk",
-    "dateFormat":"dd/mm/aa",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

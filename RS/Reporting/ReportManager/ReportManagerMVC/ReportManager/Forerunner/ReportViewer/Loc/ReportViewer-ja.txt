@@ -141,7 +141,7 @@
     "nextText":"次",
     "currentText":"今日",
     "weekHeader":"週",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"yy-mm-dd",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

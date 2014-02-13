@@ -206,7 +206,7 @@ $(function () {
             me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
-                $('.fr-report-explorer', me.element).addClass(me.colorOverrideSettings.explorer);
+                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -251,7 +251,7 @@ $(function () {
                     return;
                 }
                 for (var key in me.options.explorerSettings.CustomColors) {
-                    if (decodedPath.indexOf(key, 0) == 0) {
+                    if (decodedPath.indexOf(key, 0) === 0) {
                         me.colorOverrideSettings = me.options.explorerSettings.CustomColors[key];
                         return;
                     }

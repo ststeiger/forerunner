@@ -63,7 +63,7 @@ $(function () {
             $appContainer: null,
             parameterModel: null,
             savePosition: null,
-            viewerID: Math.floor((Math.random()*100)+1),
+            viewerID: null,
         },
 
         _destroy: function () {
@@ -111,7 +111,7 @@ $(function () {
             me.paramDefs = null;
             me.credentialDefs = null;
             me.datasourceCredentials = null;
-            me.viewerID = me.options.viewerID;
+            me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -4404,7 +4404,7 @@ $(function () {
             me.element.html("<div class='fr-report-explorer fr-core-widget'>" +
                                 "</div>");
             if (me.colorOverrideSettings && me.colorOverrideSettings.explorer) {
-                $('.fr-report-explorer', me.element).addClass(me.colorOverrideSettings.explorer);
+                $(".fr-report-explorer", me.element).addClass(me.colorOverrideSettings.explorer);
             }
             me._renderPCView(catalogItems);
             if (me.$selectedItem) {
@@ -4449,7 +4449,7 @@ $(function () {
                     return;
                 }
                 for (var key in me.options.explorerSettings.CustomColors) {
-                    if (decodedPath.indexOf(key, 0) == 0) {
+                    if (decodedPath.indexOf(key, 0) === 0) {
                         me.colorOverrideSettings = me.options.explorerSettings.CustomColors[key];
                         return;
                     }
@@ -7005,6 +7005,10 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.attr(attribute, "true");
                         });
+
+                        if (param.Type === "DateTime") {
+                            $control.datepicker("enable");
+                        }
                     }
                     else {
                         $checkbox.attr("checked", "true");
@@ -7014,6 +7018,11 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.removeAttr(attribute);
                         });
+
+                        if (param.Type === "DateTime") {
+                            //set delay to 100 since datepicker need time to generate image for the first time
+                            setTimeout(function () { $control.datepicker("disable"); }, 100);
+                        }
                     }
                 });
 
@@ -7250,7 +7259,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].label) + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");

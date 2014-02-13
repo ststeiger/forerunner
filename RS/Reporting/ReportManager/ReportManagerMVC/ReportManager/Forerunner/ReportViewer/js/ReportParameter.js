@@ -428,6 +428,10 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.attr(attribute, "true");
                         });
+
+                        if (param.Type === "DateTime") {
+                            $control.datepicker("enable");
+                        }
                     }
                     else {
                         $checkbox.attr("checked", "true");
@@ -437,6 +441,11 @@ $(function () {
                         $.each(me._parameterDefinitions[param.Name].ValidatorAttrs, function (index, attribute) {
                             $control.removeAttr(attribute);
                         });
+
+                        if (param.Type === "DateTime") {
+                            //set delay to 100 since datepicker need time to generate image for the first time
+                            setTimeout(function () { $control.datepicker("disable"); }, 100);
+                        }
                     }
                 });
 
@@ -673,7 +682,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].label) + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");

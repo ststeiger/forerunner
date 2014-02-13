@@ -141,7 +141,7 @@
     "nextText":"Næsta",
     "currentText":"í dag",
     "weekHeader":"WK",
-    "dateFormat":"mm / dd / yy",
+    "dateFormat":"dd.mm.yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,

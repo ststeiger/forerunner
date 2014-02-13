@@ -1148,7 +1148,7 @@ $(function () {
 
             if (useSavedLocation === true) {
                 top = me.savedTop;
-                left = me.savedLeft;
+                left = me.savedLeft();
             }
             else {
                 top = $(window).scrollTop();

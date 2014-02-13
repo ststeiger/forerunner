@@ -6746,7 +6746,7 @@ $(function () {
                 var $radioItem = new $("<input type='radio' class='fr-param fr-param-radio fr-paramname-" + param.Name + "' name='" + param.Name + "' value='" + radioValues[i].value +
                     "' datatype='" + param.Type + "' />");
                 if (dependenceDisable) {
-                    me._disabledSubSequenceControl($control);
+                    $radioItem.attr("disabled", true);
                 }
                 else {
                     me._getParameterControlProperty(param, $radioItem);

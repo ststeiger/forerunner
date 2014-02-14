@@ -3,6 +3,14 @@
     var reportManagerAPI = forerunner.config.forerunnerAPIBase() + "ReportManager/";
     var $reportListContainer = null;
 
+    // getItems will return back an array of CatalogItem objects where:
+    //
+    // var = CatalogItem {
+    //          ID: string,     - GUID
+    //          Name: string,   - Item Name
+    //          Path: string,   - Item Path
+    //          Type: number,   - itemType (see below)
+    // }
     var getItems = function (view, path) {
         var me = this;
         var items = null;
@@ -27,6 +35,7 @@
         return items;
     };
 
+    // itemType is the number returned in the CatalogItem.Type member
     var itemType = {
         unknown: 0,
         folder: 1,
@@ -38,6 +47,7 @@
         site: 7
     };
 
+    // render will add the ui elements for either a folder or report item type.
     var render = function ($element, path) {
         var items = getItems(view, path);
         $.each(items, function (index, item) {
@@ -55,6 +65,8 @@
         });
     }
 
+    // onClickFolder will toggle the visibility of the individual report items
+    // within the given folder. It will then remove any existing report.
     var onClickFolder = function (e) {
         // Get the catalog item from the event data
         var item = e.data;
@@ -82,6 +94,8 @@
         $("#reportViewID").remove();
     };
 
+    // onClickReport will remove any existing report and create a new report viewer for
+    // the given report path.
     var onClickReport = function (e) {
         // Get the report item from the event data
         var item = e.data;
@@ -103,6 +117,8 @@
         });
     };
 
+    // Once the document has loaded and is ready, we will render the top level catalogs. The 
+    // "/" is the root path.
     $(document).ready(function () {
 
         $reportListContainer = $(".report-list-container");

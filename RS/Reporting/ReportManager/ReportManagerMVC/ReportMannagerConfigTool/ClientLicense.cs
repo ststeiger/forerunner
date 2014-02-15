@@ -106,16 +106,28 @@ namespace ForerunnerLicense
                 Logger.Trace(LogType.Info, "ClientLicense.Load  Getting MobV1Key.");
                 RegistryKey forerunnerswKey ;
                 RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software);
-          
-                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);
-                if (wow6432NodeKey == null)
-                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                RegistryKey wow6432NodeKey = null;
+                bool Is64Bit;
+               
+                //See if 32 or 64 bit process
+                if (IntPtr.Size == 8)
+                    Is64Bit = true;
                 else
+                    Is64Bit = false;
+
+                //If 64 get the 3264 node
+                if (Is64Bit)
+                {
+                    wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);    
                     forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey);
+                }
+                else
+                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                    
 
                 if (forerunnerswKey == null)
                 {
-                    if (wow6432NodeKey == null)
+                    if (!Is64Bit)
                     {
                         softwareKey = Registry.LocalMachine.OpenSubKey(software, true);
                         forerunnerswKey = softwareKey.CreateSubKey(forerunnerKey);

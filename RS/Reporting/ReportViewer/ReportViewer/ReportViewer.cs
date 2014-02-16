@@ -105,7 +105,7 @@ namespace Forerunner.SSRS.Viewer
                 
             }
 #if DEBUG 
-            this.ServerRendering = false;
+            ReportViewer.ServerRendering = false;
             //this.MHTMLRendering = false;
 #endif
             ReportViewer.checkedServerRendering = true;

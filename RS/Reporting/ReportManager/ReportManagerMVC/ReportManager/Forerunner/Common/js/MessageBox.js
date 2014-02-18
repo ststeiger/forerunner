@@ -18,10 +18,11 @@ $(function () {
      *
      * @namespace $.forerunner.messageBox
      * @prop {object} options - The options for Message Box
-     * @prop {String} options.msg - The messgae to display
+     * @prop {object} options.$appContainer - The app container that messageBox belong to
+     *
      * @example
-     * $("#messageBoxId").messageBox({
-        msg: "Display this text"
+     * $msgBox.messageBox({ 
+     *    $appContainer: $appContainer 
      * });
      */
     $.widget(widgets.getFullname(widgets.messageBox), {
@@ -59,7 +60,11 @@ $(function () {
             });
         },
         /**
+         * Open message box dialog
+         *
          * @function $.forerunner.messageBox#openDialog
+         * @param {string} msg - Message to show
+         * @param {string} caption - Message box dialog caption
          */
         openDialog: function (msg, caption) {
             var me = this;
@@ -72,6 +77,8 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
+         * Close current message box
+         *
          * @function $.forerunner.messageBox#closeDialog
          */
         closeDialog: function () {

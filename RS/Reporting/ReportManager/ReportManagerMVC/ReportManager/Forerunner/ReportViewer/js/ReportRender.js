@@ -730,6 +730,8 @@ $(function () {
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
                 Url += "&" + me.options.renderTime;
+                if (me.options.reportViewer.options.rsInstance)
+                    Url += "&instance=" + me.options.reportViewer.options.rsInstance;
                 me.imageList[ImageName] = Url;
             }
 

@@ -43,7 +43,8 @@ $(function () {
             isReportManager: false,
             isFullScreen: true,
             userSettings: null,
-            savedParameters: null
+            savedParameters: null,
+            rsInstance: null,
         },
         _render: function () {
             var me = this;
@@ -82,7 +83,8 @@ $(function () {
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
                 savedParameters: me.options.savedParameters,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                rsInstance: me.options.rsInstance,
             });
 
             initializer.render();

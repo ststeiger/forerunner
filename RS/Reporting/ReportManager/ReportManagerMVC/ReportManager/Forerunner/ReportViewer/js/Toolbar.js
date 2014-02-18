@@ -21,7 +21,7 @@ $(function () {
      * Toobar widget used by the reportViewer
      *
      * @namespace $.forerunner.toolbar
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for toolbar
      * @prop {Object} options.$reportViewer - The report viewer widget
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example

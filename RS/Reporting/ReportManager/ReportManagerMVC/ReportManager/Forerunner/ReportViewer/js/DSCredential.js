@@ -15,17 +15,26 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dsCredential = locData.dsCredential;
     /**
-   * Widget used to show datasource credential dialog
-   *
-   * @namespace $.forerunner.dsCredemtial
-   */
+     * Widget used to manage report datasource credential
+     *
+     * @namespace $.forerunner.dsCredemtial
+     * @prop {Object} options - The options for dsCredential
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     * $("#dsCredential").dsCredential({
+     *  $appContainer: me.$appContainer, 
+     *  $reportViewer: $viewer
+     * });
+    */
     $.widget(widgets.getFullname(widgets.dsCredential), {
         options: {
             $reportViewer: null,
             $appContainer: null
         },
         _credentialData: null,
-        create: function () {
+        _create: function () {
         },
         _init: function () {
         },
@@ -137,10 +146,22 @@ $(function () {
                 me.element.find(".fr-dsc-label-error").removeClass("fr-dsc-label-error");
             }
         },
+        /**
+         * Open datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Create datasource credential dialog 
+         *
+         * @function $.forerunner.dsCredential#writeDialog
+         *
+         * @param {Object} credentials - Report service returned datasource credential data
+         */
         writeDialog: function (credentials) {
             var me = this;
             me._initBody();
@@ -150,10 +171,23 @@ $(function () {
                 me._createRows(me._credentialData);
             }
         },
+        /**
+         * Close datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Reset datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#resetSavedCredential
+         *
+         * @param {Object} credentials - Datasource credential data
+         * @param {Object} savedCredential - Widget saved datasource credential
+         */
         resetSavedCredential: function (credentials, savedCredential) {
             var me = this;
 
@@ -175,6 +209,13 @@ $(function () {
             var me = this;
             me.element.find(".fr-dsc-text-input").val("");
         },
+        /**
+         * Get user input credential JSON string 
+         *
+         * @function $.forerunner.dsCredential#getCredentialList
+         *
+         * @return {String} If form valid return credential JSON string, if not return null
+         */
         getCredentialList: function () {
             var me = this;
             if (me.$form.valid()) {
@@ -218,6 +259,11 @@ $(function () {
                 digits: error.digits
             });
         },
+        /**
+         * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.dsCredential#destroy
+         */
         destroy: function () {
             var me = this;
             me._credentialData = null;

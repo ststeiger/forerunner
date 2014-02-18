@@ -27,19 +27,25 @@ $(function () {
     }
 
     /**
-     * The main toobar used for the reportViewer
+     * Widget used to view a report
      *
      * @namespace $.forerunner.reportViewer
-     * @prop {object} options - The options for reportViewer
+     * @prop {Object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
      * @prop {String} options.reportPath - Path to the specific report
-     * @prop {String} options.pageNum - Starting page number
-     * @prop {String} options.pingInterval - Interval to ping the server. Used to keep the sessions active
-     * @prop {String} options.toolbarHeight - Height of the toolbar.
-     * @prop {String} options.pageNavArea - jQuery selector object that will the page navigation widget
-     * @prop {String} options.paramArea - jQuery selector object that defineds the report parameter widget
-     * @prop {String} options.DocMapArea - jQuery selector object that defineds the Document Map widget
+     * @prop {Integer} options.pageNum - Starting page number
+     * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
+     * @prop {Number} options.toolbarHeight - Height of the toolbar.
+     * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
+     * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
+     * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
+     * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
+     * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
+     * @prop {Object} options.$appContainer - Report container
+     * @prop {Object} options.parameterModel - Parameter model
+     * @prop {Object} options.savePosition - Saved report page scroll position 
+     * @prop {String} options.viewerID - Current report viewer id.
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -139,71 +145,90 @@ $(function () {
             }
         },
         /**
+         * Get current user settings
+         *
          * @function $.forerunner.reportViewer#getUserSettings
-         * @return {Object} Current user settings
+         * @return {Object} - Current user settings
          */
         getUserSettings: function () {
             return this.options.userSettings;
         },
         /**
+         * Get current page number
+         *
          * @function $.forerunner.reportViewer#getCurPage
-         * @return {int} Current page number
+         * @return {Integer} - Current page number
          */
         getCurPage: function () {
             var me = this;
             return me.curPage;
         },
         /**
+         * Get current number of pages
+         *
          * @function $.forerunner.reportViewer#getNumPages
-         * @return {int} Current number of pages
+         * @return {Integer} - Current number of pages
          */
         getNumPages: function () {
             var me = this;
             return me.numPages;
         },
         /**
+         * Get report viewer API path
+         *
          * @function $.forerunner.reportViewer#getReportViewerAPI
-         * @return {String} Path to the report viewer API
+         * @return {String} - Path to the report viewer API
          */
         getReportViewerAPI: function () {
             var me = this;
             return me.options.reportViewerAPI;
         },
         /**
+         * Get current report path
+         *
          * @function $.forerunner.reportViewer#getReportPath
-         * @return {String} Path to current report path
+         * @return {String} - Path to current report path
          */
         getReportPath: function () {
             var me = this;
             return me.options.reportPath;
         },
         /**
+         * Get current report session ID
+         *
          * @function $.forerunner.reportViewer#getSessionID
-         * @return {String} Session ID
+         * @return {String} - Session ID
          */
         getSessionID: function () {
             var me = this;
             return me.sessionID;
         },
         /**
+         * Get current report contain document map or not
+         *
          * @function $.forerunner.reportViewer#getHasDocMap
-         * @return {bool} true if there is a document map
+         * @return {Boolean} - true if there is a document map
          */
         getHasDocMap: function () {
             var me = this;
             return me.hasDocMap;
         },
         /**
-        * @function $.forerunner.reportViewer#getDataSourceCredential
-        * @return {String} datasource credential if saved datasource credential exist; return null if not
-        */
+         * Get datasource credentials' data
+         *
+         * @function $.forerunner.reportViewer#getDataSourceCredential
+         * @return {Object} datasource credential if saved datasource credential exist; return null if not
+         */
         getDataSourceCredential: function () {
             var me = this;
             return me.datasourceCredentials ? me.datasourceCredentials : null;
         },
         /**
+         * Trigger an report viewer event
+         *
          * @function $.forerunner.reportViewer#triggerEvent
-         * @Triggers an event
+         *
+         * @paran {String} eventName - event name
          */
         triggerEvent: function (eventName) {
             var me = this;
@@ -248,15 +273,18 @@ $(function () {
             var me = this;
             if (me.loadLock === 0) {
                 me.loadLock = 1;
-                setTimeout(function () { me.showLoadingIndictator(me); }, 500);
+                setTimeout(function () { me.showLoadingIndictator(); }, 500);
             }
         },
         /**
          * Shows the loading Indicator
          *
          * @function $.forerunner.reportViewer#showLoadingIndictator
+         *
+         * @param {Boolean} force - Force show loading indicator if it's true
          */
-        showLoadingIndictator: function (me,force) {
+        showLoadingIndictator: function (force) {
+            var me = this;
             if (me.loadLock === 1 || force===true) {
                 var $mainviewport = me.options.$appContainer.find(".fr-layout-mainviewport");
                 $mainviewport.addClass("fr-layout-mainviewport-fullheight");
@@ -280,6 +308,8 @@ $(function () {
          * Removes the loading Indicator
          *
          * @function $.forerunner.reportViewer#removeLoadingIndicator
+         *
+         * @param {Boolean} force - Force remove loading indicator if it's true
          */
         removeLoadingIndicator: function (force) {
             var me = this;
@@ -372,9 +402,15 @@ $(function () {
                 };
             }
         },
+        /**
+         * Set zoom enable or disable
+         *
+         * @function $.forerunner.reportViewer#allowZoom
+         *
+         * @param {Boolean} isEnabled - True to enable zoom, False to disable
+         */
         allowZoom: function (isEnabled) {
             var me = this;
-
 
             if (isEnabled === true){
                 forerunner.device.allowZoom(true);
@@ -387,13 +423,21 @@ $(function () {
             me._trigger(events.allowZoom, null, { isEnabled: isEnabled });
 
         },
-
+        /**
+         * Function execute when input element blur
+         *
+         * @function $.forerunner.reportViewer#onInputBlur
+         */
         onInputBlur: function () {
             var me = this;
             if (me.options.onInputBlur)
                 me.options.onInputBlur();
         },
-
+        /**
+         * Function execute when input element focus
+         *
+         * @function $.forerunner.reportViewer#onInputFocus
+         */
         onInputFocus: function () {
             var me = this;
             if (me.options.onInputFocus)
@@ -401,6 +445,13 @@ $(function () {
         },
 
         _allowSwipe: true,
+        /**
+         * Set swipe enable or disable
+         *
+         * @function $.forerunner.reportViewer#allowSwipe
+         *
+         * @param {Boolean} isEnabled - True to enable swipe, False to disable
+         */
         allowSwipe: function(isEnabled){
             var me = this;
             me._allowSwipe = isEnabled;
@@ -456,9 +507,11 @@ $(function () {
             );
         },
         /**
-         * Refreshes the current report
+         * Refreshes current report
          *
          * @function $.forerunner.reportViewer#refreshReport
+         *
+         * @param {Integer} curPage - Current page number
          */
         refreshReport: function (curPage) {
             // Remove all cached data on the report and re-run
@@ -487,7 +540,8 @@ $(function () {
          * Navigates to the given page
          *
          * @function $.forerunner.reportViewer#navToPage
-         * @param {int} newPageNum - Page number to navigate to
+         *
+         * @param {Ingeter} newPageNum - Page number to navigate to
          */
         navToPage: function (newPageNum) {
             var me = this;
@@ -604,9 +658,6 @@ $(function () {
                 return;
             }
             me._showDocMap();
-            
-            //me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
-
         },
         _cachePages: function (initPage) {
             var me = this;
@@ -627,17 +678,20 @@ $(function () {
         },
 
         /**
-        *  Returns the number of actions in history for the back event
-        *
-        * @function $.forerunner.reportViewer#actionHistoryDepth
-        */
+         * Returns the number of actions in history for the back event
+         *
+         * @function $.forerunner.reportViewer#actionHistoryDepth
+         *
+         * @return {Integer} - Action history length
+         */
         actionHistoryDepth:function(){
             return this.actionHistory.length;
         },
         /**
-         *  Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
+         * Loads and pops the page on the action history stack and triggers a drillBack event or triggers a back event if no action history
          *
          * @function $.forerunner.reportViewer#back
+         *
          * @fires reportviewerdrillback
          * @fires reportviewerback
          * @see forerunner.ssr.constants.events
@@ -705,9 +759,12 @@ $(function () {
             }
         },
         /**
-         * Shows the Page =igation pane
+         * Shows the page navigation pane
          *
          * @function $.forerunner.reportViewer#showNav
+         *
+         * @fires reportviewershowNav
+         * @see forerunner.ssr.constants.events
          */
         showNav: function () {
             var me = this;
@@ -817,10 +874,11 @@ $(function () {
          * Sorts the current report
          *
          * @function $.forerunner.reportViewer#sort
-         * @param {String} direction - sort direction
-         * @param {String} id - sort item id
-         * @param {Boolean} clear - clear existing sort flag
-         * @see forerunner.ssr.constants
+         *
+         * @param {String} direction - Sort direction
+         * @param {String} id - Sort item id
+         * @param {Boolean} clear - Clear existing sort flag
+         * @see forerunner.ssr.constants.sortDirection
          */
         sort: function (direction, id, clear) {
             //Go the other dirction from current
@@ -864,6 +922,11 @@ $(function () {
         },
         
         _isReportContextValid: true,
+        /**
+         * Set isReportContextValid to false
+         *
+         * @function $.forerunner.reportViewer#invalidateReportContext
+         */
         invalidateReportContext : function() {
             this._isReportContextValid = false;
         },
@@ -924,9 +987,10 @@ $(function () {
             }
         },
         /**
-         * Sorts the current report
+         * Toggle specify item of the report
          *
          * @function $.forerunner.reportViewer#toggleItem
+         *
          * @param {String} toggleID - Id of the item to toggle
          */
         toggleItem: function (toggleID) {
@@ -994,6 +1058,7 @@ $(function () {
          * Navigate to the given bookmark
          *
          * @function $.forerunner.reportViewer#navigateBookmark
+         *
          * @param {String} bookmarkID - Id of the bookmark
          */
         navigateBookmark: function (bookmarkID) {
@@ -1035,9 +1100,10 @@ $(function () {
          * Determines if the current report being viewed is the result of a drillthough action
          *
          * @function $.forerunner.reportViewer#isDrillThoughReport
+         *
+         * @return {Boolean} - True if current report is the result of a drillthough action, false else
          */
-        isDrillThoughReport: function()
-        {
+        isDrillThoughReport: function () {
             var me = this;
             if (me.origionalReportPath === me.options.reportPath)
                 return true;
@@ -1048,6 +1114,7 @@ $(function () {
          * Navigate to the given drill through item
          *
          * @function $.forerunner.reportViewer#navigateDrillthrough
+         *
          * @param {String} drillthroughID - Id of the item
          */
         navigateDrillthrough: function (drillthroughID) {
@@ -1108,6 +1175,7 @@ $(function () {
          * Navigate to the Document Map
          *
          * @function $.forerunner.reportViewer#navigateDocumentMap
+         *
          * @param {String} docMapID - Id of the document map
          */
         navigateDocumentMap: function (docMapID) {
@@ -1135,9 +1203,12 @@ $(function () {
             );
         },
         /**
-         * Push the current page onto the action history stack
+         * Push the current page into the action history stack
          *
          * @function $.forerunner.reportViewer#backupCurPage
+         *
+         * @param {Boolean} flushCache - Specify flushCache status
+         * @param {Boolean} useSavedLocation - Whether used saved location
          */
         backupCurPage: function (flushCache,useSavedLocation) {
             var me = this;
@@ -1186,12 +1257,14 @@ $(function () {
             me.scrollTop = top;
         },
         /**
-         * Find the given keyword. Find will always find the first occurance
+         * Find the given keyword. Find will always find the first matched
          *
          * @function $.forerunner.reportViewer#find
+         *
          * @param {String} keyword - Keyword to find
-         * @param {int} startPage - Starting page of the search range
-         * @param {int} endPage - Ending page of the search range
+         * @param {Integer} startPage - Starting page of the search range
+         * @param {Integer} endPage - Ending page of the search range
+         * @param {Boolean} findInNewPage - Find in new page not current
          */
         find: function (keyword, startPage, endPage, findInNewPage) {
             var me = this;
@@ -1234,11 +1307,11 @@ $(function () {
                         if (data.NewPage !== 0) {//keyword exist
                             me.finding = true;
                             if (data.NewPage !== me.getCurPage()) {
-                                me._addSetPageCallback(function () { me.setFindHighlight(keyword); });
+                                me._addSetPageCallback(function () { me._setFindHighlight(keyword); });
                                 me.pages[data.NewPage] = null;
                                 me._loadPage(data.NewPage, false);
                             } else {
-                                me.setFindHighlight(keyword);
+                                me._setFindHighlight(keyword);
                             }
                         }
                         else {//keyword not exist
@@ -1259,12 +1332,6 @@ $(function () {
                 );
             }
         },
-        /**
-         * Find the next occurance of the given keyword
-         *
-         * @function $.forerunner.reportViewer#findNext
-         * @param {String} keyword - Keyword to find
-         */
         _findNext: function (keyword) {
             var me = this;
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
@@ -1300,14 +1367,8 @@ $(function () {
                     me.resetFind();
                 }
             }
-        },
-        /**
-         * Highlights the first matched keyword
-         *
-         * @function $.forerunner.reportViewer#setFindHighlight
-         * @param {String} keyword - Keyword to highlight
-         */
-        setFindHighlight: function (keyword) {
+        },       
+        _setFindHighlight: function (keyword) {
             var me = this;
             me._clearHighLightWord();
             me._highLightWord(me.$reportContainer, keyword);
@@ -1335,6 +1396,7 @@ $(function () {
          * Export the report in the given format
          *
          * @function $.forerunner.reportViewer#exportReport
+         *
          * @param {String} exportType - Export format
          * @see forerunner.ssr.constants
          */
@@ -1345,7 +1407,7 @@ $(function () {
             window.open(url);
         },       
         /**
-         * show print modal dialog, close it if opened
+         * Show print dialog, close it if opened
          *
          * @function $.forerunner.reportViewer#showPrint
          */
@@ -1356,11 +1418,12 @@ $(function () {
             }
         },
         /**
-        * print current reprot in custom PDF format
-        *
-        * @function $.forerunner.reportViewer#printReport         
-        * @param {function} printPropertyList - custom print page layout option
-        */
+         * Print current reprot in PDF format
+         *
+         * @function $.forerunner.reportViewer#printReport
+         *
+         * @param {String} printPropertyList - Page layout option
+         */
         printReport: function (printPropertyList) {
             var me = this;
             me._resetContextIfInvalid();
@@ -1477,10 +1540,11 @@ $(function () {
          * Refresh the parameter using the given list
          *
          * @function $.forerunner.reportViewer#refreshParameters
-         * @param {string} The JSON string for the list of parameters.
-         * @param {boolean} Submit form if the parameters are satisfied.
-         * @param {int} The page to load.  Specify -1 to load the current page.
-         * @param {boolean} Whether to trigger show parameter area event if there are visible parameters.
+         *
+         * @param {String} Parameter list.
+         * @param {Boolean} Submit form if the parameters are satisfied.
+         * @param {Integer} The page to load.  Specify -1 to load the current page.
+         * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
          */
         refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
             var me = this;
@@ -1561,8 +1625,9 @@ $(function () {
          * Load the given report
          *
          * @function $.forerunner.reportViewer#loadReport
+         *
          * @param {String} reportPath - Path to the specific report
-         * @param {int} pageNum - starting page number
+         * @param {Integer} pageNum - Starting page number
          */
         loadReport: function (reportPath, pageNum) {
             var me = this;
@@ -1581,8 +1646,9 @@ $(function () {
          * Load current report with the given parameter list
          *
          * @function $.forerunner.reportViewer#loadReportWithNewParameters
-         * @param {Object} paramList - Paramter list object
-         * @param {int} pageNum - The page to load
+         *
+         * @param {Object} paramList - Parameter list object
+         * @param {Integer} pageNum - The page to load
          */
         loadReportWithNewParameters: function (paramList, pageNum) {
             var me = this;
@@ -1598,6 +1664,7 @@ $(function () {
         * Load current report with the given datasource credential list
         *
         * @function $.forerunner.reportViewer#loadReportWithCustomDSCredential
+        *
         * @param {Object} credentialList - datasource credential list object
         */
         loadReportWithCustomDSCredential: function (credentialList) {
@@ -1826,6 +1893,11 @@ $(function () {
             me._trigger(events.showCredential);
             me.removeLoadingIndicator();
         },
+        /**
+         * Show datasource dialog, close if opened
+         *
+         * @function $.forerunner.reportViewer#showDSCredential
+         */
         showDSCredential: function () {
             var me = this;
             me.$credentialDialog.dsCredential("openDialog");
@@ -2045,6 +2117,11 @@ $(function () {
             }
             me.autoRefreshID = null;
         },
+        /**
+         * Removes the reportViewer functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.dsCredential#destroy
+         */
         destroy: function () {
             var me = this;
 
@@ -3571,7 +3648,7 @@ $(function () {
      * Toobar widget used by the reportViewer
      *
      * @namespace $.forerunner.toolbar
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for toolbar
      * @prop {Object} options.$reportViewer - The report viewer widget
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
@@ -3777,7 +3854,7 @@ $(function () {
      * ToolPane widget used with the reportViewer
      *
      * @namespace $.forerunner.toolPane
-     * @prop {object} options - The options for toolPane
+     * @prop {Object} options - The options for toolPane
      * @prop {Object} options.$reportViewer - The report viewer widget
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolpane)
      * @example
@@ -3965,7 +4042,18 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
-    // Toolbar widget
+    /**
+     * Widget used to show page navigation
+     *
+     * @namespace $.forerunner.pageNav
+     * @prop {Object} options - The options for pageNav
+     * @prop {String} options.$reportViewer - Report viewer widget
+     *
+     * @example
+     * $("#pageNavContainer").pageNav({
+     *  $reportViewer: me.$reportViewer
+     * });
+     */
     $.widget(widgets.getFullname(widgets.pageNav), {
         options: {
             $reportViewer: null
@@ -4045,6 +4133,11 @@ $(function () {
             return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
+        /**
+         * Reset page navigation status
+         * 
+         * @function $.forerunner.pageNav#reset
+         */
         reset: function () {
             var me = this;
             me.element.hide();
@@ -4093,6 +4186,11 @@ $(function () {
                 me._ScrolltoPage();
             }
         },
+        /**
+         * Show page navigation
+         *
+         * @function $.forerunner.pageNav#showNav
+         */
         showNav: function () {
             var me = this;
             if (!me.isRendered) {
@@ -6622,15 +6720,19 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
     /**
-     * report parameter widget used with the reportViewer
+     * Widget used to manage report parameters
      *
      * @namespace $.forerunner.reportParameter
-     * @prop {object} options - The options for report parameter
+     * @prop {Object} options - The options for report parameter
      * @prop {Object} options.$reportViewer - The report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Integer} options.pageNum - Report page number
+     *
      * @example
      * $paramArea.reportParameter({ $reportViewer: this });
      * $("#paramArea").reportParameter({
-     *  $reportViewer: $viewer
+     *  $reportViewer: $viewer,
+     *  $appContainer: $appContainer
 	 * });    
      */
     $.widget(widgets.getFullname(widgets.reportParameter), {
@@ -6683,8 +6785,11 @@ $(function () {
         },
 
         /**
+         * Get number of visible parameters
+         *
          * @function $.forerunner.reportParameter#getNumOfVisibleParameters
-         * @return {int} The number of visible parameters.
+         *
+         * @return {Integer} The number of visible parameters.
          */
         getNumOfVisibleParameters: function () {
             var me = this;
@@ -6696,12 +6801,14 @@ $(function () {
         _parameterDefinitions: {},
         _hasPostedBackWithoutSubmitForm : false,
         /**
+         * Update an existing parameter panel by posting back current selected values to update casacade parameters.
+         *
          * @function $.forerunner.reportParameter#updateParameterPanel
-         * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
-         * @param {String} data - original data get from server client
-         * @param {boolean} submitForm - submit form when parameters are satisfied.
-         * @param {int} pageNum - Current page number.
-         * @param {boolean} renderParamArea - Whether to make parameter area visible.
+         * 
+         * @param {Object} data - Parameter data get from reporting service
+         * @param {Boolean} submitForm - Submit form when parameters are satisfied
+         * @param {Integer} pageNum - Current page number
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible
          */
         updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
@@ -6710,11 +6817,13 @@ $(function () {
         },
 
         /**
+        * Set the parameter panel to the given list
+        *
         * @function $.forerunner.reportParameter#setParametersAndUpdate
-        * @Set the parameter panel to the given list
-        * @param {Object} paramDefs - Parameter definition.
-        * @param {string} paramsList - Parameter List.
-        * @param {int} pageNum - Current page number.
+        * 
+        * @param {Object} paramDefs - Parameter definition data.
+        * @param {String} paramsList - Parameter value list.
+        * @param {Integer} pageNum - Current page number.
         */
         setParametersAndUpdate: function (paramDefs, savedParams, pageNum) {
             var me = this;
@@ -6726,12 +6835,14 @@ $(function () {
 
 
         /**
+         * Write parameter pane with passed definition data
+         *
          * @function $.forerunner.reportParameter#writeParameterPanel
-         * @Generate parameter html code and append to the dom tree
-         * @param {String} data - original data get from server client
-         * @param {int} pageNum - current page num
-         * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
-         * @param {boolean} renderParamArea - Whether to make parameter area visible.
+         *
+         * @param {Object} data - Original parameter data returned from reporting service
+         * @param {Integer} pageNum - Current page number
+         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied.
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible.
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;
@@ -6760,7 +6871,6 @@ $(function () {
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
-            me.resetValidateMessage();
             me.$form.validate({
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
@@ -6830,6 +6940,13 @@ $(function () {
 
         _submittedParamsList: null,
 
+        /**
+         * Set parameters with specify parameter list
+         *
+         * @function $.forerunner.reportParameter#setsubmittedParamsList
+         *
+         * @param {String} paramList - Parameter value list
+         */
         setsubmittedParamsList: function (paramList) {
             var me = this;
             me._submittedParamsList = paramList;
@@ -6853,9 +6970,10 @@ $(function () {
             me._hasPostedBackWithoutSubmitForm = false;
         },
         /**
-         * @function $.forerunner.reportParameter#revertParameters
-         * @Revert any unsubmitted parameters.  Called in two scenario:  when cancelling out from parameter area or 
-         *  before submitting an action when the set of parameters for the session does not match the loaded report.
+         * Revert any unsubmitted parameters, called in two scenario:  when cancelling out from parameter area or 
+         * before submitting an action when the set of parameters for the session does not match the loaded report.
+         *
+         * @function $.forerunner.reportParameter#revertParameters 
          */
         revertParameters: function () {
             var me = this;
@@ -7605,8 +7723,13 @@ $(function () {
             return true;
         },
         /**
+         * Generate parameter value list into string and return
+         *
          * @function $.forerunner.reportParameter#getParamsList
-         * @generate parameter list base on the user input and return
+         *
+         * @param {Boolean} noValid - if not need valid form set noValid = true
+         *
+         * @return {String} - parameter value list
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -7715,44 +7838,9 @@ $(function () {
             }
         },
         /**
-        * @function $.forerunner.reportParameter#resetValidateMessage
-        * @customize jquery.validate message
-        */
-        resetValidateMessage: function () {
-            var me = this;
-            var error = me.options.$reportViewer.locData.validateError;
-            me.extendValidate();
-
-            jQuery.extend(jQuery.validator.messages, {
-                required: error.required,
-                remote: error.remote,
-                email: error.email,
-                url: error.url,
-                date: error.date,
-                dateISO: error.dateISO,
-                number: error.number,
-                digits: error.digits,
-                maxlength: $.validator.format(error.maxlength),
-                minlength: $.validator.format(error.minlength),
-                rangelength: $.validator.format(error.rangelength),
-                range: $.validator.format(error.range),
-                max: $.validator.format(error.max),
-                min: $.validator.format(error.min),
-                autoCompleteDropdown: error.invalid
-            });
-        },
-        extendValidate: function () {
-            //add auto complete dropdown value validata, only allow select from dropdown
-            jQuery.validator.addMethod("autoCompleteDropdown", function (value, element, param) {
-                if ($(element).hasClass("fr-param-autocomplete-error"))
-                    return false;
-                else
-                    return true;
-            });
-        },
-        /**
+        * Remove all parameters from report
+        *
         * @function $.forerunner.reportParameter#removeParameter
-        * @remove parameter element form the dom tree
         */
         removeParameter: function () {
             var me = this;
@@ -7800,6 +7888,13 @@ $(function () {
 
             return disabled;
         },
+        /**
+        * Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied
+        *
+        * @function $.forerunner.reportParameter#refreshParameters
+        *
+        * @param {String} savedParams - Saved parameter value list
+        */
         refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.
@@ -7843,20 +7938,20 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
-/**
-     * documenet map widget used with the reportViewer
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    /**
+     * Widget used to show report documenet map
      *
      * @namespace $.forerunner.reportDocumentMap
-     * @prop {object} options - The options for document map
+     * @prop {Object} options - The options for document map
      * @prop {Object} options.$reportViewer - The report viewer widget     
      * @example
      *   $("#docMap").reportDocumentMap({ 
      *      $reportViewer: $viewer 
      *   });   
      */
-$(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-
     $.widget(widgets.getFullname(widgets.reportDocumentMap), {
         options: {
             $reportViewer: null,
@@ -7867,9 +7962,11 @@ $(function () {
 
         },
         /**
+        * Write document map layout with passed data
+        *
         * @function $.forerunner.reportDocumentMap#write
-        * @Generate document map html code and append to the dom tree
-        * @param {String} docMapData - original data get from server client
+        * 
+        * @param {Object} docMapData - Document map data returned from server
         */
         write: function (docMapData) {
             var me = this;
@@ -8019,6 +8116,19 @@ $(function () {
         },
     }); //$.widget
 
+    /**
+     * Widget used to show print dialog
+     *
+     * @namespace $.forerunner.reportPrint
+     * @prop {Object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
@@ -8091,9 +8201,11 @@ $(function () {
             });
         },
         /**
+         * Set report page layout
+         *
          * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
+         * 
+         * @param {Object} pageLayout - Report page layout data
          */
         setPrint: function (pageLayout) {
             var me = this;
@@ -8232,6 +8344,8 @@ $(function () {
         },
 
         /**
+         * Open print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         openDialog: function () {
@@ -8244,6 +8358,8 @@ $(function () {
             //});
         },
         /**
+         * Close print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         closeDialog: function () {
@@ -8315,6 +8431,11 @@ $(function () {
                 return source;
             }
         },
+        /**
+        * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+        *
+        * @function $.forerunner.dsCredential#destroy
+        */
         destroy: function () {
             var me = this;
             me._printData = null;
@@ -8341,6 +8462,22 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var manageParamSets = locData.manageParamSets;
 
+    /**
+     * Widget used to manage parameter set
+     *
+     * @namespace $.forerunner.manageParamSets
+     * @prop {Object} options - The options for dsCredential
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.model - Parameter model widget instance
+     *
+     * @example
+     * $("#manageParamSetsDialog").manageParamSets({
+     *    $appContainer: me.options.$appContainer,
+     *    $reportViewer: $viewer,
+     *    model: me.parameterModel
+     /  });
+     */
     $.widget(widgets.getFullname(widgets.manageParamSets), {
         options: {
             $reportViewer: null,
@@ -8573,7 +8710,10 @@ $(function () {
             delete me.serverData.parameterSets[id];
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#openDialog
+         * @param {String} parameterList - User saved parameter set
          */
         openDialog: function (parameterList) {
             var me = this;
@@ -8586,7 +8726,9 @@ $(function () {
             }
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
          */
         closeDialog: function () {
             var me = this;
@@ -8996,17 +9138,22 @@ $(function () {
      * @prop {Object} options - The options for reportViewerEZ
      * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
      * @prop {String} options.path - Path of the report
+     * @prop {String} options.jsonPath - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
-     * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
+     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
+     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
+     * @prop {Boolean} options.userSettings - Custom user setting
+     *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
      *  path: path,
      *  navigateTo: me.navigateTo,
      *  historyBack: me.historyBack
-     *  isReportManager: false
+     *  isReportManager: false,
+     *  userSettings: userSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportViewerEZ), $.forerunner.toolBase, {
@@ -9126,17 +9273,26 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var dsCredential = locData.dsCredential;
     /**
-   * Widget used to show datasource credential dialog
-   *
-   * @namespace $.forerunner.dsCredemtial
-   */
+     * Widget used to manage report datasource credential
+     *
+     * @namespace $.forerunner.dsCredemtial
+     * @prop {Object} options - The options for dsCredential
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     * $("#dsCredential").dsCredential({
+     *  $appContainer: me.$appContainer, 
+     *  $reportViewer: $viewer
+     * });
+    */
     $.widget(widgets.getFullname(widgets.dsCredential), {
         options: {
             $reportViewer: null,
             $appContainer: null
         },
         _credentialData: null,
-        create: function () {
+        _create: function () {
         },
         _init: function () {
         },
@@ -9248,10 +9404,22 @@ $(function () {
                 me.element.find(".fr-dsc-label-error").removeClass("fr-dsc-label-error");
             }
         },
+        /**
+         * Open datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#openDialog
+         */
         openDialog: function () {
             var me = this;
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Create datasource credential dialog 
+         *
+         * @function $.forerunner.dsCredential#writeDialog
+         *
+         * @param {Object} credentials - Report service returned datasource credential data
+         */
         writeDialog: function (credentials) {
             var me = this;
             me._initBody();
@@ -9261,10 +9429,23 @@ $(function () {
                 me._createRows(me._credentialData);
             }
         },
+        /**
+         * Close datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#closeDialog
+         */
         closeDialog: function () {
             var me = this;
             forerunner.dialog.closeModalDialog(me.options.$appContainer, me);
         },
+        /**
+         * Reset datasource credential dialog
+         *
+         * @function $.forerunner.dsCredential#resetSavedCredential
+         *
+         * @param {Object} credentials - Datasource credential data
+         * @param {Object} savedCredential - Widget saved datasource credential
+         */
         resetSavedCredential: function (credentials, savedCredential) {
             var me = this;
 
@@ -9286,6 +9467,13 @@ $(function () {
             var me = this;
             me.element.find(".fr-dsc-text-input").val("");
         },
+        /**
+         * Get user input credential JSON string 
+         *
+         * @function $.forerunner.dsCredential#getCredentialList
+         *
+         * @return {String} If form valid return credential JSON string, if not return null
+         */
         getCredentialList: function () {
             var me = this;
             if (me.$form.valid()) {
@@ -9329,6 +9517,11 @@ $(function () {
                 digits: error.digits
             });
         },
+        /**
+         * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+         *
+         * @function $.forerunner.dsCredential#destroy
+         */
         destroy: function () {
             var me = this;
             me._credentialData = null;

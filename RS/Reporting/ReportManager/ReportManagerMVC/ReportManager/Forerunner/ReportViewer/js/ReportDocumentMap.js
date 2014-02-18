@@ -9,20 +9,20 @@ var forerunner = forerunner || {};
 // Forerunner SQL Server Reports
 forerunner.ssr = forerunner.ssr || {};
 
-/**
-     * documenet map widget used with the reportViewer
+$(function () {
+    var widgets = forerunner.ssr.constants.widgets;
+
+    /**
+     * Widget used to show report documenet map
      *
      * @namespace $.forerunner.reportDocumentMap
-     * @prop {object} options - The options for document map
+     * @prop {Object} options - The options for document map
      * @prop {Object} options.$reportViewer - The report viewer widget     
      * @example
      *   $("#docMap").reportDocumentMap({ 
      *      $reportViewer: $viewer 
      *   });   
      */
-$(function () {
-    var widgets = forerunner.ssr.constants.widgets;
-
     $.widget(widgets.getFullname(widgets.reportDocumentMap), {
         options: {
             $reportViewer: null,
@@ -33,9 +33,11 @@ $(function () {
 
         },
         /**
+        * Write document map layout with passed data
+        *
         * @function $.forerunner.reportDocumentMap#write
-        * @Generate document map html code and append to the dom tree
-        * @param {String} docMapData - original data get from server client
+        * 
+        * @param {Object} docMapData - Document map data returned from server
         */
         write: function (docMapData) {
             var me = this;

@@ -1392,17 +1392,50 @@ $(function () {
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
         // Put a check in so that this would not barf for the login page.
         if ($.validator) {
-            // Add custom date validator rule
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var error = locData.validateError;
+
+            //replace error message with custom data
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                remote: error.remote,
+                email: error.email,
+                url: error.url,
+                date: error.date,
+                dateISO: error.dateISO,
+                number: error.number,
+                digits: error.digits,
+                maxlength: $.validator.format(error.maxlength),
+                minlength: $.validator.format(error.minlength),
+                rangelength: $.validator.format(error.rangelength),
+                range: $.validator.format(error.range),
+                max: $.validator.format(error.max),
+                min: $.validator.format(error.min),
+                autoCompleteDropdown: error.invalid
+            });
+            
             var format = locData.datepicker.dateFormat;
             var momentFormat = format.toUpperCase();
             momentFormat = momentFormat.replace("YY", "YYYY");
+
+            // Add custom date validator rule
             $.validator.addMethod(
                 "formattedDate",
                 function (value, element) {
                     return moment(value, momentFormat, true).isValid();
                 },
-                locData.validateError.date
+                error.date
+            );
+
+            $.validator.addMethod(
+                "autoCompleteDropdown",
+                function (value, element, param) {
+                    if ($(element).hasClass("fr-param-autocomplete-error"))
+                        return false;
+                    else
+                        return true;
+                },
+                error.autoCompleteDropdown
             );
         }
     });

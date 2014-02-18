@@ -9,7 +9,18 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
 
-    // Toolbar widget
+    /**
+     * Widget used to show page navigation
+     *
+     * @namespace $.forerunner.pageNav
+     * @prop {Object} options - The options for pageNav
+     * @prop {String} options.$reportViewer - Report viewer widget
+     *
+     * @example
+     * $("#pageNavContainer").pageNav({
+     *  $reportViewer: me.$reportViewer
+     * });
+     */
     $.widget(widgets.getFullname(widgets.pageNav), {
         options: {
             $reportViewer: null
@@ -89,6 +100,11 @@ $(function () {
             return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
+        /**
+         * Reset page navigation status
+         * 
+         * @function $.forerunner.pageNav#reset
+         */
         reset: function () {
             var me = this;
             me.element.hide();
@@ -137,6 +153,11 @@ $(function () {
                 me._ScrolltoPage();
             }
         },
+        /**
+         * Show page navigation
+         *
+         * @function $.forerunner.pageNav#showNav
+         */
         showNav: function () {
             var me = this;
             if (!me.isRendered) {

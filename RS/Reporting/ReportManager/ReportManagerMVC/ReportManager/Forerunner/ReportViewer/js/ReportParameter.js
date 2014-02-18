@@ -14,15 +14,19 @@ $(function () {
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
     /**
-     * report parameter widget used with the reportViewer
+     * Widget used to manage report parameters
      *
      * @namespace $.forerunner.reportParameter
-     * @prop {object} options - The options for report parameter
+     * @prop {Object} options - The options for report parameter
      * @prop {Object} options.$reportViewer - The report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Integer} options.pageNum - Report page number
+     *
      * @example
      * $paramArea.reportParameter({ $reportViewer: this });
      * $("#paramArea").reportParameter({
-     *  $reportViewer: $viewer
+     *  $reportViewer: $viewer,
+     *  $appContainer: $appContainer
 	 * });    
      */
     $.widget(widgets.getFullname(widgets.reportParameter), {
@@ -75,8 +79,11 @@ $(function () {
         },
 
         /**
+         * Get number of visible parameters
+         *
          * @function $.forerunner.reportParameter#getNumOfVisibleParameters
-         * @return {int} The number of visible parameters.
+         *
+         * @return {Integer} The number of visible parameters.
          */
         getNumOfVisibleParameters: function () {
             var me = this;
@@ -88,12 +95,14 @@ $(function () {
         _parameterDefinitions: {},
         _hasPostedBackWithoutSubmitForm : false,
         /**
+         * Update an existing parameter panel by posting back current selected values to update casacade parameters.
+         *
          * @function $.forerunner.reportParameter#updateParameterPanel
-         * @Update an existing parameter panel by posting back current selected values to update casacade parameters.
-         * @param {String} data - original data get from server client
-         * @param {boolean} submitForm - submit form when parameters are satisfied.
-         * @param {int} pageNum - Current page number.
-         * @param {boolean} renderParamArea - Whether to make parameter area visible.
+         * 
+         * @param {Object} data - Parameter data get from reporting service
+         * @param {Boolean} submitForm - Submit form when parameters are satisfied
+         * @param {Integer} pageNum - Current page number
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible
          */
         updateParameterPanel: function (data, submitForm, pageNum, renderParamArea) {
             this.removeParameter();
@@ -102,11 +111,13 @@ $(function () {
         },
 
         /**
+        * Set the parameter panel to the given list
+        *
         * @function $.forerunner.reportParameter#setParametersAndUpdate
-        * @Set the parameter panel to the given list
-        * @param {Object} paramDefs - Parameter definition.
-        * @param {string} paramsList - Parameter List.
-        * @param {int} pageNum - Current page number.
+        * 
+        * @param {Object} paramDefs - Parameter definition data.
+        * @param {String} paramsList - Parameter value list.
+        * @param {Integer} pageNum - Current page number.
         */
         setParametersAndUpdate: function (paramDefs, savedParams, pageNum) {
             var me = this;
@@ -118,12 +129,14 @@ $(function () {
 
 
         /**
+         * Write parameter pane with passed definition data
+         *
          * @function $.forerunner.reportParameter#writeParameterPanel
-         * @Generate parameter html code and append to the dom tree
-         * @param {String} data - original data get from server client
-         * @param {int} pageNum - current page num
-         * @param {boolean} submitForm - whether to submit form if all parameters are satisfied.
-         * @param {boolean} renderParamArea - Whether to make parameter area visible.
+         *
+         * @param {Object} data - Original parameter data returned from reporting service
+         * @param {Integer} pageNum - Current page number
+         * @param {Boolean} submitForm - Whether to submit form if all parameters are satisfied.
+         * @param {Boolean} renderParamArea - Whether to make parameter area visible.
          */
         writeParameterPanel: function (data, pageNum, submitForm, renderParamArea) {
             var me = this;
@@ -152,7 +165,6 @@ $(function () {
             if (me._reportDesignError !== null)
                 me._reportDesignError += me.options.$reportViewer.locData.messages.contactAdmin;
 
-            me.resetValidateMessage();
             me.$form.validate({
                 ignoreTitle: true,
                 errorPlacement: function (error, element) {
@@ -222,6 +234,13 @@ $(function () {
 
         _submittedParamsList: null,
 
+        /**
+         * Set parameters with specify parameter list
+         *
+         * @function $.forerunner.reportParameter#setsubmittedParamsList
+         *
+         * @param {String} paramList - Parameter value list
+         */
         setsubmittedParamsList: function (paramList) {
             var me = this;
             me._submittedParamsList = paramList;
@@ -245,9 +264,10 @@ $(function () {
             me._hasPostedBackWithoutSubmitForm = false;
         },
         /**
-         * @function $.forerunner.reportParameter#revertParameters
-         * @Revert any unsubmitted parameters.  Called in two scenario:  when cancelling out from parameter area or 
-         *  before submitting an action when the set of parameters for the session does not match the loaded report.
+         * Revert any unsubmitted parameters, called in two scenario:  when cancelling out from parameter area or 
+         * before submitting an action when the set of parameters for the session does not match the loaded report.
+         *
+         * @function $.forerunner.reportParameter#revertParameters 
          */
         revertParameters: function () {
             var me = this;
@@ -997,8 +1017,13 @@ $(function () {
             return true;
         },
         /**
+         * Generate parameter value list into string and return
+         *
          * @function $.forerunner.reportParameter#getParamsList
-         * @generate parameter list base on the user input and return
+         *
+         * @param {Boolean} noValid - if not need valid form set noValid = true
+         *
+         * @return {String} - parameter value list
          */
         getParamsList: function (noValid) {
             var me = this;
@@ -1107,44 +1132,9 @@ $(function () {
             }
         },
         /**
-        * @function $.forerunner.reportParameter#resetValidateMessage
-        * @customize jquery.validate message
-        */
-        resetValidateMessage: function () {
-            var me = this;
-            var error = me.options.$reportViewer.locData.validateError;
-            me.extendValidate();
-
-            jQuery.extend(jQuery.validator.messages, {
-                required: error.required,
-                remote: error.remote,
-                email: error.email,
-                url: error.url,
-                date: error.date,
-                dateISO: error.dateISO,
-                number: error.number,
-                digits: error.digits,
-                maxlength: $.validator.format(error.maxlength),
-                minlength: $.validator.format(error.minlength),
-                rangelength: $.validator.format(error.rangelength),
-                range: $.validator.format(error.range),
-                max: $.validator.format(error.max),
-                min: $.validator.format(error.min),
-                autoCompleteDropdown: error.invalid
-            });
-        },
-        extendValidate: function () {
-            //add auto complete dropdown value validata, only allow select from dropdown
-            jQuery.validator.addMethod("autoCompleteDropdown", function (value, element, param) {
-                if ($(element).hasClass("fr-param-autocomplete-error"))
-                    return false;
-                else
-                    return true;
-            });
-        },
-        /**
+        * Remove all parameters from report
+        *
         * @function $.forerunner.reportParameter#removeParameter
-        * @remove parameter element form the dom tree
         */
         removeParameter: function () {
             var me = this;
@@ -1192,6 +1182,13 @@ $(function () {
 
             return disabled;
         },
+        /**
+        * Ask viewer to refresh parameter, but not automatically post back if all parameters are satisfied
+        *
+        * @function $.forerunner.reportParameter#refreshParameters
+        *
+        * @param {String} savedParams - Saved parameter value list
+        */
         refreshParameters: function (savedParams) {
             var me = this;
             //set false not to do form validate.

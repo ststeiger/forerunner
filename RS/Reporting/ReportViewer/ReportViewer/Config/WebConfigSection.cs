@@ -21,7 +21,15 @@ namespace Forerunner.Config
 
         public static WebConfigSection GetConfigSection()
         {
-            return ConfigurationManager.GetSection("Forerunner") as WebConfigSection;
+            try
+            {
+                return ConfigurationManager.GetSection("Forerunner") as WebConfigSection;
+            }
+            catch (Exception e)
+            {
+                ReportManager.Util.Logging.ExceptionLogGenerator.LogException(e);
+                return null;
+            }
         }
     }
 }

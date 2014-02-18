@@ -2366,7 +2366,7 @@ $(function () {
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
      *
      * @namespace $.forerunner.toolBase
-     * @prop {object} options - The options for toolBase
+     * @prop {Object} options - The options for toolBase
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
      * var widgets = {@link forerunner.ssr.constants.widgets};
@@ -2386,9 +2386,9 @@ $(function () {
          * Add tools starting at index, enabled or disabled based upon the given tools array.
          * @function $.forerunner.toolBase#addTools
          *
-         * @param {int} index - 1 based index of where to insert the button array.
-         * @param {bool} enabled - true = enabled, false = disabled
-         * @param {array} tools - array containing the collection of tool information objects.
+         * @param {Integer} index - 1 based index of where to insert the button array.
+         * @param {Boolean} enabled - true = enabled, false = disabled
+         * @param {Array} tools - array containing the collection of tool information objects.
          * @example
          * var toolTypes = {@link forerunner.ssr.constants.toolTypes};
          * 
@@ -2508,9 +2508,9 @@ $(function () {
         /**
          * Return the tool object
          * @function $.forerunner.toolBase#getTool
-         * @param {string} selectorClass - tool's class name
+         * @param {String} selectorClass - tool's class name
          *
-         * @return {object} - specify tool object
+         * @return {Object} - specify tool object
          */
         getTool: function (selectorClass) {
             var me = this;
@@ -2521,7 +2521,7 @@ $(function () {
         /**
         * Make tool visible
         * @function $.forerunner.toolBase#showTool
-        * @param {string} selectorClass - tool's class name
+        * @param {String} selectorClass - tool's class name
         */
         showTool: function(selectorClass){
             var me = this;
@@ -2550,7 +2550,7 @@ $(function () {
         /**
         * Make tool hidden
         * @function $.forerunner.toolBase#hideTool
-        * @param {string} selectorClass - tool's class name
+        * @param {String} selectorClass - tool's class name
         */
         hideTool: function (selectorClass) {
             var me = this;
@@ -2579,7 +2579,7 @@ $(function () {
         /**
          * Enable or disable tool frozen
          * @function $.forerunner.toolBase#freezeEnableDisable
-         * @param {bool} freeze - ture: enable, false: disable
+         * @param {Boolean} freeze - ture: enable, false: disable
          */
         freezeEnableDisable: function (freeze) {
             var me = this;
@@ -2833,8 +2833,8 @@ $(function () {
      * Widget used display the message box dialog
      *
      * @namespace $.forerunner.messageBox
-     * @prop {object} options - The options for Message Box
-     * @prop {object} options.$appContainer - The app container that messageBox belong to
+     * @prop {Object} options - The options for Message Box
+     * @prop {Object} options.$appContainer - The app container that messageBox belong to
      *
      * @example
      * $msgBox.messageBox({ 
@@ -2879,8 +2879,8 @@ $(function () {
          * Open message box dialog
          *
          * @function $.forerunner.messageBox#openDialog
-         * @param {string} msg - Message to show
-         * @param {string} caption - Message box dialog caption
+         * @param {String} msg - Message to show
+         * @param {String} caption - Message box dialog caption
          */
         openDialog: function (msg, caption) {
             var me = this;

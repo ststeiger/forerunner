@@ -17,8 +17,8 @@ $(function () {
      * Widget used display the message box dialog
      *
      * @namespace $.forerunner.messageBox
-     * @prop {object} options - The options for Message Box
-     * @prop {object} options.$appContainer - The app container that messageBox belong to
+     * @prop {Object} options - The options for Message Box
+     * @prop {Object} options.$appContainer - The app container that messageBox belong to
      *
      * @example
      * $msgBox.messageBox({ 
@@ -63,8 +63,8 @@ $(function () {
          * Open message box dialog
          *
          * @function $.forerunner.messageBox#openDialog
-         * @param {string} msg - Message to show
-         * @param {string} caption - Message box dialog caption
+         * @param {String} msg - Message to show
+         * @param {String} caption - Message box dialog caption
          */
         openDialog: function (msg, caption) {
             var me = this;

@@ -22,7 +22,7 @@
 var forerunner = forerunner || {};
 
 /**
- * Contains the SQL Server Report datal
+ * Contains the SQL Server Report data
  *
  * @namespace
  */
@@ -501,11 +501,7 @@ $(function () {
          * Returns the number of elements or properties in an object
          *
          * @member
-         *
-         * @example
-         *  var objectSize = forerunner.helper.objectSize(obj)
-         *
-         *  objectSize(obj);
+         * @param {object} obj - target object        
          */
         objectSize: function (obj) {
             var size = 0, key;
@@ -553,7 +549,10 @@ $(function () {
             return (hasCrypto && hasRandomValues) ? _cryptoGuid() : _guid();
         },
         /**
-         * Returns whether given element contain a speficif class name
+         * Returns whether given element contain specify class names
+         * @param {object} element - target element
+         * @param {Array} classList - class name list
+         * @return {bool} - element contain one of the class list or not
          *
          * @member
          */
@@ -583,7 +582,9 @@ $(function () {
         /**
          * Returns a new div of the specified classes.
          *
-         * @params List of classes for the new div.
+         * @params {Array} listOfClassed - List of classes for the new div.
+         * @return {object} - element contain one of the class list or not
+         *
          * @member
          */
         createDiv: function (listOfClasses) {
@@ -594,7 +595,7 @@ $(function () {
             return $div;
         },
         /**
-        * Returns a dropdown for the valid values
+        * Returns a checkbox dropdown list for the valid values
         *
         * @param List of valid values.  validValue.Label is the label and validValue.Value is the value.
         */
@@ -647,11 +648,11 @@ $(function () {
             }
             return $div;
         },
-        /*
-                 * Replaces special characters with the html escape character equivalents
-                 *
-                 * @member
-                 */
+        /**
+         * Replaces special characters with the html escape character equivalents
+         *
+         * @member
+         */
         htmlEncode: function (str) {
             return String(str)
                     .replace(/&/g, "&amp;")
@@ -724,10 +725,11 @@ $(function () {
             return returnSheet;
         },
         /**
-         * Updates the given style sheet filename based upon the dynamic rule. Note that
-         * this function assumes that the rule already exists in the css file and it
-         * cannot be used to create new rules.
+         * Updates style sheet based upon the dynamic rule. Note that
+         * this function will loop style sheet object until find specify style name
+         * and it cannot be used to create new rules.
          *
+         * @param {Array} dynamicRules - custom define dynamic style rules array.
          * @member
          *
          * @example
@@ -742,7 +744,7 @@ $(function () {
          *      }
          *  };
          *
-         *  updateDynamicRules([isTouchRule]);
+         *  forerunner.styleSheet.updateDynamicRules([isTouchRule]);
          */
         updateDynamicRules: function (dynamicRules) {
             //Enumerate the styleSheets
@@ -927,7 +929,7 @@ $(function () {
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
-        * @param {object} Options for the ajax call.
+        * @param {object} options - Options for the ajax call.
         * @member
         */
         ajax: function (options) {
@@ -943,10 +945,10 @@ $(function () {
         /**
         * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
         *
-        * @param {String} Url of the ajax call
-        * @param {object} Options for the ajax call.
-        * @param {function} Handler for the success path.
-        * @param {function} Handler for the failure path.
+        * @param {String} url - Url of the ajax call
+        * @param {object} options - Options for the ajax call.
+        * @param {function} done - Handler for the success path.
+        * @param {function} fail - Handler for the failure path.
         * @member
         */
         getJSON: function (url, options, done, fail) {
@@ -966,10 +968,10 @@ $(function () {
         /**
         * Wraps the $.post call and if the response status 401 or 302, it will redirect to login page. 
         *
-        * @param {String} Url of the ajax call
-        * @param {object} data for the ajax call.
-        * @param {function} Handler for the success path.
-        * @param {function} Handler for the failure path.
+        * @param {String} url - Url of the ajax call
+        * @param {object} data - data for the ajax call.
+        * @param {function} success - Handler for the success path.
+        * @param {function} fail - Handler for the failure path.
         * @member
         */
         post: function (url, data, success, fail) {
@@ -1099,7 +1101,7 @@ $(function () {
         _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
-         * @param {bool} flag - true = scale enabled (max = 10.0)
+         * @param {bool} flag - true = scale enabled (max = 10.0), false = scale disabled
          */
         allowZoom: function (flag) {
             this._allowZoomFlag = flag;
@@ -1149,26 +1151,22 @@ $(function () {
     };
 
     /**
-    * Defines utility methods used to show and close modal dialog
+    * Defines the methods used to modal dialog.
     *
     * @namespace
     */
     forerunner.dialog = {
         /**
-       * Show a modal dialog
+       * Show a modal dialog with appContainer and target dialog container specify
        *
        * @function forerunner.dialog#showModalDialog
-       * @param {function} $appContainer - Modal dialog container
-       * @param {function} target - The element where the dialog is at
+       * @param {object} $appContainer - app Container
+       * @param {object} target - object that modal dialog apply to
        */
         showModalDialog: function ($appContainer, target) {
             var me = this;
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.showModalDialog);
-
-            //if (showModal && typeof (showModal) === "function") {
-            //    setTimeout(function () { showModal(); }, 50);
-            //}
 
             setTimeout(function () {
                 if (!target.element.parent().hasClass("ui-dialog")) {
@@ -1185,6 +1183,7 @@ $(function () {
                     //target._dialogInit = true;
                 }
 
+                //modal dialog will highlight the first matched button, add blur to remove it
                 target.element.dialog("open");
                 target.element.find(":button").blur();
 
@@ -1194,27 +1193,26 @@ $(function () {
             }, 200);
         },
         /**
-        * Close a modal dialog
+        * Close a modal dialog with appContainer and target dialog container specify
         *
         * @function forerunner.dialog#closeModalDialog
-        * @param {function} $appContainer - Modal dialog container
-        * @param {function} target - The element where the dialog is at
+        * @param {object} $appContainer - app Container
+        * @param {object} target - object that modal dialog apply to
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
 
             target.element.dialog("close");
             $(window).off("resize", me._setPosition);
-            //if (closeModal && typeof (closeModal) === "function") {
-            //    setTimeout(function () { closeModal(); }, 50);
-            //}
+           
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
         },
         /**
-        * close all opened modal dialogs with classname "fr-dialog-id"
+        * Close all opened modal dialogs in specify appContainer
         *
         * @function forerunner.dialog#closeAllModalDialogs
+        * @param {object} $appContainer - app Container
         */
         closeAllModalDialogs: function ($appContainer) {
             var me = this;
@@ -1226,10 +1224,12 @@ $(function () {
             $(window).off("resize", me._setPosition);
         },
         /**
-        * Show message box by modal dialog
+        * Show message box
         *
         * @function forerunner.dialog#showMessageBox
-        * @param {function} $appContainer - Modal dialog container
+        * @param {object} $appContainer - app Container
+        * @param {string} msg - message content
+        * @param {string} caption - modal dialog caption
         */
         showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
@@ -1244,10 +1244,12 @@ $(function () {
         * Get modal dialog static header html snippet
         *
         * @function forerunner.dialog#getModalDialogHeaderHtml
-        * @param {function} iconClass - icon class to specific icon position
-        * @param {function} title - modal dialog title
-        * @param {function} cancel - special cancel button class
-        * @param {function} cancel - cancel button's value
+        * @param {string} iconClass - icon class to specific icon position
+        * @param {string} title - modal dialog title
+        * @param {string} cancelClass - cancel button class name
+        * @param {string} cancelWord - cancel button's text
+        *
+        * @return {string} - modal dialog header html snippet
         */
         getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord) {
             var html = "<div class='fr-core-dialog-header'>" +
@@ -1341,7 +1343,7 @@ $(function () {
         }
     };
     $(document).ready(function () {
-        // Update all dynamic styles
+        //show element when touch screen rule for toolbase
         var touchShowRule = {
             selector: ".fr-toolbase-show-if-touch",
             properties: function () {
@@ -1352,7 +1354,7 @@ $(function () {
                 return pairs;
             }
         };
-        //specific rule for toolpane
+        //show element when touch screen rule for toolpane
         var touchShowRuleTp = {
             selector: ".fr-toolpane .fr-toolbase-show-if-touch",
             properties: function () {
@@ -1363,7 +1365,7 @@ $(function () {
                 return pairs;
             }
         };
-
+        //hide element when touch screen rule for toolbase
         var touchHideRule = {
             selector: ".fr-toolbase-hide-if-touch",
             properties: function () {
@@ -1374,7 +1376,7 @@ $(function () {
                 return pairs;
             }
         };
-        //specific rule for toolpane
+        //hide element when touch screen rule for toolpane
         var touchHideRuleTp = {
             selector: ".fr-toolpane .fr-toolbase-hide-if-touch",
             properties: function () {
@@ -1387,17 +1389,20 @@ $(function () {
         };
         
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
-        // Add custom date validator rule
-        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-        var format = locData.datepicker.dateFormat;
-        var momentFormat = format.toUpperCase();
-        momentFormat = momentFormat.replace("YY", "YYYY");
-        $.validator.addMethod(
-            "formattedDate",
-            function (value, element) {
-                return moment(value, momentFormat, true).isValid();
-            },
-            locData.validateError.date
-        );
+        // Put a check in so that this would not barf for the login page.
+        if ($.validator) {
+            // Add custom date validator rule
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var format = locData.datepicker.dateFormat;
+            var momentFormat = format.toUpperCase();
+            momentFormat = momentFormat.replace("YY", "YYYY");
+            $.validator.addMethod(
+                "formattedDate",
+                function (value, element) {
+                    return moment(value, momentFormat, true).isValid();
+                },
+                locData.validateError.date
+            );
+        }
     });
 });

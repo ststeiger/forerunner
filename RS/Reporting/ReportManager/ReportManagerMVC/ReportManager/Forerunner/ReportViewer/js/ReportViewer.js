@@ -1148,11 +1148,11 @@ $(function () {
 
             if (useSavedLocation === true) {
                 top = me.savedTop;
-                left = me.savedLeft();
+                left = me.savedLeft;
             }
             else {
                 top = $(window).scrollTop();
-                left = $(window).scrollLeft;
+                left = $(window).scrollLeft();
             }
 
             if (me.paramLoaded) {

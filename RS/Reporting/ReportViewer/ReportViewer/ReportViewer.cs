@@ -32,9 +32,9 @@ namespace Forerunner.SSRS.Viewer
         private String ReportServerURL;
         private Credentials Credentials = new Credentials();
         private ReportExecutionService rs = new ReportExecutionService();
-        private bool ServerRendering = false;
-        private bool MHTMLRendering = false;
-        private bool checkedServerRendering = false;
+        static private bool ServerRendering = false;
+        static private bool MHTMLRendering = false;
+        static private bool checkedServerRendering = false;
         private CurrentUserImpersonator impersonator = null;
         private int RSTimeOut = 100000;
         static private string IsDebug = ConfigurationManager.AppSettings["Forerunner.Debug"];
@@ -92,25 +92,25 @@ namespace Forerunner.SSRS.Viewer
         {
             if (checkedServerRendering)
             {
-                return this.ServerRendering;
+                return ReportViewer.ServerRendering;
             }
             if (rs.Credentials == null)
                 rs.Credentials = GetCredentials();
             foreach (Extension Ex in rs.ListRenderingExtensions())
             {
                 if (Ex.Name == "ForerunnerJSON")
-                    this.ServerRendering = true;
+                    ReportViewer.ServerRendering = true;
                 if (Ex.Name == "MHTML")
-                    this.MHTMLRendering = true;
+                    ReportViewer.MHTMLRendering = true;
                 
             }
 #if DEBUG 
-            this.ServerRendering = false;
+            ReportViewer.ServerRendering = false;
             //this.MHTMLRendering = false;
 #endif
-            checkedServerRendering = true;
+            ReportViewer.checkedServerRendering = true;
 
-            return this.ServerRendering;
+            return ReportViewer.ServerRendering;
         }
         public byte[] GetImage(string SessionID, string ImageID, out string mimeType)
         {
@@ -133,7 +133,7 @@ namespace Forerunner.SSRS.Viewer
 
                 string format;
                 GetServerRendering();
-                if (this.ServerRendering)
+                if (ReportViewer.ServerRendering)
                     format = "ForerunnerJSON";
                 else
                     format = "RPL";
@@ -317,7 +317,7 @@ namespace Forerunner.SSRS.Viewer
                     GetServerRendering();
 
                     //Use local to get RPL for debug, will through an error
-                    if (this.ServerRendering && (IsDebug != "WRPL"))
+                    if (ReportViewer.ServerRendering && (IsDebug != "WRPL"))
                         format = "ForerunnerJSON";
                     else
                         format = "RPL";
@@ -392,7 +392,7 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportContainer");
 
                     MemoryStream ms;
-                    if (this.ServerRendering)
+                    if (ReportViewer.ServerRendering)
                     {
                         ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
                     }
@@ -821,9 +821,9 @@ namespace Forerunner.SSRS.Viewer
                 string devInfo = @"<DeviceInfo><Toolbar>false</Toolbar>";
                 devInfo += @"<Section>" + PageNum + "</Section>";
 
-                if (this.ServerRendering)
+                if (ReportViewer.ServerRendering)
                     format = "ForerunnerThumbnail";
-                if (!this.MHTMLRendering)
+                if (!ReportViewer.MHTMLRendering)
                 {
                    // Support for Express and Web that do not support MHTML                
                     format = "HTML4.0";
@@ -837,10 +837,10 @@ namespace Forerunner.SSRS.Viewer
                 result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
-                if (!this.ServerRendering)
+                if (!ReportViewer.ServerRendering)
                 {
                     string fileName = Path.GetTempPath() + Path.GetRandomFileName();
-                    if (!this.MHTMLRendering)
+                    if (!ReportViewer.MHTMLRendering)
                     {
                         result = GetMHTfromHTML(result);
                         fileName += ".htm";

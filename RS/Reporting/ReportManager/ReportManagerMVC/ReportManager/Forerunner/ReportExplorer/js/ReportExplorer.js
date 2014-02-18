@@ -13,7 +13,7 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorer
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for reportExplorer
      * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
      * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
      * @prop {String} options.path - Path passed to the GetItems REST call
@@ -21,6 +21,7 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @prop {Object} options.$appContainer - Report page container
      * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerId").reportExplorer({
@@ -28,7 +29,9 @@ $(function () {
      *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
-     *  navigateTo: navigateTo
+     *  navigateTo: navigateTo,
+     *  $appContainer: me.$container,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
@@ -44,7 +47,7 @@ $(function () {
             explorerSettings: null
         },
         /**
-         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * Save the user settings
          * @function $.forerunner.reportExplorer#saveUserSettings
          *
          * @param {Object} settings - Settings object
@@ -71,7 +74,7 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {bool} forceLoadFromServer - if true, always load from the server
+         * @param {Boolean} forceLoadFromServer - if true, always load from the server
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -291,6 +294,7 @@ $(function () {
         },
         /**
          * Show the user settings modal dialog.
+         *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          *
          */

@@ -19,7 +19,7 @@ $(function () {
      * Toolbar widget used by the Report Explorer
      *
      * @namespace $.forerunner.reportExplorerToolbar
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for toolbar
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
@@ -32,6 +32,12 @@ $(function () {
             navigateTo: null,
             toolClass: "fr-toolbar"
         },
+        /**
+         * Set specify tool to active state
+         *
+         * @function $.forerunner.reportExplorerToolbar#setFolderBtnActive
+         * @param {String} selectorClass - selector class name
+         */
         setFolderBtnActive: function (selectorClass) {
             var me = this;
             me._clearFolderBtnState();

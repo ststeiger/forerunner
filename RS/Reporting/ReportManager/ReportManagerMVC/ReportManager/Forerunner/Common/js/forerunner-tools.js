@@ -358,6 +358,7 @@ $(function () {
                 }
             }
         },
+        /** @member */
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
@@ -873,7 +874,7 @@ $(function () {
     };
 
     /**
-      * Defines all the tools used in the Report Exploer Toolbar.
+      * Defines all the tools used in the Report Explorer Toolbar.
       *
       * @namespace
       */

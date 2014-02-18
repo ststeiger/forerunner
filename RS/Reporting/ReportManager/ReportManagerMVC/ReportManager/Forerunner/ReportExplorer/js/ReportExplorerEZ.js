@@ -35,7 +35,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -62,7 +63,8 @@ $(function () {
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
-                explorerSettings: me.options.explorerSettings
+                explorerSettings: me.options.explorerSettings,
+                rsInstance: me.options.rsInstance,
             });
         },
         /**
@@ -136,7 +138,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings
+                    userSettings: userSettings,
+                    rsInstance: me.options.rsInstance,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

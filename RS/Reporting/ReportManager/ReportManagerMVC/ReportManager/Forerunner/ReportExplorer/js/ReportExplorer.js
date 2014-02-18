@@ -41,7 +41,8 @@ $(function () {
             $scrollBarOwner: null,
             navigateTo: null,
             $appContainer: null,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -55,6 +56,7 @@ $(function () {
             var stringified = JSON.stringify(settings);
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -82,6 +84,7 @@ $(function () {
 
             var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -103,7 +106,8 @@ $(function () {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
               + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
-
+            if (me.options.rsInstance)
+                reportThumbnailPath += "&instance=" + me.options.rsInstance;
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
@@ -219,9 +223,11 @@ $(function () {
         },
         _fetch: function (view,path) {
             var me = this;
+            var url = me.options.reportManagerAPI + "/GetItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
+                url: url,
                 async: false,
                 data: {
                     view: view,

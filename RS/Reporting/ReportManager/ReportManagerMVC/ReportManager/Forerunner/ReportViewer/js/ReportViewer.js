@@ -63,6 +63,7 @@ $(function () {
             parameterModel: null,
             savePosition: null,
             viewerID: null,
+            rsInstance: null,
         },
 
         _destroy: function () {
@@ -533,6 +534,7 @@ $(function () {
                     url: me.options.reportViewerAPI + "/DocMapJSON/",
                     data: {
                         SessionID: me.sessionID,
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -771,7 +773,8 @@ $(function () {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
-                        ParameterList: ""
+                        ParameterList: "",
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -797,7 +800,8 @@ $(function () {
                     SessionID: me.sessionID,
                     SortItem: id,
                     Direction: direction,
-                    ClearExistingSort: clear
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -848,7 +852,8 @@ $(function () {
                     SessionID: me.sessionID,
                     SortItem: id,
                     Direction: newDir,
-                    ClearExistingSort: clear
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
@@ -883,7 +888,8 @@ $(function () {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        instance: me.options.rsInstance,
                     },
                     success: function (data) {
                         me._isReportContextValid = true;
@@ -908,7 +914,8 @@ $(function () {
                 data: {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -948,7 +955,8 @@ $(function () {
                 {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.Result === true) {
@@ -1006,7 +1014,8 @@ $(function () {
                 {
                     NavType: navigateType.bookmark,
                     SessionID: me.sessionID,
-                    UniqueID: bookmarkID
+                    UniqueID: bookmarkID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.NewPage === me.curPage) {
@@ -1061,7 +1070,8 @@ $(function () {
                 {
                     NavType: navigateType.drillThrough,
                     SessionID: me.sessionID,
-                    UniqueID: drillthroughID
+                    UniqueID: drillthroughID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(true);
@@ -1119,7 +1129,8 @@ $(function () {
                 {
                     NavType: navigateType.docMap,
                     SessionID: me.sessionID,
-                    UniqueID: docMapID
+                    UniqueID: docMapID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(false,true);
@@ -1227,7 +1238,8 @@ $(function () {
                         SessionID: me.sessionID,
                         StartPage: startPage,
                         EndPage: endPage,
-                        FindValue: keyword
+                        FindValue: keyword,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.NewPage !== 0) {//keyword exist
@@ -1341,6 +1353,7 @@ $(function () {
             var me = this;
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },       
         /**
@@ -1364,6 +1377,7 @@ $(function () {
             var me = this;
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },
         _setPrint: function (pageLayout) {
@@ -1425,7 +1439,8 @@ $(function () {
                     ReportPath: me.options.reportPath,
                     SessionID: me.getSessionID(),
                     ParameterList: null,
-                    DSCredentials: me.getDataSourceCredential()
+                    DSCredentials: me.getDataSourceCredential(),
+                    instance: me.options.rsInstance,
                 },
                 dataType: "json",
                 async: false,
@@ -1494,7 +1509,8 @@ $(function () {
                         ReportPath: me.options.reportPath,
                         SessionID: me.getSessionID(),
                         ParameterList: paramList,
-                        DSCredentials: me.getDataSourceCredential()
+                        DSCredentials: me.getDataSourceCredential(),
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -1697,7 +1713,8 @@ $(function () {
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
                         ParameterList: paramList,
-                        DSCredentials: me.getDataSourceCredential()
+                        DSCredentials: me.getDataSourceCredential(),
+                        instance: me.options.rsInstance,
                     },
                     async: true,
                     success: function (data) {
@@ -1846,7 +1863,8 @@ $(function () {
             if (sessionID && sessionID !== "")
                 forerunner.ajax.getJSON(me.options.reportViewerAPI + "/PingSession",
                     {
-                        PingSessionID: sessionID
+                        PingSessionID: sessionID,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.Status === "Fail") {

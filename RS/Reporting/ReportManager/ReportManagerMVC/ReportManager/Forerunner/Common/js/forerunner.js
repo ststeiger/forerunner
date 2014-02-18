@@ -1387,17 +1387,20 @@ $(function () {
         };
         
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
-        // Add custom date validator rule
-        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-        var format = locData.datepicker.dateFormat;
-        var momentFormat = format.toUpperCase();
-        momentFormat = momentFormat.replace("YY", "YYYY");
-        $.validator.addMethod(
-            "formattedDate",
-            function (value, element) {
-                return moment(value, momentFormat, true).isValid();
-            },
-            locData.validateError.date
-        );
+        // Put a check in so that this would not barf for the login page.
+        if ($.validator) {
+            // Add custom date validator rule
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var format = locData.datepicker.dateFormat;
+            var momentFormat = format.toUpperCase();
+            momentFormat = momentFormat.replace("YY", "YYYY");
+            $.validator.addMethod(
+                "formattedDate",
+                function (value, element) {
+                    return moment(value, momentFormat, true).isValid();
+                },
+                locData.validateError.date
+            );
+        }
     });
 });

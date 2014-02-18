@@ -11,7 +11,8 @@ $(function () {
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
         options: {
-            $reportViewer: null
+            $reportViewer: null,
+            rsInstance: null,
         },
         // Constructor
         _create: function () {
@@ -59,6 +60,8 @@ $(function () {
             for (var i = 1; i <= maxNumPages; i++) {
                 var url = reportViewerAPI + "/Thumbnail/?ReportPath="
                         + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
+                if (me.options.rsInstance)
+                    url += "&instance=" + me.options.rsInstance;
                 var $listItem = new $("<LI />");
                 $list.append($listItem);
                 me.listItems[i - 1] = $listItem;

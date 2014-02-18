@@ -18,6 +18,7 @@ namespace ReportManager.Controllers
     {
         public string reportPath { get; set; }
         public string parameters { get; set; }
+        public string Instance { get; set; }
     }
 
     [ExceptionLog]
@@ -36,18 +37,36 @@ namespace ReportManager.Controllers
         private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
         private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
         private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
+        private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
 
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];
             return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
         }
-        private Forerunner.SSRS.Manager.ReportManager GetReportManager()
+        private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
         {
+            Forerunner.Config.ConfigElement configElement = null;
+            if (webConfigSection != null && instance != null)
+            {
+                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
+                if (configElementCollection != null)
+                {
+                    configElement = configElementCollection.GetElementByKey(instance);
+                }
+            }
             //Put application security here
-            Credentials WSCred = null;
-            Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-            return new Forerunner.SSRS.Manager.ReportManager(url, WSCred, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
+
+            if (configElement == null)
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(url, null, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
+            }
+            else
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, configElement.ReportServerDBUser, configElement.ReportServerDBDomain == null ? "" : configElement.ReportServerDBDomain, configElement.ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(configElement.ReportServerWSUrl, null, configElement.ReportServerDataSource, configElement.ReportServerDB, DBCred, configElement.UseIntegratedSecurityForSQL, configElement.IsNative, DefaultUserDomain, configElement.SharePointHost);
+            }
         }
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
@@ -67,54 +86,52 @@ namespace ReportManager.Controllers
         }
         // GET api/ReportMananger/GetItems
         [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string view, string path)
+        public IEnumerable<CatalogItem> GetItems(string view, string path, string instance = null)
         {
             
-            return GetReportManager().GetItems(view, path);
+            return GetReportManager(instance).GetItems(view, path);
         }
 
 
         [HttpGet]
         [ActionName("Thumbnail")]
-        public HttpResponseMessage Thumbnail(string ReportPath,string DefDate)
+        public HttpResponseMessage Thumbnail(string ReportPath,string DefDate, string instance = null)
         {
-            return GetResponseFromBytes(GetReportManager().GetCatalogImage(ReportPath), "image/JPEG",true);            
+            return GetResponseFromBytes(GetReportManager(instance).GetCatalogImage(ReportPath), "image/JPEG",true);            
         }
 
         [HttpGet]
-        public HttpResponseMessage UpdateView(string view, string action, string path)
+        public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().UpdateView(view,action,path)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");
         }
 
         [HttpGet]
-        public HttpResponseMessage IsFavorite(string path)
+        public HttpResponseMessage IsFavorite(string path, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().IsFavorite(path)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).IsFavorite(path)), "text/JSON");
         }
 
         [HttpGet]
-        public HttpResponseMessage GetUserParameters(string reportPath)
+        public HttpResponseMessage GetUserParameters(string reportPath, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserParameters(reportPath)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserParameters(reportPath)), "text/JSON");
         }
         [HttpPost]
         public HttpResponseMessage SaveUserParameters(SaveParameters saveParams)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(saveParams.Instance).SaveUserParamaters(saveParams.reportPath, saveParams.parameters)), "text/JSON");
         }
 
         [HttpGet]
-        public HttpResponseMessage GetUserSettings()
+        public HttpResponseMessage GetUserSettings(string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().GetUserSettings()), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).GetUserSettings()), "text/JSON");
         }
         [HttpGet]
-        public HttpResponseMessage SaveUserSettings(string settings)
+        public HttpResponseMessage SaveUserSettings(string settings, string instance = null)
         {
-            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager().SaveUserSettings(settings)), "text/JSON");
+            return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).SaveUserSettings(settings)), "text/JSON");
         }
-
-
     }
 }

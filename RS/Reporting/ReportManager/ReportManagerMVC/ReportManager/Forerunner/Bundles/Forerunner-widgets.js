@@ -62,6 +62,7 @@ $(function () {
             onInputFocus: null,
             $appContainer: null,
             viewerID: null,
+            rsInstance: null,
         },
 
         _destroy: function () {
@@ -508,12 +509,14 @@ $(function () {
             me.savedTop = $(window).scrollTop();
             me.savedLeft = $(window).scrollLeft();
 
+            var url = me.options.reportViewerAPI + "/DocMapJSON";
             //get the doc map
             if (!me.docMapData) {
                 forerunner.ajax.ajax({
-                    url: me.options.reportViewerAPI + "/DocMapJSON/",
+                    url: url,
                     data: {
                         SessionID: me.sessionID,
+                        instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -717,16 +720,17 @@ $(function () {
         },
         _prepareAction: function () {
             var me = this;
-
+            var url = me.options.reportViewerAPI + "/ReportJSON";
             if (me.togglePageNum !== me.curPage || me.togglePageNum  === 0) {
                 forerunner.ajax.ajax({
                     type: "POST",
-                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    url: url,
                     data: {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
-                        ParameterList: ""
+                        ParameterList: "",
+                        Instance:  me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -745,14 +749,16 @@ $(function () {
         },
         _getSortResult: function (id, direction, clear) {
             var me = this;
+            var url = me.options.reportViewerAPI + "/SortReport";
             return forerunner.ajax.ajax({
                 dataType: "json",
-                url: me.options.reportViewerAPI + "/SortReport/",
+                url: url,
                 data: {
                     SessionID: me.sessionID,
                     SortItem: id,
                     Direction: direction,
-                    ClearExistingSort: clear
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -798,12 +804,14 @@ $(function () {
         _callSort: function (id, newDir, clear) {
             var me = this;
             me._updateSortState(id, newDir);
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/SortReport/",
+            var url = me.options.reportViewerAPI + "/SortReport";
+            forerunner.ajax.getJSON(url,
                 {
                     SessionID: me.sessionID,
                     SortItem: id,
                     Direction: newDir,
-                    ClearExistingSort: clear
+                    ClearExistingSort: clear,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.scrollLeft = $(window).scrollLeft();
@@ -829,16 +837,18 @@ $(function () {
                 //get current parameter list without validate
                 paramList = $paramArea.reportParameter("getParamsList", true);
             }
+            var url = me.options.reportViewerAPI + "/ReportJSON";
             forerunner.ajax.ajax(
                 {
                     type: "POST",
                     dataType: "json",
-                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    url: url,
                     data: {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        Instance: me.options.rsInstance,
                     },
                     success: function (data) {
                         me._isReportContextValid = true;
@@ -857,13 +867,15 @@ $(function () {
 
         _getToggleResult: function (toggleID) {
             var me = this;
+            var url = me.options.reportViewerAPI + "/NavigateTo";
             return forerunner.ajax.ajax({
                 dataType: "json",
-                url : me.options.reportViewerAPI + "/NavigateTo/",
+                url : url,
                 data: {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 async: false,
             });
@@ -900,11 +912,13 @@ $(function () {
         _callToggle : function(toggleID) {
             var me = this;
             me._updateToggleState(toggleID);
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+            var url = me.options.reportViewerAPI + "/NavigateTo";
+            forerunner.ajax.getJSON(url,
                 {
                     NavType: navigateType.toggle,
                     SessionID: me.sessionID,
-                    UniqueID: toggleID
+                    UniqueID: toggleID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.Result === true) {
@@ -958,11 +972,13 @@ $(function () {
             me.lock = 1;
             me._resetContextIfInvalid();
             me._prepareAction();
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+            var url = me.options.reportViewerAPI + "/NavigateTo";
+            forerunner.ajax.getJSON(url,
                 {
                     NavType: navigateType.bookmark,
                     SessionID: me.sessionID,
-                    UniqueID: bookmarkID
+                    UniqueID: bookmarkID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     if (data.NewPage === me.curPage) {
@@ -1013,11 +1029,13 @@ $(function () {
             me._addLoadingIndicator();
             me._resetContextIfInvalid();
             me._prepareAction();
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+            var url = me.options.reportViewerAPI + "/NavigateTo";
+            forerunner.ajax.getJSON(url,
                 {
                     NavType: navigateType.drillThrough,
                     SessionID: me.sessionID,
-                    UniqueID: drillthroughID
+                    UniqueID: drillthroughID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(true);
@@ -1065,11 +1083,13 @@ $(function () {
                 return;
             me.lock = 1;
             me._resetContextIfInvalid();
-            forerunner.ajax.getJSON(me.options.reportViewerAPI + "/NavigateTo/",
+            var url = me.options.reportViewerAPI + "/NavigateTo";
+            forerunner.ajax.getJSON(url,
                 {
                     NavType: navigateType.docMap,
                     SessionID: me.sessionID,
-                    UniqueID: docMapID
+                    UniqueID: docMapID,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.backupCurPage(false,true);
@@ -1159,12 +1179,14 @@ $(function () {
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
-                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/FindString/",
+                var url = me.options.reportViewerAPI + "/FindString";
+                forerunner.ajax.getJSON(url,
                     {
                         SessionID: me.sessionID,
                         StartPage: startPage,
                         EndPage: endPage,
-                        FindValue: keyword
+                        FindValue: keyword,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.NewPage !== 0) {//keyword exist
@@ -1300,6 +1322,8 @@ $(function () {
             var me = this;
             me._resetContextIfInvalid();
             var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
+            if (me.options.rsInstance)
+                url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },
 
@@ -1355,11 +1379,12 @@ $(function () {
             var me = this;
             forerunner.ajax.ajax({
                 type: "POST",
-                url: me.options.reportViewerAPI + "/ParameterJSON/",
+                url: me.options.reportViewerAPI + "/ParameterJSON",
                 data: {
                     ReportPath: me.options.reportPath,
                     SessionID: me.getSessionID(),
-                    ParameterList: null
+                    ParameterList: null,
+                    Instance: me.options.rsInstance,
                 },
                 dataType: "json",
                 async: false,
@@ -1427,7 +1452,8 @@ $(function () {
                     data : {
                         ReportPath: me.options.reportPath,
                         SessionID: me.getSessionID(),
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        Instance: me.options.rsInstance,
                     },
                     dataType: "json",
                     async: false,
@@ -1551,12 +1577,13 @@ $(function () {
                 {
                     type: "POST",
                     dataType: "json",
-                    url: me.options.reportViewerAPI + "/ReportJSON/",
+                    url: me.options.reportViewerAPI + "/ReportJSON",
                     data: {
                         ReportPath: me.options.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
-                        ParameterList: paramList
+                        ParameterList: paramList,
+                        Instance: me.options.rsInstance,
                     },
                     async: true,
                     success: function (data) {
@@ -1674,9 +1701,11 @@ $(function () {
         _sessionPingPost: function (sessionID) {
             var me = this;
             if (sessionID && sessionID !== "")
-                forerunner.ajax.getJSON(me.options.reportViewerAPI + "/PingSession",
+                var url = me.options.reportViewerAPI + "/PingSession";
+                forerunner.ajax.getJSON(url,
                     {
-                        PingSessionID: sessionID
+                        PingSessionID: sessionID,
+                        instance: me.options.rsInstance,
                     },
                     function (data) {
                         if (data.Status === "Fail") {
@@ -1907,7 +1936,7 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
-
+            rsInstance: null,
         },
         _create: function () {
             var me = this;
@@ -2026,6 +2055,7 @@ $(function () {
             if (me._isLoaded(reportPath)) {
                 return;
             }
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -2059,6 +2089,7 @@ $(function () {
                     // This line will kepp the database in the v1 format
                     parameters: JSON.stringify({ ParamsList: me.serverData.parameterSets[0].data }),
                     //parameters: JSON.stringify(me.serverData),
+                    Instance: me.options.rsInstance,
                 },
                 function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {
@@ -3704,7 +3735,8 @@ $(function () {
     // Toolbar widget
     $.widget(widgets.getFullname(widgets.pageNav), {
         options: {
-            $reportViewer: null
+            $reportViewer: null,
+            rsInstance: null,
         },
         // Constructor
         _create: function () {
@@ -3752,6 +3784,8 @@ $(function () {
             for (var i = 1; i <= maxNumPages; i++) {
                 var url = reportViewerAPI + "/Thumbnail/?ReportPath="
                         + reportPath + "&SessionID=" + sessionID + "&PageNumber=" + i;
+                if (me.options.rsInstance)
+                    url += "&instance=" + me.options.rsInstance;
                 var $listItem = new $("<LI />");
                 $list.append($listItem);
                 me.listItems[i - 1] = $listItem;
@@ -3978,7 +4012,8 @@ $(function () {
             $scrollBarOwner: null,
             navigateTo: null,
             $appContainer: null,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         /**
          * Add tools starting at index, enabled or disabled based upon the given tools array.
@@ -3992,6 +4027,7 @@ $(function () {
             var stringified = JSON.stringify(settings);
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -4019,6 +4055,7 @@ $(function () {
 
             var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -4041,6 +4078,8 @@ $(function () {
             var reportThumbnailPath = me.options.reportManagerAPI
               + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
 
+            if (me.options.rsInstance)
+                reportThumbnailPath += "&instance=" + me.options.rsInstance;
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
@@ -4155,9 +4194,11 @@ $(function () {
         },
         _fetch: function (view,path) {
             var me = this;
+            var url = me.options.reportManagerAPI + "/GetItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
+                url: url,
                 async: false,
                 data: {
                     view: view,
@@ -5079,6 +5120,8 @@ $(function () {
                 Url += "SessionID=" + me.options.reportViewer.sessionID;
                 Url += "&ImageID=" + ImageName;
                 Url += "&" + me.options.renderTime;
+                if (me.options.reportViewer.options.rsInstance)
+                    Url += "&instance=" + me.options.reportViewer.options.rsInstance;
                 me.imageList[ImageName] = Url;
             }
 
@@ -8204,7 +8247,8 @@ $(function () {
             navigateTo: null,
             isReportManager: false,
             userSettings: null,
-            $appContainer: null
+            $appContainer: null,
+            rsInstance: null,
         };
 
         // Merge options with the default settings
@@ -8213,7 +8257,7 @@ $(function () {
         }
 
         // Create the parameter model object for this report
-        me.parameterModel = $({}).parameterModel();
+        me.parameterModel = $({}).parameterModel({rsInstance: me.options.rsInstance});
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -8234,7 +8278,8 @@ $(function () {
                 parameterModel: me.parameterModel,
                 userSettings: me.options.userSettings,
                 savedParameters: me.options.savedParameters,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance,
             });
 
             // Create / render the toolbar
@@ -8292,7 +8337,7 @@ $(function () {
 
             var $nav = me.options.$nav;
             if ($nav !== null) {
-                $nav.pageNav({ $reportViewer: $viewer });
+                $nav.pageNav({ $reportViewer: $viewer, rsInstance: me.options.rsInstance });
                 $viewer.reportViewer("option", "pageNavArea", $nav);
             }
             
@@ -8343,8 +8388,10 @@ $(function () {
             if (me.options.$toolPane !== null) {
                 me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
             }
+            var url = me.options.ReportManagerAPI + "/isFavorite?path=" + path;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
-                url: me.options.ReportManagerAPI + "/isFavorite?path=" + path,
+                url: url,
                 dataType: "json",
                 async: true,
                 success: function (data) {
@@ -8369,11 +8416,13 @@ $(function () {
                 action = "delete";
             }
 
-            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+            var url = me.options.ReportManagerAPI + "/UpdateView";
+            forerunner.ajax.getJSON(url,
                 {
                     view: "favorites",
                     action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath")
+                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath"),
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.updateFavoriteState.call(me, action === "add");
@@ -8393,11 +8442,13 @@ $(function () {
             }
 
             $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+            var url = me.options.ReportManagerAPI + "/UpdateView";
+            forerunner.ajax.getJSON(url,
                 {
                     view: "favorites",
                     action: action,
-                    path: me.options.ReportPath
+                    path: me.options.ReportPath,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.updateFavoriteState.call(me, action === "add");
@@ -8516,7 +8567,8 @@ $(function () {
             isReportManager: false,
             isFullScreen: true,
             userSettings: null,
-            savedParameters: null
+            savedParameters: null,
+            rsInstance: null,
         },
         _render: function () {
             var me = this;
@@ -8554,7 +8606,8 @@ $(function () {
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
                 savedParameters: me.options.savedParameters,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                rsInstance: me.options.rsInstance,
             });
 
             initializer.render();
@@ -8641,7 +8694,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -8668,7 +8722,8 @@ $(function () {
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
-                explorerSettings: me.options.explorerSettings
+                explorerSettings: me.options.explorerSettings,
+                rsInstance: me.options.rsInstance,
             });
         },
         /**
@@ -8742,7 +8797,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings
+                    userSettings: userSettings,
+                    rsInstance: me.options.rsInstance,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

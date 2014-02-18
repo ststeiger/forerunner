@@ -2386,7 +2386,7 @@ $(function () {
      * The toolBase widget is used as a base namespace for toolbars and the toolPane
      *
      * @namespace $.forerunner.toolBase
-     * @prop {object} options - The options for toolBase
+     * @prop {Object} options - The options for toolBase
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
      * var widgets = {@link forerunner.ssr.constants.widgets};
@@ -2406,9 +2406,9 @@ $(function () {
          * Add tools starting at index, enabled or disabled based upon the given tools array.
          * @function $.forerunner.toolBase#addTools
          *
-         * @param {int} index - 1 based index of where to insert the button array.
-         * @param {bool} enabled - true = enabled, false = disabled
-         * @param {array} tools - array containing the collection of tool information objects.
+         * @param {Integer} index - 1 based index of where to insert the button array.
+         * @param {Boolean} enabled - true = enabled, false = disabled
+         * @param {Array} tools - array containing the collection of tool information objects.
          * @example
          * var toolTypes = {@link forerunner.ssr.constants.toolTypes};
          * 
@@ -2528,9 +2528,9 @@ $(function () {
         /**
          * Return the tool object
          * @function $.forerunner.toolBase#getTool
-         * @param {string} selectorClass - tool's class name
+         * @param {String} selectorClass - tool's class name
          *
-         * @return {object} - specify tool object
+         * @return {Object} - specify tool object
          */
         getTool: function (selectorClass) {
             var me = this;
@@ -2541,7 +2541,7 @@ $(function () {
         /**
         * Make tool visible
         * @function $.forerunner.toolBase#showTool
-        * @param {string} selectorClass - tool's class name
+        * @param {String} selectorClass - tool's class name
         */
         showTool: function(selectorClass){
             var me = this;
@@ -2570,7 +2570,7 @@ $(function () {
         /**
         * Make tool hidden
         * @function $.forerunner.toolBase#hideTool
-        * @param {string} selectorClass - tool's class name
+        * @param {String} selectorClass - tool's class name
         */
         hideTool: function (selectorClass) {
             var me = this;
@@ -2599,7 +2599,7 @@ $(function () {
         /**
          * Enable or disable tool frozen
          * @function $.forerunner.toolBase#freezeEnableDisable
-         * @param {bool} freeze - ture: enable, false: disable
+         * @param {Boolean} freeze - ture: enable, false: disable
          */
         freezeEnableDisable: function (freeze) {
             var me = this;
@@ -2853,8 +2853,8 @@ $(function () {
      * Widget used display the message box dialog
      *
      * @namespace $.forerunner.messageBox
-     * @prop {object} options - The options for Message Box
-     * @prop {object} options.$appContainer - The app container that messageBox belong to
+     * @prop {Object} options - The options for Message Box
+     * @prop {Object} options.$appContainer - The app container that messageBox belong to
      *
      * @example
      * $msgBox.messageBox({ 
@@ -2899,8 +2899,8 @@ $(function () {
          * Open message box dialog
          *
          * @function $.forerunner.messageBox#openDialog
-         * @param {string} msg - Message to show
-         * @param {string} caption - Message box dialog caption
+         * @param {String} msg - Message to show
+         * @param {String} caption - Message box dialog caption
          */
         openDialog: function (msg, caption) {
             var me = this;
@@ -4169,7 +4169,7 @@ $(function () {
      * Toolbar widget used by the Report Explorer
      *
      * @namespace $.forerunner.reportExplorerToolbar
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for toolbar
      * @prop {Object} options.navigateTo - Callback function used to navigate to a specific page
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolbar)
      * @example
@@ -4182,6 +4182,12 @@ $(function () {
             navigateTo: null,
             toolClass: "fr-toolbar"
         },
+        /**
+         * Set specify tool to active state
+         *
+         * @function $.forerunner.reportExplorerToolbar#setFolderBtnActive
+         * @param {String} selectorClass - selector class name
+         */
         setFolderBtnActive: function (selectorClass) {
             var me = this;
             me._clearFolderBtnState();
@@ -4250,7 +4256,7 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorer
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for reportExplorer
      * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
      * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
      * @prop {String} options.path - Path passed to the GetItems REST call
@@ -4258,6 +4264,7 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
+     * @prop {Object} options.$appContainer - Report page container
      * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerId").reportExplorer({
@@ -4265,7 +4272,9 @@ $(function () {
      *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
-     *  navigateTo: navigateTo
+     *  navigateTo: navigateTo,
+     *  $appContainer: me.$container,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
@@ -4282,7 +4291,7 @@ $(function () {
             rsInstance: null,
         },
         /**
-         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * Save the user settings
          * @function $.forerunner.reportExplorer#saveUserSettings
          *
          * @param {Object} settings - Settings object
@@ -4310,7 +4319,7 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {bool} forceLoadFromServer - if true, always load from the server
+         * @param {Boolean} forceLoadFromServer - if true, always load from the server
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -4534,6 +4543,7 @@ $(function () {
         },
         /**
          * Show the user settings modal dialog.
+         *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
          *
          */
@@ -4563,7 +4573,7 @@ $(function () {
      * Widget used to manage user settings
      *
      * @namespace $.forerunner.userSettings
-     * @prop {object} options - The options for userSettings
+     * @prop {Object} options - The options for userSettings
      * @prop {Object} options.$reportExplorer - The report explorer widget
      * @example
      * $("#userSettingsId").userSettings({
@@ -4654,6 +4664,8 @@ $(function () {
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
         },
         /**
+         * Open user setting dialog
+         *
          * @function $.forerunner.userSettings#openDialog
          */
         openDialog: function () {
@@ -4666,6 +4678,8 @@ $(function () {
             //});
         },
         /**
+         * Close user setting dialog
+         *
          * @function $.forerunner.userSettings#closeDialog
          */
         closeDialog: function () {
@@ -9388,13 +9402,16 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorerEZ
-     * @prop {object} options - The options for reportExplorerEZ
+     * @prop {Object} options - The options for reportExplorerEZ
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Callback function used to go back in browsing history.
+     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
+	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
+	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
      *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack
+     *  historyBack: me.historyBack,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {

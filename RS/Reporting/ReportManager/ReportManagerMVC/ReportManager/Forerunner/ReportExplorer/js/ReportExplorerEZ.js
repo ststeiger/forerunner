@@ -21,13 +21,16 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorerEZ
-     * @prop {object} options - The options for reportExplorerEZ
+     * @prop {Object} options - The options for reportExplorerEZ
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Callback function used to go back in browsing history.
+     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
+	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
+	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
      *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack
+     *  historyBack: me.historyBack,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {

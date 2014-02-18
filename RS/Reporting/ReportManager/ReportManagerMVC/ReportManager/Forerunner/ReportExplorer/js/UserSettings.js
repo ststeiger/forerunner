@@ -17,7 +17,7 @@ $(function () {
      * Widget used to manage user settings
      *
      * @namespace $.forerunner.userSettings
-     * @prop {object} options - The options for userSettings
+     * @prop {Object} options - The options for userSettings
      * @prop {Object} options.$reportExplorer - The report explorer widget
      * @example
      * $("#userSettingsId").userSettings({
@@ -108,6 +108,8 @@ $(function () {
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
         },
         /**
+         * Open user setting dialog
+         *
          * @function $.forerunner.userSettings#openDialog
          */
         openDialog: function () {
@@ -120,6 +122,8 @@ $(function () {
             //});
         },
         /**
+         * Close user setting dialog
+         *
          * @function $.forerunner.userSettings#closeDialog
          */
         closeDialog: function () {

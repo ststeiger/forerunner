@@ -22,7 +22,8 @@ $(function () {
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
      * @prop {Object} options.$appContainer - Report page container
-     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
+     * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
@@ -77,6 +78,8 @@ $(function () {
          * @function $.forerunner.reportExplorer#getUserSettings
          *
          * @param {Boolean} forceLoadFromServer - if true, always load from the server
+         *
+         * @return {Object} - User settings
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -302,7 +305,6 @@ $(function () {
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
-         *
          */
         showUserSettingsDialog : function() {
             var me = this;

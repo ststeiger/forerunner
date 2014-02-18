@@ -45,6 +45,7 @@ $(function () {
      * @prop {Object} options.parameterModel - Parameter model
      * @prop {Object} options.savePosition - Saved report page scroll position 
      * @prop {String} options.viewerID - Current report viewer id.
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"

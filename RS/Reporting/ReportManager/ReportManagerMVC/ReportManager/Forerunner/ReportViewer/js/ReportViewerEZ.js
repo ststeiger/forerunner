@@ -22,6 +22,7 @@ $(function () {
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
+     * @prop {String} options.rsInstance - Report service instance name
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({

@@ -46,6 +46,7 @@ $(function () {
      * @prop {Object} options.parameterModel - Parameter model
      * @prop {Object} options.savePosition - Saved report page scroll position 
      * @prop {String} options.viewerID - Current report viewer id.
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportViewerId").reportViewer({
      *  reportPath: "/Northwind Test Reports/bar chart"
@@ -4068,7 +4069,7 @@ $(function () {
      * @namespace $.forerunner.pageNav
      * @prop {Object} options - The options for pageNav
      * @prop {String} options.$reportViewer - Report viewer widget
-     *
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#pageNavContainer").pageNav({
      *  $reportViewer: me.$reportViewer
@@ -4363,7 +4364,8 @@ $(function () {
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
      * @prop {Object} options.$appContainer - Report page container
-     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
+     * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
@@ -4418,6 +4420,8 @@ $(function () {
          * @function $.forerunner.reportExplorer#getUserSettings
          *
          * @param {Boolean} forceLoadFromServer - if true, always load from the server
+         *
+         * @return {Object} - User settings
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -4643,7 +4647,6 @@ $(function () {
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
-         *
          */
         showUserSettingsDialog : function() {
             var me = this;
@@ -9184,6 +9187,7 @@ $(function () {
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
+     * @prop {String} options.rsInstance - Report service instance name
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -9600,6 +9604,7 @@ $(function () {
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history
 	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
      *  navigateTo: me.navigateTo,

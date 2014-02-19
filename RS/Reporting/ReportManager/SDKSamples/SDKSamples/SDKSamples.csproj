@@ -135,15 +135,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\CustomAPIFilters.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SamplesController.cs" />
-    <Compile Include="Controllers\ReportManagerController.cs" />
-    <Compile Include="Controllers\ReportViewerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sdk\CustomAPIFilters.cs" />
+    <Compile Include="sdk\ReportManagerController.cs" />
+    <Compile Include="sdk\ReportViewerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Bundles\AddButton.cshtml.txt">
@@ -175,8 +175,6 @@
     </Content>
     <Content Include="Content\images\reporticon.png" />
     <Content Include="Content\images\MyHome.png" />
-    <Content Include="Forerunner\Bundles\Forerunner-all.css" />
-    <Content Include="Forerunner\Bundles\Forerunner-all.min.css" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
@@ -227,6 +225,7 @@
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
     <Content Include="Forerunner\ReportExplorer\images\accent.png" />
     <Content Include="Forerunner\ReportExplorer\images\bullet.png" />
+    <Content Include="Forerunner\ReportExplorer\images\Folder-icon.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder.png" />
     <Content Include="Forerunner\ReportExplorer\images\folder_selected.png" />
     <Content Include="Forerunner\ReportExplorer\images\heroAccent.png" />
@@ -264,7 +263,7 @@
     <Content Include="Forerunner\ReportViewer\Images\search.png" />
     <Content Include="Forerunner\ReportViewer\Images\SortAccending.gif" />
     <Content Include="Forerunner\ReportViewer\Images\SortDecending.gif" />
-    <Content Include="Forerunner\ReportViewer\Images\Toolbar\bkg_toolbar.jpg" />
+    <Content Include="Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_down_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Images\toolpane\sq_br_up_icon16.png" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-de.txt" />
@@ -334,11 +333,6 @@
     <Content Include="Bundles\RemoveButton.cshtml.bundle" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Forerunner\Lib\jQuery\css\images\Thumbs.db" />
-    <Content Include="Forerunner\ReportViewer\Images\Toolbar\Thumbs.db" />
-    <Content Include="Forerunner\ReportViewer\Images\toolpane\Thumbs.db" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
   </ItemGroup>
   <ItemGroup>
@@ -362,6 +356,9 @@
     <Content Include="Bundles\ReportSelector.js.min.txt.map">
       <DependentUpon>ReportSelector.js.bundle</DependentUpon>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sdk\readme.docx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

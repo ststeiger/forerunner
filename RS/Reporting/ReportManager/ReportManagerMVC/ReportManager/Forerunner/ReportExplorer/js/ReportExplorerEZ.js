@@ -26,6 +26,7 @@ $(function () {
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history
 	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
 	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
      *  navigateTo: me.navigateTo,
@@ -38,7 +39,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -65,7 +67,8 @@ $(function () {
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
-                explorerSettings: me.options.explorerSettings
+                explorerSettings: me.options.explorerSettings,
+                rsInstance: me.options.rsInstance,
             });
         },
         /**
@@ -139,7 +142,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings
+                    userSettings: userSettings,
+                    rsInstance: me.options.rsInstance,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

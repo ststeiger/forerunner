@@ -67,6 +67,19 @@ $(function () {
         },
     }); //$.widget
 
+    /**
+     * Widget used to show print dialog
+     *
+     * @namespace $.forerunner.reportPrint
+     * @prop {Object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
@@ -139,9 +152,11 @@ $(function () {
             });
         },
         /**
+         * Set report page layout
+         *
          * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
+         * 
+         * @param {Object} pageLayout - Report page layout data
          */
         setPrint: function (pageLayout) {
             var me = this;
@@ -280,6 +295,8 @@ $(function () {
         },
 
         /**
+         * Open print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         openDialog: function () {
@@ -292,6 +309,8 @@ $(function () {
             //});
         },
         /**
+         * Close print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         closeDialog: function () {
@@ -363,6 +382,11 @@ $(function () {
                 return source;
             }
         },
+        /**
+        * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+        *
+        * @function $.forerunner.dsCredential#destroy
+        */
         destroy: function () {
             var me = this;
             me._printData = null;

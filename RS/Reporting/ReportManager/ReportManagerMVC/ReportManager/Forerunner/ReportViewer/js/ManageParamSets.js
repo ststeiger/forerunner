@@ -15,6 +15,22 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var manageParamSets = locData.manageParamSets;
 
+    /**
+     * Widget used to manage parameter set
+     *
+     * @namespace $.forerunner.manageParamSets
+     * @prop {Object} options - The options for dsCredential
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.model - Parameter model widget instance
+     *
+     * @example
+     * $("#manageParamSetsDialog").manageParamSets({
+     *    $appContainer: me.options.$appContainer,
+     *    $reportViewer: $viewer,
+     *    model: me.parameterModel
+     /  });
+     */
     $.widget(widgets.getFullname(widgets.manageParamSets), {
         options: {
             $reportViewer: null,
@@ -247,7 +263,10 @@ $(function () {
             delete me.serverData.parameterSets[id];
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#openDialog
+         * @param {String} parameterList - User saved parameter set
          */
         openDialog: function (parameterList) {
             var me = this;
@@ -260,7 +279,9 @@ $(function () {
             }
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
          */
         closeDialog: function () {
             var me = this;

@@ -880,12 +880,12 @@ namespace Forerunner.SSRS.Viewer
         }
 
         //Support print by producing a PDF, allow user to change page layout
-        public byte[] PrintExport(string ReportPath, string SessionID, string ParametersList, string PrintPropertyString, out string MimeType, out string FileName)
+        public byte[] PrintExport(string ReportPath, string SessionID, string PrintPropertyString, out string MimeType, out string FileName)
         {
-            return RenderExtension(ReportPath, SessionID, ParametersList, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
+            return RenderExtension(ReportPath, SessionID, "PDF", out MimeType, out FileName, JsonUtility.GetPrintPDFDevInfo(PrintPropertyString));
         }
 
-        public byte[] RenderExtension(string ReportPath, string SessionID, string ParametersList, string ExportType, out string MimeType,out string FileName, string devInfo=null)
+        public byte[] RenderExtension(string ReportPath, string SessionID, string ExportType, out string MimeType,out string FileName, string devInfo=null)
         {
             string historyID = null;
             string encoding;
@@ -909,13 +909,13 @@ namespace Forerunner.SSRS.Viewer
 
                 NewSession = rs.ExecutionHeaderValue.ExecutionID;
 
-                if (rs.GetExecutionInfo().Parameters.Length != 0)
-                {
-                    if (ParametersList != null)
-                    {
-                        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
-                    }
-                }
+                //if (rs.GetExecutionInfo().Parameters.Length != 0)
+                //{
+                //    if (ParametersList != null)
+                //    {
+                //        rs.SetExecutionParameters(JsonUtility.GetParameterValue(ParametersList), "en-us");
+                //    }
+                //}
 
                 if (devInfo == null)
                 {

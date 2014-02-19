@@ -22,7 +22,8 @@ $(function () {
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
      * @prop {Object} options.$appContainer - Report page container
-     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
+     * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
@@ -44,7 +45,8 @@ $(function () {
             $scrollBarOwner: null,
             navigateTo: null,
             $appContainer: null,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         /**
          * Save the user settings
@@ -58,6 +60,7 @@ $(function () {
             var stringified = JSON.stringify(settings);
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -75,6 +78,8 @@ $(function () {
          * @function $.forerunner.reportExplorer#getUserSettings
          *
          * @param {Boolean} forceLoadFromServer - if true, always load from the server
+         *
+         * @return {Object} - User settings
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -85,6 +90,7 @@ $(function () {
 
             var settings = null;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -106,7 +112,8 @@ $(function () {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
               + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
-
+            if (me.options.rsInstance)
+                reportThumbnailPath += "&instance=" + me.options.rsInstance;
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
@@ -222,9 +229,11 @@ $(function () {
         },
         _fetch: function (view,path) {
             var me = this;
+            var url = me.options.reportManagerAPI + "/GetItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
+                url: url,
                 async: false,
                 data: {
                     view: view,
@@ -296,7 +305,6 @@ $(function () {
          * Show the user settings modal dialog.
          *
          * @function $.forerunner.reportExplorer#showUserSettingsDialog
-         *
          */
         showUserSettingsDialog : function() {
             var me = this;

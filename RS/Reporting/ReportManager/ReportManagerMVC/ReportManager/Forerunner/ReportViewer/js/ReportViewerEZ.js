@@ -15,17 +15,23 @@ $(function () {
      * @prop {Object} options - The options for reportViewerEZ
      * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
      * @prop {String} options.path - Path of the report
+     * @prop {String} options.jsonPath - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
-     * @prop {bool} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
+     * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
+     * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
+     * @prop {Boolean} options.userSettings - Custom user setting
+     * @prop {String} options.rsInstance - Report service instance name
+     *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
      *  path: path,
      *  navigateTo: me.navigateTo,
      *  historyBack: me.historyBack
-     *  isReportManager: false
+     *  isReportManager: false,
+     *  userSettings: userSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportViewerEZ), $.forerunner.toolBase, {
@@ -38,7 +44,8 @@ $(function () {
             isReportManager: false,
             isFullScreen: true,
             userSettings: null,
-            savedParameters: null
+            savedParameters: null,
+            rsInstance: null,
         },
         _render: function () {
             var me = this;
@@ -77,7 +84,8 @@ $(function () {
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
                 savedParameters: me.options.savedParameters,
-                $appContainer: layout.$container
+                $appContainer: layout.$container,
+                rsInstance: me.options.rsInstance,
             });
 
             initializer.render();

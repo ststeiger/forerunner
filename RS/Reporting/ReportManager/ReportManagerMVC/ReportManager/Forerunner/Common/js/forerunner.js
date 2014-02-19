@@ -459,7 +459,7 @@ $(function () {
         /**
         * Override the forerunner folder path.  By default, it is the vroot + /forerunner.
         *
-        * @param {string} Forerunner folder path.
+        * @param {String} Forerunner folder path.
         */
         setForerunnerFolder: function (forerunnerFolderPath) {
             if (_endsWith(forerunnerFolderPath, "/") === -1) {
@@ -480,7 +480,7 @@ $(function () {
         /**
         * Override the api base.  By default, it is the vroot + /api.
         *
-        * @param {string} API Base.
+        * @param {String} API Base.
         */
         setAPIBase: function (apiBase) {
             if (_endsWith(apiBase, "/") === -1) {
@@ -501,7 +501,7 @@ $(function () {
          * Returns the number of elements or properties in an object
          *
          * @member
-         * @param {object} obj - target object        
+         * @param {Object} obj - target object        
          */
         objectSize: function (obj) {
             var size = 0, key;
@@ -550,9 +550,9 @@ $(function () {
         },
         /**
          * Returns whether given element contain specify class names
-         * @param {object} element - target element
+         * @param {Object} element - target element
          * @param {Array} classList - class name list
-         * @return {bool} - element contain one of the class list or not
+         * @return {Boolean} - element contain one of the class list or not
          *
          * @member
          */
@@ -583,7 +583,7 @@ $(function () {
          * Returns a new div of the specified classes.
          *
          * @params {Array} listOfClassed - List of classes for the new div.
-         * @return {object} - element contain one of the class list or not
+         * @return {Object} - element contain one of the class list or not
          *
          * @member
          */
@@ -802,7 +802,7 @@ $(function () {
          *
          * @param {String} locFileLocation - The localization file location without the language qualifier
          *
-         * @return {object} Localization data
+         * @return {Object} Localization data
          */
         getLocData: function (locFileLocation) {
             var languageList = this._getLanguages();
@@ -929,7 +929,7 @@ $(function () {
         /**
         * Wraps the $.ajax call and if the response status 302, it will redirect to login page. 
         *
-        * @param {object} options - Options for the ajax call.
+        * @param {Object} options - Options for the ajax call.
         * @member
         */
         ajax: function (options) {
@@ -946,7 +946,7 @@ $(function () {
         * Wraps the $.getJSON call and if the response status 401 or 302, it will redirect to login page. 
         *
         * @param {String} url - Url of the ajax call
-        * @param {object} options - Options for the ajax call.
+        * @param {Object} options - Options for the ajax call.
         * @param {function} done - Handler for the success path.
         * @param {function} fail - Handler for the failure path.
         * @member
@@ -969,7 +969,7 @@ $(function () {
         * Wraps the $.post call and if the response status 401 or 302, it will redirect to login page. 
         *
         * @param {String} url - Url of the ajax call
-        * @param {object} data - data for the ajax call.
+        * @param {Object} data - data for the ajax call.
         * @param {function} success - Handler for the success path.
         * @param {function} fail - Handler for the failure path.
         * @member
@@ -994,11 +994,11 @@ $(function () {
      * @namespace
      */
     forerunner.device = {
-        /** @return {bool} Returns a boolean that indicates if the device is a touch device */
+        /** @return {Boolean} Returns a boolean that indicates if the device is a touch device */
         isTouch: function () {
             return ("ontouchstart" in window) || (navigator.msMaxTouchPoints > 0);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is in portrait */
+        /** @return {Boolean} Returns a boolean that indicates if the device is in portrait */
         isPortrait: function () {
             if (!window.orientation) {
                 return $(window).height() > $(window).width();
@@ -1011,27 +1011,27 @@ $(function () {
             /*jshint bitwise: true*/
             return true;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an iOS device */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an iOS device */
         isiOS: function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPhone|iPod|iPad)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an iPhone or iPod device */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an iPhone or iPod device */
         isiPhone: function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPhone|iPod)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an iPad device */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an iPad device */
         isiPad: function () {
             var ua = navigator.userAgent;
             return ua.match(/(iPad)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an Firefox Browser  */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an Firefox Browser  */
         isFirefox: function () {
             var ua = navigator.userAgent;
             return ua.match(/(Firefox)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser  */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an Safari Browser  */
         isSafari: function () {
             var ua = navigator.userAgent;
             if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1) {
@@ -1039,7 +1039,7 @@ $(function () {
             }
             return false;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an Safari Browser on  */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an Safari Browser on  */
         isSafariPC: function () {
             var ua = navigator.userAgent;            
             if (ua.indexOf("Safari") !== -1 && ua.indexOf("Chrome") === -1 && ua.indexOf("Windows") !== -1) {
@@ -1047,52 +1047,52 @@ $(function () {
             }
             return false;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser */
         isMSIE: function () {
             var ua = navigator.userAgent;
             return (ua.match(/(MSIE)/) || ua.match(/(.NET)/));  //Handle IE11
         },
-        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 8 Browser */
         isMSIE8: function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE 8)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE 9 Browser */
         isMSIE9: function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE 9)/);
         },
-        /** @return {bool} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
+        /** @return {Boolean} Returns a boolean that indicates if the device is Microsoft IE Browser with the Touch key woard */
         isMSIEAndTouch :function () {
             var ua = navigator.userAgent;
             return ua.match(/(MSIE)/) !== null && ua.match(/(Touch)/) !== null;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is a Windows Phone */
+        /** @return {Boolean} Returns a boolean that indicates if the device is a Windows Phone */
         isWindowsPhone : function() {
             var ua = navigator.userAgent;
             return ua.match(/(Windows Phone)/) !== null;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is in the standalone mode */
+        /** @return {Boolean} Returns a boolean that indicates if the device is in the standalone mode */
         isStandalone: function () {
             if (window.navigator.standalone) {
                 return true;
             }
             return false;
         },
-        /** @return {bool} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
+        /** @return {Boolean} Returns a boolean that indicates if the device an iPhone and is in the fullscreen / landscape mode */
         isiPhoneFullscreen: function () {
             if (forerunner.device.isiPhone() && document.documentElement.clientHeight === 320) {
                 return true;
             }
             return false;
         },
-        /** @return {bool} Returns a boolean that indicates if the device is an Android device */
+        /** @return {Boolean} Returns a boolean that indicates if the device is an Android device */
         isAndroid: function () {
             var ua = navigator.userAgent;
             return ua.match(/(Android)/) !== null;
         },
 
-        /** @return {bool} Returns a boolean that indicates if it is a Chrome browser */
+        /** @return {Boolean} Returns a boolean that indicates if it is a Chrome browser */
         isChrome : function () {
             var ua = navigator.userAgent;
             return ua.match(/(Chrome)/) !== null;
@@ -1101,7 +1101,7 @@ $(function () {
         _allowZoomFlag : false,
         /** 
          * Sets up the viewport meta tag for scaling or fixed size based upon the given flag
-         * @param {bool} flag - true = scale enabled (max = 10.0), false = scale disabled
+         * @param {Boolean} flag - true = scale enabled (max = 10.0), false = scale disabled
          */
         allowZoom: function (flag) {
             this._allowZoomFlag = flag;
@@ -1116,20 +1116,20 @@ $(function () {
 
         /** 
          * Gets whether the view port allows zooming
-         * @return {bool} flag - True if the view port allow zooming.
+         * @return {Boolean} flag - True if the view port allow zooming.
          */
         isAllowZoom : function() {
             return this._allowZoomFlag;
         },
       
-        /** @return {float} Returns the zoom level, (document / window) width */
+        /** @return {Float} Returns the zoom level, (document / window) width */
         zoomLevel: function(element){
             var ratio = document.documentElement.clientWidth / window.innerWidth;
 
             //alert(ratio);
             return ratio;
         },
-        /** @return {bool} Returns a boolean that indicates if the element is inside the viewport */
+        /** @return {Boolean} Returns a boolean that indicates if the element is inside the viewport */
         isElementInViewport: function (el) {
             var rect = el.getBoundingClientRect();
 
@@ -1141,7 +1141,7 @@ $(function () {
                 );
         },
                    
-        /** @return {bool} Returns a boolean that indicates if device is small (I.e, height < 768) */
+        /** @return {Boolean} Returns a boolean that indicates if device is small (I.e, height < 768) */
         isSmall: function () {
             if ($(window).height() < 768)
                 return true;
@@ -1160,8 +1160,8 @@ $(function () {
        * Show a modal dialog with appContainer and target dialog container specify
        *
        * @function forerunner.dialog#showModalDialog
-       * @param {object} $appContainer - app Container
-       * @param {object} target - object that modal dialog apply to
+       * @param {Object} $appContainer - app Container
+       * @param {Object} target - object that modal dialog apply to
        */
         showModalDialog: function ($appContainer, target) {
             var me = this;
@@ -1196,8 +1196,8 @@ $(function () {
         * Close a modal dialog with appContainer and target dialog container specify
         *
         * @function forerunner.dialog#closeModalDialog
-        * @param {object} $appContainer - app Container
-        * @param {object} target - object that modal dialog apply to
+        * @param {Object} $appContainer - app Container
+        * @param {Object} target - object that modal dialog apply to
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
@@ -1212,7 +1212,7 @@ $(function () {
         * Close all opened modal dialogs in specify appContainer
         *
         * @function forerunner.dialog#closeAllModalDialogs
-        * @param {object} $appContainer - app Container
+        * @param {Object} $appContainer - app Container
         */
         closeAllModalDialogs: function ($appContainer) {
             var me = this;
@@ -1227,9 +1227,9 @@ $(function () {
         * Show message box
         *
         * @function forerunner.dialog#showMessageBox
-        * @param {object} $appContainer - app Container
-        * @param {string} msg - message content
-        * @param {string} caption - modal dialog caption
+        * @param {Object} $appContainer - app Container
+        * @param {String} msg - message content
+        * @param {String} caption - modal dialog caption
         */
         showMessageBox: function ($appContainer, msg, caption) {
             var $msgBox = $appContainer.find(".fr-messagebox");
@@ -1244,12 +1244,12 @@ $(function () {
         * Get modal dialog static header html snippet
         *
         * @function forerunner.dialog#getModalDialogHeaderHtml
-        * @param {string} iconClass - icon class to specific icon position
-        * @param {string} title - modal dialog title
-        * @param {string} cancelClass - cancel button class name
-        * @param {string} cancelWord - cancel button's text
+        * @param {String} iconClass - icon class to specific icon position
+        * @param {String} title - modal dialog title
+        * @param {String} cancelClass - cancel button class name
+        * @param {String} cancelWord - cancel button's text
         *
-        * @return {string} - modal dialog header html snippet
+        * @return {String} - modal dialog header html snippet
         */
         getModalDialogHeaderHtml: function (iconClass, title, cancelClass, cancelWord) {
             var html = "<div class='fr-core-dialog-header'>" +
@@ -1391,17 +1391,50 @@ $(function () {
         forerunner.styleSheet.updateDynamicRules([touchShowRule, touchShowRuleTp, touchHideRule, touchHideRuleTp]);
         // Put a check in so that this would not barf for the login page.
         if ($.validator) {
-            // Add custom date validator rule
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var error = locData.validateError;
+
+            //replace error message with custom data
+            jQuery.extend(jQuery.validator.messages, {
+                required: error.required,
+                remote: error.remote,
+                email: error.email,
+                url: error.url,
+                date: error.date,
+                dateISO: error.dateISO,
+                number: error.number,
+                digits: error.digits,
+                maxlength: $.validator.format(error.maxlength),
+                minlength: $.validator.format(error.minlength),
+                rangelength: $.validator.format(error.rangelength),
+                range: $.validator.format(error.range),
+                max: $.validator.format(error.max),
+                min: $.validator.format(error.min),
+                autoCompleteDropdown: error.invalid
+            });
+            
             var format = locData.datepicker.dateFormat;
             var momentFormat = format.toUpperCase();
             momentFormat = momentFormat.replace("YY", "YYYY");
+
+            // Add custom date validator rule
             $.validator.addMethod(
                 "formattedDate",
                 function (value, element) {
                     return moment(value, momentFormat, true).isValid();
                 },
-                locData.validateError.date
+                error.date
+            );
+
+            $.validator.addMethod(
+                "autoCompleteDropdown",
+                function (value, element, param) {
+                    if ($(element).hasClass("fr-param-autocomplete-error"))
+                        return false;
+                    else
+                        return true;
+                },
+                error.autoCompleteDropdown
             );
         }
     });

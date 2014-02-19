@@ -1415,7 +1415,7 @@ $(function () {
         exportReport: function (exportType) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&ExportType=" + exportType;
+            var url = me.options.reportViewerAPI + "/ExportReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ExportType=" + exportType;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },       
@@ -1440,7 +1440,7 @@ $(function () {
         printReport: function (printPropertyList) {
             var me = this;
             me._resetContextIfInvalid();
-            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&ParameterList=&PrintPropertyString=" + printPropertyList;
+            var url = me.options.reportViewerAPI + "/PrintReport/?ReportPath=" + me.getReportPath() + "&SessionID=" + me.getSessionID() + "&PrintPropertyString=" + printPropertyList;
             if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             window.open(url);
         },

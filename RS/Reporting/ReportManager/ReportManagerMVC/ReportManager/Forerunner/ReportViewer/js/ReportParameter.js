@@ -638,7 +638,7 @@ $(function () {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
 
                     if (me._paramCount === 1) {
-                        me._submitForm(pageNum);
+                        setTimeout(function () { me._submitForm(pageNum) }, 100);
                     }
 
                     return false;
@@ -656,8 +656,12 @@ $(function () {
                     }
                 },
                 change: function (event, obj) {
-                    if (!obj.item)
+                    if (!obj.item) {
                         $control.addClass("fr-param-autocomplete-error");
+                    }
+                    else {
+                        $control.removeClass("fr-param-autocomplete-error");
+                    }
 
                     //if this control don't required, then empty is a valid value
                     if (!$control.attr("required") && $control.val() === "")

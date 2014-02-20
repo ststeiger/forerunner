@@ -128,11 +128,6 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
-            if (!me.$reportExplorer)
-                me._createReportExplorer(false);
-
-            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
-
             me.DefaultAppTemplate._selectedItemPath = null;
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
             setTimeout(function () {
@@ -142,7 +137,6 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings,
                     rsInstance: me.options.rsInstance,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");

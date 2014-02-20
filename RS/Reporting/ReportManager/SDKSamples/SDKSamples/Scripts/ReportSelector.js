@@ -104,8 +104,8 @@
         $("#reportViewID").remove();
 
         // Create a new reportViewerEZ
-        var $viewContainer = "<div id='reportViewID' class='report-view-container'></div>";
-        var $reportCell = $("." + "report-view-cell");
+        var $reportCell = $("." + "report-view-container");
+        var $viewContainer = "<div id='reportViewID' class='report-view'></div>";
         $reportCell.html($viewContainer);
         $('#reportViewID').reportViewerEZ({
             DefaultAppTemplate: null,

@@ -279,14 +279,14 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ExportReport(string ReportPath, string SessionID, string ParameterList, string ExportType, string instance = null)
+        public HttpResponseMessage ExportReport(string ReportPath, string SessionID, string ExportType, string instance = null)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
                 string fileName;
-                result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType, out fileName);
+                result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ExportType, out mimeType, out fileName);
                 return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch(Exception e)
@@ -298,14 +298,14 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage PrintReport(string ReportPath, string SessionID, string Parameterlist, string PrintPropertyString, string instance = null)
+        public HttpResponseMessage PrintReport(string ReportPath, string SessionID, string PrintPropertyString, string instance = null)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
                 string fileName;
-                result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, Parameterlist, PrintPropertyString, out mimeType, out fileName);
+                result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, PrintPropertyString, out mimeType, out fileName);
                 return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch (Exception e)

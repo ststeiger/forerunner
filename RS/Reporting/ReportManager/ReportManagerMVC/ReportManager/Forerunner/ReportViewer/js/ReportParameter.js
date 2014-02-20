@@ -376,7 +376,9 @@ $(function () {
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) : me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ?
+                        me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
+                        me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
@@ -617,11 +619,13 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
+                    $control.val(param.ValidValues[i].Key).attr("backendValue", predefinedValue);
                     canLoad = true;
-                    break;
                 }
+
+                param.ValidValues[i].label = param.ValidValues[i].Key;
+                param.ValidValues[i].value = param.ValidValues[i].Value;
             }
             if (!canLoad && param.Nullable !== true) me._loadedForDefault = false;
 
@@ -693,12 +697,12 @@ $(function () {
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].label) + "</option>");
+                var optionValue = param.ValidValues[i].Value;
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");
-                    $control.attr("title", param.ValidValues[i].label);
+                    $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
                 }
 
@@ -770,8 +774,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
-                param.ValidValues.push({ label: "Select All", value: "Select All" });
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -780,12 +784,12 @@ $(function () {
                 var value;
                 if (i === 0) {
                     var SelectAll = param.ValidValues[param.ValidValues.length - 1];                    
-                    key = SelectAll.label;
-                    value = SelectAll.value;
+                    key = SelectAll.Key;
+                    value = SelectAll.Value;
                 }
                 else {
-                    key = param.ValidValues[i - 1].label;
-                    value = param.ValidValues[i - 1].value;
+                    key = param.ValidValues[i - 1].Key;
+                    value = param.ValidValues[i - 1].Value;
                 }
 
                 var $row = new $("<TR />");

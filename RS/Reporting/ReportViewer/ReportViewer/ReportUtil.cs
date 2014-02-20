@@ -302,10 +302,11 @@ namespace Forerunner
                     {
                         w.WriteStartObject();
                         //change key from 'Key' to 'label' to adapt jquery.ui auto complete
-                        w.WriteMember("label");
+                        //change it back to Key/Value to keep same format with v1
+                        w.WriteMember("Key");
                         w.WriteString(item.Label);
                         //change key from 'Value' to 'value' to adapt jquery.ui auto complete
-                        w.WriteMember("value");
+                        w.WriteMember("Value");
                         w.WriteString(item.Value);
                         w.WriteEndObject();
                     }

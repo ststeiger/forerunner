@@ -82,20 +82,7 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-
+            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
             }

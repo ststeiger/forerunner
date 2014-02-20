@@ -39,6 +39,7 @@ $(function () {
             userSettings: null,
             savedParameters: null,
             rsInstance: null,
+            useReportManagerSettings: false,
         },
         _render: function () {
             var me = this;
@@ -78,6 +79,7 @@ $(function () {
                 savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
+                useReportManagerSettings: me.options.useReportManagerSettings,
             });
 
             initializer.render();

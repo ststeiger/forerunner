@@ -8362,6 +8362,8 @@ $(function () {
                     me.options.$appContainer.append($dlg);
                 }
                 me._manageParamSetsDialog = $dlg;
+            }
+            if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
 

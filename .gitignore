@@ -57,6 +57,8 @@ Setup/ReportManagerRegister/ReportManagerRegister/bin/Debug/ReportManagerRegiste
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/ReportMannagerConfigTool.frmMain.resources
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Release/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/*
+RS/Reporting/ReportManager/ReportManagerMVC/ValidateLicense/obj/*
+RS/Reporting/ReportManager/ReportManagerMVC/ValidateLicense/bin/*
 RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Debug/*
 RS/Reporting/ReportViewer/Forerunner.SSR.Core/obj/Release/*
 RS/Reporting/ReportViewer/Rendering Extension/JSONRenderingExtension/obj/Debug/*

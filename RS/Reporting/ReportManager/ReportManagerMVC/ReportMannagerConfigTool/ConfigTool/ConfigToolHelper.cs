@@ -24,7 +24,7 @@ namespace ReportMannagerConfigTool
         {
             try
             {
-                ServiceController sc = new ServiceController("World Wide Web publishing");
+                ServiceController sc = new ServiceController("W3SVC");
                 if ((sc.Status.Equals(ServiceControllerStatus.Stopped) || sc.Status.Equals(ServiceControllerStatus.StopPending)))
                 {
                     return false;

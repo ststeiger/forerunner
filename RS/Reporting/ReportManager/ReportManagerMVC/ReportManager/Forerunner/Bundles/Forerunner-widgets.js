@@ -4430,20 +4430,7 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-
+            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
             }
@@ -7116,7 +7103,9 @@ $(function () {
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ? me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) : me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= 10 ?
+                        me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
+                        me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
                 else if (param.Type === "Boolean") {
                     //Radio Button, RS will return MultiValue false even set it to true
@@ -7357,11 +7346,13 @@ $(function () {
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                if ((predefinedValue && predefinedValue === param.ValidValues[i].value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].label).attr("backendValue", predefinedValue);
+                if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
+                    $control.val(param.ValidValues[i].Key).attr("backendValue", predefinedValue);
                     canLoad = true;
-                    break;
                 }
+
+                param.ValidValues[i].label = param.ValidValues[i].Key;
+                param.ValidValues[i].value = param.ValidValues[i].Value;
             }
             if (!canLoad && param.Nullable !== true) me._loadedForDefault = false;
 
@@ -7374,7 +7365,7 @@ $(function () {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
 
                     if (me._paramCount === 1) {
-                        me._submitForm(pageNum);
+                        setTimeout(function () { me._submitForm(pageNum) }, 100);
                     }
 
                     return false;
@@ -7392,8 +7383,12 @@ $(function () {
                     }
                 },
                 change: function (event, obj) {
-                    if (!obj.item)
+                    if (!obj.item) {
                         $control.addClass("fr-param-autocomplete-error");
+                    }
+                    else {
+                        $control.removeClass("fr-param-autocomplete-error");
+                    }
 
                     //if this control don't required, then empty is a valid value
                     if (!$control.attr("required") && $control.val() === "")
@@ -7433,12 +7428,12 @@ $(function () {
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
-                var optionValue = param.ValidValues[i].value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].label) + "</option>");
+                var optionValue = param.ValidValues[i].Value;
+                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");
-                    $control.attr("title", param.ValidValues[i].label);
+                    $control.attr("title", param.ValidValues[i].Key);
                     canLoad = true;
                 }
 
@@ -7510,8 +7505,8 @@ $(function () {
             $dropDownContainer.attr("value", param.Name);
 
             var $table = me._getDefaultHTMLTable();
-            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].label !== "Select All")
-                param.ValidValues.push({ label: "Select All", value: "Select All" });
+            if (param.ValidValues.length && param.ValidValues[param.ValidValues.length - 1].Key !== "Select All")
+                param.ValidValues.push({ Key: "Select All", Value: "Select All" });
 
             var keys = "";
             var values = "";
@@ -7520,12 +7515,12 @@ $(function () {
                 var value;
                 if (i === 0) {
                     var SelectAll = param.ValidValues[param.ValidValues.length - 1];                    
-                    key = SelectAll.label;
-                    value = SelectAll.value;
+                    key = SelectAll.Key;
+                    value = SelectAll.Value;
                 }
                 else {
-                    key = param.ValidValues[i - 1].label;
-                    value = param.ValidValues[i - 1].value;
+                    key = param.ValidValues[i - 1].Key;
+                    value = param.ValidValues[i - 1].Value;
                 }
 
                 var $row = new $("<TR />");
@@ -8836,6 +8831,7 @@ $(function () {
             userSettings: null,
             $appContainer: null,
             rsInstance: null,
+            useReportManagerSettings: false,
         };
 
         // Merge options with the default settings
@@ -8844,7 +8840,7 @@ $(function () {
         }
 
         me.parameterModel = null;
-        if (me.options.isReportManager) {
+        if (me.options.isReportManager || me.options.useReportManagerSettings) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
@@ -8859,6 +8855,11 @@ $(function () {
             var me = this;
             var $viewer = me.options.$viewer;
 
+            var userSettings = me.options.userSettings;
+            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
+                userSettings = me.getUserSettings(me.options);
+            }
+
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
@@ -8867,7 +8868,7 @@ $(function () {
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
-                userSettings: me.options.userSettings,
+                userSettings: userSettings,
                 savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
@@ -8899,7 +8900,7 @@ $(function () {
                 $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
-            if (me.options.isReportManager) {
+            if (me.options.isReportManager || me.options.useReportManagerSettings) {
                 $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
@@ -9016,6 +9017,22 @@ $(function () {
                     }
                 }
             });
+        },
+        getUserSettings : function(options) {
+            var settings = null;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (options.rsInstance) url += "?instance=" + options.rsInstance;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.responsiveUI !== undefined) {
+                        settings = data;
+                    }
+                }
+            });
+            return settings;
         },
         onClickBtnFavorite: function (e) {
             var me = this;
@@ -9188,6 +9205,7 @@ $(function () {
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
      * @prop {String} options.rsInstance - Report service instance name
+     * @prop {Boolean} options.useReportManagerSettings - Defaults to false if isREportManager is false.  If set to true, will load the user saved parameters and user settings from the database.
      *
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
@@ -9211,6 +9229,7 @@ $(function () {
             userSettings: null,
             savedParameters: null,
             rsInstance: null,
+            useReportManagerSettings: false,
         },
         _render: function () {
             var me = this;
@@ -9251,6 +9270,7 @@ $(function () {
                 savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
+                useReportManagerSettings: me.options.useReportManagerSettings,
             });
 
             initializer.render();
@@ -9697,7 +9717,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path) {
+        transitionToReportViewer: function (path, params) {
             var me = this;
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
@@ -9705,11 +9725,6 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            if (!me.$reportExplorer)
-                me._createReportExplorer(false);
-
-            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
@@ -9720,8 +9735,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings,
                     rsInstance: me.options.rsInstance,
+                    savedParameters: params,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

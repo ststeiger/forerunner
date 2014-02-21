@@ -384,7 +384,7 @@ namespace ForerunnerLicense
                 SQLConn.Close();
 
 
-                if (ld.MachineData.machineKey == null)
+                if (ld.MachineData == null || ld.MachineData.machineKey == null)
                     Response = String.Format(Response, "Fail", "105", "Invalid License Key or Machine Key");
                 else
                 {

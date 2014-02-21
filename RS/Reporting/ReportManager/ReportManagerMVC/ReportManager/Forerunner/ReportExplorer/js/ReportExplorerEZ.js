@@ -119,7 +119,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path) {
+        transitionToReportViewer: function (path, params) {
             var me = this;
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
@@ -127,11 +127,6 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            if (!me.$reportExplorer)
-                me._createReportExplorer(false);
-
-            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
@@ -142,8 +137,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings,
                     rsInstance: me.options.rsInstance,
+                    savedParameters: params,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

@@ -34,6 +34,7 @@ $(function () {
             userSettings: null,
             $appContainer: null,
             rsInstance: null,
+            useReportManagerSettings: false,
         };
 
         // Merge options with the default settings
@@ -42,7 +43,7 @@ $(function () {
         }
 
         me.parameterModel = null;
-        if (me.options.isReportManager) {
+        if (me.options.isReportManager || me.options.useReportManagerSettings) {
             // Create the parameter model object for this report
             me.parameterModel = $({}).parameterModel({ rsInstance: me.options.rsInstance });
         }
@@ -57,6 +58,11 @@ $(function () {
             var me = this;
             var $viewer = me.options.$viewer;
 
+            var userSettings = me.options.userSettings;
+            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
+                userSettings = me.getUserSettings(me.options);
+            }
+
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
@@ -65,7 +71,7 @@ $(function () {
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
-                userSettings: me.options.userSettings,
+                userSettings: userSettings,
                 savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
@@ -97,7 +103,7 @@ $(function () {
                 $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
-            if (me.options.isReportManager) {
+            if (me.options.isReportManager || me.options.useReportManagerSettings) {
                 $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnRTBManageSets, rtb.btnSelectSet, rtb.btnSavParam]);
             }
 
@@ -214,6 +220,22 @@ $(function () {
                     }
                 }
             });
+        },
+        getUserSettings : function(options) {
+            var settings = null;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (options.rsInstance) url += "?instance=" + options.rsInstance;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.responsiveUI !== undefined) {
+                        settings = data;
+                    }
+                }
+            });
+            return settings;
         },
         onClickBtnFavorite: function (e) {
             var me = this;

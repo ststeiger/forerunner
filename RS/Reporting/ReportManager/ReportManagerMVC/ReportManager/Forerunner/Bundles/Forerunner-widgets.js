@@ -7347,7 +7347,7 @@ $(function () {
 
             for (var i = 0; i < param.ValidValues.length; i++) {
                 if ((predefinedValue && predefinedValue === param.ValidValues[i].Value) || (!predefinedValue && i === 0)) {
-                    $control.val(param.ValidValues[i].Key).attr("backendValue", predefinedValue);
+                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                     canLoad = true;
                 }
 

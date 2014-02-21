@@ -11,6 +11,7 @@ using System.ServiceProcess;
 using System.Xml;
 using Forerunner.Security;
 using Microsoft.Win32;
+using System.ServiceProcess;
 
 namespace ReportMannagerConfigTool
 {
@@ -22,24 +23,20 @@ namespace ReportMannagerConfigTool
         /// <returns>True: installed; False: not</returns>
         public static bool isIISInstalled()
         {
-            //SOFTWARE\Microsoft\InetStp -- MajorVersion
-            string[] valueNames;
-
-            RegistryKey target = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("InetStp");
-
-            if (target == null)
-                return false;
-
-            valueNames = target.GetValueNames();
-            foreach (string keyName in valueNames)
+            try
             {
-                if (keyName == "MajorVersion")
+                ServiceController sc = new ServiceController("World Wide Web publishing");
+                if ((sc.Status.Equals(ServiceControllerStatus.Stopped) || sc.Status.Equals(ServiceControllerStatus.StopPending)))
                 {
-                    return true;
+                    return false;
                 }
             }
-
-            return false;
+            catch
+            {
+                return false;
+            }
+            return true;
+            
         }
 
         /// <summary>
@@ -117,6 +114,17 @@ namespace ReportMannagerConfigTool
             try
             {
                 conn.Open();
+                string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
+
+                SqlCommand cmd = new SqlCommand(SQL, conn);
+                SqlDataReader rdr = cmd.ExecuteReader();
+                if (!rdr.Read())
+                {
+                    conn.Close();
+                    return String.Format(StaticMessages.databaseConnectionFail, "Not a Report Server Database");
+                }
+                conn.Close();
+
             }
             catch (Exception error)
             {

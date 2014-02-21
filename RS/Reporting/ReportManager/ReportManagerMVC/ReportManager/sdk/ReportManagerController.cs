@@ -25,20 +25,49 @@ namespace ReportManager.Controllers
     [Authorize]
     public class ReportManagerController : ApiController
     {
-        private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
+        static private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
-        private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
-        private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
-        private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
-        private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
-        private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
-        private string ReportServerDBPWD = ConfigurationManager.AppSettings["Forerunner.ReportServerDBPWD"];
-        private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
-        private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
-        private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
-        private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
-        
+        static private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
+        static private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
+        static private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
+        static private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
+        static private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
+        static private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
+        static private string ReportServerDBPWD = ConfigurationManager.AppSettings["Forerunner.ReportServerDBPWD"];
+        static private string ReportServerDBDomain = ConfigurationManager.AppSettings["Forerunner.ReportServerDBDomain"];
+        static private string ReportServerSSL = ConfigurationManager.AppSettings["Forerunner.ReportServerSSL"];
+        static private string DefaultUserDomain = ConfigurationManager.AppSettings["Forerunner.DefaultUserDomain"];
+        static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
+
+        private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
+        {
+            Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+            if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
+            {
+                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+            }
+            else
+            {
+                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
+            }
+        }
+
+        static ReportManagerController()
+        {
+            if (ReportServerDataSource != null)
+            {
+                Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");
+                validateReportServerDB(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity);
+            }
+
+            if (webConfigSection != null)
+            {
+                foreach(Forerunner.Config.ConfigElement configElement in webConfigSection.InstanceCollection) {
+                    Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the Forerunner section.  Instance: " + configElement.Instance);
+                    validateReportServerDB(configElement.ReportServerDataSource, configElement.ReportServerDB, configElement.ReportServerDBUser, configElement.ReportServerDBPWD, configElement.ReportServerDBDomain, configElement.UseIntegratedSecurityForSQL);
+                }
+            }
+        }
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];

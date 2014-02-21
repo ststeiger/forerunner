@@ -9709,7 +9709,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path) {
+        transitionToReportViewer: function (path, params) {
             var me = this;
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
@@ -9728,6 +9728,7 @@ $(function () {
                     historyBack: me.options.historyBack,
                     isReportManager: true,
                     rsInstance: me.options.rsInstance,
+                    savedParameters: params,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

@@ -136,6 +136,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SamplesDownloadController.cs" />
     <Compile Include="Controllers\SamplesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -146,33 +147,6 @@
     <Compile Include="sdk\ReportViewerController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bundles\AddButton.cshtml.txt">
-      <DependentUpon>AddButton.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\Dashboard.cshtml.txt">
-      <DependentUpon>Dashboard.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\RemoveButton.cshtml.txt">
-      <DependentUpon>RemoveButton.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\ReportExplorerEZ.cshtml.txt">
-      <DependentUpon>ReportExplorerEZ.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\ReportSelector.cshtml.txt">
-      <DependentUpon>ReportSelector.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\ReportSelector.js.min.txt">
-      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\ReportSelector.js.txt">
-      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\ReportViewerEZ.cshtml.txt">
-      <DependentUpon>ReportViewerEZ.cshtml.bundle</DependentUpon>
-    </Content>
-    <Content Include="Bundles\_SamplesLayout.cshtml.txt">
-      <DependentUpon>_SamplesLayout.cshtml.bundle</DependentUpon>
-    </Content>
     <Content Include="Content\images\reporticon.png" />
     <Content Include="Content\images\MyHome.png" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
@@ -321,40 +295,11 @@
     <Content Include="Views\Samples\RemoveButton.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Bundles\ReportViewerEZ.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\ReportExplorerEZ.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\AddButton.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\RemoveButton.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\_SamplesLayout.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Samples\Dashboard.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\Dashboard.cshtml.bundle" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Samples\ReportSelector.cshtml">
       <SubType>Code</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\ReportSelector.cshtml.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\ReportSelector.js.bundle" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Bundles\ReportSelector.js.min.txt.map">
-      <DependentUpon>ReportSelector.js.bundle</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>

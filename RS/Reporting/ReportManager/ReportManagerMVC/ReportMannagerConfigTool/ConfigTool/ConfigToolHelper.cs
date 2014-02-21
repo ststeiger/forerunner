@@ -18,7 +18,7 @@ namespace ReportMannagerConfigTool
     public static class ConfigToolHelper
     {
         /// <summary>
-        /// Detect whether IIS web server installed on the machine
+        /// Detect whether IIS web server installed on the machine and running.
         /// </summary>
         /// <returns>True: installed; False: not</returns>
         public static bool isIISInstalled()
@@ -86,7 +86,9 @@ namespace ReportMannagerConfigTool
             try
             {
                 impersonator.Impersonate();
-                conn.Open();
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {
@@ -101,7 +103,23 @@ namespace ReportMannagerConfigTool
             }
 
             return StaticMessages.testSuccess;
-        }     
+        }
+
+        private static bool isReportServerDB(SqlConnection conn)
+        {
+            conn.Open();
+            string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
+
+            SqlCommand cmd = new SqlCommand(SQL, conn);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            if (!rdr.Read())
+            {
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            return true;
+        }
 
         /// <summary>
         /// Verify whether program can connect database with given connection string.
@@ -113,18 +131,9 @@ namespace ReportMannagerConfigTool
             SqlConnection conn = new SqlConnection(connectionString);
             try
             {
-                conn.Open();
-                string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
-
-                SqlCommand cmd = new SqlCommand(SQL, conn);
-                SqlDataReader rdr = cmd.ExecuteReader();
-                if (!rdr.Read())
-                {
-                    conn.Close();
-                    return String.Format(StaticMessages.databaseConnectionFail, "Not a Report Server Database");
-                }
-                conn.Close();
-
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {

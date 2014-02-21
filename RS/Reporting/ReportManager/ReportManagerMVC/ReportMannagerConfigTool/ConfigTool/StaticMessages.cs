@@ -38,6 +38,7 @@
         public static readonly string IISUsrsAccount = "IIS_IUSRS";
 
         public static readonly string databaseConnectionFail = "Database connection failed: {0}";
+        public static readonly string notReportServerDB = "Not a Report Server Database";
         public static readonly string testSuccess = "Success";
         public static readonly string testFail = "Fail";
         public static readonly string webServiceUrlInvalid = "Web Service Url is invalid: {0}";

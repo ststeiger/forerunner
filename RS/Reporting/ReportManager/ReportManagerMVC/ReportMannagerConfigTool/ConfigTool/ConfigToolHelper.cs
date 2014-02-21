@@ -10,35 +10,31 @@ using System.Security.AccessControl;
 using System.ServiceProcess;
 using Forerunner.Security;
 using Microsoft.Win32;
+using System.Xml;
 
 namespace ReportMannagerConfigTool
 {
     public static class ConfigToolHelper
     {
         /// <summary>
-        /// Detect whether IIS web server installed on the machine
+        /// Detect whether IIS web server installed on the machine and running.
         /// </summary>
         /// <returns>True: installed; False: not</returns>
         public static bool isIISInstalled()
         {
-            //SOFTWARE\Microsoft\InetStp -- MajorVersion
-            string[] valueNames;
-
-            RegistryKey target = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("InetStp");
-
-            if (target == null)
-                return false;
-
-            valueNames = target.GetValueNames();
-            foreach (string keyName in valueNames)
+            try
             {
-                if (keyName == "MajorVersion")
+                ServiceController sc = new ServiceController("World Wide Web publishing");
+                if ((sc.Status.Equals(ServiceControllerStatus.Stopped) || sc.Status.Equals(ServiceControllerStatus.StopPending)))
                 {
-                    return true;
+                    return false;
                 }
             }
-
-            return false;
+            catch
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -88,7 +84,9 @@ namespace ReportMannagerConfigTool
             try
             {
                 impersonator.Impersonate();
-                conn.Open();
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {
@@ -102,8 +100,24 @@ namespace ReportMannagerConfigTool
                     impersonator.Undo();
             }
 
-            return "True";
-        }     
+            return StaticMessages.testSuccess;
+        }
+
+        private static bool isReportServerDB(SqlConnection conn)
+        {
+            conn.Open();
+            string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
+
+            SqlCommand cmd = new SqlCommand(SQL, conn);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            if (!rdr.Read())
+            {
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            return true;
+        }
 
         /// <summary>
         /// Verify whether program can connect database with given connection string.
@@ -115,7 +129,9 @@ namespace ReportMannagerConfigTool
             SqlConnection conn = new SqlConnection(connectionString);
             try
             {
-                conn.Open();
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {
@@ -127,7 +143,64 @@ namespace ReportMannagerConfigTool
                     conn.Close();
             }
 
-            return "True";
+            return StaticMessages.testSuccess;
+        }
+
+        /// <summary>
+        /// Detect the given report service web service url is available or not
+        /// </summary>
+        /// <param name="isSharePoint">Native mode or SharePoint mode</param>
+        /// <param name="url">Web Service Url</param>
+        /// <returns>True: web service url is available; ErrorMessage</returns>
+        public static string tryWebServiceUrl(bool isSharePoint, string url)
+        {
+            try
+            {
+                url += isSharePoint ? StaticMessages.ssrs2006url : StaticMessages.ssrs2005url;
+
+                HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
+                request.Credentials = CredentialCache.DefaultNetworkCredentials;
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                {
+                    //return content type should be text/xml
+                    if (response.ContentType.Contains("text/xml"))
+                    {
+                        XmlDocument wsdl = new XmlDocument();
+                        wsdl.Load(response.GetResponseStream());
+
+                        string namespaceUri = wsdl.DocumentElement.NamespaceURI;
+                        XmlNamespaceManager nsmgr = new XmlNamespaceManager(wsdl.NameTable);
+                        nsmgr.AddNamespace("wsdl", namespaceUri);
+
+                        string targetNamespace = wsdl.SelectSingleNode("wsdl:definitions", nsmgr).Attributes["targetNamespace"].Value;
+
+                        if (targetNamespace.Equals(isSharePoint ? StaticMessages.ssrs2006TargetNS : StaticMessages.ssrs2005TargetNS))
+                        {
+                            return StaticMessages.testSuccess;
+                        }
+                    }
+                    return StaticMessages.webServiceUrlIncorrect;
+                }
+            }
+            catch (WebException e)
+            {
+                if (e.Response == null)
+                {
+                    return String.Format(StaticMessages.webServiceUrlInvalid, e.Message);
+                }
+                else
+                {
+                    var response = (HttpWebResponse)e.Response;
+                    string description = response.StatusDescription;
+
+                    e.Response.Close();
+                    return String.Format(StaticMessages.webServiceUrlError, description);
+                }
+            }
+            catch (Exception e)
+            {
+                return String.Format(StaticMessages.webServiceUrlInvalid, e.Message);
+            }
         }
 
         /// <summary>

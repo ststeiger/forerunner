@@ -191,17 +191,33 @@ namespace ReportMannagerConfigTool
             }
 
             Cursor.Current = Cursors.Default;
+            System.Text.StringBuilder errorMessage = new System.Text.StringBuilder();
             string result;
 
             if (rdoDomain.Checked)
                 result = ConfigToolHelper.tryConnectDBIntegrated(builder.ConnectionString, winform.getTextBoxValue(txtUser), winform.getTextBoxValue(txtDomain), winform.getTextBoxValue(txtPWD));
             else
-                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);        
-    
-            if (result.Equals("True"))
-                winform.showMessage(StaticMessages.connectDBSuccess);
-            else
-                MessageBox.Show(result);
+                result = ConfigToolHelper.tryConnectDB(builder.ConnectionString);
+
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+                errorMessage.AppendLine();
+            }
+
+            //Test web service url connection
+            result = ConfigToolHelper.tryWebServiceUrl(false, winform.getTextBoxValue(txtWSUrl));
+            if (!StaticMessages.testSuccess.Equals(result))
+            {
+                errorMessage.AppendLine(result);
+            }
+
+            if (errorMessage.Length != 0)
+            {
+                winform.showWarning(errorMessage.ToString());
+                return;
+            }
+            winform.showMessage(StaticMessages.connectDBSuccess);
         }
 
         private void btnApply_Click(object sender, EventArgs e)

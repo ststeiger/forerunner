@@ -1201,6 +1201,22 @@ $(function () {
             this.data = {};
         }
     };
+    forerunner.ssr._internal = {
+        // Returns the parameter list all as single valued parameters.
+        // The multiple valued parameter simply are treated 
+        getParametersFromUrl: function (url) {
+            var params = [];
+            var start = url.indexOf('?') + 1;
+            var vars = url.substring(start).split('&');
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split('=');
+                var key = decodeURIComponent(pair[0]);
+                var value = decodeURIComponent(pair[1]);
+                params.push({"Parameter": key, "Value": value, "IsMultiple": "false", Type: ""});
+            }
+            return params;
+        },
+    };
     $(document).ready(function () {
         // Update all dynamic styles
         var isTouchRule = {
@@ -1214,18 +1230,21 @@ $(function () {
             }
         };
         forerunner.styleSheet.updateDynamicRules([isTouchRule], "toolbase.css");
-        // Add custom date validator rule
-        var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
-        var format = locData.datepicker.dateFormat;
-        var momentFormat = format.toUpperCase();
-        momentFormat = momentFormat.replace("YY", "YYYY");
-        $.validator.addMethod(
-            "formattedDate",
-            function (value, element) {
-                return moment(value, momentFormat).isValid();
-            },
-            locData.validateError.date
-        );
+        // Put a check in so that this would not barf for the login page.
+        if ($.validator) {
+            // Add custom date validator rule
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+            var format = locData.datepicker.dateFormat;
+            var momentFormat = format.toUpperCase();
+            momentFormat = momentFormat.replace("YY", "YYYY");
+            $.validator.addMethod(
+                "formattedDate",
+                function (value, element) {
+                    return moment(value, momentFormat).isValid();
+                },
+                locData.validateError.date
+            );
+        }
     });
 });
 

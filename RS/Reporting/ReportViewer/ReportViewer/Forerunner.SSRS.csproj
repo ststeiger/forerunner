@@ -66,6 +66,9 @@
       <Link>LicenseUtil.cs</Link>
     </Compile>
     <Compile Include="AuthenticationMode.cs" />
+    <Compile Include="Config\ConfigElement.cs" />
+    <Compile Include="Config\ConfigElementCollection.cs" />
+    <Compile Include="Config\WebConfigSection.cs" />
     <Compile Include="CurrentUserImpersonator.cs" />
     <Compile Include="FormsAuthenticationHelper.cs" />
     <Compile Include="Impersonator.cs" />

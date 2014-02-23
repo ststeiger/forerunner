@@ -15,7 +15,7 @@ $(function () {
 
     $.widget(widgets.getFullname(widgets.parameterModel), {
         options: {
-
+            rsInstance: null,
         },
         _create: function () {
             var me = this;
@@ -134,6 +134,7 @@ $(function () {
             if (me._isLoaded(reportPath)) {
                 return;
             }
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -167,6 +168,7 @@ $(function () {
                     // This line will kepp the database in the v1 format
                     parameters: JSON.stringify({ ParamsList: me.serverData.parameterSets[0].data }),
                     //parameters: JSON.stringify(me.serverData),
+                    Instance: me.options.rsInstance,
                 },
                 function (data, textStatus, jqXHR) {
                     if (success && typeof (success) === "function") {

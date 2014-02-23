@@ -29,6 +29,11 @@ if ERRORLEVEL 8 (
 	goto :Error
 )
 
+robocopy /LOG+:%LOGFILE% "%~dp0..\..\\RS\Reporting\ReportManager\ReportManagerMVC\ValidateLicense\bin\Release" %Destination%\Config
+if ERRORLEVEL 8 (
+	goto :Error
+)
+
 robocopy /LOG+:%LOGFILE% "%~dp0..\..\\utilities\SetupUtil\SetupUtil\bin\Release" %Destination%\Register
 if ERRORLEVEL 8 (
 	goto :Error

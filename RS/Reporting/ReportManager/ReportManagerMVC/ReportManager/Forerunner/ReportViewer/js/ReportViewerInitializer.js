@@ -32,7 +32,9 @@ $(function () {
             navigateTo: null,
             isReportManager: false,
             userSettings: null,
-            $appContainer: null
+            $appContainer: null,
+            rsInstance: null,
+            useReportManagerSettings: false,
         };
 
         // Merge options with the default settings
@@ -41,7 +43,8 @@ $(function () {
         }
 
         // Create the parameter model object for this report
-        me.parameterModel = $({}).parameterModel();
+        if (me.options.isReportManager || me.options.useReportManagerSettings)
+            me.parameterModel = $({}).parameterModel({rsInstance: me.options.rsInstance});
     };
 
     ssr.ReportViewerInitializer.prototype = {
@@ -53,6 +56,11 @@ $(function () {
             var me = this;
             var $viewer = me.options.$viewer;
 
+            var userSettings = me.options.userSettings;
+            if ((me.options.isReportManager || me.options.useReportManagerSettings) && !userSettings) {
+                userSettings = me.getUserSettings(me.options);
+            }
+
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
@@ -60,9 +68,10 @@ $(function () {
                 pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
-                userSettings: me.options.userSettings,
+                userSettings: userSettings,
                 savedParameters: me.options.savedParameters,
-                $appContainer: me.options.$appContainer
+                $appContainer: me.options.$appContainer,
+                rsInstance: me.options.rsInstance,
             });
 
             // Create / render the toolbar
@@ -91,8 +100,8 @@ $(function () {
                 $righttoolbar.rightToolbar({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             }
 
-            if (me.options.isReportManager) {
-                $righttoolbar.rightToolbar("addTools", 2, true, [/*rtb.btnRTBManageSets, rtb.btnSelectSet, */rtb.btnSavParam]);
+            if (me.options.isReportManager || me.options.useReportManagerSettings) {
+                $righttoolbar.rightToolbar("addTools", 2, true, [rtb.btnSavParam]);
             }
 
             // Create / render the menu pane
@@ -120,7 +129,7 @@ $(function () {
 
             var $nav = me.options.$nav;
             if ($nav !== null) {
-                $nav.pageNav({ $reportViewer: $viewer });
+                $nav.pageNav({ $reportViewer: $viewer, rsInstance: me.options.rsInstance });
                 $viewer.reportViewer("option", "pageNavArea", $nav);
             }
             
@@ -138,19 +147,20 @@ $(function () {
             }
             $dlg.reportPrint({ $appContainer: me.options.$appContainer, $reportViewer: $viewer });
 
-            $dlg = me.options.$appContainer.find(".fr-mps-section");
-            if ($dlg.length === 0) {
-                $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
-                $dlg.manageParamSets({
-                    $appContainer: me.options.$appContainer,
-                    $reportViewer: $viewer,
-                    $reportViewerInitializer: me,
-                    model: me.parameterModel
-                });
-                me.options.$appContainer.append($dlg);
+            if (me.options.isReportManager || me.options.useReportManagerSettings) {
+                $dlg = me.options.$appContainer.find(".fr-mps-section");
+                if ($dlg.length === 0) {
+                    $dlg = $("<div class='fr-mps-section fr-dialog-id fr-core-dialog-layout fr-core-widget'/>");
+                    $dlg.manageParamSets({
+                        $appContainer: me.options.$appContainer,
+                        $reportViewer: $viewer,
+                        $reportViewerInitializer: me,
+                        model: me.parameterModel
+                    });
+                    me.options.$appContainer.append($dlg);
+                }
+                me._manageParamSetsDialog = $dlg;
             }
-            me._manageParamSetsDialog = $dlg;
-
             if (me.options.isReportManager) {
                 me.setFavoriteState(me.options.ReportPath);
             }
@@ -171,8 +181,10 @@ $(function () {
             if (me.options.$toolPane !== null) {
                 me.$itemFavorite = me.options.$toolPane.find(".fr-item-update-fav").find("div");
             }
+            var url = me.options.ReportManagerAPI + "/isFavorite?path=" + path;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
-                url: me.options.ReportManagerAPI + "/isFavorite?path=" + path,
+                url: url,
                 dataType: "json",
                 async: true,
                 success: function (data) {
@@ -188,6 +200,22 @@ $(function () {
                 }
             });
         },
+        getUserSettings : function(options) {
+            var settings = null;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
+            if (options.rsInstance) url += "?instance=" + options.rsInstance;
+            forerunner.ajax.ajax({
+                url: url,
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data && data.responsiveUI !== undefined) {
+                        settings = data;
+                    }
+                }
+            });
+            return settings;
+        },
         onClickBtnFavorite: function (e) {
             var me = this;
             var $toolbar = e.data.me;
@@ -197,11 +225,13 @@ $(function () {
                 action = "delete";
             }
 
-            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+            var url = me.options.ReportManagerAPI + "/UpdateView";
+            forerunner.ajax.getJSON(url,
                 {
                     view: "favorites",
                     action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath")
+                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath"),
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.updateFavoriteState.call(me, action === "add");
@@ -221,11 +251,13 @@ $(function () {
             }
 
             $toolpane._trigger(events.actionStarted, null, $toolpane.allTools["fr-item-update-fav"]);
-            forerunner.ajax.getJSON(me.options.ReportManagerAPI + "/UpdateView",
+            var url = me.options.ReportManagerAPI + "/UpdateView";
+            forerunner.ajax.getJSON(url,
                 {
                     view: "favorites",
                     action: action,
-                    path: me.options.ReportPath
+                    path: me.options.ReportPath,
+                    instance: me.options.rsInstance,
                 },
                 function (data) {
                     me.updateFavoriteState.call(me, action === "add");

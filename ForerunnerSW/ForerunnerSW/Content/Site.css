@@ -9,6 +9,7 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .Rounded {-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;}
 .Center{ display:table;margin: 0 auto;}
 .InlineBlock{display:inline-block;}
+.TableCell{display:table-cell;}
 
 .ForerunnerPort{width:100%;}
 .ForerunnerPage{width:984px;}
@@ -69,7 +70,13 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
 .SupportTDBorder{border-right:1px solid #cccccc;}
 .SupportTR{color:#666666;text-align:center;align-content:center;}
 
-.DeveloperTD{width:33%;}
+.DeveloperTD{width:25%;}
+.DeveloperBottomTD{width:33%;}
+.DeveloperList{text-align:left;}
+.DeveloperCell{padding-left:10px;padding-right:10px;line-height:18px;}
+.DeveloperCheveron{vertical-align:top;}
+.DeveloperSubHeader{padding-bottom:15px;}
+
 
 .SamplesItem {color:#1ba0da;font-size:15px;display:block;margin: 0 0 10px 0;}
 .SamplesDescription{min-width: 200px;padding:0 15px 0 0;vertical-align: top;}

@@ -209,6 +209,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
+  File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
   SetOutPath "$INSTDIR\Config"
 
@@ -675,6 +676,7 @@ Section Uninstall
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Thumbnail.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
+  Delete "$INSTDIR\Config\ValidateLicense.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer License.rtf"

@@ -1187,10 +1187,14 @@ $(function () {
                 //modal dialog will highlight the first matched button, add blur to remove it
                 target.element.dialog("open");
                 target.element.find(":button").blur();
+                
 
                 //reset modal dialog position when window resize happen or orientation change
                 $(window).off("resize", me._setPosition);
                 $(window).on("resize", { target: target }, me._setPosition);
+
+                $(window).off("keydown", me._bindKeyboard);
+                $(window).on("keydown", { target: target }, me._bindKeyboard);
             }, 200);
         },
         /**
@@ -1286,6 +1290,18 @@ $(function () {
                     }
                 }
             }, 100);
+        },
+        _bindKeyboard: function (event) {
+            var me = this;
+            var target = event.data.target.element;
+
+            //Press Esc will close dialog
+            if (event.keyCode === 27) {
+                target.dialog("close");
+
+                $(window).off("keydown", me._bindKeyboard);
+                $(window).off("resize", me._setPosition);
+            }
         }
     };
 

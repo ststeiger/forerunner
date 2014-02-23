@@ -4,7 +4,7 @@
         GettingStarted: 1,
         Forerunnersw: 2
     };
-
+    
     var appURL = [
         // SDKSamples
         { local: "http://localhost:55089/", remote: "http://demo.forerunnersw.com/V1Samples/" },
@@ -26,6 +26,8 @@
         return url;
     }
 
+ 
+
     // This is global scope because it is called directly from the html page
     ShowSampleDetail = function(filename, id) {
         var url = GetSiteURL(appEnum.Forerunnersw, filename);
@@ -45,6 +47,14 @@
                 showError($div, errorThrown, jqXHR, url);
             },
         });
+    }
+
+    function ShowSampleOnLoad() {
+        var sample = GetURLParameter("Sample");
+        if (sample) {
+            ShowSampleDetail("SampleDetail/" + sample, "SamplesDetailId");
+        }
+
     }
 
     function evalNumberParameter(app) {
@@ -230,5 +240,6 @@
             });
         }
     }
+    ShowSampleOnLoad();
 });  // Function
 

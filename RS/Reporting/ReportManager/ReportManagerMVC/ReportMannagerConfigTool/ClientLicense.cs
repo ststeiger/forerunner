@@ -322,7 +322,7 @@ namespace ForerunnerLicense
            
         }
 
-        public static void Validate()
+        public static void Validate(bool forceValidate = false)
         {
             Init(true);
 
@@ -346,10 +346,10 @@ namespace ForerunnerLicense
                 TimeSpan LastTry = DateTime.Now - LastServerValidationTry;
 
                 TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
-                if (LastSucess.TotalDays > 1)
+                if (LastSucess.TotalDays > 1 || forceValidate)
                 {
                     
-                    if (LastTry.TotalMinutes > 5)
+                    if (LastTry.TotalMinutes > 5 || forceValidate)
                     {
                         try
                         {

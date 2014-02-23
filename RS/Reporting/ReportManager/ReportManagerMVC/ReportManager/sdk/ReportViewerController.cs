@@ -152,10 +152,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-                //byte[] result = null;
-                //result = Encoding.UTF8.GetBytes(GetReportViewer().GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials).ToString());
-                //return GetResponseFromBytes(result, "text/JSON");
-                return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
+               return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
             }
             catch (Exception e)
             {

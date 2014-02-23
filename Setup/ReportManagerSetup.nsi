@@ -307,6 +307,8 @@ Section "ReportManager" SEC01
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
+  
 
 SectionEnd
 
@@ -769,6 +771,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\InstallInstructions.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"
@@ -810,6 +813,7 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
+   RMDir "$INSTDIR\sdk"
    ;$INSTDIR is the folder where uninst.exe belong to which is Molibizer
   RMDir "$INSTDIR"
   

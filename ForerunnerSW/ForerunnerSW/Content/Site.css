@@ -113,6 +113,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
     .ForerunnerTD50{width:100%;}
 
     .SupportTD{width:50%;}
+    .DeveloperTD{width:50%;}
+    .DeveloperBottomTD{width:100%;}
     .SupportTDBorder{border-right:none;}
 
     .DemoPageButtonRight{display:block;float:left;text-align:center;}
@@ -130,6 +132,8 @@ input{-webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;padd
    .Navbar {display:inline-block; margin-left:0px;}
 
    .SupportTD{width:100%;}
+   .DeveloperTD{width:100%;}
+   .DeveloperBottomTD{width:100%;}
    .SupportTDBorder{border-right:none;}
    
    .DownloadFormInput{height:35px;width:300px;border:1px solid #b8b8b8;margin-bottom:25px;}

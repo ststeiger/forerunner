@@ -47,10 +47,7 @@
         });
     }
 
-    // Used to generate a unique id for the <pre> tag
-    var preCount = 1;
-
-    function getAppEnum(app) {
+    function evalNumberParameter(app) {
         var me = this;
         var result = null;
         if (typeof app === "number") {
@@ -61,6 +58,9 @@
         }
         return result;
     }
+
+    // Used to generate a unique id for the <pre> tag
+    var preCount = 1;
 
     $.widget("forerunnersw.toggleSourceCode", {
         options: {
@@ -76,7 +76,7 @@
 
         _init: function () {
             var me = this;
-            var app = getAppEnum(me.options.app);
+            var app = evalNumberParameter(me.options.app);
             var id = "preId" + preCount++;
 
             me.element.html("");
@@ -95,7 +95,7 @@
         }
     });
 
-    function setOption(options, $element, optionName) {
+    function setOptionFromDataAttr(options, $element, optionName) {
         var attrValue = $element.attr("data-" + optionName);
         if (attrValue) {
             options[optionName] = attrValue;
@@ -108,17 +108,17 @@
         $toggleSourceCodeElements.each(function (index, element) {
             var options = {};
             var $element = $(element);
-            setOption(options, $element, "app");
-            setOption(options, $element, "file");
-            setOption(options, $element, "toggletext");
-            setOption(options, $element, "buttontext");
+            setOptionFromDataAttr(options, $element, "app");
+            setOptionFromDataAttr(options, $element, "file");
+            setOptionFromDataAttr(options, $element, "toggletext");
+            setOptionFromDataAttr(options, $element, "buttontext");
             $element.toggleSourceCode(options);
         });
     }
 
     // This is global scope because it is called directly from the html page
     NavigateToSiteURL = function (site, sampleName) {
-        var app = getAppEnum(site);
+        var app = evalNumberParameter(site);
         window.open(GetSiteURL(app, sampleName), "_blank");
     }
 

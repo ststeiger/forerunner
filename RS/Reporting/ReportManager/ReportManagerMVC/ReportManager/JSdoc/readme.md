@@ -28,6 +28,7 @@ From the destination folder, the SDK folders are as follows:
 			Lib\
 			ReportExplorer\
 			ReportViewer\
+		sdk\
 
 Where:
 
@@ -59,8 +60,5 @@ Where:
 	Forerunner\ReportViewer
 		Contains the resource files needed by the ReportViewerEZ widget.
 
-Tutorials / Sample Code
------------------------
-
-See the "[Getting Started](tutorial-GettingStarted.html)" tutorial to get some hands on experience creating your own Forerunner enabled 
-web applications.
+	sdk
+		Contains the controllers and controller related .cs files you need to include in your project.

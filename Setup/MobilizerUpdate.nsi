@@ -676,6 +676,7 @@ Section Uninstall
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Thumbnail.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
+  Delete "$INSTDIR\Config\ValidateLicense.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer License.rtf"

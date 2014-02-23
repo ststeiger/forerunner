@@ -199,6 +199,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
+  File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\Mobilizer 1 License.rtf"
   SetOutPath "$INSTDIR\Custom"
   File "${LOCALROOT}\Custom\Explorer.css"

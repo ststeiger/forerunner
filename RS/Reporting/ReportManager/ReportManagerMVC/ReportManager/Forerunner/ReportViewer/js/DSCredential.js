@@ -42,6 +42,9 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
@@ -80,6 +83,14 @@ $(function () {
                 me._submitCredential();
             });
 
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submitCredential();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+
             if (me.options.$reportViewer) {
                 me._initCallback();
             }
@@ -110,13 +121,7 @@ $(function () {
                           "</div>" +
                       "</div>" +
                   "</div>");
-
-                $item.find('.fr-dsc-text-input').on("keydown", function (e) {
-                    if (e.keyCode === 13) {
-                        me._submitCredential();
-                    } // Enter
-                });
-
+                
                 me.$container.append($item);
             });
 

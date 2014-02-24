@@ -2948,6 +2948,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
@@ -2970,6 +2972,14 @@ $(function () {
             me.element.append($messageBox);
 
             me.element.find(".fr-messagebox-close-id").on("click", function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
         },
@@ -4683,6 +4693,8 @@ $(function () {
             var buildVersion = me._getBuildVersion();
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
@@ -4709,13 +4721,19 @@ $(function () {
 
             me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
-                me.closeDialog();
             });
 
             me.element.find(".fr-us-cancel").on("click", function (e) {
                 me.closeDialog();
             });
 
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
         },
         _getBuildVersion: function () {
             var me = this;
@@ -4750,6 +4768,8 @@ $(function () {
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
 
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+
+            me.closeDialog();
         },
         /**
          * Open user setting dialog
@@ -8176,6 +8196,9 @@ $(function () {
             var print = me.locData.print;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -8215,11 +8238,7 @@ $(function () {
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
+                me._submitPrint();
             });
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
@@ -8227,6 +8246,14 @@ $(function () {
                 if (me._printData) {
                     me._createItems();
                 }
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submitPrint();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
             });
         },
         /**
@@ -8243,6 +8270,15 @@ $(function () {
 
             if (me._printData) {
                 me._createItems(me._printData);
+            }
+        },
+        _submitPrint: function () {
+            var me = this;
+
+            var printPropertyList = me._generatePrintProperty();
+            if (printPropertyList !== null) {
+                me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                me.closeDialog();
             }
         },
         _createItems: function (pageLayout) {
@@ -8607,6 +8643,9 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -8648,11 +8687,24 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
-                    me.closeDialog();
-                }
+                me._submitParamSet();
             });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me._submitParamSet();
+            });
+        },
+        _submitParamSet: function () {
+            var me = this;
+
+            if (me.$form.valid() === true) {
+                me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
+                me.closeDialog();
+            }
         },
         _findId: function (e) {
             var $target = $(e.target);
@@ -9365,6 +9417,9 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-dataSourceCred', dsCredential.title, "fr-dsc-cancel", dsCredential.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center fr-dsc-innerPage'>" +
@@ -9403,6 +9458,14 @@ $(function () {
                 me._submitCredential();
             });
 
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submitCredential();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
+
             if (me.options.$reportViewer) {
                 me._initCallback();
             }
@@ -9433,13 +9496,7 @@ $(function () {
                           "</div>" +
                       "</div>" +
                   "</div>");
-
-                $item.find('.fr-dsc-text-input').on("keydown", function (e) {
-                    if (e.keyCode === 13) {
-                        me._submitCredential();
-                    } // Enter
-                });
-
+                
                 me.$container.append($item);
             });
 

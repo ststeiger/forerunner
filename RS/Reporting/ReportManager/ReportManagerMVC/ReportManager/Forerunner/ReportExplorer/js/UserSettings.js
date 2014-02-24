@@ -39,6 +39,8 @@ $(function () {
             var buildVersion = me._getBuildVersion();
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-setup', userSettings.title, "fr-us-cancel", userSettings.cancel);
             var $theForm = new $(
@@ -65,13 +67,19 @@ $(function () {
 
             me.element.find(".fr-us-submit-id").on("click", function (e) {
                 me._saveSettings();
-                me.closeDialog();
             });
 
             me.element.find(".fr-us-cancel").on("click", function (e) {
                 me.closeDialog();
             });
 
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._saveSettings();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
         },
         _getBuildVersion: function () {
             var me = this;
@@ -106,6 +114,8 @@ $(function () {
             me.settings.responsiveUI = me.$resposiveUI.prop("checked");
 
             me.options.$reportExplorer.reportExplorer("saveUserSettings", me.settings);
+
+            me.closeDialog();
         },
         /**
          * Open user setting dialog

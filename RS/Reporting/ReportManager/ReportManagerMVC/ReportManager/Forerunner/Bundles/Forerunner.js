@@ -336,6 +336,12 @@ $(function () {
             closeModalDialog: "closeModalDialog",
 
             /** @constant */
+            modalDialogGenericSubmit: "modalDialogGenericSubmit",
+
+            /** @constant */
+            modalDialogGenericCancel: "modalDialogGenericCancel",
+
+            /** @constant */
             modelChanged: "changed",
             /** widget + event, lowercase */
             parameterModelChanged: function () { return (forerunner.ssr.constants.widgets.parameterModel + this.modelChanged).toLowerCase(); },
@@ -1193,8 +1199,8 @@ $(function () {
                 $(window).off("resize", me._setPosition);
                 $(window).on("resize", { target: target }, me._setPosition);
 
-                $(window).off("keydown", me._bindKeyboard);
-                $(window).on("keydown", { target: target }, me._bindKeyboard);
+                $(document).off("keydown", me._bindKeyboard);
+                $(document).on("keydown", { target: target }, me._bindKeyboard);
             }, 200);
         },
         /**
@@ -1206,9 +1212,10 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-
             target.element.dialog("close");
+
             $(window).off("resize", me._setPosition);
+            $(document).off("keydown", me._bindKeyboard);
            
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
@@ -1226,7 +1233,9 @@ $(function () {
                     $(modalDialog).dialog("close");
                 }
             });
+
             $(window).off("resize", me._setPosition);
+            $(document).off("keydown", me._bindKeyboard);
         },
         /**
         * Show message box
@@ -1293,14 +1302,16 @@ $(function () {
         },
         _bindKeyboard: function (event) {
             var me = this;
-            var target = event.data.target.element;
-
-            //Press Esc will close dialog
-            if (event.keyCode === 27) {
-                target.dialog("close");
-
-                $(window).off("keydown", me._bindKeyboard);
-                $(window).off("resize", me._setPosition);
+            var element = event.data.target.element;
+            
+            //trigger generic event, each modal dialog widget can listener part/all of them 
+            switch (event.keyCode) {
+                case 13://Enter to trigger generic submit
+                    element.trigger(forerunner.ssr.constants.events.modalDialogGenericSubmit);
+                    break;
+                case 27://Esc to trigger generic close
+                    element.trigger(forerunner.ssr.constants.events.modalDialogGenericCancel);
+                    break;
             }
         }
     };

@@ -295,7 +295,6 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${RESOURCEROOT}\MobilizerConfigTool.exe.config"
-  File "${LOCALROOT}\Config\Manual Activation.rtf"
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
   File "${RESOURCEROOT}\UltiDev.WebServer.msi"
   SetOutPath "$INSTDIR\Custom"

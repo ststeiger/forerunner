@@ -219,8 +219,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\ExplorerSettings.txt"
   File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
 
-
-
+  SetOutPath "$INSTDIR"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
 
 
 ;This must be the last line of the config tool will not work after install
@@ -689,6 +689,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\InstallInstructions.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"

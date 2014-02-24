@@ -98,6 +98,9 @@ $(function () {
             var print = me.locData.print;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -137,11 +140,7 @@ $(function () {
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
+                me._submitPrint();
             });
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
@@ -149,6 +148,14 @@ $(function () {
                 if (me._printData) {
                     me._createItems();
                 }
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submitPrint();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
             });
         },
         /**
@@ -165,6 +172,15 @@ $(function () {
 
             if (me._printData) {
                 me._createItems(me._printData);
+            }
+        },
+        _submitPrint: function () {
+            var me = this;
+
+            var printPropertyList = me._generatePrintProperty();
+            if (printPropertyList !== null) {
+                me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                me.closeDialog();
             }
         },
         _createItems: function (pageLayout) {

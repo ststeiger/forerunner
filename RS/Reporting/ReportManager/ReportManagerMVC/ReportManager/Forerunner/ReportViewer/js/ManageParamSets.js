@@ -131,6 +131,9 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -172,11 +175,24 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
-                    me.closeDialog();
-                }
+                me._submitParamSet();
             });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me._submitParamSet();
+            });
+        },
+        _submitParamSet: function () {
+            var me = this;
+
+            if (me.$form.valid() === true) {
+                me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
+                me.closeDialog();
+            }
         },
         _findId: function (e) {
             var $target = $(e.target);

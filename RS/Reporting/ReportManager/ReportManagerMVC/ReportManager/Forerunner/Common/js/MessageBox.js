@@ -34,6 +34,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
@@ -56,6 +58,14 @@ $(function () {
             me.element.append($messageBox);
 
             me.element.find(".fr-messagebox-close-id").on("click", function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
                 me.closeDialog();
             });
         },

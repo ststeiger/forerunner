@@ -310,6 +310,9 @@ Section "ReportManager" SEC01
   File "${RESOURCEROOT}\InstallInstructions.rtf"
   
 
+
+;This must be the last line of the config tool will not work after install
+ SetOutPath "$INSTDIR\Config"
 SectionEnd
 
 Section -AdditionalIcons

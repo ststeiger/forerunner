@@ -211,7 +211,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
   File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
-  SetOutPath "$INSTDIR\Config"
+ 
 
   SetOutPath "$INSTDIR\Custom"
   File "${LOCALROOT}\Custom\Explorer.css"
@@ -219,6 +219,13 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\ExplorerSettings.txt"
   File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
 
+
+
+
+
+;This must be the last line of the config tool will not work after install
+ SetOutPath "$INSTDIR\Config"
+ 
 SectionEnd
 
 Section -AdditionalIcons

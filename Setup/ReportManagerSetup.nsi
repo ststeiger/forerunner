@@ -303,6 +303,7 @@ Section "ReportManager" SEC01
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
 
 SectionEnd
 
@@ -616,6 +617,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\InstallInstructions.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizer\MobilizerConfigTool.lnk"

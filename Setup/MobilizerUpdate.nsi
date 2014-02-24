@@ -208,6 +208,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR\Config"
 
+  SetOutPath "$INSTDIR"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
+
 SectionEnd
 
 Function .onInit

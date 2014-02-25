@@ -697,12 +697,14 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var $defaultOption = new $("<option value=''>&#60" + me.options.$reportViewer.locData.paramPane.select + "&#62</option>");
+            var defaultSelect = me.options.$reportViewer.locData.paramPane.select;
+            var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
+                var optionKey = forerunner.helper.htmlEncode(param.ValidValues[i].Key);
                 var optionValue = param.ValidValues[i].Value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
+                var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");

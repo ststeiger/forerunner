@@ -1886,8 +1886,12 @@ $(function () {
         },
         _renderPageError: function ($container, errorData) {
             var me = this;
-            
+            var pageNum = me.getCurPage();
+
             me.renderError = true;
+            if (me.pages[pageNum])
+                me.pages[pageNum].isRendered = false;
+
             $container.reportRender({ reportViewer: me });
             $container.reportRender("writeError", errorData);
             me.removeLoadingIndicator();

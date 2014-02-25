@@ -6713,10 +6713,11 @@ $(function () {
             var me = this;
             
             if (param.Nullable === true) {
+
                 $control = $control.hasClass("fr-param-element-container") ? $control.find(".fr-param") :
                     param.Type === "Boolean" ? $(".fr-paramname-" + param.Name, $control) : $control;
-                var $nullableSpan = new $("<Span />");
-
+                var $nullbox = new $("<Div />");
+                $nullbox.addClass("fr-param-nullable");
                 var $checkbox = new $("<Input type='checkbox' class='fr-param-checkbox' name='" + param.Name + "' />");
 
                 //if (me._hasDefaultValue(param) && param.DefaultValues[0] === "")
@@ -6756,8 +6757,8 @@ $(function () {
                 var $nullableLable = new $("<Label class='fr-param-label-null' />");
                 $nullableLable.html(me.options.$reportViewer.locData.paramPane.nullField);
 
-                $nullableSpan.append($checkbox).append($nullableLable);
-                return $nullableSpan;
+                $nullbox.append($checkbox).append($nullableLable);
+                return $nullbox;
             }
             else
                 return null;
@@ -6778,7 +6779,7 @@ $(function () {
             radioValues[0] = { display: paramPane.isTrue, value: "True" };
             radioValues[1] = { display: paramPane.isFalse, value: "False" };
 
-            var $control = me._createDiv("fr-param-checkbox-container");
+            var $control = me._createDiv(["fr-param-checkbox-container"]);
             $control.attr("ismultiple", param.MultiValue);
             $control.attr("datatype", param.Type);
 

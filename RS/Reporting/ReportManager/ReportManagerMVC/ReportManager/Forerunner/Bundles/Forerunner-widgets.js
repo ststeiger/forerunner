@@ -1886,8 +1886,12 @@ $(function () {
         },
         _renderPageError: function ($container, errorData) {
             var me = this;
-            
+            var pageNum = me.getCurPage();
+
             me.renderError = true;
+            if (me.pages[pageNum])
+                me.pages[pageNum].isRendered = false;
+
             $container.reportRender({ reportViewer: me });
             $container.reportRender("writeError", errorData);
             me.removeLoadingIndicator();
@@ -7336,7 +7340,8 @@ $(function () {
         },
         _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
-            var canLoad = false;
+            var canLoad = false,
+                isOpen = false;
 
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -7355,18 +7360,24 @@ $(function () {
                 return $container;
             }
 
-            $openDropDown.on("click", function () {
-                if ($control.attr("disabled")) return;
+            $openDropDown.on("mousedown", function () {
+                isOpen = $control.autocomplete("widget").is(":visible");
+            });
 
-                if ($control.autocomplete("widget").is(":visible")) {
-                    $control.autocomplete("close");
+            $openDropDown.on("click", function () {
+                if ($control.attr("disabled"))
+                    return;
+
+                $control.focus();
+
+                if (isOpen) {
                     return;
                 }
-                else {
-                    me._closeAllDropdown();
-                    //pass an empty string to show all values
-                    $control.autocomplete("search", "");
-                }
+                
+                me._closeAllDropdown();
+                //pass an empty string to show all values
+                //delay 50 milliseconds to remove the blur/mousedown conflict in old browsers
+                setTimeout(function () { $control.autocomplete("search", "") }, 50);
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
@@ -7448,12 +7459,14 @@ $(function () {
             }
 
             me._getParameterControlProperty(param, $control);
-            var $defaultOption = new $("<option value=''>&#60" + me.options.$reportViewer.locData.paramPane.select + "&#62</option>");
+            var defaultSelect = me.options.$reportViewer.locData.paramPane.select;
+            var $defaultOption = new $("<option title='" + defaultSelect + "' value=''>&#60" + defaultSelect + "&#62</option>");
             $control.append($defaultOption);
 
             for (var i = 0; i < param.ValidValues.length; i++) {
+                var optionKey = forerunner.helper.htmlEncode(param.ValidValues[i].Key);
                 var optionValue = param.ValidValues[i].Value;
-                var $option = new $("<option value='" + optionValue + "'>" + forerunner.helper.htmlEncode(param.ValidValues[i].Key) + "</option>");
+                var $option = new $("<option title='" + optionKey + "' value='" + optionValue + "'>" + optionKey + "</option>");
 
                 if ((predefinedValue && predefinedValue === optionValue) || (!predefinedValue && i === 0)) {
                     $option.attr("selected", "true");

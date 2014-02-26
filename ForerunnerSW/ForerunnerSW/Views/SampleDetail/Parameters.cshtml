@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/Views/Shared/_SampleDetailLayout.cshtml";
+}
+
+@section detail {
+    <b>Parameters - How to Set and Get Detail:</b>
+    <p>
+      The Parameters sample will demonstrate how to properly set and get the parameter lists. It demonstrate
+      capabilities found in the following widgets:
+    </p>
+    <ul>
+      <li><a href="~/Docs/$.forerunner.reportViewerEZ.html" target="_blank">reportViewerEZ</a></li>
+      <li><a href="~/Docs/$.forerunner.reportViewer.html" target="_blank">reportViewer</a></li>
+      <li><a href="~/Docs/$.forerunner.toolBase.html" target="_blank">toolBase</a></li>
+      <li><a href="~/Docs/$.forerunner.reportParameter.html" target="_blank">reportParameter</a></li>
+    </ul>
+
+    <p>
+      The following sample page will create an instance of a reportViewerEZ widget. The reportViewerEZ widget
+      is passed the optional "savedParameters" option. This option will cause the Report Viewer to skip the
+      normal default parameter processing and load from the given parameter list.
+    </p>
+    <p>
+      The sample then defines two new buttons:
+    </p>
+    <ol>
+      <li>a select type button (<i>btnSelectSet</i>)</li>
+      <li>a normal button. (<i>btnGetParameters</i>)</li>
+    </ol>
+    <p>
+      Both buttons are added to the right toolbar. The right toolbar comes up when the parameter pane is opened.
+      The btnSelectSet button is used to hold the named parameter sets and the btnGetParameters is used to show
+      how to get the parameter list from the reportParameter widget.
+    </p>
+    <p>
+      <i>btnGetParameters</i> will pop up an alert() dialog showing the parameter list string.
+    </p>
+    <p>
+      <i>btnSelectSet</i> is fully hooked up to the parameterModel widget defined in this sample. Additionally when the
+      user changes the selection, the "change" event is triggered and the call is made to the reportViewer widget
+      to refreash the parameters.
+    </p>
+    <div class="toggle-source-code" data-file="Parameters.cshtml"></div>
+
+    <p>
+      The parameterModel widget defines a simple parameter set collection along with a current set. There are two
+      sets defined and they are simply hard coded for this sample. The "load" function triggers a "changed" event.
+      The toolBase widget listens to this event and uses the passed optionsArray to populate the select element. It
+      Also sets the selected option by using the passed currentSetId.
+    </p>
+    <div class="toggle-source-code" data-file="ParameterModel.js"></div>
+
+    <p>
+      Create a layout page in your project that includes the style sheets and scripts files.
+    </p>
+    <div class="toggle-source-code" data-file="_SamplesLayout.cshtml"></div>
+
+    <p><a onclick="NavigateToSiteURL('appEnum.SDKSamples', 'Samples/Parameters')">Click here to see the sample run</a></p>
+}

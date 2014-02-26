@@ -27,6 +27,8 @@ namespace SDKSamples.Controllers
             SampleItemMap.Add(@"reportselector.cshtml", @"Views\Samples\ReportSelector.cshtml");
             SampleItemMap.Add(@"reportselector.js", @"Scripts\ReportSelector.js");
             SampleItemMap.Add(@"reportviewerez.cshtml", @"Views\Samples\ReportViewerEZ.cshtml");
+            SampleItemMap.Add(@"parameters.cshtml", @"Views\Samples\Parameters.cshtml");
+            SampleItemMap.Add(@"parametermodel.js", @"Scripts\ParameterModel.js");
         }
 
         [HttpGet]

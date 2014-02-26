@@ -7,7 +7,7 @@
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\Forerunner\MobilizerV1"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
-!define COPYRIGHT "Copyright © Forerunner Software 2013"
+!define COPYRIGHT "Copyright ï¿½ Forerunner Software 2013"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
 !define VI_PRODUCT_NAME "Mobilizer 1.0"
 !define COMPANY_NAME "Forerunner Software"
@@ -303,6 +303,10 @@ Section "ReportManager" SEC01
   File /oname=Web.config "${RESOURCEROOT}\Web.config.setup"
   File "${LOCALROOT}\packages.config"
   File "${LOCALROOT}\Global.asax"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
+  
+  ;This must be the last line of the config tool will not work after install
+  SetOutPath "$INSTDIR\Config"
 
 SectionEnd
 
@@ -616,6 +620,7 @@ Section Uninstall
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\InstallInstructions.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizer\MobilizerConfigTool.lnk"

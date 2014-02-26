@@ -5,7 +5,7 @@
 !define PRODUCT_VERSION "1.0 Update"
 !define PRODUCT_PUBLISHER "Forerunner Software"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
-!define COPYRIGHT "Copyright © Forerunner Software 2014"
+!define COPYRIGHT "Copyright ï¿½ Forerunner Software 2014"
 !define DESCRIPTION "Forerunner Mobilizer for SQL Server Reporting Services"
 !define VI_PRODUCT_NAME "Mobilizer 1.0 Update"
 !define COMPANY_NAME "Forerunner Software"
@@ -208,6 +208,11 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
   SetOutPath "$INSTDIR\Config"
 
+  SetOutPath "$INSTDIR"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
+
+  ;This must be the last line of the config tool will not work after install
+  SetOutPath "$INSTDIR\Config"
 SectionEnd
 
 Function .onInit

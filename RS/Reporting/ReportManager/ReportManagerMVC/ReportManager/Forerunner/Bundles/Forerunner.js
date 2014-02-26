@@ -1240,7 +1240,7 @@ $(function () {
             $.validator.addMethod(
                 "formattedDate",
                 function (value, element) {
-                    return moment(value, momentFormat).isValid();
+                    return moment(value, momentFormat, true).isValid();
                 },
                 locData.validateError.date
             );

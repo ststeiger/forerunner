@@ -759,6 +759,7 @@ $(function () {
                 var initializer = me.options.$ReportViewerInitializer;
                 return initializer.getParameterModel.call(initializer);
             },
+            modelChange: events.parameterModelChanged(),
             tooltip: locData.toolbar.selectSet,
             events: {
                 change: function (e) {

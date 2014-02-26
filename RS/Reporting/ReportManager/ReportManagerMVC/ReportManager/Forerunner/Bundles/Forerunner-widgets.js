@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -2602,20 +2602,22 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.parameterModelChanged(), function (e, arg) {
-                var $select = me.element.find("." + me.options.toolInfo.selectorClass);
-                $select.html("");
-                $.each(arg.optionArray, function (index, option) {
-                    $option = $("<option value=" + option.id + ">" + option.name + "</option>");
-                    $select.append($option);
+            if (me.options.toolInfo.model) {
+                me.model = me.options.toolInfo.model.call(me);
+                me.model.on(me.options.toolInfo.modelChange, function (e, arg) {
+                    var $select = me.element.find("." + me.options.toolInfo.selectorClass);
+                    $select.html("");
+                    $.each(arg.optionArray, function (index, option) {
+                        $option = $("<option value=" + option.id + ">" + option.name + "</option>");
+                        $select.append($option);
+                    });
+                    $select.children("option").each(function (index, option) {
+                        if ($(option).val() === arg.currentSetId) {
+                            $select.prop("selectedIndex", index);
+                        }
+                    });
                 });
-                $select.children("option").each(function (index, option) {
-                    if ($(option).val() === arg.currentSetId) {
-                        $select.prop("selectedIndex", index);
-                    }
-                });
-            });
+            }
         }
     });  // $widget
 

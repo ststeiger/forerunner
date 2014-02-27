@@ -310,6 +310,7 @@
     <Content Include="Views\Home\NotFound.cshtml" />
     <Content Include="Web.sitemap" />
     <Content Include="Views\SampleDetail\ReportSelector.cshtml" />
+    <Content Include="Views\SampleDetail\Parameters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

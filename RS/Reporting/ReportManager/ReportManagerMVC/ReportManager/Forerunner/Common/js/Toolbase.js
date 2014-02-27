@@ -451,10 +451,14 @@ $(function () {
         },
         _create: function () {
             var me = this;
-            me.model = me.options.toolInfo.model.call(me);
-            me.model.on(events.parameterModelChanged(), function (e, data) {
-                me._onModelChange.call(me, e, data);
-            });
+            if (me.options.toolInfo.model) {
+                me.model = me.options.toolInfo.model.call(me);
+                if (me.options.toolInfo.modelChange) {
+                    me.model.on(me.options.toolInfo.modelChange, function (e, data) {
+                        me._onModelChange.call(me, e, data);
+                    });
+                }
+            }
         },
         _onModelChange: function (e, data) {
             var me = this;

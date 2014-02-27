@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -760,6 +760,7 @@ $(function () {
                 var initializer = me.options.$ReportViewerInitializer;
                 return initializer.getParameterModel.call(initializer);
             },
+            modelChange: events.parameterModelChanged(),
             tooltip: locData.toolbar.selectSet,
             events: {
                 change: function (e) {

@@ -26,8 +26,6 @@
         return url;
     }
 
- 
-
     // This is global scope because it is called directly from the html page
     ShowSampleDetail = function(filename, id) {
         var url = GetSiteURL(appEnum.Forerunnersw, filename);

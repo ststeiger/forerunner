@@ -755,7 +755,7 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
             
-            Style += me._getMeasurements(measurement, true);
+            //Style += me._getMeasurements(measurement, true);
  
 
             var ImageName;
@@ -811,16 +811,16 @@ $(function () {
                 imageHeight = imageConsolidationOffset.Height;
             }
             else {
-                imageWidth = NewImage.width;
-                imageHeight = NewImage.height;
+                imageWidth = RIContext.CurrLocation.Width * 3.78;
+                imageHeight = RIContext.CurrLocation.Height * 3.78;
             }
 
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
             switch (sizingType) {
                 case 0://AutoSize
-                    $(NewImage).css("height", height + "mm");
-                    $(NewImage).css("width", width + "mm");
+                    $(NewImage).css("height", RIContext.CurrLocation.Height + "mm");
+                    $(NewImage).css("width", RIContext.CurrLocation.Width + "mm");
                     break;
                 case 1://Fit
                     $(NewImage).css("height", RIContext.CurrLocation.Height - padHeight + "mm");
@@ -828,6 +828,8 @@ $(function () {
                     break;
                 case 2:
                 case 3:
+                    $(NewImage).css("height", RIContext.CurrLocation.Height + "mm");
+                    $(NewImage).css("width", RIContext.CurrLocation.Width + "mm");
                     NewImage.onload = function () {
                         var naturalSize = me._getNatural(this);
                         var imageWidth, imageHeight;

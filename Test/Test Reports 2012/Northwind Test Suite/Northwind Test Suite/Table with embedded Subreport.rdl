@@ -239,13 +239,14 @@
                 <TablixCell>
                   <CellContents>
                     <Subreport Name="Subreport2">
-                      <ReportName>Image Report 2</ReportName>
+                      <ReportName>SingleGuage</ReportName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                       </Style>
                     </Subreport>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>

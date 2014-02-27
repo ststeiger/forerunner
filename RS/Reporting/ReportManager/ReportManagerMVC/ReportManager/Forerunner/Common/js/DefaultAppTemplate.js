@@ -548,7 +548,7 @@ $(function () {
                 if (!forerunner.device.isAllowZoom()) {
                     me.$viewer.reportViewer("allowSwipe", true);
                 }
-                me.$viewer.reportViewer("triggerEvent", events.hidePane);
+                me.$viewer.reportViewer("triggerEvent", events.hidePane, { isLeftPane: isLeftPane });
             }
         },
         showSlideoutPane: function (isLeftPane) {
@@ -595,7 +595,7 @@ $(function () {
             me.$container.resize();
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
-                me.$viewer.reportViewer("triggerEvent", events.showPane);
+                me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });
             }
         },
         toggleSlideoutPane: function (isLeftPane) {

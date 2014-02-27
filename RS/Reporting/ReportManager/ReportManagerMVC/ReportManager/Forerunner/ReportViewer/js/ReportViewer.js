@@ -231,9 +231,9 @@ $(function () {
          *
          * @paran {String} eventName - event name
          */
-        triggerEvent: function (eventName) {
+        triggerEvent: function (eventName,eventData) {
             var me = this;
-            return me._trigger(eventName);
+            return me._trigger(eventName,null,eventData);
         },
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers

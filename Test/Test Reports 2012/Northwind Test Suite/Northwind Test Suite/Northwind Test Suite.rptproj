@@ -154,6 +154,14 @@
       <FullPath>SingleMap.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>StubbedRipley.rdl</Name>
+      <FullPath>StubbedRipley.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Table with embedded Subreport.rdl</Name>
+      <FullPath>Table with embedded Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ThreeGuages.rdl</Name>
       <FullPath>ThreeGuages.rdl</FullPath>
     </ProjectItem>
@@ -177,18 +185,6 @@
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
-    <ProjectItem>
-      <Name>StubbedRipley.rdl</Name>
-      <FullPath>StubbedRipley.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Table with embedded Subreport.rdl</Name>
-      <FullPath>Table with embedded Subreport.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Report1.rdl</Name>
-      <FullPath>Report1.rdl</FullPath>
-    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>
@@ -197,7 +193,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

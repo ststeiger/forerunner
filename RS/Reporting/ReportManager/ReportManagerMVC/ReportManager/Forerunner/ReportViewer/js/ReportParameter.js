@@ -622,7 +622,7 @@ $(function () {
                 me._closeAllDropdown();
                 //pass an empty string to show all values
                 //delay 50 milliseconds to remove the blur/mousedown conflict in old browsers
-                setTimeout(function () { $control.autocomplete("search", "") }, 50);
+                setTimeout(function () { $control.autocomplete("search", ""); }, 50);
             });
 
             for (var i = 0; i < param.ValidValues.length; i++) {
@@ -645,7 +645,7 @@ $(function () {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
 
                     if (me._paramCount === 1) {
-                        setTimeout(function () { me._submitForm(pageNum) }, 100);
+                        setTimeout(function () { me._submitForm(pageNum); }, 100);
                     }
 
                     return false;

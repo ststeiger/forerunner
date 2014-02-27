@@ -17,7 +17,7 @@ $(function () {
      * ToolPane widget used with the reportViewer
      *
      * @namespace $.forerunner.toolPane
-     * @prop {object} options - The options for toolPane
+     * @prop {Object} options - The options for toolPane
      * @prop {Object} options.$reportViewer - The report viewer widget
      * @prop {String} options.toolClass - The top level class for this tool (E.g., fr-toolpane)
      * @example

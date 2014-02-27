@@ -39,5 +39,9 @@ namespace ForerunnerSW.Controllers
         {
             return View();
         }
+        public ActionResult Parameters()
+        {
+            return View();
+        }
     }
 }

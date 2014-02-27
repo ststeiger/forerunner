@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -359,6 +359,7 @@ $(function () {
                 }
             }
         },
+        /** @member */
         btnCredential: {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-credential-button",
@@ -838,6 +839,7 @@ $(function () {
                 var initializer = me.options.$ReportViewerInitializer;
                 return initializer.getParameterModel.call(initializer);
             },
+            modelChange: events.parameterModelChanged(),
             tooltip: locData.toolbar.selectSet,
             events: {
                 change: function (e) {
@@ -874,7 +876,7 @@ $(function () {
     };
 
     /**
-      * Defines all the tools used in the Report Exploer Toolbar.
+      * Defines all the tools used in the Report Explorer Toolbar.
       *
       * @namespace
       */

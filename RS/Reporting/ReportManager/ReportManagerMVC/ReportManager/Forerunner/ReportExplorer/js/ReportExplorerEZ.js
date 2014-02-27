@@ -21,13 +21,17 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorerEZ
-     * @prop {object} options - The options for reportExplorerEZ
+     * @prop {Object} options - The options for reportExplorerEZ
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report
-     * @prop {Object} options.historyBack - Callback function used to go back in browsing history.
+     * @prop {Object} options.historyBack - Callback function used to go back in browsing history
+	 * @prop {Boolean} options.isFullScreen - Indicate is full screen mode default by true
+	 * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerEZId").reportExplorerEZ({
      *  navigateTo: me.navigateTo,
-     *  historyBack: me.historyBack
+     *  historyBack: me.historyBack,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorerEZ), /** @lends $.forerunner.reportExplorerEZ */ {
@@ -35,7 +39,8 @@ $(function () {
             navigateTo: null,
             historyBack: null,
             isFullScreen: true,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -62,7 +67,8 @@ $(function () {
                 selectedItemPath: currentSelectedPath,
                 navigateTo: me.options.navigateTo,
                 $appContainer: layout.$container,
-                explorerSettings: me.options.explorerSettings
+                explorerSettings: me.options.explorerSettings,
+                rsInstance: me.options.rsInstance,
             });
         },
         /**
@@ -113,7 +119,7 @@ $(function () {
          * @function $.forerunner.reportExplorerEZ#transitionToReportView
          * @param {String} path - The report path to display.
          */
-        transitionToReportViewer: function (path) {
+        transitionToReportViewer: function (path, params) {
             var me = this;
 
             // We need to create the report explorer here so as to get the UserSettings needed in the case where
@@ -121,11 +127,6 @@ $(function () {
             me.DefaultAppTemplate.$mainsection.html("");
             me.DefaultAppTemplate.$mainsection.hide();
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
-
-            if (!me.$reportExplorer)
-                me._createReportExplorer(false);
-
-            var userSettings = me.$reportExplorer.reportExplorer("getUserSettings");
 
             me.DefaultAppTemplate._selectedItemPath = null;
             var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
@@ -136,7 +137,8 @@ $(function () {
                     navigateTo: me.options.navigateTo,
                     historyBack: me.options.historyBack,
                     isReportManager: true,
-                    userSettings: userSettings
+                    rsInstance: me.options.rsInstance,
+                    savedParameters: params,
                 });
                 me.DefaultAppTemplate.$mainsection.fadeIn("fast");
             }, timeout);

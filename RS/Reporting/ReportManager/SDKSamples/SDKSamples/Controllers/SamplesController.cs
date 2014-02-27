@@ -43,5 +43,9 @@ namespace SDKSamples.Controllers
         {
             return View();
         }
+        public ActionResult Parameters()
+        {
+            return View();
+        }
     }
 }

@@ -8,16 +8,20 @@
     body { background-color: rgb(210, 223, 237); }
     h2 { text-align: center; }
 
-    .sample-container { background-color: rgb(210, 223, 237); margin: 10px 10px 10px 10px; }
-    .report-list-cell { vertical-align: top; font-size: 14pt;}
-    .report-list-container { margin-right: 10px; background-color: #dddddd; box-shadow: 0 0 7px #545454; min-width: 354px; max-width: 354px; overflow-x: hidden; }
-    .report-list-catalog-container { border: 1px solid #8c9eba; background: #5e96cf; background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); cursor: pointer; }
-      .report-list-catalog-container:hover { background: #efefef; }
-    .report-list-catalog { padding-right:10px; }
-    .report-list-item { list-style-image:url("../../Content/images/reporticon.png"); vertical-align: top; cursor: pointer; }
-      .report-list-item:hover { background: #efefef; }
-    .report-view-cell { vertical-align: top; }
-    .report-view-container { background-color: white; box-shadow: 0 0 7px #545454; margin: 0 10px 10px 0;}
+    .sample-container { background-color: rgb(210, 223, 237); width: 100%; height: 100%; }
+      .sample-container .sample-table { background-color: rgb(210, 223, 237); width: inherit; height: inherit; vertical-align: top; }
+      .sample-container .sample-row { width: inherit; vertical-align: top; }
+    .sample-header { height: 1em; }
+    .report-list-cell { vertical-align: top; font-size: 14pt; min-width: 354px; max-width: 354px; }
+      .report-list-cell .report-list-container { margin: 0 10px 10px 10px; background-color: #dddddd; box-shadow: 0 0 7px #545454; overflow-x: hidden; }
+      .report-list-cell .report-list-catalog-container { border: 1px solid #8c9eba; background: #5e96cf; background: -moz-linear-gradient(top, #5e96cf 0%, #4e70b0 100%); background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5e96cf), color-stop(100%,#4e70b0)); /* Chrome,Safari4+ */ background: -webkit-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Chrome10+,Safari5.1+ */ background: -o-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); /* Opera 11.10+ */ background: -ms-linear-gradient(top, #5e96cf 0%,#4e70b0 100%); background: linear-gradient(to bottom, #5e96cf 0%,#4e70b0 100%); filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5e96cf', endColorstr='#4e70b0',GradientType=0 ); cursor: pointer; }
+        .report-list-cell .report-list-catalog-container:hover { background: #efefef; }
+      .report-list-cell .report-list-catalog { padding-right:10px; }
+      .report-list-cell .report-list-item { list-style-image:url("../../Content/images/reporticon.png"); vertical-align: top; cursor: pointer; }
+        .report-list-cell .report-list-item:hover { background: #efefef; }
+    .report-view-cell { vertical-align: top; width: 100%; height: 100%; }
+      .report-view-cell .report-view-container { height: 100%; margin: 0 10px 10px 0;  background-color: white; box-shadow: 0 0 7px #545454; }
+      .report-view-cell .report-view { height: 100%; }
   </style>
 }
 
@@ -25,16 +29,20 @@
   <script type="text/javascript" src="~/Scripts/ReportSelector.js"></script>
 }
 
-<h2>Report Selector Sample</h2>
-
 <div class="sample-container">
-  <table>
+  <table class="sample-table">
     <tbody>
-      <tr>
+      <tr class="sample-row">
+        <td colspan="2" class="sample-header">
+          <h2>Report Selector Sample</h2>
+        </td>
+      </tr>
+      <tr class="sample-row">
         <td class="report-list-cell">
           <div class="report-list-container"></div>
           </td>
         <td class="report-view-cell">
+          <div class="report-view-container"></div>
         </td>
       </tr>
     </tbody>

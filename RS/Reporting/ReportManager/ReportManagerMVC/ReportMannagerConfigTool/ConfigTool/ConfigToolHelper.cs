@@ -11,35 +11,32 @@ using System.ServiceProcess;
 using System.Xml;
 using Forerunner.Security;
 using Microsoft.Win32;
+using System.ServiceProcess;
 
 namespace ReportMannagerConfigTool
 {
     public static class ConfigToolHelper
     {
         /// <summary>
-        /// Detect whether IIS web server installed on the machine
+        /// Detect whether IIS web server installed on the machine and running.
         /// </summary>
         /// <returns>True: installed; False: not</returns>
         public static bool isIISInstalled()
         {
-            //SOFTWARE\Microsoft\InetStp -- MajorVersion
-            string[] valueNames;
-
-            RegistryKey target = Registry.LocalMachine.OpenSubKey("SOFTWARE").OpenSubKey("Microsoft").OpenSubKey("InetStp");
-
-            if (target == null)
-                return false;
-
-            valueNames = target.GetValueNames();
-            foreach (string keyName in valueNames)
+            try
             {
-                if (keyName == "MajorVersion")
+                ServiceController sc = new ServiceController("W3SVC");
+                if ((sc.Status.Equals(ServiceControllerStatus.Stopped) || sc.Status.Equals(ServiceControllerStatus.StopPending)))
                 {
-                    return true;
+                    return false;
                 }
             }
-
-            return false;
+            catch
+            {
+                return false;
+            }
+            return true;
+            
         }
 
         /// <summary>
@@ -89,7 +86,9 @@ namespace ReportMannagerConfigTool
             try
             {
                 impersonator.Impersonate();
-                conn.Open();
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {
@@ -104,7 +103,23 @@ namespace ReportMannagerConfigTool
             }
 
             return StaticMessages.testSuccess;
-        }     
+        }
+
+        private static bool isReportServerDB(SqlConnection conn)
+        {
+            conn.Open();
+            string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
+
+            SqlCommand cmd = new SqlCommand(SQL, conn);
+            SqlDataReader rdr = cmd.ExecuteReader();
+            if (!rdr.Read())
+            {
+                conn.Close();
+                return false;
+            }
+            conn.Close();
+            return true;
+        }
 
         /// <summary>
         /// Verify whether program can connect database with given connection string.
@@ -116,7 +131,9 @@ namespace ReportMannagerConfigTool
             SqlConnection conn = new SqlConnection(connectionString);
             try
             {
-                conn.Open();
+                bool isReportServerDB = ConfigToolHelper.isReportServerDB(conn);
+                if (!isReportServerDB)
+                    return String.Format(StaticMessages.databaseConnectionFail, StaticMessages.notReportServerDB);
             }
             catch (Exception error)
             {

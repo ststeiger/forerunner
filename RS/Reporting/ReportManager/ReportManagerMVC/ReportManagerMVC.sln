@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportManagerUnitTest", "Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forerunner.Thumbnail", "..\..\ReportViewer\ReportViewer\Forerunner.Thumbnail\Forerunner.Thumbnail.csproj", "{91C12071-B128-4B51-9933-594B8EADD63E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValidateLicense", "ValidateLicense\ValidateLicense.csproj", "{BF9D9D43-731F-4612-8637-E6E55D39CC7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,12 @@ Global
 		{91C12071-B128-4B51-9933-594B8EADD63E}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{91C12071-B128-4B51-9933-594B8EADD63E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91C12071-B128-4B51-9933-594B8EADD63E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF9D9D43-731F-4612-8637-E6E55D39CC7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

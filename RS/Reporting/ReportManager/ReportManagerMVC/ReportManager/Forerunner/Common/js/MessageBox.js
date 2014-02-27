@@ -17,11 +17,12 @@ $(function () {
      * Widget used display the message box dialog
      *
      * @namespace $.forerunner.messageBox
-     * @prop {object} options - The options for Message Box
-     * @prop {String} options.msg - The messgae to display
+     * @prop {Object} options - The options for Message Box
+     * @prop {Object} options.$appContainer - The app container that messageBox belong to
+     *
      * @example
-     * $("#messageBoxId").messageBox({
-        msg: "Display this text"
+     * $msgBox.messageBox({ 
+     *    $appContainer: $appContainer 
      * });
      */
     $.widget(widgets.getFullname(widgets.messageBox), {
@@ -33,6 +34,8 @@ $(function () {
         },
         _init: function () {
             var me = this;
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
 
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             $messageBox = new $(
@@ -57,9 +60,21 @@ $(function () {
             me.element.find(".fr-messagebox-close-id").on("click", function () {
                 me.closeDialog();
             });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
         },
         /**
+         * Open message box dialog
+         *
          * @function $.forerunner.messageBox#openDialog
+         * @param {String} msg - Message to show
+         * @param {String} caption - Message box dialog caption
          */
         openDialog: function (msg, caption) {
             var me = this;
@@ -72,6 +87,8 @@ $(function () {
             forerunner.dialog.showModalDialog(me.options.$appContainer, me);
         },
         /**
+         * Close current message box
+         *
          * @function $.forerunner.messageBox#closeDialog
          */
         closeDialog: function () {

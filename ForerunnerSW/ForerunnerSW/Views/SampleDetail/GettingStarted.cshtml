@@ -52,8 +52,7 @@
             <li>Forerunner.SQLReporting.dll</li>
         </ul>
         <li>In the file: App_Start\WebApiConfig.cs add a second route template named MobilizerAPI</li>
-        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/WebApiConfig.cs.txt', 'WebApiConfigID')">Click here to see the source code</a></p>
-        <p><pre id="WebApiConfigID" class="prettyprint"></pre></p>
+        <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="WebApiConfig.cs"></div>
         <li>Make the following changes to your Web.config file</li>
         <ul>
             <p>Copy the Forerunner specific
@@ -71,12 +70,9 @@
             <li>Add a new view named "Report"</li>
             <li>Select the  "Add" button</li>
         </ul>
-        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/Report.cshtml.txt', 'ReportPageSourceID')">Click here to see the source code</a></p>
-        <p><pre id="ReportPageSourceID" class="prettyprint"></pre></p>
-
+        <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="Report.cshtml"></div>
         <p><i>Add a new action method to the HomeController.cs file</i></p>
-        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/HomeController.cs.txt', 'HomeControllerSourceID')">Click here to see the source code</a></p>
-        <p><pre id="HomeControllerSourceID" class="prettyprint"></pre></p>
+        <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="HomeController.cs"></div>
 
         <p><i>Add a new report layout</i></p>
         <li>In the "Solution Explorer" view, right click the "Views" > "Shared" folder and select the menu items:</li>
@@ -86,11 +82,9 @@
             <li>Add a new view named "_ReportLayout.cshtml"</li>
             <li>Select the  "Add" button</li>
         </ul>
-        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/_ReportLayout.cshtml.txt', 'ReportLayoutSourceID')">Click here to see the source code</a></p>
-        <p><pre id="ReportLayoutSourceID" class="prettyprint"></pre></p>
+        <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="_ReportLayout.cshtml"></div>
         <li>Add a link to the new report page into the _Layout.cshtml page</li>
-        <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/_Layout.cshtml.txt', 'LayoutSourceID')">Click here to see the source code</a></p>
-        <p><pre id="LayoutSourceID" class="prettyprint"></pre></p>
+        <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="_Layout.cshtml"></div>
     </ul>
 
     <p><b>Step 5: Setup authentication</b></p>
@@ -102,12 +96,11 @@
         <p>in the Login action to:</p>
         <p>Forerunner.Security.FormsAuthenticationHelper.Login(model.UserName, model.Password, 30)</p>
     </ul>
-    <p><a onclick="ToggleSourceCode(app.GettingStarted, 'Bundles/AccountController.cs.txt', 'AccountContrpollerSourceID')">Click here to see the source code</a></p>
-    <p><pre id="AccountContrpollerSourceID" class="prettyprint"></pre></p>
+    <div class="toggle-source-code" data-app="appEnum.GettingStarted" data-file="AccountController.cs"></div>
 
     <p>
         You can run the sample and see the "Report" page. The "Report" page requires authentication, so login using the user
         name "TestAccount" and password "TestPWD!".
     </p>
-    <p><a onclick="NavigateToSiteURL(app.GettingStarted, '')">Click here to see the sample run</a></p>
+    <p><a onclick="NavigateToSiteURL('appEnum.GettingStarted', '')">Click here to see the sample run</a></p>
 }

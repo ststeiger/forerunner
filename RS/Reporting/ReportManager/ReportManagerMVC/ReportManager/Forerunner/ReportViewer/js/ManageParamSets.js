@@ -15,6 +15,22 @@ $(function () {
     var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
     var manageParamSets = locData.manageParamSets;
 
+    /**
+     * Widget used to manage parameter set
+     *
+     * @namespace $.forerunner.manageParamSets
+     * @prop {Object} options - The options for dsCredential
+     * @prop {String} options.$reportViewer - Report viewer widget
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {String} options.model - Parameter model widget instance
+     *
+     * @example
+     * $("#manageParamSetsDialog").manageParamSets({
+     *    $appContainer: me.options.$appContainer,
+     *    $reportViewer: $viewer,
+     *    model: me.parameterModel
+     /  });
+     */
     $.widget(widgets.getFullname(widgets.manageParamSets), {
         options: {
             $reportViewer: null,
@@ -115,6 +131,9 @@ $(function () {
             var me = this;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml("fr-icons24x24-parameterSets", manageParamSets.manageSets, "fr-mps-cancel", manageParamSets.cancel);
             var $dialog = $(
                 "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -156,11 +175,24 @@ $(function () {
             });
 
             me.element.find(".fr-mps-submit-id").on("click", function (e) {
-                if (me.$form.valid() === true) {
-                    me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
-                    me.closeDialog();
-                }
+                me._submitParamSet();
             });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me.closeDialog();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me._submitParamSet();
+            });
+        },
+        _submitParamSet: function () {
+            var me = this;
+
+            if (me.$form.valid() === true) {
+                me.options.model.parameterModel("applyServerData", me.serverData, me.lastAddedSetId);
+                me.closeDialog();
+            }
         },
         _findId: function (e) {
             var $target = $(e.target);
@@ -247,7 +279,10 @@ $(function () {
             delete me.serverData.parameterSets[id];
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Open parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#openDialog
+         * @param {String} parameterList - User saved parameter set
          */
         openDialog: function (parameterList) {
             var me = this;
@@ -260,7 +295,9 @@ $(function () {
             }
         },
         /**
-         * @function $.forerunner.userSettings#openDialog
+         * Close parameter set dialog
+         *
+         * @function $.forerunner.manageParamSets#closeDialog
          */
         closeDialog: function () {
             var me = this;

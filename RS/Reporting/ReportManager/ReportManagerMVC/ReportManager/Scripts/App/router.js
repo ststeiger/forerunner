@@ -66,7 +66,11 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
-            $("body").reportExplorerEZ("transitionToReportViewer", path);
+            var parts = path.split("?");
+            path = parts[0];
+            var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
             $("html").removeClass("fr-Explorer-background");
         },
        
@@ -99,7 +103,7 @@ var ApplicationRouter = Backbone.Router.extend({
             this.explorer = $("body").reportExplorerEZ({
                 navigateTo: this.navigateTo,
                 historyBack: this.historyBack,
-                explorerSettings: explorerSettings
+                explorerSettings: explorerSettings,
             });
         }
     });

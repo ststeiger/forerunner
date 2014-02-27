@@ -67,6 +67,19 @@ $(function () {
         },
     }); //$.widget
 
+    /**
+     * Widget used to show print dialog
+     *
+     * @namespace $.forerunner.reportPrint
+     * @prop {Object} options - The options for document map
+     * @prop {Object} options.$reportViewer - The report viewer widget     
+     * @prop {Object} options.$appContainer - Report page container
+     *
+     * @example
+     *   $("#docMap").reportDocumentMap({ 
+     *      $reportViewer: $viewer 
+     *   });   
+     */
     $.widget(widgets.getFullname(widgets.reportPrint), {
         options: {
             $reportViewer: null,
@@ -85,6 +98,9 @@ $(function () {
             var print = me.locData.print;
 
             me.element.html("");
+            me.element.off(events.modalDialogGenericSubmit);
+            me.element.off(events.modalDialogGenericCancel);
+
             var headerHtml = forerunner.dialog.getModalDialogHeaderHtml('fr-icons24x24-printreport', print.title, "fr-print-cancel", print.cancel);
             var $printForm = new $(
             "<div class='fr-core-dialog-innerPage fr-core-center'>" +
@@ -124,11 +140,7 @@ $(function () {
             me._resetValidateMessage();
 
             me.element.find(".fr-print-submit-id").on("click", function (e) {
-                var printPropertyList = me._generatePrintProperty();
-                if (printPropertyList !== null) {
-                    me.options.$reportViewer.reportViewer("printReport", printPropertyList);
-                    me.closeDialog();
-                }
+                me._submitPrint();
             });
 
             me.element.find(".fr-print-cancel").on("click", function (e) {
@@ -137,11 +149,21 @@ $(function () {
                     me._createItems();
                 }
             });
+
+            me.element.on(events.modalDialogGenericSubmit, function () {
+                me._submitPrint();
+            });
+
+            me.element.on(events.modalDialogGenericCancel, function () {
+                me.closeDialog();
+            });
         },
         /**
+         * Set report page layout
+         *
          * @function $.forerunner.reportPrint#setPrint
-         * @Generate print pane html code and append to the dom tree
-         * @param {String} pageLayout - default loaded page layout data from RPL
+         * 
+         * @param {Object} pageLayout - Report page layout data
          */
         setPrint: function (pageLayout) {
             var me = this;
@@ -150,6 +172,15 @@ $(function () {
 
             if (me._printData) {
                 me._createItems(me._printData);
+            }
+        },
+        _submitPrint: function () {
+            var me = this;
+
+            var printPropertyList = me._generatePrintProperty();
+            if (printPropertyList !== null) {
+                me.options.$reportViewer.reportViewer("printReport", printPropertyList);
+                me.closeDialog();
             }
         },
         _createItems: function (pageLayout) {
@@ -280,6 +311,8 @@ $(function () {
         },
 
         /**
+         * Open print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         openDialog: function () {
@@ -292,6 +325,8 @@ $(function () {
             //});
         },
         /**
+         * Close print dialog
+         *
          * @function $.forerunner.reportPrint#openDialog
          */
         closeDialog: function () {
@@ -363,6 +398,11 @@ $(function () {
                 return source;
             }
         },
+        /**
+        * Removes the dsCredential functionality completely. This will return the element back to its pre-init state.
+        *
+        * @function $.forerunner.dsCredential#destroy
+        */
         destroy: function () {
             var me = this;
             me._printData = null;

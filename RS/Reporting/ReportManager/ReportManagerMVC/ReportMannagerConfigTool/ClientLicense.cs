@@ -11,6 +11,7 @@ using ForerunnerLicense;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Forerunner.Logging;
+using System.Threading;
 
 namespace ForerunnerLicense
 {
@@ -25,6 +26,9 @@ namespace ForerunnerLicense
         private const String VersionKey = "Version2";
         private const String LicenseDataKey = "LicenseData";
         private const String LicenseTimestampKey = "Timestamp";
+        private static string url = "https://forerunnersw.com/register/api/License";
+        //private static string url = "http://localhost:13149/api/License";
+
 
         private static LicenseData license = null;
         internal static LicenseData GetLicense()
@@ -106,16 +110,28 @@ namespace ForerunnerLicense
                 Logger.Trace(LogType.Info, "ClientLicense.Load  Getting MobV1Key.");
                 RegistryKey forerunnerswKey ;
                 RegistryKey softwareKey = Registry.LocalMachine.OpenSubKey(software);
-          
-                RegistryKey wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);
-                if (wow6432NodeKey == null)
-                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                RegistryKey wow6432NodeKey = null;
+                bool Is64Bit;
+               
+                //See if 32 or 64 bit process
+                if (IntPtr.Size == 8)
+                    Is64Bit = true;
                 else
+                    Is64Bit = false;
+
+                //If 64 get the 3264 node
+                if (Is64Bit)
+                {
+                    wow6432NodeKey = softwareKey.OpenSubKey(wow6432Node);    
                     forerunnerswKey = wow6432NodeKey.OpenSubKey(forerunnerKey);
+                }
+                else
+                    forerunnerswKey = softwareKey.OpenSubKey(forerunnerKey);
+                    
 
                 if (forerunnerswKey == null)
                 {
-                    if (wow6432NodeKey == null)
+                    if (!Is64Bit)
                     {
                         softwareKey = Registry.LocalMachine.OpenSubKey(software, true);
                         forerunnerswKey = softwareKey.CreateSubKey(forerunnerKey);
@@ -306,9 +322,8 @@ namespace ForerunnerLicense
            
         }
 
-        public static void Validate()
+        public static void Validate(bool forceValidate = false)
         {
-            ServerResponse resp = new ServerResponse();
             Init(true);
 
             LicenseData License = GetLicense();
@@ -327,69 +342,85 @@ namespace ForerunnerLicense
                 LicenseException.Throw(LicenseException.FailReason.IncorrectVersion, "License is invalid for this version of the software");
 
             if (License.RequireValidation == 1)
-            {                
+            {
                 TimeSpan LastTry = DateTime.Now - LastServerValidationTry;
-                
+
                 TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
-                if (LastSucess.TotalDays > 1)
+                if (LastSucess.TotalDays > 1 || forceValidate)
                 {
-                    resp.StatusCode = LastStatus;
-                    if (LastTry.TotalMinutes > 5)
+                    
+                    if (LastTry.TotalMinutes > 5 || forceValidate)
                     {
                         try
                         {
-                            LastServerValidationTry = DateTime.Now;
-                            string request = string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
-                            resp = Post(request);
-                            LastStatus = resp.StatusCode;
+                            Thread t = new Thread(new ThreadStart(ValidateInner));
+                            t.Start();
+                            t.Join();
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            Logger.Trace(LogType.Info, "Could not communicate with license Service");
-                            //This is a network error give us 14 days to fix
-                            if (LastSucess.TotalDays > 14)
-                                LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
-                            return;
-                        }
-                    }
-
-                    if (resp.StatusCode != 0)
-                    {
-                        if (resp.StatusCode == 200)
-                            LicenseException.Throw(LicenseException.FailReason.Expired, "Subscritpion Expired");
-                        else if (resp.StatusCode == 105)
-                            LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Key");
-                        //This is a server error handle like network error give us 14 days to fix
-                        else
-                        {
-                            if (LastSucess.TotalDays > 14)
-                                LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
-                        }
-
-                    }
-                    else
-                    {
-                        // This needs to be thread safe.
-                        lock (MachineIdLock)
-                        {
-                            LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)), DateTimeKind.Utc);
-                            MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
+                            throw e;
                         }
                     }
                 }
+            }
+            
+
+        }
+        private static void ValidateInner()
+        {
+            ServerResponse resp = new ServerResponse();
+            resp.StatusCode = LastStatus;
+            TimeSpan LastSucess = DateTime.Now.ToUniversalTime() - LastServerValidation;
+            LicenseData License = GetLicense();
+            try
+            {
+                LastServerValidationTry = DateTime.Now;
+                string request = string.Format(requestString, "Validate", License.LicenseKey, License.MachineData.Serialize(false), LicenseString);
+                resp = Post(request);
+                LastStatus = resp.StatusCode;
+            }
+            catch
+            {
+                Logger.Trace(LogType.Info, "Could not communicate with license Service " + url);
+                //This is a network error give us 14 days to fix
+                if (LastSucess.TotalDays > 14)
+                    LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
+                return;
+            }
+                    
+
+            if (resp.StatusCode != 0)
+            {
+                if (resp.StatusCode == 200)
+                    LicenseException.Throw(LicenseException.FailReason.Expired, "Subscritpion Expired");
+                else if (resp.StatusCode == 105)
+                    LicenseException.Throw(LicenseException.FailReason.InvalidKey, "Invalid License Key");
+                //This is a server error handle like network error give us 14 days to fix
+                else
+                {
+                    if (LastSucess.TotalDays > 14)
+                        LicenseException.Throw(LicenseException.FailReason.LicenseValidationError, "Cannot Validate License with Server");
+                }
 
             }
-           
+            else
+            {
+                // This needs to be thread safe.
+                lock (MachineIdLock)
+                {
+                    LastServerValidation = new DateTime(long.Parse(LicenseUtil.Verify(resp.Response, LicenseUtil.pubkey)), DateTimeKind.Utc);
+                    MobV1Key.SetValue(LicenseTimestampKey, resp.Response);
+                }
+            }
+        
 
 
         }
 
         public static ServerResponse Post(string Value)
         {
-           string url = "https://forerunnersw.com/register/api/License";
-
-           //string url = "http://localhost:13149/api/License";
-
+           
             WebRequest request = WebRequest.Create (url);
             request.Method = "POST";
 

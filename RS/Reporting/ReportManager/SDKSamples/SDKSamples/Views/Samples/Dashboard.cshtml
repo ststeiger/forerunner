@@ -2,6 +2,18 @@
     ViewBag.Title = "Dashboard Sample";
     Layout = "../Shared/_SamplesLayout.cshtml";
 }
+
+@section styles {
+  <style>
+    body { background-color: rgb(210, 223, 237); }
+
+    .report-container { box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; }
+
+    #Report1 { min-width:300px;min-height:300px; }
+    #Report2 { min-width:300px;min-height:300px; }
+  </style>
+}
+
 <script>
     $(document).ready(function () {
         $('#Report1').reportViewerEZ({
@@ -23,15 +35,15 @@
 <table>
     <tr>
         <td>
-            <div id="Report1" style="min-width:300px;min-height:300px;" />
+            <div id="Report1" class="report-container" />
         </td>
         <td>
-            <div id="Report2" style="min-width:300px;min-height:300px;"/>
+            <div id="Report2" class="report-container" />
         </td>
     </tr>
     <tr>
         <td colspan="2">
-            <div id="Report3" />
+            <div id="Report3" class="report-container" />
         </td>
     </tr>
 </table>

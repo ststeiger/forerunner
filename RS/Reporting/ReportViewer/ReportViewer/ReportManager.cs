@@ -38,6 +38,61 @@ namespace Forerunner.SSRS.Manager
         string SharePointHostName = null;
         SqlConnection SQLConn;
 
+        private static bool isReportServerDB(SqlConnection conn)
+        {
+            string SQL = "SELECT * FROM sysobjects WHERE name = 'ExecutionLogStorage'";
+
+            try
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand(SQL, conn))
+                {
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (!rdr.Read())
+                    {
+                        conn.Close();
+                        Logger.Trace(LogType.Error, "Not a report server database for connectionString " + conn.ConnectionString);
+                        return false;
+                    }
+                    conn.Close();
+                }
+            }
+            catch (SqlException e)
+            {
+                Logger.Trace(LogType.Error, "An exception happens while validating the report server database.  Connection string: " + conn.ConnectionString);
+                ExceptionLogGenerator.LogException(e);
+                return false;
+            }
+            finally {
+                if (conn.State == System.Data.ConnectionState.Open) {
+                    conn.Close();
+                }
+            }
+            return true;
+        }
+
+        public static bool ValidateConfig(string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity)
+        {
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder.DataSource = ReportServerDataSource;
+            builder.InitialCatalog = ReportServerDB;
+            if (useIntegratedSecurity)
+            {
+                builder.IntegratedSecurity = true;
+            }
+            else
+            {
+                builder.UserID = DBCredentials.UserName;
+                String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
+                builder.Password = Password;
+            }
+
+
+            SqlConnection conn = new SqlConnection(builder.ConnectionString);
+
+            return ReportManager.isReportServerDB(conn);
+        }
+
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName = null)
         {
             rs = new RSManagementProxy(IsNativeRS);
@@ -920,10 +975,7 @@ namespace Forerunner.SSRS.Manager
                         sqlImpersonator = tryImpersonate(true);
                         context = new ThreadContext(HttpUtility.UrlDecode(path), sqlImpersonator, true /*!GetServerRendering()*/);
                         this.SetCredentials(context.NetworkCredential);
-                        ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);
-                        //Thread t = new Thread(new ParameterizedThreadStart(this.GetThumbnail));                
-                        //t.Start(path);
-                        //t.Join();                    
+                        ThreadPool.QueueUserWorkItem(this.GetThumbnail, context);                       
                     }
                 }
                 catch

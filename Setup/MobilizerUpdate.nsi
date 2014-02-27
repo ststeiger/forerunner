@@ -209,8 +209,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\bin\Forerunner.Thumbnail.exe"
   SetOutPath "$INSTDIR\Config"
   File "${LOCALROOT}\Config\MobilizerConfigTool.exe"
+  File "${LOCALROOT}\Config\ValidateLicense.exe"
   File "${LOCALROOT}\Config\Mobilizer License.rtf"
-  SetOutPath "$INSTDIR\Config"
+ 
 
   SetOutPath "$INSTDIR\Custom"
   File "${LOCALROOT}\Custom\Explorer.css"
@@ -218,6 +219,13 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Custom\ExplorerSettings.txt"
   File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
 
+  SetOutPath "$INSTDIR"
+  File "${RESOURCEROOT}\InstallInstructions.rtf"
+
+
+;This must be the last line of the config tool will not work after install
+ SetOutPath "$INSTDIR\Config"
+ 
 SectionEnd
 
 Section -AdditionalIcons
@@ -675,11 +683,13 @@ Section Uninstall
   Delete "$INSTDIR\SSRSExtension\Forerunner.Json.dll"
   Delete "$INSTDIR\SSRSExtension\Forerunner.Thumbnail.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe"
+  Delete "$INSTDIR\Config\ValidateLicense.exe"
   Delete "$INSTDIR\Config\MobilizerConfigTool.exe.config"
   Delete "$INSTDIR\Config\Manual Activation.rtf"
   Delete "$INSTDIR\Config\Mobilizer License.rtf"
   Delete "$INSTDIR\Config\Mobilizer 1 License.rtf"
   Delete "$INSTDIR\Config\UltiDev.WebServer.msi"
+  Delete "$INSTDIR\InstallInstructions.rtf"
 
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\Uninstall.lnk"
   Delete "$SMPROGRAMS\ForerunnerMobilizerV2\MobilizerConfigTool.lnk"

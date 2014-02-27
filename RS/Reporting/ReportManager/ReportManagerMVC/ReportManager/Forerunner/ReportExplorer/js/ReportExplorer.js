@@ -13,7 +13,7 @@ $(function () {
      * Widget used to explore available reports and launch the Report Viewer
      *
      * @namespace $.forerunner.reportExplorer
-     * @prop {object} options - The options for toolbar
+     * @prop {Object} options - The options for reportExplorer
      * @prop {String} options.reportManagerAPI - Path to the report manager REST API calls
      * @prop {String} options.forerunnerPath - Path to the top level folder for the SDK
      * @prop {String} options.path - Path passed to the GetItems REST call
@@ -21,14 +21,18 @@ $(function () {
      * @prop {String} options.selectedItemPath - Set to select an item in the explorer
      * @prop {Object} options.$scrollBarOwner - Used to determine the scrollTop position
      * @prop {Object} options.navigateTo - Callback function used to navigate to a slected report
-     * @prop {Object} options.explorerSettings -- Object that stores custom explorer style settings
+     * @prop {Object} options.$appContainer - Report page container
+     * @prop {Object} options.explorerSettings - Object that stores custom explorer style settings
+     * @prop {String} options.rsInstance - Report service instance name
      * @example
      * $("#reportExplorerId").reportExplorer({
      *  reportManagerAPI: "./api/ReportManager",
      *  forerunnerPath: "./forerunner/",
      *  path: "/",
      *  view: "catalog",
-     *  navigateTo: navigateTo
+     *  navigateTo: navigateTo,
+     *  $appContainer: me.$container,
+     *  explorerSettings: explorerSettings
      * });
      */
     $.widget(widgets.getFullname(widgets.reportExplorer), /** @lends $.forerunner.reportExplorer */ {
@@ -41,10 +45,11 @@ $(function () {
             $scrollBarOwner: null,
             navigateTo: null,
             $appContainer: null,
-            explorerSettings: null
+            explorerSettings: null,
+            rsInstance: null,
         },
         /**
-         * Add tools starting at index, enabled or disabled based upon the given tools array.
+         * Save the user settings
          * @function $.forerunner.reportExplorer#saveUserSettings
          *
          * @param {Object} settings - Settings object
@@ -55,6 +60,7 @@ $(function () {
             var stringified = JSON.stringify(settings);
 
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveUserSettings?settings=" + stringified;
+            if (me.options.rsInstance) url += "&instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 url: url,
                 dataType: "json",
@@ -71,7 +77,9 @@ $(function () {
          * Get the user settings.
          * @function $.forerunner.reportExplorer#getUserSettings
          *
-         * @param {bool} forceLoadFromServer - if true, always load from the server
+         * @param {Boolean} forceLoadFromServer - if true, always load from the server
+         *
+         * @return {Object} - User settings
          */
         getUserSettings: function (forceLoadFromServer) {
             var me = this;
@@ -80,19 +88,7 @@ $(function () {
                 return me.userSettings;
             }
 
-            var settings = null;
-            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserSettings";
-            forerunner.ajax.ajax({
-                url: url,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data && data.responsiveUI !== undefined) {
-                        settings = data;
-                    }
-                }
-            });
-
+            var settings = forerunner.ssr.ReportViewerInitializer.prototype.getUserSettings(me.options);
             if (settings) {
                 me.userSettings = settings;
             }
@@ -103,7 +99,8 @@ $(function () {
             var me = this; 
             var reportThumbnailPath = me.options.reportManagerAPI
               + "/Thumbnail/?ReportPath=" + encodeURIComponent(catalogItem.Path) + "&DefDate=" + catalogItem.ModifiedDate;
-
+            if (me.options.rsInstance)
+                reportThumbnailPath += "&instance=" + me.options.rsInstance;
             //Item
             var $item = new $("<div />");
             $item.addClass("fr-explorer-item");
@@ -219,9 +216,11 @@ $(function () {
         },
         _fetch: function (view,path) {
             var me = this;
+            var url = me.options.reportManagerAPI + "/GetItems";
+            if (me.options.rsInstance) url += "?instance=" + me.options.rsInstance;
             forerunner.ajax.ajax({
                 dataType: "json",
-                url: me.options.reportManagerAPI + "/GetItems",
+                url: url,
                 async: false,
                 data: {
                     view: view,
@@ -291,8 +290,8 @@ $(function () {
         },
         /**
          * Show the user settings modal dialog.
-         * @function $.forerunner.reportExplorer#showUserSettingsDialog
          *
+         * @function $.forerunner.reportExplorer#showUserSettingsDialog
          */
         showUserSettingsDialog : function() {
             var me = this;

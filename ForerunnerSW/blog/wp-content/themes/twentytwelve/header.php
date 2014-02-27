@@ -34,10 +34,8 @@
 
 <body <?php body_class(); ?>>
 
-<!-- Forerunner Header -->
 
-   <!-- Header ================================================== -->
-    <div id="fb-root"></div>
+ <div id="fb-root"></div>
 <script>(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
@@ -46,6 +44,9 @@
     fjs.parentNode.insertBefore(js, fjs);
 }(document, "script", "facebook-jssdk"));</script>
 
+
+
+   <!-- Header ================================================== -->
     <div class="ForerunnerPort Header" style="">
         <div class="ForerunnerPage Center" style="">
             <table class="" style="width: 100%;">
@@ -55,9 +56,11 @@
                             <div class="ForerunnerTDLeft ForerunnerLogo">
                                 <img class="ForerunnerLogo" src="/Content/img/forerunnersw_logo.png" alt="Forerunner Mobilizer Product" />
                             </div>
+                           
                         </td>
                         <td class="ForerunnerTD ForerunnerTD50" style="">
                             <div class="Navbar TopNavbar">
+                                <div style="display:table-row;" >
                                 <ul>
                                     <li id="Blog" class="Navitem TopNavitem"><a href="../blog">Blog</a></li>
                                     <li id="Contact" class="Navitem TopNavitem"><a href="../home/contact">Contact</a></li>
@@ -68,28 +71,40 @@
                                     <li id="Store" class="Navitem TopNavitem"><a href="http://shop.forerunnersw.com">Store</a></li>
                                     <li id="Index" class="Navitem TopNavitem"><a href="../Home">Home</a></li>
                                 </ul>
-								<div>
-                                    <br />
-                                    <br />
-                                    <!-- Place this tag where you want the +1 button to render. -->
-                                    <div class="g-plusone" data-size="medium" data-annotation="none"></div>
+                                    </div>
+                                <div style="padding-top:20px;display:table-row;" >
+                                <ul>
+                                    <li class="Navitem" style="padding-left:10px;">
+                                        <div class="g-plusone" data-size="medium" data-annotation="none"></div>
 
-                                    <!-- Place this tag after the last +1 button tag. -->
-                                    <script type="text/javascript">
-                                        (function () {
-                                            var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                                            po.src = 'https://apis.google.com/js/platform.js';
-                                            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-                                        })();
-                                    </script>
-                                    <script src="//platform.linkedin.com/in.js" type="text/javascript">
+                                        <!-- Place this tag after the last +1 button tag. -->
+                                        <script type="text/javascript">
+                                            (function () {
+                                                var po = document.createElement("script"); po.type = "text/javascript"; po.async = true;
+                                                po.src = "https://apis.google.com/js/platform.js";
+                                                var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s);
+                                            })();
+                                        </script>
+                                    </li>
+                                    <li class="Navitem" style="padding-left:10px;">
+                                        <script src="//platform.linkedin.com/in.js" type="text/javascript">
                                      lang: en_US
-                                    </script>
-                                    <script type="IN/Share"></script>
-                                    <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://forerunnersw.com" data-via="ForerunnerSW" data-count="none">Tweet</a>
-                                    <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');</script>
-                                   <a href="http://www.reddit.com/submit" onclick="window.location = 'http://www.reddit.com/submit?url=' + encodeURIComponent(window.location); return false"> <img src="http://www.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" /> </a>
-                                    <div class="fb-like" data-href="https://forerunnersw.com" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                                        </script>
+                                        <script type="IN/Share"></script>
+                                    </li>
+                                    <li class="Navitem" style="padding-left:10px;">
+                                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://forerunnersw.com" data-via="ForerunnerSW" data-count="none">Tweet</a>
+                                        <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? "http" : "https"; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
+                                    </li>
+                                    <li class="Navitem" style="padding-left:10px;">
+                                        <a href="http://www.reddit.com/submit" onclick="window.location = """http://www.reddit.com/submit?url=""" + encodeURIComponent(window.location); return false">
+                                            <img src="http://www.reddit.com/static/spreddit7.gif" alt="submit to reddit" border="0" />
+                                        </a>
+                                    </li>
+                                    <li class="Navitem" style="margin:-8px;padding-left:10px;">
+                                        <div class="fb-like" data-href="https://forerunnersw.com" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                                    </li>
+                                </ul>
                                 </div>
                             </div>
                         </td>

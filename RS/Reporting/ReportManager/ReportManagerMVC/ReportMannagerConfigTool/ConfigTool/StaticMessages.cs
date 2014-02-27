@@ -2,8 +2,8 @@
 {
     public static class StaticMessages
     {
-        public static readonly string iisNotInstall = "Please install IIS Web Server first before deploy.";
-        public static readonly string uwsNotInstall = "Please install UWS Web Server first before deploy.";
+        public static readonly string iisNotInstall = "IIS is not installed or is not running, Please install IIS first.";
+        public static readonly string uwsNotInstall = "UWS is not installed or is not running, Please install UWS first.";
         public static readonly string siteEmpty = "Site Name can not be empty!";
         public static readonly string portEmpty = "Port can not be empty!";
         public static readonly string portNotFree = "Port: {0} is not free!";
@@ -38,6 +38,7 @@
         public static readonly string IISUsrsAccount = "IIS_IUSRS";
 
         public static readonly string databaseConnectionFail = "Database connection failed: {0}";
+        public static readonly string notReportServerDB = "Not a Report Server Database";
         public static readonly string testSuccess = "Success";
         public static readonly string testFail = "Fail";
         public static readonly string webServiceUrlInvalid = "Web Service Url is invalid: {0}";

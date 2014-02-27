@@ -181,6 +181,14 @@
       <Name>StubbedRipley.rdl</Name>
       <FullPath>StubbedRipley.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Table with embedded Subreport.rdl</Name>
+      <FullPath>Table with embedded Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report1.rdl</Name>
+      <FullPath>Report1.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

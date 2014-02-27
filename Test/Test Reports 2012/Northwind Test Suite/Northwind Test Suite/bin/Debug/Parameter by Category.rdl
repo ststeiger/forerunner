@@ -564,6 +564,7 @@ FROM            Categories</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>ProductSales</rd:DefaultName>
+                          <ToolTip>=Fields!ProductName.Value</ToolTip>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>

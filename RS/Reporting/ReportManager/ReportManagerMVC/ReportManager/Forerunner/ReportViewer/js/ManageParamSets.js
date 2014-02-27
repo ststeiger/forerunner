@@ -179,11 +179,11 @@ $(function () {
             });
 
             me.element.on(events.modalDialogGenericSubmit, function () {
-                me.closeDialog();
+                me._submitParamSet();
             });
 
             me.element.on(events.modalDialogGenericCancel, function () {
-                me._submitParamSet();
+                me.closeDialog();
             });
         },
         _submitParamSet: function () {

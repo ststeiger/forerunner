@@ -5599,23 +5599,7 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas) {
                 NewImage.useMap = "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
             }
-            NewImage.onload = function () {
-                var naturalSize = me._getNatural(this);
-                var imageWidth, imageHeight;
-
-                if (imageConsolidationOffset) {
-                    imageWidth = imageConsolidationOffset.Width;
-                    imageHeight = imageConsolidationOffset.Height;
-                }
-                else {
-                    imageWidth = NewImage.width;
-                    imageHeight = NewImage.height;
-                }
-                    
-                me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
-                
-                me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
-            };
+           
             NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
             $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
 
@@ -5629,6 +5613,51 @@ $(function () {
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
             RIContext.$HTMLParent.attr("style", Style).append(NewImage);
+
+ 
+            var imageWidth, imageHeight;
+
+            if (imageConsolidationOffset) {
+                imageWidth = imageConsolidationOffset.Width;
+                imageHeight = imageConsolidationOffset.Height;
+            }
+            else {
+                imageWidth = NewImage.width;
+                imageHeight = NewImage.height;
+            }
+
+            me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
+
+            switch (sizingType) {
+                case 0://AutoSize
+                    $(NewImage).css("height", height + "mm");
+                    $(NewImage).css("width", width + "mm");
+                    break;
+                case 1://Fit
+                    $(NewImage).css("height", RIContext.CurrLocation.Height - padHeight + "mm");
+                    $(NewImage).css("width", RIContext.CurrLocation.Width - padWidth + "mm");
+                    break;
+                case 2:
+                case 3:
+                    NewImage.onload = function () {
+                        var naturalSize = me._getNatural(this);
+                        var imageWidth, imageHeight;
+
+                        //Neeed to have this here for IE8
+                        if (imageConsolidationOffset) {
+                            imageWidth = imageConsolidationOffset.Width;
+                            imageHeight = imageConsolidationOffset.Height;
+                        }
+                        else {
+                            imageWidth = NewImage.width;
+                            imageHeight = NewImage.height;
+                        }
+
+                        me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
+                    };
+            }
+
+
             return RIContext.$HTMLParent;
         },
         _writeActions: function (RIContext, Elements, $Control) {
@@ -5797,8 +5826,15 @@ $(function () {
     
             Style = "";
 
-            if (Obj.Cell){
-                Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
+            if (Obj.Cell) {
+                if (Obj.Cell.ReportItem.Type !== "SubReport") {
+                    if (Obj.Cell.ReportItem.Elements.NonSharedElements)
+                        Style += me._getFullBorderStyle(Obj.Cell.ReportItem.Elements.NonSharedElements.Style);
+                }
+                else {
+                    if (Obj.Cell.ReportItem.SubReportProperties.NonSharedElements)
+                        Style += me._getFullBorderStyle(Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style);
+                }
                 $Cell.addClass(me._getClassName("fr-b-", Obj.Cell.ReportItem));
             }
 
@@ -5828,8 +5864,15 @@ $(function () {
                
             if (Obj.Cell){
                 //Background color goes on the cell
-                if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
-                    Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+                if (Obj.Cell.ReportItem.Type !== "SubReport") {
+                    if (Obj.Cell.ReportItem.Elements.NonSharedElements.Style && Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor)
+                        Style += "background-color:" + Obj.Cell.ReportItem.Elements.NonSharedElements.Style.BackgroundColor + ";";
+                }
+                else {
+                    if (Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style && Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style.BackgroundColor)
+                        Style += "background-color:" + Obj.Cell.ReportItem.SubReportProperties.NonSharedElements.Style.BackgroundColor + ";";
+                }
+
                 $Cell.addClass(me._getClassName("fr-n-", Obj.Cell.ReportItem));
 
                 $Cell.attr("Style", Style);
@@ -6032,16 +6075,12 @@ $(function () {
         },
 
 
-
-
-
-
-
-
-
         _writeSubreport: function (RIContext) {
             var me = this;
-            RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
+
+            if (RIContext.CurrObjParent.Type !== "Tablix") {
+                RIContext.Style += me._getElementsStyle(RIContext.RS, RIContext.CurrObj.SubReportProperties);
+            }
             RIContext.CurrObj = RIContext.CurrObj.BodyElements;
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
@@ -6695,7 +6734,7 @@ $(function () {
             }
         },
         _getNatural: function (domElement) {
-            if (domElement.naturalWidth !== undefined && domElement.naturalHeight !== undefined) {
+            if ((domElement.naturalWidth) && (domElement.naturalHeight) ) {
                 return { width: domElement.naturalWidth, height: domElement.naturalHeight };
             }
             else {
@@ -6740,6 +6779,9 @@ $(function () {
             var me = this;
 
             var cName = "";
+
+            if (obj.SubReportProperties)
+                obj = obj.SubReportProperties;
 
             if (obj.Elements && obj.Elements.SharedElements)
                 return name + obj.Elements.SharedElements.SID + "-" + me.options.reportViewer.viewerID;

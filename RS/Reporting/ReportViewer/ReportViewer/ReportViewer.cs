@@ -392,7 +392,7 @@ namespace Forerunner.SSRS.Viewer
                     w.WriteMember("ReportContainer");
 
                     MemoryStream ms;
-                    if (ReportViewer.ServerRendering)
+                    if (ReportViewer.ServerRendering && IsDebug != "RPL")
                     {
                         ms= GetUTF8Bytes(result,w.ToString(),"}") as MemoryStream;
                     }

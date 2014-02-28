@@ -370,6 +370,7 @@ $(function () {
             }
 
             me._removeCSS();
+
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
 
@@ -4887,7 +4888,7 @@ $(function () {
                me._writeSection(new reportItemContext(reportViewer, Obj, Index, me.reportObj.ReportContainer.Report.PageContent, reportDiv, ""));
             });
             me._addPageStyle(reportViewer, me.reportObj.ReportContainer.Report.PageContent.PageLayoutStart.PageStyle, me.reportObj);
-          
+                     
         },
         _addPageStyle: function (reportViewer, pageStyle, reportObj) {
             var me = this;
@@ -5549,7 +5550,7 @@ $(function () {
             return me.imageList[ImageName];
         },
         _writeImage: function (RIContext) {
-            var NewImage = new Image();
+            var NewImage = $("<img/>"); //new Image();
             var me = this; 
 
             var measurement = me._getMeasurmentsObj(RIContext.CurrObjParent, RIContext.CurrObjIndex);
@@ -5566,7 +5567,7 @@ $(function () {
                 RIContext.$HTMLParent.addClass(me._getClassName("fr-n-", RIContext.CurrObj));
             }
             
-            //Style += me._getMeasurements(measurement, true);
+            Style += me._getMeasurements(measurement, true);
  
 
             var ImageName;
@@ -5574,6 +5575,9 @@ $(function () {
             var imageConsolidationOffset;
 
             var sizingType = me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).Sizing;
+
+            if (!sizingType)
+                sizingType = 0;
 
             //get the padding size
             var padWidth = me._getPaddingSize(RIContext.CurrObj, "Left") + me._getPaddingSize(RIContext.CurrObj, "Right");
@@ -5597,14 +5601,16 @@ $(function () {
             }
                         
             if (RIContext.CurrObj.Elements.NonSharedElements.ActionImageMapAreas) {
-                NewImage.useMap = "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName;
+                NewImage.attr("useMap", "#Map_" + RIContext.RS.sessionID + "_" + RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
             }
            
-            NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;
-            $(NewImage).attr("style", imageStyle ? imageStyle : "display:block;");
 
-            NewImage.src = this._getImageURL(RIContext.RS, ImageName);
+            //NewImage.alt = me.options.reportViewer.locData.messages.imageNotDisplay;            
+            //NewImage.src = this._getImageURL(RIContext.RS, ImageName);
             
+            NewImage.attr("alt", me.options.reportViewer.locData.messages.imageNotDisplay);
+            NewImage.attr("src",this._getImageURL(RIContext.RS, ImageName));
+
             me._writeActions(RIContext, RIContext.CurrObj.Elements.NonSharedElements, $(NewImage));
             me._writeBookMark(RIContext);
             me._writeTooltip(RIContext);
@@ -5612,9 +5618,6 @@ $(function () {
             if (RIContext.CurrObj.Elements.NonSharedElements.UniqueName)
                 me._writeUniqueName($(NewImage), RIContext.CurrObj.Elements.NonSharedElements.UniqueName);
   
-            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
-
- 
             var imageWidth, imageHeight;
 
             if (imageConsolidationOffset) {
@@ -5626,12 +5629,14 @@ $(function () {
                 imageHeight = RIContext.CurrLocation.Height * 3.78;
             }
 
+            RIContext.$HTMLParent.attr("style", Style).append(NewImage);
+
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
+            Style = imageStyle ? imageStyle : "display:block;";
+            NewImage.attr("style", Style);
             switch (sizingType) {
                 case 0://AutoSize
-                    $(NewImage).css("height", RIContext.CurrLocation.Height + "mm");
-                    $(NewImage).css("width", RIContext.CurrLocation.Width + "mm");
                     break;
                 case 1://Fit
                     $(NewImage).css("height", RIContext.CurrLocation.Height - padHeight + "mm");
@@ -5639,9 +5644,9 @@ $(function () {
                     break;
                 case 2:
                 case 3:
-                    $(NewImage).css("height", RIContext.CurrLocation.Height + "mm");
+                     $(NewImage).css("height", RIContext.CurrLocation.Height + "mm");
                     $(NewImage).css("width", RIContext.CurrLocation.Width + "mm");
-                    NewImage.onload = function () {
+                    NewImage.on("load", function () {
                         var naturalSize = me._getNatural(this);
                         var imageWidth, imageHeight;
 
@@ -5656,9 +5661,8 @@ $(function () {
                         }
 
                         me._resizeImage(this, sizingType, naturalSize.height, naturalSize.width, RIContext.CurrLocation.Height - padHeight, RIContext.CurrLocation.Width - padWidth);
-                    };
+                    });
             }
-
 
             return RIContext.$HTMLParent;
         },
@@ -5772,46 +5776,47 @@ $(function () {
 
             height = me._convertToMM(height + "px");
             width = me._convertToMM(width + "px");
+            $img = $(img);
             if (height !== 0 && width !== 0) {
                 switch (sizingType) {
                     case 0://AutoSize
-                        $(img).css("height", height + "mm");
-                        $(img).css("width", width + "mm");
+                        $img.css("height", height + "mm");
+                        $img.css("width", width + "mm");
                         break;
                     case 1://Fit
-                        $(img).css("height", maxHeight + "mm");
-                        $(img).css("width", maxWidth + "mm");
+                        $img.css("height", maxHeight + "mm");
+                        $img.css("width", maxWidth + "mm");
                         break;
                     case 2://Fit Proportional
                         if (height / maxHeight > 1 || width / maxWidth > 1) {
                             if ((height / maxHeight) >= (width / maxWidth)) {
                                 ratio = maxHeight / height;
 
-                                $(img).css("height", maxHeight + "mm");
-                                $(img).css("width", width * ratio + "mm");
-                                $(img).css("max-height", maxHeight + "mm");
-                                $(img).css("max-width", width * ratio + "mm");
-                                $(img).css("min-height", maxHeight + "mm");
-                                $(img).css("min-width", width * ratio + "mm");
+                                $img.css("height", maxHeight + "mm");
+                                $img.css("width", width * ratio + "mm");
+                                $img.css("max-height", maxHeight + "mm");
+                                $img.css("max-width", width * ratio + "mm");
+                                $img.css("min-height", maxHeight + "mm");
+                                $img.css("min-width", width * ratio + "mm");
                             }
                             else {
                                 ratio = maxWidth / width;
 
-                                $(img).css("width", maxWidth + "mm");
-                                $(img).css("height", height * ratio + "mm");
-                                $(img).css("max-width", maxWidth + "mm");
-                                $(img).css("max-height", height * ratio + "mm");
-                                $(img).css("min-width", maxWidth + "mm");
-                                $(img).css("min-height", height * ratio + "mm");
+                                $img.css("width", maxWidth + "mm");
+                                $img.css("height", height * ratio + "mm");
+                                $img.css("max-width", maxWidth + "mm");
+                                $img.css("max-height", height * ratio + "mm");
+                                $img.css("min-width", maxWidth + "mm");
+                                $img.css("min-height", height * ratio + "mm");
                             }
                         }
                         break;
                     case 3://Clip
                         var naturalSize = me._getNatural(img);
-                        $(img).css("height", me._convertToMM(naturalSize.height + "px") + "mm");
-                        $(img).css("width", me._convertToMM(naturalSize.width + "px") + "mm");
-                        $(img).css("max-height", me._convertToMM(naturalSize.height + "px") + "mm");
-                        $(img).css("max-width", me._convertToMM(naturalSize.width + "px") + "mm");
+                        $img.css("height", me._convertToMM(naturalSize.height + "px") + "mm");
+                        $img.css("width", me._convertToMM(naturalSize.width + "px") + "mm");
+                        $img.css("max-height", me._convertToMM(naturalSize.height + "px") + "mm");
+                        $img.css("max-width", me._convertToMM(naturalSize.width + "px") + "mm");
                         //Also add style overflow:hidden to it's parent container
                         break;
                     default:

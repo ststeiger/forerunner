@@ -369,6 +369,7 @@ $(function () {
             }
 
             me._removeCSS();
+
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
 

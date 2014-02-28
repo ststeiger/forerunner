@@ -302,7 +302,7 @@ namespace ReportManager.Controllers
                 string mimeType;
                 string fileName;
                 result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, Parameterlist, PrintPropertyString, out mimeType, out fileName);
-                return GetResponseFromBytes(result, mimeType, false, fileName);
+                return GetResponseFromBytes(result, mimeType, false);
             }
             catch (Exception e)
             {

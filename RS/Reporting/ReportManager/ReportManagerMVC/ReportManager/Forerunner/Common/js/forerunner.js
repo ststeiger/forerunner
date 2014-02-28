@@ -1198,8 +1198,8 @@ $(function () {
                 $(window).off("resize", me._setPosition);
                 $(window).on("resize", { target: target }, me._setPosition);
 
-                $(document).off("keydown", me._bindKeyboard);
-                $(document).on("keydown", { target: target }, me._bindKeyboard);
+                $(document).off("keyup", me._bindKeyboard);
+                $(document).on("keyup", { target: target }, me._bindKeyboard);
             }, 200);
         },
         /**
@@ -1214,7 +1214,7 @@ $(function () {
             target.element.dialog("close");
 
             $(window).off("resize", me._setPosition);
-            $(document).off("keydown", me._bindKeyboard);
+            $(document).off("keyup", me._bindKeyboard);
            
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
@@ -1234,7 +1234,7 @@ $(function () {
             });
 
             $(window).off("resize", me._setPosition);
-            $(document).off("keydown", me._bindKeyboard);
+            $(document).off("keyup", me._bindKeyboard);
         },
         /**
         * Show message box

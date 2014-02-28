@@ -641,6 +641,7 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
+                maxItem: 50,// set the maximun items to show, default 100
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
 

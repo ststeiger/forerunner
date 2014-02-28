@@ -148,6 +148,21 @@ $(function () {
         _init: function () {
             var me = this;
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+        },
+        /**
+         * Get report explorer toolbar
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolbar
+         * 
+         * @return {Object} - report explorer toolbar jQuery object
+         */
+        getReportExplorerToolbar: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
         }
     });  // $.widget
 });  // function()

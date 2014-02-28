@@ -9430,6 +9430,130 @@ $(function () {
             }
             me._render();
         },
+        /**
+         * Get report viewer page navigation
+         *
+         * @function $.forerunner.reportViewerEZ#getPageNav
+         * 
+         * @return {Object} - report viewer page navigation jQuery object
+         */
+        getPageNav: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$bottomdiv;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer document map
+         *
+         * @function $.forerunner.reportViewerEZ#getReportDocumentMap
+         * 
+         * @return {Object} - report viewer document map jQuery object
+         */
+        getReportDocumentMap: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$docmapsection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer report parameter
+         *
+         * @function $.forerunner.reportViewerEZ#getReportParameter
+         * 
+         * @return {Object} - report viewer report parameter jQuery object
+         */
+        getReportParameter: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$rightpanecontent;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer
+         *
+         * @function $.forerunner.reportViewerEZ#getReportViewer
+         * 
+         * @return {Object} - report viewer jQuery object
+         */
+        getReportViewer: function () {
+            var me = this;
+
+            if (me.DefaultAppTemplate) {
+                var $viewer = me.DefaultAppTemplate.$mainsection.find(".fr-layout-reportviewer");
+                if ($viewer.length !== 0) {
+                    return $viewer;
+                }
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer toolbar
+         *
+         * @function $.forerunner.reportViewerEZ#getToolbar
+         * 
+         * @return {Object} - report viewer toolbar jQuery object
+         */
+        getToolbar: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer toolpane
+         *
+         * @function $.forerunner.reportViewerEZ#getToolPane
+         * 
+         * @return {Object} - report viewer toolpane jQuery object
+         */
+        getToolPane: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftpanecontent;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer left toolbar
+         *
+         * @function $.forerunner.reportViewerEZ#getLeftToolbar
+         * 
+         * @return {Object} - report viewer left toolbar jQuery object
+         */
+        getLeftToolbar: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$leftheader;
+            }
+
+            return null;
+        },
+        /**
+         * Get report viewer right toolbar
+         *
+         * @function $.forerunner.reportViewerEZ#getRightToolbar
+         * 
+         * @return {Object} - report viewer right toolbar jQuery object
+         */
+        getRightToolbar: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$rightheader;
+            }
+
+            return null;
+        },
     });  // $.widget
 });  // function()
 ///#source 1 1 /Forerunner/ReportViewer/js/DSCredential.js
@@ -9863,6 +9987,21 @@ $(function () {
         _init: function () {
             var me = this;
             me.DefaultAppTemplate = new forerunner.ssr.DefaultAppTemplate({ $container: me.element, isFullScreen: me.isFullScreen }).render();
+        },
+        /**
+         * Get report explorer toolbar
+         *
+         * @function $.forerunner.reportExplorerEZ#getReportExplorerToolbar
+         * 
+         * @return {Object} - report explorer toolbar jQuery object
+         */
+        getReportExplorerToolbar: function () {
+            var me = this;
+            if (me.DefaultAppTemplate) {
+                return me.DefaultAppTemplate.$mainheadersection;
+            }
+
+            return null;
         }
     });  // $.widget
 });  // function()

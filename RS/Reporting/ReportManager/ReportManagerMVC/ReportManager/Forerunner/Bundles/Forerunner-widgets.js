@@ -5630,7 +5630,7 @@ $(function () {
             }
 
             RIContext.$HTMLParent.attr("style", Style).append(NewImage);
-
+             
             me._writeActionImageMapAreas(RIContext, imageWidth, imageHeight, imageConsolidationOffset);
 
             Style = imageStyle ? imageStyle : "display:block;";
@@ -5776,7 +5776,7 @@ $(function () {
 
             height = me._convertToMM(height + "px");
             width = me._convertToMM(width + "px");
-            $img = $(img);
+            var $img = $(img);
             if (height !== 0 && width !== 0) {
                 switch (sizingType) {
                     case 0://AutoSize

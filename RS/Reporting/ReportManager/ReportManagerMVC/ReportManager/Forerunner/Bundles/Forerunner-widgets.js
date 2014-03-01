@@ -4906,8 +4906,8 @@ $(function () {
         },
         _getWatermark: function () {
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isMSIE8()){
+            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
                 var wtr = $("<DIV/>").html("Evaluation");
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);

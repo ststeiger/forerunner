@@ -817,7 +817,7 @@ Section Uninstall
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR\SSRSExtension"
   RMDir "$INSTDIR\Config"
-   RMDir "$INSTDIR\sdk"
+  RMDir "$INSTDIR\sdk"
    ;$INSTDIR is the folder where uninst.exe belong to which is Molibizer
   RMDir "$INSTDIR"
   

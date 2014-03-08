@@ -292,6 +292,14 @@ $(function () {
                 // so this call is not be needed any longer
                 //me._initTBody();
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
+                // We need to make sure the current set has the parameter list defined. It
+                // may not be defined for instance when the set is the default set and the
+                // default has never been saved by way of the save button in the toolbar
+                var currentSet = me.options.model.parameterModel("getCurrentSet");
+                if (currentSet && !currentSet.data) {
+                    currentSet.data = me.parameterList;
+                }
             }
         },
         /**

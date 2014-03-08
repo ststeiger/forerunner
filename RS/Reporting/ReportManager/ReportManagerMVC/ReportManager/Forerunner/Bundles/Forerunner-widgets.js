@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -2434,7 +2434,15 @@ $(function () {
                 }
             }
             return currentParameterList;
+        },
+        getCurrentSet: function () {
+            var me = this;
+            if (me.serverData && me.currentSetId) {
+                return me.serverData.parameterSets[me.currentSetId];
+            }
+            return null;
         }
+
     });  // $.widget(
 });  // $(function ()
 
@@ -2574,6 +2582,10 @@ $(function () {
 
             if (toolInfo.toolType === toolTypes.select) {
                 $tool.selectTool($.extend(me.options, { toolInfo: toolInfo, toolClass: "fr-toolbase-selectinner" }));
+            }
+
+            if (toolInfo.alwaysChange) {
+                $tool.alwaysChange({ handler: toolInfo.alwaysChange, toolBase: me });
             }
 
             if (toolInfo.visible === false) {
@@ -2861,6 +2873,42 @@ $(function () {
         }
     });  // $.widget
 
+    // The alwaysChange widget enables a callback to always be called on a select element
+    // even if the user selects the currently selected option.
+    $.widget(widgets.getFullname("alwaysChange"), $.forerunner.toolBase, {
+        options: {
+            toolBase: null,
+            handler: null
+        },
+        _create: function () {
+            var me = this;
+            var $select = me.element.find("select");
+            $select.on("change", function (e) {
+                if (typeof me.options.handler === "function") {
+                    e.data = { me: me.options.toolBase };
+                    me.options.handler(e);
+                }
+            });
+            $select.on("focus", function (e) {
+                var onFocusIndex = $select.prop("selectedIndex");
+                var resetSelected = function (e) {
+                    if (!$select.is(e.target)) {
+                        // Reset the selected index if no choice was made
+                        if ($select.prop("selectedIndex") === -1) {
+                            $select.prop("selectedIndex", onFocusIndex);
+                        }
+                        $('body').off("keyup mouseup", resetSelected);
+                    }
+                };
+                $select.prop("selectedIndex", -1);
+                $select.blur();
+
+                $('body').off("keyup mouseup", resetSelected);
+                $('body').on("keyup mouseup", resetSelected);
+            });
+        },
+    });  // $widget
+
     // popup widget used with the showDrowpdown method
     $.widget(widgets.getFullname("toolDropdown"), $.forerunner.toolBase, {
         options: {
@@ -2875,6 +2923,7 @@ $(function () {
         },
     });  // $widget
 
+    // Defines a toolbar select tool widget
     $.widget(widgets.getFullname("selectTool"), {
         options: {
             toolClass: "fr-toolbase-selectinner",
@@ -8871,6 +8920,14 @@ $(function () {
                 // so this call is not be needed any longer
                 //me._initTBody();
                 forerunner.dialog.showModalDialog(me.options.$appContainer, me);
+
+                // We need to make sure the current set has the parameter list defined. It
+                // may not be defined for instance when the set is the default set and the
+                // default has never been saved by way of the save button in the toolbar
+                var currentSet = me.options.model.parameterModel("getCurrentSet");
+                if (currentSet && !currentSet.data) {
+                    currentSet.data = me.parameterList;
+                }
             }
         },
         /**

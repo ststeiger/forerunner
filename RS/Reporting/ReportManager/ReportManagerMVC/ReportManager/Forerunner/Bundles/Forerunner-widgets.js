@@ -9937,7 +9937,7 @@ $(function () {
             forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            var timeout = forerunner.device.isTouch() ? 50 : forerunner.device.isWindowsPhone() ? 500 : 0;
             setTimeout(function () {
                 me._createReportExplorer(path, view, true);
 

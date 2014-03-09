@@ -286,7 +286,7 @@ WHERE CategoryID=@CategoryID</CommandText>
   </DataSets>
   <ReportParameters>
     <ReportParameter Name="CategoryID">
-      <DataType>String</DataType>
+      <DataType>Integer</DataType>
       <Prompt>Category ID</Prompt>
     </ReportParameter>
   </ReportParameters>

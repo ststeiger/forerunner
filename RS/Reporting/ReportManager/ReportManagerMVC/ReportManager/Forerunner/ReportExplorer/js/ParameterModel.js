@@ -261,6 +261,14 @@ $(function () {
                 }
             }
             return currentParameterList;
+        },
+        getCurrentSet: function () {
+            var me = this;
+            if (me.serverData && me.currentSetId) {
+                return me.serverData.parameterSets[me.currentSetId];
+            }
+            return null;
         }
+
     });  // $.widget(
 });  // $(function ()

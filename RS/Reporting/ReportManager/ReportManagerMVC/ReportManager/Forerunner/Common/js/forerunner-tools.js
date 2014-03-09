@@ -840,15 +840,12 @@ $(function () {
             },
             modelChange: events.parameterModelChanged(),
             tooltip: locData.toolbar.selectSet,
-            events: {
-                change: function (e) {
-                    var $select = $(".fr-layout-rightheader select");
-                    var id = $select.val();
-                    var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
-                    parameterModel.parameterModel("setCurrentSet", id);
-                }
+            alwaysChange: function (e) {
+                var $select = $(".fr-layout-rightheader select");
+                var id = $select.val();
+                var parameterModel = e.data.me.options.$ReportViewerInitializer.getParameterModel();
+                parameterModel.parameterModel("setCurrentSet", id);
             }
-
         },
         /** @member */
         btnSavParam: {

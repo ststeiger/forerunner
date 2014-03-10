@@ -91,7 +91,9 @@ $(function () {
             forerunner.device.allowZoom(false);
             forerunner.dialog.closeAllModalDialogs(layout.$container);
 
-            var timeout = forerunner.device.isTouch() ? 50 : forerunner.device.isWindowsPhone() ? 500 : 0;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 494 on android
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
                 me._createReportExplorer(path, view, true);
 
@@ -129,7 +131,9 @@ $(function () {
             forerunner.dialog.closeAllModalDialogs(me.DefaultAppTemplate.$container);
 
             me.DefaultAppTemplate._selectedItemPath = null;
-            var timeout = forerunner.device.isWindowsPhone() ? 500 : 0;
+            //Android and iOS need some time to clean prior scroll position, I gave it a 50 milliseconds delay
+            //To resolved bug 909, 845, 811 on iOS
+            var timeout = forerunner.device.isWindowsPhone() ? 500 : forerunner.device.isTouch() ? 50 : 0;
             setTimeout(function () {
                 me.DefaultAppTemplate.$mainviewport.reportViewerEZ({
                     DefaultAppTemplate: me.DefaultAppTemplate,

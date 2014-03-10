@@ -12,6 +12,7 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
+            "view/:args": "transitionToReportViewerWithRSURLAccess",
             "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
@@ -73,7 +74,18 @@ var ApplicationRouter = Backbone.Router.extend({
             $("body").reportExplorerEZ("transitionToReportViewer", path, params);
             $("html").removeClass("fr-Explorer-background");
         },
-       
+
+        transitionToReportViewerWithRSURLAccess: function (args) {
+            var startParam = args.indexOf("&");
+            var path = startParam > 0 ? args.substring(1, startParam) : args;
+            
+            var params = startParam > 0 ? args.substring(startParam + 1) : null;
+            if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
+            $("html").removeClass("fr-Explorer-background");
+        },
+
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();
         },

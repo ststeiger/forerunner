@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1212,7 +1212,10 @@ $(function () {
                 var pair = vars[i].split('=');
                 var key = decodeURIComponent(pair[0]);
                 var value = decodeURIComponent(pair[1]);
-                params.push({"Parameter": key, "Value": value, "IsMultiple": "false", Type: ""});
+                var ssrsPram = key.substring(0, 3);
+                if (ssrsPram !== "rs:" && ssrsPram !== "rc:") {
+                    params.push({ "Parameter": key, "Value": value, "IsMultiple": "false", Type: "" });
+                }
             }
             return params;
         },

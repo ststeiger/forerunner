@@ -152,7 +152,8 @@
     "dayNamesShort":["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Default",
+    "selectSet":"\u003cselect set\u003e"
   },
   "manageParamSets": {
     "manageSets":"Hantera Satser",

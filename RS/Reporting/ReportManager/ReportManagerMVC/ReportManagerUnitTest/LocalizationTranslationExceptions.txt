@@ -58,6 +58,9 @@
      "cancel": ["ro"],
     "datePicker": ["fr"]
   },
+ 	"validateError": {
+    "invalid":["ro"]
+  },
   "dialog":{
     "title": ["ro"]
   },

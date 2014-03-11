@@ -154,9 +154,9 @@ $(function () {
             $.each(data.ParametersList, function (index, param) {
                 me._parameterDefinitions[param.Name] = param;
                 me._parameterDefinitions[param.Name].ValidatorAttrs = [];
-                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser: true)) {
-                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
+                if (param.Prompt !== "" && (param.PromptUserSpecified ? param.PromptUser : true)) {
                     me.$numVisibleParams += 1;
+                    $eleBorder.append(me._writeParamControl(param, new $("<div />"), pageNum));
                 }
                 else
                     me._checkHiddenParam(param);
@@ -508,8 +508,11 @@ $(function () {
                         $radioItem.attr("checked", "true");
                     }
 
-                    if (me._paramCount === 1)
-                        $radioItem.on("click", function () { me._submitForm(pageNum); });
+                    $radioItem.on("click", function () {
+                        if (me.getNumOfVisibleParameters() === 1) {
+                            me._submitForm(pageNum);
+                        }
+                    });
                 }
                 var $label = new $("<label class='fr-param-radio-label'>" + radioValues[i].display + "</label>");
 
@@ -541,7 +544,8 @@ $(function () {
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
-                            if (me._paramCount === 1)
+
+                            if (me.getNumOfVisibleParameters() === 1)
                                 me._submitForm(pageNum);
                         },
                         beforeShow: function () {
@@ -586,7 +590,8 @@ $(function () {
         _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false,
-                isOpen = false;
+                isOpen = false,
+                enterLock = false;
 
             var $container = me._createDiv(["fr-param-element-container"]);
             var $control = me._createInput(param, "text", false, ["fr-param", "fr-paramname-" + param.Name]);
@@ -644,8 +649,9 @@ $(function () {
                 maxItem: 50,// set the maximun items to show, default 100
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
-
-                    if (me._paramCount === 1) {
+                    enterLock = true;
+                    
+                    if (me.getNumOfVisibleParameters() === 1) {
                         setTimeout(function () { me._submitForm(pageNum); }, 100);
                     }
 
@@ -676,6 +682,12 @@ $(function () {
                         $control.removeClass("fr-param-autocomplete-error");
 
                     $control.valid();
+                },
+                close: function (event) {
+                    //if user selected by mouse click then unlock enter
+                    //close event will happend after select event so it safe here.
+                    if (event.originalEvent.originalEvent.type === 'click')
+                        enterLock = false;
                 }
             });
 
@@ -688,6 +700,20 @@ $(function () {
                 //from being executed when input value is not valid.
                 if (!obj && $control.val() !== "")
                     event.stopImmediatePropagation();
+            });
+
+            //auto complete widget bind a keydown hander when initialize an instance
+            //I create instance first so our own handler will be execute later in the handler list
+            //enterLock is our expect value
+            $control.on("keydown", function (e) {
+                if (e.keyCode === 13) {
+                    if (enterLock) {
+                        enterLock = false;
+                        return;
+                    }
+
+                    me._submitForm(pageNum);
+                }
             });
 
             $container.append($control).append($openDropDown);
@@ -726,11 +752,11 @@ $(function () {
 
             $control.on("change", function () {
                 $control.attr("title", $(this).find("option:selected").text());
+                
+                if (me.getNumOfVisibleParameters() === 1) {
+                    me._submitForm(pageNum);
+                }
             });
-
-            if (me._paramCount === 1) {
-                $control.on("change", function () { me._submitForm(pageNum); });
-            }
 
             return $control;
         },

@@ -21,6 +21,7 @@ $(function () {
             var me = this;
             me.currentSetId = null;
             me.serverData = null;
+            me.selectSetId = forerunner.helper.guidGen();
         },
         getNewSet: function (name, parameterList) {
             var newSet = {
@@ -121,6 +122,7 @@ $(function () {
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
+            var me = this;
             var optionArray = [];
             for (var id in parameterSets) {
                 var set = parameterSets[id];
@@ -133,6 +135,11 @@ $(function () {
                 if (a.name > b.name) return 1;
                 if (b.name > a.name) return -1;
                 return 0;
+            });
+            // Add the "<select set>" option
+            optionArray.unshift({
+                id: me.selectSetId,
+                name: locData.parameterModel.selectSet
             });
             return optionArray;
         },

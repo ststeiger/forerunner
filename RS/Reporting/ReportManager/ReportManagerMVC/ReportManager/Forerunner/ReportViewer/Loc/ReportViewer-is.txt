@@ -152,7 +152,8 @@
     "dayNamesShort":["Sun", "Mán", "Þri", "Miðv", "Fim", "Fös", "Lau"],
     "dayNamesMin":["Su", "Má", "Þr", "Mi", "Fi", "Fö", "La"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Default",
+    "selectSet":"\u003cselect set\u003e"
   },
   "manageParamSets": {
     "manageSets":"stjórna Leikmynd",

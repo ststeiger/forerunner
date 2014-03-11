@@ -434,28 +434,35 @@ $(function () {
         _create: function () {
             var me = this;
             var $select = me.element.find("select");
+            var focusIndex = -1;
             $select.on("change", function (e) {
+                focusIndex = -1;
                 if (typeof me.options.handler === "function") {
                     e.data = { me: me.options.toolBase };
                     me.options.handler(e);
                 }
             });
             $select.on("focus", function (e) {
-                var onFocusIndex = $select.prop("selectedIndex");
-                var resetSelected = function (e) {
-                    if (!$select.is(e.target)) {
-                        // Reset the selected index if no choice was made
-                        if ($select.prop("selectedIndex") === -1) {
-                            $select.prop("selectedIndex", onFocusIndex);
-                        }
-                        $('body').off("keyup mouseup", resetSelected);
-                    }
-                };
-                $select.prop("selectedIndex", -1);
-                $select.blur();
+                if ($select.prop("selectedIndex") !== 0 && focusIndex === -1) {
+                    focusIndex = $select.prop("selectedIndex");
+                    $select.prop("selectedIndex", 0);
+                    // Blur does not work properly with IE 11
+                    //$select.blur();
 
-                $('body').off("keyup mouseup", resetSelected);
-                $('body').on("keyup mouseup", resetSelected);
+                    var resetSelected = function (e) {
+                        if (!$select.is(e.target)) {
+                            // Reset the selected index if no choice was made
+                            if ($select.prop("selectedIndex") === 0) {
+                                $select.prop("selectedIndex", focusIndex);
+                            }
+                            focusIndex = -1;
+                            $('body').off("keyup mouseup", resetSelected);
+                        }
+                    };
+
+                    $('body').off("keyup mouseup", resetSelected);
+                    $('body').on("keyup mouseup", resetSelected);
+                }
             });
         },
     });  // $widget

@@ -54,7 +54,7 @@ namespace ReportManager.Controllers
             {
                 string decodedUrl = HttpUtility.UrlDecode(returnUrl);
                 if (hashTag != null)
-                    decodedUrl += ("#" + hashTag.Replace("/", "%2f").Replace("%2f%2f", "/%2f"));
+                    decodedUrl += ("#" + hashTag.Replace("/", "%2f").Replace("%2f%2f", "/%2f")).Replace("#view%2f?", "#view/?");
                 if (FormsAuthenticationHelper.Login(model.UserName, model.Password, GetTimeout()))
                 {
                     return CheckNullAndRedirect(returnUrl, decodedUrl);

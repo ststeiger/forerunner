@@ -152,7 +152,8 @@
     "dayNamesShort":["BCK", "PND", "VTR", "SRD", "ChTV", "PTN", "SBT"],
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
-    "defaultName":"невыполнение обязательств"
+    "defaultName":"невыполнение обязательств",
+    "selectSet":"\u003cselect set\u003e"
   },
   "manageParamSets": {
     "manageSets":"Управление наборы",

@@ -60,20 +60,23 @@ $(function () {
 
             me.$tbody.html("");
             var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
-            $.each(optionArray, function(index, option){
-                var parameterSet = me.serverData.parameterSets[option.id];
-                var $row = me._createRow(index, parameterSet);
-                me.$tbody.append($row);
+            $.each(optionArray, function (index, option) {
+                if (index > 0) {
+                    // Skip the "<select set>" option
+                    var parameterSet = me.serverData.parameterSets[option.id];
+                    var $row = me._createRow(index, parameterSet);
+                    me.$tbody.append($row);
 
-                if (me.serverData.canEditAllUsersSet) {
-                    $row.find(".fr-mps-all-users-id").on("click", function (e) {
-                        me._onClickAllUsers(e);
-                    });
-                }
-                if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
-                    $row.find(".fr-mps-delete-id").on("click", function (e) {
-                        me._onClickDelete(e);
-                    });
+                    if (me.serverData.canEditAllUsersSet) {
+                        $row.find(".fr-mps-all-users-id").on("click", function (e) {
+                            me._onClickAllUsers(e);
+                        });
+                    }
+                    if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                        $row.find(".fr-mps-delete-id").on("click", function (e) {
+                            me._onClickDelete(e);
+                        });
+                    }
                 }
             });
 

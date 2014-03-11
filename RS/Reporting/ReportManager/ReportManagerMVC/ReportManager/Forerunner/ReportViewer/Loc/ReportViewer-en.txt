@@ -153,7 +153,8 @@
     "dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"]
   },
   "parameterModel":{
-    "defaultName": "Default"
+    "defaultName": "Default",
+    "selectSet": "<select set>"
   },
   "manageParamSets":{
     "manageSets": "Manage Sets",

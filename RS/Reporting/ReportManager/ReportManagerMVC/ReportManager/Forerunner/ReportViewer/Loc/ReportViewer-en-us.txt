@@ -124,7 +124,7 @@
     "range":"Enter a value between {0} and {1}",
     "max":"Enter a value less than or equal to {0}",
     "min":"Enter a value greater than or equal to {0}",
-	"invalid":"Invalid"
+    "invalid":"Invalid"
   },
   "dialog": {
     "title":"Prompt",
@@ -152,7 +152,8 @@
     "dayNamesShort":["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     "dayNamesMin":["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Default",
+    "selectSet":"\u003cselect set\u003e"
   },
   "manageParamSets": {
     "manageSets":"Manage Sets",

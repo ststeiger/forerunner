@@ -47,23 +47,22 @@ $(function () {
      * @prop {String} options.viewerID - Current report viewer id.
      * @prop {String} options.rsInstance - Report service instance name
      * @example
-     * $("#reportViewerId").reportViewer({
-     *  reportPath: "/Northwind Test Reports/bar chart"
-	 * });
+     * $("#reportViewerId").reportViewer();
+     * $("#reportViewerId").reportViewer("loadReport", reportPath, 1, true, savedParameters);
      */
     $.widget(widgets.getFullname(widgets.reportViewer), /** @lends $.forerunner.reportViewer */ {
         // Default options
         options: {
             reportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
-            reportPath: null,
-            pageNum: 1,
+            //reportPath: null,
+            //pageNum: 1,
             pingInterval: 300000,
             toolbarHeight: 0,
             pageNavArea: null,
             paramArea: null,
             DocMapArea: null,
             userSettings: null,
-            savedParameters: null,
+            //savedParameters: null,
             onInputBlur: null,
             onInputFocus: null,
             $appContainer: null,
@@ -79,7 +78,6 @@ $(function () {
         // Constructor
         _create: function () {
             var me = this;
-
             setInterval(function () { me._sessionPing(); }, me.options.pingInterval);
 
             // ReportState
@@ -87,6 +85,9 @@ $(function () {
             me.actionHistory = [];
             me.curPage = 0;
             me.pages = {};
+            me.reportPath = "";
+            me.pageNum = 0;
+            me.savedParameters = null;
             me.sessionID = "";
             me.numPages = 0;
             me.lock = 0;
@@ -192,7 +193,7 @@ $(function () {
          */
         getReportPath: function () {
             var me = this;
-            return me.options.reportPath;
+            return me.reportPath;
         },
         /**
          * Get current report session ID
@@ -705,7 +706,7 @@ $(function () {
             if (action) {
                 me._clearReportViewerForDrill();
 
-                me.options.reportPath = action.ReportPath;
+                me.reportPath = action.ReportPath;
                 me.sessionID = action.SessionID;
                 me.curPage = action.CurrentPage;
                
@@ -728,7 +729,7 @@ $(function () {
                 }
 
                 //Trigger Change Report, disables buttons.  Differnt than pop
-                me._trigger(events.changeReport, null, { path: me.options.reportPath, credentialRequired: me.credentialDefs ? true : false });
+                me._trigger(events.changeReport, null, { path: me.reportPath, credentialRequired: me.credentialDefs ? true : false });
 
                 //This means we changed reports
                 if (action.FlushCache) {
@@ -743,22 +744,22 @@ $(function () {
                         me.options.paramArea.reportParameter("setParametersAndUpdate", action.paramDefs, action.savedParams, action.CurrentPage);
                         me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                         if (me.$numOfVisibleParameters > 0) {
-                            me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                            me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
                         else
                             if (me.options.parameterModel)
-                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
                         me.paramLoaded = true;
                     }
                    
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
-                me._trigger(events.actionHistoryPop, null, { path: me.options.reportPath });
+                me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
             }
             else {
                 me.flushCache();
                 me._resetViewer(false);
-                me._trigger(events.back, null, { path: me.options.reportPath });
+                me._trigger(events.back, null, { path: me.reportPath });
             }
         },
         /**
@@ -795,7 +796,7 @@ $(function () {
             if (me.options.pageNavArea){
                 me.options.pageNavArea.pageNav("showNav");
             }
-            me._trigger(events.showNav, null, { path: me.options.reportPath, open: me.pageNavOpen });
+            me._trigger(events.showNav, null, { path: me.reportPath, open: me.pageNavOpen });
         },
         _handleOrientation: function () {
             var pageSection = $(".fr-layout-pagesection");
@@ -829,7 +830,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.curPage,
                         ParameterList: "",
@@ -950,7 +951,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: me.getCurPage(),
                         ParameterList: paramList,
@@ -1115,7 +1116,7 @@ $(function () {
          */
         isDrillThoughReport: function () {
             var me = this;
-            if (me.origionalReportPath === me.options.reportPath)
+            if (me.origionalReportPath === me.reportPath)
                 return true;
             else
                 return false;
@@ -1153,10 +1154,10 @@ $(function () {
                         me.renderError = false;
                         me.sessionID = data.SessionID;
                         if (me.origionalReportPath === "")
-                            me.origionalReportPath = me.options.reportPath;
-                        me.options.reportPath = data.ReportPath;
+                            me.origionalReportPath = me.reportPath;
+                        me.reportPath = data.ReportPath;
                         if (me.options.parameterModel)
-                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath);
+                            me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
 
                         me._trigger(events.drillThrough, null, { path: data.ReportPath });
                         if (data.CredentialsRequired) {
@@ -1246,14 +1247,14 @@ $(function () {
             }
 
             me.actionHistory.push({
-                ReportPath: me.options.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
+                ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
                 credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
             });
 
             me._clearReportViewerForDrill();
-            me._trigger(events.actionHistoryPush, null, { path: me.options.reportPath });
+            me._trigger(events.actionHistoryPush, null, { path: me.reportPath });
         },
         _clearReportViewerForDrill: function () {
             //clean current report's property that not all reports have
@@ -1467,8 +1468,8 @@ $(function () {
         },
         _loadParameters: function (pageNum, savedParamFromHistory, submitForm) {
             var me = this;
-            var savedParams = me._getSavedParams([savedParamFromHistory, me.options.savedParameters, 
-                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.options.reportPath) : null]);
+            var savedParams = me._getSavedParams([savedParamFromHistory, me.savedParameters, 
+                me.options.parameterModel ? me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath) : null]);
 
             if (submitForm === undefined)
                 submitForm = true;
@@ -1501,7 +1502,7 @@ $(function () {
                 type: "POST",
                 url: me.options.reportViewerAPI + "/ParameterJSON/",
                 data: {
-                    ReportPath: me.options.reportPath,
+                    ReportPath: me.reportPath,
                     SessionID: me.getSessionID(),
                     ParameterList: null,
                     DSCredentials: me.getDataSourceCredential(),
@@ -1531,6 +1532,7 @@ $(function () {
             
             if (data.Type === "Parameters") {
                 me._removeParameters();
+                me.$reportContainer.find(".Page").detach();
                 
                 var $paramArea = me.options.paramArea;
                 if ($paramArea) {
@@ -1539,7 +1541,7 @@ $(function () {
                     $paramArea.reportParameter("writeParameterPanel", data, pageNum);
                     me.$numOfVisibleParameters = $paramArea.reportParameter("getNumOfVisibleParameters");
                     if (me.$numOfVisibleParameters > 0)
-                        me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath});
+                        me._trigger(events.showParamArea, null, { reportPath: me.reportPath});
 
                     me.paramLoaded = true;
                 }
@@ -1572,7 +1574,7 @@ $(function () {
                     type: "POST",
                     url: me.options.reportViewerAPI + "/ParameterJSON",
                     data : {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: me.reportPath,
                         SessionID: me.getSessionID(),
                         ParameterList: paramList,
                         DSCredentials: me.getDataSourceCredential(),
@@ -1600,7 +1602,7 @@ $(function () {
                 me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
-                    me._trigger(events.showParamArea, null, { reportPath: me.options.reportPath });
+                    me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                 }
                 me.paramLoaded = true;
             }
@@ -1646,18 +1648,32 @@ $(function () {
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
          */
-        loadReport: function (reportPath, pageNum) {
+        loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
+            me._trigger(events.preLoadReport, null, { viewer: me, oldPath: me.reportPath, newPath: reportPath, pageNum: pageNum});
 
-            me._resetViewer();            
-            me.options.reportPath = reportPath;
-            me.options.pageNum = pageNum;
+            if (me.reportPath && me.reportPath !== reportPath) {
+                //Do some clean work if it's a new report
+                me.backupCurPage(true);
+                me.sessionID = "";
+                me.flushCache();
+                me.hideDocMap();
+                me.element.unmask();
+            }
+            
+            me._resetViewer();
+
+            me.reportPath = reportPath ? reportPath : "/";
+            me.pageNum = pageNum ? pageNum : 1;
+            me.savedParameters = savedParameters ? savedParameters : null;
 
             if (me.options.jsonPath) {
                 me._renderJson();
             } else {
-                me._loadParameters(pageNum);
+                me._loadParameters(me.pageNum);
             }
+
+            me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.reportPath  });
         },
         /**
          * Load current report with the given parameter list
@@ -1698,7 +1714,7 @@ $(function () {
                 me._loadPage(1, false, null, paramList, true);
             }
             else {
-                me.loadReport(me.getReportPath(), 1, null, null, true);
+                me.loadReport(me.getReportPath(), 1);
             }
         },
         _resetDSCredential: function () {
@@ -1778,7 +1794,7 @@ $(function () {
                     dataType: "json",
                     url: me.options.reportViewerAPI + "/ReportJSON/",
                     data: {
-                        ReportPath: me.options.reportPath,
+                        ReportPath: me.reportPath,
                         SessionID: me.sessionID,
                         PageNumber: newPageNum,
                         ParameterList: paramList,

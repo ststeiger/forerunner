@@ -1,4 +1,5 @@
-﻿/**
+///#source 1 1 /Forerunner/Common/js/forerunner.js
+/**
  * @file
  *  Defines forerunner SDK specific namespaces
  *
@@ -453,7 +454,7 @@ $(function () {
                         this._virtualRootBase = script.src.substring(0, endsWith);
                         break;
                     }
-                    endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner.js");
+                    endsWith = this._endsWith(script.src, "Forerunner/Bundles/forerunner-v2.js");
                     if (endsWith !== -1) {
                         this._virtualRootBase = script.src.substring(0, endsWith);
                         break;
@@ -1495,3 +1496,4 @@ $(function () {
         }
     });
 });
+

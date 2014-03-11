@@ -415,6 +415,10 @@ $(function () {
                 me.savePosition = null;
             });
 
+            $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                me.cleanUp();
+            });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {

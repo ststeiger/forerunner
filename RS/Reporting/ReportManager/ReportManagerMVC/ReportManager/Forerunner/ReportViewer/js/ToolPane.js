@@ -80,6 +80,10 @@ $(function () {
                 me._leaveCurReport();
             });
 
+            me.options.$reportViewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                me._leaveCurReport();
+            });
+
             me.options.$reportViewer.on(events.reportViewerChangeReport(), function (e, data) {
                 me._leaveCurReport();
 

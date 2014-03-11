@@ -91,7 +91,7 @@
         }
 
         // Remove the report viewer element
-        $("#reportViewID").remove();
+        //$("#reportViewID").remove();
     };
 
     // onClickReport will remove any existing report and create a new report viewer for
@@ -101,20 +101,24 @@
         var item = e.data;
 
         // Remove the report viewer element
-        $("#reportViewID").remove();
+        //$("#reportViewID").remove();
 
         // Create a new reportViewerEZ
-        var $reportCell = $("." + "report-view-container");
-        var $viewContainer = "<div id='reportViewID' class='report-view'></div>";
-        $reportCell.html($viewContainer);
-        $('#reportViewID').reportViewerEZ({
-            DefaultAppTemplate: null,
-            path: item.Path,
-            navigateTo: null,
-            historyBack: null,
-            isReportManager: false,
-            isFullScreen: false
-        });
+        //var $reportCell = $("." + "report-view-container");
+        //var $viewContainer = "<div id='reportViewID' class='report-view'></div>";
+        //$reportCell.html($viewContainer);
+        //$('#reportViewID').reportViewerEZ({
+        //    DefaultAppTemplate: null,
+        //    path: item.Path,
+        //    navigateTo: null,
+        //    historyBack: null,
+        //    isReportManager: false,
+        //    isFullScreen: false
+        //});
+
+        var $viewer = $('#reportViewID').reportViewerEZ("getReportViewer");
+
+        $viewer.reportViewer("loadReport", item.Path);
     };
 
     // Once the document has loaded and is ready, we will render the top level catalogs. The 
@@ -123,5 +127,7 @@
 
         $reportListContainer = $(".report-list-container");
         render($reportListContainer, "/");
+
+        $('#reportViewID').reportViewerEZ();
     });
 });

@@ -150,9 +150,12 @@
     <Content Include="Content\images\GetParameters.png" />
     <Content Include="Content\images\reporticon.png" />
     <Content Include="Content\images\MyHome.png" />
+    <Content Include="Forerunner\Bundles\Forerunner-tools-v2.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
+    <Content Include="Forerunner\Bundles\Forerunner-widgets-v2.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
+    <Content Include="Forerunner\Bundles\Forerunner-v2.js" />
     <Content Include="Forerunner\Bundles\Forerunner.min.js" />
     <Content Include="Forerunner\Common\css\DefaultAppTemplate.css" />
     <Content Include="Forerunner\Common\css\Forerunner-all.css" />

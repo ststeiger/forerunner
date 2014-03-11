@@ -153,7 +153,7 @@
     "dayNamesMin":["Do", "Lu", "Má", "Cé", "Dé", "hA", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<leagtar a roghnú>"
   },
   "manageParamSets": {
     "manageSets":"Socraigh Bainistigh",

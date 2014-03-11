@@ -153,7 +153,7 @@
     "dayNamesMin":["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<selezionare set>"
   },
   "manageParamSets": {
     "manageSets":"Gestire Sets",

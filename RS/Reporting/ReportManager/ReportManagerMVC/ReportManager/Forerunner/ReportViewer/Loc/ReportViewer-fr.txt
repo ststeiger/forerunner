@@ -154,7 +154,7 @@
     "dayNamesMin":["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"]},
   "parameterModel": {
     "defaultName":"Default",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<sélectionnez ensemble>"
   },
   "manageParamSets": {
     "manageSets":"Gérer jeux",

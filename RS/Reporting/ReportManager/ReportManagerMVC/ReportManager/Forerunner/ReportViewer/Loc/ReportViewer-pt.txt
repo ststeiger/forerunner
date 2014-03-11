@@ -153,7 +153,7 @@
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
     "defaultName":"revelia",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<seleto conjunto>"
   },
   "manageParamSets": {
     "manageSets":"Gerenciar conjuntos",

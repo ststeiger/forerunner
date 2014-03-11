@@ -153,7 +153,7 @@
     "dayNamesMin":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]},
   "parameterModel": {
     "defaultName":"既定",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<選択した一連>"
   },
   "manageParamSets": {
     "manageSets":"セットを管理",

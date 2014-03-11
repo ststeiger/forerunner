@@ -153,7 +153,7 @@
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
     "defaultName":"neprezentare",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"<selectați set>"
   },
   "manageParamSets": {
     "manageSets":"Gestionați Seturi",

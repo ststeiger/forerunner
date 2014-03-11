@@ -2194,6 +2194,7 @@ $(function () {
             var me = this;
             me.currentSetId = null;
             me.serverData = null;
+            me.selectSetId = forerunner.helper.guidGen();
         },
         getNewSet: function (name, parameterList) {
             var newSet = {
@@ -2294,6 +2295,7 @@ $(function () {
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
+            var me = this;
             var optionArray = [];
             for (var id in parameterSets) {
                 var set = parameterSets[id];
@@ -2306,6 +2308,11 @@ $(function () {
                 if (a.name > b.name) return 1;
                 if (b.name > a.name) return -1;
                 return 0;
+            });
+            // Add the "<select set>" option
+            optionArray.unshift({
+                id: me.selectSetId,
+                name: locData.parameterModel.selectSet
             });
             return optionArray;
         },
@@ -2883,28 +2890,35 @@ $(function () {
         _create: function () {
             var me = this;
             var $select = me.element.find("select");
+            var focusIndex = -1;
             $select.on("change", function (e) {
+                focusIndex = -1;
                 if (typeof me.options.handler === "function") {
                     e.data = { me: me.options.toolBase };
                     me.options.handler(e);
                 }
             });
             $select.on("focus", function (e) {
-                var onFocusIndex = $select.prop("selectedIndex");
-                var resetSelected = function (e) {
-                    if (!$select.is(e.target)) {
-                        // Reset the selected index if no choice was made
-                        if ($select.prop("selectedIndex") === -1) {
-                            $select.prop("selectedIndex", onFocusIndex);
-                        }
-                        $('body').off("keyup mouseup", resetSelected);
-                    }
-                };
-                $select.prop("selectedIndex", -1);
-                $select.blur();
+                if ($select.prop("selectedIndex") !== 0 && focusIndex === -1) {
+                    focusIndex = $select.prop("selectedIndex");
+                    $select.prop("selectedIndex", 0);
+                    // Blur does not work properly with IE 11
+                    //$select.blur();
 
-                $('body').off("keyup mouseup", resetSelected);
-                $('body').on("keyup mouseup", resetSelected);
+                    var resetSelected = function (e) {
+                        if (!$select.is(e.target)) {
+                            // Reset the selected index if no choice was made
+                            if ($select.prop("selectedIndex") === 0) {
+                                $select.prop("selectedIndex", focusIndex);
+                            }
+                            focusIndex = -1;
+                            $('body').off("keyup mouseup", resetSelected);
+                        }
+                    };
+
+                    $('body').off("keyup mouseup", resetSelected);
+                    $('body').on("keyup mouseup", resetSelected);
+                }
             });
         },
     });  // $widget
@@ -8688,20 +8702,23 @@ $(function () {
 
             me.$tbody.html("");
             var optionArray = me.options.model.parameterModel("getOptionArray", me.serverData.parameterSets);
-            $.each(optionArray, function(index, option){
-                var parameterSet = me.serverData.parameterSets[option.id];
-                var $row = me._createRow(index, parameterSet);
-                me.$tbody.append($row);
+            $.each(optionArray, function (index, option) {
+                if (index > 0) {
+                    // Skip the "<select set>" option
+                    var parameterSet = me.serverData.parameterSets[option.id];
+                    var $row = me._createRow(index, parameterSet);
+                    me.$tbody.append($row);
 
-                if (me.serverData.canEditAllUsersSet) {
-                    $row.find(".fr-mps-all-users-id").on("click", function (e) {
-                        me._onClickAllUsers(e);
-                    });
-                }
-                if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
-                    $row.find(".fr-mps-delete-id").on("click", function (e) {
-                        me._onClickDelete(e);
-                    });
+                    if (me.serverData.canEditAllUsersSet) {
+                        $row.find(".fr-mps-all-users-id").on("click", function (e) {
+                            me._onClickAllUsers(e);
+                        });
+                    }
+                    if (me.serverData.canEditAllUsersSet || !parameterSet.isAllUser) {
+                        $row.find(".fr-mps-delete-id").on("click", function (e) {
+                            me._onClickDelete(e);
+                        });
+                    }
                 }
             });
 

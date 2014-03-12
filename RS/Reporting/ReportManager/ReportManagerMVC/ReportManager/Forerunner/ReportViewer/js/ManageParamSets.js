@@ -263,8 +263,9 @@ $(function () {
         },
         _onClickDelete: function(e) {
             var me = this;
+            var count = me.options.model.parameterModel("getSetCount", me.serverData);
 
-            if (me.options.model.parameterModel("areSetsEmpty", me.serverData)) {
+            if (count <= 1) {
                 return;
             }
 

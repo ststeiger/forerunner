@@ -251,7 +251,7 @@ $(function () {
                 {
                     view: "favorites",
                     action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("option", "getReportPath"),
+                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
                     instance: me.options.rsInstance,
                 },
                 function (data) {

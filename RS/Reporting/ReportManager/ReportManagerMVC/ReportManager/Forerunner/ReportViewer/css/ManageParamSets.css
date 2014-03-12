@@ -8,9 +8,9 @@
 
 .fr-mps-main-table { }
   .fr-mps-main-table th { font-weight: bold; }
-  .fr-mps-main-table td { border: 1px solid rgba(94, 150, 207, .2); height: 26px; }
+  .fr-mps-main-table td { border: 1px solid lightblue; height: 26px; }
   .fr-mps-main-table .fr-mps-name-header { width: 156px; }
-  .fr-mps-main-table .fr-mps-odd-row { background: rgba(94, 150, 207, .1); }
+  .fr-mps-main-table .fr-mps-odd-row { background: lightblue; }
   .fr-mps-main-table .fr-mps-property-header { width: 60px; }
   .fr-mps-main-table .fr-mps-error-span { display: inline; font-size: 10pt; }
   .fr-mps-main-table .fr-mps-error-position { display: inline; }

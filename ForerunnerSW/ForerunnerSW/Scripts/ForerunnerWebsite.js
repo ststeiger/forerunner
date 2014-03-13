@@ -62,8 +62,9 @@ $(window).resize(ReSizeFooter);
 if ($("#image")) {
     $("#image").on("click", function () {
         $("#image").hide();
+        ga("send", "event", "Video", "click", "Image",0);
         $("#video").show();
-        $("#video").onclick.call();
+        //$("#video").onclick.call();
     });
 }
 

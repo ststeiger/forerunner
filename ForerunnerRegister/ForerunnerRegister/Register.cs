@@ -263,7 +263,7 @@ namespace ForerunnerRegister
             string NewMailBody;
             
             
-            NewMailBody = String.Format(SalesMailBody, RegData.Email);
+            NewMailBody = String.Format(SalesMailBody, RegData.Email,RegData.PhoneNumber,RegData.FirstName,RegData.LastName,RegData.CompanyName,RegData.referrer);
             tw.SendMail(RegMailFromAccount, "Sales@forerunnersw.com", "New Trial Registration", NewMailBody);
 
             NewMailBody = String.Format(MailBody, RegData.FirstName, RegData.LicenseID);

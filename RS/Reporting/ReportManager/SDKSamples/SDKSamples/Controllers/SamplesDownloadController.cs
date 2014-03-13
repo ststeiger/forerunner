@@ -6,7 +6,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 
 namespace SDKSamples.Controllers
 {

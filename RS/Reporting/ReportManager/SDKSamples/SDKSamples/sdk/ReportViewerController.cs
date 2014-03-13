@@ -10,7 +10,7 @@ using System.Text;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
 using System.IO;
-using ReportManager.Util.Logging;
+using Forerunner.Logging;
 
 // Changed...
 using System.Security.Principal;
@@ -23,7 +23,8 @@ namespace ReportManager.Controllers
         public string SessionID { get; set; }
         public string ReportPath { get; set; }
         public string ParameterList { get; set; }
-        public int PageNumber { get; set;}
+        public int PageNumber {get; set;}
+        public string DSCredentials { get; set; }
         public string Instance { get; set; }
     }
 
@@ -174,7 +175,7 @@ namespace ReportManager.Controllers
         {
             try
             {
-                return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList), "text/JSON");
+               return GetResponseFromBytes(GetReportViewer(postBackValue.Instance).GetReportJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.PageNumber.ToString(), postBackValue.ParameterList, postBackValue.DSCredentials), "text/JSON");
             }
             catch (Exception e)
             {
@@ -190,7 +191,7 @@ namespace ReportManager.Controllers
             try
             {
                 byte[] result = null;
-                result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList));
+                result = Encoding.UTF8.GetBytes(GetReportViewer(postBackValue.Instance).GetParameterJson(HttpUtility.UrlDecode(postBackValue.ReportPath), postBackValue.SessionID, postBackValue.ParameterList, postBackValue.DSCredentials));
                 return GetResponseFromBytes(result, "text/JSON");
             }
             catch (Exception e)
@@ -221,7 +222,7 @@ namespace ReportManager.Controllers
 
         [HttpGet]
         [ActionName("SortReport")]
-        public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort, string instance = null)
+        public HttpResponseMessage SortReport(string SessionID, string SortItem, string Direction, bool ClearExistingSort = true, string instance = null)
         {
 
             try
@@ -298,14 +299,14 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage ExportReport(string ReportPath, string SessionID, string ParameterList, string ExportType, string instance = null)
+        public HttpResponseMessage ExportReport(string ReportPath, string SessionID, string ExportType, string instance = null)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
                 string fileName;
-                result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ParameterList, ExportType, out mimeType, out fileName);
+                result = GetReportViewer(instance).RenderExtension(ReportPath, SessionID, ExportType, out mimeType, out fileName);
                 return GetResponseFromBytes(result, mimeType, false, fileName);
             }
             catch(Exception e)
@@ -317,15 +318,15 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage PrintReport(string ReportPath, string SessionID, string Parameterlist, string PrintPropertyString, string instance)
+        public HttpResponseMessage PrintReport(string ReportPath, string SessionID, string PrintPropertyString, string instance = null)
         {
             try
             {
                 byte[] result = null;
                 string mimeType;
                 string fileName;
-                result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, Parameterlist, PrintPropertyString, out mimeType, out fileName);
-                return GetResponseFromBytes(result, mimeType, false, fileName);
+                result = GetReportViewer(instance).PrintExport(ReportPath, SessionID, PrintPropertyString, out mimeType, out fileName);
+                return GetResponseFromBytes(result, mimeType, false);
             }
             catch (Exception e)
             {

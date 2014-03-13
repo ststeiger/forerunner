@@ -128,6 +128,11 @@
         $reportListContainer = $(".report-list-container");
         render($reportListContainer, "/");
 
-        $('#reportViewID').reportViewerEZ();
+        $('#reportViewID').reportViewerEZ({
+            navigateTo: null,
+            historyBack: null,
+            isReportManager: false,
+            isFullScreen: false
+        });
     });
 });

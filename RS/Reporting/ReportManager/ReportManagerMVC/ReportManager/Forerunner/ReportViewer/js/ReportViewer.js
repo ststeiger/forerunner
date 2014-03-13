@@ -137,7 +137,7 @@ $(function () {
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me._addLoadingIndicator();
+            //me._addLoadingIndicator();
             me.hideDocMap();
 
             if (me.options.parameterModel) {

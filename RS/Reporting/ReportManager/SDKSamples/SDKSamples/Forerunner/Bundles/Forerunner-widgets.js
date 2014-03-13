@@ -138,7 +138,7 @@ $(function () {
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me._addLoadingIndicator();
+            //me._addLoadingIndicator();
             me.hideDocMap();
 
             if (me.options.parameterModel) {
@@ -2358,6 +2358,18 @@ $(function () {
             }
 
             return true;
+        },
+        getSetCount: function (serverData) {
+            var count = 0;
+            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+                return count;
+            }
+
+            for (var property in serverData.parameterSets) {
+                count++;
+            }
+
+            return count;
         },
         _load: function (reportPath) {
             var me = this;
@@ -8959,8 +8971,9 @@ $(function () {
         },
         _onClickDelete: function(e) {
             var me = this;
+            var count = me.options.model.parameterModel("getSetCount", me.serverData);
 
-            if (me.options.model.parameterModel("areSetsEmpty", me.serverData)) {
+            if (count <= 1) {
                 return;
             }
 
@@ -9221,7 +9234,9 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
-            $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            if (me.options.ReportPath) {
+                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            }
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
@@ -9295,7 +9310,7 @@ $(function () {
                 {
                     view: "favorites",
                     action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("option", "getReportPath"),
+                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
                     instance: me.options.rsInstance,
                 },
                 function (data) {
@@ -9488,8 +9503,6 @@ $(function () {
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
             }
 
             //layout.$mainviewport.css({ width: "100%", height: "100%" });

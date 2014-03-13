@@ -59,8 +59,6 @@ $(function () {
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
             }
 
             //layout.$mainviewport.css({ width: "100%", height: "100%" });

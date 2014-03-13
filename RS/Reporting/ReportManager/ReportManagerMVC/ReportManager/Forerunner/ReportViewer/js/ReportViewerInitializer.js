@@ -177,7 +177,9 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
-            $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            if (me.options.ReportPath) {
+                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            }
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;

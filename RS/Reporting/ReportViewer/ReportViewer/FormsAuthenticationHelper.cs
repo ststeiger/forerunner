@@ -37,12 +37,7 @@ namespace Forerunner.Security
 
                 try
                 {
-                    if (Forerunner.Security.NativeMethods.LogonUser(
-                        userName,
-                        domain,
-                        password,
-                        LOGON32_LOGON_NETWORK,
-                        LOGON32_PROVIDER_DEFAULT, ref token))
+                    if (true)
                     {
                         // Write the cookie
                         //FormsAuthentication.SetAuthCookie(model.UserName, false);

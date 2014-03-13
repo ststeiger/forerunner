@@ -138,7 +138,7 @@ $(function () {
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me._addLoadingIndicator();
+            //me._addLoadingIndicator();
             me.hideDocMap();
 
             if (me.options.parameterModel) {
@@ -9234,7 +9234,9 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
-            $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            if (me.options.ReportPath) {
+                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            }
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
@@ -9501,8 +9503,6 @@ $(function () {
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
             }
 
             //layout.$mainviewport.css({ width: "100%", height: "100%" });

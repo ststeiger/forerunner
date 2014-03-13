@@ -27,12 +27,12 @@
     "licenseErrorContent":"Vänligen kontakta systemadministratören. Om du är administratör vänligen verifiera din licens i Mobilizer konfigurationsverktyg."
   },
   "exportType": {
-    "xml":"XML fil med rapportdata",
-    "csv":"CSV (kommaseparerad)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (webbarkiv)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF fil",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,7 +46,10 @@
     "find":"Hitta",
     "next":"nästa",
     "zoom":"Aktivera Zoom",
-    "print":"Skriv ut"
+    "print":"Skriv ut",
+    "dsCredential":"Credential",
+    "views":"Översikter",
+    "addToFavorites":"Lägg till i favoriter"
   },
   "toolbar": {
     "back":"bakåt",
@@ -71,8 +74,10 @@
     "print":"Skriv ut",
     "userSettings":"Inställningar",
     "saveParam":"Spara Parameter",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"hantera uppsättningar",
+    "selectSet":"välj set",
+    "dsCredential":"Datasource Credential",
+    "addToFavorites":"Lägg till i favoriter"
   },
   "print": {
     "title":"Skriv Option Sidlayout",
@@ -83,7 +88,7 @@
     "marginLeft":"Vänster",
     "marginRight":"höger",
     "print":"skriva ut",
-    "cancel":"avbryta",
+    "cancel":"Avbryta",
     "unit":"mm",
     "margin":"marginaler",
     "pageLayoutOptions":"Sidlayout"
@@ -91,7 +96,7 @@
   "userSettings": {
     "title":"Användarinställningar",
     "submit":"Ok",
-    "cancel":"avboka",
+    "cancel":"Avbryta",
     "ResponsiveUI":"Lyhörd UI"
   },
   "paramPane": {
@@ -99,9 +104,10 @@
     "isTrue":"Sant",
     "isFalse":"Falskt",
     "required":"krävs",
-    "viewReport":"Visa rapport",
-    "cancel":"avbryta",
-    "datePicker":"Datum"
+    "viewReport":"Visa",
+    "cancel":"Avbryta",
+    "datePicker":"Datum",
+    "select":"Välj"
   },
   "validateError": {
     "required":"krävs",
@@ -117,7 +123,8 @@
     "rangelength":"Ange ett värde mellan {0} och {1} tecken långa",
     "range":"Ange ett värde mellan {0} och {1}",
     "max":"Ange ett värde mindre än eller lika med {0}",
-    "min":"Ange ett värde som är större än eller lika med {0}"
+    "min":"Ange ett värde som är större än eller lika med {0}",
+    "invalid":"Ogiltig"
   },
   "dialog": {
     "title":"föranleda",
@@ -134,7 +141,7 @@
     "nextText":"nästa",
     "currentText":"i dag",
     "weekHeader":"Wk",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"yy-mm-dd",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,18 +152,27 @@
     "dayNamesShort":["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"],
     "dayNamesMin":["Sö", "Må", "Ti", "On", "To", "Fr", "Lö"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Default",
+    "selectSet":"<välj set>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
+    "manageSets":"Hantera Satser",
+    "cancel":"Avbryt",
+    "add":"Lägg",
+    "addNewSet":"Lägg till ny Set",
+    "name":"Namn",
     "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "allUsers":"Alla",
+    "deleteHeader":"Radera",
+    "apply":"inbespara",
+    "newSet":"Nytt Set"
+  },
+  "dsCredential": {
+    "title":"DataSource Credential",
+    "cancel":"Avbryt",
+    "submit":"inkomma",
+    "username":"Inloggningsnamn:",
+    "password":"lösenord:",
+    "reset":"Återställ"
   }
 }

@@ -24,7 +24,7 @@
 
 .fr-report-item-ear-image { background-image: url(../../reportexplorer/Images/report_ear.png); z-index:5; position: absolute;  top: 0px; right: 0px;}
 
-.fr-explorer-item-ear-selcted { background-image: url(../../reportexplorer/Images/report_ear_selected.png); z-index:5; position: absolute;  top: 0px; right: 0px; }
+.fr-explorer-item-ear-selcted { background-image: url(../../reportexplorer/Images/report_ear_selected.png); z-index:5; position: absolute;  top: 0px; right: 0px;}
 
 .fr-explorer-item-earcorner { width: 66px; height: 66px; z-index: 4; position: absolute;  top: 0px; right: 0px;}
 

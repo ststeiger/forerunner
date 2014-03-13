@@ -141,7 +141,7 @@
     "nextText":"следующий",
     "currentText":"сегодня",
     "weekHeader":"Wk",
-    "dateFormat":"dd.mm.yy",
+    "dateFormat":"дд-мм-гг",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -152,8 +152,8 @@
     "dayNamesShort":["BCK", "PND", "VTR", "SRD", "ChTV", "PTN", "SBT"],
     "dayNamesMin":["BC", "Пh", "Bt", "Cp", "Чt", "Пt", "Cь"]},
   "parameterModel": {
-    "defaultName":"невыполнение обязательств",
-    "selectSet":"\u003cselect set\u003e"
+    "defaultName":"дефолт",
+    "selectSet":"<выберите набор>"
   },
   "manageParamSets": {
     "manageSets":"Управление наборы",

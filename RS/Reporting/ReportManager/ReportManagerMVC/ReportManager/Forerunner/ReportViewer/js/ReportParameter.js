@@ -311,7 +311,12 @@ $(function () {
                         } else if (paramDefinition.Type === "Boolean") {
                             me._setRadioButton($control, savedParam.Value);
                         } else {
-                            $control.val(savedParam.Value);
+                            if ($control.attr("datatype").toLowerCase() === "datetime") {
+                                $control.val(me._getDateTimeFromDefault(savedParam.Value));
+                            }
+                            else {
+                                $control.val(savedParam.Value);
+                            }
                         }
                     }
                 }
@@ -541,6 +546,7 @@ $(function () {
                         changeYear: true,
                         showButtonPanel: true,
                         //gotoCurrent: true,
+                        dateFormat: forerunner.ssr._internal.getDateFormat(),
                         onClose: function () {
                             $control.removeAttr("disabled");
                             $(".fr-paramname-" + param.Name, me.$params).valid();
@@ -555,8 +561,9 @@ $(function () {
                     $control.attr("formattedDate", "true");
                     me._parameterDefinitions[param.Name].ValidatorAttrs.push("formattedDate");
 
-                    if (predefinedValue)
-                        $control.datepicker("setDate", me._getDateTimeFromDefault(predefinedValue));
+                    if (predefinedValue) {
+                        $control.datepicker("setDate",  me._getDateTimeFromDefault(predefinedValue));
+                    }
                     break;
                 case "Integer":
                 case "Float":
@@ -1170,7 +1177,14 @@ $(function () {
             } else if (param.attributes.backendValue) {
                 //Take care of the big dropdown list
                 return param.attributes.backendValue.nodeValue;
-            } else {
+            } else if ($element.attr("datatype").toLowerCase() === "datetime") {
+                var m = moment($element.val(), forerunner.ssr._internal.getMomentDateFormat(), true);
+                
+                //hard code a sql server accept date format here to parse all culture
+                //date format to it. It's ISO 8601 format below 
+                return m.format("YYYY-MM-DD");
+            }
+            else {
                 //Otherwise handle the case where the parameter has not been touched
                 return param.value !== "" ? param.value : null;
             }
@@ -1209,7 +1223,7 @@ $(function () {
             }
 
             var m = moment(defaultDatetime);
-            return m.isValid() ? new Date(defaultDatetime) : null;
+            return m.isValid() ? m.format(forerunner.ssr._internal.getMomentDateFormat()) : null;
         },
         _checkDependencies: function (param) {
             var me = this;

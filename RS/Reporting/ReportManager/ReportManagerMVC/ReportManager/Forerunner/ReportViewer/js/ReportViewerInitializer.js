@@ -66,13 +66,13 @@ $(function () {
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
-                reportPath: me.options.ReportPath,
+                //reportPath: me.options.ReportPath,
                 jsonPath: me.options.jsonPath,
-                pageNum: 1,
+                //pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
-                savedParameters: me.options.savedParameters,
+                //savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
             });
@@ -126,10 +126,10 @@ $(function () {
                 });
 
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
-                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                    me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
                 $viewer.on(events.reportViewerChangeReport(), function (e, data) {
-                    me.setFavoriteState($viewer.reportViewer("option", "reportPath"));
+                    me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
                
 
@@ -181,7 +181,9 @@ $(function () {
                 me.setFavoriteState(me.options.ReportPath);
             }
 
-            $viewer.reportViewer("loadReport", me.options.ReportPath, 1);
+            if (me.options.ReportPath) {
+                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
+            }
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
@@ -255,7 +257,7 @@ $(function () {
                 {
                     view: "favorites",
                     action: action,
-                    path: $toolbar.options.$reportViewer.reportViewer("option", "reportPath"),
+                    path: $toolbar.options.$reportViewer.reportViewer("getReportPath"),
                     instance: me.options.rsInstance,
                 },
                 function (data) {

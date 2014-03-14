@@ -66,13 +66,14 @@
         },
         modelChange: "parametermodelchanged",
         events: {
-          change: function (e) {
-            var $select = $(".fr-layout-rightheader select");
-            var id = $select.val();
-            var parameterList = model.parameterModel("getParameterList", id);
-            $reportViewer = $(".fr-layout-reportviewer");
-            $reportViewer.reportViewer("refreshParameters", parameterList, true, -1);
-          }
+            change: function (e) {
+                var $select = $('body').reportViewerEZ("getRightToolbar").find("select");
+                var id = $select.val();
+                var parameterList = model.parameterModel("getParameterList", id);
+
+                $reportViewer = $('body').reportViewerEZ("getReportViewer");
+                $reportViewer.reportViewer("refreshParameters", parameterList, true, -1);
+            }
         }
       }
 
@@ -85,18 +86,18 @@
         iconClass: "my-icon24x24",
         tooltip: "My Get Parameters",
         events: {
-          click: function (e) {
-            var $parameterPane = $(".fr-layout-rightpanecontent");
-            var paramList = $parameterPane.reportParameter("getParamsList");
-            var data = JSON.parse(paramList);
-            alert(paramList);
-          }
+            click: function (e) {
+                var $parameterPane = $('body').reportViewerEZ("getReportParameter");
+                var paramList = $parameterPane.reportParameter("getParamsList");
+                var data = JSON.parse(paramList);
+                alert(paramList);
+            }
         }
       }
 
       // Add the two new buttons to the right toolbar. The right toolbar is positioned above
       // the reportParameter widget and is visible when the reportParameter widget is visible
-      var $rightToolbar = $(".fr-layout-rightheader");
+      var $rightToolbar = $('body').reportViewerEZ("getRightToolbar");
       $rightToolbar.rightToolbar("addTools", 2, true, [btnSelectSet, btnGetParameters]);
 
       // Load the parameter model. This will cause the model "changed" event to be triggered

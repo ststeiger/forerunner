@@ -153,7 +153,7 @@
     "dayNamesMin":["日", "一", "二", "三", "四", "五", "六"]},
   "parameterModel": {
     "defaultName":"默认",
-    "selectSet":"\u003cselect set\u003e"
+    "selectSet":"选择参数集"
   },
   "manageParamSets": {
     "manageSets":"管理参数集",

@@ -363,6 +363,16 @@ $(function () {
             renderError: "renderError",
             /** widget + event, lowercase */
             reportViewerRenderError: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.renderError).toLowerCase(); },
+
+            /** @constant */
+            preLoadReport: "preLoadReport",
+            /** widget + event, lowercase */
+            reportViewerPreLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.preLoadReport).toLowerCase(); },
+
+            /** @constant */
+            afterLoadReport: "afterLoadReport",
+            /** widget + event, lowercase */
+            reportViewerAfterLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.afterLoadReport).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

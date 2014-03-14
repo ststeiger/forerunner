@@ -152,8 +152,8 @@
     "dayNamesShort":["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
-    "defaultName":"revelia",
-    "selectSet":"\u003cselect set\u003e"
+    "defaultName":"Revelia",
+    "selectSet":"<seleto conjunto>"
   },
   "manageParamSets": {
     "manageSets":"Gerenciar conjuntos",

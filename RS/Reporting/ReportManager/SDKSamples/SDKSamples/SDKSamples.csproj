@@ -195,6 +195,7 @@
     <Content Include="Forerunner\Lib\Misc\js\moment.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\Placeholders.min.js" />
     <Content Include="Forerunner\Lib\Misc\js\scroll-startstop.events.jquery.js" />
+    <Content Include="Forerunner\ReportExplorer\css\ManageSubscription.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer-all.css" />
     <Content Include="Forerunner\ReportExplorer\css\ReportExplorer.css" />
     <Content Include="Forerunner\ReportExplorer\css\UserSettings.css" />
@@ -208,6 +209,7 @@
     <Content Include="Forerunner\ReportExplorer\images\report_bkg.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear.png" />
     <Content Include="Forerunner\ReportExplorer\images\report_ear_selected.png" />
+    <Content Include="Forerunner\ReportViewer\css\DSCredential.css" />
     <Content Include="Forerunner\ReportViewer\css\ManageParamSets.css" />
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportDocumentMap.css" />
@@ -226,6 +228,7 @@
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Collapse.gif" />
     <Content Include="Forerunner\ReportViewer\Images\Drilldown_Expand.gif" />
     <Content Include="Forerunner\ReportViewer\Images\EmptyIndent.gif" />
+    <Content Include="Forerunner\ReportViewer\Images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\Images\NotSorted.gif" />
     <Content Include="Forerunner\ReportViewer\Images\OpenDropDown.png" />
     <Content Include="Forerunner\ReportViewer\Images\page-loading.GIF" />
@@ -258,6 +261,7 @@
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-hk.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh-tw.txt" />
     <Content Include="Forerunner\ReportViewer\Loc\ReportViewer-zh.txt" />
+    <Content Include="Forerunner\version.txt" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\ParameterModel.js" />
     <Content Include="Scripts\ReportSelector.js" />
@@ -305,10 +309,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sdk\readme.docx" />
+    <Content Include="Views\Samples\Parameters.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Samples\Parameters.cshtml" />
+    <Content Include="sdk\readme.docx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

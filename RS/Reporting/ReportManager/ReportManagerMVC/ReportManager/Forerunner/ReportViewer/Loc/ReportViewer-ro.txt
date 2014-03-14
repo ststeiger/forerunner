@@ -152,8 +152,8 @@
     "dayNamesShort":["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
     "dayNamesMin":["Du", "Lu", "Ma", "Mi", "Jo", "Vi", "Sâ"]},
   "parameterModel": {
-    "defaultName":"neprezentare",
-    "selectSet":"\u003cselect set\u003e"
+    "defaultName":"Neprezentare",
+    "selectSet":"<selectați set>"
   },
   "manageParamSets": {
     "manageSets":"Gestionați Seturi",

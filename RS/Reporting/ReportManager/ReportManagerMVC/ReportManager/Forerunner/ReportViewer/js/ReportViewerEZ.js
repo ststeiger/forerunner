@@ -15,7 +15,6 @@ $(function () {
      * @prop {Object} options - The options for reportViewerEZ
      * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
      * @prop {String} options.path - Path of the report
-     * @prop {String} options.jsonPath - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
      * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
@@ -60,8 +59,6 @@ $(function () {
 
             if (path !== null) {
                 path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
             }
 
             //layout.$mainviewport.css({ width: "100%", height: "100%" });

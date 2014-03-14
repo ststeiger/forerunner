@@ -152,8 +152,8 @@
     "dayNamesShort":["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
     "dayNamesMin":["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"]},
   "parameterModel": {
-    "defaultName":"Default",
-    "selectSet":"\u003cselect set\u003e"
+    "defaultName":"Difetto",
+    "selectSet":"<selezionare set>"
   },
   "manageParamSets": {
     "manageSets":"Gestire Sets",

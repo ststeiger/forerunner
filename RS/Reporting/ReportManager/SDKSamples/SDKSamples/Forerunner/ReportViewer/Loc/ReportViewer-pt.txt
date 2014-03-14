@@ -27,12 +27,12 @@
     "licenseErrorContent":"Por favor, contate o administrador do sistema. Se você é o administrador verifique sua licença na ferramenta de configuração mobilizador."
   },
   "exportType": {
-    "xml":"Arquivo XML com dados do relatório",
-    "csv":"CSV (delimitado por vírgula)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (arquivo da web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"Arquivo TIFF",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,7 +46,10 @@
     "find":"Procurar",
     "next":"Próximo",
     "zoom":"Ativar Zoom",
-    "print":"Impressão"
+    "print":"Impressão",
+    "dsCredential":"Credencial",
+    "views":"Visualizações",
+    "addToFavorites":"Adicionar aos favoritos"
   },
   "toolbar": {
     "back":"Volta",
@@ -71,27 +74,29 @@
     "print":"Impressão",
     "userSettings":"configurações",
     "saveParam":"Salvar Parâmetros",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Gerenciar conjuntos",
+    "selectSet":"Selecione Definir",
+    "dsCredential":"DataSource Credencial",
+    "addToFavorites":"Adicionar aos favoritos"
   },
   "print": {
     "title":"Imprimir página de opção de layout",
     "pageHeight":"Altura",
     "pageWidth":"Largura",
-    "marginTop":"superior",
-    "marginBottom":"inferior",
+    "marginTop":"Superior",
+    "marginBottom":"Inferior",
     "marginLeft":"Esquerda",
     "marginRight":"Direita",
-    "print":"imprimir",
-    "cancel":"cancelar",
+    "print":"Imprimir",
+    "cancel":"Cancelar",
     "unit":"mm",
-    "margin":"margens",
+    "margin":"Margens",
     "pageLayoutOptions":"Página Opções de layout"
   },
   "userSettings": {
     "title":"Configurações do Usuário",
     "submit":"Ok",
-    "cancel":"cancelar",
+    "cancel":"Cancelar",
     "ResponsiveUI":"UI Responsive"
   },
   "paramPane": {
@@ -99,9 +104,10 @@
     "isTrue":"Verdade",
     "isFalse":"Falso",
     "required":"Necessário",
-    "viewReport":"Exibir relatório",
-    "cancel":"cancelar",
-    "datePicker":"Data"
+    "viewReport":"Exibir",
+    "cancel":"Cancelar",
+    "datePicker":"Data",
+    "select":"Selecionar"
   },
   "validateError": {
     "required":"Necessário",
@@ -109,7 +115,7 @@
     "email":"E-mail inválido",
     "url":"URL inválido",
     "date":"Data inválida",
-    "dateISO":"Data inválida (yyyy-mm-dd)",
+    "dateISO":"Data inválida (aaaa-mm-dd)",
     "number":"Número inválido",
     "digits":"Somente dígitos",
     "maxlength":"Não mais de {0} caracteres",
@@ -117,7 +123,8 @@
     "rangelength":"Insira um valor entre {0} e {1} caracteres longa",
     "range":"Insira um valor entre {0} e {1}",
     "max":"Insira um valor menor ou igual a {0}",
-    "min":"Insira um valor maior ou igual a {0}"
+    "min":"Insira um valor maior ou igual a {0}",
+    "invalid":"inválido"
   },
   "dialog": {
     "title":"incitar",
@@ -134,7 +141,7 @@
     "nextText":"próximo",
     "currentText":"hoje",
     "weekHeader":"Wk",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,18 +152,27 @@
     "dayNamesShort":["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
     "dayNamesMin":["Do", "Se", "Te", "Qua", "Qui", "Sex", "Sá"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"revelia",
+    "selectSet":"<seleto conjunto>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gerenciar conjuntos",
+    "cancel":"cancelar",
+    "add":"adicionar",
+    "addNewSet":"Adicionar Novo Set",
+    "name":"nome",
+    "defaultHeader":"omissão",
+    "allUsers":"tudo",
+    "deleteHeader":"excluir",
+    "apply":"amealhar",
+    "newSet":"Novo conjunto"
+  },
+  "dsCredential": {
+    "title":"DataSource Credencial",
+    "cancel":"cancelar",
+    "submit":"submeter",
+    "username":"nome de login:",
+    "password":"senha:",
+    "reset":"restabelecer"
   }
 }

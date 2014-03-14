@@ -170,6 +170,18 @@ $(function () {
 
             return true;
         },
+        getSetCount: function (serverData) {
+            var count = 0;
+            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+                return count;
+            }
+
+            for (var property in serverData.parameterSets) {
+                count++;
+            }
+
+            return count;
+        },
         _load: function (reportPath) {
             var me = this;
             var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/GetUserParameters?reportPath=" + reportPath;

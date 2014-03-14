@@ -898,7 +898,7 @@ $(function () {
             tooltip: locData.toolbar.logOff,
             events: {
                 click: function (e) {
-                    window.location = "/Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
                 }
             }
         },
@@ -1024,7 +1024,7 @@ $(function () {
             tooltip: locData.toolbar.logOff,
             events: {
                 click: function (e) {
-                    window.location = "/Login/LogOff";
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
                 }
             }
         },

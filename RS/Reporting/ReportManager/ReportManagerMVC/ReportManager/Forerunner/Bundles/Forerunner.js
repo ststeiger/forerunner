@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
+///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -1401,6 +1401,18 @@ $(function () {
             }
             return params;
         },
+
+        cultureDateFormat: null,
+        getDateFormat: function () {
+            if (this.cultureDateFormat) {
+                return this.cultureDateFormat;
+            }
+        },
+        getMomentDateFormat: function () {
+            if (this.cultureDateFormat) {
+                return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+            }
+        }
     };
     $(document).ready(function () {
         //show element when touch screen rule for toolbase
@@ -1454,6 +1466,10 @@ $(function () {
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             var error = locData.validateError;
 
+            //set golbal date format
+            var format = locData.datepicker.dateFormat;
+            forerunner.ssr._internal.cultureDateFormat = format;
+
             //replace error message with custom data
             jQuery.extend(jQuery.validator.messages, {
                 required: error.required,
@@ -1473,15 +1489,11 @@ $(function () {
                 autoCompleteDropdown: error.invalid
             });
             
-            var format = locData.datepicker.dateFormat;
-            var momentFormat = format.toUpperCase();
-            momentFormat = momentFormat.replace("YY", "YYYY");
-
             // Add custom date validator rule
             $.validator.addMethod(
                 "formattedDate",
                 function (value, element) {
-                    return moment(value, momentFormat, true).isValid();
+                    return moment(value, forerunner.ssr._internal.getMomentDateFormat(), true).isValid();
                 },
                 error.date
             );

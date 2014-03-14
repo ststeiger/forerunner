@@ -82,7 +82,6 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-
             if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
                 me.DefaultAppTemplate.$mainsection.html("");
                 me.DefaultAppTemplate.$mainsection.hide();
@@ -144,7 +143,14 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                 });
-                me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+
+                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                if ($reportViewer && path !== null) {
+                    path = String(path).replace(/%2f/g, "/");
+
+                    $reportViewer.reportViewer("loadReport", path, 1, params);
+                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                }
             }, timeout);
 
             me.element.css("background-color", "");

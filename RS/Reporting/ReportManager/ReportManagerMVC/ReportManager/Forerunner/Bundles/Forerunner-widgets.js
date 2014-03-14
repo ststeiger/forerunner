@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -9239,9 +9239,6 @@ $(function () {
                     me.options.$appContainer.append($dlg);
                 }
                 me._manageParamSetsDialog = $dlg;
-            }
-            if (me.options.ReportPath) {
-                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
             }
         },
         showManageParamSetsDialog: function (parameterList) {

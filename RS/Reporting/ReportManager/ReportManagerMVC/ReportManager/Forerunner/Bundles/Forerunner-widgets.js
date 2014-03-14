@@ -138,7 +138,7 @@ $(function () {
 
             //load the report Page requested
             me.element.append(me.$reportContainer);
-            me._addLoadingIndicator();
+            //me._addLoadingIndicator();
             me.hideDocMap();
 
             if (me.options.parameterModel) {
@@ -9084,7 +9084,6 @@ $(function () {
             $docMap: null,
             ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
-            ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
             isReportManager: false,
@@ -9123,13 +9122,10 @@ $(function () {
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
-                //reportPath: me.options.ReportPath,
                 jsonPath: me.options.jsonPath,
-                //pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
-                //savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
             });
@@ -9181,11 +9177,16 @@ $(function () {
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
+
                 $viewer.on(events.reportViewerChangeReport(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
-               
 
+                $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                    if (data.newPath) {
+                        me.setFavoriteState(data.newPath);
+                    }
+                });
             }
 
             var $nav = me.options.$nav;
@@ -9229,12 +9230,6 @@ $(function () {
                 }
                 me._manageParamSetsDialog = $dlg;
             }
-
-            if (me.options.isReportManager) {
-                me.setFavoriteState(me.options.ReportPath);
-            }
-
-            $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
         },
         showManageParamSetsDialog: function (parameterList) {
             var me = this;
@@ -9334,7 +9329,7 @@ $(function () {
                 {
                     view: "favorites",
                     action: action,
-                    path: me.options.ReportPath,
+                    path: $toolpane.options.$reportViewer.reportViewer("getReportPath"),
                     instance: me.options.rsInstance,
                 },
                 function (data) {
@@ -9456,10 +9451,8 @@ $(function () {
      * @namespace $.forerunner.reportViewerEZ
      * @prop {Object} options - The options for reportViewerEZ
      * @prop {Object} options.DefaultAppTemplate -- The helper class that creates the app template.  If it is null, the widget will create its own.
-     * @prop {String} options.path - Path of the report
      * @prop {Object} options.navigateTo - Callback function used to navigate to a selected report.  Only needed if isReportManager == true.
      * @prop {Object} options.historyBack - Callback function used to go back in browsing history.  Only needed if isReportManager == true.
-     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {Boolean} options.isReportManager - A flag to determine whether we should render report manager integration items.  Defaults to false.
      * @prop {Boolean} options.isFullScreen - A flag to determine whether show report viewer in full screen. Default to true.
      * @prop {Boolean} options.userSettings - Custom user setting
@@ -9469,7 +9462,6 @@ $(function () {
      * @example
      * $("#reportViewerEZId").reportViewerEZ({
      *  DefaultAppTemplate: null,
-     *  path: path,
      *  navigateTo: me.navigateTo,
      *  historyBack: me.historyBack
      *  isReportManager: false,
@@ -9479,31 +9471,22 @@ $(function () {
     $.widget(widgets.getFullname(widgets.reportViewerEZ), $.forerunner.toolBase, {
         options: {
             DefaultAppTemplate: null,
-            path: null,
             jsonPath: null,
             navigateTo: null,
             historyBack: null,
             isReportManager: false,
             isFullScreen: true,
             userSettings: null,
-            savedParameters: null,
             rsInstance: null,
             useReportManagerSettings: false,
         },
         _render: function () {
             var me = this;
             var layout = me.DefaultAppTemplate;
-            var path = me.options.path;
             forerunner.device.allowZoom(false);
             layout.$bottomdivspacer.addClass("fr-nav-spacer").hide();
             layout.$bottomdiv.addClass("fr-nav-container").hide();
             layout.$bottomdiv.css("position", me.options.isFullScreen ? "fixed" : "absolute");
-
-            if (path !== null) {
-                path = String(path).replace(/%2f/g, "/");
-            } else {
-                path = "/";
-            }
 
             //layout.$mainviewport.css({ width: "100%", height: "100%" });
             layout.$mainsection.html(null);
@@ -9521,12 +9504,10 @@ $(function () {
                 $righttoolbar: layout.$rightheader,
                 $docMap: layout.$docmapsection,
                 ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
-                ReportPath: path,
                 jsonPath: me.options.jsonPath,
                 navigateTo: me.options.navigateTo,
                 isReportManager: me.options.isReportManager,
                 userSettings: me.options.userSettings,
-                savedParameters: me.options.savedParameters,
                 $appContainer: layout.$container,
                 rsInstance: me.options.rsInstance,
                 useReportManagerSettings: me.options.useReportManagerSettings,
@@ -9542,7 +9523,6 @@ $(function () {
             });
 
             $viewer.on("reportvieweractionhistorypop", function (e, data) {
-                
                 if (!me.options.historyBack && ($viewer.reportViewer("actionHistoryDepth") === 0)) {
                     layout.$mainheadersection.toolbar("disableTools", [forerunner.ssr.tools.toolbar.btnReportBack]);
                     layout.$leftpanecontent.toolPane("disableTools", [forerunner.ssr.tools.toolpane.itemReportBack]);
@@ -10068,7 +10048,6 @@ $(function () {
             var me = this;
             var path0 = path;
             var layout = me.DefaultAppTemplate;
-
             if (me.DefaultAppTemplate.$mainsection.html() !== "" && me.DefaultAppTemplate.$mainsection.html() !== null) {
                 me.DefaultAppTemplate.$mainsection.html("");
                 me.DefaultAppTemplate.$mainsection.hide();
@@ -10130,7 +10109,14 @@ $(function () {
                     rsInstance: me.options.rsInstance,
                     savedParameters: params,
                 });
-                me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+
+                var $reportViewer = me.DefaultAppTemplate.$mainviewport.reportViewerEZ("getReportViewer");
+                if ($reportViewer && path !== null) {
+                    path = String(path).replace(/%2f/g, "/");
+
+                    $reportViewer.reportViewer("loadReport", path, 1, params);
+                    me.DefaultAppTemplate.$mainsection.fadeIn("fast");
+                }
             }, timeout);
 
             me.element.css("background-color", "");

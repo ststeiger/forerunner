@@ -56,6 +56,7 @@
     "find":"Find",
     "firstPage":"First",
     "home":"Home",
+	"logoff": "Logoff",
     "keyword":"Keyword",
     "lastPage":"Last",
     "menu":"Menu",

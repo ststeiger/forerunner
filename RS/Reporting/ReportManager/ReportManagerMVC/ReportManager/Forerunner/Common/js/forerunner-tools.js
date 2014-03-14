@@ -855,18 +855,29 @@ $(function () {
         },
         /** @member */
         btnSetup: {
-        toolType: toolTypes.button,
-        selectorClass: "fr-rm-button-setup",
-        imageClass: "fr-icons24x24-setup",
-        tooltip: locData.toolbar.userSettings,
-        events: {
-            click: function (e) {
-                e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
-                //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-setup",
+            imageClass: "fr-icons24x24-setup",
+            tooltip: locData.toolbar.userSettings,
+            events: {
+                click: function (e) {
+                    e.data.me.options.$reportExplorer.reportExplorer("showUserSettingsDialog");
+                    //forerunner.dialog.showUserSettingsDialog(e.data.me.options.$appContainer);
+                }
             }
-        }
-    }
-};
+        },
+        btnLogOff: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-logOff",
+            imageClass: "fr-icons24x24-printreport",
+            tooltip: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = "/Login/LogOff";
+                }
+            }
+        },
+    };
 
     /**
      * Defines all the tools that are merged into the Report Viewer Toolbar
@@ -925,6 +936,17 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                }
+            }
+        },
+        btnLogOff: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-logOff",
+            imageClass: "fr-icons24x24-printreport",
+            tooltip: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = "/Login/LogOff";
                 }
             }
         },

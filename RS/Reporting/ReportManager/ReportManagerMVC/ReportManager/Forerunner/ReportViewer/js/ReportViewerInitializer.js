@@ -85,7 +85,11 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
+                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(tb.btnLogOff);
+                }
+                $toolbar.toolbar("addTools", 12, true, listOfButtons);
                 $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }

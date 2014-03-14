@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -173,120 +173,104 @@ div.fr-layout-position-absolute { position: absolute; }
   background-position: -96px 0;
 }
 
-.fr-icons24x24-homeBlue {
+.fr-icons24x24-paramarea {
   background-position: -120px 0;
 }
 
-.fr-icons24x24-paramarea {
+.fr-icons24x24-documentmap {
   background-position: 0 -24px;
 }
 
-.fr-icons24x24-documentmap {
+.fr-icons24x24-lastpage {
   background-position: -24px -24px;
 }
 
-.fr-icons24x24-lastpage {
+.fr-icons24x24-next {
   background-position: -48px -24px;
 }
 
-.fr-icons24x24-next {
+.fr-icons24x24-prev {
   background-position: -72px -24px;
 }
 
-.fr-icons24x24-prev {
+.fr-icons24x24-refresh {
   background-position: -96px -24px;
 }
 
-.fr-icons24x24-refresh {
+.fr-icons24x24-firstpage {
   background-position: -120px -24px;
 }
 
-.fr-icons24x24-firstpage {
+.fr-icons24x24-export {
   background-position: 0 -48px;
 }
 
-.fr-icons24x24-export {
+.fr-icons24x24-exportCSV {
   background-position: -24px -48px;
 }
 
-.fr-icons24x24-exportCSV {
+.fr-icons24x24-exportExcel {
   background-position: -48px -48px;
 }
 
-.fr-icons24x24-exportExcel {
+.fr-icons24x24-exportMHT {
   background-position: -72px -48px;
 }
 
-.fr-icons24x24-exportMHT {
+.fr-icons24x24-exportPDF {
   background-position: -96px -48px;
 }
 
-.fr-icons24x24-exportPDF {
+.fr-icons24x24-exportTIFF {
   background-position: -120px -48px;
 }
 
-.fr-icons24x24-exportTIFF {
+.fr-icons24x24-exportWord {
   background-position: 0 -72px;
 }
 
-.fr-icons24x24-exportWord {
+.fr-icons24x24-exportXML {
   background-position: -24px -72px;
 }
 
-.fr-icons24x24-exportXML {
+.fr-icons24x24-zoom {
   background-position: -48px -72px;
 }
 
-.fr-icons24x24-zoom {
+.fr-icons24x24-printreport {
   background-position: -72px -72px;
 }
 
-.fr-icons24x24-printreport {
+.fr-icons24x24-favorite {
   background-position: -96px -72px;
 }
 
-.fr-icons24x24-favorites {
+.fr-icons24x24-favorite-plus {
   background-position: -120px -72px;
 }
 
-.fr-icons24x24-favoritesBlue {
+.fr-icons24x24-favorite-minus {
   background-position: 0 -96px;
 }
 
-.fr-icons24x24-favorite-plus {
+.fr-icons24x24-save-param {
   background-position: -24px -96px;
 }
 
-.fr-icons24x24-favorite-minus {
+.fr-icons24x24-recent {
   background-position: -48px -96px;
 }
 
-.fr-icons24x24-save-param {
+.fr-icons24x24-setup {
   background-position: -72px -96px;
 }
 
-.fr-icons24x24-recent {
+.fr-icons24x24-parameterSets {
   background-position: -96px -96px;
 }
 
-.fr-icons24x24-recentBlue {
-  background-position: -120px -96px;
-}
-
-.fr-icons24x24-setup {
-  background-position: 0 -120px;
-}
-
-.fr-icons24x24-parameterSets {
-  background-position: -24px -120px;
-}
-
-.fr-icons24x24-folders {
-  background-position: -48px -120px;
-}
-
 .fr-icons24x24-dataSourceCred {
-  background-position: -72px -120px;
+  background-position: -120px -96px;
 }
 /*** IconGen - end automatically generated, do not hand modify ***/
 
@@ -639,7 +623,7 @@ table, td, tr {
 
 .fr-explorer-folder-selected { height: 100%; width: 100%; background-image: url(../../reportexplorer/Images/folder_selected.png); background-repeat: no-repeat; background-position: center; }
 
-.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup { float: right; }
+.fr-rm-button-home, .fr-rm-button-fav, .fr-rm-button-recent, .fr-rm-button-setup, .fr-rm-button-logOff { float: right; }
 
 .fr-rm-button-fav { }
 

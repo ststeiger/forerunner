@@ -892,7 +892,10 @@ $(function () {
      */
     forerunner.ajax = {
         loginUrl: null,
-
+        isFormsAuth: function () {
+            var url = this._getLoginUrl();
+            return (url && url.length > 0);
+        },
         _getLoginUrl: function () {
             if (!this.loginUrl) {
                 var returnValue = null;

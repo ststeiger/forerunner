@@ -94,6 +94,11 @@ namespace Forerunner.SSRS.Viewer
             {
                 return ReportViewer.ServerRendering;
             }
+            return forceGetServerRendering();
+        }
+
+        internal bool forceGetServerRendering()
+        {
             if (rs.Credentials == null)
                 rs.Credentials = GetCredentials();
             foreach (Extension Ex in rs.ListRenderingExtensions())

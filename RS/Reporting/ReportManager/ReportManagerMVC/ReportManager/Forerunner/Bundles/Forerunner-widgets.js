@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4429,6 +4429,9 @@ $(function () {
 
             // Hook up the toolbar element events
             me.enableTools([tb.btnHome, tb.btnBack, tb.btnFav, tb.btnRecent]);
+            if (forerunner.ajax.isFormsAuth()) {
+                me.enableTools([tb.btnLogOff]);
+            }
         },
         _init: function () {
             var me = this;
@@ -4443,6 +4446,9 @@ $(function () {
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);
+            if (forerunner.ajax.isFormsAuth()) {
+                me.addTools(6, true, [tb.btnLogOff]);
+            }
             me._initCallbacks();
 
             // Hold onto the folder buttons for later
@@ -9138,7 +9144,11 @@ $(function () {
             var rtb = forerunner.ssr.tools.rightToolbar;
 
             if (me.options.isReportManager) {
-                $toolbar.toolbar("addTools", 12, true, [tb.btnHome, tb.btnRecent, tb.btnFavorite]);
+                var listOfButtons = [tb.btnHome, tb.btnRecent, tb.btnFavorite];
+                if (forerunner.ajax.isFormsAuth()) {
+                    listOfButtons.push(tb.btnLogOff);
+                }
+                $toolbar.toolbar("addTools", 12, true, listOfButtons);
                 $toolbar.toolbar("addTools", 4, true, [tb.btnFav]);
                 $toolbar.toolbar("disableTools", [tb.btnFav]);
             }
@@ -9229,6 +9239,9 @@ $(function () {
                     me.options.$appContainer.append($dlg);
                 }
                 me._manageParamSetsDialog = $dlg;
+            }
+            if (me.options.ReportPath) {
+                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
             }
         },
         showManageParamSetsDialog: function (parameterList) {

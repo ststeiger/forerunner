@@ -77,12 +77,12 @@ namespace ReportManager.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
 
-            return RedirectToAction("Login", "Login");
+            return RedirectToAction("Index", "Home");
         }
     }
 }

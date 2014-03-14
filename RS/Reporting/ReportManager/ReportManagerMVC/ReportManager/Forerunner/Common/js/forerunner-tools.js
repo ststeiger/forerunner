@@ -891,6 +891,18 @@ $(function () {
             }
         },
         /** @member */
+        btnLogOff: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-logOff",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            tooltip: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                }
+            }
+        },
+        /** @member */
         btnBack: {
             toolType: toolTypes.button,
             selectorClass: "fr-button-back",
@@ -1001,6 +1013,18 @@ $(function () {
             events: {
                 click: function (e) {
                     e.data.me.options.$ReportViewerInitializer.options.navigateTo("home", null);
+                }
+            }
+        },
+        /** @member */
+        btnLogOff: {
+            toolType: toolTypes.button,
+            selectorClass: "fr-rm-button-logOff",
+            imageClass: "fr-icons24x24-dataSourceCred",
+            tooltip: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
                 }
             }
         },

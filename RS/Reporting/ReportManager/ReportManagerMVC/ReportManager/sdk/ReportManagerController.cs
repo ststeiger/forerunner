@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web.Script.Serialization;
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
@@ -111,16 +112,26 @@ namespace ReportManager.Controllers
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
             else
+            {
                 resp.StatusCode = HttpStatusCode.NotFound;
+            }
 
             return resp;
         }
         // GET api/ReportMananger/GetItems
         [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string view, string path, string instance = null)
+        public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
+            try
+            {
+                string CatItems = new JavaScriptSerializer().Serialize(GetReportManager(instance).GetItems(view, path));
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(CatItems), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{error: " + e.Message + "}"), "text/JSON");  
+            }
             
-            return GetReportManager(instance).GetItems(view, path);
         }
 
 

@@ -7,7 +7,7 @@
     "imageNotDisplay": "Cannot display image",
 		"saveParamSuccess":"Saved",
 		"saveParamFailed":"Failed",
-		"catalogsLoadFailed":"Failed to load the catalogs from the server.  Please try again.",
+		"catalogsLoadFailed":"Failed to load the catalog",
 		"paramFieldEmpty":"parameter is missing a value",
 		"contactAdmin":"Please contact report administrator for help",
 		"favoriteFailed":"Failed",

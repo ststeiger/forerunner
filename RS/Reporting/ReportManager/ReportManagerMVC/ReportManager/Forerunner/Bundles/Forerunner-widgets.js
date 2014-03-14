@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4684,6 +4684,7 @@ $(function () {
                 setTimeout(function () { me.$explorer.scrollLeft(0); }, 100);
             }
         },
+        
         _fetch: function (view,path) {
             var me = this;
             var url = me.options.reportManagerAPI + "/GetItems";
@@ -4697,7 +4698,11 @@ $(function () {
                     path: path                    
                 },
                 success: function (data) {
-                    me._render(data);
+                    if (data.error) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.error, locData.messages.catalogsLoadFailed);
+                    }
+                    else
+                        me._render(data);
                 },
                 error: function (data) {
                     console.log(data);

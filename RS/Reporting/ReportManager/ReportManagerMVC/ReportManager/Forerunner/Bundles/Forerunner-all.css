@@ -560,7 +560,6 @@ html,body {
   margin: 0px;
   border: 0px;
   height:100%;
-
 }
 
 * {
@@ -911,6 +910,7 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-report-container {
   position:relative;
   width:100%;
+  line-height: normal;
 }
 
 .fr-report-areacontainer {

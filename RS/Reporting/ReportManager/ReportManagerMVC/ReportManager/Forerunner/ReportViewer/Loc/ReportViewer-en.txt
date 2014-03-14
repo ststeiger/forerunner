@@ -62,6 +62,7 @@
     "home": "Home",
 		"keyword": "Keyword",
 		"lastPage": "Last",
+		"logoff": "Logoff",
 		"menu": "Menu",
     "navigation": "Navigation",
     "next": "Next",

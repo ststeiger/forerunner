@@ -48,6 +48,7 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "dsCredential":"Dintiúir",
+    "logoff": "logoff",
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites"
   },
@@ -61,6 +62,7 @@
     "home":"Baile",
     "keyword":"Eochairfhocal",
     "lastPage":"Last",
+    "logoff": "logoff",
     "menu":"Menu",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",

@@ -27,7 +27,6 @@ $(function () {
             $docMap: null,
             ReportViewerAPI: forerunner.config.forerunnerAPIBase() + "ReportViewer",
             ReportManagerAPI: forerunner.config.forerunnerAPIBase() + "ReportManager",
-            ReportPath: null,
             toolbarHeight: null,
             navigateTo: null,
             isReportManager: false,
@@ -66,13 +65,10 @@ $(function () {
             me.options.$docMap.hide();
             $viewer.reportViewer({
                 reportViewerAPI: me.options.ReportViewerAPI,
-                //reportPath: me.options.ReportPath,
                 jsonPath: me.options.jsonPath,
-                //pageNum: 1,
                 docMapArea: me.options.$docMap,
                 parameterModel: me.parameterModel,
                 userSettings: userSettings,
-                //savedParameters: me.options.savedParameters,
                 $appContainer: me.options.$appContainer,
                 rsInstance: me.options.rsInstance,
             });
@@ -128,11 +124,16 @@ $(function () {
                 $viewer.on(events.reportViewerDrillThrough(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
+
                 $viewer.on(events.reportViewerChangeReport(), function (e, data) {
                     me.setFavoriteState($viewer.reportViewer("getReportPath"));
                 });
-               
 
+                $viewer.on(events.reportViewerPreLoadReport(), function (e, data) {
+                    if (data.newPath) {
+                        me.setFavoriteState(data.newPath);
+                    }
+                });
             }
 
             var $nav = me.options.$nav;
@@ -175,14 +176,6 @@ $(function () {
                     me.options.$appContainer.append($dlg);
                 }
                 me._manageParamSetsDialog = $dlg;
-            }
-
-            if (me.options.isReportManager) {
-                me.setFavoriteState(me.options.ReportPath);
-            }
-
-            if (me.options.ReportPath) {
-                $viewer.reportViewer("loadReport", me.options.ReportPath, 1, me.options.savedParameters);
             }
         },
         showManageParamSetsDialog: function (parameterList) {
@@ -283,7 +276,7 @@ $(function () {
                 {
                     view: "favorites",
                     action: action,
-                    path: me.options.ReportPath,
+                    path: $toolpane.options.$reportViewer.reportViewer("getReportPath"),
                     instance: me.options.rsInstance,
                 },
                 function (data) {

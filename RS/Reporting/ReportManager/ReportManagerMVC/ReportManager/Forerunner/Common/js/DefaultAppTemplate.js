@@ -248,7 +248,7 @@ $(function () {
             if (me.options.isFullScreen)
                 return;
 
-            var diff = Math.min($(window).scrollTop() - me.$container.position().top, me.$container.height() - 38);
+            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - 38);
             if (me.$leftpane.is(":visible")) {
                 me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             } else if (me.$rightpane.is(":visible")) {

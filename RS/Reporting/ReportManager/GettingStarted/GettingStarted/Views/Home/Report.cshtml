@@ -5,15 +5,19 @@
 
 @section scripts {
 <script>
-    $(document).ready(function () {
-        $("#reportId").reportViewerEZ({
-            DefaultAppTemplate: null,
-            path: '/AdventureWorks 2008 Sample Reports/Product Line Sales 2008',
-            navigateTo: null,
-            historyBack: null,
-            isReportManager: false,
-            isFullScreen: false
-        });
+  $(document).ready(function () {
+    // Create the reportViewerEZ widget
+    var $reportViewerEZ = $("#reportId").reportViewerEZ({
+      DefaultAppTemplate: null,
+      navigateTo: null,
+      historyBack: null,
+      isReportManager: false,
+      isFullScreen: false
     });
+
+    // Get the reportViewer widget and load the report
+    var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+    $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+  });
 </script>
 }

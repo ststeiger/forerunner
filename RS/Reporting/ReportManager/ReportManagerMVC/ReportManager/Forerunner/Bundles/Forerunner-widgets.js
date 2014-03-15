@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -32,14 +32,11 @@ $(function () {
      * @namespace $.forerunner.reportViewer
      * @prop {Object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
-     * @prop {String} options.reportPath - Path to the specific report
-     * @prop {Integer} options.pageNum - Starting page number
      * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {Number} options.toolbarHeight - Height of the toolbar.
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
-     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -1648,6 +1645,7 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
+         * @param {Object} savedParameters - Saved parameters
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;

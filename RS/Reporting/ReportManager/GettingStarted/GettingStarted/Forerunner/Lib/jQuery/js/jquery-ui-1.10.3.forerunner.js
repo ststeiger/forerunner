@@ -5836,7 +5836,8 @@ $.widget( "ui.autocomplete", {
 		open: null,
 		response: null,
 		search: null,
-		select: null
+		select: null,
+        maxItem: 100
 	},
 
 	pending: 0,
@@ -6313,7 +6314,10 @@ $.widget( "ui.autocomplete", {
 
 	_renderMenu: function( ul, items ) {
 		var that = this;
-		$.each( items, function( index, item ) {
+		$.each( items, function ( index, item ) {
+		    if ( index > that.options.maxItem ) {
+		        return false;
+		    }
 			that._renderItemData( ul, item );
 		});
 	},

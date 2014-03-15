@@ -27,12 +27,12 @@
     "licenseErrorContent":"S'il vous plaît contacter votre administrateur système. Si vous êtes l'administrateur s'il vous plaît vérifier votre licence dans l'outil de configuration Mobilizer."
   },
   "exportType": {
-    "xml":"XML fichier avec les données du rapport",
-    "csv":"CSV (séparées par des virgules)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archive web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF fichier",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -43,11 +43,14 @@
     "back":"Réintégrer",
     "refresh":"Reprendre",
     "docMap":"Plan du document",
-    "exportMenu":"Explorateur de documents",
+    "exportMenu":"Exporter",
     "find":"Trouver",
     "next":"Suivant",
     "zoom":"Activer Zoom",
-    "print":"Imprimer"
+    "print":"Imprimer",
+    "dsCredential":"Lettres de créance",
+    "views":"vues",
+    "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {
     "back":"Retour",
@@ -72,8 +75,10 @@
     "print":"Imprimer",
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"Gérer jeux",
+    "selectSet":"Sélectionnez Set",
+    "dsCredential":"source de données d'identification",
+    "addToFavorites":"Ajouter aux favoris"
   },
   "print": {
     "title":"Imprimer option de mise en",
@@ -84,7 +89,7 @@
     "marginLeft":"gauche",
     "marginRight":"droite",
     "print":"Imprimer",
-    "cancel":"résilier",
+    "cancel":"Résilier",
     "unit":"mm",
     "margin":"marges",
     "pageLayoutOptions":"Les options de mise"
@@ -92,7 +97,7 @@
   "userSettings": {
     "title":"Paramètres de l'utilisateur",
     "submit":"Ok",
-    "cancel":"résilier",
+    "cancel":"Résilier",
     "ResponsiveUI":"Interface utilisateur réactive"
   },
   "paramPane": {
@@ -100,9 +105,10 @@
     "isTrue":"Vrai",
     "isFalse":"Faux",
     "required":"Voulu",
-    "viewReport":"Voir le Rapport",
-    "cancel":"résilier",
-    "datePicker":"Date"
+    "viewReport":"Voir",
+    "cancel":"Résilier",
+    "datePicker":"Date",
+    "select":"Sélectionner"
   },
   "validateError": {
     "required":"Demandé",
@@ -110,7 +116,7 @@
     "email":"Email Invalide",
     "url":"URL Invalide",
     "date":"date invalide",
-    "dateISO":"Invalid Date (aaaa-mm-jj)",
+    "dateISO":"date invalide (aaaa-mm-jj)",
     "number":"Nombre non valide",
     "digits":"Seuls les chiffres",
     "maxlength":"Pas plus que {0} caractères",
@@ -118,7 +124,8 @@
     "rangelength":"Entrez une valeur comprise entre {0} et {1} caractères",
     "range":"Entrez une valeur comprise entre {0} et {1}",
     "max":"Entrez une valeur inférieure ou égale à {0}",
-    "min":"Entrez une valeur supérieure ou égale à {0}"
+    "min":"Entrez une valeur supérieure ou égale à {0}",
+    "invalid":"invalide"
   },
   "dialog": {
     "title":"invite",
@@ -146,18 +153,27 @@
     "dayNamesShort":["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
     "dayNamesMin":["Di", "Lu", "Ma", "Me", "Je", "Ve", "Sa"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Défaut",
+    "selectSet":"<sélectionnez ensemble>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gérer jeux",
+    "cancel":"Annuler",
+    "add":"Ajouter",
+    "addNewSet":"Ajouter un nouveau Set",
+    "name":"Nom",
+    "defaultHeader":"Par défaut",
+    "allUsers":"tout",
+    "deleteHeader":"Effacer",
+    "apply":"conserver",
+    "newSet":"Nouveau jeu"
+  },
+  "dsCredential": {
+    "title":"source de données d'identification",
+    "cancel":"annuler",
+    "submit":"soumettre",
+    "username":"Connexion nom:",
+    "password":"mot de passe:",
+    "reset":"remettre"
   }
 }

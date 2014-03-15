@@ -27,12 +27,12 @@
     "licenseErrorContent":"あなたのシステム管理者に連絡してください。あなたがいる場合は管理者がMobilizerは設定ツールで、ライセンスを確認してください。"
   },
   "exportType": {
-    "xml":"XML レポートデータを持つファイル",
-    "csv":"CSV (カンマ区切り)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (ウェブアーカイブ)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF ファイル",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,7 +46,10 @@
     "find":"見つける",
     "next":"次",
     "zoom":"ズームを有効にする",
-    "print":"刷る"
+    "print":"刷る",
+    "dsCredential":"資格情報",
+    "views":"閲覧",
+    "addToFavorites":"お気に入りに追加"
   },
   "toolbar": {
     "back":"裏面",
@@ -71,8 +74,10 @@
     "print":"刷り出す",
     "userSettings":"設定",
     "saveParam":"パラメータを保存",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"セットを管理",
+    "selectSet":"セットを選択します。",
+    "dsCredential":"データソースクレデンシャル",
+    "addToFavorites":"お気に入りに追加"
   },
   "print": {
     "title":"ページレイアウトオプションを印刷",
@@ -90,7 +95,7 @@
   },
   "userSettings": {
     "title":"ユーザー設定",
-    "submit":"OK",
+    "submit":"オーケー",
     "cancel":"キャンセル",
     "ResponsiveUI":"レスポンシブUI"
   },
@@ -99,9 +104,10 @@
     "isTrue":"真",
     "isFalse":"僻",
     "required":"必修",
-    "viewReport":"レポートの表示",
+    "viewReport":"ビュー",
     "cancel":"キャンセル",
-    "datePicker":"日付"
+    "datePicker":"日付",
+    "select":"選択する"
   },
   "validateError": {
     "required":"必修",
@@ -117,7 +123,8 @@
     "rangelength":"{0}と{1}文字の長さの値を入力します",
     "range":"{0}との間の値を入力して{1}",
     "max":"以下{0}に等しい値を入力してください",
-    "min":"以上{0}に等しい値を入力します"
+    "min":"以上{0}に等しい値を入力します",
+    "invalid":"無効"
   },
   "dialog": {
     "title":"プロンプト",
@@ -134,7 +141,7 @@
     "nextText":"次",
     "currentText":"今日",
     "weekHeader":"週",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"yy-mm-dd",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,18 +152,27 @@
     "dayNamesShort":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"],
     "dayNamesMin":["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"既定",
+    "selectSet":"<選択した一連>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"セットを管理",
+    "cancel":"キャンセル",
+    "add":"加える",
+    "addNewSet":"新規セットを追加",
+    "name":"名前",
+    "defaultHeader":"デフォルト",
+    "allUsers":"すべて",
+    "deleteHeader":"削除",
+    "apply":"除いて",
+    "newSet":"新規セット"
+  },
+  "dsCredential": {
+    "title":"データソースクレデンシャル",
+    "cancel":"取り消す",
+    "submit":"提出する",
+    "username":"ログイン名:",
+    "password":"パスワード:",
+    "reset":"リセット"
   }
 }

@@ -1,7 +1,9 @@
 ﻿.fr-report-container {
   position:relative;
   width:100%;
+  line-height: normal;
 }
+
 .fr-report-areacontainer {
     display:table-cell; 
 }

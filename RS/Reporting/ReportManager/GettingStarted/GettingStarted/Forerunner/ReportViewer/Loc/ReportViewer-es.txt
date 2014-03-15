@@ -27,12 +27,12 @@
     "licenseErrorContent":"Por favor, póngase en contacto con el administrador del sistema. Si usted es el administrador, por favor verificar su licencia de la herramienta de configuración Movilizador."
   },
   "exportType": {
-    "xml":"XML archivo con los datos del informe",
-    "csv":"CSV (delimitado por comas)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archivo web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF expediente",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -42,11 +42,14 @@
     "favorites":"Favoritos",
     "back":"Retroceder",
     "refresh":"Reanudar",
-    "docMap":"Mapa de documento",
+    "docMap":"documento de mapa",
     "find":"Encontrar",
     "next":"Fespués",
     "zoom":"Habilitar zoom",
-    "print":"Imprimir"
+    "print":"Imprimir",
+    "dsCredential":"Credenciales",
+    "views":"Vistas",
+    "addToFavorites":"Añadir a Favoritos"
   },
   "toolbar": {
     "back":"de vuelta",
@@ -72,8 +75,10 @@
     "userSettings":"fraguado",
     "paramarea":"Parámetros",
     "saveParam":"Guardar parámetros",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"administrar Sets",
+    "selectSet":"Seleccione Establecer",
+    "dsCredential":"credenciales del origen de datos",
+    "addToFavorites":"Añadir a Favoritos"
   },
   "print": {
     "title":"Imprima opción Diseño de página",
@@ -84,7 +89,7 @@
     "marginLeft":"Izquierda",
     "marginRight":"Derecha",
     "print":"imprimir",
-    "cancel":"cancelar",
+    "cancel":"Cancelar",
     "unit":"mm",
     "margin":"margen",
     "pageLayoutOptions":"opciones de diseño de página"
@@ -100,9 +105,10 @@
     "isTrue":"verdadero",
     "isFalse":"Falso",
     "required":"Necesario",
-    "viewReport":"Ver Informe",
+    "viewReport":"Vista",
     "cancel":"Cancelar",
-    "datePicker":"Fecha"
+    "datePicker":"Fecha",
+    "select":"Seleccionar"
   },
   "validateError": {
     "required":"necesario",
@@ -118,7 +124,8 @@
     "rangelength":"Introduzca un valor entre {0} y {1} caracteres de longitud",
     "range":"Introduzca un valor entre {0} y {1}",
     "max":"Introduzca un valor menor o igual a {0}",
-    "min":"Introduzca un valor mayor o igual a {0}"
+    "min":"Introduzca un valor mayor o igual a {0}",
+    "invalid":"Inválido"
   },
   "dialog": {
     "title":"pronto",
@@ -135,7 +142,7 @@
     "nextText":"próximo",
     "currentText":"hoy",
     "weekHeader":"sem",
-    "dateFormat":"mm/dd/yy",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -146,18 +153,27 @@
     "dayNamesShort":["Dom", "Lu ", "Mar", "Mié", "Jue", "Vie", "Sáb"],
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Defecto",
+    "selectSet":"<conjunto de selección>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Administrar Sets",
+    "cancel":"Cancelar",
+    "add":"Añadir",
+    "addNewSet":"Crear Nuevo Set",
+    "name":"Nombre",
+    "defaultHeader":"Defecto",
+    "allUsers":"Todo",
+    "deleteHeader":"Borrar",
+    "apply":"Aplicar",
+    "newSet":"Nuevo Juego"
+  },
+  "dsCredential": {
+    "title":"credenciales del origen de datos",
+    "cancel":"cancelar",
+    "submit":"presentar",
+    "username":"nombre de acceso:",
+    "password":"contraseña:",
+    "reset":"reajustar"
   }
 }

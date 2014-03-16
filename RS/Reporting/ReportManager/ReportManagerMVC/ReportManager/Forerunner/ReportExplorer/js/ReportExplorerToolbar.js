@@ -66,12 +66,6 @@ $(function () {
             var me = this;
             me._super();
 
-            // TODO [jont]
-            //
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            //// if me.element contains or a a child contains the options.toolClass don't replace the html
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);

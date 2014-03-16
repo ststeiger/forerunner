@@ -140,16 +140,12 @@ $(function () {
             var width = me.element.width();
             if (width < 480) {
                 me.element.find(smallClass).addClass("fr-toolbar-hidden");
-                console.log("toolbar - small");
             } else if (width < 568) {
                 me.element.find(mediumClass).addClass("fr-toolbar-hidden");
-                console.log("toolbar - medium");
             } else if (width < 768) {
                 me.element.find(largeClass).addClass("fr-toolbar-hidden");
-                console.log("toolbar - large");
             } else {  // Screen >= 769
                 me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
-                console.log("toolbar - very large");
             }
         },
         _init: function () {

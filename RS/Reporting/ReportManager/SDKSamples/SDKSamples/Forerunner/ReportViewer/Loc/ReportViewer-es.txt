@@ -153,7 +153,7 @@
     "dayNamesShort":["Dom", "Lu ", "Mar", "Mié", "Jue", "Vie", "Sáb"],
     "dayNamesMin":["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]},
   "parameterModel": {
-    "defaultName":"Default",
+    "defaultName":"Defecto",
     "selectSet":"<conjunto de selección>"
   },
   "manageParamSets": {

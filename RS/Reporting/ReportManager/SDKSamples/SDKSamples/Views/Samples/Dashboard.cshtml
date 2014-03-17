@@ -15,20 +15,25 @@
 }
 
 <script>
-    $(document).ready(function () {
-        $('#Report1').reportViewerEZ({
-            path: '/Northwind Test Suite/SalesByCountry',
-            isFullScreen: false
-        });
-        $('#Report2').reportViewerEZ({
-            path: '/Northwind Test Suite/SalesByYear',
-            isFullScreen: false
-        });
-        $('#Report3').reportViewerEZ({
-            path: '/Northwind Test Suite/SalesByEmployee',
-            isFullScreen: false
-        });
+  $(document).ready(function () {
+    var $reportViewerEZ1 = $('#Report1').reportViewerEZ({
+      isFullScreen: false
     });
+    var $reportViewer1 = $reportViewerEZ1.reportViewerEZ("getReportViewer");
+    $reportViewer1.reportViewer("loadReport", "/Northwind Test Suite/SalesByCountry");
+
+    var $reportViewerEZ2 = $('#Report2').reportViewerEZ({
+      isFullScreen: false
+    });
+    var $reportViewer2 = $reportViewerEZ2.reportViewerEZ("getReportViewer");
+    $reportViewer2.reportViewer("loadReport", "/Northwind Test Suite/SalesByYear");
+
+    var $reportViewerEZ3 = $('#Report3').reportViewerEZ({
+      isFullScreen: false
+    });
+    var $reportViewer3 = $reportViewerEZ3.reportViewerEZ("getReportViewer");
+    $reportViewer3.reportViewer("loadReport", "/Northwind Test Suite/SalesByEmployee");
+  });
 </script>
 
 <h1>This is a Dashboard sample showing 3 reports on a page</h1>

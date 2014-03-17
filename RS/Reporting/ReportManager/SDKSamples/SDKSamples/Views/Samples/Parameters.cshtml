@@ -32,29 +32,31 @@
     $(document).ready(function () {
       var events = forerunner.ssr.constants.events;
       var toolTypes = forerunner.ssr.constants.toolTypes;
-      var model = $({}).parameterModel({});
+      var $parameterModel = $({}).parameterModel({});
+
+      // Get a reference to the default parameter list
+      var defaultParamsList = $parameterModel.parameterModel("getCurrentParameterList");
+
+      // Create a reportViewerEZ widget to view the report
+      var $reportViewerEZ = $('body').reportViewerEZ({
+          DefaultAppTemplate: null,
+          navigateTo: null,
+          historyBack: null,
+          isReportManager: false,
+          isFullScreen: true,
+      });
 
       // In order to load a parameterized report with parameter values, use the 
-      // "savedParameters" option in the reportViewerEZ. Do not try and call
+      // "savedParameters" parameter of the "loadReport" call. Do not try and call
       // "refreshParameters" because there is the possibility of a race condition.
       // The reportViewer widget will try and load a saved or default parameter
-      // set asynchronously but if you use the "savedParameters" this problem
-      // will not happen.
+      // set asynchronously but if you use the "savedParameters" parameter this 
+      // problem will not happen.
       //
       // After the report is loaded you can use the call to "refreshParameters".
       // See below.
-      var defaultParamsList = model.parameterModel("getCurrentParameterList");
-
-      // Create a reportViewerEZ widget to view the report
-      $('body').reportViewerEZ({
-            DefaultAppTemplate: null,
-            path: '/AdventureWorks 2008 Sample Reports/Product Line Sales 2008',
-            navigateTo: null,
-            historyBack: null,
-            isReportManager: false,
-            isFullScreen: true,
-            savedParameters: defaultParamsList
-        });
+      var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+      $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008", 1, defaultParamsList);
 
       // Define a select type button that will contain the named paramter sets
       var btnSelectSet = {
@@ -62,14 +64,14 @@
         selectorClass: "my-select-set",
         tooltip: "My Paramter Sets",
         model: function () {
-          return model;
+          return $parameterModel;
         },
         modelChange: "parametermodelchanged",
         events: {
             change: function (e) {
                 var $select = $('body').reportViewerEZ("getRightToolbar").find("select");
                 var id = $select.val();
-                var parameterList = model.parameterModel("getParameterList", id);
+                var parameterList = $parameterModel.parameterModel("getParameterList", id);
 
                 $reportViewer = $('body').reportViewerEZ("getReportViewer");
                 $reportViewer.reportViewer("refreshParameters", parameterList, true, -1);
@@ -97,12 +99,12 @@
 
       // Add the two new buttons to the right toolbar. The right toolbar is positioned above
       // the reportParameter widget and is visible when the reportParameter widget is visible
-      var $rightToolbar = $('body').reportViewerEZ("getRightToolbar");
+      var $rightToolbar = $reportViewerEZ.reportViewerEZ("getRightToolbar");
       $rightToolbar.rightToolbar("addTools", 2, true, [btnSelectSet, btnGetParameters]);
 
       // Load the parameter model. This will cause the model "changed" event to be triggered
       // which is how the <select> button gets the options set
-      model.parameterModel("load");
+      $parameterModel.parameterModel("load");
 
     });  // $(document).ready()
   </script>

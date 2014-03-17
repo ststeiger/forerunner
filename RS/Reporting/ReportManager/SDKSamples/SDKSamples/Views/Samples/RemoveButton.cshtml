@@ -5,22 +5,29 @@
 
 @section styles {
 <style>
+    /* Simply set the display style to none to remove a button.
+       in this case the document map button is removed */
     .fr-toolbar .fr-toolbar-documentmap-button { display: none; }
 </style>
 }
 
 @section scripts {
 <script>
-    $(document).ready(function () {
-        $('body').reportViewerEZ({
-            DefaultAppTemplate: null,
-            path: '/AdventureWorks 2008 Sample Reports/Product Line Sales 2008',
-            navigateTo: null,
-            historyBack: null,
-            isReportManager: false,
-            isFullScreen: true
-        });
+  $(document).ready(function () {
+    // Create the reportViewerEZ widget
+    var $reportViewerEZ = $('body').reportViewerEZ({
+      DefaultAppTemplate: null,
+      path: '',
+      navigateTo: null,
+      historyBack: null,
+      isReportManager: false,
+      isFullScreen: true
     });
+
+    // Get the reportViewer widget and load the report
+    var $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+    $reportViewer.reportViewer("loadReport", "/AdventureWorks 2008 Sample Reports/Product Line Sales 2008");
+  });
 
 
 </script>

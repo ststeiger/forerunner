@@ -110,12 +110,6 @@ $(function () {
             var me = this;
             me._super();
 
-            // TODO [jont]
-            //
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            //// if me.element contains or a a child contains the options.toolClass don"t replace the html
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
             $(me.element).append($toolpane);

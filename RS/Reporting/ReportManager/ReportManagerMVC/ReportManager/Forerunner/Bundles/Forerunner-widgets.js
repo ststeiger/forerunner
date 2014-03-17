@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -32,14 +32,11 @@ $(function () {
      * @namespace $.forerunner.reportViewer
      * @prop {Object} options - The options for reportViewer
      * @prop {String} options.reportViewerAPI - Path to the REST calls for the reportViewer
-     * @prop {String} options.reportPath - Path to the specific report
-     * @prop {Integer} options.pageNum - Starting page number
      * @prop {Integer} options.pingInterval - Interval to ping the server. Used to keep the sessions active
      * @prop {Number} options.toolbarHeight - Height of the toolbar.
      * @prop {Object} options.pageNavArea - jQuery selector object that will the page navigation widget
      * @prop {Object} options.paramArea - jQuery selector object that defineds the report parameter widget
      * @prop {Object} options.DocMapArea - jQuery selector object that defineds the Document Map widget
-     * @prop {String} options.savedParameters - A list of parameters to use in lieu of the default parameters or the forerunner managed list.  Optional.
      * @prop {Function} options.onInputBlur - Callback function used to handle input blur event
      * @prop {Function} options.onInputFocus -Callback function used to handle input focus event 
      * @prop {Object} options.$appContainer - Report container
@@ -1648,6 +1645,7 @@ $(function () {
          *
          * @param {String} reportPath - Path to the specific report
          * @param {Integer} pageNum - Starting page number
+         * @param {Object} savedParameters - Saved parameters
          */
         loadReport: function (reportPath, pageNum, savedParameters) {
             var me = this;
@@ -3365,7 +3363,7 @@ $(function () {
             if (me.options.isFullScreen)
                 return;
 
-            var diff = Math.min($(window).scrollTop() - me.$container.position().top, me.$container.height() - 38);
+            var diff = Math.min($(window).scrollTop() - me.$container.offset().top, me.$container.height() - 38);
             if (me.$leftpane.is(":visible")) {
                 me.$leftpane.css("top", diff > 0 ? diff : me.$container.scrollTop());
             } else if (me.$rightpane.is(":visible")) {
@@ -3880,20 +3878,39 @@ $(function () {
                 me.enableTools([tb.btnMenu, tb.btnReportBack, tb.btnCredential]);
             });
 
+            $(window).resize(function () {
+                me._onWindowResize.call(me);
+            });
+
             // Hook up the toolbar element events
             //me.enableTools([tb.btnNav, tb.btnRefresh, tb.btnFirstPage, tb.btnPrev, tb.btnNext,
             //                   tb.btnLastPage, tb.btnDocumentMap, tb.btnFind, tb.btnZoom, tg.btnExportDropdown, tb.btnPrint]);
             //me.enableTools([tb.btnMenu, tb.btnReportBack]);
         },
+        _onWindowResize: function () {
+            var me = this;
+            var smallClass = ".fr-toolbar .fr-toolbar-hidden-on-small";
+            var mediumClass = ".fr-toolbar .fr-toolbar-hidden-on-medium";
+            var largeClass = ".fr-toolbar .fr-toolbar-hidden-on-large";
+            var veryLargeClass = ".fr-toolbar .fr-toolbar-hidden-on-very-large";
+
+            // Remove any previously added fr-toolbar-hidden classes
+            me.element.find(smallClass + ", " + mediumClass + ", " + largeClass + ", " + veryLargeClass).removeClass("fr-toolbar-hidden");
+
+            var width = me.element.width();
+            if (width < 480) {
+                me.element.find(smallClass).addClass("fr-toolbar-hidden");
+            } else if (width < 568) {
+                me.element.find(mediumClass).addClass("fr-toolbar-hidden");
+            } else if (width < 768) {
+                me.element.find(largeClass).addClass("fr-toolbar-hidden");
+            } else {  // Screen >= 769
+                me.element.find(veryLargeClass).addClass("fr-toolbar-hidden");
+            }
+        },
         _init: function () {
             var me = this;
             me._super(); //Invokes the method of the same name from the parent widget
-
-            // TODO [jont]
-            //
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            //// if me.element contains or a a child contains the options.toolClass don't replace the html
-            ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("<div class='" + me.options.toolClass + " fr-core-widget'/>");
            
@@ -4085,12 +4102,6 @@ $(function () {
         _init: function () {
             var me = this;
             me._super();
-
-            // TODO [jont]
-            //
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            //// if me.element contains or a a child contains the options.toolClass don"t replace the html
-            ///////////////////////////////////////////////////////////////////////////////////////////////
 
             me.element.html("");
             var $toolpane = new $("<div class='" + me.options.toolClass + " fr-core-widget' />");
@@ -4437,12 +4448,6 @@ $(function () {
             var me = this;
             me._super();
 
-            // TODO [jont]
-            //
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            //// if me.element contains or a a child contains the options.toolClass don't replace the html
-            ///////////////////////////////////////////////////////////////////////////////////////////////
-            
             me.element.empty();
             me.element.append($("<div class='" + me.options.toolClass + " fr-core-widget'/>"));
             me.addTools(1, true, [tb.btnBack, tb.btnSetup, tb.btnHome, tb.btnRecent, tb.btnFav]);

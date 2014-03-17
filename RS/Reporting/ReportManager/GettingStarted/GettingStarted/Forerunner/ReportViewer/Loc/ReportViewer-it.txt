@@ -27,12 +27,12 @@
     "licenseErrorContent":"Si prega di contattare l'amministratore di sistema. Se si è l'amministratore preghiamo verificare la licenza nello strumento di configurazione Mobilizer."
   },
   "exportType": {
-    "xml":"XML file con i dati del rapporto",
-    "csv":"CSV (delimitato da virgola)",
+    "xml":"XML",
+    "csv":"CSV",
     "pdf":"PDF",
-    "mhtml":"MHTML (archivio web)",
+    "mhtml":"MHTML",
     "excel":"Excel",
-    "tiff":"TIFF file",
+    "tiff":"TIFF",
     "word":"Word"
   },
   "toolPane": {
@@ -46,7 +46,10 @@
     "find":"trovare",
     "next":"Successivo",
     "zoom":"Abilita Zoom",
-    "print":"stampare"
+    "print":"stampare",
+    "dsCredential":"Credenziale",
+    "views":"Visualizzazioni",
+    "addToFavorites":"Aggiungi ai Preferiti"
   },
   "toolbar": {
     "back":"indietro",
@@ -71,8 +74,10 @@
     "print":"Stampare",
     "userSettings":"Stillingar",
     "saveParam":"Vista Breytur",
-    "parameterSets":"Manage Sets",
-    "selectSet":"Select Set"
+    "parameterSets":"gestire Sets",
+    "selectSet":"selezionare Imposta",
+    "dsCredential":"datasource credenziale",
+    "addToFavorites":"Aggiungi ai Preferiti"
   },
   "print": {
     "title":"Stampa Pagina opzione di layout",
@@ -83,7 +88,7 @@
     "marginLeft":"sinistro",
     "marginRight":"destro",
     "print":"Stampa",
-    "cancel":"annullare",
+    "cancel":"Cancellare",
     "unit":"mm",
     "margin":"margini",
     "pageLayoutOptions":"Opzioni layout pagina"
@@ -91,7 +96,7 @@
   "userSettings": {
     "title":"Impostazioni utente",
     "submit":"Ok",
-    "cancel":"cancellare",
+    "cancel":"Cancellare",
     "ResponsiveUI":"UI Responsive"
   },
   "paramPane": {
@@ -99,9 +104,10 @@
     "isTrue":"Vero",
     "isFalse":"Falso",
     "required":"Richiesto",
-    "viewReport":"Visualizza report",
-    "cancel":"cancellare",
-    "datePicker":"Data"
+    "viewReport":"Visualizza",
+    "cancel":"Cancellare",
+    "datePicker":"Data",
+    "select":"Selezionare"
   },
   "validateError": {
     "required":"Richiesto",
@@ -117,7 +123,8 @@
     "rangelength":"Immettere un valore compreso tra {0} e lungo {1} caratteri",
     "range":"Immettere un valore compreso tra {0} e {1}",
     "max":"Immettere un valore inferiore o uguale a {0}",
-    "min":"Immettere un valore maggiore o uguale a {0}"
+    "min":"Immettere un valore maggiore o uguale a {0}",
+    "invalid":"non valido"
   },
   "dialog": {
     "title":"promt",
@@ -126,7 +133,7 @@
   "placeholders": {
     "Username":"nome utente",
     "Password":"parola d'ordine",
-    "Login":"Accedi"
+    "Login":"Entra"
   },
   "datepicker": {
     "closeText":"fatto",
@@ -134,7 +141,7 @@
     "nextText":"Successivo",
     "currentText":"oggi",
     "weekHeader":"Wk",
-    "dateFormat":"mm / dd / yy",
+    "dateFormat":"dd/mm/yy",
     "firstDay":0,
     "isRTL":false,
     "showMonthAfterYear":false,
@@ -145,18 +152,27 @@
     "dayNamesShort":["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
     "dayNamesMin":["Do", "Lu", "Ma", "Me", "Gi", "Ve", "Sa"]},
   "parameterModel": {
-    "defaultName":"Default"
+    "defaultName":"Difetto",
+    "selectSet":"<selezionare set>"
   },
   "manageParamSets": {
-    "manageSets":"Manage Sets",
-    "cancel":"Cancel",
-    "add":"Add",
-    "addNewSet":"Add New Set",
-    "name":"Name",
-    "defaultHeader":"Default",
-    "allUsers":"All",
-    "deleteHeader":"Delete",
-    "apply":"Apply",
-    "newSet":"New Set"
+    "manageSets":"Gestire Sets",
+    "cancel":"cancellare",
+    "add":"aggiungere",
+    "addNewSet":"Aggiungi Nuovo set",
+    "name":"nome",
+    "defaultHeader":"difetto",
+    "allUsers":"tutto",
+    "deleteHeader":"cancellare",
+    "apply":"conservare",
+    "newSet":"nuovo set"
+  },
+  "dsCredential": {
+    "title":"datasource credenziale",
+    "cancel":"cancellare",
+    "submit":"presentare",
+    "username":"Login name:",
+    "password":"Password:",
+    "reset":"Reset"
   }
 }

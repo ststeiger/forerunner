@@ -94,45 +94,41 @@
         //$("#reportViewID").remove();
     };
 
+    // We only need to create the reportViewerEZ one time then we can hold onto a reference.
+    // Note that reportViewerEZ creates reportViewer and a number of other widget. All widgets
+    // that reportViewerEZ creates can be obtained by calls on reportViewerEZ such as
+    // "getReportViewer"
+    var $reportViewerEZ = null;
+    var $reportViewer = null;
+
     // onClickReport will remove any existing report and create a new report viewer for
     // the given report path.
     var onClickReport = function (e) {
         // Get the report item from the event data
         var item = e.data;
 
-        // Remove the report viewer element
-        //$("#reportViewID").remove();
+        if (!$reportViewerEZ) {
+            // Create the reportViewerEZ if need be
+            $reportViewerEZ = $('#reportViewID').reportViewerEZ({
+                navigateTo: null,
+                historyBack: null,
+                isReportManager: false,
+                isFullScreen: false
+            });
+            // Get a reference to the reportViewer widget
+            $reportViewer = $reportViewerEZ.reportViewerEZ("getReportViewer");
+        }
 
-        // Create a new reportViewerEZ
-        //var $reportCell = $("." + "report-view-container");
-        //var $viewContainer = "<div id='reportViewID' class='report-view'></div>";
-        //$reportCell.html($viewContainer);
-        //$('#reportViewID').reportViewerEZ({
-        //    DefaultAppTemplate: null,
-        //    path: item.Path,
-        //    navigateTo: null,
-        //    historyBack: null,
-        //    isReportManager: false,
-        //    isFullScreen: false
-        //});
-
-        var $viewer = $('#reportViewID').reportViewerEZ("getReportViewer");
-
-        $viewer.reportViewer("loadReport", item.Path);
+        // Load the new report
+        $reportViewer.reportViewer("loadReport", item.Path);
     };
 
     // Once the document has loaded and is ready, we will render the top level catalogs. The 
-    // "/" is the root path.
+    // "/" is the root path. Note that you can start at whatever path you need for your
+    // application.
     $(document).ready(function () {
 
         $reportListContainer = $(".report-list-container");
         render($reportListContainer, "/");
-
-        $('#reportViewID').reportViewerEZ({
-            navigateTo: null,
-            historyBack: null,
-            isReportManager: false,
-            isFullScreen: false
-        });
     });
 });

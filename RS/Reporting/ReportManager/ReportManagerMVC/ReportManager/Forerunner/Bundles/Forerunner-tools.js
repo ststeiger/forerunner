@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
+///#source 1 1 /Forerunner/Common/js/forerunner-tools.js
 /**
  * @file
  *  Defines all tools, tool groups and dropdowns used in the UI.
@@ -44,6 +44,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-toolbar-menu-button",
             imageClass: "fr-icons24x24-menu",
+            sharedClass: "fr-toolbar-hidden-on-very-large",
             tooltip: locData.toolbar.menu,
             events: {
                 click: function (e) {

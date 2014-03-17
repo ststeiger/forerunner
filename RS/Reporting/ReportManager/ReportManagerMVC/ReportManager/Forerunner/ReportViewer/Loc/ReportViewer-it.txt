@@ -43,7 +43,6 @@
     "back":"indietro",
     "refresh":"Refresh",
     "docMap":"Mappa documento",
-    "logoff":"logoff",
     "find":"trovare",
     "next":"Successivo",
     "zoom":"Abilita Zoom",

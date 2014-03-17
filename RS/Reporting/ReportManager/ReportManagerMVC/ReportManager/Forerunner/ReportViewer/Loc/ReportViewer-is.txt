@@ -44,7 +44,6 @@
     "refresh":"Uppfæra",
     "docMap":"Document Map",
     "find":"finna",
-    "logoff": "nafnplata",
     "next":"Næsta",
     "zoom":"Virkja Zoom",
     "print":"Prenta",

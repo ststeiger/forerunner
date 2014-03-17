@@ -51,8 +51,7 @@
     "dsCredential":"Lettres de créance",
     "views":"vues",
     "addToFavorites":"Ajouter aux favoris",
-    "logoff": "déconnexion"
-
+  
   },
   "toolbar": {
     "back":"Retour",

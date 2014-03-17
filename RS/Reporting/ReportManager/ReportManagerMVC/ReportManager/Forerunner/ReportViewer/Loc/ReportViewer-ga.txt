@@ -48,7 +48,6 @@
     "zoom":"Cumasaigh Zoom",
     "print":"Priontáil",
     "dsCredential":"Dintiúir",
-    "logoff": "logoff",
     "views":"Radhairc",
     "addToFavorites":"Add to Favorites"
   },

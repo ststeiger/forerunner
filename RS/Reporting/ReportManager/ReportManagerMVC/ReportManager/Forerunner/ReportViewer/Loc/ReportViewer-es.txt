@@ -44,7 +44,6 @@
     "refresh":"Reanudar",
     "docMap":"documento de mapa",
     "find":"Encontrar",
-    "logoff":"Cierre de sesión",
     "next":"Fespués",
     "zoom":"Habilitar zoom",
     "print":"Imprimir",

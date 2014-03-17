@@ -43,7 +43,6 @@
     "back":"返回",
     "refresh":"刷新",
     "docMap":"站點地圖",
-    "logoff":"Logoff",
     "find":"尋找",
     "next":"下一個",
     "zoom":"允許縮放",

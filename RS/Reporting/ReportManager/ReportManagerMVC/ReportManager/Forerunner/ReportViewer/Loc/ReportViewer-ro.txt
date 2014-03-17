@@ -43,7 +43,6 @@
     "back":"Înapoi",
     "refresh":"primeni",
     "docMap":"Planul documentului",
-    "logoff":"logoff",
     "find":"Găseşte",
     "next":"Înainte",
     "zoom":"Permite Zoom",

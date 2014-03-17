@@ -41,7 +41,6 @@
     "navigation":"導航",
     "favorites":"收藏",
     "back":"返回",
-    "logoff":"Logoff",
     "refresh":"刷新",
     "docMap":"站點地圖",
     "find":"尋找",

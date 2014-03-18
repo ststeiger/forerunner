@@ -240,6 +240,12 @@ $(function () {
                 $(document.documentElement).height(window.innerHeight);
                 $(window).on("orientationchange", function () {
                     $(document.documentElement).height(window.innerHeight);
+
+                    // Hiding the tool pane and / or the parameter pane is in response to bugs like 670 and
+                    // 532. on iOS the buttons clicks and scrolling were having trouble is the panes were left
+                    // up. So we are going to close them here. The user can reopen if they want.
+                    me.hideSlideoutPane(true);
+                    me.hideSlideoutPane(false);
                 });
             }
         },

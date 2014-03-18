@@ -1286,6 +1286,8 @@ $(function () {
                 me.findKeyword = keyword;
             }
 
+            me._trigger(events.find);
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }

@@ -1287,6 +1287,8 @@ $(function () {
                 me.findKeyword = keyword;
             }
 
+            me._trigger(events.find);
+
             if (me.finding && !findInNewPage) {
                 me._findNext(keyword);
             }
@@ -3534,6 +3536,12 @@ $(function () {
                 me.cleanUp();
             });
 
+            $viewer.on(events.reportViewerFind(), function (e, data) {
+                if (me.$leftpane.is(":visible")) {
+                    me.hideSlideoutPane(true);
+                }
+            });
+
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch && !me.options.isFullScreen) {
@@ -3607,24 +3615,26 @@ $(function () {
         restoreScrollPosition: function () {
             var me = this;
             if (me.savePosition && !me.scrollLock) {
-                $(window).scrollLeft(me.savePosition.left);
-                $(window).scrollTop(me.savePosition.top);
                 me.$container.scrollLeft(me.savePosition.innerLeft);
                 me.$container.scrollTop(me.savePosition.innerTop);
+                $(window).scrollLeft(me.savePosition.left);
+                $(window).scrollTop(me.savePosition.top);
+                
                 me.savePosition = null;
             }
         },
-        hideAddressBar: function (isLeftPane) {
+        hideAddressBar: function (isLeftPane, callback) {
             var me = this;
             var containerPosition = me.getOriginalPosition();
+            var delay = (document.height <= window.outerHeight + 10) ? 50 : 0;
             if (!isLeftPane) containerPosition.left = null;
 
-            if (document.height <= window.outerHeight + 10) {
-                setTimeout(function () { me.scrollToPosition(containerPosition); }, 50);
-            }
-            else {
-                setTimeout(function () { me.scrollToPosition(containerPosition); }, 0);
-            }
+            setTimeout(function () {
+                me.scrollToPosition(containerPosition);
+                if (typeof callback === "function") {
+                    callback();
+                }
+            }, delay);
         },
         restoreScroll: function () {
             var me = this;
@@ -3706,12 +3716,13 @@ $(function () {
                 }
             }
 
-            me.$container.addClass("fr-layout-container-noscroll");
-            me.$pagesection.addClass("fr-layout-pagesection-noscroll");
-            
             // Make sure the address bar is not showing when a side out pane is showing
-            me.hideAddressBar(isLeftPane);
-            me.$container.resize();
+            // Take add noscroll process as callback to make sure the execute sequence with hideAddress.
+            me.hideAddressBar(isLeftPane, function () {
+                me.$container.addClass("fr-layout-container-noscroll");
+                me.$pagesection.addClass("fr-layout-pagesection-noscroll");
+                me.$container.resize();
+            });
 
             if (me.$viewer !== undefined && me.$viewer.is(":visible")) {
                 me.$viewer.reportViewer("triggerEvent", events.showPane, { isLeftPane: isLeftPane });

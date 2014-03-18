@@ -373,6 +373,11 @@ $(function () {
             afterLoadReport: "afterLoadReport",
             /** widget + event, lowercase */
             reportViewerAfterLoadReport: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.afterLoadReport).toLowerCase(); },
+
+            /** @constant */
+            find: "find",
+            /** widget + event, lowercase */
+            reportViewerFind: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.find).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}

@@ -78,6 +78,7 @@
     <Content Include="images\24x24icons\HomeBlue.png" />
     <Content Include="images\24x24icons\HomeOff.png" />
     <Content Include="images\24x24icons\LastPageOff.png" />
+    <Content Include="images\24x24icons\Logout.png" />
     <Content Include="images\24x24icons\MHT.png" />
     <Content Include="images\24x24icons\mhtml.png" />
     <Content Include="images\24x24icons\PageNavOff.png" />

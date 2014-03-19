@@ -620,12 +620,6 @@ $(function () {
             $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             $TextObj.addClass("fr-r-t");
 
-            //Make room for the sort image
-            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
-               // $TextObj.css("padding-right", "15px");
-            }
-            //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
-           
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
             return RIContext.$HTMLParent;
@@ -1877,14 +1871,14 @@ $(function () {
             return fontSize;
 
 
-            var unit = fontSize.match(/\D+$/);  // get the existing unit
-            var value = fontSize.match(/\d+/);  // get the numeric component
+           // var unit = fontSize.match(/\D+$/);  // get the existing unit
+           // var value = fontSize.match(/\d+/);  // get the numeric component
 
-            if (unit.length === 1) unit = unit[0];
-            if (value.length === 1) value = value[0];
+           // if (unit.length === 1) unit = unit[0];
+           // if (value.length === 1) value = value[0];
 
-           //This is an error
-            return (value*0.98) + unit ;
+           ////This is an error
+           // return (value*0.98) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

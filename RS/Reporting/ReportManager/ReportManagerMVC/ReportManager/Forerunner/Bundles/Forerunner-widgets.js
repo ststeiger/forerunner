@@ -4257,11 +4257,13 @@ $(function () {
             }
 
             me.currentPageNum = currentPageNum;
-            // If there is still no max page count, increment it by 1
+            // If there is still no max page count, increment it by _batchSize
             if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
                 if (me.currentPageNum >= me._maxNumPages) {
-                    me._renderListItem(me._maxNumPages + 1, me.$list);                    
-                    me._maxNumPages++;
+                    for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+                        me._renderListItem(i, me.$list);
+                    }
+                    me._maxNumPages += me._batchSize;
                 }
             } else {
                 var realMax = me.options.$reportViewer.reportViewer("getNumPages");

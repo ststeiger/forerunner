@@ -370,7 +370,7 @@ namespace Forerunner.SSRS.Viewer
                         execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
 
-                    result = rs.Render(format, devInfo, out extension, out mimeType, out encoding, out warnings, out streamIDs);
+                    result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);
                     execInfo = rs.GetExecutionInfo();
                     numPages = execInfo.NumPages;
                     hasDocMap = execInfo.HasDocumentMap;
@@ -425,7 +425,10 @@ namespace Forerunner.SSRS.Viewer
                 }
                 else
                 {
-                    LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
+                    if (execInfo.NumPages < int.Parse(PageNum))
+                        throw new Exception("No such page");
+                    else
+                        LicenseException.Throw(LicenseException.FailReason.SSRSLicenseError, "License Validation Failed, please see SSRS logfile");
                 }
                 //this should never be called
                 return GetUTF8Bytes(JSON);

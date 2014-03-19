@@ -132,9 +132,9 @@ namespace ReportManager.Controllers
         [ActionName("Thumbnail")]
         public HttpResponseMessage Thumbnail(string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2, string instance = null)
         {
+            byte[] result = null;
             try
-            {
-                byte[] result = null;
+            {                
                 result = GetReportViewer(instance).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
                 return GetResponseFromBytes(result, "image/JPEG",true);
 
@@ -142,7 +142,7 @@ namespace ReportManager.Controllers
             catch (Exception e)
             {
                 ExceptionLogGenerator.LogException(e);
-                return ReturnError(e);
+                return GetResponseFromBytes((Stream) null, "image/JPEG", true);
             }            
         }
 

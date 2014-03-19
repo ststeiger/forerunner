@@ -121,7 +121,7 @@ $(function () {
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
-                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+                $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
             } else {
                 //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
                 //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
@@ -236,7 +236,7 @@ $(function () {
         _setColHeaderOffset: function ($tablix, $colHeader) {
             //Update floating column headers
             //var me = this;
-           
+          
             if (!$colHeader)
                 return;
 
@@ -245,15 +245,15 @@ $(function () {
             if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $tablix.width())) {
                 //$colHeader.css("top", $tablix.offset.top);
                 $colHeader.css("left", Math.min(scrollLeft - offset.left, $tablix.width() - $colHeader.width()) + "px");
-                $colHeader.fadeIn("fast");
+                $colHeader.css("visibility", "visible");
             }
             else {
-                $colHeader.hide();
-
+                $colHeader.css("visibility", "hidden");                
             }
         },
         _setRowHeaderOffset: function ($tablix, $rowHeader) {
             //  Update floating row headers
+         
             var me = this;
             if (!$rowHeader)
                 return;
@@ -262,11 +262,12 @@ $(function () {
             var scrollTop = $(window).scrollTop();            
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
                 $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
-                $rowHeader.show();
+                $rowHeader.css("visibility", "visible");
             }
             else {
-                $rowHeader.hide();
+                $rowHeader.css("visibility", "hidden");
             }
+            
         },
         _addLoadingIndicator: function () {
             var me = this;
@@ -473,12 +474,11 @@ $(function () {
                     switch (ev.type) {
                         // Hide the header on touch
                         case "touch":
-                            me._hideTableHeaders();                            
+                            me._hideTableHeaders();
                             break;
 
                             // Show the header on release only if this is not scrolling.
-                            // If it is scrolling, we will let scrollstop handle that.
-                   
+                            // If it is scrolling, we will let scrollstop handle that.                   
                         case "release":
                             var swipeNav = false;                            
                             if (ev.gesture.touches.length > 1) {                                
@@ -551,7 +551,7 @@ $(function () {
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
-            if (newPageNum > me.numPages) {
+            if (newPageNum > me.numPages && me.numPages !==0 ) {
                 newPageNum = 1;
             }
             if (newPageNum < 1) {
@@ -668,7 +668,8 @@ $(function () {
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
-            if (high > me.numPages) high = me.numPages;
+            if (high > me.numPages && me.numPages !== 0 )
+                high = me.numPages;
 
             for (var i = low; i <= high; i++) {
                 if (!me.pages[i])
@@ -1982,8 +1983,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                if (obj.$rowHeader) obj.$rowHeader.hide();
-                if (obj.$colHeader) obj.$colHeader.hide();
+                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

@@ -68,6 +68,9 @@ $(function () {
             var reportViewerAPI = me.options.$reportViewer.reportViewer("getReportViewerAPI");
             var reportPath = me.options.$reportViewer.reportViewer("getReportPath");
             
+            if (maxNumPages === 0)
+                maxNumPages = 30;
+
             me.listItems = new Array(maxNumPages);
 
             for (var i = 1; i <= maxNumPages; i++) {
@@ -91,10 +94,14 @@ $(function () {
                     click: function (event) {
                         me.options.$reportViewer.reportViewer("navToPage", $(event.currentTarget).data("pageNumber"));
                         if (forerunner.device.isSmall())
-                            me.options.$reportViewer.reportViewer("showNav");
-                    }
+                            me.options.$reportViewer.reportViewer("showNav");                        
+                    },
                 });
-                // Need to add onclick
+  
+                $thumbnail.error(function () {
+                    $(this).hide();
+                });
+                
                 $listItem.addClass("fr-nav-item");
                 $listItem.append($caption);
                 $listItem.append($thumbnail);

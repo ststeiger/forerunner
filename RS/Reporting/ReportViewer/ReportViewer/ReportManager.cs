@@ -82,6 +82,9 @@ namespace Forerunner.SSRS.Manager
             }
             else
             {
+                if (DBCredentials.UserName.IndexOf("\\") >= 0)
+                    builder.IntegratedSecurity = true;
+
                 builder.UserID = DBCredentials.UserName;
                 String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
                 builder.Password = Password;
@@ -116,6 +119,9 @@ namespace Forerunner.SSRS.Manager
             }
             else
             {
+                if (DBCredentials.UserName.IndexOf("\\") >= 0)
+                    builder.IntegratedSecurity = true;
+               
                 builder.UserID = DBCredentials.UserName;
                 String Password = DBCredentials.encrypted ? Security.Encryption.Decrypt(DBCredentials.Password) : DBCredentials.Password;
                 builder.Password = Password;

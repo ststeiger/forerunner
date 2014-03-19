@@ -290,7 +290,7 @@ $(function () {
                 Style = "";
 
                 //Determin height and location
-                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
+                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line" )
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
                 else {
                     if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
@@ -1135,13 +1135,13 @@ $(function () {
             HasFixedRows = TS.HasFixedRows;
             HasFixedCols = TS.HasFixedCols;
             if (HasFixedRows) {
-                $FixedColHeader.hide();
+                $FixedColHeader.css("visibility", "hidden");               
             }
             else
                 $FixedColHeader = null;
 
             if (HasFixedCols) {
-                $FixedRowHeader.hide();
+                $FixedRowHeader.css("visibility", "hidden");                
             }
             else
                 $FixedRowHeader = null;
@@ -1355,17 +1355,16 @@ $(function () {
         _getHeight: function ($obj) {
             var me = this;
             var height;
+            var $copiedElem = $obj;
 
-            var $copiedElem = $obj.clone()
-                                .css({
-                                    visibility: "hidden"
-                                });
-
-            $copiedElem.find("img").remove();
-
+            //remove images becasue they couple be resized
+            if ($copiedElem.find("img").length > 0) {
+                $copiedElem = $obj.clone().css({ visibility: "hidden" });
+                $copiedElem.find("img").remove();
+            }
+            
             $("body").append($copiedElem);
             height = $copiedElem.outerHeight() + "px";
-
             $copiedElem.remove();
 
             //Return in mm

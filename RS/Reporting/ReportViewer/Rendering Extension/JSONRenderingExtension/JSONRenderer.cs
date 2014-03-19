@@ -51,12 +51,17 @@ namespace Forerunner.RenderingExtensions
                 Logger.Trace(LogType.Info, "JSONRenderer.Render " + report.Name);
                 bool retval;
                 RenderStreams = createAndRegisterStream;
+                StringWriter sw;
+
                 Stream outputStream = createAndRegisterStream(report.Name, "json", Encoding.UTF8, "text/json", true, StreamOper.CreateAndRegister);
                 retval = RPL.Render(report, reportServerParameters, deviceInfo, clientCapabilities, ref renderProperties, new Microsoft.ReportingServices.Interfaces.CreateAndRegisterStream(IntermediateCreateAndRegisterStream));
 
                 RegisteredStream.Position = 0;
                 JSON = new ReportJSONWriter(RegisteredStream);
-                StringWriter sw = JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString()));
+                if (renderProperties["UpdatedPaginationMode"].ToString() == "TotalPages")
+                    sw = JSON.RPLToJSON(int.Parse(renderProperties["TotalPages"].ToString()));
+                else
+                    sw = JSON.RPLToJSON(0);
         
                 int bufsiz = 1024 * 1000;
                 char[] c = new char[bufsiz];

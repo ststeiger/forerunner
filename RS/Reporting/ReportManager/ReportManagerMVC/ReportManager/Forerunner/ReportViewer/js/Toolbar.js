@@ -183,8 +183,14 @@ $(function () {
         _updateBtnStates: function (curPage, maxPage) {
             var me = this;
 
-            me.element.find(".fr-toolbar-numPages-button").html(maxPage);
-            me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
+            if (maxPage !== 0) {
+                me.element.find(".fr-toolbar-numPages-button").html(maxPage);
+                me.element.find(".fr-toolbar-reportpage-textbox").attr({ max: maxPage, min: 1 });
+            }
+            else {
+                me.element.find(".fr-toolbar-numPages-button").html("?");
+            }
+
 
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
                 me.enableTools([tb.btnDocumentMap]);
@@ -198,11 +204,14 @@ $(function () {
                 me.enableTools([tb.btnPrev, tb.btnFirstPage]);
             }
 
-            if (curPage >= maxPage) {
+            if (curPage >= maxPage && maxPage !== 0) {
                 me.disableTools([tb.btnNext, tb.btnLastPage]);
             }
             else {
-                me.enableTools([tb.btnNext, tb.btnLastPage]);
+                if (maxPage === 0)
+                    me.disableTools([tb.btnLastPage]);
+                else
+                    me.enableTools([tb.btnNext, tb.btnLastPage]);
             }
             if (maxPage ===1 )
                 me.disableTools([tb.btnNav]);

@@ -895,7 +895,7 @@ $(function () {
         btnLogOff: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-logout",
             tooltip: locData.toolbar.logOff,
             events: {
                 click: function (e) {
@@ -1021,7 +1021,7 @@ $(function () {
         btnLogOff: {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
-            imageClass: "fr-icons24x24-dataSourceCred",
+            imageClass: "fr-icons24x24-logout",
             tooltip: locData.toolbar.logOff,
             events: {
                 click: function (e) {

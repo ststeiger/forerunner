@@ -842,7 +842,7 @@ namespace Forerunner.SSRS.Viewer
                 }
                 devInfo += @"</DeviceInfo>";
 
-                result = rs.Render(format, devInfo, out extension, out encoding, out mimeType, out warnings, out streamIDs);
+                result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out encoding, out mimeType, out warnings, out streamIDs);
                 execInfo = rs.GetExecutionInfo();
 
                 if (!ReportViewer.ServerRendering)

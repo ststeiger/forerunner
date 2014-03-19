@@ -61,7 +61,7 @@
     "home":"Baile",
     "keyword":"Eochairfhocal",
     "lastPage":"Last",
-    "logoff": "logoff",
+    "logOff": "logoff",
     "menu":"Menu",
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",

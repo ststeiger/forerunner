@@ -60,7 +60,7 @@
     "firstPage":"最初",
     "home":"自宅",
     "keyword":"キーワード",
-    "logoff":"ログオフ",
+    "logOff":"ログオフ",
     "lastPage":"最後の人",
     "menu":"メニュー",
     "navigation":"ナビゲーション",

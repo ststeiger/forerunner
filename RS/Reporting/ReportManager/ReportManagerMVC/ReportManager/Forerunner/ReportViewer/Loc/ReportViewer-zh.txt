@@ -58,7 +58,7 @@
     "favorites":"收藏",
     "find":"查找",
     "firstPage":"首页",
-    "logoff":"退出",
+    "logOff":"退出",
     "home":"主页",
     "keyword":"关键字",
     "lastPage":"末页",

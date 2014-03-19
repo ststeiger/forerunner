@@ -54,13 +54,7 @@ $(function () {
                 if (realMax !== me._maxNumPages) {
                     for (var i = me._maxNumPages + 1; i <= realMax; i++) {
                         me._renderListItem(i, me.$list);
-                    }
-                    if (realMax < me._maxNumPages) {
-                        for (var i = me._maxNumPages; i >= realMax + 1; i--) {
-                            $listItem = me.listItems.pop();
-                            $listItem.remove();
-                        }
-                    }                    
+                    }                           
                     me._maxNumPages = realMax;
                 }
             }
@@ -68,7 +62,13 @@ $(function () {
 
             // Reset Lazy load to load new images
             var $container = $("ul.fr-nav-container", $(me.element));
-            $(".lazy", me.$list).lazyload({ container: $container, threshold: 200 });
+            $(".lazy", me.$list).lazy({
+                appendScroll: $container, bind: "event", visibleOnly: false,
+                onError: function (element) {
+                    $listItem = me.listItems.pop();
+                    $listItem.remove();                    
+                },
+            });
 
             $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
@@ -80,7 +80,7 @@ $(function () {
             if (me.currentPageNum > me._maxNumPages && me.options.$reportViewer.reportViewer("getNumPages") === 0) {
                 for (var i = me._maxNumPages + 1 ; i <= me.currentPageNum; i++)
                     me._renderListItem(i, me.$list);
-                $(".lazy", me.$list).lazyload("update");
+
                 me._maxNumPages = me.currentPageNum;
             }
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
@@ -109,7 +109,7 @@ $(function () {
             // we will use lazy loading.
             $thumbnail.addClass("lazy");
             $thumbnail.attr("src", forerunner.config.forerunnerFolder() + "reportviewer/Images/page-loading.gif");
-            $thumbnail.attr("data-original", url);
+            $thumbnail.attr("data-src", url);
             $thumbnail.data("pageNumber", i);
             this._on($thumbnail, {
                 click: function (event) {
@@ -117,10 +117,6 @@ $(function () {
                     if (forerunner.device.isSmall())
                         me.options.$reportViewer.reportViewer("showNav");                        
                 },
-            });
-  
-            $thumbnail.error(function () {
-                $(this).hide();
             });
                 
             $listItem.addClass("fr-nav-item");
@@ -213,12 +209,19 @@ $(function () {
             if (!me.isRendered) {
                 me._render();
                 me.isRendered = true;
+                var $container = $("ul.fr-nav-container", $(me.element));
+                $(".lazy", me.$list).lazy({
+                    appendScroll: $container,bind: "event",visibleOnly:false,
+                    onError: function (element) {
+                        $listItem = me.listItems.pop();
+                        $listItem.remove();
+                    },
+                });
             }
 
             me._makeVisible(!me.element.is(":visible"));
             $(".fr-nav-container", $(me.element)).css("position", me.element.css("position"));
-            var $container = $("ul.fr-nav-container", $(me.element));
-            $(".lazy", me.$list).lazyload({ container: $container, threshold : 200});
+           
             if (forerunner.device.isMSIE()) {
                 me._ScrolltoPage();
             }

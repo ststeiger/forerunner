@@ -350,6 +350,7 @@ $(function () {
 
             if (!me.pages[pageNum].isRendered)
                 me._renderPage(pageNum);
+
             if ($(".fr-report-areacontainer", me.$reportContainer).length === 0) {
                 var errorpage = me.$reportContainer.find(".Page");
                 if (errorpage)
@@ -372,9 +373,10 @@ $(function () {
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
 
-            me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
-
+            if (!me.renderError) {
+                me.curPage = pageNum;
+                me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+            }
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
             me.removeLoadingIndicator();
@@ -386,7 +388,7 @@ $(function () {
             }
             
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
+            me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError, credentialRequired: me.credentialDefs ? true : false });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;

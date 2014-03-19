@@ -4261,6 +4261,7 @@ $(function () {
             if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
                 if (me.currentPageNum >= me._maxNumPages) {
                     me._renderListItem(me._maxNumPages + 1, me.$list);
+                    $(".lazy", me.$list).lazyload("update");
                     me._maxNumPages++;
                 }
             } else {
@@ -4275,6 +4276,7 @@ $(function () {
                             $listItem.remove();
                         }
                     }
+                    $(".lazy", me.$list).lazyload("update");
                     me._maxNumPages = realMax;
                 }
             }
@@ -4290,6 +4292,7 @@ $(function () {
             if (me.currentPageNum > me._maxNumPages && me.options.$reportViewer.reportViewer("getNumPages") === 0) {
                 for (var i = me._maxNumPages + 1 ; i <= me.currentPageNum; i++)
                     me._renderListItem(i, me.$list);
+                $(".lazy", me.$list).lazyload("update");
                 me._maxNumPages = me.currentPageNum;
             }
             if (me.currentPageNum && !forerunner.device.isElementInViewport(me.listItems[me.currentPageNum - 1].get(0))) {
@@ -4336,6 +4339,7 @@ $(function () {
             $listItem.append($caption);
             $listItem.append($thumbnail);
         },
+        _batchSize : 10,
         _renderList: function () {
             var me = this;
             var isTouch = forerunner.device.isTouch();
@@ -4346,7 +4350,7 @@ $(function () {
  
             me._maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");            
             if (me._maxNumPages === 0)
-                me._maxNumPages = 10;
+                me._maxNumPages = me._batchSize;
 
             me.listItems = new Array(me._maxNumPages);
 

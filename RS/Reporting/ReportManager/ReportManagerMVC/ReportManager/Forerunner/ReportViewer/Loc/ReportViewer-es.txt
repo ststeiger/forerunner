@@ -61,7 +61,7 @@
     "home":"Casa",
     "keyword":"Palabra clave",
     "lastPage":"Último",
-    "logoff": "Cierre de sesión",
+    "logOff": "Cierre de sesión",
     "menu":"Menú",
     "navigation":"Navegación",
     "next":"Después",

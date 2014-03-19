@@ -4260,8 +4260,7 @@ $(function () {
             // If there is still no max page count, increment it by 1
             if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
                 if (me.currentPageNum >= me._maxNumPages) {
-                    me._renderListItem(me._maxNumPages + 1, me.$list);
-                    $(".lazy", me.$list).lazyload("update");
+                    me._renderListItem(me._maxNumPages + 1, me.$list);                    
                     me._maxNumPages++;
                 }
             } else {
@@ -4275,12 +4274,15 @@ $(function () {
                             $listItem = me.listItems.pop();
                             $listItem.remove();
                         }
-                    }
-                    $(".lazy", me.$list).lazyload("update");
+                    }                    
                     me._maxNumPages = realMax;
                 }
             }
             me._ScrolltoPage();
+
+            // Reset Lazy load to load new images
+            var $container = $("ul.fr-nav-container", $(me.element));
+            $(".lazy", me.$list).lazyload({ container: $container, threshold: 200 });
 
             $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
@@ -4357,8 +4359,7 @@ $(function () {
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }
-            
-            $(".lazy", me.$list).lazyload({ container: $("ul.fr-nav-container", $(me.element)), threshold: 200 });
+             
             return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
         },
 
@@ -4401,7 +4402,7 @@ $(function () {
             
             me.element.append($slider);
             //me.element.html($slider.html());
-            
+
             me.element.hide();
             me._initCallbacks();
             me._setCurrentPage(me.currentPageNum);

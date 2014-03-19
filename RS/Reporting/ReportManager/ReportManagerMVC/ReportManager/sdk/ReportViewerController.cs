@@ -141,7 +141,7 @@ namespace ReportManager.Controllers
             catch (Exception e)
             {
                 ExceptionLogGenerator.LogException(e);
-                return ReturnError(e);
+                return GetResponseFromBytes((Stream)null, "image/JPEG", true);
             }            
         }
 

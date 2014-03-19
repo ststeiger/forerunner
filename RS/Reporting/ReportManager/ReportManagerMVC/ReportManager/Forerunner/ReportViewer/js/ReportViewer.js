@@ -207,11 +207,10 @@ $(function () {
             if ((scrollLeft > offset.left) && (scrollLeft < offset.left + $tablix.width())) {
                 //$colHeader.css("top", $tablix.offset.top);
                 $colHeader.css("left", Math.min(scrollLeft - offset.left, $tablix.width() - $colHeader.width()) + "px");
-                $colHeader.fadeIn("fast");
+                $colHeader.css("visibility", "visible");
             }
             else {
-                $colHeader.hide();
-
+                $colHeader.css("visibility", "hidden");
             }
         },
         _setRowHeaderOffset: function ($tablix, $rowHeader) {
@@ -224,10 +223,10 @@ $(function () {
             var scrollTop = $(window).scrollTop();
             if ((scrollTop > offset.top) && (scrollTop < offset.top + $tablix.innerHeight())) {
                 $rowHeader.css("top", (Math.min((scrollTop - offset.top), ($tablix.height() - $rowHeader.innerHeight())) + me.options.toolbarHeight) + "px");
-                $rowHeader.show();
+                $rowHeader.css("visibility", "visible");
             }
             else {
-                $rowHeader.hide();
+                $rowHeader.css("visibility", "hidden");
             }
         },
         _addLoadingIndicator: function () {
@@ -325,9 +324,10 @@ $(function () {
             if (!$.isEmptyObject(me.pages[pageNum].CSS))
                 me.pages[pageNum].CSS.appendTo("head");
 
-            me.curPage = pageNum;
-            me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
-
+            if (!me.renderError) {
+                me.curPage = pageNum;
+                me._trigger(events.changePage, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
+            }
             $(window).scrollLeft(me.scrollLeft);
             $(window).scrollTop(me.scrollTop);
             me.removeLoadingIndicator();
@@ -338,7 +338,7 @@ $(function () {
                 me._setPageCallback = null;
             }
             // Trigger the change page event to allow any widget (E.g., toolbar) to update their view
-            me._trigger(events.setPageDone, null, { newPageNum: pageNum, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
+            me._trigger(events.setPageDone, null, { newPageNum: me.curPage, paramLoaded: me.paramLoaded, numOfVisibleParameters: me.$numOfVisibleParameters, renderError: me.renderError });
         },
         _addSetPageCallback: function (func) {
             if (typeof (func) !== "function") return;
@@ -479,7 +479,7 @@ $(function () {
             me.scrollLeft = 0;
             me.scrollTop = 0;
 
-            if (newPageNum > me.numPages) {
+            if (newPageNum > me.numPages && me.numPages !== 0) {
                 newPageNum = 1;
             }
             if (newPageNum < 1) {
@@ -586,7 +586,8 @@ $(function () {
             var low = initPage - 1;
             var high = initPage + 1;
             if (low < 1) low = 1;
-            if (high > me.numPages) high = me.numPages;
+            if (high > me.numPages && me.numPages !== 0 )
+                high = me.numPages;
 
             for (var i = low; i <= high; i++) {
                 if (!me.pages[i])
@@ -1728,8 +1729,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                if (obj.$rowHeader) obj.$rowHeader.hide();
-                if (obj.$colHeader) obj.$colHeader.hide();
+                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

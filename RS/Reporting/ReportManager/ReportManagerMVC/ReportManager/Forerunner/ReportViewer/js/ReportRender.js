@@ -1,4 +1,4 @@
-// Assign or create the single globally scoped variable
+﻿// Assign or create the single globally scoped variable
 var forerunner = forerunner || {};
 
 // Forerunner SQL Server Reports
@@ -94,8 +94,8 @@ $(function () {
         },
         _getWatermark: function () {
 
-            var wstyle = "opacity:0.10;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
-            if (forerunner.device.isMSIE8()){
+            var wstyle = "opacity:0.30;color: #d0d0d0;font-size: 120pt;position: absolute;margin: 0;left:0px;top:40px; pointer-events: none;";
+            if (forerunner.device.isMSIE8() || forerunner.device.isAndroid()) {
                 var wtr = $("<DIV/>").html("Evaluation");
                 wstyle += "z-index: -1;";
                 wtr.attr("style", wstyle);
@@ -290,7 +290,7 @@ $(function () {
                 Style = "";
 
                 //Determin height and location
-                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line")
+                if (Obj.Type === "Image" || Obj.Type === "Chart" || Obj.Type === "Gauge" || Obj.Type === "Map" || Obj.Type === "Line" )
                     RecLayout.ReportItems[Index].NewHeight = Measurements[Index].Height;
                 else {
                     if (Obj.Type === "Tablix" && me._tablixStream[Obj.Elements.NonSharedElements.UniqueName].BigTablix === true) {
@@ -620,12 +620,6 @@ $(function () {
             $TextObj.addClass(me._getClassName("fr-t-", RIContext.CurrObj));
             $TextObj.addClass("fr-r-t");
 
-            //Make room for the sort image
-            if (me._getSharedElements(RIContext.CurrObj.Elements.SharedElements).CanSort !== undefined) {
-               // $TextObj.css("padding-right", "15px");
-            }
-            //RIContext.$HTMLParent.append(ParagraphContainer["Root"]);
-           
             RIContext.$HTMLParent.append($TextObj);
             if ($Sort) RIContext.$HTMLParent.append($Sort);
             return RIContext.$HTMLParent;
@@ -1135,13 +1129,13 @@ $(function () {
             HasFixedRows = TS.HasFixedRows;
             HasFixedCols = TS.HasFixedCols;
             if (HasFixedRows) {
-                $FixedColHeader.hide();
+                $FixedColHeader.css("visibility", "hidden");               
             }
             else
                 $FixedColHeader = null;
 
             if (HasFixedCols) {
-                $FixedRowHeader.hide();
+                $FixedRowHeader.css("visibility", "hidden");                
             }
             else
                 $FixedRowHeader = null;
@@ -1355,17 +1349,16 @@ $(function () {
         _getHeight: function ($obj) {
             var me = this;
             var height;
+            var $copiedElem = $obj;
 
-            var $copiedElem = $obj.clone()
-                                .css({
-                                    visibility: "hidden"
-                                });
-
-            $copiedElem.find("img").remove();
-
+            //remove images becasue they couple be resized
+            if ($copiedElem.find("img").length > 0) {
+                $copiedElem = $obj.clone().css({ visibility: "hidden" });
+                $copiedElem.find("img").remove();
+            }
+            
             $("body").append($copiedElem);
             height = $copiedElem.outerHeight() + "px";
-
             $copiedElem.remove();
 
             //Return in mm
@@ -1878,14 +1871,14 @@ $(function () {
             return fontSize;
 
 
-            var unit = fontSize.match(/\D+$/);  // get the existing unit
-            var value = fontSize.match(/\d+/);  // get the numeric component
+           // var unit = fontSize.match(/\D+$/);  // get the existing unit
+           // var value = fontSize.match(/\d+/);  // get the numeric component
 
-            if (unit.length === 1) unit = unit[0];
-            if (value.length === 1) value = value[0];
+           // if (unit.length === 1) unit = unit[0];
+           // if (value.length === 1) value = value[0];
 
-           //This is an error
-            return (value*0.98) + unit ;
+           ////This is an error
+           // return (value*0.98) + unit ;
         },
         _getListStyle: function (Style, Level) {
             var ListStyle;

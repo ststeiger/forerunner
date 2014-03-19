@@ -1,4 +1,4 @@
-﻿.fr-layout-container {
+.fr-layout-container {
   
   /*min-height: 100%;*/
   background-color: transparent;
@@ -437,6 +437,10 @@ and (min-width : 1824px) {
 
 .fr-icons24x24-dataSourceCred {
   background-position: -120px -96px;
+}
+
+.fr-icons24x24-logout {
+  background-position: 0 -120px;
 }
 /*** IconGen - end automatically generated, do not hand modify ***/
 

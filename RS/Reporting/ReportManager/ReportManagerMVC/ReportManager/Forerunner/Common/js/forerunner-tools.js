@@ -1028,7 +1028,7 @@ $(function () {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
                 }
             }
-        },
+        }
     };
 
     var tb = forerunner.ssr.tools.toolbar;
@@ -1071,6 +1071,18 @@ $(function () {
                     var accordionGroup = toolInfo.accordionGroup;
                     var $accordionGroup = e.data.me.element.find("." + accordionGroup.selectorClass);
                     $accordionGroup.toggle();
+                }
+            }
+        },
+        /** @member */
+        itemLogOff: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-logOff",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolbar.logOff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
                 }
             }
         }

@@ -6,7 +6,7 @@ using System.Net;
 using System.Configuration;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
-using Forerunner.Logging;
+using ReportManager.Util.Logging;
 
 namespace Forerunner.Security
 {

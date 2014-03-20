@@ -1730,8 +1730,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
-                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

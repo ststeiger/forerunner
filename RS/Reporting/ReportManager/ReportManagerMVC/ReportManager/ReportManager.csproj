@@ -405,7 +405,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>9000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:9000/</IISUrl>
+          <IISUrl>http://localhost:8000/</IISUrl>
           <NTLMAuthentication>True</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://localhost/ReportManager</CustomServerUrl>

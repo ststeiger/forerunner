@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4406,8 +4406,7 @@ $(function () {
                 });
 
                 var $loadMoreSpan = new $("<Div />");
-                $loadMoreSpan.addClass("fr-nav-loadmore-text");
-                $loadMoreSpan.text("Load More");
+                $loadMoreSpan.addClass("fr-nav-loadmore-text");    
                 $loadMore.append($loadMoreSpan);
 
                 $list.append($loadMore);

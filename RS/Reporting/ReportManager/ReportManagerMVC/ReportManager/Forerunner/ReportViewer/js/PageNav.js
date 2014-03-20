@@ -187,8 +187,7 @@ $(function () {
                 });
 
                 var $loadMoreSpan = new $("<Div />");
-                $loadMoreSpan.addClass("fr-nav-loadmore-text");
-                $loadMoreSpan.text("Load More");
+                $loadMoreSpan.addClass("fr-nav-loadmore-text");    
                 $loadMore.append($loadMoreSpan);
 
                 $list.append($loadMore);

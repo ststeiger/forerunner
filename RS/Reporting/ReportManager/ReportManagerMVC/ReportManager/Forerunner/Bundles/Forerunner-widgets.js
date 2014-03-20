@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -2309,6 +2309,13 @@ $(function () {
             if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
+
+            var setCount = me.getSetCount(me.serverData);
+            if (setCount === 0) {
+                me.currentSetId = null;
+                me.serverData.defaultSetId = null;
+            }
+
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
@@ -2350,7 +2357,7 @@ $(function () {
             return me.serverData !== null && me.reportPath === reportPath;
         },
         areSetsEmpty: function (serverData) {
-            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+            if (!serverData || !serverData.parameterSets) {
                 return true;
             }
 
@@ -2362,7 +2369,7 @@ $(function () {
         },
         getSetCount: function (serverData) {
             var count = 0;
-            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+            if (!serverData || !serverData.parameterSets) {
                 return count;
             }
 
@@ -2390,10 +2397,7 @@ $(function () {
                     }
                     else if (data) {
                         me.serverData = data;
-                        if (me.areSetsEmpty(me.serverData)) {
-                            me._addNewSet(locData.parameterModel.defaultName);
-                        }
-                        else {
+                        if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
                     }
@@ -2431,6 +2435,7 @@ $(function () {
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
                     me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._triggerModelChange();
                 } else {
                     me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);
                 }
@@ -4256,33 +4261,33 @@ $(function () {
 
             me.currentPageNum = currentPageNum;
             // If there is still no max page count, increment it by _batchSize
-            if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
-                if (me.currentPageNum >= me._maxNumPages) {
-                    for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
-                        me._renderListItem(i, me.$list);
-                    }
-                    me._maxNumPages += me._batchSize;
-                }
-            } else {
-                var realMax = me.options.$reportViewer.reportViewer("getNumPages");
-                if (realMax !== me._maxNumPages) {
-                    for (var i = me._maxNumPages + 1; i <= realMax; i++) {
-                        me._renderListItem(i, me.$list);
-                    }                           
-                    me._maxNumPages = realMax;
-                }
-            }
+            //if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
+            //    if (me.currentPageNum >= me._maxNumPages) {
+            //        for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+            //            me._renderListItem(i, me.$list, true);
+            //        }
+            //        me._maxNumPages += me._batchSize;
+            //    }
+            //} else {
+            //    var realMax = me.options.$reportViewer.reportViewer("getNumPages");
+            //    if (realMax !== me._maxNumPages) {
+            //        for (var i = me._maxNumPages + 1; i <= realMax; i++) {
+            //            me._renderListItem(i, me.$list);
+            //        }
+            //        me._maxNumPages = realMax;
+            //    }
+            //}
             me._ScrolltoPage();
 
             // Reset Lazy load to load new images
-            var $container = $("ul.fr-nav-container", $(me.element));
-            $(".lazy", me.$list).lazy({
-                appendScroll: $container, bind: "event", visibleOnly: false,
-                onError: function (element) {
-                    $listItem = me.listItems.pop();
-                    $listItem.remove();                    
-                },
-            });
+            //var $container = $("ul.fr-nav-container", $(me.element));
+            //$(".lazy", me.$list).lazy({
+            //    appendScroll: $container, bind: "event", visibleOnly: false,
+            //    onError: function (element) {
+            //        $listItem = me.listItems.pop();
+            //        $listItem.remove();                    
+            //    },
+            //});
 
             $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
@@ -4303,7 +4308,7 @@ $(function () {
             }
         },
         _maxNumPages: null,
-        _renderListItem: function (i, $list) {
+        _renderListItem: function (i, $list, isAppend) {
             var me = this;
 
             var sessionID = me.options.$reportViewer.reportViewer("getSessionID");
@@ -4314,7 +4319,14 @@ $(function () {
             if (me.options.rsInstance)
                 url += "&instance=" + me.options.rsInstance;
             var $listItem = new $("<LI />");
-            $list.append($listItem);
+
+            if (isAppend && me.$loadMore) {
+                $listItem.insertBefore(me.$loadMore);
+            }
+            else {
+                $list.append($listItem);
+            }
+
             me.listItems[i - 1] = $listItem;
             var $caption = new $("<DIV class='fr-nav-centertext'>" + i.toString() + "</DIV>");
             var $thumbnail = new $("<IMG />");
@@ -4346,7 +4358,7 @@ $(function () {
             $list = new $("<ul class='fr-nav-container fr-core-widget' />");
             me.$ul = $list;
  
-            me._maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");            
+            me._maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
             if (me._maxNumPages === 0)
                 me._maxNumPages = me._batchSize;
 
@@ -4355,8 +4367,56 @@ $(function () {
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }
-             
-            return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
+
+            if (me._maxNumPages !== me.options.$reportViewer.reportViewer("getNumPages")) {
+                var $loadMore = new $("<LI />")
+                $loadMore.addClass("fr-nav-loadmore");
+                $loadMore.addClass("fr-nav-item");
+                $loadMore.addClass("fr-core-cursorpointer");
+                $loadMore.on("click", function () {
+                    if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
+                        for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+                            me._renderListItem(i, me.$list, true);
+                        }
+                        me._maxNumPages += me._batchSize;
+                    } else {
+                        var realMax = me.options.$reportViewer.reportViewer("getNumPages");
+                        if (realMax !== me._maxNumPages) {
+                            for (var i = me._maxNumPages + 1; i <= realMax; i++) {
+                                me._renderListItem(i, me.$list, true);
+                            }
+                            me._maxNumPages = realMax;
+                        }
+
+                        $loadMore.remove();
+                    }
+
+                    var $container = $("ul.fr-nav-container", $(me.element));
+                    $(".lazy", me.$list).lazy({
+                        appendScroll: $container, bind: "event", visibleOnly: false,
+                        onError: function (element) {
+                            $listItem = me.listItems.pop();
+                            $listItem.remove();
+
+                            if ($loadMore.is(":visible")) {
+                                $loadMore.remove();
+                            }
+                        },
+                    });
+                });
+
+                var $loadMoreSpan = new $("<Div />");
+                $loadMoreSpan.addClass("fr-nav-loadmore-text");
+                $loadMoreSpan.text("Load More");
+                $loadMore.append($loadMoreSpan);
+
+                $list.append($loadMore);
+                me.$loadMore = $loadMore;
+            }
+            var $spacer = new $("<LI />");
+            $spacer.addClass("fr-nav-li-spacer");
+
+            return $list.append($spacer);
         },
 
         /**
@@ -4429,6 +4489,10 @@ $(function () {
                     onError: function (element) {
                         $listItem = me.listItems.pop();
                         $listItem.remove();
+
+                        if (me.$loadMore && me.$loadMore.is(":visible")) {
+                            me.$loadMore.remove();
+                        }
                     },
                 });
             }
@@ -9025,6 +9089,14 @@ $(function () {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets[newSet.id] = newSet;
+            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
+
+            if (setCount === 1) {
+                // Set the default id if this is the first set
+                me.serverData.defaultSetId = newSet.id;
+            }
+
+            // Update the UI with the new set
             me._createRows();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
@@ -9073,21 +9145,24 @@ $(function () {
             var me = this;
             var count = me.options.model.parameterModel("getSetCount", me.serverData);
 
-            if (count <= 1) {
-                return;
-            }
-
             // Update the UI
             var id = me._findId(e);
             var $tr = me._findRow(id);
             $tr.remove();
 
             // Update the paramaterSets
-            id = me._findId(e);
-            if (id === me.serverData.defaultSetId) {
+            if (count === 1) {
+                me.serverData.defaultSetId = null;
+            } else if (id === me.serverData.defaultSetId) {
                 var $first = me.$tbody.find(".fr-mps-default-check-id").first();
                 me._onClickDefault({ target: $first });
             }
+
+            if (id === me.lastAddedSetId) {
+                // Reset the last added if need be
+                me.lastAddedSetId = me.serverData.defaultSetId;
+            }
+
             delete me.serverData.parameterSets[id];
         },
         /**
@@ -9270,6 +9345,9 @@ $(function () {
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [mi.itemFolders, tg.itemFolderGroup]);
+                if (forerunner.ajax.isFormsAuth()) {
+                    $toolPane.toolPane("addTools", 13, true, [mi.itemLogOff]);
+                }
 
                 $toolPane.toolPane("addTools", 5, true, [mi.itemFav]);
                 $toolPane.toolPane("disableTools", [mi.itemFav]);

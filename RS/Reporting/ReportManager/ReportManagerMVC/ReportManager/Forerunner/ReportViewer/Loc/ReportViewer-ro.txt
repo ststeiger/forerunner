@@ -58,6 +58,7 @@
     "home":"Acasă",
     "keyword":"Cuvinte cheie",
     "lastPage":"Ultima",
+	"logOff":"logoff",
     "menu":"Meniu",
     "navigation":"Navigare",
     "next":"Înainte",

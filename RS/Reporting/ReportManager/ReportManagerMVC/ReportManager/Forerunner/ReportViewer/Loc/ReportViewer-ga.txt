@@ -62,6 +62,7 @@
     "navigation":"Nascleanúint",
     "next":"Ar Aghaidh",
     "pageOf":"de",
+	"logOff": "logoff",
     "paramarea":"Paraiméadair",
     "previousPage":"roimhe Seo",
     "recent":"déanaí",

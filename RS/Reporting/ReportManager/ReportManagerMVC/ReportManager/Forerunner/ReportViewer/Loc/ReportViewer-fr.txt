@@ -70,6 +70,7 @@
     "reportPage":"Page",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
+	"logOff": "déconnexion",
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Manage Sets",

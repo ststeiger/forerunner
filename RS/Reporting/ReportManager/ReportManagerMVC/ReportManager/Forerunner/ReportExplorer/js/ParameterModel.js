@@ -119,6 +119,13 @@ $(function () {
             if (lastAddedSetId && lastAddedSetId != me.currentSetId) {
                 me.currentSetId = lastAddedSetId;
             }
+
+            var setCount = me.getSetCount(me.serverData);
+            if (setCount === 0) {
+                me.currentSetId = null;
+                me.serverData.defaultSetId = null;
+            }
+
             me._triggerModelChange();
         },
         getOptionArray: function (parameterSets) {
@@ -160,7 +167,7 @@ $(function () {
             return me.serverData !== null && me.reportPath === reportPath;
         },
         areSetsEmpty: function (serverData) {
-            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+            if (!serverData || !serverData.parameterSets) {
                 return true;
             }
 
@@ -172,7 +179,7 @@ $(function () {
         },
         getSetCount: function (serverData) {
             var count = 0;
-            if (serverData.parameterSets === undefined || serverData.parameterSets === null) {
+            if (!serverData || !serverData.parameterSets) {
                 return count;
             }
 
@@ -200,10 +207,7 @@ $(function () {
                     }
                     else if (data) {
                         me.serverData = data;
-                        if (me.areSetsEmpty(me.serverData)) {
-                            me._addNewSet(locData.parameterModel.defaultName);
-                        }
-                        else {
+                        if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
                     }
@@ -241,6 +245,7 @@ $(function () {
             if (parameterList) {
                 if (me.serverData === null || me.currentSetId === null) {
                     me._addNewSet(locData.parameterModel.defaultName, JSON.parse(parameterList));
+                    me._triggerModelChange();
                 } else {
                     me.serverData.parameterSets[me.currentSetId].data = JSON.parse(parameterList);
                 }

@@ -217,6 +217,14 @@ $(function () {
             var me = this;
             var newSet = me.options.model.parameterModel("getNewSet", manageParamSets.newSet, me.parameterList);
             me.serverData.parameterSets[newSet.id] = newSet;
+            var setCount = me.options.model.parameterModel("getSetCount", me.serverData);
+
+            if (setCount === 1) {
+                // Set the default id if this is the first set
+                me.serverData.defaultSetId = newSet.id;
+            }
+
+            // Update the UI with the new set
             me._createRows();
             var $tr = me._findRow(newSet.id);
             var $input = $tr.find("input");
@@ -265,21 +273,24 @@ $(function () {
             var me = this;
             var count = me.options.model.parameterModel("getSetCount", me.serverData);
 
-            if (count <= 1) {
-                return;
-            }
-
             // Update the UI
             var id = me._findId(e);
             var $tr = me._findRow(id);
             $tr.remove();
 
             // Update the paramaterSets
-            id = me._findId(e);
-            if (id === me.serverData.defaultSetId) {
+            if (count === 1) {
+                me.serverData.defaultSetId = null;
+            } else if (id === me.serverData.defaultSetId) {
                 var $first = me.$tbody.find(".fr-mps-default-check-id").first();
                 me._onClickDefault({ target: $first });
             }
+
+            if (id === me.lastAddedSetId) {
+                // Reset the last added if need be
+                me.lastAddedSetId = me.serverData.defaultSetId;
+            }
+
             delete me.serverData.parameterSets[id];
         },
         /**

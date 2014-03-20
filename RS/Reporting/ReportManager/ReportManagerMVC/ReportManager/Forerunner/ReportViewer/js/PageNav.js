@@ -81,7 +81,7 @@ $(function () {
                 $list.append($listItem);
             }
 
-            me.listItems[i - 1] = $listItem;
+            me.listItems[i - 1] = $listItem;            
             var $caption = new $("<DIV class='fr-nav-centertext'>" + i.toString() + "</DIV>");
             var $thumbnail = new $("<IMG />");
             $thumbnail.addClass("fr-nav-page-thumb");
@@ -149,12 +149,10 @@ $(function () {
                     $(".lazy", me.$list).lazyload({
                         $container: $container,
                         onError: function (element) {
-                            $listItem = me.listItems.pop();
-                            $listItem.remove();
-
-                            if ($loadMore.is(":visible")) {
+                            if ($loadMore) 
                                 $loadMore.remove();
-                            }
+
+                            element.data.parent().remove();
                         },
                     });
                 });
@@ -240,12 +238,10 @@ $(function () {
                 $(".lazy", me.$list).lazyload({
                     $container: $container,
                     onError: function (element) {
-                        $listItem = me.listItems.pop();
-                        $listItem.remove();
-
-                        if (me.$loadMore && me.$loadMore.is(":visible")) {
+                        if (me.$loadMore)
                             me.$loadMore.remove();
-                        }
+
+                        element.data.parent().remove();
                     },
                 });
             }

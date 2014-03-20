@@ -123,9 +123,7 @@ $(function () {
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
-            } else {
-                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+            } else {                
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
@@ -1986,8 +1984,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
-                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

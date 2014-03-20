@@ -21,7 +21,7 @@
         var $container;
         var settings = {
             threshold: 500,
-            failure_limit: 0,
+            failure_limit: 10,
             event: "scroll",
             effect: "show",
             container: window,
@@ -41,6 +41,9 @@
                 if (settings.skip_invisible && !$this.is(":visible")) {
                     return;
                 }
+                $this.trigger("appear");
+                return;
+
                 if ($.abovethetop(this, settings) ||
                     $.leftofbegin(this, settings)) {
                     /* Nothing. */
@@ -88,60 +91,64 @@
             var $self = $(self);
 
             self.loaded = false;
+            if ($self.attr("data-lazyLoad") !== "true") {
+                $self.attr("data-lazyLoad", "true");
 
-            /* If no src attribute given use data:uri. */
-            if ($self.attr("src") === undefined || $self.attr("src") === false) {
-                if ($self.is("img")) {
-                    $self.attr("src", settings.placeholder);
-                }
-            }
 
-            /* When appear is triggered load original image. */
-            $self.one("appear", function () {
-                if (!this.loaded) {
-                    if (settings.appear) {
-                        var elements_left = elements.length;
-                        settings.appear.call(self, elements_left, settings);
+                /* If no src attribute given use data:uri. */
+                if ($self.attr("src") === undefined || $self.attr("src") === false) {
+                    if ($self.is("img")) {
+                        $self.attr("src", settings.placeholder);
                     }
-                    $("<img />")
-                        .bind("load", function () {
-
-                            var original = $self.attr("data-" + settings.data_attribute);
-                            $self.hide();
-                            if ($self.is("img")) {
-                                $self.attr("src", original);
-                            } else {
-                                $self.css("background-image", "url('" + original + "')");
-                            }
-                            $self[settings.effect](settings.effect_speed);
-
-                            self.loaded = true;
-
-                            /* Remove image from array so it is not looped next time. */
-                            var temp = $.grep(elements, function (element) {
-                                return !element.loaded;
-                            });
-                            elements = $(temp);
-
-                            if (settings.load) {
-                                var elements_left = elements.length;
-                                settings.load.call(self, elements_left, settings);
-                            }
-                        })
-                        .attr("src", $self.attr("data-" + settings.data_attribute))
-                    .error(settings.onError);
-                    
                 }
-            });
 
-            /* When wanted event is triggered load original image */
-            /* by triggering appear.                              */
-            if (0 !== settings.event.indexOf("scroll")) {
-                $self.bind(settings.event, function () {
-                    if (!self.loaded) {
-                        $self.trigger("appear");
+                /* When appear is triggered load original image. */
+                $self.one("appear", function () {
+                    if (!this.loaded) {
+                        if (settings.appear) {
+                            var elements_left = elements.length;
+                            settings.appear.call(self, elements_left, settings);
+                        }
+                        $("<img />")
+                            .bind("load", function () {
+
+                                var original = $self.attr("data-" + settings.data_attribute);
+                                $self.hide();
+                                if ($self.is("img")) {
+                                    $self.attr("src", original);
+                                } else {
+                                    $self.css("background-image", "url('" + original + "')");
+                                }
+                                $self[settings.effect](settings.effect_speed);
+
+                                self.loaded = true;
+
+                                /* Remove image from array so it is not looped next time. */
+                                var temp = $.grep(elements, function (element) {
+                                    return !element.loaded;
+                                });
+                                elements = $(temp);
+
+                                if (settings.load) {
+                                    var elements_left = elements.length;
+                                    settings.load.call(self, elements_left, settings);
+                                }
+                            })
+                            .attr("src", $self.attr("data-" + settings.data_attribute))
+                            .error($self, function (data) { settings.onError(data) });
+
                     }
                 });
+
+                /* When wanted event is triggered load original image */
+                /* by triggering appear.                              */
+                if (0 !== settings.event.indexOf("scroll")) {
+                    $self.bind(settings.event, function () {
+                        if (!self.loaded) {
+                            $self.trigger("appear");
+                        }
+                    });
+                }
             }
         });
 

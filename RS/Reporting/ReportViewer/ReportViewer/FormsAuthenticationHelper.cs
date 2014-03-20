@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Security;
@@ -6,6 +6,7 @@ using System.Net;
 using System.Configuration;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
+using Forerunner.Logging;
 
 namespace Forerunner.Security
 {
@@ -28,7 +29,7 @@ namespace Forerunner.Security
 
         static private string GetFirstUrl()
         {
-            if (url != null) 
+            if (url != null)
                 return url;
 
             if (webConfigSection != null)
@@ -44,7 +45,7 @@ namespace Forerunner.Security
         }
         static public bool Login(string userNameAndDomain, string password, int timeout)
         {
-            
+
             HttpCookie authCookie = FindAuthCookie();
             if (authCookie == null)
             {
@@ -76,8 +77,10 @@ namespace Forerunner.Security
 
                     // This is the code path when we cannot authenticate with the Web Server.
                     // Have to make a call to RS.
-                    if (!authenticated) 
+                    if (!authenticated)
                     {
+                        Logger.Trace(LogType.Info, "Failure to login localy, trying RS login validation");
+                        Logger.Trace(LogType.Info, "RS URL:" + GetFirstUrl() + " UserName:"+ userName +  " Domain:" + domain);
                         try
                         {
                             NetworkCredential networkCredential = new NetworkCredential(userName, password, domain);
@@ -86,8 +89,9 @@ namespace Forerunner.Security
                             reportViewer.forceGetServerRendering();
                             authenticated = true;
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
+                            Logger.Trace(LogType.Error, e.Message);
                             authenticated = false;
                         }
                     }

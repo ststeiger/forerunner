@@ -54,6 +54,7 @@
     "exportMenu":"导出",
     "favorites":"收藏",
     "find":"查找",
+	"logOff":"退出",
     "firstPage":"首页",
     "home":"主页",
     "keyword":"关键字",

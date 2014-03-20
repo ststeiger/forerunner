@@ -8492,6 +8492,10 @@ $(function () {
             var $toolPane = me.options.$toolPane.toolPane({ $reportViewer: $viewer, $ReportViewerInitializer: this, $appContainer: me.options.$appContainer });
             if (me.options.isReportManager) {
                 $toolPane.toolPane("addTools", 2, true, [tp.itemHome]);
+                if (forerunner.ajax.isFormsAuth()) {
+                    $toolPane.toolPane("addTools", 11, true, [tp.itemLogOff]);
+                }
+
 
                 $toolPane.toolPane("addTools", 4, true, [tp.itemFav]);
                 $toolPane.toolPane("disableTools", [tp.itemFav]);

@@ -58,6 +58,7 @@
     "home":"Em casa",
     "keyword":"Palavra-chave",
     "lastPage":"Último",
+	"logOff":"logoff,
     "menu":"Menu",
     "navigation":"Navegação",
     "next":"Próximo",

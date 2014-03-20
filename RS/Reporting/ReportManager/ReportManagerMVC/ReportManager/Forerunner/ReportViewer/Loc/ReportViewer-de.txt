@@ -62,6 +62,7 @@
     "navigation":"Navigation",
     "next":"nächster",
     "pageOf":"von",
+	"logOff":"Abmelden",
     "paramarea":"Parameter",
     "previousPage":"vorhergehend",
     "recent":"Kürzlich",

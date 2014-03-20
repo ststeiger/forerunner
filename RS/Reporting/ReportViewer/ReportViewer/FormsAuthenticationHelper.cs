@@ -6,6 +6,7 @@ using System.Net;
 using System.Configuration;
 using Forerunner.SSRS.Viewer;
 using Forerunner;
+using Forerunner.Logging;
 
 namespace Forerunner.Security
 {
@@ -78,6 +79,8 @@ namespace Forerunner.Security
                     // Have to make a call to RS.
                     if (!authenticated)
                     {
+                        Logger.Trace(LogType.Info, "Failure to login localy, trying RS login validation");
+                        Logger.Trace(LogType.Info, "RS URL:" + GetFirstUrl() + " UserName:"+ userName +  " Domain:" + domain);
                         try
                         {
                             NetworkCredential networkCredential = new NetworkCredential(userName, password, domain);
@@ -88,6 +91,7 @@ namespace Forerunner.Security
                         }
                         catch (Exception e)
                         {
+                            Logger.Trace(LogType.Error, e.Message);
                             authenticated = false;
                         }
                     }

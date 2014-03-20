@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4371,7 +4371,6 @@ $(function () {
                         onError: function (element) {
                             if ($loadMore) 
                                 $loadMore.remove();
-
                             element.data.parent().remove();
                         },
                     });
@@ -6392,11 +6391,8 @@ $(function () {
             var height;
             var $copiedElem = $obj;
 
-            //remove images becasue they couple be resized
-            if ($copiedElem.find("img").length > 0) {
-                $copiedElem = $obj.clone().css({ visibility: "hidden" });
-                $copiedElem.find("img").remove();
-            }
+            $copiedElem = $obj.clone().css({ visibility: "hidden" });
+            $copiedElem.find("img").remove();
             
             $("body").append($copiedElem);
             height = $copiedElem.outerHeight() + "px";

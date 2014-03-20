@@ -161,7 +161,7 @@
                                           <Paragraph>
                                             <TextRuns>
                                               <TextRun>
-                                                <Value>=Fields!CategoryName.Value</Value>
+                                                <Value>=Fields!CategoryName.Value + "asdasdasdasdasd"</Value>
                                                 <Style>
                                                   <FontFamily>Tahoma</FontFamily>
                                                   <FontWeight>Bold</FontWeight>
@@ -414,6 +414,7 @@
                               </TablixMember>
                               <TablixMember>
                                 <Group Name="table1_CategoryName">
+                                  <DocumentMapLabel>=Fields!CategoryName.Value</DocumentMapLabel>
                                   <GroupExpressions>
                                     <GroupExpression>=Fields!CategoryName.Value</GroupExpression>
                                   </GroupExpressions>
@@ -430,6 +431,7 @@
                                   </TablixMember>
                                   <TablixMember>
                                     <Group Name="table1_Details_Group">
+                                      <DocumentMapLabel>=Fields!ProductName.Value</DocumentMapLabel>
                                       <DataElementName>Detail</DataElementName>
                                     </Group>
                                     <TablixMembers>
@@ -477,7 +479,6 @@
                           <Height>0.27in</Height>
                           <Width>2.125in</Width>
                           <ZIndex>1</ZIndex>
-                          <DocumentMapLabel>=Fields!Country.Value</DocumentMapLabel>
                           <Bookmark>=Fields!Country.Value</Bookmark>
                           <Style>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -516,6 +517,66 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <Textbox Name="textbox28">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>&lt;14 Days</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Top>0.60764in</Top>
+                          <Left>1.625in</Left>
+                          <Height>0.23958in</Height>
+                          <Width>0.64974in</Width>
+                          <ZIndex>3</ZIndex>
+                          <Style>
+                            <Border />
+                            <BackgroundColor>Tomato</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <Textbox Name="textbox33">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>&lt;60 Days</Value>
+                                  <Style>
+                                    <FontWeight>Bold</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Top>0.59375in</Top>
+                          <Left>2.86458in</Left>
+                          <Height>0.23958in</Height>
+                          <Width>0.64974in</Width>
+                          <ZIndex>4</ZIndex>
+                          <Style>
+                            <Border />
+                            <BackgroundColor>Gold</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
                       </ReportItems>
                       <KeepTogether>true</KeepTogether>
                       <Style />
@@ -535,6 +596,7 @@
           <TablixMembers>
             <TablixMember>
               <Group Name="list1_Country">
+                <DocumentMapLabel>=Fields!Country.Value</DocumentMapLabel>
                 <GroupExpressions>
                   <GroupExpression>=Fields!Country.Value</GroupExpression>
                 </GroupExpressions>
@@ -554,10 +616,10 @@
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
         <PageBreak>
-          <BreakLocation>End</BreakLocation>
+          <BreakLocation>StartAndEnd</BreakLocation>
         </PageBreak>
-        <Top>2.82069in</Top>
-        <Left>0.11459in</Left>
+        <Top>4.6218in</Top>
+        <Left>0.17583in</Left>
         <Height>1.96167in</Height>
         <Width>4.60417in</Width>
         <Style>
@@ -573,45 +635,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Simp</Value>
-                <Style>
-                  <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>SteelBlue</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>le </Value>
-                <Style>
-                  <FontStyle>Italic</FontStyle>
-                  <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>SteelBlue</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>Table with </Value>
-                <Style>
-                  <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <Color>SteelBlue</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value>groups</Value>
-                <Style>
-                  <FontFamily>Tahoma</FontFamily>
-                  <FontSize>20pt</FontSize>
-                  <FontWeight>Bold</FontWeight>
-                  <TextDecoration>Underline</TextDecoration>
-                  <Color>DarkViolet</Color>
-                </Style>
-              </TextRun>
-              <TextRun>
-                <Value> and drill down</Value>
+                <Value>Sales by Country</Value>
                 <Style>
                   <FontFamily>Tahoma</FontFamily>
                   <FontSize>20pt</FontSize>
@@ -624,10 +648,21 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>textbox1</rd:DefaultName>
-        <Height>0.36in</Height>
+        <ActionInfo>
+          <Actions>
+            <Action>
+              <Hyperlink>="javascript:void(window.open('http://www.google.ca','_blank'))"</Hyperlink>
+            </Action>
+          </Actions>
+        </ActionInfo>
+        <Height>0.485in</Height>
         <Width>8in</Width>
         <ZIndex>1</ZIndex>
+        <ToolTip>Thi is a very important message for everyone.</ToolTip>
         <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
           <PaddingLeft>2pt</PaddingLeft>
           <PaddingRight>2pt</PaddingRight>
           <PaddingTop>2pt</PaddingTop>
@@ -907,8 +942,8 @@
         <DataSetName>DataSet1</DataSetName>
         <Top>0.655in</Top>
         <Left>0.17583in</Left>
-        <Height>2in</Height>
-        <Width>6.09375in</Width>
+        <Height>3.79167in</Height>
+        <Width>7.70833in</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -923,7 +958,7 @@
     <Height>6.5925in</Height>
     <Style />
   </Body>
-  <Width>14.51958in</Width>
+  <Width>8.03in</Width>
   <Page>
     <LeftMargin>1in</LeftMargin>
     <RightMargin>1in</RightMargin>

@@ -43,7 +43,7 @@
                     <Actions>
                       <Action>
                         <Drillthrough>
-                          <ReportName>bar chart with border and texture</ReportName>
+                          <ReportName>Simple Matrix</ReportName>
                         </Drillthrough>
                       </Action>
                     </Actions>
@@ -306,6 +306,7 @@
         <Height>0.25in</Height>
         <Width>3.48958in</Width>
         <ZIndex>1</ZIndex>
+        <ToolTip>=Globals!ExecutionTime</ToolTip>
         <Style>
           <Border>
             <Style>None</Style>
@@ -650,6 +651,15 @@
                   <ChartDataLabel>
                     <Style />
                   </ChartDataLabel>
+                  <ActionInfo>
+                    <Actions>
+                      <Action>
+                        <Drillthrough>
+                          <ReportName>Simple Matrix</ReportName>
+                        </Drillthrough>
+                      </Action>
+                    </Actions>
+                  </ActionInfo>
                   <Style />
                   <ChartMarker>
                     <Type>Auto</Type>
@@ -926,10 +936,10 @@
           </Style>
         </ChartNoDataMessage>
         <DataSetName>DataSet1</DataSetName>
-        <Top>5.72444in</Top>
+        <Top>5.72445in</Top>
         <Left>4.32291in</Left>
         <Height>2.65972in</Height>
-        <Width>4.66542in</Width>
+        <Width>4.93625in</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>

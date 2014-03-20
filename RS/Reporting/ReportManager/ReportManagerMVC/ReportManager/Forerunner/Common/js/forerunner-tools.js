@@ -985,7 +985,18 @@ $(function () {
                 }
             }
         },
-
+        /** @member */
+        itemLogOff: {
+            toolType: toolTypes.containerItem,
+            selectorClass: "fr-item-logOff",
+            imageClass: "fr-icons24x24-logout",
+            text: locData.toolbar.logoff,
+            events: {
+                click: function (e) {
+                    window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
+                }
+            }
+        }
     };
 
     var tb = forerunner.ssr.tools.toolbar;

@@ -871,7 +871,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
-            tooltip: locData.toolbar.logOff,
+            tooltip: locData.toolbar.logoff,
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";
@@ -944,7 +944,7 @@ $(function () {
             toolType: toolTypes.button,
             selectorClass: "fr-rm-button-logOff",
             imageClass: "fr-icons24x24-logout",
-            tooltip: locData.toolbar.logOff,
+            tooltip: locData.toolbar.logoff,
             events: {
                 click: function (e) {
                     window.location = forerunner.config.forerunnerFolder() + "../Login/LogOff";

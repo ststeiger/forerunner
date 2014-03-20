@@ -122,9 +122,7 @@ $(function () {
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
-            } else {
-                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+            } else {                
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
@@ -1299,7 +1297,7 @@ $(function () {
                     startPage = me.getCurPage();
 
                 if (endPage === undefined)
-                    endPage = me.getNumPages();
+                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
 
                 if (startPage > endPage) {
                     me.resetFind();
@@ -1307,7 +1305,7 @@ $(function () {
                     return;
                 }
 
-                //mark up find start page
+                //markup find start page
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
@@ -1332,7 +1330,8 @@ $(function () {
                         }
                         else {//keyword not exist
                             if (me.findStartPage !== 1) {
-                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findEndPage = me.findStartPage - 1;
+                                me.find(keyword, 1, me.findEndPage, true);
                                 me.findStartPage = 1;
                             }
                             else {
@@ -1363,10 +1362,10 @@ $(function () {
                     me.resetFind();
                     return;
                 }
-                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it;
 
                 if (me.getCurPage() + 1 <= endPage){
-                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                    me.find(keyword, me.getCurPage() + 1, endPage, true);
                 }
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
@@ -1375,7 +1374,7 @@ $(function () {
                         me.resetFind();
                     }
                     else {
-                        me.find(keyword, 1, me.findStartPage - 1, true);
+                        me.find(keyword, 1, me.findEndPage, true);
                     }
                 }
                 else {
@@ -1985,8 +1984,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
-                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

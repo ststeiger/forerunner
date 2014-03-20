@@ -1,4 +1,4 @@
-.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
+﻿.fr-layout-container { /*min-height: 100%;*/ background-color: transparent; position: relative; padding: 0px; border: 0px; }
   .fr-layout-container table, td, tr { padding: 0px; margin: 0px; border: 0px; z-index: 0; }
 
 .fr-layout-mainviewport { z-index: 1; display: inline-block; overflow-y: visible; padding: 0px; margin: 0px; border: 0px; width: 100%; }
@@ -746,6 +746,9 @@ ul.fr-nav-container { display: block; white-space: nowrap; vertical-align: top; 
 .fr-nav-li-spacer { display: inline-block; width: 0px; }
 
 .fr-nav-close-container { display:none; position: absolute; right: 20px; top: 10px; z-index: 4; cursor: pointer; text-align: center; vertical-align: middle; font-size: 20px; color: white; }
+
+.fr-nav-loadmore-text { margin:100px auto; text-align:center; font-size:150px; white-space:pre-wrap; }
+.fr-nav-loadmore-text:before { content: ">>";}
 
 /* Smartphones  ----------- */
 @media only screen and (max-height : 768px) {

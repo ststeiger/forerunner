@@ -191,9 +191,6 @@ namespace ReportMannagerConfigTool
             builder.InitialCatalog = winform.getTextBoxValue(txtDBName);
             if (!rdoDomain.Checked)
             {
-                if (winform.getTextBoxValue(txtUser).IndexOf("\\") >= 0)
-                    builder.IntegratedSecurity = true;
-
                 builder.UserID = winform.getTextBoxValue(txtUser);
                 builder.Password = winform.getTextBoxValue(txtPWD);
             }

@@ -270,7 +270,6 @@
         <Height>1.60417in</Height>
         <Width>2.14583in</Width>
         <ZIndex>2</ZIndex>
-        <ToolTip>=Globals!PageNumber</ToolTip>
         <Style>
           <Border>
             <Style>None</Style>

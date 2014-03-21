@@ -123,9 +123,7 @@ $(function () {
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
-            } else {
-                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+            } else {                
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
@@ -599,7 +597,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -842,7 +840,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -1095,7 +1093,7 @@ $(function () {
                             me.backupCurPage();
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.bookmarkNotFound);
+                            me._showMessageBox(me.locData.messages.bookmarkNotFound);
                             me.lock = 0;
                         }
                     }
@@ -1300,15 +1298,15 @@ $(function () {
                     startPage = me.getCurPage();
 
                 if (endPage === undefined)
-                    endPage = me.getNumPages();
+                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     return;
                 }
 
-                //mark up find start page
+                //markup find start page
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
@@ -1333,14 +1331,15 @@ $(function () {
                         }
                         else {//keyword not exist
                             if (me.findStartPage !== 1) {
-                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findEndPage = me.findStartPage - 1;
+                                me.find(keyword, 1, me.findEndPage, true);
                                 me.findStartPage = 1;
                             }
                             else {
                                 if (me.finding === true)
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                                 else
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.keyNotFound);
+                                    me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
                                 me.resetFind();
                             }
                         }
@@ -1351,6 +1350,7 @@ $(function () {
         },
         _findNext: function (keyword) {
             var me = this;
+
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
@@ -1360,27 +1360,27 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
-                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it;
 
                 if (me.getCurPage() + 1 <= endPage){
-                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                    me.find(keyword, me.getCurPage() + 1, endPage, true);
                 }
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
-                        me.find(keyword, 1, me.findStartPage - 1, true);
+                        me.find(keyword, 1, me.findEndPage, true);
                     }
                 }
                 else {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }
@@ -1395,6 +1395,22 @@ $(function () {
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+            }
+        },
+        _findDone: function (me) {
+            me._trigger(events.findDone);
+        },
+        _showMessageBox: function (message, preFunc, afterFunc) {
+            var me = this;
+
+            if (typeof preFunc === "function") {
+                preFunc(me);
+            }
+
+            forerunner.dialog.showMessageBox(me.options.$appContainer, message);
+
+            if (typeof afterFunc === "function") {
+                afterFunc(me);
             }
         },
         /**
@@ -1986,8 +2002,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
-                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },
@@ -3889,6 +3905,13 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
+                if (forerunner.device.isTouch()) {
+                    //if it's touch device trigger blur event on textbox to remove virtual keyboard
+                    me.element.find(".fr-toolbar-keyword-textbox").trigger("blur");
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tb.btnMenu, tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
@@ -4119,6 +4142,13 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
+                if (forerunner.device.isTouch()) {
+                    //if it's touch device trigger blur event on textbox to remove virtual keyboard
+                    me.element.find(".fr-item-keyword-textbox").trigger("blur");
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tp.itemCredential]);
             });
@@ -4261,35 +4291,8 @@ $(function () {
                 $li.find("img").removeClass("fr-nav-page-thumb-selected");
             }
 
-            me.currentPageNum = currentPageNum;
-            // If there is still no max page count, increment it by _batchSize
-            if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
-                if (me.currentPageNum >= me._maxNumPages) {
-                    for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
-                        me._renderListItem(i, me.$list);
-                    }
-                    me._maxNumPages += me._batchSize;
-                }
-            } else {
-                var realMax = me.options.$reportViewer.reportViewer("getNumPages");
-                if (realMax !== me._maxNumPages) {
-                    for (var i = me._maxNumPages + 1; i <= realMax; i++) {
-                        me._renderListItem(i, me.$list);
-                    }                           
-                    me._maxNumPages = realMax;
-                }
-            }
+            me.currentPageNum = currentPageNum;            
             me._ScrolltoPage();
-
-            // Reset Lazy load to load new images
-            var $container = $("ul.fr-nav-container", $(me.element));
-            $(".lazy", me.$list).lazy({
-                appendScroll: $container, bind: "event", visibleOnly: false,
-                onError: function (element) {
-                    $listItem = me.listItems.pop();
-                    $listItem.remove();                    
-                },
-            });
 
             $li = me.listItems[me.currentPageNum - 1];
             $li.addClass("fr-nav-selected");
@@ -4310,7 +4313,7 @@ $(function () {
             }
         },
         _maxNumPages: null,
-        _renderListItem: function (i, $list) {
+        _renderListItem: function (i, $list, isAppend) {
             var me = this;
 
             var sessionID = me.options.$reportViewer.reportViewer("getSessionID");
@@ -4321,8 +4324,15 @@ $(function () {
             if (me.options.rsInstance)
                 url += "&instance=" + me.options.rsInstance;
             var $listItem = new $("<LI />");
-            $list.append($listItem);
-            me.listItems[i - 1] = $listItem;
+
+            if (isAppend && me.$loadMore) {
+                $listItem.insertBefore(me.$loadMore);
+            }
+            else {
+                $list.append($listItem);
+            }
+
+            me.listItems[i - 1] = $listItem;            
             var $caption = new $("<DIV class='fr-nav-centertext'>" + i.toString() + "</DIV>");
             var $thumbnail = new $("<IMG />");
             $thumbnail.addClass("fr-nav-page-thumb");
@@ -4353,7 +4363,7 @@ $(function () {
             $list = new $("<ul class='fr-nav-container fr-core-widget' />");
             me.$ul = $list;
  
-            me._maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");            
+            me._maxNumPages = me.options.$reportViewer.reportViewer("getNumPages");
             if (me._maxNumPages === 0)
                 me._maxNumPages = me._batchSize;
 
@@ -4362,8 +4372,53 @@ $(function () {
             for (var i = 1; i <= me._maxNumPages; i++) {
                 me._renderListItem(i, $list);
             }
-             
-            return $list.append($("<LI />").addClass("fr-nav-li-spacer"));
+
+            if (me._maxNumPages !== me.options.$reportViewer.reportViewer("getNumPages")) {
+                var $loadMore = new $("<LI />")
+                $loadMore.addClass("fr-nav-loadmore");
+                $loadMore.addClass("fr-nav-item");
+                $loadMore.addClass("fr-core-cursorpointer");
+                $loadMore.on("click", function () {
+                    if (me.options.$reportViewer.reportViewer("getNumPages") === 0) {
+                        for (var i = me._maxNumPages + 1; i <= me._maxNumPages + me._batchSize; i++) {
+                            me._renderListItem(i, me.$list, true);
+                        }
+                        me._maxNumPages += me._batchSize;
+                    } else {
+                        var realMax = me.options.$reportViewer.reportViewer("getNumPages");
+                        if (realMax !== me._maxNumPages) {
+                            for (var i = me._maxNumPages + 1; i <= realMax; i++) {
+                                me._renderListItem(i, me.$list, true);
+                            }
+                            me._maxNumPages = realMax;
+                        }
+
+                        $loadMore.remove();
+                    }
+
+                    var $container = $("ul.fr-nav-container", $(me.element));
+                    $(".lazy", me.$list).lazyload({
+                        $container: $container,
+                        onError: function (element) {
+                            if ($loadMore) 
+                                $loadMore.remove();
+
+                            element.data.parent().remove();
+                        },
+                    });
+                });
+
+                var $loadMoreSpan = new $("<Div />");
+                $loadMoreSpan.addClass("fr-nav-loadmore-text");    
+                $loadMore.append($loadMoreSpan);
+
+                $list.append($loadMore);
+                me.$loadMore = $loadMore;
+            }
+            var $spacer = new $("<LI />");
+            $spacer.addClass("fr-nav-li-spacer");
+
+            return $list.append($spacer);
         },
 
         /**
@@ -4431,11 +4486,13 @@ $(function () {
                 me._render();
                 me.isRendered = true;
                 var $container = $("ul.fr-nav-container", $(me.element));
-                $(".lazy", me.$list).lazy({
-                    appendScroll: $container,bind: "event",visibleOnly:false,
+                $(".lazy", me.$list).lazyload({
+                    $container: $container,
                     onError: function (element) {
-                        $listItem = me.listItems.pop();
-                        $listItem.remove();
+                        if (me.$loadMore)
+                            me.$loadMore.remove();
+
+                        element.data.parent().remove();
                     },
                 });
             }

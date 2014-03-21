@@ -122,9 +122,7 @@ $(function () {
             // For touch device, update the header only on scrollstop.
             if (isTouch) {
                 $(window).on("scrollstop", function () { me._updateTableHeaders(me); });                
-            } else {
-                //$(window).on("scrollstart", function () { me._hideTableHeaders(me); });
-                //$(window).on("scrollstop", function () { me._updateTableHeaders(me); });
+            } else {                
                 $(window).on("scroll", function () { me._updateTableHeaders(me); });
             }
 
@@ -598,7 +596,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -841,7 +839,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -1094,7 +1092,7 @@ $(function () {
                             me.backupCurPage();
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.bookmarkNotFound);
+                            me._showMessageBox(me.locData.messages.bookmarkNotFound);
                             me.lock = 0;
                         }
                     }
@@ -1299,15 +1297,15 @@ $(function () {
                     startPage = me.getCurPage();
 
                 if (endPage === undefined)
-                    endPage = me.getNumPages();
+                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     return;
                 }
 
-                //mark up find start page
+                //markup find start page
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
@@ -1332,14 +1330,15 @@ $(function () {
                         }
                         else {//keyword not exist
                             if (me.findStartPage !== 1) {
-                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findEndPage = me.findStartPage - 1;
+                                me.find(keyword, 1, me.findEndPage, true);
                                 me.findStartPage = 1;
                             }
                             else {
                                 if (me.finding === true)
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                                 else
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.keyNotFound);
+                                    me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
                                 me.resetFind();
                             }
                         }
@@ -1350,6 +1349,7 @@ $(function () {
         },
         _findNext: function (keyword) {
             var me = this;
+
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
@@ -1359,27 +1359,27 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
-                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it;
 
                 if (me.getCurPage() + 1 <= endPage){
-                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                    me.find(keyword, me.getCurPage() + 1, endPage, true);
                 }
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
-                        me.find(keyword, 1, me.findStartPage - 1, true);
+                        me.find(keyword, 1, me.findEndPage, true);
                     }
                 }
                 else {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }
@@ -1394,6 +1394,22 @@ $(function () {
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+            }
+        },
+        _findDone: function (me) {
+            me._trigger(events.findDone);
+        },
+        _showMessageBox: function (message, preFunc, afterFunc) {
+            var me = this;
+
+            if (typeof preFunc === "function") {
+                preFunc(me);
+            }
+
+            forerunner.dialog.showMessageBox(me.options.$appContainer, message);
+
+            if (typeof afterFunc === "function") {
+                afterFunc(me);
             }
         },
         /**
@@ -1985,8 +2001,8 @@ $(function () {
             // On a touch device hide the headers during a scroll if possible
             var me = this;
             $.each(me.floatingHeaders, function (index, obj) {
-                //if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
-                //if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
+                if (obj.$rowHeader) obj.$rowHeader.css("visibility", "hidden");
+                if (obj.$colHeader) obj.$colHeader.css("visibility", "hidden");
             });
             if (me.$floatingToolbar) me.$floatingToolbar.hide();
         },

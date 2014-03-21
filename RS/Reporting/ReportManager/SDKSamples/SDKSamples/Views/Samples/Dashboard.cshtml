@@ -7,10 +7,10 @@
   <style>
     body { background-color: rgb(210, 223, 237); }
 
-    .report-container { box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; }
+    .report-container { box-shadow: 0 0 7px #545454; margin: 4px 4px 4px 4px; background-color: white; position:relative; }
 
-    #Report1 { min-width:300px;min-height:300px; }
-    #Report2 { min-width:300px;min-height:300px; }
+    #Report1 { min-width:300px; min-height:300px; }
+    #Report2 { min-width:300px; min-height:300px; }
   </style>
 }
 
@@ -20,6 +20,7 @@
       isFullScreen: false
     });
     var $reportViewer1 = $reportViewerEZ1.reportViewerEZ("getReportViewer");
+    // "/Northwind Test Suite/Mutiple Parameter"
     $reportViewer1.reportViewer("loadReport", "/Northwind Test Suite/SalesByCountry");
 
     var $reportViewerEZ2 = $('#Report2').reportViewerEZ({

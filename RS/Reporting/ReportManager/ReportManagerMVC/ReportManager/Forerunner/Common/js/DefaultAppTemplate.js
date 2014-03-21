@@ -328,7 +328,11 @@ $(function () {
             }
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
-            values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            if (me.options.isFullScreen) {
+                values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            } else {
+                values.paneHeight = values.containerHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            }
             if (window.navigator.standalone && forerunner.device.isiOS()) {
                 values.paneHeight = values.max;
             }
@@ -348,8 +352,13 @@ $(function () {
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
-            me.$leftpane.css({ height: heightValues.max });
-            me.$rightpane.css({ height: heightValues.max });
+            if (me.options.isFullScreen) {
+                me.$leftpane.css({ height: heightValues.max });
+                me.$rightpane.css({ height: heightValues.max });
+            } else {
+                me.$leftpane.css({ height: heightValues.containerHeight });
+                me.$rightpane.css({ height: heightValues.containerHeight });
+            }
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $(".fr-toolpane", me.$container).css({ height: "100%" });

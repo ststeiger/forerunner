@@ -92,6 +92,13 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
+                if (forerunner.device.isTouch()) {
+                    //if it's touch device trigger blur event on textbox to remove virtual keyboard
+                    me.element.find(".fr-item-keyword-textbox").trigger("blur");
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tp.itemCredential]);
             });

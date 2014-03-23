@@ -101,6 +101,7 @@ Section "ReportManager" SEC01
   IfFileExists $R0\LogFiles\*.* 0 +2
   Goto +2
   CreateDirectory "$R0\LogFiles"
+  AccessControl::GrantOnFile  "$R0\LogFiles" "(S-1-1-0)" "GenericWrite"
 
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifdiff

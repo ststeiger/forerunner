@@ -44,6 +44,7 @@ input.inputsize {
   font-size: 13pt;
   padding: 0px 0px 0px 10px;
   margin: 0px;
+  line-height:38px\9;
 }
 
 .usernamecontainer {
@@ -119,6 +120,7 @@ input.inputsize {
   font-size: 8pt;
   padding: 0px 0px 0px 6px;
   margin: 0px;
+  line-height:22px\9;
 }
 
 .usernamecontainer {
@@ -168,6 +170,7 @@ input.inputsize {
   font-size: 8pt;
   padding: 0px 0px 0px 6px;
   margin: 0px;
+  line-height:22px\9;
 }
 
 .usernamecontainer {

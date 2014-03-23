@@ -597,7 +597,7 @@ $(function () {
                         me.docMapData = data;
                         docMap.reportDocumentMap("write", data);
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.docmapShowFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.docmapShowFailed); }
                 });
             }
 
@@ -840,7 +840,7 @@ $(function () {
                     success: function (data) {
                         me.togglePageNum = me.curPage;
                     },
-                    fail: function () { forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.prepareActionFailed); }
+                    fail: function () { me._showMessageBox(me.locData.messages.prepareActionFailed); }
                 });
             }
         },
@@ -1093,7 +1093,7 @@ $(function () {
                             me.backupCurPage();
                             me._loadPage(data.NewPage, false, bookmarkID);
                         } else {
-                            forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.bookmarkNotFound);
+                            me._showMessageBox(me.locData.messages.bookmarkNotFound);
                             me.lock = 0;
                         }
                     }
@@ -1302,7 +1302,7 @@ $(function () {
 
                 if (startPage > endPage) {
                     me.resetFind();
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     return;
                 }
 
@@ -1337,9 +1337,9 @@ $(function () {
                             }
                             else {
                                 if (me.finding === true)
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                                 else
-                                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.keyNotFound);
+                                    me._showMessageBox(me.locData.messages.keyNotFound, me._findDone);
                                 me.resetFind();
                             }
                         }
@@ -1350,6 +1350,7 @@ $(function () {
         },
         _findNext: function (keyword) {
             var me = this;
+
             $(".fr-render-find-keyword").filter(".fr-render-find-highlight").first().removeClass("fr-render-find-highlight");
 
             var $nextWord = $(".fr-render-find-keyword").filter(":visible").filter(".Unread").first();
@@ -1359,7 +1360,7 @@ $(function () {
             }
             else {
                 if (me.getNumPages() === 1) {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                     return;
                 }
@@ -1371,7 +1372,7 @@ $(function () {
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
                     if (me.getCurPage() === me.findEndPage) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                        me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                         me.resetFind();
                     }
                     else {
@@ -1379,7 +1380,7 @@ $(function () {
                     }
                 }
                 else {
-                    forerunner.dialog.showMessageBox(me.options.$appContainer, me.locData.messages.completeFind);
+                    me._showMessageBox(me.locData.messages.completeFind, me._findDone);
                     me.resetFind();
                 }
             }
@@ -1394,6 +1395,22 @@ $(function () {
             if ($item.length > 0) {
                 $item.removeClass("Unread").addClass("fr-render-find-highlight").addClass("Read");
                 me._trigger(events.navToPosition, null, { top: $item.offset().top - 150, left: $item.offset().left - 250 });
+            }
+        },
+        _findDone: function (me) {
+            me._trigger(events.findDone);
+        },
+        _showMessageBox: function (message, preFunc, afterFunc) {
+            var me = this;
+
+            if (typeof preFunc === "function") {
+                preFunc(me);
+            }
+
+            forerunner.dialog.showMessageBox(me.options.$appContainer, message);
+
+            if (typeof afterFunc === "function") {
+                afterFunc(me);
             }
         },
         /**
@@ -3452,7 +3469,11 @@ $(function () {
             }
 
             values.max = Math.max(values.windowHeight, values.containerHeight);
-            values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            if (me.options.isFullScreen) {
+                values.paneHeight = values.windowHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            } else {
+                values.paneHeight = values.containerHeight - 38; /* 38 because $leftPaneContent.offset().top, doesn't work on iPhone*/
+            }
             if (window.navigator.standalone && forerunner.device.isiOS()) {
                 values.paneHeight = values.max;
             }
@@ -3472,8 +3493,13 @@ $(function () {
             }
             me.$leftpanecontent.css({ height: heightValues.paneHeight });
             me.$rightpanecontent.css({ height: heightValues.paneHeight });
-            me.$leftpane.css({ height: heightValues.max });
-            me.$rightpane.css({ height: heightValues.max });
+            if (me.options.isFullScreen) {
+                me.$leftpane.css({ height: heightValues.max });
+                me.$rightpane.css({ height: heightValues.max });
+            } else {
+                me.$leftpane.css({ height: heightValues.containerHeight });
+                me.$rightpane.css({ height: heightValues.containerHeight });
+            }
             //me.$mainviewport.css({ height: "100%" });
             $(".fr-param-container", me.$container).css({ height: "100%" });
             $(".fr-toolpane", me.$container).css({ height: "100%" });
@@ -3888,6 +3914,13 @@ $(function () {
                 }
             });
 
+            me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
+                if (forerunner.device.isTouch()) {
+                    //if it's touch device trigger blur event on textbox to remove virtual keyboard
+                    me.element.find(".fr-toolbar-keyword-textbox").trigger("blur");
+                }
+            });
+
             me.options.$reportViewer.on(events.reportViewerShowCredential(), function (e, data) {
                 me.enableTools([tb.btnMenu, tb.btnCredential]);
                 //add credential button to the end of the toolbar if report require credential.
@@ -4115,6 +4148,13 @@ $(function () {
 
                 if (data.credentialRequired === true) {
                     me.enableTools([tp.itemCredential]);
+                }
+            });
+
+            me.options.$reportViewer.on(events.reportViewerFindDone(), function (e, data) {
+                if (forerunner.device.isTouch()) {
+                    //if it's touch device trigger blur event on textbox to remove virtual keyboard
+                    me.element.find(".fr-item-keyword-textbox").trigger("blur");
                 }
             });
 

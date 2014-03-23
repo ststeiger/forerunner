@@ -364,11 +364,11 @@
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js.map">
       <DependentUpon>Forerunner-tools.js.bundle</DependentUpon>
     </Content>
-    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
-      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
-    </Content>
     <Content Include="Forerunner\Bundles\Forerunner.min.js.map">
       <DependentUpon>Forerunner.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
+      <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />

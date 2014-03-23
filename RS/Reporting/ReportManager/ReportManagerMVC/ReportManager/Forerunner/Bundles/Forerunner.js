@@ -1235,8 +1235,7 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-            target.element.dialog("close");
-
+            target.element.dialog("destroy");            
             $(window).off("resize", me._setPosition);
             $(document).off("keyup", me._bindKeyboard);
            

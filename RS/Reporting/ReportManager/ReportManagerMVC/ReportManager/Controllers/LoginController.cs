@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using ReportManager.Models;
 using Forerunner.Security;
+using ReportManager.Util.Logging;
 
 namespace ReportManager.Controllers
 {
@@ -16,7 +17,7 @@ namespace ReportManager.Controllers
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl, string hashTag)
-        {
+        {           
             ViewBag.ReturnUrl = returnUrl;
             ViewBag.HashTag = hashTag;
             return View();

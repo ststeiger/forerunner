@@ -45,7 +45,7 @@ namespace Forerunner.Security
         }
         static public bool Login(string userNameAndDomain, string password, int timeout)
         {
-
+            
             HttpCookie authCookie = FindAuthCookie();
             if (authCookie == null)
             {

@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -6442,7 +6442,7 @@ $(function () {
         _getHeight: function ($obj) {
             var me = this;
             var height;
-            var $copiedElem = $obj;
+            var $copiedElem ;
 
             $copiedElem = $obj.clone().css({ visibility: "hidden" });
             $copiedElem.find("img").remove();

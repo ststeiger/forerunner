@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web.Script.Serialization;
 using Forerunner.SSRS.Management;
 using Forerunner.SSRS.Manager;
 using Forerunner;
@@ -36,6 +37,7 @@ namespace ReportManager.Controllers
         static private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
         static private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
         static private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
+        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
         static private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         static private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         static private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -64,6 +66,9 @@ namespace ReportManager.Controllers
 
         static ReportManagerController()
         {
+            if (IgnoreSSLErrors)
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            
             if (ReportServerDataSource != null)
             {
                 Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");
@@ -133,16 +138,26 @@ namespace ReportManager.Controllers
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
             else
+            {
                 resp.StatusCode = HttpStatusCode.NotFound;
+            }
 
             return resp;
         }
         // GET api/ReportMananger/GetItems
         [HttpGet]
-        public IEnumerable<CatalogItem> GetItems(string view, string path, string instance = null)
+        public HttpResponseMessage GetItems(string view, string path, string instance = null)
         {
+            try
+            {
+                string CatItems = new JavaScriptSerializer().Serialize(GetReportManager(instance).GetItems(view, path));
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(CatItems), "text/JSON");
+            }
+            catch (Exception e)
+            {
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{\"error\": \"" + e.Message + "\"}"), "text/JSON");  
+            }
             
-            return GetReportManager(instance).GetItems(view, path);
         }
 
 

@@ -416,10 +416,6 @@ Function VersionDetect
 			Push "${BUILD_VERSION}" ; setup build version number
 			StrLen $R5 "$R0"
 			StrLen $R6 "${BUILD_VERSION}"
-			MessageBox MB_OK "$R0"
-			MessageBox MB_OK "$R5"
-			MessageBox MB_OK "${BUILD_VERSION}"
-			MessageBox MB_OK "$R6"
 			
 			Call VersionCompare
 			Pop $R1

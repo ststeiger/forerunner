@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -2159,6 +2159,9 @@ $(function () {
                             $(window).scrollTop(windowTop).scrollLeft(windowLeft);
                         });
 
+                        //close all opened dialog before report start refresh
+                        forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
+
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }
@@ -4214,28 +4217,38 @@ $(function () {
         },
         _updateItemStates: function (curPage, maxPage) {
             var me = this;
-            me.element.find(".fr-toolbar-numPages-button").html(maxPage);
-            me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
 
-            me.options.$reportViewer.reportViewer("getNumPages", curPage);
+            if (maxPage !== 0) {
+                me.element.find(".fr-toolbar-numPages-button").html(maxPage);
+                me.element.find(".fr-item-textbox-reportpage").attr({ max: maxPage, min: 1 });
+            }
+            else {
+                me.element.find('.fr-toolbar-numPages-button').html("?");
+            }
+            
             if (me.options.$reportViewer.reportViewer("getHasDocMap"))
                 me.enableTools([tp.itemDocumentMap]);
             else
                 me.disableTools([tp.itemDocumentMap]);
 
-            if (curPage > 1) {
-                me.enableTools([tp.itemPrev, tp.itemFirstPage]);
-            }
-            else {
+            if (curPage <= 1) {
                 me.disableTools([tp.itemPrev, tp.itemFirstPage]);
             }
-
-            if (curPage < maxPage) {
-                me.enableTools([tp.itemNext, tp.itemLastPage]);
-            }
             else {
+                me.enableTools([tp.itemPrev, tp.itemFirstPage]);
+            }
+
+            if (curPage >= maxPage && maxPage !== 0) {
                 me.disableTools([tp.itemNext, tp.itemLastPage]);
             }
+            else {
+                if (maxPage === 0) {
+                    me.disableTools([tp.itemLastPage]);
+                } else {
+                    me.enableTools([tp.itemNext, tp.itemLastPage]);
+                }
+            }
+           
             if (maxPage === 1)
                 me.disableTools([tp.itemNav]);
             else

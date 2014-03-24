@@ -2158,6 +2158,9 @@ $(function () {
                             $(window).scrollTop(windowTop).scrollLeft(windowLeft);
                         });
 
+                        //close all opened dialog before report start refresh
+                        forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
+
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());
                     }

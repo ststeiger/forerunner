@@ -30,7 +30,15 @@ namespace ReportManager.Controllers
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
-        
+        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
+
+        static ReportViewerController()
+        {
+            if (IgnoreSSLErrors)
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
+        }
+
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];

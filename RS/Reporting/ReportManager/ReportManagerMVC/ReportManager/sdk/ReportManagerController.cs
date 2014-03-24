@@ -30,6 +30,7 @@ namespace ReportManager.Controllers
         static private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
         static private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
         static private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
+        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
         static private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         static private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         static private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -54,6 +55,9 @@ namespace ReportManager.Controllers
 
         static ReportManagerController()
         {
+            if (IgnoreSSLErrors)
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+
             if (ReportServerDataSource != null)
             {
                 Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");

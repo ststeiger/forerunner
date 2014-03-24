@@ -12,6 +12,7 @@ var ApplicationRouter = Backbone.Router.extend({
             "": "transitionToReportManager",
             "explore/:path" : "transitionToReportManager",      
             "browse/:path": "transitionToReportViewer",
+            "view/:args": "transitionToReportViewerWithRSURLAccess",
             "favorites": "transitionToFavorites",
             "recent": "transitionToRecent",
             "test/:arg": "test",
@@ -66,10 +67,25 @@ var ApplicationRouter = Backbone.Router.extend({
         },
 
         transitionToReportViewer: function (path) {
-            $("body").reportExplorerEZ("transitionToReportViewer", path);
+            var parts = path.split("?");
+            path = parts[0];
+            var params = parts.length > 1 ? forerunner.ssr._internal.getParametersFromUrl(parts[1]) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
             $("html").removeClass("fr-Explorer-background");
         },
-       
+
+        transitionToReportViewerWithRSURLAccess: function (args) {
+            var startParam = args.indexOf("&");
+            var path = startParam > 0 ? args.substring(1, startParam) : args;
+            
+            var params = startParam > 0 ? args.substring(startParam + 1) : null;
+            if (params) params = params.length > 0 ? forerunner.ssr._internal.getParametersFromUrl(params) : null;
+            if (params) params = JSON.stringify({ "ParamsList": params });
+            $("body").reportExplorerEZ("transitionToReportViewer", path, params);
+            $("html").removeClass("fr-Explorer-background");
+        },
+
         toolbarHeight : function() {
             return $("#topdiv").outerHeight();
         },
@@ -79,9 +95,27 @@ var ApplicationRouter = Backbone.Router.extend({
         },
     
         initialize: function () {
+
+             var explorerSettings;
+             $.ajax({
+                url: forerunner.config.forerunnerFolder() + "../Custom/ExplorerSettings.txt",
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    explorerSettings = data;
+                },
+                fail: function () {
+                    console.log("Load explorer settings failed");
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("Load explorer settings failed.  " + textStatus);
+                },
+            });
+   
             this.explorer = $("body").reportExplorerEZ({
                 navigateTo: this.navigateTo,
-                historyBack: this.historyBack
+                historyBack: this.historyBack,
+                explorerSettings: explorerSettings,
             });
         }
     });

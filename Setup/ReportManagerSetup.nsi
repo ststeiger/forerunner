@@ -100,6 +100,7 @@ Section "ReportManager" SEC01
   Call GetParent
   Pop $R0
   CreateDirectory "$R0\LogFiles"
+  AccessControl::GrantOnFile  "$R0\LogFiles" "(S-1-1-0)" "GenericWrite"
   
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifdiff

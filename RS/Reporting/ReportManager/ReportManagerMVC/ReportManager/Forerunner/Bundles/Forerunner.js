@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/Common/js/forerunner.js
+﻿///#source 1 1 /Forerunner/Common/js/forerunner.js
 /**
  * @file
  *  Defines forerunner SDK specific namespaces
@@ -379,6 +379,11 @@ $(function () {
             find: "find",
             /** widget + event, lowercase */
             reportViewerFind: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.find).toLowerCase(); },
+
+            /** @constant */
+            findDone: "finddone",
+            /** widget + event, lowercase */
+            reportViewerFindDone: function () { return (forerunner.ssr.constants.widgets.reportViewer + this.findDone).toLowerCase(); },
         },
         /**
          * Tool types used by the Toolbase widget {@link $.forerunner.toolBase}
@@ -1230,7 +1235,7 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-            target.element.dialog("close");
+            target.element.dialog("destroy");
 
             $(window).off("resize", me._setPosition);
             $(document).off("keyup", me._bindKeyboard);
@@ -1248,7 +1253,7 @@ $(function () {
             var me = this;
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
                 if ($(modalDialog).is(":visible")) {
-                    $(modalDialog).dialog("close");
+                    $(modalDialog).dialog("destroy");
                 }
             });
 

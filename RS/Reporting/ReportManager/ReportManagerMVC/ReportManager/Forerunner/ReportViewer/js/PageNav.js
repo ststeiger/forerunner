@@ -151,7 +151,6 @@ $(function () {
                         onError: function (element) {
                             if ($loadMore) 
                                 $loadMore.remove();
-
                             element.data.parent().remove();
                         },
                     });

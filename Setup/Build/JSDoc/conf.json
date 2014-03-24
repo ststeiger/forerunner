@@ -23,7 +23,6 @@
         "encoding": "utf8",
         "destination": "./Docs/",
         "recurse": true,
-        "tutorials": "./Tutorials",
         "query": "",
         "private": true,
         "lenient": true,

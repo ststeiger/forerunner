@@ -101,6 +101,7 @@ Section "ReportManager" SEC01
   IfFileExists $R0\LogFiles\*.* 0 +2
   Goto +2
   CreateDirectory "$R0\LogFiles"
+  AccessControl::GrantOnFile  "$R0\LogFiles" "(S-1-1-0)" "GenericWrite"
 
   SetOutPath "$INSTDIR\bin"
   SetOverwrite ifdiff
@@ -129,6 +130,7 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\css\DefaultAppTemplate.css"
   SetOutPath "$INSTDIR\Forerunner\Common\Images"
   File "${LOCALROOT}\Forerunner\Common\Images\icons24x24.png"
+  File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"

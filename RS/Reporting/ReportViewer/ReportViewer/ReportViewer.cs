@@ -370,7 +370,7 @@ namespace Forerunner.SSRS.Viewer
                         execInfo = rs.SetExecutionParameters(JsonUtility.GetParameterValue(parametersList), "en-us");
                     }
 
-                    result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);
+                    result = rs.Render2(format, devInfo, Forerunner.SSRS.Execution.PageCountMode.Estimate, out extension, out mimeType, out encoding, out warnings, out streamIDs);                    
                     execInfo = rs.GetExecutionInfo();
                     numPages = execInfo.NumPages;
                     hasDocMap = execInfo.HasDocumentMap;

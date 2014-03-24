@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -2158,6 +2158,9 @@ $(function () {
                             me.options.$appContainer.scrollTop(containerTop).scrollLeft(containerLeft);
                             $(window).scrollTop(windowTop).scrollLeft(windowLeft);
                         });
+
+                        //close all opened dialog before report start refresh
+                        forerunner.dialog.closeAllModalDialogs(me.options.$appContainer);
 
                         me.refreshReport(me.getCurPage());
                         //console.log("report: " + me.getReportPath() + " refresh at:" + new Date());

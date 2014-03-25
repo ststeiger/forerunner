@@ -50,8 +50,7 @@
     "print":"Imprimer",
     "dsCredential":"Lettres de créance",
     "views":"vues",
-    "addToFavorites":"Ajouter aux favoris",
-  
+    "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {
     "back":"Retour",

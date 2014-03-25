@@ -107,15 +107,17 @@ namespace ReportManager.Controllers
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
-            if (result != null)
+            if (result == null || result.Length == 0)
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            else
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
-            else
-                resp.StatusCode = HttpStatusCode.NotFound;
 
             return resp;
         }

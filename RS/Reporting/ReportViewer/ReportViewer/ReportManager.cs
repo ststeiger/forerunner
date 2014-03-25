@@ -274,10 +274,10 @@ namespace Forerunner.SSRS.Manager
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
-                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.1','0'
+                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.3','0'
                             END
                             ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version,Version = '1.1'  FROM ForerunnerDBVersion
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
 
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 
@@ -285,40 +285,50 @@ namespace Forerunner.SSRS.Manager
 
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
-	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
+	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerFavorites(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NOT NULL,PRIMARY KEY (ItemID,UserID))
                             END
-                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserItemProperties')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserItemProperties(ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL, SavedParameters varchar(max), CONSTRAINT uip_PK UNIQUE (ItemID,UserID))
                             END
-                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
+                           IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerUserSettings')
                             BEGIN	                            	                            
                                 CREATE TABLE ForerunnerUserSettings(UserID uniqueidentifier NOT NULL, Settings varchar(max), PRIMARY KEY (UserID))
                             END
 
-                          /*  Version update Code */
-                           /*
-                           IF @DBVersionPrev = 1.1 
-                             BEGIN
-                              ALTER TABLE ForerunnerCatalog ...
-                              ALTER TABLE ForerunnerUserItemProperties ...
-                              SELECT @DBVersionPrev = '1.2'
-                             END
+                           /*  Version update Code */
+                           IF @DBVersionPrev = '1.1'
+                            BEGIN
+                                DECLARE @PKName varchar(200) 
+                                select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
+                                IF @PKName IS NOT NULL
+                                BEGIN
+                                    DECLARE @SQL VARCHAR(1000)
+                                    SET @SQL = 'ALTER TABLE ForerunnerUserItemProperties DROP CONSTRAINT ' + @PKName
+	                                EXEC (@SQL)
+                                END
 
-                           IF @DBVersionPrev = 1.2 
-                             BEGIN
-                              ALTER TABLE ForerunnerCatalog ...
-                              ALTER TABLE ForerunnerUserItemProperties ...
-                              SELECT @DBVersionPrev = '1.3'
-                             END
+	                            ALTER TABLE ForerunnerUserItemProperties ALTER COLUMN UserID uniqueidentifier NULL
 
+                                IF NOT EXISTS(SELECT * FROM sysobjects WHERE xtype = 'UQ' AND name = 'uc_uip_ItemUser')
+                                BEGIN
+                                    ALTER TABLE ForerunnerUserItemProperties ADD CONSTRAINT uc_uip_ItemUser UNIQUE (ItemID, UserID)
+                                END
 
-                           */ 
+                                SELECT @DBVersionPrev = '1.2'
+                            END
 
+                            
+                            IF @DBVersionPrev ='1.2' 
+                                BEGIN
+                                    ALTER TABLE ForerunnerCatalog ALTER COLUMN ThumbnailImage Image NULL
+                                    SELECT @DBVersionPrev = '1.3'
+                                END
+                             
                             ";
                 
                 OpenSQLConn();
@@ -778,7 +788,7 @@ namespace Forerunner.SSRS.Manager
             return IsUserSpecific;
         }
         private void SaveImage(byte[] image, string path, string userName, string IID, int IsUserSpecific)
-        {   
+        {
             string SQL = @" BEGIN TRAN t1
                             DECLARE @UID uniqueidentifier
                                                                                         
@@ -791,9 +801,13 @@ namespace Forerunner.SSRS.Manager
                                 BEGIN
                                     SELECT @UID = NULL
                                     DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
-                                END
-                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
-                            IF @@error <> 0
+                                END";
+
+            if (image == null)
+                SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,NULL, GETDATE() ";
+            else
+                SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()  ";
+            SQL += @"      IF @@error <> 0
                                 ROLLBACK TRAN t1
                             ELSE
                                 COMMIT TRAN t1        
@@ -807,7 +821,10 @@ namespace Forerunner.SSRS.Manager
 
                     SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
                     SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                    SQLComm.Parameters.AddWithValue("@Image", image);
+                    if (image == null)
+                        SQLComm.Parameters.AddWithValue("@Image", DBNull.Value);
+                    else
+                        SQLComm.Parameters.AddWithValue("@Image", image);
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -843,6 +860,8 @@ namespace Forerunner.SSRS.Manager
                         {
                             SQLReader.Read();
                             retval = SQLReader.GetSqlBytes(0).Buffer;
+                            if (retval == null)
+                                retval = new byte[0];
                         }
                     }
                 }
@@ -977,14 +996,12 @@ namespace Forerunner.SSRS.Manager
 
             try
             {
-                if (retval != null)
+                if (sqlImpersonator != null)
                 {
-                    if (sqlImpersonator != null)
-                    {
-                        sqlImpersonator.Impersonate();
-                    }
-                    SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
+                    sqlImpersonator.Impersonate();
                 }
+                SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
+               
             }
             catch (Exception e)
             {

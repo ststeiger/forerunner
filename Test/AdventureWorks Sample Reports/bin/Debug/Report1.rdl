@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition"><Body><Height>4.04167in</Height><Style /></Body><Width>6.6875in</Width><Page><LeftMargin>1in</LeftMargin><RightMargin>1in</RightMargin><TopMargin>1in</TopMargin><BottomMargin>1in</BottomMargin><Style /></Page><AutoRefresh>0</AutoRefresh><DataSources><DataSource Name="Adventureworks2008"><DataSourceReference>AdventureWorks2008</DataSourceReference><rd:SecurityType xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">None</rd:SecurityType><rd:DataSourceID xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">e1757776-9097-4546-bb55-6d4264168d67</rd:DataSourceID></DataSource></DataSources><DataSets><DataSet Name="SalesOrder"><Query><DataSourceName>Adventureworks2008</DataSourceName><QueryParameters><QueryParameter Name="@SalesOrderID"><Value>=Parameters!SalesOrderID.Value</Value></QueryParameter></QueryParameters><CommandText>--DECLARE @SalesOrderID int
+--SET @SalesOrderID = 69528
+
+SELECT SOH.SalesOrderNumber,
+        S.BusinessEntityID, S.Name, 
+        SOH.SalesOrderID, SOH.SalesPersonID, SOH.TotalDue
+		, SOH.OrderDate, SOH.PurchaseOrderNumber
+        ,SOH.BillToAddressID, SOH.ShipToAddressID, SOH.ShipMethodID
+         ,SM.Name AS ShipMethod
+		   ,BA.AddressLine1 AS BillAddress1, BA.AddressLine2 AS BillAddress2, BA.City AS BillCity, 
+            BA.PostalCode AS BillPostalCode, BSP.Name AS BillStateProvince, BCR.Name AS BillCountryRegion, 
+            SA.AddressLine1 AS ShipAddress1, SA.AddressLine2 AS ShipAddress2, SA.City AS ShipCity, SA.PostalCode AS ShipPostalCode, 
+            SSP.Name AS ShipStateProvince, SCR.Name AS ShipCountryRegion
+            ,e.JobTitle, per.[FirstName] + N' ' + per.[LastName] AS [SalesPerson], 
+	ph.PhoneNumber,
+	st.Name as SalesTerritory 
+       FROM [Sales].[SalesOrderHeader] SOH 
+		INNER JOIN Sales.Customer C ON SOH.CustomerID = C.CustomerID
+        INNER JOIN Sales.Store S ON C.StoreID = S.BusinessEntityID
+        INNER JOIN Person.Address SA ON SA.AddressID = SOH.ShipToAddressID -- Shipping address
+		INNER JOIN Person.StateProvince SSP ON SA.StateProvinceID = SSP.StateProvinceID 
+		INNER JOIN Person.CountryRegion SCR ON SSP.CountryRegionCode = SCR.CountryRegionCode 
+		-- Join on sales order headers that have a shipping address
+				INNER JOIN Person.Address BA ON SOH.BillToAddressID = BA.AddressID -- Billing Address
+				INNER JOIN Person.StateProvince BSP ON BA.StateProvinceID = BSP.StateProvinceID 
+				INNER JOIN Person.CountryRegion BCR ON BSP.CountryRegionCode = BCR.CountryRegionCode 
+        INNER JOIN Purchasing.ShipMethod SM ON SOH.ShipMethodID = SM.ShipMethodID 
+		INNER JOIN [Sales].[SalesPerson] sp ON sp.[BusinessEntityID] = SOH.[SalesPersonID]	
+        LEFT OUTER JOIN [Sales].[SalesTerritory] st ON sp.[TerritoryID] = st.[TerritoryID] 
+		INNER JOIN [HumanResources].[Employee] e ON SOH.[SalesPersonID] = e.[BusinessEntityID] 
+		INNER JOIN [Person].[Person] per ON per.[BusinessEntityID] = sp.[BusinessEntityID]
+		INNER JOIN Person.PersonPhone ph ON per.[BusinessEntityID] = ph.[BusinessEntityID]
+		WHERE (SOH.SalesOrderID = (@SalesOrderID))</CommandText></Query><Fields><Field Name="SalesOrderNumber"><DataField>SalesOrderNumber</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BusinessEntityID"><DataField>BusinessEntityID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="SalesOrderID"><DataField>SalesOrderID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="SalesPersonID"><DataField>SalesPersonID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="TotalDue"><DataField>TotalDue</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field><Field Name="OrderDate"><DataField>OrderDate</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.DateTime</rd:TypeName></Field><Field Name="PurchaseOrderNumber"><DataField>PurchaseOrderNumber</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillToAddressID"><DataField>BillToAddressID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="ShipToAddressID"><DataField>ShipToAddressID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="ShipMethodID"><DataField>ShipMethodID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="ShipMethod"><DataField>ShipMethod</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillAddress1"><DataField>BillAddress1</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillAddress2"><DataField>BillAddress2</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillCity"><DataField>BillCity</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillPostalCode"><DataField>BillPostalCode</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillStateProvince"><DataField>BillStateProvince</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BillCountryRegion"><DataField>BillCountryRegion</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipAddress1"><DataField>ShipAddress1</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipAddress2"><DataField>ShipAddress2</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipCity"><DataField>ShipCity</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipPostalCode"><DataField>ShipPostalCode</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipStateProvince"><DataField>ShipStateProvince</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ShipCountryRegion"><DataField>ShipCountryRegion</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="JobTitle"><DataField>JobTitle</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="SalesPerson"><DataField>SalesPerson</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="PhoneNumber"><DataField>PhoneNumber</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="SalesTerritory"><DataField>SalesTerritory</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="TopEmployees"><Query><DataSourceName>Adventureworks2008</DataSourceName><QueryParameters><QueryParameter Name="@ProductCategory"><Value>=Parameters!ProductCategory.Value</Value></QueryParameter><QueryParameter Name="@ProductSubcategory"><Value>=Parameters!ProductSubcategory.Value</Value></QueryParameter><QueryParameter Name="@StartDate"><Value>=Parameters!StartDate.Value</Value></QueryParameter><QueryParameter Name="@EndDate"><Value>=Parameters!EndDate.Value</Value></QueryParameter></QueryParameters><CommandText>--DECLARE @StartDate datetime
+--DECLARE @EndDate datetime
+--DECLARE @ProductSubcategory int
+--DECLARE @ProductCategory int
+
+--SET @StartDate = '20010101'
+--SET @EndDate = '20020701'
+
+--SET @ProductCategory = 1
+--SET @ProductSubcategory = 1
+
+SELECT TOP 5 PER.LastName, PER.FirstName, E.[BusinessEntityID], SUM(DET.LineTotal) AS SaleAmount
+FROM [Sales].[SalesPerson] SP 
+        INNER JOIN [Sales].[SalesOrderHeader] SOH	ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
+        INNER JOIN Sales.SalesOrderDetail DET		ON SOH.SalesOrderID = DET.SalesOrderID
+        INNER JOIN [Sales].[SalesTerritory] ST		ON SP.[TerritoryID] = ST.[TerritoryID] 
+        INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
+		INNER JOIN [Person].[Person] PER			ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
+		INNER JOIN Production.Product P ON DET.ProductID = P.ProductID INNER JOIN
+   Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
+   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
+WHERE       (PC.ProductCategoryID = @ProductCategory) AND (PS.ProductSubcategoryID IN (@ProductSubcategory)) 
+			AND 
+			(SOH.OrderDate &gt; @StartDate) AND (SOH.OrderDate &lt; @EndDate)
+GROUP BY    PER.LastName, PER.FirstName, E.[BusinessEntityID]
+ORDER BY    SUM(DET.LineTotal) DESC</CommandText></Query><Fields><Field Name="LastName"><DataField>LastName</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="FirstName"><DataField>FirstName</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="BusinessEntityID"><DataField>BusinessEntityID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="SaleAmount"><DataField>SaleAmount</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field></Fields></DataSet><DataSet Name="ProductCategory"><Query><DataSourceName>Adventureworks2008</DataSourceName><CommandText>SELECT DISTINCT ProductCategoryID, Name
+FROM        Production.ProductCategory
+ORDER BY    Name</CommandText></Query><Fields><Field Name="ProductCategoryID"><DataField>ProductCategoryID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="TopCustomersStores"><Query><DataSourceName>Adventureworks2008</DataSourceName><QueryParameters><QueryParameter Name="@ProductCategory"><Value>=Parameters!ProductCategory.Value</Value></QueryParameter><QueryParameter Name="@ProductSubcategory"><Value>=Parameters!ProductSubcategory.Value</Value></QueryParameter><QueryParameter Name="@StartDate"><Value>=Parameters!StartDate.Value</Value></QueryParameter><QueryParameter Name="@EndDate"><Value>=Parameters!EndDate.Value</Value></QueryParameter></QueryParameters><CommandText>--DECLARE @StartDate datetime
+--DECLARE @EndDate datetime
+--DECLARE @ProductSubcategory int
+--DECLARE @ProductCategory int
+
+--SET @StartDate = '20010101'
+--SET @EndDate = '20020701'
+
+--SET @ProductCategory = 1
+--SET @ProductSubcategory = 1
+
+
+SELECT top 5
+    S.Name as Store, C.StoreID, COUNT(SOH.SalesOrderID) as NSalesOrders, SUM(DET.LineTotal) as SaleAmount 
+FROM Sales.SalesOrderHeader SOH
+	INNER JOIN [Sales].[Customer] C	ON C.[CustomerID] = SOH.[CustomerID]
+	INNER JOIN [Sales].[Store] S ON C.StoreID = S.BusinessEntityID
+	INNER JOIN Sales.SalesOrderDetail DET ON  DET.SalesOrderID = SOH.SalesOrderID
+	INNER JOIN Production.Product P ON P.ProductID = DET.ProductID
+	INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
+WHERE C.StoreID IS NOT NULL
+   AND PS.ProductCategoryID = (@ProductCategory) 
+   AND PS.ProductSubcategoryID IN (@ProductSubcategory)
+   AND SOH.OrderDate &gt; (@StartDate) AND 
+       SOH.OrderDate &lt; (@EndDate) 
+ 
+GROUP BY  S.Name, C.StoreID
+ORDER BY    SUM(DET.LineTotal) DESC</CommandText></Query><Fields><Field Name="Store"><DataField>Store</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="StoreID"><DataField>StoreID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="NSalesOrders"><DataField>NSalesOrders</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="SaleAmount"><DataField>SaleAmount</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field></Fields></DataSet><DataSet Name="ProductSubcategories"><Query><DataSourceName>Adventureworks2008</DataSourceName><QueryParameters><QueryParameter Name="@ProductCategory"><Value>=Parameters!ProductCategory.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT      ProductSubcategoryID, ProductCategoryID, Name
+FROM        Production.ProductSubcategory
+WHERE       (ProductCategoryID = @ProductCategory)</CommandText></Query><Fields><Field Name="ProductSubcategoryID"><DataField>ProductSubcategoryID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="ProductCategoryID"><DataField>ProductCategoryID</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Int32</rd:TypeName></Field><Field Name="Name"><DataField>Name</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="ProductCatalog"><Query><DataSourceName>Adventureworks2008</DataSourceName><CommandText>SELECT      
+   PS.Name AS Subcategory, PM.Name AS Model, 
+   PC.Name AS Category, PD.Description, PP.LargePhoto, PP.LargePhotoFileName, P.Name AS Product, P.ProductNumber, 
+   P.Color, P.Size, P.Weight, P.StandardCost, P.Style, P.Class, P.ListPrice
+FROM Production.Product P INNER JOIN
+   Production.ProductSubcategory PS INNER JOIN
+   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID 
+      ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
+   Production.ProductProductPhoto PPP ON P.ProductID = PPP.ProductID INNER JOIN
+   Production.ProductPhoto PP ON PPP.ProductPhotoID = PP.ProductPhotoID LEFT OUTER JOIN
+   Production.ProductDescription PD INNER JOIN
+   Production.ProductModel PM INNER JOIN
+   Production.ProductModelProductDescriptionCulture PMPDCL ON PM.ProductModelID = PMPDCL.ProductModelID ON 
+   PD.ProductDescriptionID = PMPDCL.ProductDescriptionID ON P.ProductModelID = PM.ProductModelID
+WHERE (PMPDCL.CultureID = 'en')</CommandText></Query><Fields><Field Name="Subcategory"><DataField>Subcategory</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Model"><DataField>Model</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Category"><DataField>Category</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Description"><DataField>Description</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="LargePhoto"><DataField>LargePhoto</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Byte[]</rd:TypeName></Field><Field Name="LargePhotoFileName"><DataField>LargePhotoFileName</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Product"><DataField>Product</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ProductNumber"><DataField>ProductNumber</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Color"><DataField>Color</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Size"><DataField>Size</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Weight"><DataField>Weight</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field><Field Name="StandardCost"><DataField>StandardCost</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field><Field Name="Style"><DataField>Style</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="Class"><DataField>Class</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.String</rd:TypeName></Field><Field Name="ListPrice"><DataField>ListPrice</DataField><rd:TypeName xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">System.Decimal</rd:TypeName></Field></Fields></DataSet></DataSets><ReportParameters><ReportParameter Name="SalesOrderID"><DataType>String</DataType><Prompt>Sales Order ID</Prompt></ReportParameter><ReportParameter Name="ProductCategory"><DataType>String</DataType><Prompt>Product Category</Prompt></ReportParameter><ReportParameter Name="ProductSubcategory"><DataType>String</DataType><Prompt>Product Subcategory</Prompt></ReportParameter><ReportParameter Name="StartDate"><DataType>String</DataType><Prompt>Start Date</Prompt></ReportParameter><ReportParameter Name="EndDate"><DataType>String</DataType><Prompt>End Date</Prompt></ReportParameter></ReportParameters><rd:ReportUnitType xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">Inch</rd:ReportUnitType><rd:ReportID xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">cf6e70be-1a2e-48f9-83ad-8e436d5a9004</rd:ReportID></Report>

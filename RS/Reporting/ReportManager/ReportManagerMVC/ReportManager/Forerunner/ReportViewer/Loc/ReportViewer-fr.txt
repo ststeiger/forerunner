@@ -74,7 +74,7 @@
     "reportPage":"Page",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
-    "logOff": "déconnexion",
+    "logOff":"déconnexion",
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Gérer jeux",

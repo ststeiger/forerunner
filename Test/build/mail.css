@@ -1,0 +1,38 @@
+		  body
+		  {
+			  font-family: "segoe ui light",arial,sans-serif;
+			  color: #000000;
+			  background-color: #ffffff;
+		  }
+
+		  b.Succeeded
+		  {
+			  color: #008000;
+		  }
+
+		  b.Failed
+		  {
+			  color: #800000;
+		  }
+
+		  table
+		  {
+              border-spacing:0;
+    		  border-collapse:collapse;			  
+		  }
+
+		  th
+		  {
+			  background-color: #c0c0c0;
+			  border: 1px solid #000000;
+			  padding-right: 1em;
+			  text-align: left;
+		  }
+
+		  td
+		  {
+			  border: 1px solid #000000;
+			  padding-right: 1em;
+			  text-align: left;
+			  padding-left: 0.25em;
+		  }

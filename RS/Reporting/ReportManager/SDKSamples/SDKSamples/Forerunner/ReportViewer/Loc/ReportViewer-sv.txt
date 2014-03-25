@@ -58,6 +58,7 @@
     "favorites":"favoriter",
     "find":"hitta",
     "firstPage":"Först",
+    "logOff": "Logga ut",
     "home":"Hem",
     "keyword":"Nyckelord",
     "lastPage":"Sista",

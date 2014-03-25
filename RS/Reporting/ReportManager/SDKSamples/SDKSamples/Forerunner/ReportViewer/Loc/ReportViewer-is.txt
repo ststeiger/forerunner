@@ -61,6 +61,7 @@
     "home":"Forsíða",
     "keyword":"leitarorð",
     "lastPage":"síðast",
+    "logOff": "nafnplata",
     "menu":"Valmynd",
     "navigation":"Navigation",
     "next":"Næsta",

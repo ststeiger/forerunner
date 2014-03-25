@@ -61,6 +61,7 @@
     "home":"Casa",
     "keyword":"parola chiave",
     "lastPage":"Ultimo",
+    "logOff":"logoff",
     "menu":"Menu",
     "navigation":"Navigazione",
     "next":"seguente",

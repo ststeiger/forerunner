@@ -58,6 +58,7 @@
     "favorites":"Favorite",
     "find":"Găseşte",
     "firstPage":"primul",
+    "logOff":"logoff",
     "home":"Acasă",
     "keyword":"Cuvinte cheie",
     "lastPage":"Ultima",

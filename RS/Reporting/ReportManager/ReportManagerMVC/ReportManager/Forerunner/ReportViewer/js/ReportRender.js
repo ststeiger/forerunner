@@ -1349,7 +1349,7 @@ $(function () {
         _getHeight: function ($obj) {
             var me = this;
             var height;
-            var $copiedElem = $obj;
+            var $copiedElem ;
 
             $copiedElem = $obj.clone().css({ visibility: "hidden" });
             $copiedElem.find("img").remove();

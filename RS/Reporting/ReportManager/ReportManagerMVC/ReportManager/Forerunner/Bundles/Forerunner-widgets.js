@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -1168,7 +1168,7 @@ $(function () {
                     startPage = me.getCurPage();
 
                 if (endPage === undefined)
-                    endPage = me.getNumPages();
+                    endPage = me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it
 
                 if (startPage > endPage) {
                     me.resetFind();
@@ -1176,7 +1176,7 @@ $(function () {
                     return;
                 }
 
-                //mark up find start page
+                //markup find start page
                 if (me.findStartPage === null)
                     me.findStartPage = startPage;
 
@@ -1202,7 +1202,8 @@ $(function () {
                         }
                         else {//keyword not exist
                             if (me.findStartPage !== 1) {
-                                me.find(keyword, 1, me.findStartPage - 1);
+                                me.findEndPage = me.findStartPage - 1;
+                                me.find(keyword, 1, me.findEndPage, true);
                                 me.findStartPage = 1;
                             }
                             else {
@@ -1239,10 +1240,10 @@ $(function () {
                     me.resetFind();
                     return;
                 }
-                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages();
+                var endPage = me.findEndPage ? me.findEndPage : me.getNumPages() === 0 ? 2147483647 : me.getNumPages(); //if page number === 0 then set Int32.MaxValue in C# to it;
 
                 if (me.getCurPage() + 1 <= endPage){
-                    me.find(keyword, me.getCurPage() + 1, undefined, true);
+                    me.find(keyword, me.getCurPage() + 1, endPage, true);
                 }
                 else if (me.findStartPage > 1) {
                     me.findEndPage = me.findStartPage - 1;
@@ -1251,7 +1252,7 @@ $(function () {
                         me.resetFind();
                     }
                     else {
-                        me.find(keyword, 1, me.findStartPage - 1, true);
+                        me.find(keyword, 1, me.findEndPage, true);
                     }
                 }
                 else {

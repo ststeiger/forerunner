@@ -223,34 +223,27 @@ namespace ForerunnerRegister
 
         }
 
-        public bool ValidateDownload(string ID)
+        public void SavePageView(string UserID, string Page, string referer, string IP)
         {
             ForerunnerDB DB = new ForerunnerDB();
             SqlConnection SQLConn = DB.GetSQLConn();
-            SqlDataReader SQLReader;
+            SqlCommand SQLComm;
 
-            string SQL = @" UPDATE TrialRegistration SET DownloadAttempts = DownloadAttempts+1 WHERE DownloadID = @ID
-                            SELECT DownloadAttempts,MaxDownloadAttempts FROM TrialRegistration WHERE DownloadID = @ID
-                           ";
-            SQLConn.Open();
-            SqlCommand SQLComm = new SqlCommand(SQL, SQLConn);
-            SQLComm.Parameters.AddWithValue("@ID", new Guid(ID));
-
-            SQLReader = SQLComm.ExecuteReader();
-            int DownloadAttempts = -1;
-            int MaxDownloadAttempts = -1;
-            while (SQLReader.Read())
-            {
-                DownloadAttempts = SQLReader.GetInt32(0);
-                MaxDownloadAttempts = SQLReader.GetInt32(1);
+            try
+            {            
+                SQLConn.Open();
+                SQLComm = new SqlCommand("INSERT WebSiteTraffic (UserID ,IP, Referer, WSPage, VisitTime)  SELECT @ID,@IP,@Referer, @Page,GETDATE()", SQLConn);
+                SQLComm.Parameters.AddWithValue("@ID", UserID);
+                SQLComm.Parameters.AddWithValue("@IP", IP);
+                SQLComm.Parameters.AddWithValue("@Referer", referer);
+                SQLComm.Parameters.AddWithValue("@Page", Page);
+                SQLComm.ExecuteNonQuery();
+                SQLConn.Close();
             }
-            SQLReader.Close();
-            SQLConn.Close();
-
-            if (DownloadAttempts == -1 || DownloadAttempts > MaxDownloadAttempts)
-                return false;
-            else
-                return true;
+            catch (Exception e)
+            {
+                SQLConn.Close();
+            }
 
         }
 

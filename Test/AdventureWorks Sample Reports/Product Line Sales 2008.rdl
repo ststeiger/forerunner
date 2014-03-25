@@ -1,198 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition">
-  <Description>Adventure Works top five sales people and stores. This report illustrates a dataset with queries containing the TOP clause. It also illustrates the use of  a tablix and a bar chart that synchronize sort order when you click the interactive sort button on the column headers, a tablix and pie chart, parameters, calculated fields, and drillthrough links.</Description>
-  <DataSources>
-    <DataSource Name="AdventureWorks2008">
-      <DataSourceReference>AdventureWorks2008</DataSourceReference>
-      <rd:DataSourceID>54afed67-d321-47d4-b394-d019252ddfff</rd:DataSourceID>
-    </DataSource>
-  </DataSources>
-  <DataSets>
-    <DataSet Name="TopEmployees">
-      <Fields>
-        <Field Name="LastName">
-          <DataField>LastName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="FirstName">
-          <DataField>FirstName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="BusinessEntityID">
-          <DataField>BusinessEntityID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="SaleAmount">
-          <DataField>SaleAmount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="FullName">
-          <Value>=Fields!LastName.Value &amp; ", " &amp; Fields!FirstName.Value</Value>
-        </Field>
-      </Fields>
-      <Query>
-        <Timeout>30</Timeout>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>--DECLARE @StartDate datetime
---DECLARE @EndDate datetime
---DECLARE @ProductSubcategory int
---DECLARE @ProductCategory int
-
---SET @StartDate = '20010101'
---SET @EndDate = '20020701'
-
---SET @ProductCategory = 1
---SET @ProductSubcategory = 1
-
-SELECT TOP 5 PER.LastName, PER.FirstName, E.[BusinessEntityID], SUM(DET.LineTotal) AS SaleAmount
-FROM [Sales].[SalesPerson] SP 
-        INNER JOIN [Sales].[SalesOrderHeader] SOH	ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
-        INNER JOIN Sales.SalesOrderDetail DET		ON SOH.SalesOrderID = DET.SalesOrderID
-        INNER JOIN [Sales].[SalesTerritory] ST		ON SP.[TerritoryID] = ST.[TerritoryID] 
-        INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
-		INNER JOIN [Person].[Person] PER			ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
-		INNER JOIN Production.Product P ON DET.ProductID = P.ProductID INNER JOIN
-   Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
-   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
-WHERE       (PC.ProductCategoryID = @ProductCategory) AND (PS.ProductSubcategoryID IN (@ProductSubcategory)) 
-			AND 
-			(SOH.OrderDate &gt; @StartDate) AND (SOH.OrderDate &lt; @EndDate)
-GROUP BY    PER.LastName, PER.FirstName, E.[BusinessEntityID]
-ORDER BY    SUM(DET.LineTotal) DESC</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProductCategory">
-            <Value>=Parameters!ProductCategory.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ProductSubcategory">
-            <Value>=Parameters!ProductSubcategory.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@StartDate">
-            <Value>=Parameters!StartDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EndDate">
-            <Value>=Parameters!EndDate.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="ProductCategories">
-      <Fields>
-        <Field Name="ProductCategoryID">
-          <DataField>ProductCategoryID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <Timeout>30</Timeout>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT DISTINCT ProductCategoryID, Name
-FROM        Production.ProductCategory
-ORDER BY    Name</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="TopCustomerStores">
-      <Fields>
-        <Field Name="Store">
-          <DataField>Store</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="SaleAmount">
-          <DataField>SaleAmount</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
-        </Field>
-        <Field Name="StoreID">
-          <DataField>StoreID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="NSalesOrders">
-          <DataField>NSalesOrders</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <Timeout>30</Timeout>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>--DECLARE @StartDate datetime
---DECLARE @EndDate datetime
---DECLARE @ProductSubcategory int
---DECLARE @ProductCategory int
-
---SET @StartDate = '20010101'
---SET @EndDate = '20020701'
-
---SET @ProductCategory = 1
---SET @ProductSubcategory = 1
-
-
-SELECT top 5
-    S.Name as Store, C.StoreID, COUNT(SOH.SalesOrderID) as NSalesOrders, SUM(DET.LineTotal) as SaleAmount 
-FROM Sales.SalesOrderHeader SOH
-	INNER JOIN [Sales].[Customer] C	ON C.[CustomerID] = SOH.[CustomerID]
-	INNER JOIN [Sales].[Store] S ON C.StoreID = S.BusinessEntityID
-	INNER JOIN Sales.SalesOrderDetail DET ON  DET.SalesOrderID = SOH.SalesOrderID
-	INNER JOIN Production.Product P ON P.ProductID = DET.ProductID
-	INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
-WHERE C.StoreID IS NOT NULL
-   AND PS.ProductCategoryID = (@ProductCategory) 
-   AND PS.ProductSubcategoryID IN (@ProductSubcategory)
-   AND SOH.OrderDate &gt; (@StartDate) AND 
-       SOH.OrderDate &lt; (@EndDate) 
- 
-GROUP BY  S.Name, C.StoreID
-ORDER BY    SUM(DET.LineTotal) DESC</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProductSubcategory">
-            <Value>=Parameters!ProductSubcategory.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@StartDate">
-            <Value>=Parameters!StartDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EndDate">
-            <Value>=Parameters!EndDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ProductCategory">
-            <Value>=Parameters!ProductCategory.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-    <DataSet Name="ProductSubcategories">
-      <Fields>
-        <Field Name="ProductSubcategoryID">
-          <DataField>ProductSubcategoryID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="ProductCategoryID">
-          <DataField>ProductCategoryID</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="Name">
-          <DataField>Name</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-      </Fields>
-      <Query>
-        <Timeout>30</Timeout>
-        <DataSourceName>AdventureWorks2008</DataSourceName>
-        <CommandText>SELECT      ProductSubcategoryID, ProductCategoryID, Name
-FROM        Production.ProductSubcategory
-WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
-        <QueryParameters>
-          <QueryParameter Name="@ProductCategory">
-            <Value>=Parameters!ProductCategory.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-    </DataSet>
-  </DataSets>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
       <Rectangle Name="TopEmployeesRectangle">
@@ -440,7 +247,7 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
             <ChartSeriesHierarchy>
               <ChartMembers>
                 <ChartMember>
-                  <Label />
+                  <Label>Sale Amount</Label>
                 </ChartMember>
               </ChartMembers>
             </ChartSeriesHierarchy>
@@ -567,9 +374,14 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <ChartMinorTickMarks>
                       <Type>None</Type>
                     </ChartMinorTickMarks>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
                     <PreventFontShrink>true</PreventFontShrink>
                     <PreventFontGrow>true</PreventFontGrow>
                     <IncludeZero>false</IncludeZero>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -585,6 +397,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartCategoryAxes>
                 <ChartValueAxes>
@@ -636,6 +451,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <PreventFontShrink>true</PreventFontShrink>
                     <PreventFontGrow>true</PreventFontGrow>
                     <IncludeZero>false</IncludeZero>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -651,6 +469,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartValueAxes>
                 <ChartThreeDProperties>
@@ -1057,9 +878,14 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <ChartMinorTickMarks>
                       <Type>None</Type>
                     </ChartMinorTickMarks>
+                    <Minimum>NaN</Minimum>
+                    <Maximum>NaN</Maximum>
                     <PreventFontShrink>true</PreventFontShrink>
                     <PreventFontGrow>true</PreventFontGrow>
                     <IncludeZero>false</IncludeZero>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -1075,6 +901,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartCategoryAxes>
                 <ChartValueAxes>
@@ -1124,6 +953,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <PreventFontShrink>true</PreventFontShrink>
                     <PreventFontGrow>true</PreventFontGrow>
                     <IncludeZero>false</IncludeZero>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -1139,6 +971,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartValueAxes>
                 <ChartThreeDProperties>
@@ -1534,6 +1369,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <CrossAt>NaN</CrossAt>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -1568,6 +1406,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartCategoryAxes>
                 <ChartValueAxes>
@@ -1602,6 +1443,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <CrossAt>NaN</CrossAt>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                   <ChartAxis Name="Secondary">
                     <Style>
@@ -1635,6 +1479,9 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
                     <Location>Opposite</Location>
                     <Minimum>NaN</Minimum>
                     <Maximum>NaN</Maximum>
+                    <ChartAxisScaleBreak>
+                      <Style />
+                    </ChartAxisScaleBreak>
                   </ChartAxis>
                 </ChartValueAxes>
                 <ChartThreeDProperties>
@@ -1691,70 +1538,6 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
     <Height>9.3125in</Height>
     <Style />
   </Body>
-  <ReportParameters>
-    <ReportParameter Name="ProductCategory">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>1</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Category:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ProductCategories</DataSetName>
-          <ValueField>ProductCategoryID</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ProductSubcategory">
-      <DataType>Integer</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>2</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Subcategory:</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ProductSubcategories</DataSetName>
-          <ValueField>ProductSubcategoryID</ValueField>
-          <LabelField>Name</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="StartDate">
-      <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>01/01/2003 00:00:00</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Start Date:</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="EndDate">
-      <DataType>DateTime</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>2003-12-31</Value>
-        </Values>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>End Date:</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ShowDescription">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>False</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Description?</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-  </ReportParameters>
   <Width>7.69458in</Width>
   <Page>
     <PageHeader>
@@ -1951,6 +1734,265 @@ WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
     <BottomMargin>0.5in</BottomMargin>
     <Style />
   </Page>
+  <Description>Adventure Works top five sales people and stores. This report illustrates a dataset with queries containing the TOP clause. It also illustrates the use of  a tablix and a bar chart that synchronize sort order when you click the interactive sort button on the column headers, a tablix and pie chart, parameters, calculated fields, and drillthrough links.</Description>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="AdventureWorks2008">
+      <DataSourceReference>AdventureWorks2008</DataSourceReference>
+      <rd:SecurityType>None</rd:SecurityType>
+      <rd:DataSourceID>54afed67-d321-47d4-b394-d019252ddfff</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="TopEmployees">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProductCategory">
+            <Value>=Parameters!ProductCategory.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ProductSubcategory">
+            <Value>=Parameters!ProductSubcategory.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @StartDate datetime
+--DECLARE @EndDate datetime
+--DECLARE @ProductSubcategory int
+--DECLARE @ProductCategory int
+
+--SET @StartDate = '20010101'
+--SET @EndDate = '20020701'
+
+--SET @ProductCategory = 1
+--SET @ProductSubcategory = 1
+
+SELECT TOP 5 PER.LastName, PER.FirstName, E.[BusinessEntityID], SUM(DET.LineTotal) AS SaleAmount
+FROM [Sales].[SalesPerson] SP 
+        INNER JOIN [Sales].[SalesOrderHeader] SOH	ON SP.[BusinessEntityID] = SOH.[SalesPersonID]
+        INNER JOIN Sales.SalesOrderDetail DET		ON SOH.SalesOrderID = DET.SalesOrderID
+        INNER JOIN [Sales].[SalesTerritory] ST		ON SP.[TerritoryID] = ST.[TerritoryID] 
+        INNER JOIN [HumanResources].[Employee] E	ON SOH.[SalesPersonID] = E.[BusinessEntityID] 
+		INNER JOIN [Person].[Person] PER			ON PER.[BusinessEntityID] = SP.[BusinessEntityID]
+		INNER JOIN Production.Product P ON DET.ProductID = P.ProductID INNER JOIN
+   Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID INNER JOIN
+   Production.ProductCategory PC ON PS.ProductCategoryID = PC.ProductCategoryID
+WHERE       (PC.ProductCategoryID = @ProductCategory) AND (PS.ProductSubcategoryID IN (@ProductSubcategory)) 
+			AND 
+			(SOH.OrderDate &gt; @StartDate) AND (SOH.OrderDate &lt; @EndDate)
+GROUP BY    PER.LastName, PER.FirstName, E.[BusinessEntityID]
+ORDER BY    SUM(DET.LineTotal) DESC</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="LastName">
+          <DataField>LastName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FirstName">
+          <DataField>FirstName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BusinessEntityID">
+          <DataField>BusinessEntityID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SaleAmount">
+          <DataField>SaleAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="FullName">
+          <Value>=Fields!LastName.Value &amp; ", " &amp; Fields!FirstName.Value</Value>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="ProductCategories">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <CommandText>SELECT DISTINCT ProductCategoryID, Name
+FROM        Production.ProductCategory
+ORDER BY    Name</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="ProductCategoryID">
+          <DataField>ProductCategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="TopCustomerStores">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProductSubcategory">
+            <Value>=Parameters!ProductSubcategory.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@StartDate">
+            <Value>=Parameters!StartDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@EndDate">
+            <Value>=Parameters!EndDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ProductCategory">
+            <Value>=Parameters!ProductCategory.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>--DECLARE @StartDate datetime
+--DECLARE @EndDate datetime
+--DECLARE @ProductSubcategory int
+--DECLARE @ProductCategory int
+
+--SET @StartDate = '20010101'
+--SET @EndDate = '20020701'
+
+--SET @ProductCategory = 1
+--SET @ProductSubcategory = 1
+
+
+SELECT top 5
+    S.Name as Store, C.StoreID, COUNT(SOH.SalesOrderID) as NSalesOrders, SUM(DET.LineTotal) as SaleAmount 
+FROM Sales.SalesOrderHeader SOH
+	INNER JOIN [Sales].[Customer] C	ON C.[CustomerID] = SOH.[CustomerID]
+	INNER JOIN [Sales].[Store] S ON C.StoreID = S.BusinessEntityID
+	INNER JOIN Sales.SalesOrderDetail DET ON  DET.SalesOrderID = SOH.SalesOrderID
+	INNER JOIN Production.Product P ON P.ProductID = DET.ProductID
+	INNER JOIN Production.ProductSubcategory PS ON P.ProductSubcategoryID = PS.ProductSubcategoryID 
+WHERE C.StoreID IS NOT NULL
+   AND PS.ProductCategoryID = (@ProductCategory) 
+   AND PS.ProductSubcategoryID IN (@ProductSubcategory)
+   AND SOH.OrderDate &gt; (@StartDate) AND 
+       SOH.OrderDate &lt; (@EndDate) 
+ 
+GROUP BY  S.Name, C.StoreID
+ORDER BY    SUM(DET.LineTotal) DESC</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="Store">
+          <DataField>Store</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SaleAmount">
+          <DataField>SaleAmount</DataField>
+          <rd:TypeName>System.Decimal</rd:TypeName>
+        </Field>
+        <Field Name="StoreID">
+          <DataField>StoreID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="NSalesOrders">
+          <DataField>NSalesOrders</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="ProductSubcategories">
+      <Query>
+        <DataSourceName>AdventureWorks2008</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ProductCategory">
+            <Value>=Parameters!ProductCategory.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT      ProductSubcategoryID, ProductCategoryID, Name
+FROM        Production.ProductSubcategory
+WHERE       (ProductCategoryID = @ProductCategory)</CommandText>
+        <Timeout>30</Timeout>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="ProductSubcategoryID">
+          <DataField>ProductSubcategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ProductCategoryID">
+          <DataField>ProductCategoryID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Name">
+          <DataField>Name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="ProductCategory">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Category:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ProductCategories</DataSetName>
+          <ValueField>ProductCategoryID</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="ProductSubcategory">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Subcategory:</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ProductSubcategories</DataSetName>
+          <ValueField>ProductSubcategoryID</ValueField>
+          <LabelField>Name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="StartDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>01/01/2003 00:00:00</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Start Date:</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="EndDate">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>2003-12-31</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>End Date:</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ShowDescription">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>False</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Description?</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
+  </ReportParameters>
   <EmbeddedImages>
     <EmbeddedImage Name="tires">
       <MIMEType>image/jpeg</MIMEType>
@@ -1977,6 +2019,6 @@ AN2mdlXNHAPaSx4H2gUBPREQBERAEREAREQBERAEREAREQBERAEREAREQBERAF8SxxyxuilaHxvBa9rh
   </EmbeddedImages>
   <Language>en-US</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportID>8bb0f3dc-34b8-41e3-8f56-4cbe21b0c93f</rd:ReportID>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>8bb0f3dc-34b8-41e3-8f56-4cbe21b0c93f</rd:ReportID>
 </Report>

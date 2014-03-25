@@ -450,6 +450,8 @@ $(function () {
 
         _forerunnerFolderPath: null,
 
+        _customSettings: null,
+
         _endsWith : function(str, suffix) {
             return str.indexOf(suffix, str.length - suffix.length);
         },
@@ -514,6 +516,31 @@ $(function () {
             } else {
                 this._apiBase = apiBase;
             }
+        },
+        /**
+         * Get user custom settings
+         *
+         * @param {Object} Custom settings object.
+         */
+        getCustomSettings: function () {
+            if (this._customSettings === null) {
+                $.ajax({
+                    url: forerunner.config.forerunnerFolder() + "../Custom/MobilizerSettings.txt",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        forerunner.config._customSettings = data;
+                    },
+                    fail: function () {
+                        console.log("Load mobilizer custom settings failed");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Load mobilizer custom settings .  " + textStatus);
+                    },
+                });
+            }
+
+            return this._customSettings;
         },
     };
 

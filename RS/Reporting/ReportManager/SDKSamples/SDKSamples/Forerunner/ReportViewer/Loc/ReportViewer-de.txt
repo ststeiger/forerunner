@@ -62,6 +62,7 @@
     "keyword":"Schlüsselwort",
     "lastPage":"Letzte",
     "menu":"Menü",
+    "logOff":"Abmelden",
     "navigation":"Navigation",
     "next":"nächster",
     "pageOf":"von",

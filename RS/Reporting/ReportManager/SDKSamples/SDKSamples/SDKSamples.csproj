@@ -231,7 +231,7 @@
     <Content Include="Forerunner\ReportViewer\Images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\Images\NotSorted.gif" />
     <Content Include="Forerunner\ReportViewer\Images\OpenDropDown.png" />
-    <Content Include="Forerunner\ReportViewer\Images\page-loading.GIF" />
+    <Content Include="Forerunner\ReportViewer\Images\page-loading.gif" />
     <Content Include="Forerunner\ReportViewer\Images\Parameter_Collapse.png" />
     <Content Include="Forerunner\ReportViewer\Images\Parameter_Expand.png" />
     <Content Include="Forerunner\ReportViewer\Images\print_landscape.png" />

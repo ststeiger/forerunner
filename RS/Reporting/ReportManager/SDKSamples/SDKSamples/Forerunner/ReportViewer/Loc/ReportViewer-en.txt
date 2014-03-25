@@ -38,7 +38,6 @@
 	"toolPane": {
     "pageOf": "of",
     "home": "Home",
-	"logoff": "Logoff",
     "navigation": "Navigation",
     "favorites": "Favorites",
     "back": "Back",
@@ -62,6 +61,7 @@
     "home": "Home",
 		"keyword": "Keyword",
 		"lastPage": "Last",
+		"logOff": "Logoff",
 		"menu": "Menu",
     "navigation": "Navigation",
     "next": "Next",

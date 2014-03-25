@@ -37,11 +37,19 @@ namespace ReportManager.Controllers
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
         private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
+        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
 
         // Changed...
         private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
         // ...Changed
 
+        static  ReportViewerController()
+        {
+            if (IgnoreSSLErrors)
+                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            
+        }
+ 
         static private bool GetAppSetting(string key, bool defaultValue)
         {
             string value = ConfigurationManager.AppSettings[key];
@@ -155,9 +163,9 @@ namespace ReportManager.Controllers
         [ActionName("Thumbnail")]
         public HttpResponseMessage Thumbnail(string ReportPath, string SessionID, int PageNumber, double maxHeightToWidthRatio = 1.2, string instance = null)
         {
+            byte[] result = null;
             try
-            {
-                byte[] result = null;
+            {                
                 result = GetReportViewer(instance).GetThumbnail(HttpUtility.UrlDecode(ReportPath), SessionID, PageNumber.ToString(), maxHeightToWidthRatio);
                 return GetResponseFromBytes(result, "image/JPEG",true);
 
@@ -165,7 +173,7 @@ namespace ReportManager.Controllers
             catch (Exception e)
             {
                 ExceptionLogGenerator.LogException(e);
-                return ReturnError(e);
+                return GetResponseFromBytes((Stream) null, "image/JPEG", true);
             }            
         }
 

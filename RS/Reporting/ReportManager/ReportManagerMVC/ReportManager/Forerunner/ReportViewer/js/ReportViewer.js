@@ -117,6 +117,7 @@ $(function () {
             me.credentialDefs = null;
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
+            me.SaveThumbnail = false;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -819,6 +820,27 @@ $(function () {
             me.pages = {};
             if (me.options.pageNavArea)
                 me.options.pageNavArea.pageNav("reset");
+        },
+        _saveThumbnail: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveThumbnail";
+            if (me.getCurPage() === 1 && !me.SaveThumbnail) {
+                me.SaveThumbnail = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        ReportPath: me.reportPath,
+                        SessionID: me.sessionID,
+                        Instance: me.options.rsInstance,
+                    },
+                    async: true,
+                    success: function (data) {
+                        //console.log("Saved");
+                    }
+
+                });
+            }
         },
         _prepareAction: function () {
             var me = this;
@@ -1645,6 +1667,7 @@ $(function () {
             if (!isSameReport) {
                 me.paramLoaded = false;
                 me._removeSetTimeout();
+                me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -1774,7 +1797,7 @@ $(function () {
                             if (!me.element.is(":visible"))
                                 me.element.show();  //scrollto does not work with the slide in functions:(                            
 
-                            me._updateTableHeaders(me);
+                            me._updateTableHeaders(me);                            
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -1836,6 +1859,7 @@ $(function () {
                                 me._cachePages(newPageNum);
 
                             me._updateTableHeaders(me);
+                            me._saveThumbnail();
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }

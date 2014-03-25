@@ -834,6 +834,7 @@ namespace Forerunner.SSRS.Manager
                 CloseSQLConn();
             }
         }
+        
         public byte[] GetDBImage(string path)
         {
             string IID = GetItemID(path);
@@ -950,6 +951,30 @@ namespace Forerunner.SSRS.Manager
             ReportViewer rep = new ReportViewer(this.URL);
             return rep.GetServerRendering();
         }
+
+        public void SaveThumbnail(string Path, String SessionID)
+        {
+            byte[] retval = null;
+            int isUserSpecific = 0;           
+            string IID = null;
+
+            retval = GetDBImage(Path);
+            if (retval == null || retval.Length == 0)
+            {
+
+                using (ReportViewer rep = new ReportViewer(this.URL))
+                {
+                    retval = rep.GetThumbnail(Path, SessionID, "1", 1.2);
+                    isUserSpecific = IsUserSpecific(Path);
+                    rep.Dispose();
+                }
+
+                IID = GetItemID(Path);
+                SaveImage(retval, Path, null, IID, isUserSpecific);
+            }
+           
+        }
+
 
         public void GetThumbnail(object context)
         {

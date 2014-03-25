@@ -108,6 +108,7 @@ $(function () {
             me.renderTime = new Date().getTime();
             me.paramDefs = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
+            me.SaveThumbnail = false;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -718,6 +719,30 @@ $(function () {
             if (me.options.pageNavArea)
                 me.options.pageNavArea.pageNav("reset");
         },
+
+        _saveThumbnail: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveThumbnail";
+            if (me.getCurPage() === 1 && !me.SaveThumbnail) {
+                me.SaveThumbnail = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        ReportPath: me.options.reportPath,
+                        SessionID: me.sessionID,                        
+                        Instance: me.options.rsInstance,
+                    },
+                   async: true,
+                    success: function (data) {
+                        //console.log("Saved");
+                    }
+                    
+                });
+            }
+        },
+
+
         _prepareAction: function () {
             var me = this;
             var url = me.options.reportViewerAPI + "/ReportJSON";
@@ -1504,6 +1529,7 @@ $(function () {
             if (!isSameReport) {
                 me.paramLoaded = false;
                 me._removeSetTimeout();
+                me.SaveThumbnail = false;
             }
             me.finding = false;
             me.findStartPage = null;
@@ -1602,6 +1628,7 @@ $(function () {
                                 me._cachePages(newPageNum);
 
                             me._updateTableHeaders(me);
+                            me._saveThumbnail();
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }

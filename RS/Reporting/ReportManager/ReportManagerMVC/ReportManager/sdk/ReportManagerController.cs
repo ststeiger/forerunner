@@ -138,6 +138,16 @@ namespace ReportManager.Controllers
         }
 
         [HttpGet]
+        [ActionName("SaveThumbnail")]
+        public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
+        {
+            GetReportManager(instance).SaveThumbnail(ReportPath,SessionID);
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            resp.StatusCode = HttpStatusCode.OK;
+            return resp;
+        }
+
+        [HttpGet]
         public HttpResponseMessage UpdateView(string view, string action, string path, string instance = null)
         {
             return GetResponseFromBytes(Encoding.UTF8.GetBytes(GetReportManager(instance).UpdateView(view,action,path)), "text/JSON");

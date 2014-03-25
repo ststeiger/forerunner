@@ -1,0 +1,4 @@
+{
+	"MaxBigDropdownItem": 50,
+	"MinItemToEnableBigDropdownOnTouch": 10
+}

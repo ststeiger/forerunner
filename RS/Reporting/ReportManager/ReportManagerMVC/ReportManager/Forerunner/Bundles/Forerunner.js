@@ -1244,12 +1244,9 @@ $(function () {
                 target.element.dialog("open");
                 target.element.find(":button").blur();
                 
-
+                me._removeEventsBinding();
                 //reset modal dialog position when window resize happen or orientation change
-                $(window).off("resize", me._setPosition);
-                $(window).on("resize", { target: target }, me._setPosition);
-
-                $(document).off("keyup", me._bindKeyboard);
+                $(window).on("resize", { target: target, me: me }, me._setPosition);
                 $(document).on("keyup", { target: target }, me._bindKeyboard);
             }, 200);
         },
@@ -1262,10 +1259,9 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-            target.element.dialog("destroy");
 
-            $(window).off("resize", me._setPosition);
-            $(document).off("keyup", me._bindKeyboard);
+            me._removeEventsBinding();
+            target.element.dialog("destroy");
            
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
@@ -1278,14 +1274,14 @@ $(function () {
         */
         closeAllModalDialogs: function ($appContainer) {
             var me = this;
+
+            me._removeEventsBinding();
+
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
                 if ($(modalDialog).is(":visible")) {
                     $(modalDialog).dialog("destroy");
                 }
             });
-
-            $(window).off("resize", me._setPosition);
-            $(document).off("keyup", me._bindKeyboard);
         },
         /**
         * Show message box
@@ -1335,12 +1331,17 @@ $(function () {
         },
         _timer: null,
         _setPosition: function (event) {
-            var me = this;
-            if (me._timer) clearTimeout(me._timer);
+            var me = event.data.me;
+
+            if (me._timer) {
+                clearTimeout(me._timer);
+                me._timer = null;
+            }
 
             me._timer = setTimeout(function () {
-                if (event.data.target) {
-                    var uiDialog = event.data.target.element.parent();
+                var target = event.data.target;
+                if (target && target.element.is(":visible")) {
+                    var uiDialog = target.element.parent();
                     if (uiDialog.is(":visible")) {
                         var clone = uiDialog.clone().appendTo(uiDialog.parent());
                         var newTop = clone.css("position", "static").offset().top * -1;
@@ -1351,7 +1352,6 @@ $(function () {
             }, 100);
         },
         _bindKeyboard: function (event) {
-            var me = this;
             var element = event.data.target.element;
             
             //trigger generic event, each modal dialog widget can listener part/all of them 
@@ -1363,6 +1363,17 @@ $(function () {
                     element.trigger(forerunner.ssr.constants.events.modalDialogGenericCancel);
                     break;
             }
+        },
+        _removeEventsBinding: function () {
+            var me = this;
+            
+            if (me._timer) {
+                clearTimeout(me._timer);
+                me._timer = null;
+            }
+
+            $(window).off("resize", me._setPosition);
+            $(document).off("keyup", me._bindKeyboard);
         }
     };
 

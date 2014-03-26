@@ -31,7 +31,9 @@ namespace ForerunnerSW
                 if (Request.IsSecureConnection)
                     Response.Redirect(Request.Url.AbsoluteUri.Replace("https://", "http://"));
             }
-            else if (!Request.IsSecureConnection && Request.Url.AbsoluteUri.IndexOf("localhost") < 0)
+            else if (!Request.IsSecureConnection &&
+                     Request.Url.AbsoluteUri.IndexOf("localhost") < 0 &&
+                     Request.Url.AbsoluteUri.IndexOf("192.168.1.111") < 0)
                 Response.Redirect(Request.Url.AbsoluteUri.Replace("http://", "https://"));
             
            

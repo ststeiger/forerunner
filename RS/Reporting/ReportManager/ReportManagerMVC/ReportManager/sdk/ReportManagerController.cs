@@ -28,10 +28,9 @@ namespace ReportManager.Controllers
     {
         static private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        static private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
+        static private bool IsNativeRS = ForerunnerUtil.GetAppSetting("Forerunner.IsNative", true);
         static private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
-        static private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
-        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
+        static private bool useIntegratedSecurity = ForerunnerUtil.GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
         static private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         static private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         static private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -44,20 +43,12 @@ namespace ReportManager.Controllers
         private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
         {
             Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
-            if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
-            {
-                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
-            }
-            else
-            {
-                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
-            }
+            Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL);            
         }
 
         static ReportManagerController()
         {
-            if (IgnoreSSLErrors)
-                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            ForerunnerUtil.CheckSSLConfig();
             
             if (ReportServerDataSource != null)
             {
@@ -73,12 +64,7 @@ namespace ReportManager.Controllers
                 }
             }
         }
-        static private bool GetAppSetting(string key, bool defaultValue)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
-        }
-        
+       
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
         {
             Forerunner.Config.ConfigElement configElement = null;

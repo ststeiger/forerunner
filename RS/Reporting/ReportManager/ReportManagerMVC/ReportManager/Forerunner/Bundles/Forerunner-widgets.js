@@ -1,4 +1,4 @@
-﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -1716,7 +1716,10 @@ $(function () {
                 me._loadParameters(me.pageNum);
             }
 
-            me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.reportPath  });
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+            });
         },
         /**
          * Load current report with the given parameter list
@@ -1798,7 +1801,7 @@ $(function () {
                             if (!me.element.is(":visible"))
                                 me.element.show();  //scrollto does not work with the slide in functions:(                            
 
-                            me._updateTableHeaders(me);                            
+                            me._updateTableHeaders(me);
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }

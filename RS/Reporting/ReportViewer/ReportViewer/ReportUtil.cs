@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -8,6 +9,7 @@ using System.IO;
 using Jayrock.Json;
 using Forerunner.SSRS.Execution;
 using ForerunnerLicense;
+using System.Configuration;
 
 namespace Forerunner
 {
@@ -44,8 +46,35 @@ namespace Forerunner
 
 
     }
- 
 
+    public static class ForerunnerUtil
+    {
+        static private bool IgnoreSSLErrors = ForerunnerUtil.GetAppSetting("Forerunner.IgnoreSSLErrors", false);
+        static private bool CheckSSL = false;
+
+        static public void CheckSSLConfig()
+        {
+            if (!CheckSSL)
+            {
+                CheckSSL = true;
+                if (IgnoreSSLErrors)
+                    ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            }
+        }
+
+        static public bool GetAppSetting(string key, bool defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
+        }
+
+        static public int GetAppSetting(string key, int defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return (value == null) ? defaultValue : int.Parse(value);
+        }
+
+    }
     public static class JsonUtility
     {
         internal static ParameterValue[] GetParameterValue(string parameterList)

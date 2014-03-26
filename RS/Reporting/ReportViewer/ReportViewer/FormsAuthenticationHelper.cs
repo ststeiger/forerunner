@@ -13,14 +13,9 @@ namespace Forerunner.Security
     public class FormsAuthenticationHelper
     {
         static private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
-        static private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
+        static private int ReportServerTimeout = ForerunnerUtil.GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         static private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
 
-        static private int GetAppSetting(string key, int defaultValue)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-            return (value == null) ? defaultValue : int.Parse(value);
-        }
 
         static private HttpCookie FindAuthCookie()
         {

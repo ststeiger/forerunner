@@ -37,6 +37,7 @@ namespace Forerunner.SSRS.Manager
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
 
         private static bool isReportServerDB(SqlConnection conn)
         {
@@ -90,7 +91,17 @@ namespace Forerunner.SSRS.Manager
 
             SqlConnection conn = new SqlConnection(builder.ConnectionString);
 
-            return ReportManager.isReportServerDB(conn);
+            if (ReportManager.isReportServerDB(conn))
+            {
+                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+                return true;
+            }
+            else
+            {
+                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
+                return false;
+            }
+       
         }
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName = null)
@@ -228,26 +239,34 @@ namespace Forerunner.SSRS.Manager
             CatalogItem[] items = callListChildren(path, isRecursive);
             foreach (CatalogItem ci in items)
             {
-                if (ci.Type == ItemTypeEnum.Report )
+                if (ci.Type == ItemTypeEnum.Report && !ci.Hidden)
                 {
-                    if (!ci.Hidden)
-                        list.Add(ci);
+                    list.Add(ci);
                 }
-                if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                if (RecurseFolders)
                 {
-                    CatalogItem[] folder = callListChildren(ci.Path, false);
-                    foreach (CatalogItem fci in folder)
+                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
                     {
-                        if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
+                        CatalogItem[] folder = callListChildren(ci.Path, false);
+                        foreach (CatalogItem fci in folder)
                         {
-                            if (!ci.Hidden)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
                             {
-                                list.Add(ci);
-                                break;
+                                if (!ci.Hidden)
+                                {
+                                    list.Add(ci);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                {
+                    list.Add(ci);
+                }
+
+
             }
             return list.ToArray();
         }

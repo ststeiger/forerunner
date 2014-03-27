@@ -40,22 +40,10 @@ namespace ReportManager.Controllers
  
         private ReportViewer GetReportViewer(string instance)
         {
-            Forerunner.Config.ConfigElement configElement = null;
-            if (webConfigSection != null && instance != null)
-            {
-                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
-                if (configElementCollection != null)
-                {
-                    configElement = configElementCollection.GetElementByKey(instance);
-                }
-            }
-            //Put application security here
-            if (configElement == null)
-                return new ReportViewer(url, ReportServerTimeout);
-            else
-                return new ReportViewer(configElement.ReportServerWSUrl, configElement.ReportServerTimeout);
+            return ForerunnerUtil.GetReportViewerInstance(instance, url, ReportServerTimeout, webConfigSection);
         }
 
+        
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
             return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);

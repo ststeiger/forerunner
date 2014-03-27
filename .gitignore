@@ -94,9 +94,6 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportMannagerConfigTool/obj/Debug/R
 utilities/SetupUtil/SetupUtil/bin/Debug/*
 utilities/SetupUtil/SetupUtil/bin/Release/*
 utilities/SetupUtil/SetupUtil/SetupUtil.csproj.user
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
-build/tools/Zipper/obj/Debug/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
 LicenseService/Worker/bin/Release/Microsoft.WindowsAzure.Diagnostics.xml
 LicenseService/Worker/bin/Release/Microsoft.WindowsAzure.Storage.xml
 LicenseService/Worker/bin/Release/System.Spatial.xml
@@ -609,8 +606,8 @@ RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/Te
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManagerUnitTest/obj/Release/TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs
 Test/Test Reports 2012/Northwind Test Suite/Northwind Test Suite/bin/Debug/*
-build/tools/Zipper/bin/Debug/Zipper.vshost.exe.config
-build/tools/Zipper/bin/Debug/Zipper.vshost.exe.manifest
+build/tools/Zipper/bin/Debug/*
+build/tools/SharepointUploader/bin/Debug/*
 RS/Reporting/ReportManager/ReportManagerMVC/ReportManager/Mobilizer.log
 ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db
 ForerunnerSW/ForerunnerSW/Content/img/Thumbs.db

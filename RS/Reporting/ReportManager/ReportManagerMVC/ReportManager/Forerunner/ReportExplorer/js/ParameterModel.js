@@ -210,6 +210,10 @@ $(function () {
                         if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
+                        else {
+                            // If the server returns back no sets then we need to clear out the current set id
+                            me.currentSetId = null;
+                        }
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
@@ -280,7 +284,7 @@ $(function () {
                 } else {
                     return null;
                 }
-                if (parameterSet.data) {
+                if (parameterSet && parameterSet.data) {
                     currentParameterList = JSON.stringify(parameterSet.data);
                 }
             }

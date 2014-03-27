@@ -218,8 +218,8 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Custom"
   File "${LOCALROOT}\Custom\Explorer.css"
   File "${LOCALROOT}\Custom\Explorer_Examples.css"
-  File "${LOCALROOT}\Custom\ExplorerSettings.txt"
-  File "${LOCALROOT}\Custom\ExplorerSettings_Examples.txt"
+  File "${LOCALROOT}\Custom\MobilizerSettings.txt"
+  File "${LOCALROOT}\Custom\MobilizerSettings_Examples.txt"
 
   SetOutPath "$INSTDIR"
   File "${RESOURCEROOT}\InstallInstructions.rtf"

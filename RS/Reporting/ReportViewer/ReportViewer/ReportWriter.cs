@@ -358,14 +358,17 @@ namespace Forerunner.SSRS.JSONRender
 
         private void ThrowParseError()
         {
+            Forerunner.Logging.Logger.Trace(LogType.Error, "RPL parse error");
             Forerunner.Logging.ExceptionLogGenerator.LogExceptionWithRPL(string.Empty, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg)
         {
+            Forerunner.Logging.Logger.Trace(LogType.Error, "RPL parse error");
             Forerunner.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream);
         }
         private void ThrowParseError(string Msg, Exception e)
         {
+            Forerunner.Logging.Logger.Trace(LogType.Error, "RPL parse error");
             Forerunner.Logging.ExceptionLogGenerator.LogExceptionWithRPL(Msg, RPL.RPLStream, e);
         }
 

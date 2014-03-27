@@ -10,6 +10,10 @@ using Jayrock.Json;
 using Forerunner.SSRS.Execution;
 using ForerunnerLicense;
 using System.Configuration;
+using Forerunner.SSRS.Viewer;
+using Forerunner.SSRS.Manager;
+using Forerunner.Config;
+using Forerunner.Logging;
 
 namespace Forerunner
 {
@@ -74,7 +78,81 @@ namespace Forerunner
             return (value == null) ? defaultValue : int.Parse(value);
         }
 
+        static public ReportViewer GetReportViewerInstance(string instance, string url, int ReportServerTimeout, WebConfigSection webConfigSection)
+        {
+            ConfigElement configElement = null;
+            if (webConfigSection != null && instance != null)
+            {
+                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
+                if (configElementCollection != null)
+                {
+                    configElement = configElementCollection.GetElementByKey(instance);
+                }
+            }
+            //Put application security here
+            if (configElement == null)
+                return new ReportViewer(url, ReportServerTimeout);
+            else
+                return new ReportViewer(configElement.ReportServerWSUrl, configElement.ReportServerTimeout);
+        }
+
+        private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
+        {
+            Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
+            if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
+            {
+                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+            }
+            else
+            {
+                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
+            }
+        }
+
+        public static ReportManager GetReportManagerInstance(string instance, string url, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName, string ReportServerDataSource, string ReportServerDB, string ReportServerDBUser, string ReportServerDBPWD, string ReportServerDBDomain, bool useIntegratedSecurity, WebConfigSection webConfigSection)
+        {
+            Forerunner.Config.ConfigElement configElement = null;
+            if (webConfigSection != null && instance != null)
+            {
+                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
+                if (configElementCollection != null)
+                {
+                    configElement = configElementCollection.GetElementByKey(instance);
+                }
+            }
+            //Put application security here
+
+            if (configElement == null)
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(url, null, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
+            }
+            else
+            {
+                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, configElement.ReportServerDBUser, configElement.ReportServerDBDomain == null ? "" : configElement.ReportServerDBDomain, configElement.ReportServerDBPWD);
+                return new Forerunner.SSRS.Manager.ReportManager(configElement.ReportServerWSUrl, null, configElement.ReportServerDataSource, configElement.ReportServerDB, DBCred, configElement.UseIntegratedSecurityForSQL, configElement.IsNative, DefaultUserDomain, configElement.SharePointHost);
+            }
+        }
+
+        public static void validateConfig(string ReportServerDataSource, string ReportServerDB, string ReportServerDBUser,string ReportServerDBPWD, string ReportServerDBDomain, bool useIntegratedSecurity, WebConfigSection webConfigSection)
+        {
+            if (ReportServerDataSource != null)
+            {
+                Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");
+                ForerunnerUtil.validateReportServerDB(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity);
+            }
+
+            if (webConfigSection != null)
+            {
+                foreach (Forerunner.Config.ConfigElement configElement in webConfigSection.InstanceCollection)
+                {
+                    Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the Forerunner section.  Instance: " + configElement.Instance);
+                    ForerunnerUtil.validateReportServerDB(configElement.ReportServerDataSource, configElement.ReportServerDB, configElement.ReportServerDBUser, configElement.ReportServerDBPWD, configElement.ReportServerDBDomain, configElement.UseIntegratedSecurityForSQL);
+                }
+            }
+        }
     }
+
     public static class JsonUtility
     {
         internal static ParameterValue[] GetParameterValue(string parameterList)

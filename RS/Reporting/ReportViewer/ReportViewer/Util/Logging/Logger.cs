@@ -14,7 +14,8 @@ namespace Forerunner.Logging
 
     public class Logger
     {
-        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", SourceLevels.All);
+        static private SourceSwitch sourceSwitch = new SourceSwitch("MobilizerTraceType");
+        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", sourceSwitch.Level);
         
         static Logger()
         {
@@ -33,7 +34,7 @@ namespace Forerunner.Logging
             }
         }
 
-        public static void Trace(LogType logType, string message, Object[] objects = null) 
+        public static void Trace(LogType logType, string message, Object[] objects = null)
         {
             TraceEventType eventType = TraceEventType.Information;
             switch (logType)
@@ -48,6 +49,7 @@ namespace Forerunner.Logging
                     eventType = TraceEventType.Warning;
                     break;
             }
+
             if (objects == null)
             {
                 ts.TraceEvent(eventType, 0, message);

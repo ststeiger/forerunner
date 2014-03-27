@@ -31,6 +31,7 @@
     "exportMenu": ["ro", "sv"],
     "menu": ["fr", "ga", "it", "pt"],
     "lastPage": ["ga"],
+    "logOff": ["ga", "it", "pt", "ro"],
     "navigation": ["de", "fr", "is"],
     "refresh": ["it", "ro"],
     "docMap": ["is"],

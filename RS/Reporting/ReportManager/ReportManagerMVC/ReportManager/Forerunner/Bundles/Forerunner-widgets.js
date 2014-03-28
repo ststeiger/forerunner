@@ -746,12 +746,12 @@ $(function () {
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
-                        else
-                            if (me.options.parameterModel)
-                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
                         me.paramLoaded = true;
                     }
-                   
+
+                    // Restore the parameterModel state from the action history
+                    if (me.options.parameterModel && action.parameterModel)
+                        me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
@@ -1248,6 +1248,7 @@ $(function () {
             var me = this;
 
             var top, left, savedParams;
+            var parameterModel = null;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -1267,11 +1268,15 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            if (me.options.parameterModel)
+                parameterModel = me.options.parameterModel.parameterModel("getModel");
+
             me.actionHistory.push({
                 ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
+                parameterModel: parameterModel
             });
 
             me._clearReportViewerForDrill();
@@ -2309,6 +2314,22 @@ $(function () {
 
             return newSet;
         },
+        // getModel is used to get the model state used with the report viewer action history
+        getModel: function () {
+            var me = this;
+            return {
+                serverData: me.cloneServerData(),
+                reportPath: me.reportPath,
+            };
+        },
+        // setModel restores the model state and triggers a Model change event
+        setModel: function (modelData) {
+            var me = this;
+            me.serverData = modelData.serverData;
+            me.reportPath = modelData.reportPath;
+            me.currentSetId = null;
+            me._triggerModelChange();
+        },
         cloneServerData: function () {
             var me = this;
             if (me.serverData) {
@@ -2448,12 +2469,18 @@ $(function () {
                         if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
+                        else {
+                            // If the server returns back no sets then we need to clear out the current set id
+                            me.currentSetId = null;
+                        }
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
+                    me.currentSetId = null;
+                    me.serverData = null;
                 }
             });
         },
@@ -2518,7 +2545,7 @@ $(function () {
                 } else {
                     return null;
                 }
-                if (parameterSet.data) {
+                if (parameterSet && parameterSet.data) {
                     currentParameterList = JSON.stringify(parameterSet.data);
                 }
             }

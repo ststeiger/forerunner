@@ -133,6 +133,8 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\Common\images\icons25x31.png"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\js"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js"
+  File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-1.11.0.MIN.JS"
+  File "${LOCALROOT}\Forerunner\Lib\jQuery\js\jquery-1.11.0.js"
   SetOutPath "$INSTDIR\Forerunner\Lib\jQuery\css"
   File "${LOCALROOT}\Forerunner\Lib\jQuery\css\jquery-ui-1.10.3.forerunner.css"
   SetOutPath "$INSTDIR\Forerunner\Lib\Misc\js"

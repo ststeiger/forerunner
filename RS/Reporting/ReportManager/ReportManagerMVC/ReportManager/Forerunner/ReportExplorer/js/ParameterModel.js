@@ -71,6 +71,22 @@ $(function () {
 
             return newSet;
         },
+        // getModel is used to get the model state used with the report viewer action history
+        getModel: function () {
+            var me = this;
+            return {
+                serverData: me.cloneServerData(),
+                reportPath: me.reportPath,
+            };
+        },
+        // setModel restores the model state and triggers a Model change event
+        setModel: function (modelData) {
+            var me = this;
+            me.serverData = modelData.serverData;
+            me.reportPath = modelData.reportPath;
+            me.currentSetId = null;
+            me._triggerModelChange();
+        },
         cloneServerData: function () {
             var me = this;
             if (me.serverData) {
@@ -210,12 +226,18 @@ $(function () {
                         if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
+                        else {
+                            // If the server returns back no sets then we need to clear out the current set id
+                            me.currentSetId = null;
+                        }
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
+                    me.currentSetId = null;
+                    me.serverData = null;
                 }
             });
         },
@@ -280,7 +302,7 @@ $(function () {
                 } else {
                     return null;
                 }
-                if (parameterSet.data) {
+                if (parameterSet && parameterSet.data) {
                     currentParameterList = JSON.stringify(parameterSet.data);
                 }
             }

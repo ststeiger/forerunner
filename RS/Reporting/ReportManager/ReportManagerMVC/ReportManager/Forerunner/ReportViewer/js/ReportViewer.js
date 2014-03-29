@@ -745,12 +745,12 @@ $(function () {
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
-                        else
-                            if (me.options.parameterModel)
-                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
                         me.paramLoaded = true;
                     }
-                   
+
+                    // Restore the parameterModel state from the action history
+                    if (me.options.parameterModel && action.parameterModel)
+                        me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
@@ -1247,6 +1247,7 @@ $(function () {
             var me = this;
 
             var top, left, savedParams;
+            var parameterModel = null;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -1266,11 +1267,15 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            if (me.options.parameterModel)
+                parameterModel = me.options.parameterModel.parameterModel("getModel");
+
             me.actionHistory.push({
                 ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
+                parameterModel: parameterModel
             });
 
             me._clearReportViewerForDrill();

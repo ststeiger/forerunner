@@ -34,10 +34,9 @@ namespace ReportManager.Controllers
     {
         static private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
 
-        static private bool IsNativeRS = GetAppSetting("Forerunner.IsNative", true);
+        static private bool IsNativeRS = ForerunnerUtil.GetAppSetting("Forerunner.IsNative", true);
         static private string SharePointHostName = ConfigurationManager.AppSettings["Forerunner.SharePointHost"];
-        static private bool useIntegratedSecurity = GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
-        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
+        static private bool useIntegratedSecurity = ForerunnerUtil.GetAppSetting("Forerunner.UseIntegratedSecurityForSQL", false);
         static private string ReportServerDataSource = ConfigurationManager.AppSettings["Forerunner.ReportServerDataSource"];
         static private string ReportServerDB = ConfigurationManager.AppSettings["Forerunner.ReportServerDB"];
         static private string ReportServerDBUser = ConfigurationManager.AppSettings["Forerunner.ReportServerDBUser"];
@@ -51,69 +50,16 @@ namespace ReportManager.Controllers
         private NetworkCredential credentials = new NetworkCredential("TestAccount", "TestPWD!");
         // ...Changed
 
-        private static void validateReportServerDB(String reportServerDataSource, string reportServerDB, string reportServerDBUser, string reportServerDBPWD, string reportServerDBDomain, bool useIntegratedSecuritForSQL)
-        {
-            Credentials dbCred = new Credentials(Credentials.SecurityTypeEnum.Custom, reportServerDBUser, reportServerDBDomain == null ? "" : reportServerDBDomain, reportServerDBPWD);
-            if (Forerunner.SSRS.Manager.ReportManager.ValidateConfig(reportServerDataSource, reportServerDB, dbCred, useIntegratedSecuritForSQL))
-            {
-                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
-            }
-            else
-            {
-                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
-            }
-        }
-
         static ReportManagerController()
         {
-            if (IgnoreSSLErrors)
-                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-            
-            if (ReportServerDataSource != null)
-            {
-                Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the appSettings section.");
-                validateReportServerDB(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity);
-            }
+            ForerunnerUtil.validateConfig(ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
+        }
 
-            if (webConfigSection != null)
-            {
-                foreach(Forerunner.Config.ConfigElement configElement in webConfigSection.InstanceCollection) {
-                    Logger.Trace(LogType.Info, "Validating the database connections for the report server db configured in the Forerunner section.  Instance: " + configElement.Instance);
-                    validateReportServerDB(configElement.ReportServerDataSource, configElement.ReportServerDB, configElement.ReportServerDBUser, configElement.ReportServerDBPWD, configElement.ReportServerDBDomain, configElement.UseIntegratedSecurityForSQL);
-                }
-            }
-        }
-        static private bool GetAppSetting(string key, bool defaultValue)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
-        }
-        
         private Forerunner.SSRS.Manager.ReportManager GetReportManager(string instance)
         {
-            Forerunner.Config.ConfigElement configElement = null;
-            if (webConfigSection != null && instance != null)
-            {
-                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
-                if (configElementCollection != null)
-                {
-                    configElement = configElementCollection.GetElementByKey(instance);
-                }
-            }
-            //Put application security here
-
             // Changed...
             Forerunner.SSRS.Manager.ReportManager rm;
-            if (configElement == null)
-            {
-                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, ReportServerDBUser, ReportServerDBDomain == null ? "" : ReportServerDBDomain, ReportServerDBPWD);
-                rm = new Forerunner.SSRS.Manager.ReportManager(url, null, ReportServerDataSource, ReportServerDB, DBCred, useIntegratedSecurity, IsNativeRS, DefaultUserDomain, SharePointHostName);
-            }
-            else
-            {
-                Credentials DBCred = new Credentials(Credentials.SecurityTypeEnum.Custom, configElement.ReportServerDBUser, configElement.ReportServerDBDomain == null ? "" : configElement.ReportServerDBDomain, configElement.ReportServerDBPWD);
-                rm = new Forerunner.SSRS.Manager.ReportManager(configElement.ReportServerWSUrl, null, configElement.ReportServerDataSource, configElement.ReportServerDB, DBCred, configElement.UseIntegratedSecurityForSQL, configElement.IsNative, DefaultUserDomain, configElement.SharePointHost);
-            }
+            rm = ForerunnerUtil.GetReportManagerInstance(instance, url, IsNativeRS, DefaultUserDomain, SharePointHostName, ReportServerDataSource, ReportServerDB, ReportServerDBUser, ReportServerDBPWD, ReportServerDBDomain, useIntegratedSecurity, webConfigSection);
 
             // For the SDKSamples we will programmatically set the credentials. Note that the TestAccount
             // and password are not considered secure so it is ok to hard code it here
@@ -125,23 +71,24 @@ namespace ReportManager.Controllers
             return rm;
             // ...Changed
         }
-
+        
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType,bool cache = false)
         {
             HttpResponseMessage resp = this.Request.CreateResponse();
 
-            if (result != null)
+            if (result == null || result.Length ==0)
+            {
+                resp.StatusCode = HttpStatusCode.NotFound;
+            }
+            else
             {
                 resp.Content = new ByteArrayContent(result); ;
                 resp.Content.Headers.ContentType = new MediaTypeHeaderValue(mimeType);
                 if (cache)
                     resp.Headers.Add("Cache-Control", "max-age=7887000");  //3 months
             }
-            else
-            {
-                resp.StatusCode = HttpStatusCode.NotFound;
-            }
-
+            
+            
             return resp;
         }
         // GET api/ReportMananger/GetItems
@@ -160,6 +107,15 @@ namespace ReportManager.Controllers
             
         }
 
+        [HttpGet]
+        [ActionName("SaveThumbnail")]
+        public HttpResponseMessage SaveThumbnail(string ReportPath, string SessionID, string instance = null)
+        {
+            GetReportManager(instance).SaveThumbnail(ReportPath, SessionID);
+            HttpResponseMessage resp = this.Request.CreateResponse();
+            resp.StatusCode = HttpStatusCode.OK;
+            return resp;
+        }
 
         [HttpGet]
         [ActionName("Thumbnail")]

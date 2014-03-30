@@ -518,9 +518,18 @@ $(function () {
             }
         },
         /**
-         * Get user custom settings
+        * Set custom settings object
+        *
+        * @param {Object} Custom Settings Object
+        */
+        setCustomSettings: function (settingObject) {
+            this._customSettings = settingObjectl
+        },
+
+        /**
+         * Get custom settings object, will retrieve from default location if not set.
          *
-         * @param {Object} Custom settings object.
+         * 
          */
         getCustomSettings: function () {
             if (this._customSettings === null) {
@@ -541,6 +550,19 @@ $(function () {
             }
 
             return this._customSettings;
+        },
+        /**
+       * Get user custom settings
+       *
+       * @param {string} value to get.
+       * @param {var} default if not set
+       */
+        getCustomSettingsValue: function (setting, defaultval) {
+            var settings = this.getCustomSettings();
+            if (settings && settings[setting])
+                return settings[setting]
+            else
+                return defaultval;
         },
     };
 

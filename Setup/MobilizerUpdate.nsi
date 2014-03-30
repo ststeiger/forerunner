@@ -166,6 +166,7 @@ Section "ReportManager" SEC01
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Images"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\page-loading.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"

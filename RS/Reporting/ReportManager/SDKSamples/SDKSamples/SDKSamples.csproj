@@ -150,6 +150,10 @@
     <Content Include="Content\images\GetParameters.png" />
     <Content Include="Content\images\reporticon.png" />
     <Content Include="Content\images\MyHome.png" />
+    <Content Include="Custom\Explorer.css" />
+    <Content Include="Custom\Explorer_Examples.css" />
+    <Content Include="Custom\MobilizerSettings.txt" />
+    <Content Include="Custom\MobilizerSettings_Examples.txt" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.js" />
     <Content Include="Forerunner\Bundles\Forerunner-tools.min.js" />
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js" />
@@ -183,8 +187,8 @@
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_888888_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Forerunner\Lib\jQuery\css\jquery-ui-1.10.3.forerunner.css" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.js" />
-    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.9.1.min.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.js" />
+    <Content Include="Forerunner\Lib\jQuery\js\jquery-1.11.0.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery-ui-1.10.3.forerunner.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.validate1.11.1.min.js" />
     <Content Include="Forerunner\Lib\jQuery\js\jquery.watermark.min.js" />

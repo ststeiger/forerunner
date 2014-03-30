@@ -50,8 +50,7 @@
     "print":"Imprimer",
     "dsCredential":"Lettres de créance",
     "views":"vues",
-    "addToFavorites":"Ajouter aux favoris",
-  
+    "addToFavorites":"Ajouter aux favoris"
   },
   "toolbar": {
     "back":"Retour",
@@ -74,7 +73,7 @@
     "reportPage":"Page",
     "zoom":"Activer Zoom",
     "print":"Imprimer",
-    "logOff": "déconnexion",
+    "logOff":"déconnexion",
     "userSettings":"réglages",
     "saveParam":"Enregistrer les paramètres",
     "parameterSets":"Gérer jeux",

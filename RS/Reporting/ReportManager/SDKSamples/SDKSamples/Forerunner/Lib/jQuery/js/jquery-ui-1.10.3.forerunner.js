@@ -531,7 +531,7 @@ $.Widget.prototype = {
 		this.element = $( element );
 		this.uuid = uuid++;
 		this.eventNamespace = "." + this.widgetName + this.uuid;
-		this.options = $.widget.extend( {},
+		this.options = $.widget.extend({},
 			this.options,
 			this._getCreateOptions(),
 			options );

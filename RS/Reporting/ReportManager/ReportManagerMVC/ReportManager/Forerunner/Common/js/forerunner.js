@@ -1472,16 +1472,27 @@ $(function () {
         },
 
         cultureDateFormat: null,
+        _setDateFormat: function () {
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+            //set golbal date format
+            var format = locData.datepicker.dateFormat;
+            forerunner.ssr._internal.cultureDateFormat = format;
+        },
         getDateFormat: function () {
-            if (this.cultureDateFormat) {
-                return this.cultureDateFormat;
+            if (!this.cultureDateFormat) {
+                this._setDateFormat();
             }
+            return this.cultureDateFormat;
         },
         getMomentDateFormat: function () {
-            if (this.cultureDateFormat) {
-                return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+            if (!this.cultureDateFormat) {
+                this._setDateFormat();
             }
-        }
+
+            return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+        },
+        
     };
     $(document).ready(function () {
         //show element when touch screen rule for toolbase
@@ -1534,10 +1545,6 @@ $(function () {
         if ($.validator) {
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             var error = locData.validateError;
-
-            //set golbal date format
-            var format = locData.datepicker.dateFormat;
-            forerunner.ssr._internal.cultureDateFormat = format;
 
             //replace error message with custom data
             jQuery.extend(jQuery.validator.messages, {

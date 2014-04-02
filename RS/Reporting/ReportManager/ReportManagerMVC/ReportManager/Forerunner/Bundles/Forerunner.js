@@ -1473,10 +1473,18 @@ $(function () {
         },
 
         cultureDateFormat: null,
-        getDateFormat: function () {
-            if (this.cultureDateFormat) {
-                return this.cultureDateFormat;
+        _setDateFormat: function () {
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+            //set golbal date format
+            var format = locData.datepicker.dateFormat;
+            forerunner.ssr._internal.cultureDateFormat = format;
+        },
+        getDateFormatgetDateFormat: function () {
+            if (!this.cultureDateFormat) {
+                this._setDateFormat();
             }
+            return this.cultureDateFormat;
         },
         getMomentDateFormat: function () {
             if (this.cultureDateFormat) {

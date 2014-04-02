@@ -1480,7 +1480,7 @@ $(function () {
             var format = locData.datepicker.dateFormat;
             forerunner.ssr._internal.cultureDateFormat = format;
         },
-        getDateFormatgetDateFormat: function () {
+        getDateFormat: function () {
             if (!this.cultureDateFormat) {
                 this._setDateFormat();
             }

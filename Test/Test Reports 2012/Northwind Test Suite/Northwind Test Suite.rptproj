@@ -35,42 +35,6 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Checkin Test Report.rdl</Name>
-      <FullPath>Checkin Test Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Customer Information2.rdl</Name>
-      <FullPath>Customer Information2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Go To Report Action Test.rdl</Name>
-      <FullPath>Go To Report Action Test.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>multi chart with go to report action.rdl</Name>
-      <FullPath>multi chart with go to report action.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Mutiple Parameter.rdl</Name>
-      <FullPath>Mutiple Parameter.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameter by Category.rdl</Name>
-      <FullPath>Parameter by Category.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Parameter by Region.rdl</Name>
-      <FullPath>Parameter by Region.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Matrix.rdl</Name>
-      <FullPath>Simple Matrix.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
-      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>A-ParamReportWithTwoDS.rdl</Name>
       <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
     </ProjectItem>
@@ -83,8 +47,20 @@
       <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Checkin Test Report.rdl</Name>
+      <FullPath>Checkin Test Report.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>ColumnChartReport.rdl</Name>
       <FullPath>ColumnChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Customer Information2.rdl</Name>
+      <FullPath>Customer Information2.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>CustomerInfo.rdl</Name>
+      <FullPath>CustomerInfo.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>D-NormalReportNeedCredential.rdl</Name>
@@ -93,6 +69,10 @@
     <ProjectItem>
       <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
       <FullPath>EmployeesAllocationFragmentation.rdl.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Go To Report Action Test.rdl</Name>
+      <FullPath>Go To Report Action Test.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Header footer indicator report.rdl</Name>
@@ -119,10 +99,6 @@
       <FullPath>Image table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>CustomerInfo.rdl</Name>
-      <FullPath>CustomerInfo.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>images and subreports.rdl</Name>
       <FullPath>images and subreports.rdl</FullPath>
     </ProjectItem>
@@ -143,12 +119,28 @@
       <FullPath>Long Text  Report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>multi chart with go to report action.rdl</Name>
+      <FullPath>multi chart with go to report action.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>multichart.rdl</Name>
       <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
       <FullPath>newspaper multi column.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter by Category.rdl</Name>
+      <FullPath>Parameter by Category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Parameter by Region.rdl</Name>
+      <FullPath>Parameter by Region.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>pie chart.rdl</Name>
@@ -163,8 +155,16 @@
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Simple Matrix.rdl</Name>
+      <FullPath>Simple Matrix.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Simple Parameter.rdl</Name>
       <FullPath>Simple Parameter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Simple Table with groups and drill down with bookmark.rdl</Name>
+      <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
@@ -223,7 +223,7 @@
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
         <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
-        <TargetFolder>Northwind Test Reports</TargetFolder>
+        <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>
         <TargetReportPartFolder>Report Parts</TargetReportPartFolder>

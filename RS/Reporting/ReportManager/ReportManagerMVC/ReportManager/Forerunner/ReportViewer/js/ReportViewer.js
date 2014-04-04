@@ -117,6 +117,7 @@ $(function () {
             me.credentialDefs = null;
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
+            me.SaveThumbnail = false;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -744,12 +745,12 @@ $(function () {
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
-                        else
-                            if (me.options.parameterModel)
-                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
                         me.paramLoaded = true;
                     }
-                   
+
+                    // Restore the parameterModel state from the action history
+                    if (me.options.parameterModel && action.parameterModel)
+                        me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
@@ -819,6 +820,27 @@ $(function () {
             me.pages = {};
             if (me.options.pageNavArea)
                 me.options.pageNavArea.pageNav("reset");
+        },
+        _saveThumbnail: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveThumbnail";
+            if (me.getCurPage() === 1 && !me.SaveThumbnail) {
+                me.SaveThumbnail = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        ReportPath: me.reportPath,
+                        SessionID: me.sessionID,
+                        Instance: me.options.rsInstance,
+                    },
+                    async: true,
+                    success: function (data) {
+                        //console.log("Saved");
+                    }
+
+                });
+            }
         },
         _prepareAction: function () {
             var me = this;
@@ -1225,6 +1247,7 @@ $(function () {
             var me = this;
 
             var top, left, savedParams;
+            var parameterModel = null;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -1244,11 +1267,15 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            if (me.options.parameterModel)
+                parameterModel = me.options.parameterModel.parameterModel("getModel");
+
             me.actionHistory.push({
                 ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
+                parameterModel: parameterModel
             });
 
             me._clearReportViewerForDrill();
@@ -1645,6 +1672,7 @@ $(function () {
             if (!isSameReport) {
                 me.paramLoaded = false;
                 me._removeSetTimeout();
+                me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -1692,7 +1720,10 @@ $(function () {
                 me._loadParameters(me.pageNum);
             }
 
-            me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.reportPath  });
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+            });
         },
         /**
          * Load current report with the given parameter list
@@ -1836,6 +1867,7 @@ $(function () {
                                 me._cachePages(newPageNum);
 
                             me._updateTableHeaders(me);
+                            me._saveThumbnail();
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }

@@ -18,21 +18,31 @@ namespace RegisterWebService.Controllers
         private Register Reg = new Register();
         
         [HttpGet]
-        public HttpResponseMessage Get(string id)
+        public HttpResponseMessage Get(string Referer, string Page)
         {
-            string errorString = "<DIV><H1>Thank you for your interest in Forerunner Software</H1><BR><BR><H3>We are sorry but we are unable to complete your request either becasue your ID is invalid or you have apttempted to download too many times.</h3><h3>If you need to download the file again please send mail to support@forerunnersw.com</h3>";
-            try
+            string cookievalue;
+            HttpResponseMessage Response = this.Request.CreateResponse();
+            this.Request.CreateResponse();
+
+            if (HttpContext.Current.Request.Cookies["ForerunnerID"] != null)
             {
-                if (Reg.ValidateDownload(id))
-                    return WebSerivceHelper.GetResponseFromBytes(Reg.GetSetupFile(), "application/exe", this.Request.CreateResponse(), false, "ForerunnerMobilizerSetup.exe");
-                else
-                    return WebSerivceHelper.GetResponseFromBytes(Encoding.UTF8.GetBytes(errorString), "text/HTML", this.Request.CreateResponse());
+                cookievalue = HttpContext.Current.Request.Cookies["ForerunnerID"].Value;
             }
-            catch (Exception e)
+            else
             {
-                return WebSerivceHelper.ReturnError(e, this.Request.CreateResponse());
+                cookievalue = Guid.NewGuid().ToString();
+                CookieHeaderValue[] c = new CookieHeaderValue[1];
+                c[0] = new CookieHeaderValue("ForerunnerID", cookievalue) ;
+                c[0].Expires = DateTime.Now.AddYears(1);
+
+                Response.Headers.AddCookies(c);
+                
             }
 
+            Reg.SavePageView(cookievalue, Page, Referer, WebSerivceHelper.GetUserIP());
+
+            Response.StatusCode = HttpStatusCode.OK;            
+            return Response;
         }
 
         public HttpResponseMessage Post()

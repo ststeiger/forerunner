@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -118,6 +118,7 @@ $(function () {
             me.credentialDefs = null;
             me.datasourceCredentials = null;
             me.viewerID = me.options.viewerID ? me.options.viewerID : Math.floor((Math.random() * 100) + 1);
+            me.SaveThumbnail = false;
             
             var isTouch = forerunner.device.isTouch();
             // For touch device, update the header only on scrollstop.
@@ -745,12 +746,12 @@ $(function () {
                         if (me.$numOfVisibleParameters > 0) {
                             me._trigger(events.showParamArea, null, { reportPath: me.reportPath });
                         }
-                        else
-                            if (me.options.parameterModel)
-                                me.options.parameterModel.parameterModel("getCurrentParameterList", me.reportPath);
                         me.paramLoaded = true;
                     }
-                   
+
+                    // Restore the parameterModel state from the action history
+                    if (me.options.parameterModel && action.parameterModel)
+                        me.options.parameterModel.parameterModel("setModel", action.parameterModel);
                 }
                 me._loadPage(action.CurrentPage, false, null, null, false);
                 me._trigger(events.actionHistoryPop, null, { path: me.reportPath });
@@ -820,6 +821,27 @@ $(function () {
             me.pages = {};
             if (me.options.pageNavArea)
                 me.options.pageNavArea.pageNav("reset");
+        },
+        _saveThumbnail: function () {
+            var me = this;
+            var url = forerunner.config.forerunnerAPIBase() + "ReportManager" + "/SaveThumbnail";
+            if (me.getCurPage() === 1 && !me.SaveThumbnail) {
+                me.SaveThumbnail = true;
+                forerunner.ajax.ajax({
+                    type: "GET",
+                    url: url,
+                    data: {
+                        ReportPath: me.reportPath,
+                        SessionID: me.sessionID,
+                        Instance: me.options.rsInstance,
+                    },
+                    async: true,
+                    success: function (data) {
+                        //console.log("Saved");
+                    }
+
+                });
+            }
         },
         _prepareAction: function () {
             var me = this;
@@ -1226,6 +1248,7 @@ $(function () {
             var me = this;
 
             var top, left, savedParams;
+            var parameterModel = null;
 
             if (flushCache !== true)
                 flushCache = false;
@@ -1245,11 +1268,15 @@ $(function () {
                 savedParams = $paramArea.reportParameter("getParamsList", true);
             }
 
+            if (me.options.parameterModel)
+                parameterModel = me.options.parameterModel.parameterModel("getModel");
+
             me.actionHistory.push({
                 ReportPath: me.reportPath, SessionID: me.sessionID, CurrentPage: me.curPage, ScrollTop: top,
                 ScrollLeft: left, FlushCache: flushCache, paramLoaded: me.paramLoaded, savedParams: savedParams,
                 reportStates: me.reportStates, renderTime: me.renderTime, reportPages: me.pages, paramDefs: me.paramDefs,
-                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError
+                credentialDefs: me.credentialDefs, savedCredential: me.datasourceCredentials, renderError: me.renderError,
+                parameterModel: parameterModel
             });
 
             me._clearReportViewerForDrill();
@@ -1646,6 +1673,7 @@ $(function () {
             if (!isSameReport) {
                 me.paramLoaded = false;
                 me._removeSetTimeout();
+                me.SaveThumbnail = false;
             }
             me.scrollTop = 0;
             me.scrollLeft = 0;
@@ -1693,7 +1721,10 @@ $(function () {
                 me._loadParameters(me.pageNum);
             }
 
-            me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.reportPath  });
+            me._addSetPageCallback(function () {
+                //_loadPage is designed to async so trigger afterloadreport event as set page down callback
+                me._trigger(events.afterLoadReport, null, { viewer: me, reportPath: me.getReportPath(), sessionID: me.getSessionID() })
+            });
         },
         /**
          * Load current report with the given parameter list
@@ -1837,6 +1868,7 @@ $(function () {
                                 me._cachePages(newPageNum);
 
                             me._updateTableHeaders(me);
+                            me._saveThumbnail();
                         }
                     },
                     error: function () { console.log("error"); me.removeLoadingIndicator(); }
@@ -2282,6 +2314,22 @@ $(function () {
 
             return newSet;
         },
+        // getModel is used to get the model state used with the report viewer action history
+        getModel: function () {
+            var me = this;
+            return {
+                serverData: me.cloneServerData(),
+                reportPath: me.reportPath,
+            };
+        },
+        // setModel restores the model state and triggers a Model change event
+        setModel: function (modelData) {
+            var me = this;
+            me.serverData = modelData.serverData;
+            me.reportPath = modelData.reportPath;
+            me.currentSetId = null;
+            me._triggerModelChange();
+        },
         cloneServerData: function () {
             var me = this;
             if (me.serverData) {
@@ -2421,12 +2469,18 @@ $(function () {
                         if (!me.areSetsEmpty(me.serverData)) {
                             me.currentSetId = me.serverData.defaultSetId;
                         }
+                        else {
+                            // If the server returns back no sets then we need to clear out the current set id
+                            me.currentSetId = null;
+                        }
                     }
                     me.reportPath = reportPath;
                     me._triggerModelChange();
                 },
                 error: function (data) {
                     console.log("ParameterModel._load() - error: " + data.status);
+                    me.currentSetId = null;
+                    me.serverData = null;
                 }
             });
         },
@@ -2491,7 +2545,7 @@ $(function () {
                 } else {
                     return null;
                 }
-                if (parameterSet.data) {
+                if (parameterSet && parameterSet.data) {
                     currentParameterList = JSON.stringify(parameterSet.data);
                 }
             }
@@ -7088,7 +7142,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-    var customSettings = forerunner.config.getCustomSettings();
+    
 
     /**
      * Widget used to manage report parameters
@@ -7458,7 +7512,7 @@ $(function () {
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= customSettings.MinItemToEnableBigDropdownOnTouch ?
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch",10) ?
                         me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
                         me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
@@ -7730,7 +7784,7 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
-                maxItem: customSettings.MaxBigDropdownItem,// set the maximun items to show, default to 50
+                maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;

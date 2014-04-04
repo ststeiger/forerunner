@@ -37,6 +37,7 @@ namespace Forerunner.SSRS.Manager
         string DefaultUserDomain = null;
         string SharePointHostName = null;
         SqlConnection SQLConn;
+        static bool RecurseFolders = ForerunnerUtil.GetAppSetting("Forerunner.RecurseFolders", true);
 
         private static bool isReportServerDB(SqlConnection conn)
         {
@@ -90,7 +91,17 @@ namespace Forerunner.SSRS.Manager
 
             SqlConnection conn = new SqlConnection(builder.ConnectionString);
 
-            return ReportManager.isReportServerDB(conn);
+            if (ReportManager.isReportServerDB(conn))
+            {
+                Logger.Trace(LogType.Info, "Validation of the report server database succeeded.");
+                return true;
+            }
+            else
+            {
+                Logger.Trace(LogType.Error, "Validation of the report server database  failed.");
+                return false;
+            }
+       
         }
 
         public ReportManager(string URL, Credentials WSCredentials, string ReportServerDataSource, string ReportServerDB, Credentials DBCredentials, bool useIntegratedSecurity, bool IsNativeRS, string DefaultUserDomain, string SharePointHostName = null)
@@ -228,26 +239,34 @@ namespace Forerunner.SSRS.Manager
             CatalogItem[] items = callListChildren(path, isRecursive);
             foreach (CatalogItem ci in items)
             {
-                if (ci.Type == ItemTypeEnum.Report )
+                if (ci.Type == ItemTypeEnum.Report && !ci.Hidden)
                 {
-                    if (!ci.Hidden)
-                        list.Add(ci);
+                    list.Add(ci);
                 }
-                if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                if (RecurseFolders)
                 {
-                    CatalogItem[] folder = callListChildren(ci.Path, false);
-                    foreach (CatalogItem fci in folder)
+                    if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
                     {
-                        if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
+                        CatalogItem[] folder = callListChildren(ci.Path, false);
+                        foreach (CatalogItem fci in folder)
                         {
-                            if (!ci.Hidden)
+                            if (fci.Type == ItemTypeEnum.Report || fci.Type == ItemTypeEnum.Folder || fci.Type == ItemTypeEnum.Site)
                             {
-                                list.Add(ci);
-                                break;
+                                if (!ci.Hidden)
+                                {
+                                    list.Add(ci);
+                                    break;
+                                }
                             }
                         }
                     }
                 }
+                else if ((ci.Type == ItemTypeEnum.Folder || ci.Type == ItemTypeEnum.Site) && !ci.Hidden)
+                {
+                    list.Add(ci);
+                }
+
+
             }
             return list.ToArray();
         }
@@ -277,10 +296,10 @@ namespace Forerunner.SSRS.Manager
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerDBVersion')
                             BEGIN	                            
 	                            CREATE TABLE ForerunnerDBVersion (Version varchar(200) NOT NULL,PreviousVersion varchar(200) NOT NULL, PRIMARY KEY (Version))  
-                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.2','0'
+                                INSERT ForerunnerDBVersion (Version,PreviousVersion) SELECT '1.3','0'
                             END
                             ELSE
-                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.2'  FROM ForerunnerDBVersion
+                                UPDATE ForerunnerDBVersion SET PreviousVersion = Version, Version = '1.3'  FROM ForerunnerDBVersion
 
                             DECLARE @DBVersion varchar(200) 
                             DECLARE @DBVersionPrev varchar(200) 
@@ -288,7 +307,7 @@ namespace Forerunner.SSRS.Manager
 
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerCatalog')
                             BEGIN	                            
-	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NOT NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
+	                            CREATE TABLE ForerunnerCatalog (ItemID uniqueidentifier NOT NULL,UserID uniqueidentifier NULL ,ThumbnailImage image NULL, SaveDate datetime NOT NULL,CONSTRAINT uc_PK UNIQUE (ItemID,UserID))  
                             END
                            IF NOT EXISTS(SELECT * FROM sysobjects WHERE type = 'u' AND name = 'ForerunnerFavorites')
                             BEGIN	                            	                            
@@ -304,7 +323,7 @@ namespace Forerunner.SSRS.Manager
                             END
 
                            /*  Version update Code */
-                           IF @DBVersionPrev = 1.1
+                           IF @DBVersionPrev = '1.1'
                             BEGIN
                                 DECLARE @PKName varchar(200) 
                                 select @PKName = name from sysobjects where xtype = 'PK' and parent_obj = object_id('ForerunnerUserItemProperties')
@@ -325,14 +344,13 @@ namespace Forerunner.SSRS.Manager
                                 SELECT @DBVersionPrev = '1.2'
                             END
 
-                            /*
-                            IF @DBVersionPrev = 1.2 
+                            
+                            IF @DBVersionPrev ='1.2' 
                                 BEGIN
-                                ALTER TABLE ForerunnerCatalog ...
-                                ALTER TABLE ForerunnerUserItemProperties ...
-                                SELECT @DBVersionPrev = '1.3'
+                                    ALTER TABLE ForerunnerCatalog ALTER COLUMN ThumbnailImage Image NULL
+                                    SELECT @DBVersionPrev = '1.3'
                                 END
-                            */ 
+                             
                             ";
                 OpenSQLConn();
 
@@ -875,9 +893,13 @@ namespace Forerunner.SSRS.Manager
                                 BEGIN
                                     SELECT @UID = NULL
                                     DELETE ForerunnerCatalog WHERE UserID IS NULL AND ItemID = @IID
-                                END
-                            INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()                            
-                            IF @@error <> 0
+                                END";
+
+            if (image == null)
+                SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,NULL, GETDATE() ";
+            else
+                SQL += " INSERT ForerunnerCatalog (ItemID, UserID,ThumbnailImage,SaveDate) SELECT @IID,@UID,@Image, GETDATE()  ";
+            SQL += @"      IF @@error <> 0
                                 ROLLBACK TRAN t1
                             ELSE
                                 COMMIT TRAN t1        
@@ -891,7 +913,10 @@ namespace Forerunner.SSRS.Manager
 
                     SQLComm.Parameters.AddWithValue("@UserSpecific", IsUserSpecific);
                     SQLComm.Parameters.AddWithValue("@Path", HttpUtility.UrlDecode(path));
-                    SQLComm.Parameters.AddWithValue("@Image", image);
+                    if (image == null)
+                        SQLComm.Parameters.AddWithValue("@Image", DBNull.Value);                        
+                    else
+                        SQLComm.Parameters.AddWithValue("@Image", image);                   
                     SQLComm.Parameters.AddWithValue("@IID", IID);
                     SQLComm.ExecuteNonQuery();
                 }
@@ -900,6 +925,29 @@ namespace Forerunner.SSRS.Manager
             {
                 CloseSQLConn();
             }
+        }
+
+        public void SaveThumbnail(string Path, String SessionID)
+        {
+            byte[] retval = null;
+            int isUserSpecific = 0;
+            string IID = null;
+
+            retval = GetDBImage(Path);
+            if (retval == null || retval.Length == 0)
+            {
+
+                using (ReportViewer rep = new ReportViewer(this.URL))
+                {
+                    retval = rep.GetThumbnail(Path, SessionID, "1", 1.2);
+                    isUserSpecific = IsUserSpecific(Path);
+                    rep.Dispose();
+                }
+
+                IID = GetItemID(Path);
+                SaveImage(retval, Path, null, IID, isUserSpecific);
+            }
+
         }
 
         public byte[] GetDBImage(string path)
@@ -928,6 +976,9 @@ namespace Forerunner.SSRS.Manager
                         {
                             SQLReader.Read();
                             retval = SQLReader.GetSqlBytes(0).Buffer;
+                            if (retval == null)
+                                retval = new byte[0];
+
                         }
                     }
                 }
@@ -1058,14 +1109,12 @@ namespace Forerunner.SSRS.Manager
 
             try
             {
-                if (retval != null)
+                if (sqlImpersonator != null)
                 {
-                    if (sqlImpersonator != null)
-                    {
-                        sqlImpersonator.Impersonate();
-                    }
-                    SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
+                    sqlImpersonator.Impersonate();
                 }
+                SaveImage(retval, path.ToString(), userName, IID, isUserSpecific);
+             
             }
             catch (Exception e)
             {

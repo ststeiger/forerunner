@@ -518,9 +518,18 @@ $(function () {
             }
         },
         /**
-         * Get user custom settings
+        * Set custom settings object
+        *
+        * @param {Object} Custom Settings Object
+        */
+        setCustomSettings: function (settingObject) {
+            this._customSettings =settingObjectl            
+        },
+
+        /**
+         * Get custom settings object, will retrieve from default location if not set.
          *
-         * @param {Object} Custom settings object.
+         * 
          */
         getCustomSettings: function () {
             if (this._customSettings === null) {
@@ -541,6 +550,19 @@ $(function () {
             }
 
             return this._customSettings;
+        },
+        /**
+       * Get user custom settings
+       *
+       * @param {string} value to get.
+       * @param {var} default if not set
+       */
+        getCustomSettingsValue: function (setting, defaultval) {
+            var settings = this.getCustomSettings();
+            if (settings && settings[setting])
+                return settings[setting]
+            else
+                return defaultval;
         },
     };
 
@@ -1243,12 +1265,9 @@ $(function () {
                 target.element.dialog("open");
                 target.element.find(":button").blur();
                 
-
+                me._removeEventsBinding();
                 //reset modal dialog position when window resize happen or orientation change
-                $(window).off("resize", me._setPosition);
-                $(window).on("resize", { target: target }, me._setPosition);
-
-                $(document).off("keyup", me._bindKeyboard);
+                $(window).on("resize", { target: target, me: me }, me._setPosition);
                 $(document).on("keyup", { target: target }, me._bindKeyboard);
             }, 200);
         },
@@ -1261,10 +1280,9 @@ $(function () {
         */
         closeModalDialog: function ($appContainer, target) {
             var me = this;
-            target.element.dialog("destroy");
 
-            $(window).off("resize", me._setPosition);
-            $(document).off("keyup", me._bindKeyboard);
+            me._removeEventsBinding();
+            target.element.dialog("destroy");
            
             if (!forerunner.device.isWindowsPhone())
                 $appContainer.trigger(forerunner.ssr.constants.events.closeModalDialog);
@@ -1277,14 +1295,14 @@ $(function () {
         */
         closeAllModalDialogs: function ($appContainer) {
             var me = this;
+
+            me._removeEventsBinding();
+
             $.each($appContainer.find(".fr-dialog-id"), function (index, modalDialog) {
                 if ($(modalDialog).is(":visible")) {
                     $(modalDialog).dialog("destroy");
                 }
             });
-
-            $(window).off("resize", me._setPosition);
-            $(document).off("keyup", me._bindKeyboard);
         },
         /**
         * Show message box
@@ -1334,12 +1352,17 @@ $(function () {
         },
         _timer: null,
         _setPosition: function (event) {
-            var me = this;
-            if (me._timer) clearTimeout(me._timer);
+            var me = event.data.me;
+
+            if (me._timer) {
+                clearTimeout(me._timer);
+                me._timer = null;
+            }
 
             me._timer = setTimeout(function () {
-                if (event.data.target) {
-                    var uiDialog = event.data.target.element.parent();
+                var target = event.data.target;
+                if (target && target.element.is(":visible")) {
+                    var uiDialog = target.element.parent();
                     if (uiDialog.is(":visible")) {
                         var clone = uiDialog.clone().appendTo(uiDialog.parent());
                         var newTop = clone.css("position", "static").offset().top * -1;
@@ -1350,7 +1373,6 @@ $(function () {
             }, 100);
         },
         _bindKeyboard: function (event) {
-            var me = this;
             var element = event.data.target.element;
             
             //trigger generic event, each modal dialog widget can listener part/all of them 
@@ -1362,6 +1384,17 @@ $(function () {
                     element.trigger(forerunner.ssr.constants.events.modalDialogGenericCancel);
                     break;
             }
+        },
+        _removeEventsBinding: function () {
+            var me = this;
+            
+            if (me._timer) {
+                clearTimeout(me._timer);
+                me._timer = null;
+            }
+
+            $(window).off("resize", me._setPosition);
+            $(document).off("keyup", me._bindKeyboard);
         }
     };
 
@@ -1439,16 +1472,27 @@ $(function () {
         },
 
         cultureDateFormat: null,
+        _setDateFormat: function () {
+            var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
+
+            //set golbal date format
+            var format = locData.datepicker.dateFormat;
+            forerunner.ssr._internal.cultureDateFormat = format;
+        },
         getDateFormat: function () {
-            if (this.cultureDateFormat) {
-                return this.cultureDateFormat;
+            if (!this.cultureDateFormat) {
+                this._setDateFormat();
             }
+            return this.cultureDateFormat;
         },
         getMomentDateFormat: function () {
-            if (this.cultureDateFormat) {
-                return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+            if (!this.cultureDateFormat) {
+                this._setDateFormat();
             }
-        }
+
+            return this.cultureDateFormat.toUpperCase().replace("YY", "YYYY");
+        },
+        
     };
     $(document).ready(function () {
         //show element when touch screen rule for toolbase
@@ -1501,10 +1545,6 @@ $(function () {
         if ($.validator) {
             var locData = forerunner.localize.getLocData(forerunner.config.forerunnerFolder() + "ReportViewer/loc/ReportViewer");
             var error = locData.validateError;
-
-            //set golbal date format
-            var format = locData.datepicker.dateFormat;
-            forerunner.ssr._internal.cultureDateFormat = format;
 
             //replace error message with custom data
             jQuery.extend(jQuery.validator.messages, {

@@ -29,46 +29,21 @@ namespace ReportManager.Controllers
     public class ReportViewerController :ApiController
     {
         private string url = ConfigurationManager.AppSettings["Forerunner.ReportServerWSUrl"];
-        private int ReportServerTimeout = GetAppSetting("Forerunner.ReportServerTimeout", 100000);
+        private int ReportServerTimeout = ForerunnerUtil.GetAppSetting("Forerunner.ReportServerTimeout", 100000);
         private Forerunner.Config.WebConfigSection webConfigSection = Forerunner.Config.WebConfigSection.GetConfigSection();
-        static private bool IgnoreSSLErrors = GetAppSetting("Forerunner.IgnoreSSLErrors", false);
         
         static  ReportViewerController()
         {
-            if (IgnoreSSLErrors)
-                ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            ForerunnerUtil.CheckSSLConfig();
             
         }
  
-        static private bool GetAppSetting(string key, bool defaultValue)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-            return (value == null) ? defaultValue : String.Equals("true", value.ToLower());
-        }
-        static private int GetAppSetting(string key, int defaultValue)
-        {
-            string value = ConfigurationManager.AppSettings[key];
-            return (value == null) ? defaultValue : int.Parse(value);
-        }
-
         private ReportViewer GetReportViewer(string instance)
         {
-            Forerunner.Config.ConfigElement configElement = null;
-            if (webConfigSection != null && instance != null)
-            {
-                Forerunner.Config.ConfigElementCollection configElementCollection = webConfigSection.InstanceCollection;
-                if (configElementCollection != null)
-                {
-                    configElement = configElementCollection.GetElementByKey(instance);
-                }
-            }
-            //Put application security here
-            if (configElement == null)
-                return new ReportViewer(url, ReportServerTimeout);
-            else
-                return new ReportViewer(configElement.ReportServerWSUrl, configElement.ReportServerTimeout);
+            return ForerunnerUtil.GetReportViewerInstance(instance, url, ReportServerTimeout, webConfigSection);
         }
 
+        
         private HttpResponseMessage GetResponseFromBytes(byte[] result, string mimeType, bool cache = false, string fileName = null)
         {
             return GetResponseFromBytes(new MemoryStream(result), mimeType, cache, fileName);

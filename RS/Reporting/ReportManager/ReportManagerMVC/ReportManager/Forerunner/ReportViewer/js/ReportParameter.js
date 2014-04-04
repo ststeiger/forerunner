@@ -13,7 +13,7 @@ $(function () {
     var widgets = forerunner.ssr.constants.widgets;
     var events = forerunner.ssr.constants.events;
     var paramContainerClass = "fr-param-container";
-    var customSettings = forerunner.config.getCustomSettings();
+    
 
     /**
      * Widget used to manage report parameters
@@ -383,7 +383,7 @@ $(function () {
 
                 if (param.ValidValues !== "") { // Dropdown box
                     bindingEnter = false;
-                    $element = forerunner.device.isTouch() && param.ValidValues.length <= customSettings.MinItemToEnableBigDropdownOnTouch ?
+                    $element = forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch",10) ?
                         me._writeDropDownControl(param, dependenceDisable, pageNum, predefinedValue) :
                         me._writeBigDropDown(param, dependenceDisable, pageNum, predefinedValue);
                 }
@@ -655,7 +655,7 @@ $(function () {
                 minLength: 0,
                 delay: 0,
                 autoFocus: true,
-                maxItem: customSettings.MaxBigDropdownItem,// set the maximun items to show, default to 50
+                maxItem: forerunner.config.getCustomSettingsValue("MaxBigDropdownItem",50),
                 select: function (event, obj) {
                     $control.attr("backendValue", obj.item.value).val(obj.item.label).trigger("change", { value: obj.item.value });
                     enterLock = true;

@@ -246,6 +246,7 @@
                         </Border>
                       </Style>
                     </Subreport>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -271,8 +272,8 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>DataSet1</DataSetName>
-        <Top>0.73834in</Top>
-        <Left>0.41542in</Left>
+        <Top>1.75917in</Top>
+        <Left>1.17583in</Left>
         <Height>0.5in</Height>
         <Width>4.01042in</Width>
         <Style>

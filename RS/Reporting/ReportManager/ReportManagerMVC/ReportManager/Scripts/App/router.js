@@ -97,10 +97,15 @@ var ApplicationRouter = Backbone.Router.extend({
         initialize: function () {
             var explorerSettings = forerunner.config.getCustomSettings();
 
+            var isAdmin = false;
+            if (window.location.pathname.toLowerCase().indexOf("/admin") >= 0)
+                isAdmin = true;
+
             this.explorer = $("body").reportExplorerEZ({
                 navigateTo: this.navigateTo,
                 historyBack: this.historyBack,
                 explorerSettings: explorerSettings,
+                isAdmin:isAdmin,
             });
         }
     });

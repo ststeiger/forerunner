@@ -134,6 +134,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="sdk\ReportManagerController.cs" />
@@ -291,6 +292,15 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples\WP8\NoZoom_6.html" />
+    <Content Include="Samples\WP8\NoZoom_5.html" />
+    <Content Include="Samples\WP8\NoZoom.html" />
+    <Content Include="Samples\WP8\NoZoom_1.css" />
+    <Content Include="Samples\WP8\NoZoom_1.html" />
+    <Content Include="Samples\WP8\NoZoom_2.html" />
+    <Content Include="Samples\WP8\NoZoom_3.html" />
+    <Content Include="Samples\WP8\NoZoom_4.css" />
+    <Content Include="Samples\WP8\NoZoom_4.html" />
     <Content Include="Samples_Release\BottomNav.html" />
     <Content Include="Samples_Release\FullPage.html" />
     <Content Include="Samples_Release\Dashboard.html" />
@@ -375,6 +385,7 @@
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Views\Admin\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

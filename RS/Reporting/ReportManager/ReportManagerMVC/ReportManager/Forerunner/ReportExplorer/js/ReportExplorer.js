@@ -47,6 +47,7 @@ $(function () {
             $appContainer: null,
             explorerSettings: null,
             rsInstance: null,
+            isAdmin: false,
         },
         /**
          * Save the user settings

@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <!--
+    Approach:
+      NoZomm_4 will try to set the @-ms-viewport tag usung the updateDynamicRules function.
+      The thinking being if we can dynamically change a style rule instead of the viewport meta
+      tag then maybe the Windows Phone 8 will honor the change at runtime.
+
+    Result:
+      This approach fails because the updateDynamicRules function cannot find the style rule because
+      the rule is not contained in the sheet "rules" or "cssRules" collections.
+    -->
+<head>
+<!--  <meta name="viewport" content="width=device-width, user-scalable=no" />-->
+  <title>NoZoom_4</title>
+  <link href="NoZoom_4.css" rel="stylesheet"/>
+</head>
+<body>
+  <script type="text/javascript" src="../../Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../../Forerunner/Bundles/forerunner.js"></script>
+
+  <script type="text/javascript">
+    var _zoomFlag = false;
+    var $status = $("#status");
+
+    var allowZoomRule = {
+      selector: "@-ms-viewport",
+      properties: function () {
+        var pairs = { width:"device-width", userzoom:"zoom" };
+        if (_zoomFlag) {
+          pairs.userzoom = "zoom";
+          $status.text("user-zoom: zoom");
+        } else {
+          pairs.userzoom = "fixed";
+          $status.text("user-zoom: fixed");
+        }
+        return pairs;
+      }
+    }
+
+    function toggleZoom() {
+      _zoomFlag = !_zoomFlag;
+      forerunner.styleSheet.updateDynamicRules([allowZoomRule]);
+    }
+  </script>
+
+  <input type="button" onclick="toggleZoom()" value="Toggle"/><br />
+  No Zoom Page 4
+  <p id="status"/>
+</body>
+</html>

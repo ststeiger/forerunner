@@ -134,6 +134,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DebugController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="sdk\ReportManagerController.cs" />
@@ -380,6 +381,7 @@
     <Content Include="Forerunner\Bundles\Forerunner-widgets.min.js.map">
       <DependentUpon>Forerunner-widgets.js.bundle</DependentUpon>
     </Content>
+    <Content Include="Views\Admin\Index.cshtml" />
     <None Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\_RMLayout.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />

@@ -4738,6 +4738,7 @@ $(function () {
             $appContainer: null,
             explorerSettings: null,
             rsInstance: null,
+            isAdmin: false,
         },
         /**
          * Save the user settings
@@ -10263,6 +10264,7 @@ $(function () {
             isFullScreen: true,
             explorerSettings: null,
             rsInstance: null,
+            isAdmin:false,
         },
         _createReportExplorer: function (path, view, showmainesection) {
             var me = this;
@@ -10291,7 +10293,8 @@ $(function () {
                 $appContainer: layout.$container,
                 explorerSettings: me.options.explorerSettings,
                 rsInstance: me.options.rsInstance,
-            });
+                isAdmin: me.options.isAdmin,
+            });            
         },
         /**
          * Transition to ReportManager view.

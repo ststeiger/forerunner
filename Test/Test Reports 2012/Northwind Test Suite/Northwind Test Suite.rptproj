@@ -35,20 +35,36 @@
       <FullPath>action URL.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>A-ParamReportWithTwoDS.rdl</Name>
+      <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>bar chart with border and texture.rdl</Name>
       <FullPath>bar chart with border and texture.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>B-ParamReportWithOneDS.rdl</Name>
+      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Checkin Test Report.rdl</Name>
+      <FullPath>Checkin Test Report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>ColumnChartReport.rdl</Name>
       <FullPath>ColumnChartReport.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Customer Data.rdl</Name>
-      <FullPath>Customer Data.rdl</FullPath>
+      <Name>Customer Information2.rdl</Name>
+      <FullPath>Customer Information2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>CustomerInfo.rdl</Name>
       <FullPath>CustomerInfo.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>D-NormalReportNeedCredential.rdl</Name>
+      <FullPath>D-NormalReportNeedCredential.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>EmployeesAllocationFragmentation.rdl.rdl</Name>
@@ -71,12 +87,20 @@
       <FullPath>Image Report 2.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Image Report with header.rdl</Name>
+      <FullPath>Image Report with header.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Image Report.rdl</Name>
       <FullPath>Image Report.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Image table.rdl</Name>
       <FullPath>Image table.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>images and subreports.rdl</Name>
+      <FullPath>images and subreports.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Layout.rdl</Name>
@@ -131,14 +155,6 @@
       <FullPath>Richtextbox.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>RowSpanRepro.rdl</Name>
-      <FullPath>RowSpanRepro.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Simple Gauge.rdl</Name>
-      <FullPath>Simple Gauge.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Simple Matrix.rdl</Name>
       <FullPath>Simple Matrix.rdl</FullPath>
     </ProjectItem>
@@ -155,48 +171,52 @@
       <FullPath>Table Chart with background color.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>Table with embedded Subreport.rdl</Name>
+      <FullPath>Table with embedded Subreport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>table with side txt box.rdl</Name>
       <FullPath>table with side txt box.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Table with Subtotal - Backup.rdl</Name>
+      <FullPath>Table with Subtotal - Backup.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Table with Subtotal.rdl</Name>
       <FullPath>Table with Subtotal.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>ThreeGuages.rdl</Name>
+      <FullPath>ThreeGuages.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>ThreeMaps.rdl</Name>
+      <FullPath>ThreeMaps.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>TwoChartReport.rdl</Name>
       <FullPath>TwoChartReport.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoCharts.rdl</Name>
+      <FullPath>TwoCharts.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoGuages.rdl</Name>
+      <FullPath>TwoGuages.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>TwoMaps.rdl</Name>
+      <FullPath>TwoMaps.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>txt box rt table.rdl</Name>
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>A-ParamReportWithTwoDS.rdl</Name>
-      <FullPath>A-ParamReportWithTwoDS.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>B-ParamReportWithOneDS.rdl</Name>
-      <FullPath>B-ParamReportWithOneDS.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Checkin Test Report.rdl</Name>
-      <FullPath>Checkin Test Report.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>C-ParameterWithoutDataset.rdl</Name>
-      <FullPath>C-ParameterWithoutDataset.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Customer Information2.rdl</Name>
-      <FullPath>Customer Information2.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>D-NormalReportNeedCredential.rdl</Name>
-      <FullPath>D-NormalReportNeedCredential.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>images and subreports.rdl</Name>
-      <FullPath>images and subreports.rdl</FullPath>
+      <Name>SingleGuage.rdl</Name>
+      <FullPath>SingleGuage.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -207,7 +227,7 @@
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
         <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
-        <TargetFolder>Northwind Test Reports</TargetFolder>
+        <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>
         <TargetReportPartFolder>Report Parts</TargetReportPartFolder>

@@ -245,6 +245,9 @@
     <Content Include="Forerunner\ReportViewer\css\PageNav.css" />
     <Content Include="Forerunner\ReportViewer\css\ReportParameter.css" />
     <Content Include="Forerunner\ReportViewer\images\calendar.png" />
+    <Content Include="Forerunner\ReportViewer\images\JSTree32px.png" />
+    <Content Include="Forerunner\ReportViewer\images\JSTree40px.png" />
+    <Content Include="Forerunner\ReportViewer\images\JSTreeThrobber.gif" />
     <Content Include="Forerunner\ReportViewer\images\NavigationClose.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape.png" />
     <Content Include="Forerunner\ReportViewer\images\print_landscape_1.png" />
@@ -289,6 +292,15 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples\WP8\NoZoom_6.html" />
+    <Content Include="Samples\WP8\NoZoom_5.html" />
+    <Content Include="Samples\WP8\NoZoom.html" />
+    <Content Include="Samples\WP8\NoZoom_1.css" />
+    <Content Include="Samples\WP8\NoZoom_1.html" />
+    <Content Include="Samples\WP8\NoZoom_2.html" />
+    <Content Include="Samples\WP8\NoZoom_3.html" />
+    <Content Include="Samples\WP8\NoZoom_4.css" />
+    <Content Include="Samples\WP8\NoZoom_4.html" />
     <Content Include="Samples_Release\BottomNav.html" />
     <Content Include="Samples_Release\FullPage.html" />
     <Content Include="Samples_Release\Dashboard.html" />

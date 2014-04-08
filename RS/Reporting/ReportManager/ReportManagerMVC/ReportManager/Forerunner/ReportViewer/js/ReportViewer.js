@@ -1608,8 +1608,9 @@ $(function () {
          * @param {Boolean} Submit form if the parameters are satisfied.
          * @param {Integer} The page to load.  Specify -1 to load the current page.
          * @param {Boolean} Whether to trigger show parameter area event if there are visible parameters.
+         * @param {Boolean} Indicate it's a cascading refresh or whole refresh
          */
-        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea) {
+        refreshParameters: function (paramList, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
             if (pageNum === -1) {
                 pageNum = me.getCurPage();
@@ -1634,17 +1635,17 @@ $(function () {
                         } else {
                             if (data.SessionID)
                                 me.sessionID = data.SessionID;
-                            me._updateParameterData(data, submitForm, pageNum, renderParamArea);
+                            me._updateParameterData(data, submitForm, pageNum, renderParamArea, isCascading);
                         }
                     }
                 });
             }
         },
-        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea) {
+        _updateParameterData: function (paramData, submitForm, pageNum, renderParamArea, isCascading) {
             var me = this;
             if (paramData) {
                 me.paramDefs = paramData;
-                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea);
+                me.options.paramArea.reportParameter("updateParameterPanel", paramData, submitForm, pageNum, renderParamArea, isCascading);
                 me.$numOfVisibleParameters = me.options.paramArea.reportParameter("getNumOfVisibleParameters");
                 if (me.$numOfVisibleParameters > 0) {
                     me._trigger(events.showParamArea, null, { reportPath: me.reportPath });

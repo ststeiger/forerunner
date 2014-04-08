@@ -167,6 +167,10 @@
       <FullPath>Simple Table with groups and drill down with bookmark.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
+      <Name>SingleGuage.rdl</Name>
+      <FullPath>SingleGuage.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Table Chart with background color.rdl</Name>
       <FullPath>Table Chart with background color.rdl</FullPath>
     </ProjectItem>
@@ -215,8 +219,8 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>SingleGuage.rdl</Name>
-      <FullPath>SingleGuage.rdl</FullPath>
+      <Name>Multiple Cascade Paramters.rdl</Name>
+      <FullPath>Multiple Cascade Paramters.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
@@ -226,7 +230,7 @@
       <Options>
         <OutputPath>bin\Debug</OutputPath>
         <TargetServerVersion>SSRS2008R2</TargetServerVersion>
-        <TargetServerURL>http://192.168.1.66/reportserver</TargetServerURL>
+        <TargetServerURL>http://localhost:8080/reportserver</TargetServerURL>
         <TargetFolder>Northwind Test Suite</TargetFolder>
         <TargetDataSourceFolder>Data Sources</TargetDataSourceFolder>
         <TargetDatasetFolder>Datasets</TargetDatasetFolder>

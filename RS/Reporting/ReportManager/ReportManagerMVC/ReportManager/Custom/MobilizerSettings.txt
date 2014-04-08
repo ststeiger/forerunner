@@ -1,4 +1,5 @@
 {
 	"MaxBigDropdownItem": 50,
-	"MinItemToEnableBigDropdownOnTouch": 10
+	"MinItemToEnableBigDropdownOnTouch": 10,
+	"EnableCascadingTree": "on"
 }

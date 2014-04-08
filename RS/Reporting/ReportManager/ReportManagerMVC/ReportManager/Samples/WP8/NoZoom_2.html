@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--
+    Approach:
+      NoZomm_2 will try to set the @-ms-viewport tag using a refernce to a style element
+      that I create when the document is ready.
+
+    Result:
+      This fails as well. Although I can verify in the browser on the PC that the style sheet
+      does get updated dynamically, Windows Phone 8 does not honor the change.
+    -->
+<head>
+    <title>NoZoom_2</title>
+</head>
+<body>
+  <script type="text/javascript" src="../../Forerunner/Lib/jQuery/js/jquery-1.11.0.min.js"></script>
+  <script type="text/javascript" src="../../Forerunner/Bundles/forerunner.js"></script>
+
+  <script type="text/javascript">
+    $(function () {
+      var $viewportStyle = null;
+      var $status = $("#status");
+
+        $viewportStyle = $("<style>@-ms-viewport {width:device-width; user-zoom:fixed;}</style>");
+        $status.text("user-zoom: fixed");
+        $("head").slice(0).append($viewportStyle);
+
+        var _zoomFlag = false;
+
+      toggleZoom = function () {
+        _zoomFlag = !_zoomFlag;
+        if (_zoomFlag) {
+          $viewportStyle.html("@-ms-viewport {width:device-width!important; user-zoom:zoom!important;}");
+          $status.text("user-zoom: zoom");
+        } else {
+          $viewportStyle.html("@-ms-viewport {width:device-width!important; user-zoom:fixed!important;}");
+          $status.text("user-zoom: fixed");
+        }
+      };
+    });
+  </script>
+
+  <input type="button" onclick="toggleZoom()" value="Toggle"/><br />
+  No Zoom Page 2
+  <p id="status"/>
+</body>
+</html>

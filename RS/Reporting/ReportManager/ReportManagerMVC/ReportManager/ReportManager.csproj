@@ -288,6 +288,14 @@
     <Content Include="Samples\SideNav.html" />
     <Content Include="Samples\TopNav.html" />
     <Content Include="Samples\TopNav2.html" />
+    <Content Include="Samples\WP8\NoZoom_5.html" />
+    <Content Include="Samples\WP8\NoZoom.html" />
+    <Content Include="Samples\WP8\NoZoom_1.css" />
+    <Content Include="Samples\WP8\NoZoom_1.html" />
+    <Content Include="Samples\WP8\NoZoom_2.html" />
+    <Content Include="Samples\WP8\NoZoom_3.html" />
+    <Content Include="Samples\WP8\NoZoom_4.css" />
+    <Content Include="Samples\WP8\NoZoom_4.html" />
     <Content Include="Samples_Release\BottomNav.html" />
     <Content Include="Samples_Release\FullPage.html" />
     <Content Include="Samples_Release\Dashboard.html" />

@@ -14,7 +14,8 @@ namespace Forerunner.Logging
 
     public class Logger
     {
-        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", SourceLevels.All);
+        static private SourceSwitch sourceSwitch = new SourceSwitch("MobilizerTraceType");
+        static private TraceSource ts = new TraceSource("ForerunnerMobilizer", sourceSwitch.Level);
         
         static Logger()
         {

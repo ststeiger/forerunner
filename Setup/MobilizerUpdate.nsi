@@ -659,8 +659,8 @@ Section Uninstall
   
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"
-  Delete "$INSTDIR\Custom\ExplorerSettings.txt"
-  Delete "$INSTDIR\Custom\ExplorerSettings_Examples.txt"
+  Delete "$INSTDIR\Custom\MobilizerSettings.txt"
+  Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"

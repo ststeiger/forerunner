@@ -127,8 +127,12 @@
       <FullPath>multichart.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Multiple Cascade Paramters.rdl</Name>
-      <FullPath>Multiple Cascade Paramters.rdl</FullPath>
+      <Name>Multiple Cascade Parameters.rdl</Name>
+      <FullPath>Multiple Cascade Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
@@ -219,8 +223,12 @@
       <FullPath>txt box rt table.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Mutiple Parameter.rdl</Name>
-      <FullPath>Mutiple Parameter.rdl</FullPath>
+      <Name>Cascading Parameter single category.rdl</Name>
+      <FullPath>Cascading Parameter single category.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Cascading Parameter single product.rdl</Name>
+      <FullPath>Cascading Parameter single product.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

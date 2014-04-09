@@ -820,19 +820,27 @@ $(function () {
             var $tree = me._getCascadingTree(param);
             $treeContainer.append($tree);
 
-            $input.on("click", function () {
-                if ($treeContainer.is(":visible")) {
-                    me._setCascadingTreeValues($treeContainer);
-                    $treeContainer.hide();
-                }
-                else {
-                    $treeContainer.show();
-                }
-                $treeContainer.position({ my: "left top", at: "left bottom", of: $input });
-            });
+            var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
+            var $dropdownicon = me._createDiv(["fr-param-dropdown-icon", "fr-param-not-close"]);
+            $openDropDown.append($dropdownicon);
 
-            $container.append($input).append($hidden).append($treeContainer);
+            $input.on("click", function () { me._showTreePanel($treeContainer, $input); });
+            $openDropDown.on("click", function () { me._showTreePanel($treeContainer, $input); });
+
+            $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
             return $container;
+        },
+        _showTreePanel: function ($tree, $textbox) {
+            var me = this;
+
+            if ($tree.is(":visible")) {
+                me._setCascadingTreeValues($tree);
+                $tree.hide();
+            }
+            else {
+                $tree.show();
+                $tree.position({ my: "left top", at: "left bottom", of: $textbox });
+            }
         },
         _writeCascadingChildren: function (param, predefinedValue) {
             var me = this;
@@ -1115,7 +1123,7 @@ $(function () {
             var me = this;
             var $ul = $container.children("ul");
             var text = null, displayText = [];
-            var hasChild = $ul.attr("haschild").toLowerCase() === "true" ? true : false;
+            var hasChild = $ul.attr("haschild") === "true" ? true : false;
 
             $.each($ul.children("li.fr-param-tree-item-selected"), function (index, li) {
                 text = $(li).children("a").text();

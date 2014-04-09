@@ -8250,11 +8250,15 @@ $(function () {
                 }
             }
         },
-        _getDisplayText: function ($container, param) {
+        _getDisplayText: function ($container) {
             var me = this;
             var $ul = $container.children("ul");
+
+            if ($ul.length === 0)// length === 0 mean it don't have children, stop the recurrence by return empty string
+                return "";
+
             var text = null, displayText = [];
-            var hasChild = $ul.attr("haschild") === "true" ? true : false;
+            var hasChild = $ul.attr("haschild").toLowerCase() === "true" ? true : false;
 
             $.each($ul.children("li.fr-param-tree-item-selected"), function (index, li) {
                 text = $(li).children("a").text();

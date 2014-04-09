@@ -1,4 +1,4 @@
-///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
+﻿///#source 1 1 /Forerunner/ReportViewer/js/ReportViewer.js
 /**
  * @file Contains the reportViewer widget.
  *
@@ -4921,8 +4921,8 @@ $(function () {
                     path: path                    
                 },
                 success: function (data) {
-                    if (data.error) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.error, locData.messages.catalogsLoadFailed);
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
                     }
                     else
                         me._render(data);

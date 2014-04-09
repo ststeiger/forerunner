@@ -1482,7 +1482,7 @@ $(function () {
         getDateFormat: function () {
             if (!this.cultureDateFormat) {
                 this._setDateFormat();
-            }
+            } 
             return this.cultureDateFormat;
         },
         getMomentDateFormat: function () {

@@ -231,7 +231,7 @@ $(function () {
                 success: function (data) {
                     if (data.Exception) {
                         forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
-                    }
+                    } 
                     else
                         me._render(data);
                 },

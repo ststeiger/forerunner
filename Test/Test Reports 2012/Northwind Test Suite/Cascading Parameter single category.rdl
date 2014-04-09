@@ -127,7 +127,9 @@
                               <Style />
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Center</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>OrderID</rd:DefaultName>
@@ -154,7 +156,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!OrderDate.Value</Value>
-                              <Style />
+                              <Style>
+                                <Format>d</Format>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -184,7 +188,9 @@
                           <TextRuns>
                             <TextRun>
                               <Value>=Fields!RequiredDate.Value</Value>
-                              <Style />
+                              <Style>
+                                <Format>d</Format>
+                              </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
@@ -226,8 +232,8 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ReportOrders</DataSetName>
-        <Top>0.87375in</Top>
-        <Left>0.73833in</Left>
+        <Top>0.75in</Top>
+        <Left>0.30208in</Left>
         <Height>0.5in</Height>
         <Width>3in</Width>
         <Style>
@@ -236,6 +242,36 @@
           </Border>
         </Style>
       </Tablix>
+      <Textbox Name="Textbox7">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Cascading Parameter </Value>
+                <Style />
+              </TextRun>
+            </TextRuns>
+            <Style />
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox7</rd:DefaultName>
+        <Top>0.28in</Top>
+        <Left>0.28in</Left>
+        <Height>0.25in</Height>
+        <Width>3.02208in</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
     </ReportItems>
     <Height>2in</Height>
     <Style />
@@ -253,7 +289,7 @@
     <DataSource Name="DataSource1">
       <DataSourceReference>Northwind</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>9c25887d-fb43-41aa-bc73-95f377052908</rd:DataSourceID>
+      <rd:DataSourceID>89bd1374-82d5-472f-b0b6-4fa963e44177</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -282,7 +318,7 @@ FROM            Categories</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Products">
+    <DataSet Name="Product">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
@@ -337,7 +373,7 @@ WHERE        (CategoryID IN (@CatID))</CommandText>
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Orders">
+    <DataSet Name="Order">
       <Query>
         <DataSourceName>DataSource1</DataSourceName>
         <QueryParameters>
@@ -485,7 +521,7 @@ WHERE        OrderID IN (@Orders)</CommandText>
   <ReportParameters>
     <ReportParameter Name="CatID">
       <DataType>String</DataType>
-      <Prompt>Category</Prompt>
+      <Prompt>Cat ID</Prompt>
       <ValidValues>
         <DataSetReference>
           <DataSetName>Cat</DataSetName>
@@ -493,14 +529,13 @@ WHERE        OrderID IN (@Orders)</CommandText>
           <LabelField>CategoryName</LabelField>
         </DataSetReference>
       </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="Product">
       <DataType>String</DataType>
       <Prompt>Product</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>Products</DataSetName>
+          <DataSetName>Product</DataSetName>
           <ValueField>ProductID</ValueField>
           <LabelField>ProductName</LabelField>
         </DataSetReference>
@@ -512,7 +547,7 @@ WHERE        OrderID IN (@Orders)</CommandText>
       <Prompt>Orders</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>Orders</DataSetName>
+          <DataSetName>Order</DataSetName>
           <ValueField>OrderID</ValueField>
           <LabelField>OrderID</LabelField>
         </DataSetReference>
@@ -521,5 +556,5 @@ WHERE        OrderID IN (@Orders)</CommandText>
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Inch</rd:ReportUnitType>
-  <rd:ReportID>f2ed9400-61da-46b7-8922-367c937ffc0e</rd:ReportID>
+  <rd:ReportID>1fbbd23b-e63f-4878-9354-19c8824461af</rd:ReportID>
 </Report>

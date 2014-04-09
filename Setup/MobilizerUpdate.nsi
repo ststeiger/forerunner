@@ -165,6 +165,9 @@ Section "ReportManager" SEC01
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\NavigationClose.png"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\page-loading.gif"
   File "${LOCALROOT}\Forerunner\ReportViewer\Images\ajax-loader1.gif"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTree32px.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTree40px.png"
+  File "${LOCALROOT}\Forerunner\ReportViewer\Images\JSTreeThrobber.gif"
 
   SetOutPath "$INSTDIR\Forerunner\ReportViewer\Loc"
   File "${LOCALROOT}\Forerunner\ReportViewer\Loc\ReportViewer-zh-cn.txt"
@@ -586,6 +589,9 @@ Section Uninstall
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\print_portrait_1.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\NavigationClose.png"
   Delete "$INSTDIR\Forerunner\ReportViewer\Images\toolbar\bkg_toolbar.jpg"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTree32px.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTree40px.png"
+  Delete "$INSTDIR\Forerunner\ReportViewer\Images\JSTreeThrobber.gif"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\PageNav.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportDocumentMap.css"
   Delete "$INSTDIR\Forerunner\ReportViewer\css\ReportParameter.css"
@@ -657,8 +663,8 @@ Section Uninstall
   
   Delete "$INSTDIR\Custom\Explorer.css"
   Delete "$INSTDIR\Custom\Explorer_Examples.css"
-  Delete "$INSTDIR\Custom\ExplorerSettings.txt"
-  Delete "$INSTDIR\Custom\ExplorerSettings_Examples.txt"
+  Delete "$INSTDIR\Custom\MobilizerSettings.txt"
+  Delete "$INSTDIR\Custom\MobilizerSettings_Examples.txt"
   
   Delete "$INSTDIR\bin\Antlr3.Runtime.dll"
   Delete "$INSTDIR\bin\EntityFramework.dll"

@@ -229,9 +229,9 @@ $(function () {
                     path: path                    
                 },
                 success: function (data) {
-                    if (data.error) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.error, locData.messages.catalogsLoadFailed);
-                    }
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    } 
                     else
                         me._render(data);
                 },

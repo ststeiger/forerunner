@@ -80,7 +80,7 @@ namespace ReportManager.Controllers
             }
             catch (Exception e)
             {
-                return GetResponseFromBytes(Encoding.UTF8.GetBytes("{\"error\": \"" + e.Message + "\"}"), "text/JSON");  
+                return GetResponseFromBytes(Encoding.UTF8.GetBytes(JsonUtility.WriteExceptionJSON(e)), "text/JSON");  
             }
             
         }

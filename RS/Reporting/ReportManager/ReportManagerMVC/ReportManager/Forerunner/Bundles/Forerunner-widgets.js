@@ -4921,9 +4921,9 @@ $(function () {
                     path: path                    
                 },
                 success: function (data) {
-                    if (data.error) {
-                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.error, locData.messages.catalogsLoadFailed);
-                    }
+                    if (data.Exception) {
+                        forerunner.dialog.showMessageBox(me.options.$appContainer, data.Exception.Message, locData.messages.catalogsLoadFailed);
+                    } 
                     else
                         me._render(data);
                 },
@@ -7213,6 +7213,7 @@ $(function () {
         _dependencyList: null,
         //indicate whether apply cascading tree
         _isDropdownTree: true,
+        _writeParamDoneCallback: null,
 
         /**
          * Get number of visible parameters
@@ -7388,6 +7389,26 @@ $(function () {
                     textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
                 }
             );
+
+            if (typeof (me._writeParamDoneCallback) === "function") {
+                me._writeParamDoneCallback();
+                me._writeParamDoneCallback = null;
+            }
+        },
+        _addWriteParamDoneCallback: function (func) {
+            if (typeof (func) !== "function") return;
+
+            var me = this;
+            var priorCallback = me._writeParamDoneCallback;
+
+            if (priorCallback === null) {
+                me._writeParamDoneCallback = func;
+            } else {
+                me._writeParamDoneCallback = function () {
+                    priorCallback();
+                    func();
+                };
+            }
         },
 
         _submittedParamsList: null,
@@ -7944,6 +7965,7 @@ $(function () {
             var $container = me._createDiv(["fr-param-element-container fr-param-tree-container"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
+            $input.attr("readonly", "readonly");
             me._setTreeNodeDefaultValue(param, predefinedValue, $input, $hidden);
             me._getParameterControlProperty(param, $input);
 
@@ -7957,6 +7979,8 @@ $(function () {
 
             $input.on("click", function () { me._showTreePanel($treeContainer, $input); });
             $openDropDown.on("click", function () { me._showTreePanel($treeContainer, $input); });
+            //generate default value after write parameter panel done
+            me._addWriteParamDoneCallback(function () { me._setCascadingTreeValues($treeContainer); });
 
             $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
             return $container;
@@ -8032,7 +8056,6 @@ $(function () {
         },
         _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault) {
             var me = this;
-            
             var $li = new $("<li/>");
             $li.addClass("fr-param-tree-item").attr("value", value.Value);
             
@@ -8060,24 +8083,27 @@ $(function () {
                         if ($li.children("ul").length === 0) {
                             $li.addClass("fr-param-tree-loading");
                             me.refreshParameters(null, true);
+                            
+                            // it's not useful now, when the children are new added, its parent won't have selected status
+                            //
                             //update new append's children status
-                            if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
-                                if (param.MultiValue) {
-                                    $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                                    $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
-                                }
-                                else {
-                                    $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
-                                    $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
-                                }
-                            }
+                            //if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
+                            //    if ($li.children("ul").attr("allowmultiple") === "true") {
+                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
+                            //        $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
+                            //    }
+                            //    else {
+                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
+                            //        $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
+                            //    }
+                            //}
                         }
                         else {
                             $li.find("ul").show();
                         }
                     }
 
-                    if (param.MultiValue === false) {
+                    if (param.MultiValue === false) {//handle siblings
                         $li.siblings(".fr-param-tree-item-open").children(".fr-param-tree-icon").trigger("click");
                     }
 
@@ -8122,6 +8148,12 @@ $(function () {
                 }
                 
                 $anchor.removeClass("fr-param-tree-anchor-udm");
+
+                //if this node has child, either children not loaded or collapsed it will open child instead of select all
+                if (hasChild && ($li.children("ul").length === 0 || $li.children("ul").is(":visible") === false)) {
+                    $icon.trigger("click");
+                    return;
+                }
                 
                 if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
                     $anchor.removeClass("fr-param-tree-anchor-selected");
@@ -8137,11 +8169,13 @@ $(function () {
                     $anchor.addClass("fr-param-tree-anchor-selected");
 
                     if (hasChild) {
+                        //if children allow multiple then selected all children by default.
                         if ($li.find("ul").attr("allowmultiple") === "true") {
                             $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
                             $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
                         }
                         else {
+                            //if children not allow multiple then only select the first children by default.
                             $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
                             $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
                         }
@@ -8172,6 +8206,11 @@ $(function () {
                 else {
                     $li.addClass("fr-param-tree-item-close");
                 }
+            }
+
+            //trigger default click after write parameter panel done
+            if (isDefault && !hasChild) {
+                me._addWriteParamDoneCallback(function () { $anchor.trigger("click"); });
             }
 
             return $li;
@@ -8301,14 +8340,13 @@ $(function () {
         },
         _closeCascadingTree: function () {
             var me = this;
-
             var $trees = me.element.find(".fr-param-tree");
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
+
                 if ($tree.is(":visible")) {
                     me._setCascadingTreeValues($tree);
-
                     $tree.hide();
                 }
             });

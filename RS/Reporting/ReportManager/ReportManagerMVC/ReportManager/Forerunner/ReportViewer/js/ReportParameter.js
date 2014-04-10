@@ -82,6 +82,7 @@ $(function () {
         _dependencyList: null,
         //indicate whether apply cascading tree
         _isDropdownTree: true,
+        _writeParamDoneCallback: null,
 
         /**
          * Get number of visible parameters
@@ -257,6 +258,26 @@ $(function () {
                     textinput.on("focus", function () { me.options.$reportViewer.onInputFocus(); });
                 }
             );
+
+            if (typeof (me._writeParamDoneCallback) === "function") {
+                me._writeParamDoneCallback();
+                me._writeParamDoneCallback = null;
+            }
+        },
+        _addWriteParamDoneCallback: function (func) {
+            if (typeof (func) !== "function") return;
+
+            var me = this;
+            var priorCallback = me._writeParamDoneCallback;
+
+            if (priorCallback === null) {
+                me._writeParamDoneCallback = func;
+            } else {
+                me._writeParamDoneCallback = function () {
+                    priorCallback();
+                    func();
+                };
+            }
         },
 
         _submittedParamsList: null,
@@ -813,6 +834,7 @@ $(function () {
             var $container = me._createDiv(["fr-param-element-container fr-param-tree-container"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
             var $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
+            $input.attr("readonly", "readonly");
             me._setTreeNodeDefaultValue(param, predefinedValue, $input, $hidden);
             me._getParameterControlProperty(param, $input);
 
@@ -826,6 +848,8 @@ $(function () {
 
             $input.on("click", function () { me._showTreePanel($treeContainer, $input); });
             $openDropDown.on("click", function () { me._showTreePanel($treeContainer, $input); });
+            //generate default value after write parameter panel done
+            me._addWriteParamDoneCallback(function () { me._setCascadingTreeValues($treeContainer); });
 
             $container.append($input).append($hidden).append($openDropDown).append($treeContainer);
             return $container;
@@ -901,7 +925,6 @@ $(function () {
         },
         _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault) {
             var me = this;
-            
             var $li = new $("<li/>");
             $li.addClass("fr-param-tree-item").attr("value", value.Value);
             
@@ -1054,6 +1077,11 @@ $(function () {
                 }
             }
 
+            //trigger default click after write parameter panel done
+            if (isDefault && !hasChild) {
+                me._addWriteParamDoneCallback(function () { $anchor.trigger("click"); });
+            }
+
             return $li;
         },
         _setParentStatus: function ($item) {
@@ -1181,14 +1209,13 @@ $(function () {
         },
         _closeCascadingTree: function () {
             var me = this;
-
             var $trees = me.element.find(".fr-param-tree");
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
+
                 if ($tree.is(":visible")) {
                     me._setCascadingTreeValues($tree);
-
                     $tree.hide();
                 }
             });

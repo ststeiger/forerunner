@@ -8060,24 +8060,27 @@ $(function () {
                         if ($li.children("ul").length === 0) {
                             $li.addClass("fr-param-tree-loading");
                             me.refreshParameters(null, true);
+                            
+                            // it's not useful now, when the children are new added, its parent won't have selected status
+                            //
                             //update new append's children status
-                            if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
-                                if (param.MultiValue) {
-                                    $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                                    $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
-                                }
-                                else {
-                                    $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
-                                    $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
-                                }
-                            }
+                            //if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
+                            //    if ($li.children("ul").attr("allowmultiple") === "true") {
+                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
+                            //        $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
+                            //    }
+                            //    else {
+                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
+                            //        $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
+                            //    }
+                            //}
                         }
                         else {
                             $li.find("ul").show();
                         }
                     }
 
-                    if (param.MultiValue === false) {
+                    if (param.MultiValue === false) {//handle siblings
                         $li.siblings(".fr-param-tree-item-open").children(".fr-param-tree-icon").trigger("click");
                     }
 
@@ -8122,6 +8125,12 @@ $(function () {
                 }
                 
                 $anchor.removeClass("fr-param-tree-anchor-udm");
+
+                //if this node has child, either children not loaded or collapsed it will open child instead of select all
+                if (hasChild && ($li.children("ul").length === 0 || $li.children("ul").is(":visible") === false)) {
+                    $icon.trigger("click");
+                    return;
+                }
                 
                 if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
                     $anchor.removeClass("fr-param-tree-anchor-selected");
@@ -8137,11 +8146,13 @@ $(function () {
                     $anchor.addClass("fr-param-tree-anchor-selected");
 
                     if (hasChild) {
+                        //if children allow multiple then selected all children by default.
                         if ($li.find("ul").attr("allowmultiple") === "true") {
                             $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
                             $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
                         }
                         else {
+                            //if children not allow multiple then only select the first children by default.
                             $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
                             $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
                         }

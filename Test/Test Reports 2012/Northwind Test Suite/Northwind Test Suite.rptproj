@@ -131,10 +131,6 @@
       <FullPath>Multiple Cascade Parameters.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Mutiple Parameter.rdl</Name>
-      <FullPath>Mutiple Parameter.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>newspaper multi column.rdl</Name>
       <FullPath>newspaper multi column.rdl</FullPath>
     </ProjectItem>
@@ -229,6 +225,10 @@
     <ProjectItem>
       <Name>Cascading Parameter single product.rdl</Name>
       <FullPath>Cascading Parameter single product.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Mutiple Parameter.rdl</Name>
+      <FullPath>Mutiple Parameter.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>

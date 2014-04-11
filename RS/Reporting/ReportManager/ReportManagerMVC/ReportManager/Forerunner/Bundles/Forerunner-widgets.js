@@ -7595,7 +7595,13 @@ $(function () {
                 });
             }
 
-            $container.append($element).append(me._addNullableCheckBox(param, $element, predefinedValue)).append($errorMsg);
+            $container.append($element);
+            //for cascading hidden elements, don't add null checkbox constraint
+            //they are assist elements to generate parameter list
+            if (!$parent.hasClass("fr-param-hidden")) {
+                $container.append(me._addNullableCheckBox(param, $element, predefinedValue)).append($errorMsg);
+            }
+                
             $parent.append($label).append($container);
             return $parent;
         },
@@ -8002,13 +8008,13 @@ $(function () {
             var $container = null, $hidden = null;
 
             $container = me._createDiv(["fr-param-element-container"]);
-            $input = me._createInput(param, "text", false, ["fr-param-client", "fr-paramname-" + param.Name]);
-            $input.attr("disabled", true);
+            //$input = me._createInput(param, "text", false, ["fr-param-client", "fr-paramname-" + param.Name]);
+            //$input.attr("disabled", true);
             $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
-            me._setTreeNodeDefaultValue(param, predefinedValue, $input, $hidden);
-            me._getParameterControlProperty(param, $input);
+            me._setTreeNodeDefaultValue(param, predefinedValue, null, $hidden);
+            //me._getParameterControlProperty(param, $input);
             
-            $container.append($input).append($hidden);
+            $container.append($hidden);
             return $container;
         },
         _getCascadingTree: function (param) {
@@ -8143,8 +8149,8 @@ $(function () {
                 e.preventDefault();
                 if (param.MultiValue === false) {
                     $li.siblings().removeClass("fr-param-tree-item-selected").//remove siblings selected status
-                        //remove its children selected status
-                        find(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-udm");
+                       //remove its children selected status
+                       find(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-udm");
                 }
                 
                 $anchor.removeClass("fr-param-tree-anchor-udm");
@@ -8194,13 +8200,12 @@ $(function () {
 
                     for (var i = 0; i < children.length; i++) {
                         var subParam = me._parameterDefinitions[children[i]];
-
                         var $childList = me._getCascadingTree(subParam);
+                        
                         if ($childList) {
                             $li.append($childList);
                         }
                     }
-
                     $li.addClass("fr-param-tree-item-open");
                 }
                 else {
@@ -8260,31 +8265,25 @@ $(function () {
                         $targetElement = me.element.find(".fr-paramname-" + param.Name);
 
                         if (param.MultiValue) {
-                            //displayText = [];
                             backendValue = [];
-                            
+
                             $.each($tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected"), function (index, li) {
-                                //displayText.push($(li).children("a").text());
                                 backendValue.push($(li).attr("value"));
                             });
 
-                            //$targetElement.filter(".fr-param-client").val(displayText.join());
                             $targetElement.filter(".fr-param").attr("backendValue", JSON.stringify(backendValue));
                         }
                         else {
                             var $selected = $tree.find("ul[name=" + param.Name + "] > li.fr-param-tree-item-selected");
-                            //displayText = $selected.children("a").text();
                             backendValue = $selected.attr("value");
-
-                            //$targetElement.filter(".fr-param-client").val(displayText);
                             $targetElement.filter(".fr-param").attr("backendValue", backendValue);
                         }
-                    }
 
-                    //set display text only for top parameter
-                    if (param.isParent && !param.isChild) {
-                        displayText = me._getDisplayText($tree);
-                        $targetElement.val(displayText);
+                        //set display text only for top parameter
+                        if (param.isParent && !param.isChild) {
+                            displayText = me._getDisplayText($tree);
+                            $targetElement.val(displayText);
+                        }
                     }
                 }
             }
@@ -8324,13 +8323,17 @@ $(function () {
                             keys.push(param.ValidValues[i].Key);
                         }
                     }
-                    $input.val(keys.join());
+                    if ($input) {
+                        $input.val(keys.join());
+                    }
                     $hidden.attr("backendValue", JSON.stringify(predefinedValue));
                 }
                 else {
                     for (var i = 0; i < param.ValidValues.length; i++) {
                         if ((predefinedValue && predefinedValue === param.ValidValues[i].Value)) {
-                            $input.val(param.ValidValues[i].Key);
+                            if ($input) {
+                                $input.val(param.ValidValues[i].Key);
+                            }
                             $hidden.attr("backendValue", param.ValidValues[i].Value);
                             break;
                         }
@@ -8895,13 +8898,6 @@ $(function () {
             var me = this;
             return me.options.$reportViewer.locData.datepicker;
         },
-        //destroy: function () {
-        //    var me = this;
-        //    console.log('parameter destroy');
-        //    me.options.$appContainer.find('.fr-param-testpanel').remove();
-
-        //    this._destroy();
-        //}
     });  // $.widget
 });
 ///#source 1 1 /Forerunner/ReportViewer/js/ReportDocumentMap.js

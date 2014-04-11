@@ -7248,13 +7248,14 @@ $(function () {
             if (isCascading && me._isDropdownTree) {
                 var $li = me.element.find(".fr-param-tree-loading");
                 me._dataPreprocess(data.ParametersList);
+                var level = $li.parent("ul").attr("level");
 
                 var parentName = $li.parent().attr("name");
                 var childName = me._dependencyList[parentName];
                 var $childList = null;
                 //now it only work for 1 to 1 relationship
                 for (var i = 0; i < childName.length; i++) {
-                    $childList = me._getCascadingTree(me._parameterDefinitions[childName[i]]);
+                    $childList = me._getCascadingTree(me._parameterDefinitions[childName[i]], parseInt(level, 10) + 1);
                     if ($childList) {
                         $li.append($childList);
                     }
@@ -7967,6 +7968,7 @@ $(function () {
         },
         _writeCascadingTree: function (param, predefinedValue) {
             var me = this;
+            var nodeLevel = 1;
 
             var $container = me._createDiv(["fr-param-element-container fr-param-tree-container"]);
             var $input = me._createInput(param, "text", false, ["fr-param-client", "fr-param-not-close", "fr-paramname-" + param.Name]);
@@ -7976,7 +7978,7 @@ $(function () {
             me._getParameterControlProperty(param, $input);
 
             var $treeContainer = me._createDiv(["fr-param-tree", "ui-corner-all", "fr-param-not-close"]);
-            var $tree = me._getCascadingTree(param);
+            var $tree = me._getCascadingTree(param, nodeLevel);
             $treeContainer.append($tree);
 
             var $openDropDown = me._createDiv(["fr-param-dropdown-iconcontainer", "fr-core-cursorpointer"]);
@@ -8017,7 +8019,7 @@ $(function () {
             $container.append($hidden);
             return $container;
         },
-        _getCascadingTree: function (param) {
+        _getCascadingTree: function (param, level) {
             var me = this;
             var $list = null;
             //for dropdown list or dropdown with checkbox
@@ -8031,6 +8033,7 @@ $(function () {
                     .attr("allowmultiple", param.MultiValue)
                     .attr("haschild", hasChild)
                     .attr("nullable", param.Nullable)
+                    .attr("level", level)
                     .addClass("fr-param-tree-ul");
 
                 if (param.isChild) {
@@ -8053,14 +8056,14 @@ $(function () {
                         }
                     }
                     
-                    var item = me._getCascadingTreeItem(param, param.ValidValues[i], hasChild, i === length - 1, isDefault);
+                    var item = me._getCascadingTreeItem(param, param.ValidValues[i], hasChild, i === length - 1, isDefault, level);
                     $list.append(item)
                 }
             }
 
             return $list;
         },
-        _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault) {
+        _getCascadingTreeItem: function (param, value, hasChild, isLast, isDefault, level) {
             var me = this;
             var $li = new $("<li/>");
             $li.addClass("fr-param-tree-item").attr("value", value.Value);
@@ -8075,34 +8078,12 @@ $(function () {
 
             $icon.on("click", function () {
                 if ($li.hasClass("fr-param-tree-item-close")) {
-                    if (hasChild) {
-                        var parentName = $li.parent().attr("name");
-                        var $parent = me.element.find(".fr-paramname-" + parentName);
-                        //set single selected item as backend value to load data dynamically
-                        if (param.MultiValue) {
-                            $parent.filter(".fr-param").val("#").attr("backendValue", '["' + $li.attr("value") + '"]');
-                        }
-                        else {
-                            $parent.filter(".fr-param").val("#").attr("backendValue", $li.attr("value"));
-                        }
+                    me._setRuntimeTreeValues($li);
 
+                    if (hasChild) {
                         if ($li.children("ul").length === 0) {
                             $li.addClass("fr-param-tree-loading");
                             me.refreshParameters(null, true);
-                            
-                            // it's not useful now, when the children are new added, its parent won't have selected status
-                            //
-                            //update new append's children status
-                            //if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
-                            //    if ($li.children("ul").attr("allowmultiple") === "true") {
-                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor").addClass("fr-param-tree-anchor-selected");
-                            //        $li.find(".fr-param-tree-item").addClass("fr-param-tree-item-selected");
-                            //    }
-                            //    else {
-                            //        $li.find(".fr-param-tree-item .fr-param-tree-anchor:first").addClass("fr-param-tree-anchor-selected");
-                            //        $li.find(".fr-param-tree-item:first").addClass("fr-param-tree-item-selected");
-                            //    }
-                            //}
                         }
                         else {
                             $li.find("ul").show();
@@ -8110,7 +8091,11 @@ $(function () {
                     }
 
                     if (param.MultiValue === false) {//handle siblings
-                        $li.siblings(".fr-param-tree-item-open").children(".fr-param-tree-icon").trigger("click");
+                        var allSiblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-open");
+
+                        $.each(allSiblings, function (index, sibling) {
+                            $(sibling).children(".fr-param-tree-icon").trigger("click");
+                        });
                     }
 
                     $li.removeClass("fr-param-tree-item-close").addClass("fr-param-tree-item-open");
@@ -8128,6 +8113,8 @@ $(function () {
                         $li.find(".fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-selected");
                     }
                 }
+
+                me._setParentStatus($li);
             });
 
             var $checkbox = new $("<i/>");
@@ -8147,19 +8134,24 @@ $(function () {
             $anchor.addClass("fr-param-tree-anchor");
             $anchor.on("click", function (e) {
                 e.preventDefault();
-                if (param.MultiValue === false) {
-                    $li.siblings().removeClass("fr-param-tree-item-selected").//remove siblings selected status
-                       //remove its children selected status
-                       find(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-udm");
-                }
-                
-                $anchor.removeClass("fr-param-tree-anchor-udm");
 
                 //if this node has child, either children not loaded or collapsed it will open child instead of select all
+                //in the same time clear all siblings selected status for single select parameter
                 if (hasChild && ($li.children("ul").length === 0 || $li.children("ul").is(":visible") === false)) {
+                    if (param.MultiValue === false) {
+                        var allSiblings = me.element.find(".fr-param-tree-container ul[level='" + level + "']").children("li.fr-param-tree-item-selected");
+
+                        $.each(allSiblings, function (index, sibling) {
+                            $(sibling).removeClass("fr-param-tree-item-selected")
+                                .find(".fr-param-tree-anchor").removeClass("fr-param-tree-anchor-selected").removeClass("fr-param-tree-anchor-udm");
+                        });
+                    }
+
                     $icon.trigger("click");
                     return;
                 }
+
+                $anchor.removeClass("fr-param-tree-anchor-udm");
                 
                 if ($anchor.hasClass("fr-param-tree-anchor-selected")) {
                     $anchor.removeClass("fr-param-tree-anchor-selected");
@@ -8196,16 +8188,19 @@ $(function () {
 
             if (hasChild) {
                 if (isDefault) {
+                    level += 1;
                     var children = me._dependencyList[param.Name];
 
                     for (var i = 0; i < children.length; i++) {
                         var subParam = me._parameterDefinitions[children[i]];
-                        var $childList = me._getCascadingTree(subParam);
+                        var $childList = me._getCascadingTree(subParam, level);
                         
                         if ($childList) {
                             $li.append($childList);
                         }
                     }
+
+                    level -= 1;
                     $li.addClass("fr-param-tree-item-open");
                 }
                 else {
@@ -8247,6 +8242,24 @@ $(function () {
                 }
 
                 me._setParentStatus($parent);
+            }
+        },
+        _setRuntimeTreeValues: function($item){
+            var me = this;
+
+            var $ul = $item.parent();
+            var parentName = $ul.attr("name");
+            var $param = me.element.find(".fr-paramname-" + parentName);
+            //set single selected item as backend value to load data dynamically
+            if ($ul.attr("allowmultiple") === "true") {
+                $param.filter(".fr-param").val("#").attr("backendValue", '["' + $item.attr("value") + '"]');
+            }
+            else {
+                $param.filter(".fr-param").val("#").attr("backendValue", $item.attr("value"));
+            }
+
+            if ($ul.attr("parent")) {
+                me._setRuntimeTreeValues($ul.parent("li"));
             }
         },
         _setCascadingTreeValues: function ($tree) {

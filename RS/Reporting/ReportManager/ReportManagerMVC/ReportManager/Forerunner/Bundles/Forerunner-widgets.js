@@ -7265,9 +7265,10 @@ $(function () {
             }
             else {
                 this.removeParameter();
-                this._hasPostedBackWithoutSubmitForm = true;
                 this.writeParameterPanel(data, pageNum, submitForm, renderParamArea);
             }
+
+            this._hasPostedBackWithoutSubmitForm = true;
         },
 
         /**
@@ -7461,43 +7462,68 @@ $(function () {
 
                     me.options.$reportViewer.invalidateReportContext();
                 }
-                var submittedParameters = JSON.parse(me._submittedParamsList);
-                var list = submittedParameters.ParamsList;
-                var $control;
-                for (var i = 0; i < list.length; i++) {
-                    var savedParam = list[i];
-                    var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
-                    if (paramDefinition.MultiValue) {
-                        if (paramDefinition.ValidValues !== "") {
-                            $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
-                            me._setCheckBoxes($control, savedParam.Value);
-                            me._setMultipleInputValues(paramDefinition);
-                        } else {
-                            $control = $(".fr-paramname-" + paramDefinition.Name);
-                            var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
-                            $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
-                            $control.val(me._getTextAreaValue(savedParam.Value, false));
-                            $control.attr("jsonValues", JSON.stringify(savedParam.Value));
+                else {
+                    var submittedParameters = JSON.parse(me._submittedParamsList);
+                    var list = submittedParameters.ParamsList;
+                    var $control;
+                   
+                    for (var i = 0; i < list.length; i++) {
+                        var savedParam = list[i];
+                        var paramDefinition = me._parameterDefinitions[savedParam.Parameter];
+
+                        if (me._isDropdownTree && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on"
+                            && (paramDefinition.isParent || paramDefinition.isChild)) {
+
+                            var isTopParent = paramDefinition.isParent === true && paramDefinition.isChild !== true;
+                            //Revert cascading tree status: display text, backend value, tree UI
+                            me._setCascadingTreeItemStatus(paramDefinition, savedParam, isTopParent);
+                            $control = me.element.find(".fr-paramname-" + paramDefinition.Name);
+                            $control.attr("backendValue", JSON.stringify(savedParam.Value));
+                            continue;
                         }
-                    } else {
-                        $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
-                        // Only non-multi-value parameters can be nullable.
-                        if (paramDefinition.Nullable && savedParam.Value === null) {
-                            var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
-                            if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
-                                $cb.trigger("click");
-                        } else if (paramDefinition.ValidValues !== "") {
-                            me._setSelectedIndex($control, savedParam.Value);
-                        } else if (paramDefinition.Type === "Boolean") {
-                            me._setRadioButton($control, savedParam.Value);
-                        } else {
-                            if ($control.attr("datatype").toLowerCase() === "datetime") {
-                                $control.val(me._getDateTimeFromDefault(savedParam.Value));
+
+                        if (paramDefinition.MultiValue) {
+                            if (paramDefinition.ValidValues !== "") {
+                                $control = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-cb", me.$params);
+                                me._setCheckBoxes($control, savedParam.Value);
+                                me._setMultipleInputValues(paramDefinition);
+                            } else {
+                                $control = $(".fr-paramname-" + paramDefinition.Name);
+                                var $dropdownText = $(".fr-paramname-" + paramDefinition.Name + "-dropdown-textArea");
+                                $dropdownText.val(me._getTextAreaValue(savedParam.Value, true));
+                                $control.val(me._getTextAreaValue(savedParam.Value, false));
+                                $control.attr("jsonValues", JSON.stringify(savedParam.Value));
                             }
-                            else {
-                                $control.val(savedParam.Value);
+                        } else {
+                            $control = $(".fr-paramname-" + paramDefinition.Name, me.$params);
+                            // Only non-multi-value parameters can be nullable.
+                            if (paramDefinition.Nullable && savedParam.Value === null) {
+                                var $cb = $(".fr-param-checkbox", me.$params).filter("[name*='" + paramDefinition.Name + "']").first();
+                                if ($cb.length !== 0 && $cb.attr("checked") !== "checked")
+                                    $cb.trigger("click");
+                            } else if (paramDefinition.ValidValues !== "") {
+                                if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
+                                    me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
+                                }
+                                else {
+                                    me._setSelectedIndex($control, savedParam.Value);
+                                }
+                            } else if (paramDefinition.Type === "Boolean") {
+                                me._setRadioButton($control, savedParam.Value);
+                            } else {
+                                if ($control.attr("datatype").toLowerCase() === "datetime") {
+                                    $control.val(me._getDateTimeFromDefault(savedParam.Value));
+                                }
+                                else {
+                                    $control.val(savedParam.Value);
+                                }
                             }
                         }
+                    }
+
+                    //set tree selected status after revert
+                    if (me._isDropdownTree && forerunner.config.getCustomSettingsValue("EnableCascadingTree", true) === "on") {
+                        me._closeCascadingTree(true);
                     }
                 }
             }
@@ -7537,11 +7563,7 @@ $(function () {
             var me = this;
             var $label = new $("<div class='fr-param-label'>" + param.Prompt + "</div>");
             var bindingEnter = true;
-            var dependenceDisable = me._checkDependencies(param);
             var predefinedValue = me._getPredefinedValue(param);
-            //if any element disable exist then not submit form auto
-            if (dependenceDisable) me._loadedForDefault = false;
-
             //If the control have valid values, then generate a select control
             var $container = new $("<div class='fr-param-item-container'></div>");
             var $errorMsg = new $("<span class='fr-param-error-placeholder'/>");
@@ -7560,6 +7582,10 @@ $(function () {
             }
 
             if ($element === null) {
+                var dependenceDisable = me._checkDependencies(param);
+                //if any element disable exist then not submit form auto
+                if (dependenceDisable) me._loadedForDefault = false;
+
                 if (param.MultiValue === true) { // Allow multiple values in one textbox
                     if (param.ValidValues !== "") { // Dropdown with checkbox
                         $element = me._writeDropDownWithCheckBox(param, dependenceDisable, predefinedValue);
@@ -7793,6 +7819,13 @@ $(function () {
             }
 
         },
+        _setBigDropDownIndex: function(param, value, $control){
+            for (var i = 0; i < param.ValidValues.length; i++) {
+                if ((value && value === param.ValidValues[i].Value) || (!value && i === 0)) {
+                    $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
+                }
+            }
+        },
         _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
             var canLoad = false,
@@ -8013,6 +8046,7 @@ $(function () {
             //$input = me._createInput(param, "text", false, ["fr-param-client", "fr-paramname-" + param.Name]);
             //$input.attr("disabled", true);
             $hidden = me._createInput(param, "hidden", false, ["fr-param", "fr-paramname-" + param.Name]);
+            $hidden.val("#");
             me._setTreeNodeDefaultValue(param, predefinedValue, null, $hidden);
             //me._getParameterControlProperty(param, $input);
             
@@ -8086,7 +8120,7 @@ $(function () {
                             me.refreshParameters(null, true);
                         }
                         else {
-                            $li.find("ul").show();
+                            $li.children("ul").show();
                         }
                     }
 
@@ -8294,14 +8328,14 @@ $(function () {
 
                         //set display text only for top parameter
                         if (param.isParent && !param.isChild) {
-                            displayText = me._getDisplayText($tree);
+                            displayText = me._getTreeDisplayText($tree);
                             $targetElement.val(displayText);
                         }
                     }
                 }
             }
         },
-        _getDisplayText: function ($container) {
+        _getTreeDisplayText: function ($container) {
             var me = this;
             var $ul = $container.children("ul");
 
@@ -8314,7 +8348,7 @@ $(function () {
             $.each($ul.children("li.fr-param-tree-item-selected"), function (index, li) {
                 text = $(li).children("a").text();
                 if (hasChild) {
-                    text += me._getDisplayText($(li));
+                    text += me._getTreeDisplayText($(li));
                 }
                 displayText.push(text);
             });
@@ -8354,14 +8388,54 @@ $(function () {
                 }
             }
         },
-        _closeCascadingTree: function () {
+        //set each tree item status by specify parameter value
+        _setCascadingTreeItemStatus:  function (param, defaultParam, isTopParent) {
+            var me = this;
+            var $parent = me.element.find(".fr-param-tree ul[name='" + param.Name + "']");
+            if (isTopParent) {
+                //clear current tree status
+                me._clearCascadingTreeStatus($parent);
+            }
+
+            //reset tree select status
+            var $li = $parent.children("li");
+            $.each($li, function (index, item) {
+                if (param.MultiValue) {
+                    if (me._contains(defaultParam.Value, $(item).attr("value"))) {
+                        $(item).children(".fr-param-tree-anchor").trigger("click");
+                    }
+                }
+                else {
+                    if ($(item).attr("value") === defaultParam.Value) {
+                        $(item).children(".fr-param-tree-anchor").trigger("click");
+                    }
+                }
+            });
+        },
+        _clearCascadingTreeStatus: function ($parent) {
+            var me = this;
+            var hasChild = $parent.attr("haschild") === "true";
+            if (hasChild) {
+                var $children = $parent.children("li.fr-param-tree-item-selected").children("ul");
+                $.each($children, function (index, child) {
+                    me._clearCascadingTreeStatus($(child));
+                });
+            }
+
+            $parent.children("li.fr-param-tree-item-selected").children(".fr-param-tree-anchor").trigger("click");
+            
+            if (hasChild) {
+                $parent.children("li.fr-param-tree-item-open").children(".fr-param-tree-ocl").trigger("click");
+            }
+        },
+        _closeCascadingTree: function (skipVisibleCheck) {
             var me = this;
             var $trees = me.element.find(".fr-param-tree");
 
             $.each($trees, function (index, tree) {
                 var $tree = $(tree);
 
-                if ($tree.is(":visible")) {
+                if (skipVisibleCheck || $tree.is(":visible")) {
                     me._setCascadingTreeValues($tree);
                     $tree.hide();
                 }
@@ -8630,7 +8704,7 @@ $(function () {
             //clsoe auto complete dropdown, it will be appended to the body so use $appContainer here to do select
             $(".ui-autocomplete", me.options.$appContainer).hide();
 
-            me._closeCascadingTree();
+            me._closeCascadingTree(false);
         },
         _checkExternalClick: function (e) {
             var me = this;

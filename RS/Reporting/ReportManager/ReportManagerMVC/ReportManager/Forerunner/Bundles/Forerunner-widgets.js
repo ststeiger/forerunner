@@ -7503,10 +7503,10 @@ $(function () {
                                     $cb.trigger("click");
                             } else if (paramDefinition.ValidValues !== "") {
                                 if (forerunner.device.isTouch() && param.ValidValues.length <= forerunner.config.getCustomSettingsValue("MinItemToEnableBigDropdownOnTouch", 10)) {
-                                    me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
+                                    me._setSelectedIndex($control, savedParam.Value);
                                 }
                                 else {
-                                    me._setSelectedIndex($control, savedParam.Value);
+                                    me._setBigDropDownIndex(paramDefinition, savedParam.Value, $control);
                                 }
                             } else if (paramDefinition.Type === "Boolean") {
                                 me._setRadioButton($control, savedParam.Value);
@@ -7825,6 +7825,10 @@ $(function () {
                     $control.val(param.ValidValues[i].Key).attr("backendValue", param.ValidValues[i].Value);
                 }
             }
+
+            if ($control.hasClass("fr-param-autocomplete-error")) {
+                $control.removeClass("fr-param-autocomplete-error");
+            }
         },
         _writeBigDropDown: function (param, dependenceDisable, pageNum, predefinedValue) {
             var me = this;
@@ -7910,6 +7914,8 @@ $(function () {
                 },
                 change: function (event, obj) {
                     if (!obj.item) {
+                        //Invalid selection, remove prior select
+                        $control.removeAttr("backendValue");
                         $control.addClass("fr-param-autocomplete-error");
                     }
                     else {
@@ -7925,7 +7931,7 @@ $(function () {
                 close: function (event) {
                     //if user selected by mouse click then unlock enter
                     //close event will happend after select event so it safe here.
-                    if (event.originalEvent.originalEvent.type === 'click')
+                    if (event.originalEvent && event.originalEvent.originalEvent.type === 'click')
                         enterLock = false;
                 }
             });
